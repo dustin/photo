@@ -100,7 +100,6 @@
 			<html:hidden property="imageId" value="<%= "" + image.getId() %>"/>
 			<html:textarea property="comment" cols="50" rows="2"/>
 			<br/>
-			<input type="submit" value="Comment"/>
 			<html:submit>Add Comment</html:submit>
 		</html:form>
 	</photo:guest>

@@ -118,14 +118,13 @@ Size Image</a>]
 	Submit a comment:<br/>
 
 	<photo:guest negate="true">
-		<form method="POST" action="PhotoServlet">
-			<input type="hidden" name="func" value="comment"/>
-			<input type="hidden" name="image_id"
-				value="<%= "" + image.getId() %>"/>
-			<textarea name="comment" wrap="hard" cols="50" rows="2"></textarea>
+		<html:form action="/addcomment">
+			<html:errors/>
+			<html:hidden property="imageId" value="<%= "" + image.getId() %>"/>
+			<html:textarea property="comment" cols="50" rows="2"/>
 			<br/>
-			<input type="submit" value="Comment"/>
-		</form>
+			<html:submit>Add Comment</html:submit>
+		</html:form>
 	</photo:guest>
 
 <p>
