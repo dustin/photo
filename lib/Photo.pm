@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.36 1998/09/06 21:48:06 dustin Exp $
+# $Id: Photo.pm,v 1.37 1998/10/05 05:21:11 dustin Exp $
 
 package Photo;
 
@@ -183,20 +183,32 @@ sub saveSearch
 sub cacheImage
 {
     my($self, $key, $img, $type)=@_;
-    my($query, $r, $s, $c, $out);
+    my($query, $r, $s, $c, $out, $dbh, $done);
 
     $c=DCache->new;
 
+    $dbh=$self->{dbh};
+    $dbh->{AutoCommit}=0;
+
     $out="";
-    $query ="select * from image_store where id=\n";
+    $query ="declare cursor c for select * from image_store where id=\n";
     $query.="(select id from image_map where name='$img')\n";
     $query.="    order by line\n";
     $s=$self->doQuery($query);
-    while($r=$s->fetch) {
-        $out.=decode_base64($r->[2]);
+
+	$done=0;
+    while($done==0) {
+	    $s=$self->doQuery("fetch 20 in c;\n");
+		$done=20;
+		while($r=$s->fetch) {
+			$done--;
+            $out.=decode_base64($r->[2]);
+		}
     }
     $s->finish;
     $c->cache($key, $type, $out);
+	undef($out);
+    $dbh->{AutoCommit}=1;
 }
 
 sub makeThumbnail
