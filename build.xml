@@ -19,9 +19,12 @@
 	<property name="DOCDIR" value="${BUILDTOP}/docs/"/>
 	<property name="WARDIR" value="${BUILDTOP}/wars/"/>
 	<property name="WARDEST" value="/afs/.spy.net/misc/web/resin/wars"/>
+	<property name="LAZYWARDEST" value="/afs/.spy.net/misc/web/resin/lazy-wars"/>
 
-	<property name="wars"
-		value="photo,beckerphoto,wisephoto,jasonphoto,photodemo"/>
+	<property name="wars" value="photo"/>
+	<property name="lazy-wars"
+		value="beckerphoto,wisephoto,jasonphoto,photodemo"/>
+	<property name="buildwars" value="${wars},${lazy-wars}"/>
 
 	<!-- Set up the class path -->
 	<path id="photo.classpath">
@@ -94,10 +97,15 @@
 		<echo message="Installing ${which}.war"/>
 		<copy file="${WARDIR}/${which}.war" tofile="${WARDEST}/${which}.war"/>
 	</target>
+	<target name="install-lazy-war-var">
+		<echo message="Installing lazy ${which}.war"/>
+		<copy file="${WARDIR}/${which}.war" tofile="${LAZYWARDEST}/${which}.war"/>
+	</target>
 
 	<target name="install-wars" description="Install all wars" depends="wars">
 		<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 		<foreach list="${wars}" target="install-war-var" param="which"/>
+		<foreach list="${lazy-wars}" target="install-lazy-war-var" param="which"/>
 	</target>
 
 	<target name="photo.war" depends="photo.jar">
@@ -132,7 +140,7 @@
 
 	<target name="wars" depends="photo.jar,validateconfigs">
 		<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-		<foreach list="${wars}" target="war-var" param="which"/>
+		<foreach list="${buildwars}" target="war-var" param="which"/>
 	</target>
 
 	<target name="install-docs"
