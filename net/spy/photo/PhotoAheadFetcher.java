@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.13 2002/02/23 23:14:01 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.14 2002/02/24 07:36:55 dustin Exp $
  */
 
 package net.spy.photo;
@@ -23,7 +23,7 @@ public class PhotoAheadFetcher extends Object {
 	public PhotoAheadFetcher() {
 		super(); // thanks for asking
 
-		tp=new ThreadPool("PhotoAheadFetcher", 3);
+		tp=new ThreadPool("PhotoAheadFetcher", 3, Thread.NORM_PRIORITY-1);
 	}
 
 	/**

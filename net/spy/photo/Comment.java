@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.3 2002/02/24 01:11:52 dustin Exp $
+// $Id: Comment.java,v 1.4 2002/02/24 07:36:55 dustin Exp $
 
 package net.spy.photo;
 
@@ -13,7 +13,8 @@ import net.spy.photo.sp.*;
 /**
  * Comments on photos.
  */
-public class Comment extends Object implements java.io.Serializable {
+public class Comment extends Object
+	implements java.io.Serializable, XMLAble {
 
 	private int commentId=-1;
 
@@ -73,7 +74,9 @@ public class Comment extends Object implements java.io.Serializable {
 	}
 
 	/**
-	 * Get all of the comments a given user can see.
+	 * Get an Enumeration of XMLAble objects that represent the comments
+	 * this user can see.  Each object may represent multiple comments, but
+	 * they will all refer to a single image.
 	 */
 	public static Enumeration getAllComments(PhotoUser user) throws Exception {
 
@@ -83,8 +86,21 @@ public class Comment extends Object implements java.io.Serializable {
 		db.set("user_id", user.getId());
 		ResultSet rs=db.executeQuery();
 
-		while(rs.next()) {
-			v.addElement(new Comment(security, rs));
+		if(rs.next()) {
+			GroupedComments gc=new GroupedComments(rs.getInt("photo_id"));
+			gc.addComment(new Comment(security, rs));
+			while(rs.next()) {
+				int newid=rs.getInt("photo_id");
+				if(gc.getPhotoId()!=newid) {
+					// Add what we have so far
+					v.addElement(gc);
+					// Create a new one
+					gc=new GroupedComments(rs.getInt("photo_id"));
+				}
+				// Add the current entry
+				gc.addComment(new Comment(security, rs));
+			}
+			v.addElement(gc);
 		}
 
 		rs.close();
@@ -210,7 +226,7 @@ public class Comment extends Object implements java.io.Serializable {
 		sb.append("<comment_id>");
 		sb.append(getCommentId());
 		sb.append("</comment_id>\n");
-		sb.append("<photo_id>\n");
+		sb.append("<photo_id>");
 		sb.append(getPhotoId());
 		sb.append("</photo_id>\n");
 		sb.append("<remote_addr>");
@@ -254,6 +270,12 @@ public class Comment extends Object implements java.io.Serializable {
 			PhotoUser me=sec.getUser("dustin");
 			System.out.println("Got user:  " + me);
 
+			for(Enumeration e=getAllComments(me); e.hasMoreElements();) {
+				XMLAble xmlable=(XMLAble)e.nextElement();
+				System.out.println(xmlable.toXML());
+			}
+
+			/*
 			Comment comment=new Comment();
 			comment.setUser(me);
 			comment.setNote("This image has been up for a *really* long time.");
@@ -262,6 +284,7 @@ public class Comment extends Object implements java.io.Serializable {
 
 			comment.save();
 			System.out.println(comment);
+			*/
 		} else {
 			int img=Integer.parseInt(args[0]);
 			for(Enumeration e=Comment.getCommentsForPhoto(img);
@@ -271,6 +294,56 @@ public class Comment extends Object implements java.io.Serializable {
 				System.out.println(c.toXML());
 				System.out.println("--");
 			}
+		}
+	}
+
+	private static class GroupedComments extends
+		Object implements XMLAble, java.io.Serializable {
+
+		private Vector comments=null;
+		private int image_id=0;
+
+		public GroupedComments(int id) {
+			super();
+			this.image_id=id;
+			comments=new Vector();
+		}
+
+		public int getPhotoId() {
+			return(image_id);
+		}
+
+		public void addComment(Comment comment) {
+			if(image_id!=comment.getPhotoId()) {
+				throw new Error(comment.getPhotoId() + " != " + image_id);
+			}
+			if(comments.size()<5) {
+				comments.addElement(comment);
+			} else if(comments.size()==5) {
+				comments.addElement(new XMLAble() {
+					public String toXML() {
+						return("<more_comments/>\n");
+					}
+					});
+			}
+		}
+
+		public String toXML() {
+			StringBuffer xml=new StringBuffer();
+
+			xml.append("<photo_comments>\n");
+			xml.append("<photo_id>");
+			xml.append(image_id);
+			xml.append("</photo_id>\n");
+
+			for(Enumeration e=comments.elements(); e.hasMoreElements();) {
+				XMLAble c=(XMLAble)e.nextElement();
+				xml.append(c.toXML());
+			}
+
+			xml.append("</photo_comments>\n");
+
+			return(xml.toString());
 		}
 	}
 

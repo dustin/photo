@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.11 2002/02/23 23:14:01 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.12 2002/02/24 07:36:55 dustin Exp $
  */
 
 package net.spy.photo;
@@ -78,12 +78,15 @@ public class PhotoSearchResults extends Cursor {
 			ret=(PhotoSearchResult)o;
 		} catch(ClassCastException e) {
 			try {
-				Integer i=(Integer)o;
-				ret=new PhotoSearchResult(i.intValue(), which);
-				// Add the max dimensions so it'll scale.
-				ret.setMaxSize(maxSize);
-				// Next time, won't need to do this again.
-				replace(which, ret);
+				// Synchronize on the object in this position.
+				synchronized(o) {
+					Integer i=(Integer)o;
+					ret=new PhotoSearchResult(i.intValue(), which);
+					// Add the max dimensions so it'll scale.
+					ret.setMaxSize(maxSize);
+					// Next time, won't need to do this again.
+					replace(which, ret);
+				}
 			} catch(Exception e2) {
 				System.err.println("Error getting result "
 					+ which + ":  " + e2);

@@ -325,7 +325,6 @@ public class JpegEncoder extends Frame
                 System.out.println("IO Error: " + e.getMessage());
         }
     }
-}
 
 // This class incorporates quality scaling as implemented in the JPEG-6a
 // library.
@@ -334,7 +333,7 @@ public class JpegEncoder extends Frame
  * DCT - A Java implementation of the Discreet Cosine Transform
  */
 
-class DCT
+private class DCT
 {
     /**
      * DCT Block Size - default 8
@@ -775,7 +774,7 @@ class DCT
 // It now incorporates Huffman table derivation as in the C jpeg library
 // from the IJG, Jpeg-6a.
 
-class Huffman
+private class Huffman
 {
     int bufferPutBits, bufferPutBuffer;    
     public int ImageHeight;
@@ -846,7 +845,7 @@ class Huffman
      * jpegNaturalOrder[i] is the natural-order position of the i'th element
      * of zigzag order.
      */
-    public static int[] jpegNaturalOrder = {
+    public final static int[] jpegNaturalOrder = {
           0,  1,  8, 16,  9,  2,  3, 10,
          17, 24, 32, 25, 18, 11,  4,  5,
          12, 19, 26, 33, 40, 48, 41, 34,
@@ -1193,7 +1192,7 @@ class Huffman
  * it into its constituant components, downsizing those that need to be.
  */
 
-class JpegInfo
+private class JpegInfo
 {
     String Comment;
     public Image imageobj;
@@ -1355,4 +1354,6 @@ class JpegInfo
         }
         return output;
     }
+}
+
 }

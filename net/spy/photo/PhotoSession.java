@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.98 2002/02/24 01:11:52 dustin Exp $
+ * $Id: PhotoSession.java,v 1.99 2002/02/24 07:36:55 dustin Exp $
  */
 
 package net.spy.photo;
@@ -331,8 +331,8 @@ public class PhotoSession extends Object
 		sb.append("<all_comments>\n");
 
 		for(int i=0; cursor.nRemaining() > 0 && i<cursor.getMaxRet(); i++) {
-			Comment comment=(Comment)cursor.next();
-			sb.append(comment.toXML());
+			XMLAble tmp=(XMLAble)cursor.next();
+			sb.append(tmp.toXML());
 		}
 
 		sb.append("<meta_stuff>\n");

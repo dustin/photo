@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Vote.java,v 1.1 2002/02/23 10:58:52 dustin Exp $
+// $Id: Vote.java,v 1.2 2002/02/24 07:36:55 dustin Exp $
 
 package net.spy.photo;
 
@@ -12,7 +12,8 @@ import net.spy.*;
 /**
  * Votes on photos.
  */
-public class Vote extends Object {
+public class Vote extends Object
+	implements java.io.Serializable, XMLAble {
 
 	private int voteId=-1;
 
