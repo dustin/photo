@@ -140,7 +140,8 @@
 
 	<target name="wars" depends="photo.jar,validateconfigs">
 		<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-		<foreach list="${buildwars}" target="war-var" param="which"/>
+		<foreach list="${buildwars}" inheritall="true"
+			target="war-var" param="which"/>
 	</target>
 
 	<target name="install-docs"
