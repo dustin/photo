@@ -1,4 +1,5 @@
 <%@ page import="net.spy.photo.Category" %>
+<%@ page import="net.spy.photo.Comment" %>
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
@@ -57,5 +58,50 @@ href="display.jsp?id=<%= image.getImage() %>">Linkable image</a>] |
 [<a href="PhotoServlet?func=getimage&photo_id=<%= image.getImage() %>">Full
 Size Image</a>]
 
+
+<p class="comments">
+
+	<h1>Comments</h1>
+
+	<logic:iterate id="i"
+		collection="<%= Comment.getCommentsForPhoto(Integer.parseInt(image.getImage())) %>">
+
+		<% Comment comment=(Comment)i; %>
+
+		<table class="comments" width="100%">
+			<tr class="comment_header">
+				<td>At <%= comment.getTimestamp() %>,
+					<%= comment.getUser().getRealname() %> said the
+					following:
+				</td>
+			</tr>
+			<tr class="comment_body">
+				<td>
+					<%= comment.getNote() %>
+				</td>
+			</tr>
+		</table>
+	</logic:iterate>
+
+</p>
+
+<p>
+
+	Submit a comment:<br/>
+
+	<photo:guest negate="1">
+		<form method="POST" action="PhotoServlet">
+			<input type="hidden" name="func" value="comment"/>
+			<input type="hidden" name="image_id"
+				value="<%= image.getImage() %>"/>
+			<textarea name="comment" wrap="hard" cols="50" rows="2"></textarea>
+			<br/>
+			<input type="submit" value="Comment"/>
+		</form>
+	</photo:guest>
+
+<p>
+
+</p>
 
 </photo:getImage>
