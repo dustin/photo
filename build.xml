@@ -61,7 +61,7 @@
 		<delete dir="=build"/>
 	</target>
 
-	<target name="docs" depends="photoresources.properties,spfiles"
+	<target name="docs" depends="prepare,photoresources.properties,spfiles"
 			description="Create the documentation.">
 		<mkdir dir="${DOCDIR}"/>
 		<javadoc destdir="${DOCDIR}"
@@ -71,8 +71,8 @@
 			sourcepath="${SRCDIR}"
 			packagenames="net.spy.*"
 			classpathref="photo.classpath"
-			windowtitle="PhotoServlet API Documentation - built ${build.date}"
-			doctitle="PhotoServlet API Documentation - built ${build.date}">
+			windowtitle="PhotoServlet API Documentation - ${short.version} built ${build.date}"
+			doctitle="PhotoServlet API Documentation - ${short.version} built ${build.date}">
 
 			<link href="http://java.sun.com/products/servlet/2.3/javadoc/"/>
 			<link href="http://java.sun.com/products/servlet/2.2/javadoc/"/>
@@ -157,13 +157,13 @@
 	<target name="install-docs"
 		description="Install the documentation"
 		depends="docs">
-		<copy todir="/afs/spy.net/home/dustin/public_html/doc/photo">
+		<sync todir="/afs/spy.net/home/dustin/public_html/doc/photo">
 			<fileset dir="${DOCDIR}">
 				<include name="**/*.html"/>
 				<include name="**/*.css"/>
 				<include name="**/package-list"/>
 			</fileset>
-		</copy>
+		</sync>
 	</target>
 
 	<target name="photo.jar"
