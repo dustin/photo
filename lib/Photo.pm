@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.13 1998/07/07 05:55:15 dustin Exp $
+# $Id: Photo.pm,v 1.14 1998/07/07 05:56:24 dustin Exp $
 
 package Photo;
 
@@ -11,13 +11,11 @@ use DCache;
 use MIME::Base64;
 use strict;
 
-use vars qw($cgidir $imagedir $uriroot $Itop $includes $adminc $ldir);
+use vars qw($cgidir $uriroot $includes $adminc $ldir);
 
 # Global stuffs
 $Photo::cgidir="/perl/dustin/photo";
-$Photo::imagedir="/~dustin/images/";
 $Photo::uriroot="/~dustin/photo";
-$Photo::Itop="$Photo::uriroot/album";
 $Photo::includes="/usr/people/dustin/public_html/photo/inc";
 $Photo::adminc="/usr/people/dustin/public_html/photo/admin/inc";
 $Photo::ldir="/usr/people/dustin/public_html/photo/album";
@@ -568,8 +566,6 @@ sub showTemplate
 
     $p{'URIROOT'}=$Photo::uriroot;
     $p{'CGIDIR'}=$Photo::cgidir;
-    $p{'IMAGEDIR'}=$Photo::imagedir;
-    $p{'ITOP'}=$Photo::Itop;
     $p{'SELF_URI'}=&myself;
 
     $p{'ALL_VARS'}=join("\n", sort(keys(%p)));
@@ -605,8 +601,7 @@ sub deleteImage
     $query="delete from album where oid=$oid;\n";
     if($self->doQuery($query))
     {
-	unlink("$Photo::Itop/$p{IMAGE}");
-	unlink("$Photo::Itop/tn/$p{IMAGE}");
+	# stuff to delete image goes here...
     }
 
     $self->showTemplate("$Photo::includes/admin/killimage.inc", %p);
