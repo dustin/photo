@@ -165,13 +165,17 @@
 		</zip>
 	</target>
 
-	<target name="photo.war" depends="photo.jar">
+	<target name="photo.conf">
+		<copy file="etc/photo.conf" tofile="${BUILDTOP}/photo.conf"/>
+	</target>
+
+	<target name="photo.war" depends="photo.jar,photo.conf">
 		<jar jarfile="${BUILDTOP}/photo.war" basedir="." excludes="**">
 			<zipfileset dir="photo" prefix="">
 				<patternset refid="arch-stuff"/>
 			</zipfileset>
 			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF/lib" includes="photo.jar"/>
-			<zipfileset dir="etc" prefix="WEB-INF" includes="photo.conf">
+			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF" includes="photo.conf">
 				<patternset refid="arch-stuff"/>
 			</zipfileset>
 		</jar>
