@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: setstyle.cgi,v 1.1 1998/10/17 22:55:28 dustin Exp $
+# $Id: setstyle.cgi,v 1.2 1998/10/17 23:22:08 dustin Exp $
 
 use Photo;
 use CGI;
@@ -21,38 +21,36 @@ if(!defined($in{'font'}) || !defined($in{'h_transform'})) {
 }
 
 $style=<<EOF;
-body,td {
-        font-family: $in{'font'};
-        background-color: $in{'bgcolor'};
-}
-
-h1,h2,h3,h4,h5 {
-        text-transform: $in{'h_transform'};
-}
-
+body,td { font-family: $in{'font'}, Arial; background-color: $in{'bgcolor'}; }
+h1,h2,h3,h4,h5 { text-transform: $in{'h_transform'}; }
 EOF
 
 $cookie=$q->cookie(-name=>'photo_style',
                    -path=>$Photo::cgidir,
-				   -value=>$style);
+				   -value=>$style,
+				   -expires=>'+30d');
 
 print $q->header(-cookie => $cookie);
 $p->start_html($q, 'Set Style');
 
-print <DATA>;
+print <<EOF;
 
-undef($q);
-undef($p);
-undef($style);
-undef(%in);
-undef($cookie);
-
-__END__
 <h2>Set Style</h2>
 
 Your new style has been set, you may continue to <a
 href="/~dustin/photo/">browse the photo album</a> to
 make use of it.
 
+<pre>
+$style
+</pre>
+
 </body>
 </html>
+EOF
+
+undef($q);
+undef($p);
+undef($style);
+undef(%in);
+undef($cookie);
