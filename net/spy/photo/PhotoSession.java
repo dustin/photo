@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.19 2000/06/30 08:24:39 dustin Exp $
+ * $Id: PhotoSession.java,v 1.20 2000/06/30 08:44:12 dustin Exp $
  */
 
 package net.spy.photo;
@@ -307,7 +307,6 @@ public class PhotoSession extends Object
 			query = "insert into album(keywords, descr, cat, taken, size, "
 				+ " addedby)\n"
 				+ "   values(?, ?, ?, ?, ?, ?)";
-			log("Running SQL:  " + query);
 			PreparedStatement st=photo.prepareStatement(query);
 			// Toss in the parameters
 			st.setString(1, multi.getParameter("keywords"));
@@ -316,11 +315,9 @@ public class PhotoSession extends Object
 			st.setString(4, multi.getParameter("taken"));
 			st.setInt(5, size);
 			st.setInt(6, remote_uid.intValue());
-			System.out.println("Statment:  " + st);
 			st.executeUpdate();
 
 			query = "select currval('album_id_seq')\n";
-			log("Running SQL:  " + query);
 			ResultSet rs = st.executeQuery(query);
 			rs.next();
 			id=rs.getInt(1);
