@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.114 2002/03/22 22:25:44 dustin Exp $
+ * $Id: PhotoSession.java,v 1.115 2002/04/26 21:15:04 knitterb Exp $
  */
 
 package net.spy.photo;
@@ -604,6 +604,35 @@ public class PhotoSession extends Object
 		SpyDB db=null;
 		Connection photo=null;
 
+		// Get the string data
+		String keywords=multi.getParameter("keywords");
+		if (keywords == null) {
+			debug ("keywords null, setting to blank string");
+			keywords = "";
+		}
+
+		String info=multi.getParameter("info");
+		if (info == null) {
+			debug ("info/desc null, setting to blank string");
+			info = "";
+		}
+
+		// now check all the data components.
+		try {
+			StringBuffer test=new StringBuffer();
+			test.append("<?xml version=\"1.0\"?>\n");
+			test.append("<test>\n");
+			test.append(info);
+			test.append(keywords);
+			test.append("\n</test>");
+
+			PhotoXSLT.sendXML(test.toString(),
+				null, new ByteArrayOutputStream());
+		} catch (Exception ex) {
+			throw new ServletException ("Problem with keywords/description, "+
+				"potentially illegal character in description", ex);
+		}
+
 		// OK, things look good, let's try to store our data.
 		try {
 			String query=null;
@@ -617,19 +646,8 @@ public class PhotoSession extends Object
 				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement st=photo.prepareStatement(query);
 			// Toss in the parameters
-			if (multi.getParameter("keywords") == null) {
-				debug ("keywords null, setting to blank string");
-				st.setString(1, "");
-			} else {
-				st.setString(1, multi.getParameter("keywords"));
-			}
-
-			if (multi.getParameter("info") == null) {
-				debug ("info/desc null, setting to blank string");
-				st.setString(2, "");
-			} else {
-				st.setString(2, multi.getParameter("info"));
-			}
+			st.setString(1, keywords);
+			st.setString(2, info);
 
 			st.setInt(3, cat);
 			st.setString(4, multi.getParameter("taken"));

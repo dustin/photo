@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.27 2002/03/12 09:48:24 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.28 2002/04/26 21:15:04 knitterb Exp $
  */
 
 package net.spy.photo;
@@ -9,6 +9,7 @@ package net.spy.photo;
 import java.security.*;
 import java.util.*;
 import java.sql.*;
+import java.io.ByteArrayOutputStream; // for text/xml testing
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -464,6 +465,25 @@ public class PhotoAdmin extends PhotoHelper {
 		int cat_id=Integer.parseInt(stmp);
 		String cat_name=ps.request.getParameter("name");
 
+		if(cat_name.length()<1) {
+			throw new ServletException("Missing category name");
+		}
+
+		// now check all the data components.
+		try {
+			StringBuffer test=new StringBuffer();
+			test.append("<?xml version=\"1.0\"?>\n");
+			test.append("<test>\n");
+			test.append(cat_name);
+			test.append("\n</test>");
+
+			PhotoXSLT.sendXML(test.toString(),
+				null, new ByteArrayOutputStream());
+		} catch (Exception ex) {
+			throw new ServletException ("Problem with category name, "+
+				"potentially illegal character in description", ex);
+		}
+
 		SpyDB photo=new SpyDB(new PhotoConfig());
 		if(cat_id>0) {
 			PreparedStatement st=photo.prepareStatement(
@@ -599,6 +619,22 @@ public class PhotoAdmin extends PhotoHelper {
 		if (info == null) {
 			debug ("info/desc null, setting to blank string");
 			info = "";
+		}
+
+		// now check all the data components.
+		try {
+			StringBuffer test=new StringBuffer();
+			test.append("<?xml version=\"1.0\"?>\n");
+			test.append("<test>\n");
+			test.append(info);
+			test.append(keywords);
+			test.append("\n</test>");
+
+			PhotoXSLT.sendXML(test.toString(),
+				null, new ByteArrayOutputStream());
+		} catch (Exception ex) {
+			throw new ServletException ("Problem with keywords/description, "+
+				"potentially illegal character in description", ex);
 		}
 
 		// Make sure the user has access to this.
