@@ -43,7 +43,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 
 .SUFFIXES: .java .class .jar
 
-all: photo.jar
+all: $(CLASSES)
 
 photo.jar: $(CLASSES)
 	$(JAR) cv0f $@ $(CLASSES)
