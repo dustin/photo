@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.6 2002/05/23 07:56:31 dustin Exp $
+// $Id: DisplayLink.java,v 1.7 2002/05/23 16:24:49 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -23,9 +23,6 @@ public class DisplayLink extends PhotoTag {
 	private String height=null;
 
 	private String relative=null;
-
-	// If true, process this link display.
-	private boolean process=true;
 
 	/**
 	 * Get an instance of ImageLink.
@@ -116,6 +113,9 @@ public class DisplayLink extends PhotoTag {
 	 */
 	public int doStartTag() throws JspException {
 
+        // If this is true at the bottom, process the link.
+        boolean process=true;
+
 		StringBuffer sb=new StringBuffer();
 
 		sb.append("<a href=\"display.jsp?");
@@ -204,17 +204,15 @@ public class DisplayLink extends PhotoTag {
 	/**
 	 * End link.
 	 */
-	public int doEndTag() throws JspException {
+	public int doAfterBody() throws JspException {
 		try {
-			if(process) {
-				pageContext.getOut().write("</a>");
-			}
+			pageContext.getOut().write("</a>");
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new JspException("Error sending output:  " + e);
 		}
 
-		return(EVAL_PAGE);
+		return(SKIP_BODY);
 	}
 
 	/**
@@ -224,7 +222,6 @@ public class DisplayLink extends PhotoTag {
 		id=0;
 		showThumbnail=false;
 		altText=null;
-		process=true;
 	}
 
 }
