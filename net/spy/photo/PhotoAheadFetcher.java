@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.3 2000/07/05 07:09:50 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.4 2000/07/05 07:36:49 dustin Exp $
  */
 
 package net.spy.photo;
@@ -70,12 +70,15 @@ public class PhotoAheadFetcher extends Thread {
 		// Outside of the lock, fetch (precache) the entries.
 		for(Enumeration e=tofetch.elements(); e.hasMoreElements();) {
 			PhotoSearchResults r=(PhotoSearchResults)e.nextElement();
+			String self_uri=r.getURI();
+
 			for(int i=0; i<5; i++) {
 				PhotoSearchResult res=r.next();
 				if(res!=null) {
 					 Hashtable h=new Hashtable();
 					 // Populate the data thingies.
 					 res.addToHash(h);
+					 res.showHTML(self_uri);
 
 					 // This will cache the thumbnails
 					 int image_id=Integer.parseInt((String)h.get("IMAGE"));

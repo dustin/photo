@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.4 2000/07/05 06:08:33 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.5 2000/07/05 07:36:49 dustin Exp $
  */
 
 package net.spy.photo;
@@ -16,10 +16,12 @@ import net.spy.*;
 public class PhotoSearchResults extends Object {
 	protected Vector _results=null;
 	protected int _current=0;
+	protected String self_uri=null;
 
-	public PhotoSearchResults() {
+	public PhotoSearchResults(String self_uri) {
 		super();
 		_results=new Vector();
+		this.self_uri=self_uri;
 	}
 
 	// Add a search result to the list.
@@ -32,6 +34,11 @@ public class PhotoSearchResults extends Object {
 	// Add a photo ID to the result list
 	public void add(Integer what) {
 		_results.addElement(what);
+	}
+
+	// Get the URI this result was built from
+	public String getURI() {
+		return(self_uri);
 	}
 
 	// Set the search result we're lookin' at.

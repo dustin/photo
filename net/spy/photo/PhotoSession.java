@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.23 2000/07/05 06:32:17 dustin Exp $
+ * $Id: PhotoSession.java,v 1.24 2000/07/05 07:36:49 dustin Exp $
  */
 
 package net.spy.photo;
@@ -54,7 +54,6 @@ public class PhotoSession extends Object
 
 		logger=p.logger;
 
-		self_uri = p.self_uri;
 		rhash=p.rhash;
 		security=p.security;
 	}
@@ -814,7 +813,7 @@ public class PhotoSession extends Object
 					middle += "</tr>\n<tr>\n";
 				}
 				middle += "<td>\n";
-				middle += tokenize("findmatch.inc", r.addToHash(null));
+				middle += r.showHTML(self_uri);
 				middle += "</td>\n";
 			}
 		}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.6 2000/07/05 06:31:38 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.7 2000/07/05 07:36:49 dustin Exp $
  */
 
 package net.spy.photo;
@@ -19,6 +19,7 @@ public class PhotoSearchResult extends PhotoHelper {
 	protected Hashtable mydata=null;
 	protected int id=-1;
 	protected int search_id=-1;
+	protected String html=null;
 
 	/**
 	 * Get an uninitialized search result.
@@ -48,6 +49,18 @@ public class PhotoSearchResult extends PhotoHelper {
 			out+=search_id;
 		}
 		return(out);
+	}
+
+	/**
+	 * Grab the HTML chunk to be displayed (fill in the template).
+	 */
+	public String showHTML(String self_uri) {
+		if(html==null) {
+			Hashtable h=new Hashtable();
+			h.put("SELF_URI", self_uri);
+			html=PhotoUtil.tokenize("findmatch.inc", addToHash(h));
+		}
+		return(html);
 	}
 
 	/**

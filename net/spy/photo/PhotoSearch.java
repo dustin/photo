@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.3 2000/07/04 22:48:31 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.4 2000/07/05 07:36:49 dustin Exp $
  */
 
 package net.spy.photo;
@@ -89,7 +89,8 @@ public class PhotoSearch extends PhotoHelper {
 	// Actually perform the search
 	public PhotoSearchResults performSearch(
 		HttpServletRequest request, PhotoUser user) throws ServletException {
-		PhotoSearchResults results=new PhotoSearchResults();
+		PhotoSearchResults results=
+			new PhotoSearchResults(request.getRequestURI());
 
 		Connection photo=null;
 

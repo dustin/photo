@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.2 2000/07/05 07:36:49 dustin Exp $
  */
 
 package net.spy.photo;
@@ -40,6 +40,18 @@ public class PhotoUtil
 		vars.put("STYLESHEET", "<link rel=\"stylesheet\"href=\""
 			+ p.self_uri + "?func=getstylesheet\">");
 		
+		ret = t.tokenize(conf.get("includes") + file, vars);
+		return(ret);
+	}
+
+	// Tokenize without a session.
+	public static String tokenize(String file, Hashtable vars) {
+		SpyToker t=new SpyToker();
+		String ret=null;
+
+		PhotoConfig conf = new PhotoConfig();
+		vars.put("HTML_URI", conf.get("html_uriroot"));
+		vars.put("LAST_MODIFIED", "recently");
 		ret = t.tokenize(conf.get("includes") + file, vars);
 		return(ret);
 	}

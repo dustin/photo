@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.6 2000/07/05 06:08:33 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.7 2000/07/05 07:36:49 dustin Exp $
  */
 
 package net.spy.photo;
@@ -21,7 +21,6 @@ import net.spy.*;
 public class PhotoServlet extends HttpServlet
 { 
 	// Only *really* persistent data can go here.
-	public String self_uri=null;
 	public RHash rhash=null;
 	public PhotoSecurity security = null;
 	public PhotoAheadFetcher aheadfetcher=null;
