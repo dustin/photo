@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.47 1998/10/17 21:50:41 dustin Exp $
+# $Id: Photo.pm,v 1.48 1998/10/17 21:59:04 dustin Exp $
 
 package Photo;
 
@@ -623,7 +623,7 @@ sub showTemplate
 
 	$p{'ALL_VARS'}=join("\n", sort(keys(%p)));
 	$p{'STYLESHEET'}="<link rel=\"stylesheet\"".
-					 "href=\"$Photo::uriroot/inc/style.css\">";
+					 "href=\"$Photo::cgidir/style.cgi\">";
 
 	open(IN, $fn) || die("Can't open $fn:  $!\n");
 	while(<IN>)
@@ -674,7 +674,7 @@ sub start_html
 	my($self, $cgi, $title)=@_;
 
 	print "<html><head><title>$title</title>\n<head>\n".
-		  "<link rel=\"stylesheet\" href=\"$Photo::uriroot/inc/style.css\">".
+		  "<link rel=\"stylesheet\" href=\"$Photo::cgidir/style.cgi\">".
 		  "</head><body bgcolor=\"#fFfFfF\">";
 }
 
