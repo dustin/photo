@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.31 2002/09/13 20:28:46 dustin Exp $
+-- $Id: photo.sql,v 1.32 2002/09/16 04:32:49 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -366,6 +366,7 @@ create table properties (
 grant all on properties to nobody;
 -- Add the photo of the unit of time property
 insert into properties(name, value) values('photo_of_uot', '1');
+insert into properties(name, value) values('background_img', '');
 
 -- Show the profile users along with the profiles that created them
 create view user_byprofiles as

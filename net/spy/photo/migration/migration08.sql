@@ -13,3 +13,6 @@ grant all on properties to nobody
 -- Add the photo of the unit of time property
 insert into properties(name, value) values('photo_of_uot', '1')
 ;
+-- Background image property
+insert into properties(name, value) values('background_img', '')
+;
