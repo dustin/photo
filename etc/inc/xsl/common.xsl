@@ -4,7 +4,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: common.xsl,v 1.2 2000/11/10 07:17:18 dustin Exp $
+ $Id: common.xsl,v 1.3 2000/11/27 07:59:05 dustin Exp $
  -->
 
 <!-- Default Section handling -->
@@ -118,11 +118,19 @@
 		<xsl:apply-templates/>
 	</xsl:copy>
 </xsl:template>
+
 <xsl:template match="select">
 	<xsl:copy use-attribute-sets="select-stuff">
 		<xsl:apply-templates/>
 	</xsl:copy>
 </xsl:template>
+
+<xsl:template match="mselect">
+	<select name="{@name}" size="{@size}" multiple="">
+		<xsl:apply-templates/>
+	</select>
+</xsl:template>
+
 <xsl:template match="option">
 	<xsl:copy use-attribute-sets="option-stuff">
 		<xsl:apply-templates/>

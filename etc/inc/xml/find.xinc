@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 	Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
-	$Id: find.xinc,v 1.3 2000/11/27 07:12:22 dustin Exp $
+	$Id: find.xinc,v 1.4 2000/11/27 07:59:05 dustin Exp $
 -->
 
 <page>
@@ -43,9 +43,9 @@
 				<form method="POST" action="%SELF_URI%">
 				<input type="hidden" name="func" value="search"/>
 				Category:
-				<select name="cat" multiple="1" size="5">
+				<mselect name="cat" size="5">
 				%CAT_LIST%
-				</select>
+				</mselect>
 				<p/>
 
 				<select name="fieldjoin">
