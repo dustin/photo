@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.6 2000/07/08 05:50:48 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.7 2000/10/08 09:12:06 dustin Exp $
  */
 
 package net.spy.photo;
@@ -17,8 +17,9 @@ public class PhotoAheadFetcher extends Thread {
 
 	public PhotoAheadFetcher() {
 		super(); // thanks for asking
-		this.setDaemon(true);
-		this.start();
+		setDaemon(true);
+		setName("PhotoAheadFetcher");
+		start();
 	}
 
 	public void run() {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.35 2000/07/24 08:47:35 dustin Exp $
+ * $Id: PhotoSession.java,v 1.36 2000/10/08 09:12:06 dustin Exp $
  */
 
 package net.spy.photo;
@@ -10,6 +10,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.net.*;
+import java.text.*;
 import sun.misc.*;
 
 import javax.servlet.*;
@@ -638,17 +639,70 @@ public class PhotoSession extends Object
 		return(output);
 	}
 
+	// Some basic statistic stuff for the home page.
+	protected String getTotalImagesShown() throws Exception {
+		String ret=null;
+		String key="photo_total_images_shown";
+		NumberFormat nf=NumberFormat.getNumberInstance();
+
+		PhotoCache cache=new PhotoCache();
+
+		ret=(String)cache.get(key);
+		if(ret==null) {
+			SpyDB db=new SpyDB(new PhotoConfig());
+			ResultSet rs=db.executeQuery("select count(*) from photo_log");
+			rs.next();
+			ret=nf.format(rs.getInt(1));
+			// Recalculate every hour
+			cache.store(key, ret, 60*60*1000);
+		}
+
+		return(ret);
+	}
+
+	protected String getTotalImages() throws Exception {
+		String ret=null;
+		String key="photo_total_images";
+		NumberFormat nf=NumberFormat.getNumberInstance();
+
+		PhotoCache cache=new PhotoCache();
+
+		ret=(String)cache.get(key);
+		if(ret==null) {
+			SpyDB db=new SpyDB(new PhotoConfig());
+			ResultSet rs=db.executeQuery("select count(*) from album");
+			rs.next();
+			ret=nf.format(rs.getInt(1));
+			// Recalculate once a day
+			cache.store(key, ret, 86400*1000);
+		}
+		return(ret);
+	}
+
 	// Display the index page.
 	protected String doIndex() throws ServletException {
 		String output = "";;
 		Hashtable h = new Hashtable();
 
+		// Get the saved searches.
 		try {
 			h.put("SAVED", showSaved());
 		} catch(Exception e) {
 			log("Error getting saved search list:  " + e);
 			h.put("SAVED", "");
 		}
+
+		// Add some statistics on the index
+		try {
+			h.put("TOTAL_IMAGES_SHOWN", getTotalImagesShown());
+			h.put("TOTAL_IMAGES",       getTotalImages());
+		} catch(Exception e) {
+			log("Error gathering statistics for the home page:  " + e);
+			h.put("TOTAL_IMAGES_SHOWN", "n");
+			h.put("TOTAL_IMAGES", "n");
+		}
+
+		// Switch between administration or non-administration users.
 		if(isAdmin()) {
 			output += tokenize("admin/index.inc", h);
 		} else {

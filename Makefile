@@ -80,4 +80,4 @@ net/spy/rmi/ImageServerImpl_Skel.class: net/spy/rmi/ImageServer.class \
 
 
 .java.class:
-	env CLASSPATH=$(CLASSPATH) $(JAVAC) $<
+	env CLASSPATH=$(CLASSPATH) $(JAVAC) -deprecation $<

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoHelper.java,v 1.4 2000/07/26 09:29:13 dustin Exp $
+ * $Id: PhotoHelper.java,v 1.5 2000/10/08 09:12:06 dustin Exp $
  */
 
 package net.spy.photo;
@@ -26,7 +26,7 @@ public class PhotoHelper
 	}
 
 	protected void initlog() {
-		logger = new SpyLog();
+		logger = new SpyLog("PhotoLog");
 	}
 
 	protected void log(String message) {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.9 2000/07/19 03:21:34 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.10 2000/10/08 09:12:06 dustin Exp $
  */
 
 package net.spy.photo;
@@ -68,7 +68,7 @@ public class PhotoServlet extends HttpServlet
 		}
 
 		log("Initing logger");
-		logger = new SpyLog(new PhotoLogFlusher());
+		logger = new SpyLog("PhotoLog", new PhotoLogFlusher());
 		log("got logger");
 		log("Initialization complete");
 	}
