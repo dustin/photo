@@ -4,6 +4,9 @@
 
 package net.spy.photo.filter;
 
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoSearchResults;
+
 /**
  * Filter that affects sorting.
  */
@@ -19,8 +22,6 @@ public abstract class SortingFilter extends Filter {
 	 */
 	public static final int SORT_REVERSE=2;
 
-	private int sortDirection=SORT_REVERSE;
-
 	/**
 	 * Get an instance of SortingFilter.
 	 */
@@ -28,18 +29,19 @@ public abstract class SortingFilter extends Filter {
 		super();
 	}
 
-	/**
-	 * Get the sort direction.
+	/** 
+	 * Filter the results and use the FORWARD sort direction.
 	 */
-	public int getSortDirection() {
-		return(sortDirection);
+	public final PhotoSearchResults filter(PhotoSearchResults in)
+		throws PhotoException {
+
+		return(filter(in, SORT_FORWARD));
 	}
 
 	/**
-	 * Set the sort direction.
+	 * Filter a result set.
 	 */
-	public void setSortDirection(int sortDirection) {
-		this.sortDirection=sortDirection;
-	}
+	public abstract PhotoSearchResults filter(PhotoSearchResults in,
+		int direction) throws PhotoException;
 
 }
