@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.57 1998/11/13 07:30:30 dustin Exp $
+# $Id: Photo.pm,v 1.58 1998/11/13 07:46:51 dustin Exp $
 
 package Photo;
 
@@ -109,6 +109,8 @@ sub getuid
 	if(!defined($name)) {
 		$name=$ENV{'REMOTE_USER'};
 	}
+
+	$name=$self->myquote($name);
 
 	$s=$self->doQuery("select getwwwuser($name)");
 	$r=$s->fetch;
