@@ -34,12 +34,12 @@ a backup. Then proceed to copy all the new includes over the top
 of the old. remember here, you have to use cp -R to bring the
 directories (subdirectories) with.
 
-Step 4. Restart the Servlet Engine (Jserv) and the PhotoServlet
+Step 5. Restart the Servlet Engine (Jserv) and the PhotoServlet
 
 This step is already in detail. Just restart the serlvet engine
 and the PhotoServlet itself, and you should be off and running.
 
-Set 5.  Update configuration
+Step 6.  Update configuration
 
 If you're upgrading from a PhotoServlet older than 2000/06/30, you will
 need to update your config files, specifically, spyrunner.conf.  DoBindings
@@ -49,13 +49,13 @@ directory and modify it for your needs.
 If you would prefer to to just update your existing config, then you'll need
 to do the following things:
  
- 5.a
+ 6.a
 
    remove ``spyservices'' from the ``apps'' line of the spyrunner.conf and
        replace it with two entries, one for ``rcache'' and one for
 	   ``imageserver''
 
- 5.b
+ 6.b
 
     Add the following entries:
 
@@ -64,6 +64,28 @@ to do the following things:
 
 	   imageserver.class    net.spy.rmi.ImageServerImpl
 	   imageserver.args     /path/to/imageserver.conf
+
+----------------------------------------------------------------------
+
+MIGRATION KITS
+
+If you are upgrading to a release before 2000/07/16, you will need a
+migration kit.  The current migration kit is 01.
+
+Please be sure to back up your data before you attempt to run the migration
+kit.  Remember:  Data loss is your fault.  :)
+
+Also, this release uses a new PhotoImage format, so you'll need to rm -rf
+your cache before restarting the spyservices.
+
+Once you've got your data backed up, cache cleared, and spyservices running
+under the new version, you can use the following command to beging the
+migration:
+
+	java net.spy.photo.migration.PhotoMigration01
+
+It may take a while depending on how many images you have.  When it's done,
+every image (including thumbnails) will be cached and ready to go.
 
 ----------------------------------------------------------------------
 
@@ -154,4 +176,4 @@ images showing up as ``admin'' do you?  :)
 
 Let me know if you have any problems.
 
-$Id: HOWTO,v 1.4 2000/06/30 05:57:19 dustin Exp $
+$Id: HOWTO,v 1.5 2000/07/16 08:57:19 dustin Exp $
