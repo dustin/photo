@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogImageEntry.java,v 1.5 2002/02/24 21:43:37 dustin Exp $
+ * $Id: PhotoLogImageEntry.java,v 1.6 2002/02/24 22:50:29 dustin Exp $
  */
 
 package net.spy.photo;
@@ -55,7 +55,7 @@ public class PhotoLogImageEntry extends SpyLogEntry {
 		java.sql.Timestamp ts=new java.sql.Timestamp(timestamp);
 		StringBuffer sb=new StringBuffer();
 
-		sb.append("insert into photo_log(log_type, photo_id, wwwuser_id,");
+		sb.append("insert into photo_logs(log_type, photo_id, wwwuser_id,");
 		sb.append(" remote_addr, user_agent, extra_info, ts) values(");
 
 		sb.append("get_log_type('ImgView'), ");
@@ -68,11 +68,11 @@ public class PhotoLogImageEntry extends SpyLogEntry {
 
 		sb.append("'");
 		sb.append(remote_addr);
-		sb.append("'");
+		sb.append("', ");
 
 		sb.append("get_agent('");
 		sb.append(PhotoUtil.dbquote_str(user_agent));
-		sb.append("',");
+		sb.append("'), ");
 
 		if(size==null) {
 			sb.append("null, ");

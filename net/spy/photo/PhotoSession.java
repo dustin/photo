@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.100 2002/02/24 21:43:37 dustin Exp $
+ * $Id: PhotoSession.java,v 1.101 2002/02/24 22:50:29 dustin Exp $
  */
 
 package net.spy.photo;
@@ -642,12 +642,14 @@ public class PhotoSession extends Object
 
 			// Log that the data was stored in the cache, so that, perhaps,
 			// it can be permanently stored later on.
-			query = "insert into upload_log (photo_id, wwwuser_id, ts)\n"
-				+ "  values(?, ?, ?)\n";
+			query = "insert into photo_logs "
+				+ "(log_type, photo_id, wwwuser_id, remote_addr, user_agent)\n"
+				+ "  values(get_log_type('Upload'), ?, ?, ?, get_agent(?))\n";
 			st=photo.prepareStatement(query);
 			st.setInt(1, id);
 			st.setInt(2, sessionData.getUser().getId());
-			st.setDate(3, new java.sql.Date(System.currentTimeMillis()));
+			st.setString(3, request.getRemoteAddr());
+			st.setString(4, request.getHeader("User-Agent"));
 			st.executeUpdate();
 
 			photo.commit();
@@ -1071,7 +1073,9 @@ public class PhotoSession extends Object
 		ret=(String)cache.get(key);
 		if(ret==null) {
 			SpyDB db=new SpyDB(conf);
-			ResultSet rs=db.executeQuery("select count(*) from photo_log");
+			ResultSet rs=db.executeQuery(
+				"select count(*) from photo_logs\n"
+					+ " where log_type=get_log_type('ImgView')");
 			rs.next();
 			ret=nf.format(rs.getInt(1));
 			// Recalculate every hour

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.7 2002/02/22 04:18:56 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.8 2002/02/24 22:50:29 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -97,8 +97,9 @@ public class PhotoStorerThread extends Thread {
 			pst.close();
 			pst=null;
 			PreparedStatement pst2=db.prepareStatement(
-				"update upload_log set stored=datetime(now())\n"
-					+ "  where photo_id = ?");
+				"update photo_logs set extra_info=text(now())\n"
+					+ "  where photo_id = ?\n"
+					+ "  and log_type = get_log_type('Upload')");
 			pst2.setInt(1, image_id);
 			int rows=pst2.executeUpdate();
 			if(rows!=1) {
@@ -135,7 +136,9 @@ public class PhotoStorerThread extends Thread {
 		int rv=0;
 		Vector v = new Vector();
 		try {
-			String query = "select * from upload_log where stored is null";
+			String query = "select * from photo_logs\n"
+				+ " where extra_info is null\n"
+				+ " and log_type = get_log_type('Upload')";
 			ResultSet rs=db.executeQuery(query);
 			while(rs.next()) {
 				v.addElement(rs.getString("photo_id"));

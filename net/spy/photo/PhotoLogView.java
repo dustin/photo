@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogView.java,v 1.4 2002/02/15 08:28:07 dustin Exp $
+ * $Id: PhotoLogView.java,v 1.5 2002/02/24 22:50:29 dustin Exp $
  */
 
 package net.spy.photo;
@@ -28,10 +28,11 @@ public class PhotoLogView extends PhotoHelper
 
 		query = "select wwwusers.username, log.remote_addr,\n"
 			  + "   user_agent.user_agent, log.cached, log.ts\n"
-			  + "  from wwwusers, photo_log log, user_agent\n"
-			  + "  where log.wwwuser_id = wwwusers.id and\n"
-			  + "    log.photo_id = " + photo_id + " and\n"
-			  + "    user_agent.user_agent_id = log.user_agent\n"
+			  + "  from wwwusers, photo_logs log, user_agent\n"
+			  + "  where log.wwwuser_id = wwwusers.id\n"
+			  + "    and log.photo_id = " + photo_id + "\n"
+			  + "    and user_agent.user_agent_id = log.user_agent\n"
+			  + "    and log.log_type = get_log_type('ImgView')\n"
 			  + "  order by log.ts\n";
 		try {
 			SpyDB db=new SpyDB(new PhotoConfig());

@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.24 2002/02/24 21:04:29 dustin Exp $
+-- $Id: photo.sql,v 1.25 2002/02/24 22:50:29 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -341,10 +341,13 @@ grant select on user_profile_view to nobody;
 
 -- Log view
 create view log_user_ip_agent as
-	select u.username, l.remote_addr, a.user_agent
-		from wwwusers u, photo_log l, user_agent a
-	  where u.id = l.wwwuser_id and
-	  	a.user_agent_id = l.user_agent
+	select u.username, l.ts, l.remote_addr, a.user_agent,
+		l.extra_info as img_size
+	from wwwusers u, photo_logs l, user_agent a, log_types t
+	where u.id = l.wwwuser_id and
+		a.user_agent_id = l.user_agent
+		and l.log_type = t.log_type_id
+		and t.log_type ='ImgView';
 ;
 
 grant all on log_user_ip_agent to nobody;

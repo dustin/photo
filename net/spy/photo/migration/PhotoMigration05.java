@@ -11,8 +11,9 @@ public class PhotoMigration05 extends PhotoMigration {
 			&& (hasColumn("photo_logs", "log_id"))) {
 			System.err.println("Looks like you've already run this kit.");
 		} else {
-			// Add the new columns.
 			runSqlScript("net/spy/photo/migration/migration05.sql");
+			runSqlScript("net/spy/photo/migration/migration05.ac.sql",
+				true, true);
 		}
 	}
 

@@ -46,14 +46,39 @@ public abstract class PhotoMigration extends Object {
 		return(u);
 	}
 
+	/**
+	 * Run the given script as a transaction.
+	 *
+	 * @param path The relative path to the migration sql script.
+	 */
 	protected void runSqlScript(String path) throws Exception {
+		runSqlScript(path, false, false);
+	}
+
+	/**
+	 * Run a SQL script with the ability to run it as a transaction and
+	 * ignore errors.  You may not ignore errors if the script is
+	 * transactional.
+	 *
+	 * @param path The relative path to the migration sql script.
+	 * @param autocommit If true, the script will run as a single transaction.
+	 * @param errok If true, errors will be reported, but the script will
+	 * 				continue.
+	 */
+	protected void runSqlScript(String path, boolean autocommit,
+		boolean errok) throws Exception {
+
 		URL u=findPath(path);
+
+		if(autocommit==false && errok==true) {
+			throw new Exception("Can't ignore errors on autocommit.");
+		}
 
 		System.out.println("Running SQL script from " + u);
 
 		SpyDB db=new SpyDB(new PhotoConfig());
 		Connection conn=db.getConn();
-		conn.setAutoCommit(false);
+		conn.setAutoCommit(autocommit);
 
 		LineNumberReader lr=new LineNumberReader(
 			new InputStreamReader(u.openStream()));
@@ -66,8 +91,19 @@ public abstract class PhotoMigration extends Object {
 
 				if(curline.equals(";")) {
 					Statement st=conn.createStatement();
+					int updated=0;
 					long starttime=System.currentTimeMillis();
-					int updated=st.executeUpdate(query.toString());
+					try {
+						updated=st.executeUpdate(query.toString());
+					} catch(SQLException se) {
+						if(errok) {
+							System.err.println("Query:\n" + query);
+							se.printStackTrace();
+							System.err.println("Continuing...");
+						} else {
+							throw se;
+						}
+					}
 					long stoptime=System.currentTimeMillis();
 					st.close();
 					st=null;
@@ -89,9 +125,13 @@ public abstract class PhotoMigration extends Object {
 
 			}
 
-			conn.commit();
+			if(!autocommit) {
+				conn.commit();
+			}
 		} catch(Exception e) {
-			conn.rollback();
+			if(!autocommit) {
+				conn.rollback();
+			}
 			throw e;
 		} finally {
 			conn.setAutoCommit(true);
