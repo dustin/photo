@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePhoto.java,v 1.3 2002/02/21 20:44:27 dustin Exp $
+ * $Id: CachePhoto.java,v 1.4 2002/02/22 04:18:56 dustin Exp $
  */
 
 package net.spy.photo.tools;
@@ -26,6 +26,7 @@ public class CachePhoto extends Object {
 	private SpyConfig conf=null;
 	private ImageServer server=null;
 	private String saveDir=null;
+	private Vector errors=null;
 
 	/**
 	 * Get a new CachePhoto.
@@ -36,6 +37,7 @@ public class CachePhoto extends Object {
 		conf=new PhotoConfig();
 		String source=null;
 		server = (ImageServer)Naming.lookup(conf.get("imageserver"));
+		errors=new Vector();
 	}
 
 	/**
@@ -144,9 +146,11 @@ public class CachePhoto extends Object {
 			} catch(ImageDataException ide) {
 				System.err.println("Data difference on " + id + ":  " + ide);
 				saveImage(id, dbdata_s, dbdata, data.getData());
+				errors.addElement(ide);
 			} catch(Exception e) {
 				System.err.println("Error on image " + id);
 				e.printStackTrace();
+				errors.addElement(e);
 			}
 			stats.stop();
 			System.out.println("Cached " + id 
@@ -154,6 +158,11 @@ public class CachePhoto extends Object {
 		}
 		rs.close();
 		db.close();
+
+		System.err.println("Errors:");
+		for(Enumeration e=errors.elements(); e.hasMoreElements(); ) {
+			System.err.println("\t" + e.nextElement());
+		}
 	}
 
 	/**

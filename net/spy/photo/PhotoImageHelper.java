@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.12 2002/02/21 20:44:27 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.13 2002/02/22 04:18:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -40,6 +40,13 @@ public class PhotoImageHelper extends PhotoHelper
 	}
 
 	/**
+	 * Get a full-size image.
+	 */
+	public PhotoImage getImage() throws Exception {
+		return(getImage(null));
+	}
+
+	/**
 	 * Get the full image.
 	 */
 	public PhotoImage getImage(PhotoDimensions dim)
@@ -50,7 +57,7 @@ public class PhotoImageHelper extends PhotoHelper
 
 		// Cache any images smaller than 320x200
 		PhotoDimensions pdim=new PhotoDimensionsImpl("320x200");
-		if(dim.equals(pdim) || dim.smallerThan(pdim)) {
+		if(dim!=null && (dim.equals(pdim) || dim.smallerThan(pdim))) {
 			SpyCache cache=new SpyCache();
 			String key="img_" + image_id + "_"
 				+ dim.getWidth() + "x" + dim.getHeight();

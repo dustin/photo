@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.6 2002/02/21 09:26:03 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.7 2002/02/22 04:18:56 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -26,27 +26,13 @@ public class PhotoStorerThread extends Thread {
 		this.setDaemon(true);
 	}
 
-	// Query to store an image
-	private void storeQuery(int image_id, int line,
-		Statement st, String data) throws Exception {
-		String query = "insert into image_store values(" + image_id
-			+ ", " + line + ", '" + data + "')";
-
-		// Print out the query for debug.
-		// System.err.println(query);
-
-		st.executeUpdate(query);
-	}
-
 	// Takes and image_id, pulls in the image from cache, and goes about
 	// encoding it to put it into the database in a transaction.  The last
 	// query in the transaction records the image having been stored.
 	private void storeImage(int image_id) throws Exception {
 		PhotoImageHelper p = new PhotoImageHelper(image_id);
-		SpyDB pdb = getDB();
-		Connection db = null;
-		Statement st = null;
-		PhotoImage pi = p.getImage(null);
+		SpyDB pdb = new SpyDB(new PhotoConfig());
+		PhotoImage pi = p.getImage();
 		System.err.println("Storer: Got image for " + image_id + " " 
 			+ pi.size() + " bytes of data to store.");
 		// This is an awkward way of doing this.
@@ -72,87 +58,93 @@ public class PhotoStorerThread extends Thread {
 			v.addElement(b);
 		}
 
+		Connection db=null;
 		try {
 			int i=0, n=0;
 			db = pdb.getConn();
 			db.setAutoCommit(false);
-			st = db.createStatement();
+			PreparedStatement pst=db.prepareStatement(
+				"insert into image_store (id, line, data) values(?,?,?)");
+
 			Base64 base64=new Base64();
-			String sdata = "";
+			StringBuffer sdata = new StringBuffer();
+
+			pst.setInt(1, image_id);
 
 			for(; i<v.size(); i++) {
 				String tmp = base64.encode((byte[])v.elementAt(i));
 				tmp=tmp.trim();
 
 				if(sdata.length() < CHUNK_SIZE) {
-					sdata+=tmp+"\n";
+					sdata.append(tmp);
+					sdata.append("\n");
 				} else {
-					storeQuery(image_id, n, st, sdata);
-					sdata=tmp;
-					n++;
+					pst.setInt(2, n++);
+					pst.setString(3, sdata.toString());
+					pst.executeUpdate();
+					sdata=new StringBuffer(tmp);
 				}
 			}
 			// OK, this is sick, but another one right now for the spare.
 			if(sdata.length() > 0) {
 				System.err.println("Storer:  Storing spare.");
-				storeQuery(image_id, n, st, sdata);
-				n++;
+				pst.setInt(2, n++);
+				pst.setString(3, sdata.toString());
+				pst.executeUpdate();
 			}
 			System.err.println("Storer:  Stored " + n + " lines of data for "
 				+ image_id + ".");
-			st.executeUpdate("update upload_log set stored=datetime(now())\n"
-				+ "\twhere photo_id = " + image_id);
+			pst.close();
+			pst=null;
+			PreparedStatement pst2=db.prepareStatement(
+				"update upload_log set stored=datetime(now())\n"
+					+ "  where photo_id = ?");
+			pst2.setInt(1, image_id);
+			int rows=pst2.executeUpdate();
+			if(rows!=1) {
+				throw new Exception("Didn't update any rows.");
+			}
 			db.commit();
 			// Go ahead and generate a thumbnail.
 			p.getThumbnail();
 		} catch(Exception e) {
 			// If anything happens, roll it back.
-			if( st != null) {
-				try {
-					db.rollback();
-				} catch(Exception e3) {
-					// Nothing
-				}
+			e.printStackTrace();
+			try {
+				db.rollback();
+			} catch(Exception e3) {
+				e3.printStackTrace();
 			}
 		} finally {
 			if(db!=null) {
 				try {
 					db.setAutoCommit(true);
 				} catch(Exception e) {
-					System.err.println("Error:  " + e);
+					e.printStackTrace();
 				}
 			}
-			pdb.freeDBConn();
+			pdb.close();
 		}
-	}
-
-	// Get a DB connection from the storer pool.
-	// We need a different log file to get the thing to work at all.
-	private SpyDB getDB() {
-		PhotoConfig conf=new PhotoConfig();
-		SpyDB pdb = new SpyDB(conf);
-		return(pdb);
 	}
 
 	// Get a list of images that have been added, but not yet added into
 	// the database.
 	// Returns the number of things found to flush
 	private int doFlush() {
-		SpyDB pdb = getDB();
+		SpyDB db = new SpyDB(new PhotoConfig());
 		int rv=0;
 		Vector v = new Vector();
 		try {
-			Connection db=pdb.getConn();
-			Statement st=db.createStatement();
 			String query = "select * from upload_log where stored is null";
-			ResultSet rs=st.executeQuery(query);
+			ResultSet rs=db.executeQuery(query);
 			while(rs.next()) {
 				v.addElement(rs.getString("photo_id"));
 			}
+			rs.close();
+			db.close();
 		} catch(Exception e) {
 			// Do nothing, we'll try again later.
-		} finally {
-			pdb.freeDBConn();
+			e.printStackTrace();
 		}
 
 		// Got the vector, now store the actual images.  This is done so
@@ -167,6 +159,7 @@ public class PhotoStorerThread extends Thread {
 					storeImage(Integer.valueOf(stmp).intValue());
 				}
 			} catch(Exception e) {
+				e.printStackTrace();
 				// Return 0 so we won't try again *right now*, but we will
 				// in a bit.
 				rv=0;
@@ -192,6 +185,7 @@ public class PhotoStorerThread extends Thread {
 				// Check every x minutes
 				sleep(m * 60 * 1000);
 			} catch(Exception e) {
+				e.printStackTrace();
 			}
 			// Loop immediately as often as it flushes.
 			while(doFlush()>0) {
