@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //  
-// $Id: AdminCheck.java,v 1.5 2003/07/26 08:38:27 dustin Exp $
+// $Id: AdminCheck.java,v 1.6 2003/07/26 08:49:26 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -38,7 +38,7 @@ public class AdminCheck extends ConditionalTag {
 	 * prevents admin pages from being served up to unworty beings.
 	 */
 	public void setExplodeOnImpact(String explodeOnImpact) {
-		this.explodeOnImpact=Boolean.getBoolean(explodeOnImpact);
+		this.explodeOnImpact=Boolean.valueOf(explodeOnImpact).booleanValue();
 	}
 
 	/**

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.18 2003/07/26 08:38:27 dustin Exp $
+// $Id: DisplayLink.java,v 1.19 2003/07/26 08:49:26 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -85,7 +85,7 @@ public class DisplayLink extends PhotoTag {
 	 * If ``true'' show a thumbnail.
 	 */
 	public void setShowThumbnail(String to) {
-		this.showThumbnail=Boolean.getBoolean(to);
+		this.showThumbnail=Boolean.valueOf(to).booleanValue();
 	}
 
 	/**

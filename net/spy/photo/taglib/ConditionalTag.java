@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ConditionalTag.java,v 1.3 2003/07/26 08:38:27 dustin Exp $
+// $Id: ConditionalTag.java,v 1.4 2003/07/26 08:49:26 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -43,7 +43,7 @@ public class ConditionalTag extends PhotoTag {
 	 * Set the negate value.
 	 */
 	public void setNegate(String negate) {
-		this.negate=Boolean.getBoolean(negate);
+		this.negate=Boolean.valueOf(negate).booleanValue();
 	}
 
 	/**
