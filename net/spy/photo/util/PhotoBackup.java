@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoBackup.java,v 1.7 2002/06/23 07:34:27 dustin Exp $
+ * $Id: PhotoBackup.java,v 1.8 2002/06/24 21:50:30 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -23,15 +23,24 @@ public class PhotoBackup extends Object {
 	}
 
 	/**
-	 * Set the directory to which to write the backups.
+	 * Perform a backup to a given diretory.
+	 *
+	 * @param cat the name of the category to back up, if null, back up all
+	 *			categories.
+	 * @param dir the directory to which to write the backup
 	 */
-	public void backupTo(String dir) throws Exception {
+	public void backup(String cat, String dir) throws Exception {
 		SpyDB db=new SpyDB(new PhotoConfig());
 
-		backupAlbum(db, dir);
+		if(dir==null) {
+			throw new NullPointerException("Directory was null.");
+		}
+
+		backupAlbum(db, cat, dir);
 	}
 
-	private void backupAlbum(SpyDB db, String dir) throws Exception {
+	private void backupAlbum(SpyDB db, String cat, String dir)
+		throws Exception {
 
 		// First, make our directory.
 		String basedir=dir + "/album/";
@@ -40,14 +49,31 @@ public class PhotoBackup extends Object {
 
 		// Next, grab all the IDs we need
 		Vector ids=new Vector();
-		ResultSet rs=db.executeQuery("select id from album");
+
+		PreparedStatement pst=null;
+		if(cat==null) {
+			pst=db.prepareStatement("select id from album");
+		} else {
+			pst=db.prepareStatement("select album.id\n"
+				+ "from album, cat\n"
+				+ " where album.cat=cat.id and cat.name=?");
+			pst.setString(1, cat);
+		}
+
+		ResultSet rs=pst.executeQuery();
 		while(rs.next()) {
 			ids.addElement(new Integer(rs.getInt("id")));
 		}
 
 		// Statistics.
 		BackupStats bs=new BackupStats(ids.size());
-		System.out.println("Beginning backups on " + ids.size() + " objects.");
+		if(cat==null) {
+			System.out.println("Beginning backup of all categories, totalling "
+				+ ids.size() + " objects.");
+		} else {
+			System.out.println("Beginning backup of category ``" + cat
+				+ "'', " + ids.size() + " objects.");
+		}
 
 		// Flip through the IDs and back 'em up.
 		for(Enumeration e=ids.elements(); e.hasMoreElements(); ) {
@@ -88,12 +114,24 @@ public class PhotoBackup extends Object {
 	}
 
 	/**
-	 * Perform a backup.  argv[0] is the destination directory where the
-	 * backups will be written.
+	 * Perform a backup.
+	 *
+	 * Usage:  PhotoBackup /path/to/store/backups [CategoryName ...]
 	 */
 	public static void main(String args[]) throws Exception {
 		PhotoBackup pb=new PhotoBackup();
-		pb.backupTo(args[0]);
+		String cat=null;
+		String dir=null;
+		if(args.length==1) {
+			dir=args[0];
+			pb.backup(null, dir);
+		} else {
+			for(int i=1; i<args.length; i++) {
+				dir=args[0];
+				cat=args[i];
+				pb.backup(cat, dir);
+			}
+		}
 	}
 
 	private class BackupStats extends Object {

@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoRestore.java,v 1.5 2002/06/23 07:34:27 dustin Exp $
+// $Id: PhotoRestore.java,v 1.6 2002/06/24 21:50:30 dustin Exp $
 
 package net.spy.photo.util;
 
@@ -59,17 +59,19 @@ public class PhotoRestore extends Object {
 	}
 
 	/**
-	 * Restore an image.
+	 * Restore an image or a series of images.
 	 */
 	public static void main(String args[]) throws Exception {
 		PhotoRestore pr=new PhotoRestore();
 
-		// Get the stream
+		for(int i=0; i<args.length; i++) {
+			// Get the stream
 
-		FileInputStream fis=new FileInputStream(args[0]);
-		GZIPInputStream gis=new GZIPInputStream(fis);
+			FileInputStream fis=new FileInputStream(args[i]);
+			GZIPInputStream gis=new GZIPInputStream(fis);
 
-		BackupEntry be = pr.restore(gis);
-		gis.close();
+			BackupEntry be = pr.restore(gis);
+			gis.close();
+		}
 	}
 }

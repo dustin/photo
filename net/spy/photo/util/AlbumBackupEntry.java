@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.12 2002/06/23 07:34:27 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.13 2002/06/24 21:50:30 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -94,14 +94,16 @@ public class AlbumBackupEntry extends BackupEntry {
 
 			PreparedStatement pst2=conn.prepareStatement(
 				"insert into photo_logs "
-				+ "(log_type, photo_id, wwwuser_id, remote_addr, user_agent)\n"
-				+ "  values(get_log_type('Upload'), ?, ?, ?, get_agent(?))\n"
+					+ "(log_type, photo_id, wwwuser_id, remote_addr, "
+					+ "user_agent, ts)\n"
+					+ "  values(get_log_type('Upload'), ?, ?, ?, "
+					+ "   get_agent(?), ?)\n"
 				);
 			pst2.setInt(1, id);
 			pst2.setInt(2, getUserid());
 			pst2.setString(3, "127.0.0.1");
 			pst2.setString(4, "PhotoRestore");
-			pst2.setTimestamp(3,
+			pst2.setTimestamp(5,
 				new java.sql.Timestamp(start_ts));
 			pst2.executeUpdate();
 
