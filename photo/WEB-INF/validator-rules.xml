@@ -46,7 +46,7 @@
 
 			<!-- Looks at secondProperty -->
 			<validator name="twofields"
-				classname="net.spy.photo.struts.ValidationUtils"
+				classname="net.spy.jwebkit.struts.ValidationUtils"
 				method="validateTwoFields"
 				methodParams="java.lang.Object,
 					org.apache.commons.validator.ValidatorAction,
