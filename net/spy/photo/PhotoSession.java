@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.81 2002/02/15 08:28:07 dustin Exp $
+ * $Id: PhotoSession.java,v 1.82 2002/02/15 09:10:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -251,6 +251,8 @@ public class PhotoSession extends Object
 		} else if(func.equals("xmlraw")) {
 			setXMLRaw();
 			out=doIndex();
+		} else if(func.equals("forgotpassword")) {
+			forgotPassword();
 		} else if(func.equals("setcred")) {
 			setCreds();
 			out=doIndex();
@@ -313,9 +315,36 @@ public class PhotoSession extends Object
 		}
 	}
 
-	private void forgotPassword() throws ServletException, IOException {
+	private void forgotPassword() throws Exception {
 		String username=request.getParameter("username");
-		// XXX finish
+		PhotoUser pu=security.getUser(username);
+		PhotoXML xml=new PhotoXML();
+
+		if(pu==null) {
+			xml.setTitle("No Such User");
+			xml.addBodyPart(getGlobalMeta());
+			xml.addBodyPart("<no_such_user>\n"
+				+ "<id>" + username + "</id>"
+				+ "</no_such_user>");
+		} else {
+			String newPass=PwGen.getPass(8);
+			pu.setPassword(newPass);
+			pu.save();
+
+			Mailer m=new Mailer();
+			m.setTo(pu.getEmail());
+			m.setSubject("New Password for Photo Album");
+			m.setBody("\n\nYour new password for " + pu.getUsername()
+				+ " is " + newPass + "\n\n");
+			m.send();
+			xml.setTitle("Password Changed");
+			xml.addBodyPart(getGlobalMeta());
+			xml.addBodyPart("<generated_password>\n"
+				+ "<username>" + pu.getUsername() + "</username>"
+				+ "<email>" + pu.getEmail() + "</email>"
+				+ "</generated_password>");
+		}
+		sendXML(xml.toString());
 	}
 
 	private void setCreds() throws ServletException, IOException {

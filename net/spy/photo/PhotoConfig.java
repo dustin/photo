@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoConfig.java,v 1.8 2001/12/29 06:19:40 dustin Exp $
+ * $Id: PhotoConfig.java,v 1.9 2002/02/15 09:10:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -37,6 +37,9 @@ public class PhotoConfig extends SpyConfig {
 		orput("timezone", "GMT");
 		orput("cryptohash", "SHA");
 		orput("storer_sleep", "10");
+
+		orput("mail_server", "mail");
+		orput("mail_sender", "dustin+photoservlet@spy.net");
 
 		// XSLT processor
 		orput("xslt_processor", "net.spy.photo.xslt.ResinXSLT");
