@@ -6,6 +6,9 @@ package net.spy.photo;
 
 import java.io.Serializable;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -21,6 +24,9 @@ import net.spy.photo.sp.GetPhotoInfo;
  */
 public class PhotoImageDataImpl extends SpyObject
 	implements Serializable, PhotoImageData {
+
+	private static final String CACHE_KEY="image_data";
+	private static final long CACHE_TIME=3600000;
 
 	private int id=-1;
 	private String keywords=null;
@@ -41,8 +47,9 @@ public class PhotoImageDataImpl extends SpyObject
 	private String timestamp=null;
 	private String taken=null;
 
-	private PhotoImageDataImpl() {
+	private PhotoImageDataImpl(ResultSet rs) throws Exception {
 		super();
+		initFromResultSet(rs);
 	}
 
 	/**
@@ -123,42 +130,48 @@ public class PhotoImageDataImpl extends SpyObject
 		}
 	}
 
+	private static Map getCache() throws Exception {
+		SpyCache sc=SpyCache.getInstance();
+		Map rv=(Map)sc.get(CACHE_KEY);
+		if(rv == null) {
+			rv=initFromDB();
+			sc.store(CACHE_KEY, rv, CACHE_TIME);
+		}
+		return(rv);
+	}
+
+	/** 
+	 * Clear the image data cache.
+	 */
+	public static void clearCache() {
+		SpyCache sc=SpyCache.getInstance();
+		sc.uncache(CACHE_KEY);
+	}
+
 	/**
 	 * Get the data for the given ID and calculate the scaled image size
 	 * down to fit within the provided dimensions.
 	 */
 	public static PhotoImageData getData(int id) throws Exception {
-
-		SpyCache sc=SpyCache.getInstance();
-
-		String key="photo_idata_" + id;
-		PhotoImageData rv=(PhotoImageData)sc.get(key);
-		if(rv==null) {
-			rv=getDataFromDB(id);
-
-			// Cache it for an hour.
-			sc.store(key, rv, 3600000);
+		Map m=getCache();
+		PhotoImageData rv=(PhotoImageData)m.get(new Integer(id));
+		if(rv == null) {
+			throw new Exception("No nuch image:  " + id);
 		}
-
 		return(rv);
 	}
 
 	// Go get the live data.
-	private static PhotoImageData getDataFromDB(int id) throws Exception {
-		PhotoImageDataImpl rv=new PhotoImageDataImpl();
+	private static Map initFromDB() throws Exception {
+		Map rv=new HashMap();
 
 		GetPhotoInfo db=new GetPhotoInfo(PhotoConfig.getInstance());
-		db.setPhotoId(id);
 
 		ResultSet rs=db.executeQuery();
-		if(rs.next()) {
-			rv.initFromResultSet(rs);
-		} else {
-			rs.close();
-			db.close();
-			throw new Exception("No image found for " + id);
+		while(rs.next()) {
+			PhotoImageDataImpl pidi=new PhotoImageDataImpl(rs);
+			rv.put(new Integer(pidi.getId()), pidi);
 		}
-
 		rs.close();
 		db.close();
 

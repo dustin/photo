@@ -22,14 +22,7 @@ select
 		a.id,
 		c.name as catname
 	from
-		album a,
-		cat c
-	where
-		a.cat=c.id
-		and a.id=?
-
-@params
-photo_id required INTEGER The ID of the photo to look up
+		album a inner join cat c on(a.cat = c.id)
 
 @results
 descr VARCHAR Description of this image
@@ -43,4 +36,3 @@ height INTEGER Height of this image
 ts TIMESTAMP Time this image made it into the database
 id INTEGER ID of this image
 catname VARCHAR Name of the category in which this image is
-

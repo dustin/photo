@@ -212,6 +212,9 @@ public class PhotoSaver extends SpyObject {
 			// Image is stored, commit.
 			conn.commit();
 
+			// Clear the image data cache
+			PhotoImageDataImpl.clearCache();
+
 		} catch(Exception e) {
 			try {
 				if(conn!=null) {
