@@ -167,17 +167,25 @@
 						</xsl:if>
 						<xsl:if test="/page/meta_stuff/photo_user/canadd">
 							<li>
-								<a href="{/page/meta_stuff/self_uri}?func=addform">Add a new Image</a>
+								<a href="{/page/meta_stuff/self_uri}?func=addform">
+									Add a new Image</a>
 							</li>
 						</xsl:if>
 						<li>
-							<a href="{/page/meta_stuff/self_uri}?func=findform">Advanced Search</a>
+							<a href="{/page/meta_stuff/self_uri}?func=findform">
+							Advanced Search</a>
 						</li>
 						<li>
-							<a href="{/page/meta_stuff/self_uri}?func=catview">Category View</a>
+							<a href="{/page/meta_stuff/self_uri}?func=catview">
+								Category View</a>
 						</li>
 						<li>
-							<a href="{/page/meta_stuff/self_uri}?func=newuserform">Create an Account</a>
+							<a href="{/page/meta_stuff/self_uri}?func=listcomments&amp;start=true">
+								View Recent Comments</a>
+						</li>
+						<li>
+							<a href="{/page/meta_stuff/self_uri}?func=newuserform">
+								Create an Account</a>
 						</li>
 					</ul>
 				</p>
@@ -574,6 +582,54 @@ E-mailed to you.
 		</table>
 		</center>
 	</form>
+</xsl:template>
+
+<xsl:template match="all_comments">
+	<table width="100%">
+		<xsl:for-each select="photo_comment">
+			<tr valign="top">
+				<td>
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={photo_id}">
+						<img border="0"
+							src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={photo_id}&amp;thumbnail=1"/>
+					</a>
+				</td>
+
+				<td>
+					<table class="comments" width="100%">
+						<tr valign="top" class="comment_header">
+							<td>At <xsl:value-of select="timestamp"/>&#160;
+								<xsl:value-of select="photo_user/realname"/> said the
+								following:
+							</td>
+						</tr>
+						<tr valign="top" class="comment_body">
+							<td>
+								<xsl:value-of select="note"/>
+							</td>
+						</tr>
+					</table>
+
+				</td>
+			</tr>
+		</xsl:for-each>
+	</table>
+
+	<br/>
+
+	<!-- if there are more, link to them -->
+	<xsl:variable name="r" select="meta_stuff/linktomore/remaining"/>
+	<xsl:if test="$r>0">
+		<xsl:value-of select="$r"/> results remaining.<p/>
+		<form method="POST" action="{/page/meta_stuff/self_uri}">
+			<input type="hidden" name="func" value="listcomments"/>
+			<input type="hidden" name="startfrom"
+				value="{meta_stuff/linktomore/startfrom}"/>
+			<input type="submit"
+				value="Next {meta_stuff/linktomore/nextpage}"/>
+		</form>
+	</xsl:if>
+
 </xsl:template>
 
 <xsl:template match="adm_new_profile">
