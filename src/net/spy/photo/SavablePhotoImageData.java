@@ -2,6 +2,7 @@
 
 package net.spy.photo;
 
+import java.util.TreeSet;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Date;
@@ -69,6 +70,8 @@ public class SavablePhotoImageData extends AbstractSavable
 		this.size=data.size();
 		this.format=data.getFormat();
 		this.timestamp=new Date();
+
+		keywords=new TreeSet();
 
 		id=getNewImageId();
 		setNew(true);

@@ -12,6 +12,7 @@ Store the basic fields of a new image.
 insert
 		into album(
 			id,
+			keywords,
 			descr,
 			cat,
 			taken,
@@ -22,7 +23,7 @@ insert
 			height,
 			format_id
 		)
-		values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		values(?, '', ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
 @params
 image_id required INTEGER New image ID
