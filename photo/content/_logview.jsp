@@ -28,7 +28,7 @@
 	<th>When</th>
 </tr>
 
-<logic:iterate id="log" type="net.spy.photo.PhotoLogViewEntry"
+<logic:iterate id="log" type="net.spy.photo.log.PhotoLogViewEntry"
 	collection="<%= PhotoLogViewEntry.getViewersOf(id) %>">
 
 	<tr>
