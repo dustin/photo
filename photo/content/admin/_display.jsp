@@ -10,8 +10,6 @@
 	Integer searchId=(Integer)request.getAttribute("search_id");
 %>
 
-<h1>ADMIN DISPLAY</h1>
-
 	<table width="100%">
 		<tr valign="top">
 			<c:if test="{not empty searchId}">
