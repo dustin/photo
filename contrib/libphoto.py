@@ -7,6 +7,7 @@ Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 """
 
 import os
+import urllib
 import urllib2
 import xml.sax
 try:
@@ -77,6 +78,16 @@ def parseIndex(path, handler):
     """Parse the index at the given path."""
     d=xml.sax.parse(path, handler)
 
+def authenticate(baseurl, username, password):
+    if baseurl[-1] != '/':
+        baseurl = baseurl + "/"
+    req=urllib2.Request(baseurl + "login.do",
+        urllib.urlencode({'username': username, 'password': password}))
+    res=urlopener.open(req)
+    res.read()
+    # XXX:  Need to validate the authentication was successful
+    res.close()
+
 def fetchIndex(baseurl):
     """Fetch the export index, return a reader"""
     if baseurl[-1] != '/':
@@ -89,6 +100,8 @@ def fetchIndex(baseurl):
 
 def fetchImage(baseurl, id, size=None, thumbnail=False):
     """Fetch an image"""
+    if baseurl[-1] != '/':
+        baseurl = baseurl + "/"
 
     imgurl="%sPhotoServlet?id=%d" % (baseurl, id)
     if size is not None:

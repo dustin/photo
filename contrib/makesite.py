@@ -12,6 +12,7 @@ import time
 import posix
 import shutil
 import getopt
+import getpass
 import libphoto
 import exceptions
 
@@ -256,6 +257,11 @@ def go():
     mymkdir(config['destdir'])
     os.chdir(config['destdir'])
 
+    # Authenticate if we should
+    if config.has_key('-a'):
+        libphoto.authenticate(config['baseurl'],
+            config['-a'], config['passwd'])
+
     if os.path.exists("index.xml"):
         if config.has_key('-f'):
             timefn(fetchIndex, "index fetch")
@@ -281,7 +287,7 @@ def go():
 def parseArgs():
     global config
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'vf')
+        opts, args = getopt.getopt(sys.argv[1:], 'vfa:')
         config = dict(opts)
     except getopt.GetoptError, e:
         raise UsageError(e)
@@ -295,10 +301,14 @@ def parseArgs():
     except ValueError, e:
         raise UsageError("Need photourl and destdir")
 
+    if config.has_key('-a'):
+        config['passwd']=getpass.getpass("Password for %s: " % config['-a'])
+
 # Start
 
 def usage():
-    print "Usage:  %s [-v] [-f] photurl destdir" % (sys.argv[0], );
+    print "Usage:  %s [-v] [-f] [-a user] photurl destdir" % (sys.argv[0], );
+    print " -a authenticate as the given user"
     print " -v verbose"
     print " -f fetch index even if we already have one"
     sys.exit(1)
