@@ -7,9 +7,12 @@
 
 <ul>
     <li><a href="%SELF_URI%?func=repmostpopular">Popular Images</a></li>
+    <li><a href="%SELF_URI%?func=repuserview">User Image Views</a></li>
     <li><a href="%SELF_URI%?func=repmostpopular30d">Popular Images
 		(last 30 days)</a></li>
     <li><a href="%SELF_URI%?func=repmostcommonip">Common IP Addresses</a></li>
+	<li><a href="%SELF_URI%?func=repratebymonth">View Rates by Month</a></li>
+	<li><a href="%SELF_URI%?func=repupratebymonth">Upload Rates by Month</a></li>
     <li><a href="%SELF_URI%?func=repauth">Auth Report</a></li>
     <li><a href="%SELF_URI%?func=replogs">Logs</a></li>
 </ul>
