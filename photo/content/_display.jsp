@@ -58,10 +58,20 @@
 	</p>
 
 <photo:guest negate="true">
-	[<a href="logview.jsp?id=<%= "" + image.getId() %>"> Who's seen this?</a>] | 
+	[<photo:link url='<%= "/logview.jsp?id=" + image.getId() %>'>
+			Who's seen this?
+	</photo:link>] | 
+	[<photo:link url='<%= "/addToGallery.do?id=" + image.getId() %>'>
+		Add to Gallery
+	</photo:link>] | 
 </photo:guest>
-[<a href="display.jsp?id=<%= "" + image.getId() %>">Linkable image</a>] |
-[<a href="PhotoServlet/<%= image.getId() %>.jpg?photo_id=<%= image.getId() %>">Full Size Image</a>]
+[<photo:imgLink id='<%= "" + image.getId() %>'>
+	Linkable image
+</photo:imgLink>] |
+[<photo:link url='<%= "/PhotoServlet/" + image.getId() + ".jpg?photo_id=" + image.getId() %>'>Full Size Image</photo:link>]
+<%--
+[<photo:imgLink id="<%= "" + image.getId() %>">Full Size Image</photo:imgLink>]
+--%>
 
 
 <p class="comments">
