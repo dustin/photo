@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.16 2000/06/30 07:59:31 dustin Exp $
+ * $Id: PhotoSession.java,v 1.17 2000/06/30 08:02:10 dustin Exp $
  */
 
 package net.spy.photo;
@@ -672,7 +672,6 @@ public class PhotoSession extends Object
 				throw new ServletException("No search id, and no search_id");
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
 			throw new ServletException("Error displaying image:  " + e);
 		}
 
