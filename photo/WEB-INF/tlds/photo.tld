@@ -153,4 +153,10 @@
 		</attribute>
 	</tag>
 
+	<!-- Info about active sessions -->
+	<tag>
+		<name>sessionInfo</name>
+		<tagclass>net.spy.photo.taglib.SessionInfo</tagclass>
+	</tag>
+
 </taglib>
