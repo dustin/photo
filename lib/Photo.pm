@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.41 1998/10/05 07:16:18 dustin Exp $
+# $Id: Photo.pm,v 1.42 1998/10/17 08:08:06 dustin Exp $
 
 package Photo;
 
@@ -374,7 +374,8 @@ sub doFind
 	$max=$q->param('maxret');	# Find the desired max return
 	$max+=0;					 # make it a number
 
-	print "<h2>Found $n match".(($n==1)?"":"es")."</h2>\n";
+	print "<h2><font face=\"Ariel,Helvetica\">Found $n match".
+	       (($n==1)?"":"es")."</font></h2>\n";
 	print "Displaying ".($start+1)."-".
 		  (($start+$max>$n)?$n:$start+$max). ":<br>\n";
 	print "<table><tr>\n";
