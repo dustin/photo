@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.104 2002/02/25 02:46:41 dustin Exp $
+ * $Id: PhotoSession.java,v 1.105 2002/02/25 04:14:36 dustin Exp $
  */
 
 package net.spy.photo;
@@ -40,10 +40,10 @@ public class PhotoSession extends Object
 	// I use this enough that I might as well have it here.
 	private PhotoConfig conf=null;
 
-	// These are public because they may be used by PhotoHelpers
-	public HttpServletRequest request=null;
-	public HttpServletResponse response=null;
-	public PhotoSessionData sessionData=null;
+	// These are package scoped because they may be used by PhotoHelpers
+	HttpServletRequest request=null;
+	HttpServletResponse response=null;
+	PhotoSessionData sessionData=null;
 
 	public PhotoSession(PhotoServlet p,
 		HttpServletRequest request,
@@ -709,9 +709,13 @@ public class PhotoSession extends Object
 		return(null);
 	}
 
-	// Get a list of categories for a select list
-	// Public because helpers use it
-	public String getCatList(int def) {
+	/**
+	 * Get a list of categories for use in a select list.  Package scoped
+	 * because helpers use it.
+	 *
+	 * @param def The ID of the default category.
+	 */
+	String getCatList(int def) {
 		String out="";
 		SpyCache cache=new SpyCache();
 
@@ -1253,7 +1257,13 @@ public class PhotoSession extends Object
 	}
 
 	// Display dispatcher -- can be called from a helper
-	public String doDisplay() throws Exception {
+	/**
+	 * Display an image by ID or search ID.  This may be called by helpers
+	 * (hence the package scope).  The parameters ``id'' or ``image_id''
+	 * will be used, if provided, else a ``search_id'' is expected to
+	 * provide the offset in the current search cursor.
+	 */
+	String doDisplay() throws Exception {
 		String out="";
 		String id=null;
 		String search_id=null;
@@ -1642,8 +1652,11 @@ public class PhotoSession extends Object
 		sessionData.setIsadmin(false);
 	}
 
-	// Returns true if the session is an admin session
-	public boolean isAdmin() {
+	/**
+	 * Return true if this session has the admin flag set.  May be called
+	 * by helpers, hence the package scope.
+	 */
+	boolean isAdmin() {
 		return(sessionData.isAdmin());
 	}
 
@@ -1668,14 +1681,15 @@ public class PhotoSession extends Object
 	/**
 	 * Get the self URI.
 	 */
-	public String getSelfURI() {
+	String getSelfURI() {
 		return(self_uri);
 	}
 
 	/**
-	 * Get the remote user.
+	 * Get the remote user.  This can be called by helpers, hence the
+	 * package scope.
 	 */
-	public PhotoUser getUser() {
+	PhotoUser getUser() {
 		return(sessionData.getUser());
 	}
 
