@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.24 2002/05/16 18:35:24 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.25 2002/05/18 03:02:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -41,7 +41,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		super();
 		this.id=id;
 		this.search_id=search_id;
-        initialize();
+		initialize();
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 			h.put(k, mydata.get(k));
 		}
 
-		h.put("ID",            "" + search_id);
+		h.put("ID",			   "" + search_id);
 
 		return(h);
 	}
@@ -156,10 +156,10 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		mydata.put("IMAGE",    "" + pid.getId());
 		mydata.put("KEYWORDS", pid.getKeywords());
 		mydata.put("DESCR",    pid.getDescr());
-		mydata.put("SIZE",     "" + pid.getSize());
+		mydata.put("SIZE",	   "" + pid.getSize());
 		mydata.put("TAKEN",    pid.getTaken());
-		mydata.put("TS",       pid.getTimestamp());
-		mydata.put("CAT",      pid.getCatName());
+		mydata.put("TS",	   pid.getTimestamp());
+		mydata.put("CAT",	   pid.getCatName());
 		mydata.put("CATNUM",   "" + pid.getCatId());
 		mydata.put("ADDEDBY",  pid.getAddedBy().getUsername());
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.119 2002/05/16 05:54:58 dustin Exp $
+ * $Id: PhotoSession.java,v 1.120 2002/05/18 03:02:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -494,7 +494,7 @@ public class PhotoSession extends Object
 			PhotoLogEntry ple=new PhotoLogEntry(
 				user.getId(), "AuthFail", request);
 			logger.log(ple);
-			log("AUTH FAILURE:  " + username);
+			log("AUTH FAILURE:	" + username);
 
 			throw new ServletException(
 				"Your username or password is incorrect.");
@@ -509,7 +509,7 @@ public class PhotoSession extends Object
 			Collection c=SavedSearch.getSearches();
 			for(Iterator i=c.iterator(); i.hasNext();) {
 				SavedSearch s=(SavedSearch)i.next();
-				out.append("    <item link=\"");
+				out.append("	<item link=\"");
 				out.append(self_uri);
 				out.append("?");
 				out.append(PhotoXSLT.normalize(s.getSearch(), true));
@@ -546,9 +546,9 @@ public class PhotoSession extends Object
 		}
 
 		// We need a short lifetime for whatever page this produces
-        long l=new java.util.Date().getTime();
-        l+=10000L;
-        response.setDateHeader("Expires", l);
+		long l=new java.util.Date().getTime();
+		l+=10000L;
+		response.setDateHeader("Expires", l);
 
 		File f = multi.getFile("picture");
 
@@ -560,7 +560,7 @@ public class PhotoSession extends Object
 		if(f.length()==0) {
 			f.delete();
 			throw new ServletException(
-				"I did not receive any data for the file you uploaded.  "
+				"I did not receive any data for the file you uploaded.	"
 				+ "Perhaps you selected a file that doesn't exist?");
 		}
 
@@ -718,10 +718,10 @@ public class PhotoSession extends Object
 				SpyDB photo=new SpyDB(conf);
 
 				String query = "select * from cat where id in\n"
-			  		+ "(select cat from wwwacl where\n"
-			  		+ "    (userid=? or userid=?) "
-					+ "     and " + column + "=true)\n"
-			  		+ "order by name\n";
+					+ "(select cat from wwwacl where\n"
+					+ "    (userid=? or userid=?) "
+					+ "		and " + column + "=true)\n"
+					+ "order by name\n";
 
 				PreparedStatement st = photo.prepareStatement(query);
 				st.setInt(1, sessionData.getUser().getId());
@@ -734,7 +734,7 @@ public class PhotoSession extends Object
 					if(id==def) {
 						selected=" selected=\"1\"";
 					}
-					out += "    <option value=\"" + id + "\"" + selected
+					out += "	<option value=\"" + id + "\"" + selected
 						+ ">" + rs.getString("name") + "</option>\n";
 				}
 				// Cache it for five minutes
@@ -1037,10 +1037,10 @@ public class PhotoSession extends Object
 			SpyDB photo = new SpyDB(conf);
 
 			String query = "select name,id,catsum(id) as cs from cat\n"
-			  	+ "where id in\n"
-			  	+ "  (select cat from wwwacl where\n"
-			  	+ "   (userid=? or userid=?) and canview=true)\n"
-			  	+ " order by cs desc";
+				+ "where id in\n"
+				+ "  (select cat from wwwacl where\n"
+				+ "   (userid=? or userid=?) and canview=true)\n"
+				+ " order by cs desc";
 			PreparedStatement st = photo.prepareStatement(query);
 			st.setInt(1, sessionData.getUser().getId());
 			st.setInt(2, PhotoUtil.getDefaultId());
@@ -1650,7 +1650,7 @@ public class PhotoSession extends Object
 	}
 
 	/**
-	 * Return true if this session has the admin flag set.  May be called
+	 * Return true if this session has the admin flag set.	May be called
 	 * by helpers, hence the package scope.
 	 */
 	boolean isAdmin() {

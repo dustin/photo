@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CursorForm.java,v 1.1 2002/05/16 17:07:02 dustin Exp $
+// $Id: CursorForm.java,v 1.2 2002/05/18 03:02:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -15,8 +15,8 @@ import org.apache.struts.action.ActionMapping;
  */
 public class CursorForm extends ActionForm {
 
-    private String startOffset=null;
-    private String whichCursor=null;
+	private String startOffset=null;
+	private String whichCursor=null;
 
 	/**
 	 * Get an instance of LoginForm.
@@ -25,36 +25,36 @@ public class CursorForm extends ActionForm {
 		super();
 	}
 
-    /**
-     * Set the start offset for the current page.
-     */
-    public void setStartOffset(String startOffset) {
-        this.startOffset=startOffset;
-    }
+	/**
+	 * Set the start offset for the current page.
+	 */
+	public void setStartOffset(String startOffset) {
+		this.startOffset=startOffset;
+	}
 
-    /**
-     * Get the start offset for the current page (null if not set).
-     */
-    public String getStartOffset() {
-        return(startOffset);
-    }
+	/**
+	 * Get the start offset for the current page (null if not set).
+	 */
+	public String getStartOffset() {
+		return(startOffset);
+	}
 
-    /**
-     * Set the name of the cursor that needs to be adjusted.
-     *
-     * @param whichCursor must be <code>results</code> or
-     * <code>comments</code>
-     */
-    public void setWhichCursor(String whichCursor) {
-        this.whichCursor=whichCursor;
-    }
+	/**
+	 * Set the name of the cursor that needs to be adjusted.
+	 *
+	 * @param whichCursor must be <code>results</code> or
+	 * <code>comments</code>
+	 */
+	public void setWhichCursor(String whichCursor) {
+		this.whichCursor=whichCursor;
+	}
 
-    /**
-     * Get the name of the cursor that needs to be adjusted.
-     */
-    public String getWhichCursor() {
-        return(whichCursor);
-    }
+	/**
+	 * Get the name of the cursor that needs to be adjusted.
+	 */
+	public String getWhichCursor() {
+		return(whichCursor);
+	}
 
 	/**
 	 * Reset all properties to their default values.
@@ -63,8 +63,8 @@ public class CursorForm extends ActionForm {
 	 * @param request The servlet request we are processing
 	 */
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-        startOffset=null;
-        whichCursor=null;
+		startOffset=null;
+		whichCursor=null;
 	}
 
 	/**
@@ -76,26 +76,26 @@ public class CursorForm extends ActionForm {
 	public ActionErrors validate(ActionMapping mapping,
 		HttpServletRequest request) {
 
-        // If startOffset isn't a valid number, null it.
-        try {
-            Integer.parseInt(startOffset);
-        } catch(NumberFormatException nfe) {
-            nfe.printStackTrace();
-            startOffset=null;
-        }
+		// If startOffset isn't a valid number, null it.
+		try {
+			Integer.parseInt(startOffset);
+		} catch(NumberFormatException nfe) {
+			nfe.printStackTrace();
+			startOffset=null;
+		}
 
-        if(whichCursor!=null) {
-            if(whichCursor.equals("results")) {
-                // OK
-            } else if(whichCursor.equals("comments")) {
-                // OK
-            } else {
-                // Not OK, reset it
-                whichCursor=null;
-            }
-        }
+		if(whichCursor!=null) {
+			if(whichCursor.equals("results")) {
+				// OK
+			} else if(whichCursor.equals("comments")) {
+				// OK
+			} else {
+				// Not OK, reset it
+				whichCursor=null;
+			}
+		}
 
-        // There will be no errors
+		// There will be no errors
 		return(null);
 	}
 
