@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImgSrcTag.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: ImgSrcTag.java,v 1.3 2003/08/08 05:52:56 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -16,7 +16,7 @@ import net.spy.photo.PhotoUtil;
 public class ImgSrcTag extends PhotoTag {
 
 	private String url=null;
-	private String border=null;
+	private String styleClass=null;
 	private String width=null;
 	private String height=null;
 	private String alt=null;
@@ -37,10 +37,10 @@ public class ImgSrcTag extends PhotoTag {
 	}
 
 	/**
-	 * Set a border setting for this image.
+	 * Set an HTML class setting for this image.
 	 */
-	public void setBorder(String border) {
-		this.border=border;
+	public void setBorder(String styleClass) {
+		this.styleClass=styleClass;
 	}
 
 	/**
@@ -76,9 +76,9 @@ public class ImgSrcTag extends PhotoTag {
 		sb.append(PhotoUtil.getRelativeUri(req, url));
 		sb.append("\"");
 
-		if(border!=null) {
-			sb.append(" border=\"");
-			sb.append(border);
+		if(styleClass!=null) {
+			sb.append(" class=\"");
+			sb.append(styleClass);
 			sb.append("\""); 
 		}
 
@@ -94,11 +94,12 @@ public class ImgSrcTag extends PhotoTag {
 			sb.append("\""); 
 		}
 
-		if(alt!=null) {
-			sb.append(" alt=\"");
-			sb.append(alt);
-			sb.append("\""); 
+		if(alt==null) {
+			alt="";
 		}
+		sb.append(" alt=\"");
+		sb.append(alt);
+		sb.append("\""); 
 
 		sb.append("/>");
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Stylesheet.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: Stylesheet.java,v 1.3 2003/08/08 05:52:56 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -48,7 +48,7 @@ public class Stylesheet extends PhotoTag {
 		sb.append("<link href=\"");
 		HttpServletRequest req=(HttpServletRequest)pageContext.getRequest();
 		sb.append(PhotoUtil.getRelativeUri(req, url));
-		sb.append("\" rel=\"stylesheet\">");
+		sb.append("\" rel=\"stylesheet\" />");
 
 		try {
 			pageContext.getOut().write(sb.toString());

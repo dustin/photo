@@ -1,8 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SavedSearch.java,v 1.3 2002/07/10 03:38:08 dustin Exp $
+// $Id: SavedSearch.java,v 1.4 2003/08/08 05:52:56 dustin Exp $
 
 package net.spy.photo;
+
+import java.net.URLEncoder;
+
+import java.io.UnsupportedEncodingException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +23,8 @@ import net.spy.util.Base64;
  * Represents a saved search entry.
  */
 public class SavedSearch extends Object {
+
+	private static final String CHARSET="UTF-8";
 
 	private String name=null;
 	private String search=null;
@@ -63,6 +69,13 @@ public class SavedSearch extends Object {
 	 */
 	public String getSearch() {
 		return(search);
+	}
+
+	/** 
+	 * Get the search parameters, URL encoded.
+	 */
+	public String getSearchURL() throws UnsupportedEncodingException {
+		return(URLEncoder.encode(search, CHARSET));
 	}
 
 	/**

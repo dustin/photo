@@ -13,32 +13,36 @@
 	}
 %>
 
-<p>
+<div>
 
 <table width="100%">
 <tr>
 <photo:canAdd>
 	<% if(sessionData.getEncodedSearch() != null) { %>
-	<td valign="top" align="left">
+	<td valign="top" class="leftAligned">
 		<form method="POST" action="savesearch.do">
+			<div>
 			<input type="hidden" name="search"
 				value="<%= sessionData.getEncodedSearch() %>"/>
 			Save search as:  <input name="name"/>
 			<html:submit>Save</html:submit>
+		</div>
 		</form>
 	</td>
 	<% } %>
 </photo:canAdd>
 
-	<td valign="top" align="right">
-		<div align="right" class="search_matches">
+	<td valign="top" class="rightAligned">
+		<div class="rightAligned search_matches">
 			Search matched <%= results.size() %> entries.
 		</div>
 	</td>
 </tr>
 </table>
 
-<p class="search_results">
+</div>
+
+<div class="search_results">
 
 <table>
 
@@ -47,14 +51,14 @@
 	length="<%= "" + results.getMaxRet() %>">
 
 <tr>
-	<td width="25%" align="center">
+	<td style="width: 25%" class="centered">
 		<photo:imgLink id="<%= image.getId() %>"
 			searchId="<%= image.getSearchId() %>"
 			width="<%= "" + image.getTnDims().getWidth() %>"
 			height="<%= "" + image.getTnDims().getHeight() %>"
 			showThumbnail="true"/>
 	</td>
-	<td width="25%" align="left" valign="top" bgcolor="#eFeFef">
+	<td style="width: 25%; background: #eFeFef;" class="leftAligned" valign="top">
 		ID:  <%= image.getId() %><br/>
 		Keywords:  <%= image.getKeywords() %><br/>
 		Category:  <%= image.getCatName() %><br/>
@@ -65,10 +69,10 @@
 	</td>
 </tr>
 <tr>
-	<td colspan="2" width="50%" valign="top" bgcolor="#eFeFef">
-		<blockquote>
+	<td colspan="2" style="width: 25%; background: #eFeFef;" valign="top">
+		<div class="imgDescr">
 			<%= image.getDescr() %>
-		</blockquote>
+		</div>
 	</td>
 </tr>
 
@@ -76,7 +80,7 @@
 
 </table>
 
-</p>
+</div>
 
 <%
   // Figure out if there are any more.
@@ -91,13 +95,15 @@
 
     %>
       <%= remaining %> results remaining.
-      <p>
+      <div>
       <html:form action="nextresults.do">
+				<div>
         <html:hidden property="startOffset" value="<%= nextOffsetS %>"/>
         <html:hidden property="whichCursor" value="results"/>
         <html:submit>Next <%= nextWhu %></html:submit>
+				</div>
       </html:form>
-      </p>
+      </div>
     <%
   }
 %>

@@ -173,7 +173,7 @@
 			<required>true</required>
 		</attribute>
 		<attribute>
-			<name>border</name>
+			<name>styleClass</name>
 			<required>false</required>
 		</attribute>
 		<attribute>

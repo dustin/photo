@@ -19,7 +19,7 @@
 			<td align="left" width="30%">
 					<photo:imgLink id="0" relative="prev"
 						searchId='<%= "" + searchIdS %>'>
-						<photo:imgsrc alt="previous" border="0" url="/images/prev.png"/>
+						<photo:imgsrc alt="previous" url="/images/prev.png"/>
 					</photo:imgLink>
 			</td>
 
@@ -29,40 +29,40 @@
 
 			<td align="right" width="30%">
 					<photo:link url='<%= "/display.do?search_id=" + searchIdS %>'>
-						<photo:imgsrc alt="pause" border="0" url="/images/pause.png"/>
+						<photo:imgsrc alt="pause" url="/images/pause.png"/>
 					</photo:link>
 					<photo:link url='<%= "/refreshDisplay.do?search_id=" + searchIdS %>'>
-						<photo:imgsrc alt="slideshow" border="0" url="/images/play.png"/>
+						<photo:imgsrc alt="slideshow" url="/images/play.png"/>
 					</photo:link>
 					<photo:imgLink id="<%= 0 %>" relative="next"
 							searchId="<%= "" + searchIdS %>">
-						<photo:imgsrc alt="next" border="0" url="/images/next.png"/>
+						<photo:imgsrc alt="next" url="/images/next.png"/>
 					</photo:imgLink>
 			</td>
 		</tr>
 	</table>
 <% } %>
 
-	<div align="center">
+	<div id="imgDisplay">
 		<photo:imgSrc id='<%= image.getId() %>'
 			width='<%= String.valueOf(image.getScaledDims().getWidth()) %>'
 			height='<%= String.valueOf(image.getScaledDims().getHeight()) %>'
 			scale="true"/>
 	</div>
 
-	<p>
-		<b>Category</b>: &#147;<c:out
-			value="${image.catName}"/>&#148;&nbsp;<b>Keywords</b>:
-			<i><c:out value="${image.keywords}"/></i><br>
+	<div>
+		<b>Category</b>: <q><c:out
+			value="${image.catName}"/></q>&nbsp;<b>Keywords</b>:
+			<i><c:out value="${image.keywords}"/></i><br />
 		<b>Size</b>:  <c:out value="${image.dimensions}"/>
-			(<c:out value="${image.size}"/> bytes)<br>
-		<b>Taken</b>:  <c:out value="${image.taken}"/>&nbsp; <b>Added</b>:
+			(<c:out value="${image.size}"/> bytes)<br />
+		<b>Taken</b>:  <c:out value="${image.taken}"/> <b>Added</b>:
 			<c:out value="${image.timestamp}"/>
-		by <c:out value="${image.addedBy.realName}"/><br>
+		by <c:out value="${image.addedBy.realName}"/><br />
 		<b>Info</b>:
-		<blockquote><c:out value="${image.descr}"/></blockquote>
+		<div class="imgDescr"><c:out value="${image.descr}"/></div>
 
-	</p>
+	</div>
 
 <photo:guest negate="true">
 	[<photo:link url="/logView.do" id="<%= String.valueOf(image.getId()) %>">
@@ -81,7 +81,7 @@
 --%>
 
 
-<p class="comments">
+<div class="comments">
 
 	<h1>Comments</h1>
 
@@ -100,9 +100,9 @@
 		</div>
 	</logic:iterate>
 
-</p>
+</div>
 
-<p>
+<div>
 
 	<photo:guest negate="true">
 		<bean:message key="display.comment"/><br/>
@@ -124,3 +124,4 @@
 			<html:submit>Add Comment</html:submit>
 		</html:form>
 	</photo:guest>
+</div>

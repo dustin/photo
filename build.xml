@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.44 2003/07/24 19:46:29 dustin Exp $
+	$Id: build.xml,v 1.45 2003/08/08 05:52:55 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -110,13 +110,16 @@
 		</antcall>
 	</target>
 
-	<target name="install-demo"
-			description="Update the demo installation"
-			depends="photo.jar">
+	<target name="install-demo-content"
+		description="Install the web app content without making a new jar">
 		<antcall target="install-web-app-var">
 			<param name="location" value="photodemo"/>
 		</antcall>
 	</target>
+
+	<target name="install-demo"
+			description="Update the demo installation"
+			depends="photo.jar,install-demo-content"/>
 
 	<target name="install-docs"
 		description="Install the documentation"

@@ -1,15 +1,21 @@
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
+
+<html:xhtml/>
+
+<div>
 <html:form action="/newuser" focus="profile">
 
-	<div align="center">
-		<p>
+	<div>
+		<div>
 			Registering an account requires a valid profile ID.  If you
 			don't have one, you probably shouldn't be here.
-		</p>
+		</div>
 
+
+		<div align="center" class="centered">
 		<html:errors/>
 
-		<table>
+		<table class="leftAligned">
 			<tr>
 				<td>Profile</td>
 				<td><html:text property="profile"/></td>
@@ -36,13 +42,15 @@
 			</tr>
 			<tr>
 				<td colspan="2">
-					<div align="center">
+					<div>
 						<html:submit>Add Me</html:submit>
 						<html:reset>Clear</html:reset>
 					</div>
 				</td>
 			</tr>
 		</table>
+		</div>
 	</div>
 
 </html:form>
+</div>

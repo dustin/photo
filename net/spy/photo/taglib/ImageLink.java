@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.11 2003/07/26 08:49:26 dustin Exp $
+// $Id: ImageLink.java,v 1.12 2003/08/08 05:52:56 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -99,14 +99,14 @@ public class ImageLink extends PhotoTag {
 		url.append(".jpg?id=");
 		url.append(id);
 		if(scale && (width!=null) && (height!=null)) {
-			url.append("&scale=");
+			url.append("&amp;scale=");
 			url.append(width);
 			url.append("x");
 			url.append(height);
 		}
 
 		if(showThumbnail) {
-			url.append("&thumbnail=1");
+			url.append("&amp;thumbnail=1");
 		}
 
 		// Get the response for rewriting
@@ -116,12 +116,12 @@ public class ImageLink extends PhotoTag {
 		// Finish the src attribute.
 		href.append("\"");
 
-		href.append(" border=\"0\"");
-		if(altText!=null) {
-			href.append(" alt=\"");
-			href.append(altText);
-			href.append("\"");
+		if(altText==null) {
+			altText="image " + id;
 		}
+		href.append(" alt=\"");
+		href.append(altText);
+		href.append("\"");
 
 		// if no width or height was provided, figure out out
 		if( (width == null) && (height == null) ) {

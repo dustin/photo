@@ -4,11 +4,14 @@
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
-<p>
+<html:xhtml/>
 
-<div class="sectionheader">Simple Search</div>
+<h1>Simple Search</h1>
+
+<div>
 
 <html:form action="/search.do">
+	<div>
 	<html:errors/>
 	<html:hidden property="maxret" value="6"/>
 	<html:hidden property="fieldjoin" value="and"/>
@@ -27,30 +30,33 @@
 	<html:submit>
 		<bean:message key="forms.search.simple.submit"/>
 	</html:submit>
+	</div>
 </html:form>
 
-</p>
+</div>
 
-<p>
+<h1>Find image by ID</h1>
 
-<div class="sectionheader">Find image by ID</div>
+<div>
 
-<form method="GET" action="display.do">
-	ID:  <input name="id" size="6">
-	<html:submit>Lookup</html:submit>
+<form method="get" action="display.do">
+	<div>
+		ID:  <input name="id" size="6" />
+		<html:submit>Lookup</html:submit>
+	</div>
 </form>
 
-</p>
+</div>
 
-<p>
+<h1>Advanced Search</h1>
 
-<div class="sectionheader">Advanced Search</div>
+<div>
 
 <bean:message key="forms.search.adv.pre"/>
 
 <html:form action="/search.do">
 
-	<p>
+	<div>
 		<bean:message key="forms.search.adv.cat"/>:<br/>
 		<html:select property="cat" size="5" multiple="true">
 			<photo:getCatList showViewable="true">
@@ -60,8 +66,8 @@
 				</logic:iterate>
 			</photo:getCatList>
 		</html:select>
-	</p>
-	<p>
+	</div>
+	<div>
 		<html:select property="fieldjoin">
 			<html:option value="and">
 				<bean:message key="forms.search.adv.and"/>
@@ -92,6 +98,8 @@
 
 		<html:text property="what"/><br/>
 
+		</div>
+		<div>
 		<table>
 			<tr>
 				<td>
@@ -149,6 +157,8 @@
 				</td>
 			</tr>
 		</table>
+		</div>
+		<div>
 
 		<bean:message key="forms.search.adv.sortby"/>
 		<html:select property="order">
@@ -209,8 +219,8 @@
 		<html:reset>
 			<bean:message key="forms.search.adv.reset"/>
 		</html:reset>
-	</p>
+	</div>
 
 </html:form>
 
-</p>
+</div>

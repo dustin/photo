@@ -1,0 +1,185 @@
+/*
+ * Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
+ *
+ * $Id: layout.css,v 1.2 2003/08/08 05:52:56 dustin Exp $
+ */
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-align: center;
+}
+
+h1,h2,h3,h4,h5,th {
+	text-transform: capitalize;
+	font-weight: bolder;
+}
+
+img {
+	border-style: none;
+}
+
+h1 { font-size: large; }
+
+h2 { font-size: medium; }
+
+#pagetitle {
+	font-size: xx-large;
+	font-weight: bold;
+	border-style: outset;
+	border-width: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+	width: 33%;
+}
+
+#pagebody {
+	text-align: left;
+	border-style: solid;
+	border-width: 1px;
+	/* XXX:  This definitely needs to be dynamic */
+	width: 810px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-bottom: 10px;
+	padding-left: 1px;
+	padding-right: 1px;
+}
+
+.sectionheader {
+	font-size: large;
+	font-weight: bold;
+}
+
+#footer {
+	border-style: none solid solid solid;
+	font-size: x-small;
+	border-width: 1px;
+	/* XXX:  This definitely needs to be dynamic */
+	width: 810px;
+	margin-left: auto;
+	margin-right: auto;
+	height: 7em;
+	padding-left: 1px;
+	padding-right: 1px;
+}
+
+.footerfineprint {
+	font-size: smaller;
+}
+
+#sflogo {
+	text-align: center;
+	padding-top: 1em;
+}
+
+.leftstuff {
+	float: left;
+	width: 49%;
+	text-align: left;
+}
+
+.rightstuff {
+	float: left;
+	width: 49%;
+	text-align: right;
+}
+
+.centered {
+	text-align: center;
+}
+
+.rightAligned {
+	text-align: right;
+}
+
+.leftAligned {
+	text-align: left;
+}
+
+.displayBrief {
+	font-weight: bold;
+	font-size: x-small;
+	text-align: center;
+}
+
+.commentblock {
+	height: 150px;
+	margin-bottom: 1px;
+	padding: 0.5em;
+	border-style: solid;
+	border-width: 2px;
+}
+
+.comments {
+	margin-left: 2em;
+	margin-right: 2em;
+	font-size: smaller;
+}
+
+.commentimage {
+	text-align: center;
+	padding-right: 1em;
+	float: left;
+	width: 220px;
+	height: 146px;
+}
+
+.commentmore {
+	font-size: x-small;
+	font-style: italic;
+}
+
+.commentheader {
+	font-size: smaller;
+}
+
+/*
+.commentbody {
+	border-style: none;
+}
+*/
+
+.searchmatches {
+	font-weight: bold;
+}
+
+.imgDescr {
+	margin: 20px;
+}
+
+#imgDisplay {
+	text-align: center;
+}
+
+/*
+.searchresults {
+}
+*/
+
+input[type="submit"], input[type="reset"], input[type="button"] {
+	border-style: outset;
+	border-width: 2px;
+	-moz-border-radius: 2em;
+}
+
+/* Magic error stuff */
+
+.errormagic a:hover .hiddenmagic {
+	display: block;
+}
+
+/* Magic error stuff */
+.errormagic a .hiddenmagic {
+	white-space: pre;
+	text-align: left;
+	border: 1px solid black;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 1em;
+   	position: absolute;
+	top: 200px;
+	left: 5px;
+	width: 95%;
+	text-decoration: none;
+	display: none;
+}

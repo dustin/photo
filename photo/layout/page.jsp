@@ -1,25 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib uri="/tlds/struts-tiles.tld" prefix="tiles" %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
+<%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
 
-<html><head><title><tiles:insert attribute='title'/></title>
-<photo:stylesheet url="/css/layout.css"/>
-<photo:stylesheet url="/css/colors.css"/>
-<c:if test="${slideshowMode eq 1}">
-	<photo:stylesheet url="/css/slideshow.css"/>
-</c:if>
+<html:html xhtml="true">
+	<head>
+		<title><tiles:insert attribute='title'/></title>
+		<photo:stylesheet url="/css/layout.css"/>
+		<photo:stylesheet url="/css/colors.css"/>
+		<c:if test="${slideshowMode eq 1}">
+			<photo:stylesheet url="/css/slideshow.css"/>
+		</c:if>
+		<style type="text/css">
+			body {
+				background-image: url(<%= props.getProperty("background_img", "") %>);
+			}
+		</style>
 </head>
-<body background='<%= props.getProperty("background_img", "") %>'>
+<body>
 
 	<div id="pagetitle"><tiles:insert attribute='title'/></div>
 
 	<div id="pagebody">
 			<tiles:insert attribute='body'/>
 	</div>
-	<div class="footer"> <!-- Footer -->
+	<div id="footer"> <!-- Footer -->
 		<div class="leftstuff">
 			<div>
 				Logged in as
@@ -50,9 +62,9 @@
 	</div> <!-- /Footer -->
 
 	<div id="sflogo">
-		<a href="http://photoservlet.sourceforge.net/"><img border="0"
-			width="88" height="31" alt="SourceForge"
-			src="http://sourceforge.net/sflogo.php?group_id=7312&type=1"/></a>
+		<a href="http://photoservlet.sourceforge.net/"><img width="88" height="31"
+			alt="SourceForge"
+			src="http://sourceforge.net/sflogo.php?group_id=7312&amp;type=1"/></a>
 	</div>
 
-</body></html>
+</body></html:html>
