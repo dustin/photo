@@ -11,7 +11,6 @@ Get the top x images by how many times they have been viewed.
 @sql
 select
 		a.id as image_id,
-		a.keywords,
 		c.name as category,
 		count(*) as views
 	from
@@ -25,7 +24,7 @@ select
 		and t.log_type = 'ImgView'
 		and t.log_type_id = l.log_type
 	group by
-		image_id, keywords, category
+		image_id, category
 	order by
 		views desc
 	limit ?

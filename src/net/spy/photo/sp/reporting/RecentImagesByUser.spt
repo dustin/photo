@@ -11,7 +11,6 @@ Find images seen by a particular user.
 @sql
 select  
 		a.id as image_id,
-		a.keywords as keywords,
 		c.id as category_id,
 		c.name as category_name,
 		l.ts as view_time
@@ -41,7 +40,6 @@ limit 250
 
 @results
 image_id INTEGER the image ID
-keywords VARCHAR Keywords for the image
 category_name VARCHAR The name of the category
 category_id INTEGER the ID of the category
 view_time TIMESTAMP The Time the image was viewed
