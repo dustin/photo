@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.54 2001/01/31 18:50:02 dustin Exp $
+ * $Id: PhotoSession.java,v 1.55 2001/04/29 08:18:11 dustin Exp $
  */
 
 package net.spy.photo;
@@ -256,7 +256,7 @@ public class PhotoSession extends Object
 			}
 
 			// Make it available for the session
-			session.putValue("photo_stylesheet", ss);
+			session.setAttribute("photo_stylesheet", ss);
 			// Make it immediately available
 			xslt_stylesheet=ss;
 		}
@@ -269,7 +269,7 @@ public class PhotoSession extends Object
 		PhotoConfig conf=new PhotoConfig();
 
 		if(session!=null) {
-			xslt_stylesheet=(String)session.getValue("photo_stylesheet");
+			xslt_stylesheet=(String)session.getAttribute("photo_stylesheet");
 		}
 	}
 
@@ -292,7 +292,7 @@ public class PhotoSession extends Object
 				session=request.getSession(true);
 			}
 			// Save the username.
-			session.putValue("username", username);
+			session.setAttribute("username", username);
 			// Make it valid immediately
 			remote_user = username;
 			// Set the UID variable.
@@ -977,11 +977,11 @@ public class PhotoSession extends Object
 			if(session==null) {
 				remote_user="guest";
 			} else {
-				remote_user=(String)session.getValue("username");
+				remote_user=(String)session.getAttribute("username");
 				// If we have a session, but no username, add guest.
 				if(remote_user==null) {
 					remote_user="guest";
-					session.putValue("username", "guest");
+					session.setAttribute("username", "guest");
 				}
 			}
 			PhotoUser p=security.getUser(remote_user);
@@ -1085,7 +1085,7 @@ public class PhotoSession extends Object
 		throws Exception {
 
 		PhotoSearchResults results=null;
-		results=(PhotoSearchResults)session.getValue("search_results");
+		results=(PhotoSearchResults)session.getAttribute("search_results");
 		int which=Integer.parseInt(request.getParameter("search_id"));
 		PhotoSearchResult r = results.get(which);
 
@@ -1158,7 +1158,7 @@ public class PhotoSession extends Object
 			throw new ServletException("There's no session!");
 		}
 		PhotoSearchResults results=
-			(PhotoSearchResults)session.getValue("search_results");
+			(PhotoSearchResults)session.getAttribute("search_results");
 		if(results==null) {
 			throw new ServletException("There are no search results!");
 		}
@@ -1211,7 +1211,7 @@ public class PhotoSession extends Object
 		meta.append("" + results.nResults());
 		meta.append("</total>\n");
 		meta.append("\t<search_query>\n");
-		meta.append((String)session.getValue("encoded_search"));
+		meta.append((String)session.getAttribute("encoded_search"));
 		meta.append("\t</search_query>\n");
 		meta.append("</meta_stuff>\n");
 
@@ -1244,8 +1244,8 @@ public class PhotoSession extends Object
 			PhotoSearchResults results=null;
 			// Get the results and put them in the mofo session
 			results=ps.performSearch(request, user);
-			session.putValue("search_results", results);
-			session.putValue("encoded_search",
+			session.setAttribute("search_results", results);
+			session.setAttribute("encoded_search",
 				ps.encodeSearch(request));
 		} catch(Exception e) {
 			log("Error performing search:  " + e);
@@ -1367,7 +1367,7 @@ public class PhotoSession extends Object
 		try {
 			getGroups();
 			if(groups.containsKey("admin")) {
-				session.putValue("photo_is_admin", "1");
+				session.setAttribute("photo_is_admin", "1");
 			}
 		} catch(Exception e) {
 			log("Error setting admin privs:  " + e);
@@ -1377,7 +1377,7 @@ public class PhotoSession extends Object
 	// Revoke administrative privys
 	protected void unsetAdmin() throws ServletException  {
 		if(session!=null) {
-			session.removeValue("photo_is_admin");
+			session.removeAttribute("photo_is_admin");
 		}
 	}
 
@@ -1385,7 +1385,7 @@ public class PhotoSession extends Object
 	public boolean isAdmin() {
 		boolean ret=false;
 		if(session!=null) {
-			String admin= (String)session.getValue("photo_is_admin");
+			String admin= (String)session.getAttribute("photo_is_admin");
 			if(admin!=null) {
 				ret=true;
 			}

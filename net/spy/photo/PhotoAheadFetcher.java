@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.9 2000/12/26 03:30:59 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.10 2001/04/29 08:18:11 dustin Exp $
  */
 
 package net.spy.photo;
@@ -13,8 +13,12 @@ import java.util.*;
  * the photo album.
  */
 public class PhotoAheadFetcher extends Thread {
-	protected static Vector sets=null;
+	private static Vector sets=null;
+	private boolean keepgoing=true;
 
+	/**
+	 * Get a new PhotoheadFetcher (auto starts).
+	 */
 	public PhotoAheadFetcher() {
 		super(); // thanks for asking
 		setDaemon(true);
@@ -22,10 +26,20 @@ public class PhotoAheadFetcher extends Thread {
 		start();
 	}
 
+	/**
+	 * Tell the Aheadfetcher to stop soon.
+	 */
+	public void close() {
+		keepgoing=false;
+	}
+
+	/**
+	 * Do the actual updating here.
+	 */
 	public void run() {
 		// Create the sets vector.
 		sets=new Vector();
-		while(true) {
+		while(keepgoing) {
 			try {
 				synchronized(sets) {
 					sets.wait();
@@ -44,7 +58,9 @@ public class PhotoAheadFetcher extends Thread {
 		}
 	}
 
-	// Add to the queue.
+	/**
+	 * Add the PhotoSearchResults to the ahead-fetching queue.
+	 */
 	public void next(PhotoSearchResults r) {
 		synchronized(sets) {
 			sets.addElement(r);
@@ -53,7 +69,7 @@ public class PhotoAheadFetcher extends Thread {
 	}
 
 	// We got a notify, fetch ahead.
-	protected void fetchAhead() throws Exception {
+	private void fetchAhead() throws Exception {
 		Vector tofetch=new Vector();
 
 		// In a lock, copy the current queue into a temporary one, and

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.13 2001/01/31 18:50:02 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.14 2001/04/29 08:18:11 dustin Exp $
  */
 
 package net.spy.photo;
@@ -30,7 +30,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	public PhotoSearchResult() throws Exception {
 		super();
 		mydata=new Hashtable();
-	};
+	}
 
 	/**
 	 * Get an uninitialized search result pointing at a given id.
@@ -39,7 +39,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		super();
 		this.id=id;
 		this.search_id=search_id;
-	};
+	}
 
 	/**
 	 * String representation of this object.

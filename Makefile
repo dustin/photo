@@ -1,14 +1,17 @@
 # Makefile for RHash, remote object server stuff.
 
-JAVAHOME=/usr/pkg/java
+JAVAHOME=/usr/java
 JAR=$(JAVAHOME)/bin/jar
-JAVAC=$(JAVAHOME)/bin/javac
+# JAVAC=$(JAVAHOME)/bin/javac
+JAVAC=jikes +P
 JAVA=$(JAVAHOME)/bin/java
 RMIC=$(JAVAHOME)/bin/rmic
-MYLIB=/home/dustin/lib/java
+MYLIB=$(HOME)/lib/java
+S=/System/Library/Frameworks/JavaVM.framework/Versions/1.3/Classes/classes.jar
 C1=$(MYLIB)/jsdk.jar:$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
-C2=$(MYLIB)/xalan.jar:$(MYLIB)/xerces.jar:$(MYLIB)/resin-xsl.jar
-CLASSPATH=$(C1):$(C2):.
+C2=$(MYLIB)/resin-xsl.jar:$(MYLIB)/sax.jar:$(MYLIB)/dom.jar
+C3=$(MYLIB)/xerces.jar:$(MYLIB)/xalan.jar:$S
+CLASSPATH=$(C1):$(C2):$(C3):.
 SERVLETRUNNER=/home/dustin/lib/java/JSDK2.0/bin/servletrunner
 
 RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \

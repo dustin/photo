@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.9 2000/12/27 06:05:25 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.10 2001/04/29 08:18:11 dustin Exp $
  */
 
 package net.spy.photo;
@@ -70,7 +70,8 @@ public class PhotoSecurity extends PhotoHelper {
 					ret=u;
 				}
 			} catch(Exception e) {
-				log("Error lookup up user:  " + username);
+				log("Error lookup up user " + username);
+				e.printStackTrace();
 			} finally {
 				if(photo!=null) {
 					freeDBConn(photo);
@@ -108,7 +109,8 @@ public class PhotoSecurity extends PhotoHelper {
 					ret=u;
 				}
 			} catch(Exception e) {
-				log("Error lookup up user:  " + id);
+				log("Error lookup up user " + id);
+				e.printStackTrace();
 			} finally {
 				if(photo!=null) {
 					freeDBConn(photo);
