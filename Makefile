@@ -12,7 +12,7 @@ C1=$(MYLIB)/jsdk.jar:$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
 C2=$(MYLIB)/resin-xsl.jar:$(MYLIB)/sax.jar:$(MYLIB)/dom.jar
 C3=$(MYLIB)/xerces.jar:$(MYLIB)/xalan.jar:$S
 CLASSPATH=$(C1):$(C2):$(C3):.
-SERVLETRUNNER=$(MYLIB)/jswdk/startserver
+SERVLETRUNNER=$(MYLIB)/resin/bin/start_resin
 
 RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \
 	net/spy/rmi/ImageServerImpl_Stub.class \
@@ -53,13 +53,15 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 
 .SUFFIXES: .java .class .jar
 
+.PHONY: test
+
 all: $(CLASSES)
 
 photo.jar: $(CLASSES)
 	$(JAR) cv0f $@ `find net/spy -name "*.class"`
 
 test: $(CLASSES)
-	env CLASSPATH=$(CLASSPATH) $(SERVLETRUNNER)
+	env CLASSPATH=/tmp $(SERVLETRUNNER) $(PWD)/etc/resin.conf
 
 setpw: net/spy/photo/SetPW.class
 	env CLASSPATH=$(CLASSPATH) $(JAVA) net.spy.photo.SetPW
