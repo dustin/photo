@@ -10,8 +10,7 @@
 <xsl:output method="html"/>
 
 <!--
- Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.23 2001/01/16 21:01:19 dustin Exp $
+ Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  -->
 
 <xsl:template match="page">
@@ -24,13 +23,23 @@
 			<link rel="stylesheet"
 			href="{meta_stuff/self_uri}?func=getstylesheet"/>
 		</head>
-		<body background="/~dustin/images/holiday.gif" bgcolor="#cFcFfF">
+		<body background="/~dustin/images/bluedkplaid.jpg" bgcolor="#cFcFfF">
 			<center>
-				<b>
-					<font size="+3">
-						<xsl:value-of select="heading/title"/>
-					</font>
-				</b>
+
+				<!-- Title wrapper -->
+				<table bgcolor="#000000">
+					<tr><td>
+						<table border="5" bgcolor="#fFfFfF">
+							<tr><td>
+								<b>
+									<font size="+3">
+										<xsl:value-of select="heading/title"/>
+									</font>
+								</b>
+							</td></tr>
+						</table>
+					</td></tr>
+				</table>
 
 				<table bgcolor="#000000" width="75%">
 					<tr><td>

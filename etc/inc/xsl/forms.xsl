@@ -91,7 +91,11 @@
 							<td>Category:</td>
 							<td>
 								<select name="category" size="5">
-									<xsl:apply-templates select="cat_list"/>
+									<xsl:for-each select="cat_list/option">
+										<option value="{@value}">
+											<xsl:value-of select="."/>
+										</option>
+									</xsl:for-each>
 								</select>
 							</td>
 						</tr>
@@ -193,7 +197,11 @@
 			<p>
 				Category:<br/>
 				<select name="cat" size="5" multiple="">
-					<xsl:apply-templates select="cat_list"/>
+					<xsl:for-each select="cat_list/option">
+						<option value="{@value}">
+							<xsl:value-of select="."/>
+						</option>
+					</xsl:for-each>
 				</select>
 			</p>
 			<p>
