@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.1 2000/07/05 06:08:33 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.2 2000/07/05 06:32:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -63,6 +63,9 @@ public class PhotoAheadFetcher extends Thread {
 			}
 			sets.removeAllElements();
 		}
+
+		// System.out.println("Need to fetch ahead in the following:\n"
+		// 	+ tofetch);
 
 		// Outside of the lock, fetch (precache) the entries.
 		for(Enumeration e=tofetch.elements(); e.hasMoreElements();) {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.22 2000/07/05 06:08:33 dustin Exp $
+ * $Id: PhotoSession.java,v 1.23 2000/07/05 06:32:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -750,16 +750,31 @@ public class PhotoSession extends Object
 		response.setContentType("text/html");
 		try {
 			PrintWriter out = response.getWriter();
-			Hashtable ht=new Hashtable();
-			if(isAdmin()) {
-				ht.put("ADMIN_FLAG",
-					" - <a href=\"" + self_uri
-						+ "?func=unsetadmin\">Admin mode</a>");
-			} else {
-				ht.put("ADMIN_FLAG", "");
+
+			String tail=null;
+			PhotoCache cache=new PhotoCache();
+			String key="t_tail_" + remote_uid + "." + isAdmin();
+			tail=(String)cache.get(key);
+
+			// If we didn't get a tail from the cache, build one.
+			if(tail==null) {
+
+				Hashtable ht=new Hashtable();
+				if(isAdmin()) {
+					ht.put("ADMIN_FLAG",
+						" - <a href=\"" + self_uri
+							+ "?func=unsetadmin\">Admin mode</a>");
+				} else {
+					ht.put("ADMIN_FLAG", "");
+				}
+
+				tail=tokenize("tail.inc", ht);
+				// Store if for fifteen minutes.
+				cache.store(key, tail, 15*60*1000);
 			}
+
 			// Print out the document and the tail together.
-			out.print(text + tokenize("tail.inc", ht));
+			out.print(text + tail);
 			out.close();
 		} catch(Exception e) {
 			log("Error sending response:  " + e);
