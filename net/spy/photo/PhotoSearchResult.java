@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.5 2000/07/05 06:08:33 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.6 2000/07/05 06:31:38 dustin Exp $
  */
 
 package net.spy.photo;
@@ -41,7 +41,13 @@ public class PhotoSearchResult extends PhotoHelper {
 	 * String representation of this object.
 	 */
 	public String toString() {
-		return("Photo search result for result " + id);
+		String out="Photo search result for result ";
+		if(id>0) {
+			out+=id;
+		} else {
+			out+=search_id;
+		}
+		return(out);
 	}
 
 	/**
