@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectUserAction.java,v 1.7 2002/07/10 03:38:09 dustin Exp $
+// $Id: AdminSelectUserAction.java,v 1.8 2002/07/14 07:11:23 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -9,18 +9,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.PhotoACLEntry;
-import net.spy.photo.PhotoSecurity;
-import net.spy.photo.PhotoUser;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import net.spy.SpyDB;
+
+import net.spy.photo.PhotoACLEntry;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoSecurity;
+import net.spy.photo.PhotoUser;
 
 /**
  * Action used to begin editing a new user.
@@ -95,6 +102,33 @@ public class AdminSelectUserAction extends AdminAction {
 			// Store them
 			auf.setCatAclAdd((String[])addable.toArray(new String[0]));
 			auf.setCatAclView((String[])viewable.toArray(new String[0]));
+
+			// Look up the group thingy.
+			try {
+				SpyDB db=new SpyDB(new PhotoConfig());
+				PreparedStatement pst=db.prepareStatement(
+					"select groupname from wwwgroup where userid=?");
+				pst.setInt(1, user.getId());
+				ResultSet rs=pst.executeQuery();
+				if(rs.next()) {
+					// If there's a group name, get it
+					String groupName=rs.getString("groupname");
+					auf.setAdminStatus(groupName);
+				} else {
+					// If not, set it to none
+					auf.setAdminStatus(rs.getString("none"));
+				}
+				if(rs.next()) {
+					throw new ServletException(
+						"Too many results returned for group lookup, "
+							+ "I'm confused");
+				}
+				rs.close();
+				pst.close();
+				db.close();
+			} catch(SQLException se) {
+				throw new ServletException("Error looking up group", se);
+			}
 		}
 
 		return(mapping.findForward("success"));
