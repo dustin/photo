@@ -1,0 +1,22 @@
+#
+# $Id
+#
+
+@package
+net.spy.photo.sp
+
+@description
+List all users.
+
+@sql
+select id, username, password, email, realname, canadd
+	from wwwusers
+	order by lower(username)
+
+@results
+id INTEGER User id
+username VARCHAR username
+password VARCHAR Hashed password
+email VARCHAR Email address
+realname VARCHAR Real name of the user
+canadd BOOLEAN Whether the user has general add access or not

@@ -153,6 +153,16 @@
 		</attribute>
 	</tag>
 
+	<!-- Create a relative stylesheet link -->
+	<tag>
+		<name>stylesheet</name>
+		<tagclass>net.spy.photo.taglib.Stylesheet</tagclass>
+		<attribute>
+			<name>url</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+
 	<!-- Create a relative image src to an image within this webapp -->
 	<tag>
 		<name>imgsrc</name>

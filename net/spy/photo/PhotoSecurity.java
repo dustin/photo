@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.21 2002/05/15 08:26:15 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.22 2002/06/20 04:34:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,6 +14,8 @@ import net.spy.*;
 import net.spy.db.*;
 import net.spy.cache.*;
 import net.spy.util.*;
+
+import net.spy.photo.sp.*;
 
 /**
  * Security dispatch type stuff happens here.
@@ -248,7 +250,7 @@ public class PhotoSecurity extends PhotoHelper {
 	}
 
 	// Load the user info from a result set
-	private PhotoUser getUser(ResultSet rs) throws Exception {
+	private static PhotoUser getUser(ResultSet rs) throws Exception {
 		PhotoUser u = new PhotoUser();
 		u.setId(rs.getInt("id"));
 		u.setUsername(rs.getString("username"));
@@ -257,5 +259,22 @@ public class PhotoSecurity extends PhotoHelper {
 		u.setRealname(rs.getString("realname"));
 		u.canAdd(rs.getBoolean("canadd"));
 		return(u);
+	}
+
+	/**
+	 * List all users in alphabetical order by username.
+	 *
+	 * @return an Enumeration of PhotoUser objects
+	 */
+	public static Enumeration getAllUsers() throws Exception {
+		ListUsers db=new ListUsers(new PhotoConfig());
+		ResultSet rs=db.executeQuery();
+		Vector v=new Vector();
+
+		while(rs.next()) {
+			v.addElement(getUser(rs));
+		}
+
+		return(v.elements());
 	}
 }
