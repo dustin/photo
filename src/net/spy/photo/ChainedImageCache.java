@@ -89,7 +89,7 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 						throw new IllegalArgumentException(
 							"Can't chain a chain");
 					}
-					rv.add(st.nextToken());
+					rv.add(nt);
 				}
 			}
 		}
