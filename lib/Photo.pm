@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.14 1998/07/07 05:56:24 dustin Exp $
+# $Id: Photo.pm,v 1.15 1998/07/07 06:03:53 dustin Exp $
 
 package Photo;
 
@@ -585,24 +585,31 @@ sub deleteImage
     my($self, $oid)=@_;
     my($query, $s, $r, %p);
 
-    $query ="select a.id,a.name,b.keywords,b.descr,b.fn,b.cat,b.oid\n";
-    $query.="    from cat a, album b\n";
-    $query.="    where a.id=b.cat and b.oid=$oid;";
+    $query ="select a.id,a.name,b.keywords,b.descr,b.fn,b.cat,b.oid,\n";
+    $query.="        c.id,c.name\n";
+    $query.="    from cat a, album b, image_map c\n";
+    $query.="    where a.id=b.cat and b.oid=$oid\n";
+    $query.="        and c.name=b.fn;";
 
     $p{oid}=$oid;
 
     $s=$self->doQuery($query);
 
-    if($r=$s->fetch)
-    {
-	($p{AID}, $p{CAT}, $p{KEYWORDS}, $p{DESCR}, $p{IMAGE})=@{$r};
+    if($r=$s->fetch) {
+	($p{AID}, $p{CAT}, $p{KEYWORDS}, $p{DESCR}, $p{IMAGE},
+	 $p{BCAT}, $p{BOID}, $p{MAPID})=@{$r};
     }
 
-    $query="delete from album where oid=$oid;\n";
-    if($self->doQuery($query))
-    {
-	# stuff to delete image goes here...
-    }
+    eval {
+        $query="delete from album where oid=$oid;\n";
+	$self->doQuery($query);
+
+	$query="delete from image_map where id=$p{MAPID};\n";
+	$self->doQuery($query);
+
+	$query="delete from image_store where id=$p{MAPID};\n";
+	$self->doQuery($query);
+    };
 
     $self->showTemplate("$Photo::includes/admin/killimage.inc", %p);
 }
