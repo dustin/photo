@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.25 2002/03/12 09:05:35 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.26 2002/03/12 09:08:44 dustin Exp $
  */
 
 package net.spy.photo;
@@ -432,6 +432,7 @@ public class PhotoAdmin extends PhotoHelper {
 				acltable.append(rs.getString("username"));
 				acltable.append(" (");
 				acltable.append(rs.getString("realname"));
+				acltable.append(")");
 				acltable.append("</font></td>");
 				acltable.append("<td><input type=\"checkbox\" ");
 				acltable.append("name=\"useracl_view\" ");
