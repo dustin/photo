@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: photo.cgi,v 1.4 1998/04/24 17:09:16 dustin Exp $
+# $Id: photo.cgi,v 1.5 1998/04/24 17:48:17 dustin Exp $
 
 use CGI;
 
@@ -156,7 +156,7 @@ sub doFind
 
     $s=doQuery($query);
 
-    $n=$s->ntuples;
+    $n=$s->rows;
     $i=0;
 
     $start=$q->param('qstart');  # Find the desired starting point
