@@ -81,7 +81,7 @@
 	<action    path="/newuser"
 		type="net.spy.photo.struts.NewUserAction"
 		input="/newuserform.jsp"
-		name="NewUserForm">
+		name="newUserForm">
 		<forward name="success" path="/index.jsp" />
 	</action>
 

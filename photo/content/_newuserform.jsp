@@ -1,5 +1,6 @@
-<form method="POST" action="PhotoServlet">
-	<input type="hidden" name="func" value="adduser"/>
+<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
+<%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
+<html:form action="/newuser" focus="profile">
 
 	<div align="center">
 		<p>
@@ -7,40 +8,42 @@
 			don't have one, you probably shouldn't be here.
 		</p>
 
+		<html:errors/>
+
 		<table>
 			<tr>
 				<td>Profile</td>
-				<td><input name="profile"/></td>
+				<td><html:text property="profile"/></td>
 			</tr>
 			<tr>
 				<td>Username</td>
-				<td><input name="username"/></td>
+				<td><html:text property="username"/></td>
 			</tr>
 			<tr>
 				<td>Password</td>
-				<td><input type=password name="password"/></td>
+				<td><html:password property="password"/></td>
 			</tr>
 			<tr>
 				<td>Password (confirm)</td>
-				<td><input type=password name="pass2"/></td>
+				<td><html:password property="pass2"/></td>
 			</tr>
 			<tr>
 				<td>Real Name</td>
-				<td><input name="realname"/></td>
+				<td><html:text property="realname"/></td>
 			</tr>
 			<tr>
 				<td>Email address</td>
-				<td><input name="email"/></td>
+				<td><html:text property="email"/></td>
 			</tr>
 			<tr>
 				<td colspan="2">
 					<div align="center">
-						<input type="submit" value="Add Me"/>
-						<input type="reset" value="Clear"/>
+						<html:submit>Add Me</html:submit>
+						<html:reset>Clear</html:reset>
 					</div>
 				</td>
 			</tr>
 		</table>
 	</div>
 
-</form>
+</html:form>
