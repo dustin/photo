@@ -5,10 +5,9 @@
 package net.spy.photo.migration;
 
 /**
- * Add properties table.
+ * Add the ``persess'' column to wwwusers.
  */
-public class PhotoMigration09 extends PhotoMigration
-{
+public class PhotoMigration09 extends PhotoMigration {
 
 	/**
 	 * Get an instance of PhotoMigration09.
@@ -17,20 +16,14 @@ public class PhotoMigration09 extends PhotoMigration
 		super();
 	}
 
-	/** 
-	 * Perform the migration.
-	 */
-	public void migrate() throws Exception {
-		if(hasColumn("wwwusers", "persess")) {
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			runSqlScript("net/spy/photo/migration/migration09.sql");
-		}
+	protected boolean checkMigration() throws Exception {
+		return(hasColumn("wwwusers", "persess"));
 	}
 
-	/** 
-	 * Run the 9th migration script.
-	 */
+	protected void performMigration() throws Exception {
+		runSqlScript("net/spy/photo/migration/migration09.sql");
+	}
+
 	public static void main(String args[]) throws Exception {
 		PhotoMigration09 mig=new PhotoMigration09();
 		mig.migrate();

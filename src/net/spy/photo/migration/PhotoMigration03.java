@@ -2,17 +2,19 @@
 
 package net.spy.photo.migration;
 
+/** 
+ * Migration kit for adding profiles.
+ */
 public class PhotoMigration03 extends PhotoMigration {
 
-	public void migrate() throws Exception {
-		if( (hasColumn("user_profiles", "profile_id"))
+	protected boolean checkMigration() throws Exception {
+		return( (hasColumn("user_profiles", "profile_id"))
 			&& (hasColumn("user_profile_acls", "profile_id"))
-			&& (hasColumn("user_profile_log", "profile_id"))) {
+			&& (hasColumn("user_profile_log", "profile_id")));
+	}
 
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			runSqlScript("net/spy/photo/migration/migration03.sql");
-		}
+	protected void performMigration() throws Exception {
+		runSqlScript("net/spy/photo/migration/migration03.sql");
 	}
 
 	public static void main(String args[]) throws Exception {

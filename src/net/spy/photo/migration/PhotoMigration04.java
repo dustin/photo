@@ -2,16 +2,19 @@
 
 package net.spy.photo.migration;
 
+/** 
+ * Migration kit for adding commentary and votes.
+ */
 public class PhotoMigration04 extends PhotoMigration {
 
-	public void migrate() throws Exception {
-		if( (hasColumn("commentary", "comment_id"))
-			&& (hasColumn("votes", "vote_id"))) {
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			// Add the new columns.
-			runSqlScript("net/spy/photo/migration/migration04.sql");
-		}
+	protected boolean checkMigration() throws Exception {
+		return( (hasColumn("commentary", "comment_id"))
+			&& (hasColumn("votes", "vote_id")));
+	}
+
+	protected void performMigration() throws Exception {
+		// Add the new columns.
+		runSqlScript("net/spy/photo/migration/migration04.sql");
 	}
 
 	public static void main(String args[]) throws Exception {

@@ -16,17 +16,14 @@ public class PhotoMigration06 extends PhotoMigration {
 		super();
 	}
 
-	public void migrate() throws Exception {
-		if(hasColumn("galleries", "gallery_name")) {
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			runSqlScript("net/spy/photo/migration/migration06.sql");
-		}
+	protected boolean checkMigration() throws Exception {
+		return(hasColumn("galleries", "gallery_name"));
 	}
 
-	/**
-	 * Testing and what not.
-	 */
+	protected void performMigration() throws Exception {
+		runSqlScript("net/spy/photo/migration/migration06.sql");
+	}
+
 	public static void main(String args[]) throws Exception {
 		PhotoMigration06 mig=new PhotoMigration06();
 		mig.migrate();

@@ -2,17 +2,19 @@
 
 package net.spy.photo.migration;
 
+/** 
+ * Migration kit for enhancing logs.
+ */
 public class PhotoMigration05 extends PhotoMigration {
 
-	public void migrate() throws Exception {
-		if( (hasColumn("photo_logs", "wwwuser_id"))
-			&& (hasColumn("photo_logs", "log_id"))) {
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			runSqlScript("net/spy/photo/migration/migration05.sql");
-			runSqlScript("net/spy/photo/migration/migration05.ac.sql",
-				true, true);
-		}
+	protected boolean checkMigration() throws Exception {
+		return( (hasColumn("photo_logs", "wwwuser_id"))
+			&& (hasColumn("photo_logs", "log_id")));
+	}
+
+	protected void performMigration() throws Exception {
+		runSqlScript("net/spy/photo/migration/migration05.sql");
+		runSqlScript("net/spy/photo/migration/migration05.ac.sql", true, true);
 	}
 
 	public static void main(String args[]) throws Exception {

@@ -14,6 +14,9 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageHelper;
 
+/** 
+ * Migration for dimensions.
+ */
 public class PhotoMigration01 extends PhotoMigration {
 
 	private void addColumns() throws Exception {
@@ -87,24 +90,23 @@ public class PhotoMigration01 extends PhotoMigration {
 		}
 	}
 
-	public void migrate() throws Exception {
-		if((hasColumn("album", "tn_width"))
-			&& (hasColumn("album", "tn_height"))
-			&& (hasColumn("album", "width"))
-			&& (hasColumn("album", "height"))
-			) {
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			// Add the new columns.
-			addColumns();
+	protected boolean checkMigration() throws Exception {
+		return((hasColumn("album", "tn_width"))
+				&& (hasColumn("album", "tn_height"))
+				&& (hasColumn("album", "width"))
+				&& (hasColumn("album", "height")));
+	}
 
-			// This gets the images, and sets the width and height in the DB
-			getImages();
+	protected void performMigration() throws Exception {
+		// Add the new columns.
+		addColumns();
 
-			// Fetch the thumbnails, just so everything is precached for the
-			// imageserver.
-			fetchThumbnails();
-		}
+		// This gets the images, and sets the width and height in the DB
+		getImages();
+
+		// Fetch the thumbnails, just so everything is precached for the
+		// imageserver.
+		fetchThumbnails();
 	}
 
 	public static void main(String args[]) throws Exception {

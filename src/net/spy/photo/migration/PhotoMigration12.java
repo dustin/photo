@@ -7,8 +7,7 @@ package net.spy.photo.migration;
 /**
  * Drop old keywords column.
  */
-public class PhotoMigration12 extends PhotoMigration
-{
+public class PhotoMigration12 extends PhotoMigration {
 
 	/**
 	 * Get an instance of PhotoMigration12.
@@ -17,20 +16,14 @@ public class PhotoMigration12 extends PhotoMigration
 		super();
 	}
 
-	/** 
-	 * Perform the migration.
-	 */
-	public void migrate() throws Exception {
-		if(!hasColumn("album", "keywords")) {
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			runSqlScript("net/spy/photo/migration/migration12.sql");
-		}
+	protected boolean checkMigration() throws Exception {
+		return(!hasColumn("album", "keywords"));
 	}
 
-	/** 
-	 * Run the 9th migration script.
-	 */
+	protected void performMigration() throws Exception {
+		runSqlScript("net/spy/photo/migration/migration12.sql");
+	}
+
 	public static void main(String args[]) throws Exception {
 		PhotoMigration12 mig=new PhotoMigration12();
 		mig.migrate();

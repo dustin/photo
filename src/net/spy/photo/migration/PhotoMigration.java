@@ -125,10 +125,29 @@ public abstract class PhotoMigration extends SpyObject {
 		return(tryQuery("select " + column + " from " + table + " where 1=2"));
 	}
 
+	/** 
+	 * Check to see if we've already run this migration kit.
+	 * 
+	 * @return true if this kit has already been run.
+	 */
+	protected abstract boolean checkMigration() throws Exception;
+
+	/** 
+	 * Perform this migration.
+	 */
+	protected abstract void performMigration() throws Exception;
+
 	/**
 	 * Perform the migration.
 	 */
-	public abstract void migrate() throws Exception;
+	public final void migrate() throws Exception {
+		if(checkMigration()) {
+			System.err.println("Looks like you've already run "
+				+ getClass().getName());
+		} else {
+			performMigration();
+		}
+	}
 
 	/**
 	 * Fetch all thumbnails.  This is used to populate caches and stuff

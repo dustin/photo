@@ -24,7 +24,7 @@ import net.spy.photo.SavablePhotoImageData;
 import net.spy.photo.sp.migration.GetAllImgIdsAndKws;
 
 /**
- * Add the format table.
+ * Migrate to the new keywords mechanism.
  */
 public class PhotoMigration11 extends PhotoMigration {
 
@@ -68,15 +68,12 @@ public class PhotoMigration11 extends PhotoMigration {
 		}
 	}
 
-	/** 
-	 * Perform the migration.
-	 */
-	public void migrate() throws Exception {
-		if(getRowCount("album_keywords_map") > 0) {
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			updateKeywords();
-		}
+	protected boolean checkMigration() throws Exception {
+		return(getRowCount("album_keywords_map") > 0);
+	}
+
+	protected void performMigration() throws Exception {
+		updateKeywords();
 	}
 
 	/** 

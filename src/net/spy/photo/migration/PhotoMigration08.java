@@ -7,8 +7,7 @@ package net.spy.photo.migration;
 /**
  * Add properties table.
  */
-public class PhotoMigration08 extends PhotoMigration
-{
+public class PhotoMigration08 extends PhotoMigration {
 
 	/**
 	 * Get an instance of PhotoMigration08.
@@ -17,20 +16,14 @@ public class PhotoMigration08 extends PhotoMigration
 		super();
 	}
 
-	/** 
-	 * Perform the migration.
-	 */
-	public void migrate() throws Exception {
-		if(hasColumn("properties", "name")) {
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			runSqlScript("net/spy/photo/migration/migration08.sql");
-		}
+	protected boolean checkMigration() throws Exception {
+		return(hasColumn("properties", "name"));
 	}
 
-	/** 
-	 * Run the 8th migration script.
-	 */
+	protected void performMigration() throws Exception {
+		runSqlScript("net/spy/photo/migration/migration08.sql");
+	}
+
 	public static void main(String args[]) throws Exception {
 		PhotoMigration08 mig=new PhotoMigration08();
 		mig.migrate();

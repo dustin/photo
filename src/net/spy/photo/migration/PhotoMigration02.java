@@ -6,6 +6,9 @@ import net.spy.db.SpyDB;
 
 import net.spy.photo.PhotoConfig;
 
+/** 
+ * Migration kit for separating view permissions from add permissions.
+ */
 public class PhotoMigration02 extends PhotoMigration {
 
 	private void addColumns() throws Exception {
@@ -34,14 +37,14 @@ public class PhotoMigration02 extends PhotoMigration {
 		db.close();
 	}
 
-	public void migrate() throws Exception {
-		if((hasColumn("wwwacl", "canadd")) && (hasColumn("wwwacl", "canview"))
-			) {
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			// Add the new columns.
-			addColumns();
-		}
+	protected boolean checkMigration() throws Exception {
+		return((hasColumn("wwwacl", "canadd"))
+			&& (hasColumn("wwwacl", "canview")));
+	}
+
+	protected void performMigration() throws Exception {
+		// Add the new columns.
+		addColumns();
 	}
 
 	public static void main(String args[]) throws Exception {

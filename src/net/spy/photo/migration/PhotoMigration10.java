@@ -67,22 +67,16 @@ public class PhotoMigration10 extends PhotoMigration {
 		}
 	}
 
-	/** 
-	 * Perform the migration.
-	 */
-	public void migrate() throws Exception {
-		if(hasColumn("format", "format_id")
-			|| hasColumn("album", "format_id")) {
-			System.err.println("Looks like you've already run this kit.");
-		} else {
-			runSqlScript("net/spy/photo/migration/migration10.sql");
-			updateFormats();
-		}
+	protected boolean checkMigration() throws Exception {
+		return((hasColumn("format", "format_id")
+			|| hasColumn("album", "format_id")));
 	}
 
-	/** 
-	 * Run the 9th migration script.
-	 */
+	protected void performMigration() throws Exception {
+		runSqlScript("net/spy/photo/migration/migration10.sql");
+		updateFormats();
+	}
+
 	public static void main(String args[]) throws Exception {
 		PhotoMigration10 mig=new PhotoMigration10();
 		mig.migrate();
