@@ -11,7 +11,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.22 2001/01/08 10:02:52 dustin Exp $
+ $Id: default.xsl,v 1.23 2001/01/16 21:01:19 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -64,7 +64,7 @@
 						</table>
 						<p>
 						<font size="-2">
-						Copyright &#169; 1997-2000 Dustin Sallings of
+						Copyright &#169; 1997-2001 Dustin Sallings of
 						<a href="http://www.spy.net/">SPY
 						internetworking</a><br/>
 						All images and other data

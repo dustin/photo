@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.52 2001/01/16 07:36:15 knitterb Exp $
+ * $Id: PhotoSession.java,v 1.53 2001/01/16 21:01:19 dustin Exp $
  */
 
 package net.spy.photo;
@@ -211,20 +211,12 @@ public class PhotoSession extends Object
 			out=doIndex();
 		} else if(func.startsWith("adm")) {
 			// Anything that starts with rep is probably reporting.
-			try {
-				PhotoAdmin adm=new PhotoAdmin(this);
-				out=adm.process(func);
-			} catch(Exception e) {
-				throw new ServletException("Admin Exception:  " + e);
-			}
+			PhotoAdmin adm=new PhotoAdmin(this);
+			out=adm.process(func);
 		} else if(func.startsWith("rep")) {
 			// Anything that starts with rep is probably reporting.
-			try {
-				PhotoReporting rep=new PhotoReporting(this);
-				out=rep.process(func);
-			} catch(Exception e) {
-				throw new ServletException("Reporting Exception:  " + e);
-			}
+			PhotoReporting rep=new PhotoReporting(this);
+			out=rep.process(func);
 		} else {
 			throw new ServletException("No known function.");
 		}
