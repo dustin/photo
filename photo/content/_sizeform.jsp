@@ -3,7 +3,6 @@
 <p>
 <h1>Set the Optimal Viewing Size</h1>
 <html:form action="/setviewsize">
-<form method="POST" action="PhotoServlet">
 
 <html:errors/>
 
@@ -14,10 +13,6 @@
 		<html:option value="1024x768">1024x768</html:option>
 	</html:select>
 	<br/>
-	<%--
-	Remember:  <html:checkbox property="remember">
-	<br/>
-	--%>
 	<html:submit>Set Size</html:submit>
 
 </html:form>
