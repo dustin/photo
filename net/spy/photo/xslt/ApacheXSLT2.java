@@ -1,5 +1,5 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
-// $Id: ApacheXSLT2.java,v 1.1 2002/05/13 07:22:48 dustin Exp $
+// $Id: ApacheXSLT2.java,v 1.2 2002/05/23 20:45:27 dustin Exp $
 // Apache Xalan 2 support by Robert Searle
 
 package net.spy.photo.xslt;
@@ -39,7 +39,7 @@ public class ApacheXSLT2 extends PhotoXSLT {
 	/**
 	 * Construct.
 	 */
-	public ApacheXSLT() {
+	public ApacheXSLT2() {
 		super();
 	}
 
