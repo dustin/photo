@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.9 2000/12/27 06:05:25 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.10 2001/01/06 23:34:12 dustin Exp $
  */
 
 package net.spy.photo;
@@ -28,7 +28,7 @@ public class PhotoAdmin extends PhotoHelper {
 		this.ps=ps;
 	}
 
-	public String process(String func) throws ServletException {
+	public String process(String func) throws Exception {
 		String out="";
 
 		if(func.equals("admcat")) {
