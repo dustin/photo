@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.8 2001/12/28 12:39:37 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.9 2002/01/10 10:22:35 dustin Exp $
  */
 
 package net.spy.photo;
@@ -78,7 +78,7 @@ public class PhotoImageHelper extends PhotoHelper
 	 */
 	public PhotoImage getImage() throws Exception {
 		ensureConnected();
-		log("Getting image " + image_id + " from ImageServer");
+		// log("Getting image " + image_id + " from ImageServer");
 		return(server.getImage(image_id, false));
 	}
 
@@ -102,8 +102,10 @@ public class PhotoImageHelper extends PhotoHelper
 		// If we didn't get it from our cache, get it from the image server's
 		if(pi==null) {
 			ensureConnected();
+			/*
 			log("Getting image "
 				+ image_id + " (as thumbnail) from ImageServer");
+			*/
 			// Grab it from the image server.
 			pi=server.getImage(image_id, true);
 			// Cache the image for ten minutes.

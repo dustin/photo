@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.75 2001/12/30 22:15:31 dustin Exp $
+ * $Id: PhotoSession.java,v 1.76 2002/01/10 10:22:35 dustin Exp $
  */
 
 package net.spy.photo;
@@ -171,17 +171,21 @@ public class PhotoSession extends Object
 
 		rv.append("<exception>\n");
 		rv.append("\t<text>\n");
-		rv.append("\t\t" + PhotoXSLT.normalize(msg, true) + "\n");
+		rv.append("\t\t");
+		rv.append(PhotoXSLT.normalize(msg, true));
+		rv.append("\n");
 		rv.append("\t</text>\n");
 		rv.append("\t<exception_class>\n");
-		rv.append("\t\t" + PhotoXSLT.normalize(e.getClass().getName(), true)
-			+ "\n");
+		rv.append("\t\t");
+		rv.append(PhotoXSLT.normalize(e.getClass().getName(), true));
+		rv.append("\n");
 		rv.append("\t</exception_class>\n");
 		rv.append("\t<stack>\n");
-		String s[]=SpyUtil.split(",", SpyUtil.getStack(e, 1));
-		for(int i=0; i<s.length; i++) {
+		for(Enumeration en=SpyUtil.getStackEnum(e, 1); en.hasMoreElements();) {
 			rv.append("\t\t<stack_entry>\n");
-			rv.append("\t\t\t" + PhotoXSLT.normalize(s[i], true) + "\n");
+			rv.append("\t\t\t");
+			rv.append(PhotoXSLT.normalize(en.nextElement().toString(), true));
+			rv.append("\n");
 			rv.append("\t\t</stack_entry>\n");
 		}
 		rv.append("\t</stack>\n");
@@ -546,7 +550,7 @@ public class PhotoSession extends Object
 			try {
 				photo.rollback();
 			} catch(Exception e2) {
-				log("Error rolling back and/or reporting add falure", e2);
+				log("Error rolling back", e2);
 			}
 			throw new ServletException("Error adding image", e);
 		} finally {
@@ -602,7 +606,7 @@ public class PhotoSession extends Object
 				// Cache it for five minutes
 				cache.store(key, out, 5*60*1000);
 			} catch(Exception e) {
-				log("Error getting category list", e);
+				log("Error getting category list, returning an empty one", e);
 			} finally {
 					if(photo != null) {
 						freeDBConn(photo);
@@ -709,7 +713,7 @@ public class PhotoSession extends Object
 			out.print(output);
 			out.close();
 		} catch(Exception e) {
-			log("Error producing stylesheet output", e);
+			throw new ServletException("Error producing stylesheet output", e);
 		}
 		// We handled our own response.
 		return(null);
@@ -894,7 +898,7 @@ public class PhotoSession extends Object
 				catstuff += "</cat_view_item>\n\n";
 			}
 		} catch(Exception e) {
-			log("Error producing category view", e);
+			throw new ServletException("Error producing category view", e);
 		}
 		finally { freeDBConn(photo); }
 
@@ -961,7 +965,7 @@ public class PhotoSession extends Object
 		try {
 			saved=showSaved();
 		} catch(Exception e) {
-			log("Error getting saved search list", e);
+			log("Error getting saved search list, it will be empty", e);
 		}
 
 		PhotoXML xml=new PhotoXML();
@@ -1007,13 +1011,15 @@ public class PhotoSession extends Object
 		try {
 			tmp=getTotalImagesShown();
 		} catch(Exception e) {
-			log("Error gathering global meta data", e);
+			log("Error gathering global meta data, "
+				+ "total images shown will be empty", e);
 		}
 		sb.append("<total_images_shown>" + tmp + "</total_images_shown>\n");
 		try {
 			tmp=getTotalImages();
 		} catch(Exception e) {
-			log("Error gathering global meta data", e);
+			log("Error gathering global meta data, total images will be empty",
+				e);
 		}
 		sb.append("<total_images>" + tmp + "</total_images>\n");
 		// If the user has requested admin privs, set this flag.
@@ -1119,6 +1125,9 @@ public class PhotoSession extends Object
 		PhotoSearchResults results=sessionData.getResults();
 		int which=Integer.parseInt(request.getParameter("search_id"));
 		PhotoSearchResult r = results.get(which);
+		if(r==null) {
+			throw new ServletException("No results in session.");
+		}
 
 		// Add the PREV and NEXT button stuff, if applicable.
 		if(results.nResults() > which+1) {
@@ -1262,16 +1271,12 @@ public class PhotoSession extends Object
 	// Find images.
 	private String doFind() throws Exception {
 
-		try {
-			PhotoSearch ps = new PhotoSearch();
-			PhotoSearchResults results=null;
-			// Get the results and put them in the mofo session
-			results=ps.performSearch(request, sessionData);
-			sessionData.setResults(results);
-			sessionData.setEncodedSearch(ps.encodeSearch(request));
-		} catch(Exception e) {
-			log("Error performing search", e);
-		}
+		PhotoSearch ps = new PhotoSearch();
+		PhotoSearchResults results=null;
+		// Get the results and put them in the mofo session
+		results=ps.performSearch(request, sessionData);
+		sessionData.setResults(results);
+		sessionData.setEncodedSearch(ps.encodeSearch(request));
 
 		return(displaySearchResults());
 	}
@@ -1330,7 +1335,7 @@ public class PhotoSession extends Object
 			PhotoImage image=null;
 
 			if(thumbnail) {
-				log("Requesting thumbnail");
+				// log("Requesting thumbnail");
 
 				// We're going to go ahead and allow the thumbnails to be
 				// cached for an hour.
@@ -1341,7 +1346,7 @@ public class PhotoSession extends Object
 
 				image=p.getThumbnail(sessionData.getUser().getId());
 			} else {
-				log("Requesting full image");
+				// log("Requesting full image");
 				image=p.getImage(sessionData.getUser().getId());
 			}
 
@@ -1399,7 +1404,7 @@ public class PhotoSession extends Object
 				sessionData.setIsadmin(true);
 			}
 		} catch(Exception e) {
-			log("Error setting admin privs", e);
+			throw new ServletException("Error setting admin privs", e);
 		}
 	}
 

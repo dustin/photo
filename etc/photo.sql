@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.10 2001/12/28 12:39:37 dustin Exp $
+-- $Id: photo.sql,v 1.11 2002/01/10 10:22:35 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -246,19 +246,19 @@ grant all on user_profile_acls to nobody;
 
 -- Log view
 create view log_user_ip_agent as
-	select wwwusers.username, photo_log.remote_addr, user_agent.user_agent
-		from wwwusers, photo_log, user_agent
-	  where wwwusers.id = photo_log.wwwuser_id and
-	  	user_agent.user_agent_id = photo_log.user_agent
+	select u.username, l.remote_addr, a.user_agent
+		from wwwusers u, photo_log l, user_agent a
+	  where u.id = l.wwwuser_id and
+	  	a.user_agent_id = l.user_agent
 ;
 
 grant all on log_user_ip_agent to nobody;
 
 create view log_user_ip_keywords as
-	select wwwusers.username, photo_log.remote_addr, album.keywords
-		from wwwusers, photo_log, album
-	  where wwwusers.id = photo_log.wwwuser_id and
-	    album.id = photo_log.photo_id
+	select a.id as photo_id, u.username, l.remote_addr, a.keywords, l.ts
+		from wwwusers u, photo_log l, album a
+	  where u.id = l.wwwuser_id and
+	    a.id = l.photo_id
 ;
 
 grant all on log_user_ip_keywords to nobody;
