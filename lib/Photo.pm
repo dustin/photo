@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.20 1998/07/23 06:01:27 dustin Exp $
+# $Id: Photo.pm,v 1.21 1998/08/11 04:57:07 dustin Exp $
 
 package Photo;
 
@@ -71,7 +71,7 @@ sub buildQuery
     $query.="                       where username='$ENV{REMOTE_USER}')";
 
     if($h{searchtype} eq "simple") {
-        $query.="\n    and $h{field} ~* '$h{what}'";
+        $query.="\n    and $h{field} ~* '$h{what}' order by a.ts desc;";
     } else {
         $needao=0;
         $sub="";
@@ -424,7 +424,7 @@ sub doCatView
         $t=($r->[2]==1?"image":"images");
 
         print "<li>$r->[0]:  <a href=\"$Photo::cgidir/photo.cgi?func=search&".
-        "searchtype=advanced&cat=$r->[1]&maxret=10\">$r->[2] $t</a></li>\n";
+        "searchtype=advanced&cat=$r->[1]&maxret=5\">$r->[2] $t</a></li>\n";
     }
 
     print "</ul>\n" . $q->end_html . "\n";
