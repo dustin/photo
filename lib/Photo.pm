@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.40 1998/10/05 07:09:19 dustin Exp $
+# $Id: Photo.pm,v 1.41 1998/10/05 07:16:18 dustin Exp $
 
 package Photo;
 
@@ -232,7 +232,7 @@ sub cacheImage
 	$s->finish;
 	# Only cache if we got something, maybe this will help with some of the
 	# problems...
-	if(length($out)) {
+	if(length($out)>0) {
 	    $c->cache($key, $type, $out);
 	}
 	undef($out);
@@ -277,7 +277,9 @@ sub makeThumbnail
 	close(IN);
 	unlink("/tmp/photoout.tn.$img.$$");
 
-	$c->cache($key, $type, $out);
+	if(length($out)>0) {
+		$c->cache($key, $type, $out);
+	}
 }
 
 sub displayImage
