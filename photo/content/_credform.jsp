@@ -4,7 +4,7 @@
 
 <p>
 <h1>Login</h1>
-<form method="POST" action="PhotoServlet">
+<form method="POST" action="login.do">
 	<input type="hidden" name="func" value="setcred"/>
 
 	<table>

@@ -11,7 +11,7 @@
 				</template:insert>
 				<ul>
 					<photo:guest>
-						<li><a href="credform.jsp">Login</a></li>
+						<li><a href="login.do">Login</a></li>
 					</photo:guest>
 					<photo:guest negate="1">
 						<li><a href="PhotoServlet?func=addform">Add a New Image</a></li>
