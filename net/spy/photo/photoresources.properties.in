@@ -201,6 +201,7 @@ error.getgallery.id=<li>Required parameter ``id'' not provided</li>
 
 # Reporting stuff
 reporting.links.userCat=User/Category Report
+reporting.links.userCatXd=User/Category Report (last 30 days)
 reporting.links.topImages=Top images
 reporting.links.topImagesXd=Top images (last 30 days)
 reporting.links.mostActiveUsers=Most Active Users

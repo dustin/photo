@@ -245,6 +245,17 @@
 		<forward name="success" path="/admin/reportDisplay.jsp"/>
 	</action>
 
+	<action path="/report/userCatXd"
+		className="net.spy.photo.struts.AdminReportMapping"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="User Category Report"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.GetUserCatXd"/>
+
+		<forward name="success" path="/admin/reportDisplay.jsp"/>
+	</action>
+
 	<action path="/report/userImgs"
 		className="net.spy.photo.struts.AdminReportMapping"
 		type="net.spy.photo.struts.AdminReportAction">

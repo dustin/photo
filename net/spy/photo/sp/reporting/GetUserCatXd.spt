@@ -1,5 +1,5 @@
 #
-# $Id: GetUserCat.spt,v 1.2 2003/05/12 06:47:51 dustin Exp $
+# $Id: GetUserCatXd.spt,v 1.1 2003/05/12 06:47:51 dustin Exp $
 #
 
 @package
@@ -23,7 +23,14 @@ select u.username, c.name as cat, count(*)
 		and l.photo_id = a.id
 		and a.cat = c.id
 		and username != 'guest'
+		and l.ts > now() - (? || ' days')::interval
 	group by
 		u.username, c.name
 	order by
 		username, count(*) desc
+
+@params
+xdays required INTEGER Number of days to go back
+
+@defaults
+xdays 30
