@@ -1,0 +1,45 @@
+<html><head><title>Set Your Style</title>
+<link rel="stylesheet" href="/perl/dustin/photo/style.cgi">
+</head>
+
+<body bgcolor="#fFfFfF">
+
+<h2>Set Your Style</h2>
+
+<form method="POST"
+action="/cgi-bin/dustin/photo/setstyle.cgi">
+
+<table>
+   <tr>
+       <td>Font:</td>
+       <td>
+	   <select name="font">
+	   <option>Arial
+	   <option>Helvetica
+	   <option>cursive
+	   <option>fantasy
+	   <option>sans-serif
+	   <option>serif
+	   </select>
+       </td>
+   </tr>
+   <tr>
+       <td>Header Transform:</td>
+	   <td>
+	   <select name="h_transform">
+	   <option>none
+	   <option>capitalize
+	   <option>uppercase
+	   <option>lowercase
+	   </select>
+	   </td>
+   </tr>
+</table>
+
+<input type="submit" value="Set Style">
+<input type="reset" value="Clear">
+
+</form>
+
+<!--#include virtual="../tail.shtml"-->
+</body></html>
