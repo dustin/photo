@@ -19,6 +19,3 @@ select
 @results
 name VARCHAR Name of the property (not null)
 value VARCHAR Value of the property (possibly null)
-
-@cachetime
-900

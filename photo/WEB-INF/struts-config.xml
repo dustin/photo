@@ -23,6 +23,8 @@
 			type="net.spy.photo.struts.AddToGalleryForm"/>
     <form-bean name="saveGalleryForm"
 			type="net.spy.photo.struts.SaveGalleryForm"/>
+    <form-bean name="emptyForm"
+			type="net.spy.photo.struts.EmptyForm"/>
 
 		<!-- Admin beans -->
 		<form-bean name="adminUserForm" type="net.spy.photo.struts.AdminUserForm"/>
@@ -215,6 +217,13 @@
 		input="/admin/display.jsp"
 		type="net.spy.photo.struts.AdminEditImage">
 		<forward name="success" path="/display.do"/>
+	</action>
+
+	<action path="/admin/saveProperties"
+		name="emptyForm"
+		input="/admin/properties.jsp"
+		type="net.spy.photo.struts.AdminSaveProperties">
+		<forward name="success" path="/index.jsp"/>
 	</action>
 
   </action-mappings>

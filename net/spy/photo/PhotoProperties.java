@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoProperties.java,v 1.2 2002/09/14 00:52:11 dustin Exp $
+// $Id: PhotoProperties.java,v 1.3 2002/09/16 01:51:03 dustin Exp $
 
 package net.spy.photo;
 
@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -17,6 +18,8 @@ import java.util.Collection;
 import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
 import net.spy.db.Savable;
+
+import net.spy.cache.SpyCache;
 
 import net.spy.photo.sp.GetProperties;
 import net.spy.photo.sp.DeleteAllProperties;
@@ -44,15 +47,31 @@ public class PhotoProperties extends Properties implements Savable
 	}
 
 	private void init() throws SQLException {
+		SpyCache sc=SpyCache.getInstance();
+
+		String key="photo_props";
+
+		Map m=(Map)sc.get(key);
+		if(m==null) {
+			m=initFromDB();
+			sc.store(key, m, 900*1000);
+		}
+
+		putAll(m);
+	}
+
+	private Map initFromDB() throws SQLException {
+		HashMap hm=new HashMap();
 		GetProperties gp=new GetProperties(new PhotoConfig());
 
 		ResultSet rs=gp.executeQuery();
 		while(rs.next()) {
-			setProperty(rs.getString("name"), rs.getString("value"));
+			hm.put(rs.getString("name"), rs.getString("value"));
 		}
 
 		rs.close();
 		gp.close();
+		return(hm);
 	}
 
 	/** 

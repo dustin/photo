@@ -108,6 +108,10 @@
 								message="index.links.admin.newprofile"/>
 						</li>
 						<li>
+							<photo:link url="/admin/properties.jsp"
+								message="index.links.admin.properties"/>
+						</li>
+						<li>
 							<photo:link url="/adminify.do?action=unsetadmin"
 								message="index.links.admin.droppriv"/>
 						</li>
