@@ -315,7 +315,7 @@
 		scope="request"
 		name="sessionForm">
 
-		<forward name="next" path="/nextresults.do"/>
+		<forward name="next" path="/reverseSearch.do"/>
 	</action>
 
 	<!-- ***************************************************************** -->
