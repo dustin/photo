@@ -13,7 +13,7 @@ Update a user.
 
 @sql
 update wwwusers
-	set username=?, realname=?, email=?, password=?, canadd=?
+	set username=?, realname=?, email=?, password=?, canadd=?, persess=?
 	where id=?
 
 @params
@@ -22,5 +22,5 @@ realname required VARCHAR The real name of the user
 email required VARCHAR The email address of the user
 password required VARCHAR The encoded password
 canadd required BIT true if the user can add
+persess required VARCHAR persistent session ID
 user_id required INTEGER The ID number of this user
-
