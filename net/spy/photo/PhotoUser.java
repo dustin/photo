@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.28 2003/01/09 07:42:54 dustin Exp $
+// $Id: PhotoUser.java,v 1.29 2003/01/10 08:43:33 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 package net.spy.photo;
@@ -99,7 +99,7 @@ public class PhotoUser extends AbstractSavable implements Serializable {
 			rs.close();
 			db.close();
 		} catch(SQLException e) {
-			throw new PhotoUserException("Error innitializing ACLs", e);
+			throw new PhotoUserException("Error initializing ACLs", e);
 		}
 	}
 
