@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.8 2002/06/23 02:10:39 dustin Exp $
+	$Id: build.xml,v 1.9 2002/06/23 03:16:32 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -63,6 +63,7 @@
 		<jar jarfile="photo.war" basedir="." excludes="**">
 			<zipfileset dir="photo" prefix=""/>
 			<zipfileset dir="." prefix="WEB-INF/lib" includes="photo.jar"/>
+			<zipfileset dir="etc" prefix="WEB-INF/lib" includes="photo.conf"/>
 		</jar>
 	</target>
 
