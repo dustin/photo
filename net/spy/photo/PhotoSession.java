@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.107 2002/02/25 09:58:56 dustin Exp $
+ * $Id: PhotoSession.java,v 1.108 2002/02/25 19:49:13 dustin Exp $
  */
 
 package net.spy.photo;
@@ -693,12 +693,19 @@ public class PhotoSession extends Object
 					} else {
 						throw new ServletException(
 							"Not good, couldn't record the entry in the log, "
-							+ "it will not be stored in the DB!", se);
+							+ "the image is available, but it will not be "
+							+ "stored in the DB!", se);
 					} // Examining error
 				} // catch
 			} // Retry loop
 			st.close();
 			db2.close();
+			if(success==false) {
+				throw new ServletException(
+					"Not good, couldn't record the entry in the log, "
+					+ "the image is available, but will not be stored in "
+					+ "the DB.");
+			}
 
 			PhotoXML xml=new PhotoXML();
 			xml.setTitle("Upload Succesful");
