@@ -349,7 +349,7 @@ def go():
 def parseArgs():
     global config
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'a:u:i:fFi')
+        opts, args = getopt.getopt(sys.argv[1:], 'a:u:i:fFiI')
         config = dict(opts)
     except getopt.GetoptError, e:
         raise UsageError(e)
