@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchFilterAction.java,v 1.1 2002/06/29 07:13:56 dustin Exp $
+// $Id: SearchFilterAction.java,v 1.2 2002/06/29 07:40:07 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -52,7 +52,14 @@ public class SearchFilterAction extends PhotoAction {
 
 			// Figure out what filter to use
 			if(filterName.equals("onceamonth")) {
-				filter=new OnceAMonthFilter();
+				OnceAMonthFilter oam=new OnceAMonthFilter();
+				// Save the sort direction.
+				if(sf.getSdirection().equals("desc")) {
+					oam.setSortDirection(OnceAMonthFilter.SORT_REVERSE);
+				} else {
+					oam.setSortDirection(OnceAMonthFilter.SORT_FORWARD);
+				}
+				filter=oam;
 			} else {
 				throw new ServletException("Unknown filter:  " + filterName);
 			}

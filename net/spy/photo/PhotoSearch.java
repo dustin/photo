@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.26 2002/06/29 07:13:56 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.27 2002/06/29 07:40:07 dustin Exp $
  */
 
 package net.spy.photo;
@@ -26,45 +26,11 @@ import net.spy.photo.struts.SaveSearchForm;
  */
 public class PhotoSearch extends PhotoHelper {
 
+	/**
+	 * Get a PhotoSearch instance.
+	 */
 	public PhotoSearch() {
 		super();
-	}
-
-	/**
-	 * Encode a search from an HttpServletRequest.
-	 */
-	public String encodeSearch(HttpServletRequest request) {
-		return(encodeSearch(getSearchForm(request)));
-	}
-
-	/**
-	 * Save a search based with an HttpServletRequest.
-	 *
-	 * The following parameters are expected:
-	 *
-	 * <ul>
-	 *   <li><code>name</code> - the name of the search</li>
-	 *   <li><code>search</code> - the encoded search parameters</li>
-	 * </ul>
-	 */
-	public void saveSearch(HttpServletRequest request, PhotoUser user)
-		throws Exception {
-
-		// Check the parameters.
-		String name=request.getParameter("name").trim();
-		if(name.length() == 0) {
-			throw new Exception("Invalid ``name'' parameter");
-		}
-		String search=request.getParameter("search").trim();
-		if(search.length() == 0) {
-			throw new Exception("Invalid ``search'' parameter");
-		}
-
-		SaveSearchForm form=new SaveSearchForm();
-		form.setName(request.getParameter("name"));
-		form.setSearch(request.getParameter("search"));
-
-		saveSearch(form, user);
 	}
 
 	/**
@@ -98,42 +64,6 @@ public class PhotoSearch extends PhotoHelper {
 		} catch(Exception e) {
 			log("Error saving search:  " + e);
 		}
-	}
-
-	/**
-	 * Perform a search from an HttpServletRequest.
-	 */
-	public PhotoSearchResults performSearch(
-		HttpServletRequest request, PhotoSessionData sessionData)
-		throws ServletException  {
-
-		return(performSearch(getSearchForm(request), sessionData));
-	}
-
-	/**
-	 * Get a search form from a HttpServletRequest.
-	 */
-	private SearchForm getSearchForm(HttpServletRequest request) {
-		SearchForm sf=new SearchForm();
-
-		sf.setCat(request.getParameterValues("cat"));
-		sf.setFieldjoin(request.getParameter("fieldjoin"));
-		sf.setField(request.getParameter("field"));
-		sf.setKeyjoin(request.getParameter("keyjoin"));
-		sf.setWhat(request.getParameter("what"));
-		sf.setTstartjoin(request.getParameter("tstartjoin"));
-		sf.setTstart(request.getParameter("tstart"));
-		sf.setTendjoin(request.getParameter("tendjoin"));
-		sf.setTend(request.getParameter("tend"));
-		sf.setStartjoin(request.getParameter("startjoin"));
-		sf.setStart(request.getParameter("start"));
-		sf.setEndjoin(request.getParameter("endjoin"));
-		sf.setEnd(request.getParameter("end"));
-		sf.setOrder(request.getParameter("order"));
-		sf.setSdirection(request.getParameter("sdirection"));
-		sf.setMaxret(request.getParameter("maxret"));
-
-		return(sf);
 	}
 
 	/**
