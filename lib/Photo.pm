@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.62 1998/12/30 04:44:59 dustin Exp $
+# $Id: Photo.pm,v 1.63 1998/12/30 04:46:52 dustin Exp $
 
 package Photo;
 
@@ -466,7 +466,7 @@ sub doFind
 			$p{'IMAGEDATA'}="data:image/jpeg;base64,".
 				$self->base64image("tn/$p{'IMAGE'}");
 		} else {
-			$p{'IMAGEDATA'}="$Photo::cgidir/tn/img.cgi/$p{'IMAGE'}";
+			$p{'IMAGEDATA'}="$Photo::cgidir/img.cgi/tn/$p{'IMAGE'}";
 		}
 
 		# Two columns.
