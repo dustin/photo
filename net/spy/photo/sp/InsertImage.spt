@@ -1,0 +1,38 @@
+#
+# $Id: InsertImage.spt,v 1.1 2002/11/10 09:41:59 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Store the basic fields of a new image.
+
+@sql
+insert
+		into album(
+			id,
+			keywords,
+			descr,
+			cat,
+			taken,
+			size,
+			addedby,
+			ts,
+			width,
+			height
+		)
+		values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
+@params
+image_id required INTEGER New image ID
+keywords required VARCHAR Keywords for this image
+description required VARCHAR Description for this image entry
+cat_id required INTEGER ID of the category to contain this image
+taken required DATE Date this image was taken
+size required INTEGER Size of this image (in bytes)
+added_by required INTEGER ID of the user who added this image
+timestamp required TIMESTAMP Time this image was added
+width required INTEGER Width (in pixels) of this image
+height required INTEGER Height (in pixels) of this image
+

@@ -1,0 +1,20 @@
+#
+# $Id: InsertACLEntry.spt,v 1.1 2002/11/10 09:41:59 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Insert a new ACL entry
+
+@sql
+insert into wwwacl(userid, cat, canview, canadd)
+	values(?,?,?,?)
+
+@params
+user_id required INTEGER The user id for the ACL
+cat_id required INTEGER The category ID
+can_view required BIT true if this ACL entry indicates this user can view this category
+can_add required BIT true if this ACL entry indicates this user can add to this category
+

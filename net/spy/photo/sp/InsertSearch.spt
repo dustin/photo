@@ -1,0 +1,25 @@
+#
+# $Id: InsertSearch.spt,v 1.1 2002/11/10 09:41:59 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Save a new search.
+
+@sql
+insert
+	into searches(
+		name,
+		addedby,
+		search,
+		ts)
+	values(?, ?, ?, ?)
+
+@params
+name required VARCHAR Name of this search
+added_by required INTEGER ID of the user who is adding this search
+search_data required VARCHAR The search data.
+timestamp required TIMESTAMP The time this search was saved
+

@@ -1,0 +1,19 @@
+#
+# $Id: GetGeneratedKey.spt,v 1.1 2002/11/10 09:41:59 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get a generated key.
+
+@sql
+select currval(?) as key
+
+@params
+seq required VARCHAR The name of the sequence from which we want the key
+
+@results
+key INTEGER The last key provided by this sequence.
+

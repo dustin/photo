@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.31 2002/11/03 07:33:35 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.32 2002/11/10 09:41:59 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,11 +14,12 @@ import java.sql.ResultSet;
 import javax.servlet.ServletException;
 
 import net.spy.SpyDB;
+import net.spy.util.Base64;
 
 import net.spy.photo.struts.SaveSearchForm;
 import net.spy.photo.struts.SearchForm;
 
-import net.spy.util.Base64;
+import net.spy.photo.sp.InsertSearch;
 
 /**
  * Perform searches.
@@ -46,18 +47,15 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		try {
-			String query = "insert into searches (name, addedby, search, ts)\n"
-				+ "  values(?, ?, ?, ?)";
-			SpyDB photo=new SpyDB(getConfig());
-			PreparedStatement st=photo.prepareStatement(query);
-			st.setString(1, form.getName());
-			st.setInt(2, user.getId());
-			st.setString(3, form.getSearch());
-			st.setDate(4, new java.sql.Date(System.currentTimeMillis()));
+			InsertSearch is=new InsertSearch(getConfig());
+			is.setName(form.getName());
+			is.setAddedBy(user.getId());
+			is.setSearchData(form.getSearch());
+			is.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
 
-			st.executeUpdate();
+			is.executeUpdate();
 
-			photo.close();
+			is.close();
 		} catch(Exception e) {
 			log("Error saving search:  " + e);
 		}

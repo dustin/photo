@@ -1,0 +1,46 @@
+#
+# $Id: GetPhotoInfo.spt,v 1.1 2002/11/10 09:41:59 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get all of the info required to display photo information
+
+@sql
+select
+		a.descr,
+		a.keywords,
+		a.cat as catid,
+		a.taken,
+		a.size,
+		a.addedby,
+		a.width,
+		a.height,
+		a.ts,
+		a.id,
+		c.name as catname
+	from
+		album a,
+		cat c
+	where
+		a.cat=c.id
+		and a.id=?
+
+@params
+photo_id required INTEGER The ID of the photo to look up
+
+@results
+descr VARCHAR Description of this image
+keywords VARCHAR Keywords for this image
+catid INTEGER ID of the category in which this image is
+taken DATE Date this image was taken
+size INTEGER Size (in bytes) of this image
+addedby INTEGER The ID of the user who added this image
+width INTEGER Width of this image
+height INTEGER Height of this image
+ts TIMESTAMP Time this image made it into the database
+id INTEGER ID of this image
+catname VARCHAR Name of the category in which this image is
+

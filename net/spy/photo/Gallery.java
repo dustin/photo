@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.8 2002/09/14 05:06:34 dustin Exp $
+// $Id: Gallery.java,v 1.9 2002/11/10 09:41:59 dustin Exp $
 
 package net.spy.photo;
 
@@ -21,6 +21,8 @@ import net.spy.SpyDB;
 import net.spy.db.SpyCacheDB;
 
 import net.spy.photo.sp.LookupGallery;
+import net.spy.photo.sp.GetGalleriesForUser;
+import net.spy.photo.sp.GetGalleryForUser;
 
 /**
  * A named collection of images.
@@ -59,7 +61,7 @@ public class Gallery extends Object implements java.io.Serializable {
 		this.id=rs.getInt("gallery_id");
 		this.name=rs.getString("gallery_name");
 		this.owner=Persistent.getSecurity().getUser(
-			rs.getInt("wwwuser_id"));
+			rs.getInt("user_id"));
 		this.isPublic=rs.getBoolean("ispublic");
 		this.timestamp=rs.getTimestamp("ts");
 
@@ -78,13 +80,9 @@ public class Gallery extends Object implements java.io.Serializable {
 		Cursor rv=null;
 
 		try {
-			SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
-			PreparedStatement pst=db.prepareStatement(
-				"select * from galleries\n"
-				+ "  where wwwuser_id=? or ispublic = true\n"
-				+ "  order by ts desc", 3600);
-			pst.setInt(1, user.getId());
-			ResultSet rs=pst.executeQuery();
+			GetGalleriesForUser db=new GetGalleriesForUser(new PhotoConfig());
+			db.setUserId(user.getId());
+			ResultSet rs=db.executeQuery();
 			rv=new Cursor();
 			while(rs.next()) {
 				Gallery g=new Gallery(rs);
@@ -92,7 +90,6 @@ public class Gallery extends Object implements java.io.Serializable {
 				rv.add(g);
 			}
 			rs.close();
-			pst.close();
 			db.close();
 		} catch(Exception e) {
 			throw new PhotoException("Error getting gallery list", e);
@@ -129,15 +126,10 @@ public class Gallery extends Object implements java.io.Serializable {
 		Gallery rv=null;
 
 		try {
-			SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
-			PreparedStatement pst=db.prepareStatement(
-				"select gallery_id, gallery_name, wwwuser_id, ispublic, ts\n"
-					+ " from galleries\n"
-					+ "   where gallery_id=?\n"
-					+ "    and (wwwuser_id=? or ispublic=true)", 3600);
-			pst.setInt(1, id);
-			pst.setInt(2, user.getId());
-			ResultSet rs=pst.executeQuery();
+			GetGalleryForUser db=new GetGalleryForUser(new PhotoConfig());
+			db.setGalleryId(id);
+			db.setUserId(user.getId());
+			ResultSet rs=db.executeQuery();
 			if(rs.next()) {
 				rv=new Gallery(rs);
 			}

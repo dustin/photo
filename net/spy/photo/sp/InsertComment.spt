@@ -1,0 +1,26 @@
+#
+# $Id: InsertComment.spt,v 1.1 2002/11/10 09:41:59 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Insert a new comment.
+
+@sql
+insert into commentary(
+			wwwuser_id,
+			photo_id,
+			note,
+			remote_addr,
+			ts)
+		values(?,?,?,?,?)
+
+@params
+user_id required INTEGER The user ID
+photo_id required INTEGER The photo ID
+comment required VARCHAR The comment itself
+remote_addr required VARCHAR The address of the remote user
+timestamp required TIMESTAMP The time the comment was submitted
+

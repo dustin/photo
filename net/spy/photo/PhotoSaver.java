@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaver.java,v 1.7 2002/07/10 04:00:17 dustin Exp $
+// $Id: PhotoSaver.java,v 1.8 2002/11/10 09:41:59 dustin Exp $
 
 package net.spy.photo;
 
@@ -10,8 +10,11 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 import net.spy.SpyDB;
+
+import net.spy.photo.sp.InsertImage;
 
 /**
  * This class is responsible for saving images that have been uploaded.
@@ -22,6 +25,7 @@ public class PhotoSaver extends Object {
 	private String info=null;
 	private int cat=-1;
 	private String taken=null;
+	private java.util.Date takenDate=null;
 	private PhotoUser user=null;
 	private PhotoImage photoImage=null;
 	private Timestamp timestamp=null;
@@ -67,16 +71,29 @@ public class PhotoSaver extends Object {
 	}
 
 	public void setTaken(String taken) {
+		SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
+		try {
+			this.takenDate=sdf.parse(taken);
+		} catch(ParseException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException(taken
+				+ " can't be parsed as a date:  " + e);
+		}
 		this.taken=taken;
 	}
 
 	public void setTaken(java.util.Date taken) {
 		SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
 		this.taken=sdf.format(taken);
+		takenDate=taken;
 	}
 
 	public String getTaken() {
 		return(taken);
+	}
+
+	public java.util.Date getTakenAsDate() {
+		return(takenDate);
 	}
 
 	public void setPhotoImage(PhotoImage photoImage) {
@@ -172,26 +189,22 @@ public class PhotoSaver extends Object {
 			conn=db.getConn();
 			conn.setAutoCommit(false);
 
-			query = "insert into album(id, keywords, descr, cat, taken, size, "
-				+ " addedby, ts, width, height)\n"
-				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			InsertImage ii=new InsertImage(conn);
 
-			PreparedStatement pst=conn.prepareStatement(query);
-
-			int i=1;
-			pst.setInt(i++, getId());
-			pst.setString(i++, getKeywords());
-			pst.setString(i++, getInfo());
-			pst.setInt(i++, getCat());
-			pst.setString(i++, getTaken());
-			pst.setInt(i++, getPhotoImage().size());
-			pst.setInt(i++, user.getId());
-			pst.setTimestamp(i++, getTimestamp());
-			pst.setInt(i++, getPhotoImage().getWidth());
-			pst.setInt(i++, getPhotoImage().getHeight());
+			ii.setImageId(getId());
+			ii.setKeywords(getKeywords());
+			ii.setDescription(getInfo());
+			ii.setCatId(getCat());
+			ii.setTaken(new java.sql.Date(getTakenAsDate().getTime()));
+			ii.setSize(getPhotoImage().size());
+			ii.setAddedBy(user.getId());
+			ii.setTimestamp(getTimestamp());
+			ii.setWidth(getPhotoImage().getWidth());
+			ii.setHeight(getPhotoImage().getHeight());
 
 			// Run the query
-			pst.executeUpdate();
+			ii.executeUpdate();
+			ii.close();
 
 			// Cache the image data
 			PhotoImageHelper photoHelper=new PhotoImageHelper(getId());

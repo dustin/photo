@@ -1,0 +1,18 @@
+#
+# $Id: UpdateCategory.spt,v 1.1 2002/11/10 09:41:59 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Give a category a new name.
+
+@sql
+update cat set name=?
+	where id=?
+
+@params
+name required VARCHAR New name for the category
+id required INTEGER Category ID
+

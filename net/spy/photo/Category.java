@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.8 2002/11/04 03:11:24 dustin Exp $
+// $Id: Category.java,v 1.9 2002/11/10 09:41:59 dustin Exp $
 
 package net.spy.photo;
 
@@ -22,9 +22,16 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import net.spy.SpyDB;
+import net.spy.db.DBSP;
 import net.spy.cache.SpyCache;
 
 import net.spy.photo.sp.GetAllCategories;
+import net.spy.photo.sp.DeleteACLForCat;
+import net.spy.photo.sp.InsertACLEntry;
+import net.spy.photo.sp.InsertCategory;
+import net.spy.photo.sp.UpdateCategory;
+import net.spy.photo.sp.GetACLsForCategory;
+import net.spy.photo.sp.GetGeneratedKey;
 
 /**
  * Category representation.
@@ -169,16 +176,13 @@ public class Category extends Object implements Comparable {
 	 */
 	private static void loadACLs(Collection categories) throws SQLException {
 		
-		SpyDB db=new SpyDB(new PhotoConfig());
-		PreparedStatement pst=db.prepareStatement(
-			"select distinct userid, canview, canadd\n"
-				+ " from wwwacl where cat=?");
+		GetACLsForCategory db=new GetACLsForCategory(new PhotoConfig());
 
 		for (Iterator i=categories.iterator(); i.hasNext(); ) {
 			Category cat=(Category)i.next();
 
-			pst.setInt(1, cat.getId());
-			ResultSet rs=pst.executeQuery();
+			db.setCat(cat.getId());
+			ResultSet rs=db.executeQuery();
 
 			// (re)set the ACL set for this category
 			cat.setAcl(new ArrayList());
@@ -194,7 +198,6 @@ public class Category extends Object implements Comparable {
 			}
 			rs.close();
 		}
-		pst.close();
 		db.close();
 	}
 
@@ -207,63 +210,66 @@ public class Category extends Object implements Comparable {
 		try {
 			conn=db.getConn();
 			conn.setAutoCommit(false);
-			PreparedStatement pst=null;
+
+			DBSP saveCat=null;
 
 			// What to do here depends on whether it's a new category or a
 			// modification of an existing category.
 			if(id>=0) {
 				// Existing user
-				pst=conn.prepareStatement("update cat set name=? where id=?");
-				pst.setInt(2, id);
+				saveCat=new UpdateCategory(conn);
+				saveCat.set("id", id);
 			} else {
-				pst=conn.prepareStatement("insert into cat(name) values(?)");
+				saveCat=new InsertCategory(conn);
 			}
 
 			// Set the common fields
-			pst.setString(1, name);
+			saveCat.set("name", name);
 			// Save the category proper
-			pst.executeUpdate();
-			pst.close();
+			saveCat.executeUpdate();
+			saveCat.close();
+			saveCat=null;
 
 			// If'n it's a new category, let's look up the ACL we just saved.
 			if(id==-1) {
-				Statement st=conn.createStatement();
-				ResultSet rs=st.executeQuery(
-					"select currval('cat_id_seq')");
+				GetGeneratedKey ggk=new GetGeneratedKey(conn);
+				ggk.setSeq("cat_id_seq");
+				ResultSet rs=ggk.executeQuery();
 				if(!rs.next()) {
 					throw new PhotoException(
 						"No results returned while looking up new cat id");
 				}
 				id=rs.getInt(1);
 				rs.close();
-				st.close();
+				ggk.close();
 				System.err.println("New category:  " + id);
 			}
 
 			// OK, now deal with the ACLs
 
 			// Out with the old
-			pst=conn.prepareStatement("delete from wwwacl where cat=?");
-			pst.setInt(1, id);
-			pst.executeUpdate();
-			pst.close();
+			DeleteACLForCat dacl=new DeleteACLForCat(conn);
+			dacl.setCat(id);
+			dacl.executeUpdate();
+			dacl.close();
+			dacl=null;
 
 			// In with the new
 
-			pst=conn.prepareStatement(
-				"insert into wwwacl(userid, cat, canview, canadd) "
-					+ "values(?,?,?,?)");
+			InsertACLEntry iacl=new InsertACLEntry(conn);
 
 			for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
 				PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
 
-				pst.setInt(1, aclEntry.getUid());
-				pst.setInt(2, id);
-				pst.setBoolean(3, aclEntry.canView());
-				pst.setBoolean(4, aclEntry.canAdd());
-				pst.executeUpdate();
+				iacl.setUserId(aclEntry.getUid());
+				iacl.setCatId(id);
+				iacl.setCanView(aclEntry.canView());
+				iacl.setCanAdd(aclEntry.canAdd());
+				iacl.executeUpdate();
 			}
-			pst.close();
+			iacl.close();
+			iacl=null;
+
 			conn.commit();
 		} catch(Exception e) {
 			if(conn!=null) {

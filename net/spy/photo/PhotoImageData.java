@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.10 2002/08/08 23:04:57 dustin Exp $
+// $Id: PhotoImageData.java,v 1.11 2002/11/10 09:41:59 dustin Exp $
 
 package net.spy.photo;
 
@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import net.spy.SpyDB;
 
 import net.spy.cache.SpyCache;
+
+import net.spy.photo.sp.GetPhotoInfo;
 
 /**
  * This class represents, and retreives all useful data for a given image.
@@ -183,17 +185,10 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 	private static PhotoImageData getDataFromDB(int id) throws Exception {
 		PhotoImageData rv=new PhotoImageData();
 
-		String query="select a.descr, a.keywords, a.cat as catid, a.taken, "
-			+ "a.size, a.addedby, a.width, a.height, a.ts, a.id, "
-			+ "c.name as catname\n"
-			+ "from album a, cat c\n"
-			+ "where a.cat=c.id and a.id=?";
+		GetPhotoInfo db=new GetPhotoInfo(new PhotoConfig());
+		db.setPhotoId(id);
 
-		SpyDB db=new SpyDB(new PhotoConfig());
-		PreparedStatement pst=db.prepareStatement(query);
-		pst.setInt(1, id);
-
-		ResultSet rs=pst.executeQuery();
+		ResultSet rs=db.executeQuery();
 		if(rs.next()) {
 			rv.initFromResultSet(rs);
 		} else {

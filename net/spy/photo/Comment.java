@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.13 2002/11/03 07:33:35 dustin Exp $
+// $Id: Comment.java,v 1.14 2002/11/10 09:41:59 dustin Exp $
 
 package net.spy.photo;
 
@@ -15,6 +15,9 @@ import java.util.List;
 import net.spy.SpyDB;
 
 import net.spy.photo.sp.FindImagesByComments;
+import net.spy.photo.sp.GetCommentsForPhoto;
+import net.spy.photo.sp.InsertComment;
+import net.spy.photo.sp.GetGeneratedKey;
 
 /**
  * Comments on photos.
@@ -49,7 +52,7 @@ public class Comment extends Object implements java.io.Serializable {
 		note=rs.getString("note");
 		timestampString=rs.getString("ts");
 		remoteAddr=rs.getString("remote_addr");
-		user=sec.getUser(rs.getInt("wwwuser_id"));
+		user=sec.getUser(rs.getInt("user_id"));
 	}
 
 	/**
@@ -61,18 +64,15 @@ public class Comment extends Object implements java.io.Serializable {
 
 		PhotoSecurity security=new PhotoSecurity();
 		ArrayList al=new ArrayList();
-		SpyDB db=new SpyDB(new PhotoConfig());
-		PreparedStatement pst=db.prepareStatement(
-			"select * from commentary where photo_id=? order by ts desc");
-		pst.setInt(1, imageId);
-		ResultSet rs=pst.executeQuery();
+		GetCommentsForPhoto db=new GetCommentsForPhoto(new PhotoConfig());
+		db.setPhotoId(imageId);
+		ResultSet rs=db.executeQuery();
 
 		while(rs.next()) {
 			al.add(new Comment(security, rs));
 		}
 
 		rs.close();
-		pst.close();
 		db.close();
 
 		return(al);
@@ -126,24 +126,22 @@ public class Comment extends Object implements java.io.Serializable {
 		if(user.getUsername().equals("guest")) {
 			throw new Exception("Guest is not allowed to comment.");
 		}
-		SpyDB db=new SpyDB(new PhotoConfig());
-		PreparedStatement pst=db.prepareStatement(
-			"insert into commentary(wwwuser_id,photo_id,note,remote_addr,ts)\n"
-			+ " values(?,?,?,?,?)");
-		pst.setInt(1, user.getId());
-		pst.setInt(2, photoId);
-		pst.setString(3, note);
-		pst.setString(4, remoteAddr);
-		pst.setTimestamp(5, timestamp);
+		InsertComment db=new InsertComment(new PhotoConfig());
+		db.setUserId(user.getId());
+		db.setPhotoId(photoId);
+		db.setComment(note);
+		db.setRemoteAddr(remoteAddr);
+		db.setTimestamp(timestamp);
 
-		int updated=pst.executeUpdate();
+		int updated=db.executeUpdate();
 		if(updated!=1) {
 			throw new Exception("No rows updated?");
 		}
-		pst.close();
+		db.close();
 
-		ResultSet rs=db.executeQuery(
-			"select currval('commentary_comment_id_seq')");
+		GetGeneratedKey ggk=new GetGeneratedKey(new PhotoConfig());
+		ggk.setSeq("commentary_comment_id_seq");
+		ResultSet rs=ggk.executeQuery();
 		if(!rs.next()) {
 			System.err.println("*** Couldn't get comment ID ***");
 			commentId=-2;
@@ -151,7 +149,7 @@ public class Comment extends Object implements java.io.Serializable {
 			commentId=rs.getInt(1);
 		}
 		rs.close();
-		db.close();
+		ggk.close();
 	}
 
 	/**

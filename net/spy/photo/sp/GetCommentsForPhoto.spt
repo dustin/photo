@@ -1,0 +1,33 @@
+#
+# $Id: GetCommentsForPhoto.spt,v 1.1 2002/11/10 09:41:59 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get the comments for the given photo.
+
+@sql
+select
+		comment_id,
+		photo_id,
+		wwwuser_id as user_id,
+		note,
+		remote_addr,
+		ts
+	from commentary
+	where photo_id=?
+	order by ts desc
+
+@params
+photo_id required INTEGER The ID of the photo whose comments you want.
+
+@results
+comment_id INTEGER ID of this comment entry
+photo_id INTEGER The ID of this photo.
+user_id INTEGER ID of the user who submitted this comment
+note VARCHAR The comment text
+remote_addr VARCHAR IP address of the user who submitted this comment
+ts TIMESTAMP Time at which this comment was entered
+

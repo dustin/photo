@@ -1,0 +1,36 @@
+#
+# $Id: GetGalleriesForUser.spt,v 1.1 2002/11/10 09:41:59 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get the galleries visible by the given user.
+
+@sql
+select
+		gallery_id,
+		gallery_name,
+		wwwuser_id as user_id,
+		ispublic,
+		ts
+	from galleries
+	where
+		wwwuser_id=?
+		or ispublic = true
+	order by ts desc
+
+@params
+user_id required INTEGER The user who will be looking at the galleries.
+
+@results
+gallery_id INTEGER The ID of this gallery
+gallery_name VARCHAR The name of this gallery
+user_id INTEGER The user who owns this gallery
+ispublic BIT True if the gallery is publically visible
+ts TIMESTAMP The time this gallery was created
+
+@cachetime
+3600
+
