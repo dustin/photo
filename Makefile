@@ -77,6 +77,7 @@ CLASSES=\
 	net/spy/photo/SetPW.class \
 	net/spy/photo/StopWatch.class \
 	net/spy/photo/taglib/GuestCheck.class \
+	net/spy/photo/taglib/ImageLink.class \
 	net/spy/photo/taglib/InitSessionData.class \
 	net/spy/photo/taglib/InitSessionDataExtraInfo.class \
 	net/spy/photo/taglib/CategoryTag.class \
