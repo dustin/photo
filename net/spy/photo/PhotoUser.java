@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.14 2002/03/05 00:52:40 dustin Exp $
+// $Id: PhotoUser.java,v 1.15 2002/05/17 00:15:33 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -238,6 +238,13 @@ public class PhotoUser extends Object implements Serializable {
 	 */
 	public void setRealname(String realname) {
 		this.realname=realname;
+	}
+
+	/**
+	 * Get the real name of this user.
+	 */
+	public String getRealname() {
+		return(realname);
 	}
 
 	/**
