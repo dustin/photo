@@ -120,7 +120,6 @@ def makeMonthPage(y, m, photos):
         <div class="monthList">\n""")
     for photo in photos:
         f.write('<a href="%02d/%d.html">' % (m, photo.id))
-        (yr,mn,dt)=photo.dateParts()
         f.write('<img alt="%d" src="%02d/%d_tn.%s"/></a>\n' \
                 % (photo.id, m, photo.id, photo.extension))
     f.write("</div>\n")
