@@ -4,8 +4,12 @@
 <h2>Simple Search</h2>
 
 <form method="POST" action="/perl/dustin/photo/photo.cgi">
-<input type="hidden" name="searchtype" value="simple">
 <input type="hidden" name="func" value="search">
+<input type="hidden" name="maxret" value="5">
+<input type="hidden" name="fieldjoin" value="and">
+<input type="hidden" name="keyjoin" value="and">
+<input type="hidden" name="order" value="a.ts">
+<input type="hidden" name="sdirection" value="desc">
 
 Find all images whose
 
@@ -27,7 +31,6 @@ Only fields that are filled out will be used, default search will return
 all images.
 
 <form method="post" action="/perl/dustin/photo/photo.cgi">
-<input type="hidden" name="searchtype" value="advanced">
 <input type="hidden" name="func" value="search">
 
 Category:
