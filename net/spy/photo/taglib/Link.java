@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Link.java,v 1.7 2002/07/10 03:38:09 dustin Exp $
+// $Id: Link.java,v 1.8 2003/07/16 08:18:50 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -126,7 +126,6 @@ public class Link extends PhotoTag {
 			// If we used an internal message, we can close the a tag.
 			if(usedMessage) {
 				out.write(content);
-				out.write("</a>");
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
