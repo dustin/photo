@@ -10,7 +10,7 @@
 <xsl:output method="html"/>
 
 <!--
- Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
+ Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
  -->
 
 <xsl:template match="page">
@@ -122,7 +122,7 @@
 						</table>
 						<p>
 						<font size="-2">
-						Copyright &#169; 1997-2001 Dustin Sallings of
+						Copyright &#169; 1997-2002 Dustin Sallings of
 						<a href="http://www.spy.net/">SPY
 						internetworking</a><br/>
 						All images and other data
@@ -307,10 +307,20 @@
 				<xsl:if test="search_result[1]">
 					<td width="25%" align="center">
 						<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={search_result[1]/ID}">
-							<img border="0"
-								width="{search_result[1]/TN_WIDTH}"
-								height="{search_result[1]/TN_HEIGHT}"
-								src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={search_result[1]/IMAGE}&amp;thumbnail=1"/>
+							<xsl:choose>
+								<xsl:when test="search_result[1]/TN_HEIGHT>0">
+									<!-- Include the tn width and height if we have them, as
+												an optimization -->
+									<img border="0"
+										width="{search_result[1]/TN_WIDTH}"
+										height="{search_result[1]/TN_HEIGHT}"
+										src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={search_result[1]/IMAGE}&amp;thumbnail=1"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<img border="0"
+										src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={search_result[1]/IMAGE}&amp;thumbnail=1"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</a>
 					</td>
 					<td width="25%" bgcolor="#efefff" valign="top">
