@@ -94,7 +94,7 @@ CLASSES=\
 .PHONY: test
 
 photo.jar: $(CLASSES)
-	$(JAR) cv0f $@ `find net/spy -name "*.class"` \
+	$(JAR) cvf $@ `find net/spy -name "*.class"` \
 		`find net/spy -name "*.sql"`
 
 all: $(CLASSES)
