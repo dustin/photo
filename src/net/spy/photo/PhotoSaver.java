@@ -13,13 +13,14 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 import net.spy.SpyDB;
+import net.spy.SpyObject;
 
 import net.spy.photo.sp.InsertImage;
 
 /**
  * This class is responsible for saving images that have been uploaded.
  */
-public class PhotoSaver extends Object {
+public class PhotoSaver extends SpyObject {
 
 	private String keywords=null;
 	private String info=null;
@@ -75,9 +76,7 @@ public class PhotoSaver extends Object {
 		try {
 			this.takenDate=sdf.parse(taken);
 		} catch(ParseException e) {
-			e.printStackTrace();
-			throw new IllegalArgumentException(taken
-				+ " can't be parsed as a date:  " + e);
+			getLogger().warn(taken + " can't be parsed as a date", e);
 		}
 		this.taken=taken;
 	}
@@ -219,7 +218,7 @@ public class PhotoSaver extends Object {
 					conn.rollback();
 				}
 			} catch(Exception e2) {
-				e2.printStackTrace();
+				getLogger().warn("Problem rolling back transaction", e2);
 			}
 			throw new PhotoException("Error saving image.", e);
 		} finally {
@@ -230,7 +229,7 @@ public class PhotoSaver extends Object {
 						db.close();
 					}
 				} catch(Exception e) {
-					e.printStackTrace();
+					getLogger().warn("Problem restoring autocommit");
 				}
 			}
 		} // Finally block

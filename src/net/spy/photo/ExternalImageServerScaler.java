@@ -31,8 +31,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 			s.read(b);
 			out=new String(b);
 		} catch(Exception e) {
-			log("Error dumping InputStream:  " + e);
-			e.printStackTrace();
+			getLogger().warn("Error dumping InputStream", e);
 		}
 		out=out.trim();
 		if(out.length() < 1) {
@@ -82,7 +81,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 			String command=tmp + " -geometry "
 				+ newSize.getWidth() + "x" + newSize.getHeight()
 				+ " " + tmpfilename + " " + thumbfilename;
-			log("Running " + command);
+			getLogger().info("Running " + command);
 			Runtime run = Runtime.getRuntime();
 			Process p = run.exec(command);
 			stderr=p.getErrorStream();
@@ -91,17 +90,18 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 
 			// Process status.
 			if(p.exitValue()!=0) {
-				log("Exit value was " + p.exitValue());
+				getLogger().warn("Exit value of " + command
+					+ " was " + p.exitValue());
 			}
 			tmp=dumpIS(stderr);
 			if(tmp!=null) {
-				log("Stderr was as follows:\n" + tmp);
-				log("------");
+				getLogger().warn("Stderr was as follows:\n" + tmp);
+				getLogger().warn("------");
 			}
 			tmp=dumpIS(stdout);
 			if(tmp!=null) {
-				log("Stdout was as follows:\n" + tmp);
-				log("------");
+				getLogger().warn("Stdout was as follows:\n" + tmp);
+				getLogger().warn("------");
 			}
 
 			File file=new File(thumbfilename);
@@ -112,7 +112,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 			fin.read(b);
 
 		} catch(Exception e) {
-			log("Error scaling image:  " + e);
+			getLogger().warn("Error scaling image", e);
 			throw e;
 		} finally {
 			try {

@@ -45,7 +45,7 @@ public class SetSizeAction extends PhotoAction {
 		String dims=(String)ssf.get("dims");
 		sessionData.setOptimalDimensions(new PhotoDimensionsImpl(dims));
 
-		System.out.println("Set viewing size to " + dims);
+		getLogger().debug("Set viewing size to " + dims);
 
 		return(mapping.findForward("next"));
 	}

@@ -25,12 +25,13 @@ import java.io.OutputStream;
 
 import java.util.Vector;
 
-/*
-* JpegEncoder - The JPEG main program which performs a jpeg compression of
-* an image.
-*/
+import net.spy.SpyObject;
 
-public class JpegEncoder extends Object
+/*
+ * JpegEncoder - The JPEG main program which performs a jpeg compression of
+ * an image.
+ */
+public class JpegEncoder extends SpyObject
 {
 	Thread runner;
 	BufferedOutputStream outStream;
@@ -57,13 +58,12 @@ public class JpegEncoder extends Object
 		try {
 			watcher.waitForImage();
 		} catch(InterruptedException e) {
-			e.printStackTrace();
+			getLogger().info("Excepting waiting or image", e);
 			// Try again
 			try {
 				watcher.waitForImage();
 			} catch(InterruptedException e2) {
-				System.err.println("Giving up.");
-				e2.printStackTrace();
+				getLogger().warn("Giving up.", e2);
 			}
 		}
 		/*
@@ -101,7 +101,7 @@ public class JpegEncoder extends Object
 		try {
 				outStream.flush();
 		} catch (IOException e) {
-				System.out.println("IO Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -321,7 +321,7 @@ public class JpegEncoder extends Object
 		try {
 				out.write(data, 0, 2);
 		} catch (IOException e) {
-				System.out.println("IO Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 		
@@ -331,7 +331,7 @@ public class JpegEncoder extends Object
 				length = (((int) (data[2] & 0xFF)) << 8) + (int) (data[3] & 0xFF) + 2;
 				out.write(data, 0, length);
 		} catch (IOException e) {
-				System.out.println("IO Error: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -960,7 +960,7 @@ private class Huffman
 						outStream.write(c);
 				}
 				catch (IOException e) {
-						System.out.println("IO Error: " + e.getMessage());
+					e.printStackTrace();
 				}
 				if (c == 0xFF) {
 						try
@@ -968,7 +968,7 @@ private class Huffman
 								outStream.write(0);
 						}
 						catch (IOException e) {
-								System.out.println("IO Error: " + e.getMessage());
+							e.printStackTrace();
 						}
 				}
 				PutBuffer <<= 8;
@@ -989,14 +989,14 @@ private class Huffman
 								outStream.write(c);
 						}
 						catch (IOException e) {
-								System.out.println("IO Error: " + e.getMessage());
+							e.printStackTrace();
 						}
 						if (c == 0xFF) {
 								try {
 										outStream.write(0);
 								}
 								catch (IOException e) {
-										System.out.println("IO Error: " + e.getMessage());
+									e.printStackTrace();
 								}
 						}
 						PutBuffer <<= 8;
@@ -1009,7 +1009,7 @@ private class Huffman
 								outStream.write(c);
 						}
 						catch (IOException e) {
-								System.out.println("IO Error: " + e.getMessage());
+							e.printStackTrace();
 						}
 				}
 		}

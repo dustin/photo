@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import net.spy.SpyObject;
 import net.spy.SpyDB;
 import net.spy.db.SQLRunner;
 
@@ -22,7 +23,7 @@ import net.spy.photo.PhotoImageHelper;
 /**
  * This is the base class for migration utilities.
  */
-public abstract class PhotoMigration extends Object {
+public abstract class PhotoMigration extends SpyObject {
 
 	/**
 	 * Try a query and see whether it would succeed.  This is used for
@@ -119,13 +120,13 @@ public abstract class PhotoMigration extends Object {
 		ResultSet rs=db.executeQuery("select id from album order by ts desc");
 		while(rs.next()) {
 			int id=rs.getInt(1);
-			System.out.println("Doing image #" + id);
+			getLogger().debug("Doing image #" + id);
 			PhotoImageHelper helper=new PhotoImageHelper(id);
 			PhotoImage image=helper.getThumbnail();
 			if(image==null) {
 				throw new Exception("Why did that return null?");
 			}
-			System.out.println("Done.");
+			getLogger().debug("Done.");
 		}
 	}
 }

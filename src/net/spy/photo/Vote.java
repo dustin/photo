@@ -13,11 +13,12 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.spy.SpyDB;
+import net.spy.SpyObject;
 
 /**
  * Votes on photos.
  */
-public class Vote extends Object implements java.io.Serializable {
+public class Vote extends SpyObject implements java.io.Serializable {
 
 	private int voteId=-1;
 
@@ -105,7 +106,7 @@ public class Vote extends Object implements java.io.Serializable {
 		ResultSet rs=db.executeQuery(
 			"select currval('votes_vote_id_seq')");
 		if(!rs.next()) {
-			System.err.println("*** Couldn't get vote ID ***");
+			getLogger().warn("Couldn't get vote ID");
 			voteId=-2;
 		} else {
 			voteId=rs.getInt(1);

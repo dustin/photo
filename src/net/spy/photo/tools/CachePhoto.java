@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.spy.SpyObject;
 import net.spy.SpyConfig;
 import net.spy.SpyDB;
 
@@ -31,7 +32,7 @@ import net.spy.util.Base64;
  * Cache all of the images and verify they look the same in the DB as they
  * do when they come from the image server.
  */
-public class CachePhoto extends Object {
+public class CachePhoto extends SpyObject {
 
 	private SpyConfig conf=null;
 	private RemoteImageServer server=null;
@@ -153,16 +154,15 @@ public class CachePhoto extends Object {
 				// true == thumbnail
 				data=server.getImage(id, true);
 			} catch(ImageDataException ide) {
-				System.err.println("Data difference on " + id + ":  " + ide);
+				getLogger().warn("Data difference on " + id, ide);
 				saveImage(id, dbdataStr, dbdata, data.getData());
 				errors.add(ide);
 			} catch(Exception e) {
-				System.err.println("Error on image " + id);
-				e.printStackTrace();
+				getLogger().warn("Error on image " + id, e);
 				errors.add(e);
 			}
 			stats.stop();
-			System.out.println("Cached " + id 
+			getLogger().info("Cached " + id 
 				+ " in " + stats.getLastTime() + " - " + stats.getStats());
 		}
 		rs.close();

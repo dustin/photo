@@ -5,13 +5,13 @@
 package net.spy.photo;
 
 import net.spy.SpyConfig;
+import net.spy.SpyObject;
 
 /**
  * Interface for scaling images.
  */
-public abstract class ImageServerScaler extends Object {
+public abstract class ImageServerScaler extends SpyObject {
 
-	private boolean debug=false;
 	private SpyConfig conf=null;
 
 	/**
@@ -34,29 +34,6 @@ public abstract class ImageServerScaler extends Object {
 	 */
 	protected SpyConfig getConf() {
 		return(conf);
-	}
-
-	/**
-	 * Log the given message.
-	 */
-	protected void log(String msg) {
-		System.err.println(msg);
-	}
-
-	/**
-	 * If debug is enabled, log the given message.
-	 */
-	protected void debug(String msg) {
-		if(debug) {
-			log(msg);
-		}
-	}
-
-	/**
-	 * Set the debug value.
-	 */
-	protected void setDebug(boolean to) {
-		debug=to;
 	}
 
 }

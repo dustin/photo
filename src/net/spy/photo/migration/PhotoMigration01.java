@@ -54,13 +54,13 @@ public class PhotoMigration01 extends PhotoMigration {
 				+ "  limit 20");
 			while(rs.next()) {
 				int id=rs.getInt(1);
-				System.out.println("Doing image #" + id);
+				getLogger().info("Doing image #" + id);
 				PhotoImageHelper helper=new PhotoImageHelper(id);
 				PhotoImage image=helper.getImage(null);
 
-				System.out.println("Image " + id + " is "
+				getLogger().info("Image " + id + " is "
 					+ image.getWidth() + "x" + image.getHeight());
-			
+
 				int dim[]=new int[3];
 				dim[0]=id;
 				dim[1]=image.getWidth();
@@ -70,7 +70,7 @@ public class PhotoMigration01 extends PhotoMigration {
 			}
 
 			n=al.size();
-			System.out.println("Updating " + n + " images.");
+			getLogger().info("Updating " + n + " images.");
 
 			// OK, now store them.
 			for(Iterator i=al.iterator(); i.hasNext(); ) {
@@ -81,7 +81,7 @@ public class PhotoMigration01 extends PhotoMigration {
 				st.setInt(1, dim[1]);
 				st.setInt(2, dim[2]);
 				st.setInt(3, dim[0]);
-				System.out.println("Saving image " + dim[0]);
+				getLogger().info("Saving image " + dim[0]);
 				st.executeUpdate();
 			}
 		}

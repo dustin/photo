@@ -158,7 +158,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 		ggk.setSeq("commentary_comment_id_seq");
 		ResultSet rs=ggk.executeQuery();
 		if(!rs.next()) {
-			System.err.println("*** Couldn't get comment ID ***");
+			getLogger().warn("*** Couldn't get comment ID ***");
 			commentId=-2;
 		} else {
 			commentId=rs.getInt(1);

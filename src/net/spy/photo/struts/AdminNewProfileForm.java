@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
 /**
  * Form to create new profiles.
  */
-public class AdminNewProfileForm extends ActionForm {
+public class AdminNewProfileForm extends PhotoForm {
 
 	private String name=null;
 	private String categories[]=null;

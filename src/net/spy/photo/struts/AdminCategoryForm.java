@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
 /**
  * Form used for editing categories.
  */
-public class AdminCategoryForm extends ActionForm {
+public class AdminCategoryForm extends PhotoForm {
 
 	private String catId=null;
 	private String name=null;

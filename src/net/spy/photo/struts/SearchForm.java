@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
 /**
  * Form for processing search requests.
  */
-public class SearchForm extends ActionForm {
+public class SearchForm extends PhotoForm {
 
 	private String cats[]=null;
 	private String fieldjoin=null;

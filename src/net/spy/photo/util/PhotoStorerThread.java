@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.spy.SpyDB;
+import net.spy.SpyThread;
 
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
@@ -28,7 +29,7 @@ import net.spy.util.Base64;
  * is cleared.	It's quite important to make sure the images make it into
  * the database for long-term storage, however.
  */
-public class PhotoStorerThread extends Thread {
+public class PhotoStorerThread extends SpyThread {
 
 	// chunks should be divisible by 57
 	private static final int CHUNK_SIZE=2052;
@@ -48,7 +49,7 @@ public class PhotoStorerThread extends Thread {
 		PhotoImageHelper p = new PhotoImageHelper(imageId);
 		SpyDB pdb = new SpyDB(new PhotoConfig());
 		PhotoImage pi = p.getImage();
-		System.err.println("Storer: Got image for " + imageId + " " 
+		getLogger().info("Storer: Got image for " + imageId + " " 
 			+ pi.size() + " bytes of data to store.");
 		// This is an awkward way of doing this.
 		ArrayList al=new ArrayList();
@@ -58,7 +59,7 @@ public class PhotoStorerThread extends Thread {
 		for(int i=0; i<data.length; ) {
 			// How much we have left
 			int max=data.length-i;
-			
+
 			// Make sure we don't get more than 2k at a time.
 			if(max>CHUNK_SIZE) {
 				max=CHUNK_SIZE;
@@ -103,12 +104,12 @@ public class PhotoStorerThread extends Thread {
 
 			// OK, this is sick, but another one right now for the spare.
 			if(sdata.length() > 0) {
-				System.err.println("Storer:  Storing spare.");
+				getLogger().debug("Storer:  Storing spare.");
 				pst.setInt(2, n++);
 				pst.setString(3, sdata.toString());
 				pst.executeUpdate();
 			}
-			System.err.println("Storer:  Stored " + n + " lines of data for "
+			getLogger().debug("Storer:  Stored " + n + " lines of data for "
 				+ imageId + ".");
 			pst.close();
 			pst=null;
@@ -122,7 +123,7 @@ public class PhotoStorerThread extends Thread {
 			// more than one could be bad.
 			switch(rows) {
 				case 0:
-					System.err.println("WARNING:  No upload log entry was "
+					getLogger().warn("WARNING:  No upload log entry was "
 						+ "found for " + imageId);
 					break;
 				case 1:
@@ -138,20 +139,20 @@ public class PhotoStorerThread extends Thread {
 			p.getThumbnail();
 		} catch(Exception e) {
 			// If anything happens, roll it back.
-			e.printStackTrace();
+			getLogger().warn("Problem saving image", e);
 			try {
 				if(db!=null) {
 					db.rollback();
 				}
 			} catch(Exception e3) {
-				e3.printStackTrace();
+				getLogger().warn("Problem rolling back transaction", e3);
 			}
 		} finally {
 			if(db!=null) {
 				try {
 					db.setAutoCommit(true);
 				} catch(Exception e) {
-					e.printStackTrace();
+					getLogger().warn("Problem restoring autocommit", e);
 				}
 			}
 			pdb.close();
@@ -205,6 +206,7 @@ public class PhotoStorerThread extends Thread {
 	 * Sit around and flush.
 	 */
 	public void run() {
+		getLogger().info("Starting storer thread");
 		// Do a flush at the beginning, just in case stuff has been
 		// building up.
 		try {
@@ -225,8 +227,7 @@ public class PhotoStorerThread extends Thread {
 			}
 			// Loop immediately as often as it flushes.
 			while(doFlush()>0) {
-				System.err.println(
-					"doFlush() returned > 0, flushing again.");
+				getLogger().debug("doFlush() returned > 0, flushing again.");
 			} // Flush loop
 		} // Forever loop
 	}

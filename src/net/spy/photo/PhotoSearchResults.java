@@ -81,9 +81,8 @@ public class PhotoSearchResults extends Cursor {
 					set(which, ret);
 				}
 			} catch(Exception e2) {
-				e2.printStackTrace();
-				System.err.println("Error getting result "
-					+ which + " from " + o + ":  " + e2);
+				getLogger().warn("Error getting result "
+					+ which + " from " + o, e2);
 			}
 		}
 		return(ret);

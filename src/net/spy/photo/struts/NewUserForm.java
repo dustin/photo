@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
 /**
  * Form used when creating an account.
  */
-public class NewUserForm extends ActionForm {
+public class NewUserForm extends PhotoForm {
 
 	private String username=null;
 	private String password=null;

@@ -11,10 +11,12 @@ import java.awt.image.ImageObserver;
 
 import java.net.URL;
 
+import net.spy.SpyObject;
+
 /**
  * Useful image observer.
  */
-public class PhotoImageObserver extends Object implements ImageObserver {
+public class PhotoImageObserver extends SpyObject implements ImageObserver {
 
 	private boolean allbits=false;
 
@@ -57,7 +59,8 @@ public class PhotoImageObserver extends Object implements ImageObserver {
 				try {
 					pio.wait(15000);
 				} catch(InterruptedException e) {
-					e.printStackTrace();
+					pio.getLogger().warn(
+						"Interrupted while preparing image.", e);
 				}
 			}
 		}

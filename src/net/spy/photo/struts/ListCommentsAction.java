@@ -40,7 +40,7 @@ public class ListCommentsAction extends PhotoAction {
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
 
-		System.out.println("Preparing a new comments cursor.");
+		getLogger().debug("Preparing a new comments cursor.");
 
 		PhotoSessionData sessionData=getSessionData(request);
 		PhotoUser user=sessionData.getUser();

@@ -6,13 +6,14 @@
 
 package net.spy.photo;
 
+import net.spy.SpyObject;
 import net.spy.util.ThreadPool;
 
 /**
  * This object fetches ahead in resultsets as to speed up the appearance of
  * the photo album.
  */
-public class PhotoAheadFetcher extends Object {
+public class PhotoAheadFetcher extends SpyObject {
 	private ThreadPool tp=null;
 
 	/**
@@ -39,7 +40,7 @@ public class PhotoAheadFetcher extends Object {
 	}
 
 	// This class uses the thread pool to fetch ahead.
-	private static class FetchAhead extends Object implements Runnable {
+	private static class FetchAhead extends SpyObject implements Runnable {
 
 		private PhotoSearchResults results=null;
 
@@ -57,7 +58,7 @@ public class PhotoAheadFetcher extends Object {
 				Thread.sleep(5000);
 				fetchAhead();
 			} catch(Exception e) {
-				e.printStackTrace();
+				getLogger().warn("Problem fetching", e);
 			}
 		}
 
@@ -74,11 +75,11 @@ public class PhotoAheadFetcher extends Object {
 				PhotoImageData res=null;
 				res=(PhotoImageData)r.get(current+i);
 				if(res!=null) {
-				 	// This will cache the thumbnails
-				 	PhotoImageHelper p=new PhotoImageHelper(res.getId());
-					System.out.println("PhotoAheadFetcher fetching "
+					// This will cache the thumbnails
+					PhotoImageHelper p=new PhotoImageHelper(res.getId());
+					getLogger().debug("PhotoAheadFetcher fetching "
 						+ res.getId());
-				 	p.getThumbnail();
+					p.getThumbnail();
 				} // Got a result
 			} // end for loop on a given result set
 		}

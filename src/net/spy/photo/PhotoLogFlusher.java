@@ -74,7 +74,7 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 					boolean tryagain=true;
 					for(int i=0; i<3 && tryagain; i++) {
 						if(i>0) {
-							System.err.println("Attempt " + i);
+							getLogger().debug("Attempt " + i);
 						}
 						try {
 							st.executeUpdate(l.toString());
@@ -85,17 +85,17 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 							String msg=se.getMessage();
 							if(msg!=null
 								&& msg.indexOf("Deadlock detected")>=0) {
-								System.err.println(
-									"Got deadlock trying to flush.");
-								se.printStackTrace();
+								getLogger().warn(
+									"Got deadlock trying to flush.", se);
 								try {
 									sleep(5000);
 								} catch(InterruptedException ise) {
-									ise.printStackTrace();
+									getLogger().warn("Interrupted waiting "
+										+ "for deadlock retry", ise);
 								}
 							} else {
 								// Not a deadlock error, dump it, move on
-								se.printStackTrace();
+								getLogger().warn("Problem flushing log", se);
 								tryagain=false;
 							}
 						} // Past SQL exception

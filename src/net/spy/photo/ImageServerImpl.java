@@ -7,15 +7,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import net.spy.SpyDB;
-
-import net.spy.photo.util.PhotoStorerThread;
+import net.spy.SpyObject;
 
 import net.spy.util.Base64;
+
+import net.spy.photo.util.PhotoStorerThread;
 
 /**
  * Implementation of the remote image server.
  */
-public class ImageServerImpl extends Object implements ImageServer {
+public class ImageServerImpl extends SpyObject implements ImageServer {
 
 	private PhotoConfig conf = null;
 	private ImageCache cache=null;
@@ -45,8 +46,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 				imageData=fetchScaledImage(imageId, dim);
 			}
 		} catch(Exception e) {
-			log("Error fetching image:  " + e);
-			e.printStackTrace();
+			getLogger().warn("Error fetching image", e);
 			throw new PhotoException("Error fetching image", e);
 		}
 		// Calculate the width
@@ -69,7 +69,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 			pi=fetchImage(imageId);
 
 			if(pi.equals(dim) || pi.smallerThan(dim)) {
-				log("Requested scaled size for " + imageId
+				getLogger().debug("Requested scaled size for " + imageId
 					+ "(" + dim + ") is equal to or "
 					+ "greater than its full size, ignoring.");
 			} else {
@@ -77,7 +77,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 				pi=scaleImage(pi, dim);
 				// Store it
 				cache.putImage(key, pi);
-				log("Stored " + imageId + " with key " + key);
+				getLogger().info("Stored " + imageId + " with key " + key);
 			}
 		}
 
@@ -104,8 +104,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 			getCache();
 			cache.putImage("photo_" + imageId, image);
 		} catch(Exception e) {
-			log("Error caching image:  " + e);
-			e.printStackTrace();
+			getLogger().warn("Error caching image", e);
 			throw new PhotoException("Error storing image", e);
 		}
 
@@ -118,7 +117,6 @@ public class ImageServerImpl extends Object implements ImageServer {
 
 	private static synchronized void checkStorerThread() {
 		if(storer==null || !(storer.isAlive())) {
-			System.err.println("Starting storer thread.");
 			storer=new PhotoStorerThread();
 			storer.start();
 		}
@@ -126,16 +124,12 @@ public class ImageServerImpl extends Object implements ImageServer {
 
 	private PhotoImage scaleImage(
 		PhotoImage in, PhotoDimensions dim) throws Exception {
-		
+
 		Class c=Class.forName(conf.get("scaler_class",
 			"net.spy.rmi.JavaImageServerScaler"));
 		ImageServerScaler iss=(ImageServerScaler)c.newInstance();
 		iss.setConfig(conf);
 		return(iss.scaleImage(in, dim));
-	}
-
-	private void log(String what) {
-		System.err.println(what);
 	}
 
 	// Fetch an image
@@ -167,9 +161,8 @@ public class ImageServerImpl extends Object implements ImageServer {
 				db.close();
 
 			} catch(Exception e) {
-				log("Problem getting image:  " + e);
-				e.printStackTrace();
-				throw new Exception("Problem getting image: " + e);
+				getLogger().warn("Problem getting image", e);
+				throw new Exception("Problem getting image", e);
 			}
 
 			// If we got an exception, throw it
@@ -191,8 +184,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 				cache=(ImageCache)c.newInstance();
 			}
 		} catch(Exception e) {
-			log("Error getting cache server");
-			e.printStackTrace();
+			getLogger().warn("Error getting cache server", e);
 			cache=null;
 			throw new PhotoException("Error getting cache server", e);
 		}

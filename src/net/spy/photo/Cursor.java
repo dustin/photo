@@ -14,6 +14,9 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
+
 /**
  * An object that will be cursor through other objects.
  */
@@ -21,6 +24,8 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 
 	private int current=0;
 	private int maxret=10;
+
+	private Logger logger=null;
 
 	/**
 	 * Get an empty Cursor object.
@@ -153,6 +158,16 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 			r=get(current);
 		}
 		return(r);
+	}
+
+	/** 
+	 * Get a Logger instance for this class.
+	 */
+	protected Logger getLogger() {
+		if(logger==null) {
+			logger=LoggerFactory.getLogger(getClass());
+		}
+		return(logger);
 	}
 
 	/**

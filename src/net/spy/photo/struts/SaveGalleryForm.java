@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
 /**
  * Form for saving a gallery.
  */
-public class SaveGalleryForm extends ActionForm {
+public class SaveGalleryForm extends PhotoForm {
 
 	private String name=null;
 	private boolean isPublic=false;

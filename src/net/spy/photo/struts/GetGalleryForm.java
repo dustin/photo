@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
 /**
  * Form for fetching a gallery.
  */
-public class GetGalleryForm extends ActionForm {
+public class GetGalleryForm extends PhotoForm {
 
 	private int id=-1;
 

@@ -13,6 +13,9 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
+
 /**
  * Watch session creation and destruction and manage sessionData.
  */
@@ -37,7 +40,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 		try {
 			sessionData.setUser(PhotoUser.getPhotoUser("guest"));
 		} catch(PhotoUserException e) {
-			e.printStackTrace();
+			getLogger().warn("Problem setting user", e);
 		}
         // The rest of the stuff will remain null until something comes
         // along with something better.
@@ -52,6 +55,11 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	 */
 	public static int totalSessions() {
 		return(getSessions().size());
+	}
+
+	private static Logger getStaticLogger() {
+		Logger log=LoggerFactory.getLogger(SessionWatcher.class);
+		return(log);
 	}
 
 	/**
@@ -74,8 +82,8 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 					al.add(sessionData);
 				} // Found a match
 			} else {
-				System.err.println(
-					"Warning:  Found a session without a photoSession");
+				getStaticLogger().warn(
+					"Found a session without a photoSession");
 			}
 		} // Flipping through the sessions
 
@@ -113,8 +121,8 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 				// Add the session to the result List
 				al.add(session);
 			} else {
-				System.err.println(
-					"Warning:  Found a session without a photoSession");
+				getStaticLogger().warn(
+					"Found a session without a photoSession");
 			}
 		}
 

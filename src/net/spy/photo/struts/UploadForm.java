@@ -11,7 +11,6 @@ import net.spy.photo.PhotoUtil;
 
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 
 import org.apache.struts.upload.FormFile;
@@ -19,7 +18,7 @@ import org.apache.struts.upload.FormFile;
 /**
  * Form to receive image uploads.
  */
-public class UploadForm extends ActionForm {
+public class UploadForm extends PhotoForm {
 
 	private FormFile picture=null;
 	private String id=null;
@@ -102,7 +101,7 @@ public class UploadForm extends ActionForm {
 	public ActionErrors validate(ActionMapping mapping,
 		HttpServletRequest request) {
 
-		System.err.println("Validating upload form.");
+		getLogger().debug("Validating upload form.");
 
 		ActionErrors errors = new ActionErrors();
 
@@ -128,7 +127,7 @@ public class UploadForm extends ActionForm {
 			try {
 				Integer.parseInt(category);
 			} catch(NumberFormatException nfe) {
-				nfe.printStackTrace();
+				getLogger().info("Could not parse category id", nfe);
 				errors.add("category",
 					new ActionError("error.upload.category.nfe"));
 			}
@@ -153,11 +152,11 @@ public class UploadForm extends ActionForm {
 					}
 					// Create a PhotoImage out of it.
 					photoImage=new PhotoImage(data);
-					System.out.println("Mime type is "
+					getLogger().debug("Mime type is "
 						+ picture.getContentType()
 						+ " format is " + photoImage.getFormatString());
 				} catch(Exception e) {
-					e.printStackTrace();
+					getLogger().warn("Problem uploading picture", e);
 					errors.add("picture",
 						new ActionError("error.upload.picture.notread"));
 				}
@@ -172,7 +171,7 @@ public class UploadForm extends ActionForm {
 				try {
 					Integer.parseInt(id);
 				} catch(NumberFormatException e) {
-					e.printStackTrace();
+					getLogger().info("Failed to parse image id", e);
 					errors.add("id", new ActionError("error.upload.id.nfe"));
 				}
 			}

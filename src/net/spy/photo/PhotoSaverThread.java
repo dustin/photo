@@ -7,10 +7,12 @@ package net.spy.photo;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import net.spy.SpyThread;
+
 /**
  * Store images in the background.
  */
-public class PhotoSaverThread extends Thread {
+public class PhotoSaverThread extends SpyThread {
 
 	private Stack jobQueue=null;
 	private boolean going=true;
@@ -83,21 +85,21 @@ public class PhotoSaverThread extends Thread {
 			subject="Success storing " + ps;
 			body="\n\nThe storage of image " + ps.getId()
 				+ " (keywords " + ps.getKeywords() + ") was successful.";
-			System.out.println("Success storing " + ps);
+			getLogger().info("Success storing " + ps);
 		} else {
 			subject="FAILURE storing " + ps;
 			body="\n\nThe storage of image " + ps.getId()
 				+ " (keywords " + ps.getKeywords() + ") has failed with the"
 				+ " following exception:\n\n"
 				+ e;
-			System.out.println("FAILURE storing " + ps);
+			getLogger().warn("FAILURE storing " + ps, e);
 		}
 		m.setSubject(subject);
 		m.setBody(body);
 		try {
 			m.send();
 		} catch(Exception e2) {
-			e2.printStackTrace();
+			getLogger().warn("Problem sending email", e2);
 		}
 	}
 
@@ -114,10 +116,10 @@ public class PhotoSaverThread extends Thread {
 				ps=(PhotoSaver)jobQueue.pop();
 				// Since we've popped the stack, mark us as processing.
 				processing=true;
-				System.out.println("Saving " + ps);
+				getLogger().info("Saving " + ps);
 				ps.saveImage();
 				report(SUCCESS, ps, null);
-                System.out.println("Queue size:  " + jobQueue.size());
+                getLogger().debug("Queue size:  " + jobQueue.size());
 			} catch(EmptyStackException e) {
 				try {
 					synchronized(jobQueue) {
@@ -125,21 +127,22 @@ public class PhotoSaverThread extends Thread {
 						jobQueue.wait(3600000);
 					}
 				} catch(InterruptedException e2) {
-					e2.printStackTrace();
+					getLogger().warn("Interrupted", e2);
 					try {
 						// wait five seconds on InterruptedException
 						sleep(5000);
 					} catch(InterruptedException e3) {
-						e3.printStackTrace();
+						getLogger().warn(
+							"Interrupted dealing with interruption", e3);
 					}
 				}
 			} catch(PhotoException pe) {
-				pe.printStackTrace();
+				getLogger().warn("Problem storing images", pe);
 				report(FAILURE, ps, pe);
 			}
 		}
 
-		System.out.println("PhotoSaverThread shutting down.");
+		getLogger().info("PhotoSaverThread shutting down.");
 	}
 
 }

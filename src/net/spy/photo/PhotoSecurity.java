@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.spy.SpyDB;
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
 
 import net.spy.cache.SpyCache;
 
@@ -53,6 +55,11 @@ public class PhotoSecurity extends PhotoHelper {
 		return(out.trim());
 	}
 
+	private static Logger getStaticLogger() {
+		Logger log=LoggerFactory.getLogger(PhotoSecurity.class);
+		return(log);
+	}
+
 	// Get the default user
 	PhotoUser getDefaultUser() {
 		PhotoUser ret=null;
@@ -64,11 +71,12 @@ public class PhotoSecurity extends PhotoHelper {
 			ret=PhotoUser.getPhotoUser(username);
 		} catch(PhotoUserException e) {
 			// Ignore, return null
+			getStaticLogger().debug("Can't get default user", e);
 		}
 
 		return(ret);
 	}
-	
+
 	/**
 	 * Get a user by integer ID.
 	 */
@@ -94,14 +102,15 @@ public class PhotoSecurity extends PhotoHelper {
 		try {
 			PhotoImageData pid=PhotoImageData.getData(imageId);
 			ok=user.canView(pid.getCatId());
-			
+
 			if(!ok) {
 				PhotoUser u=PhotoUtil.getDefaultUser();
 				ok=u.canView(pid.getCatId());
 			}
 		} catch(Exception e) {
 			// Will return false
-			e.printStackTrace();
+			getStaticLogger().warn("Problem validating user " + user
+				+ "'s access to image " + imageId, e);
 		}
 
 		if(!ok) {
