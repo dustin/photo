@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.43 2000/12/26 03:30:59 dustin Exp $
+ * $Id: PhotoSession.java,v 1.44 2000/12/26 06:21:42 dustin Exp $
  */
 
 package net.spy.photo;
@@ -30,7 +30,6 @@ public class PhotoSession extends Object
 	protected MultipartRequest multi=null;
 	protected SpyLog logger=null;
 	protected PhotoSecurity security = null;
-	protected PhotoStorerThread storer_thread = null;
 	protected PhotoServlet photo_servlet = null;
 	protected Hashtable groups=null;
 
