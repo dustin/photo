@@ -16,6 +16,7 @@
 			type="net.spy.photo.struts.SaveSearchForm"/>
     <form-bean name="newUserForm" type="net.spy.photo.struts.NewUserForm"/>
     <form-bean name="setSizeForm" type="net.spy.photo.struts.SetSizeForm"/>
+    <form-bean name="changePWForm" type="net.spy.photo.struts.ChangePWForm"/>
   </form-beans>
 
   <action-mappings>
@@ -31,6 +32,14 @@
 	<!-- Logout -->
 	<action    path="/logout"
 		type="net.spy.photo.struts.LogoutAction">
+		<forward name="success" path="/index.jsp" />
+	</action>
+
+	<!-- Change password -->
+	<action    path="/changepw"
+		type="net.spy.photo.struts.ChangePWAction"
+		input="/changepw.jsp"
+		name="changePWForm">
 		<forward name="success" path="/index.jsp" />
 	</action>
 
