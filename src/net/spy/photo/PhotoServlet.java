@@ -140,7 +140,7 @@ public class PhotoServlet extends HttpServlet {
 				pu.getId(), which, pdim, request), PhotoConfig.getInstance());
 
 			// Tell the client what we're sending
-			response.setContentType("image/" + image.getFormatString());
+			response.setContentType(image.getFormatMime());
 
 			// Tell the client the size
 			response.setContentLength(image.size());

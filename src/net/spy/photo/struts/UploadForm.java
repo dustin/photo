@@ -154,7 +154,7 @@ public class UploadForm extends PhotoForm {
 					photoImage=new PhotoImage(data);
 					getLogger().debug("Mime type is "
 						+ picture.getContentType()
-						+ " format is " + photoImage.getFormatString());
+						+ " format is " + photoImage.getFormatMime());
 				} catch(Exception e) {
 					getLogger().warn("Problem uploading picture", e);
 					errors.add("picture",

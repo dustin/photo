@@ -44,9 +44,6 @@ public class MakeStaticSite extends SpyObject {
 	private String destDir=null;
 	private PhotoDimensions normaldim=null;
 
-	private Document doc=null;
-	private Element root=null;
-
 	/**
 	 * Get an instance of MakeStaticSite.
 	 */
@@ -59,26 +56,6 @@ public class MakeStaticSite extends SpyObject {
 		outFormat=new SimpleDateFormat("yyyyMMdd");
 		dateFormat=new SimpleDateFormat("yyyy-MM-dd");
 		tsFormat=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-		DOMImplementationImpl dom=new DOMImplementationImpl();
-		doc=dom.createDocument(null, "album", null);
-		root=doc.getDocumentElement();
-	}
-
-	private String getExtension(PhotoImage image) {
-		String rv=".huh";
-		switch(image.getFormat()) {
-			case PhotoImage.FORMAT_JPEG:
-				rv=".jpg";
-				break;
-			case PhotoImage.FORMAT_PNG:
-				rv=".png";
-				break;
-			case PhotoImage.FORMAT_GIF:
-				rv=".gif";
-				break;
-		}
-		return(rv);
 	}
 
 	private String fixDate(Date d) throws Exception {
@@ -103,8 +80,10 @@ public class MakeStaticSite extends SpyObject {
 		// should probably fix this at some point.
 		PhotoImage image=pih.getImage(normaldim);
 
+		String ext=image.getFormatExtension();
+
 		// Handle the regular file path
-		File iFile=new File(imgdir + "/" + pid.getId() + getExtension(image));
+		File iFile=new File(imgdir + "/" + pid.getId() + ext);
 		if(!iFile.exists()) {
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Need to get full image for " + pid);
@@ -115,8 +94,7 @@ public class MakeStaticSite extends SpyObject {
 		}
 
 		// Handle the thumbnail path
-		File tnFile=new File(imgdir + "/" + pid.getId()
-			+ "_t" + getExtension(image));
+		File tnFile=new File(imgdir + "/" + pid.getId() + "_t" + ext);
 		if(!tnFile.exists()) {
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Need to get thumbnail for " + pid);
@@ -126,63 +104,6 @@ public class MakeStaticSite extends SpyObject {
 			fos.write(thumb.getData());
 			fos.close();
 		}
-	}
-
-	private void saveTextMeta(PhotoImageData pid) throws Exception {
-
-		String imgdir=getImageDir(pid);
-
-		FileWriter fr=new FileWriter(imgdir + "/" + pid.getId() + "_k.txt");
-		fr.write(pid.getKeywords());
-		fr.close();
-
-		fr=new FileWriter(imgdir + "/" + pid.getId() + "_d.txt");
-		fr.write(pid.getDescr());
-		fr.close();
-	}
-
-	private Element addNode(String name, String val) {
-		Element el=doc.createElement(name);
-		el.appendChild(doc.createTextNode(val));
-		return(el);
-	}
-
-	private Element addNode(String name, int val) {
-		return(addNode(name, String.valueOf(val)));
-	}
-
-	private Element addDate(String name, Date d) {
-		return(addNode(name, dateFormat.format(d)));
-	}
-
-	private Element addTimestamp(String name, Date d) {
-		return(addNode(name, tsFormat.format(d)));
-	}
-
-	private void saveXmlMeta(PhotoImageData pid) throws Exception {
-		// Store the images by date
-		String imgdir=getImageDir(pid);
-
-		// Get the image to figure out the extension.
-		PhotoImageHelper pih=new PhotoImageHelper(pid.getId());
-		PhotoImage image=pih.getImage();
-
-		Element el=doc.createElement("photo");
-		root.appendChild(el);
-
-		el.appendChild(addNode("id", pid.getId()));
-		el.appendChild(addNode("addedby", pid.getAddedBy().getUsername()));
-		el.appendChild(addNode("cat", pid.getCatName()));
-		el.appendChild(addDate("taken", pid.getTaken()));
-		el.appendChild(addTimestamp("ts", pid.getTimestamp()));
-		el.appendChild(addNode("keywords", pid.getKeywords()));
-		el.appendChild(addNode("descr", pid.getDescr()));
-		el.appendChild(addNode("size", pid.getSize()));
-		el.appendChild(addNode("width", pid.getDimensions().getWidth()));
-		el.appendChild(addNode("height", pid.getDimensions().getHeight()));
-		el.appendChild(addNode("tnwidth", pid.getTnDims().getWidth()));
-		el.appendChild(addNode("tnheight", pid.getTnDims().getHeight()));
-		el.appendChild(addNode("extension", getExtension(image)));
 	}
 
 	public void build() throws Exception {
@@ -197,8 +118,17 @@ public class MakeStaticSite extends SpyObject {
 		PhotoSearch ps=new PhotoSearch();
 		PhotoSearchResults psr=ps.performSearch(sf, sessionData);
 
-		ProgressStats stats=new ProgressStats(psr.size());
+		// Save the XML
+		System.out.println("Writing out XML");
+		FileOutputStream fos=new FileOutputStream(destDir + "/index.xml");
+		Search2XML s2x=Search2XML.getInstance();
+		s2x.stream(psr, fos);
+		fos.close();
+		// Reset the cursor
+		psr.set(0);
+		System.out.println("Finished writing out XML");
 
+		ProgressStats stats=new ProgressStats(psr.size());
 		stats.start();
 		for(Iterator i=psr.iterator(); i.hasNext(); ) {
 			PhotoImageData result=(PhotoImageData)i.next();
@@ -206,27 +136,10 @@ public class MakeStaticSite extends SpyObject {
 			// Save the image
 			saveImage(result);
 
-			// Save the textual meta data
-			// saveTextMeta(result);
-
-			// Save the XML version
-			saveXmlMeta(result);
-
 			stats.stop();
 			System.out.println(stats);
 			stats.start();
 		}
-
-		// Save the XML
-		FileOutputStream fos=new FileOutputStream(destDir + "/index.xml");
-
-		OutputFormat format = new OutputFormat(doc);
-		format.setIndenting(true);
-		XMLSerializer serial = new XMLSerializer(fos, format);
-		serial.asDOMSerializer();
-		serial.serialize(root);
-
-		fos.close();
 	}
 
 	/** 

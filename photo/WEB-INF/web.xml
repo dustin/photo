@@ -49,6 +49,11 @@
 		<servlet-class>net.spy.photo.PhotoServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>Export</servlet-name>
+		<servlet-class>net.spy.photo.ExportServlet</servlet-class>
+	</servlet>
+
 	<!-- The XMLRPC interface -->
 	<servlet>
 		<servlet-name>XMLRPCServlet</servlet-name>
@@ -96,6 +101,11 @@
 	<servlet-mapping>
 		<servlet-name>PhotoServlet</servlet-name>
 		<url-pattern>/PhotoServlet/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Export</servlet-name>
+		<url-pattern>/export</url-pattern>
 	</servlet-mapping>
 
 	<!-- XMLRPC servlet mapping -->

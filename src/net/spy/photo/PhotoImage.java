@@ -26,6 +26,15 @@ public class PhotoImage extends Object
 	public static final int FORMAT_PNG=2;
 	public static final int FORMAT_GIF=3;
 
+	// Format definitions from above
+	private static String formatMime[]={
+		"image/unknown",
+		"image/jpeg",
+		"image/png",
+		"image/gif"
+	};
+	private static String formatExt[]={ "unk", "jpg", "png", "gif" };
+
 	private int format=FORMAT_UNKNOWN;
 
 	/**
@@ -77,22 +86,15 @@ public class PhotoImage extends Object
 	/**
 	 * Get the name of the format of this image.
 	 */
-	public String getFormatString() {
-		String rv="unknown";
+	public String getFormatMime() {
+		return(formatMime[format]);
+	}
 
-		switch(format) {
-			case FORMAT_JPEG:
-				rv="jpeg";
-				break;
-			case FORMAT_PNG:
-				rv="png";
-				break;
-			case FORMAT_GIF:
-				rv="gif";
-				break;
-		}
-
-		return(rv);
+	/** 
+	 * Get the extension to be used for this format.
+	 */
+	public String getFormatExtension() {
+		return(formatExt[format]);
 	}
 
 	/**
@@ -102,7 +104,7 @@ public class PhotoImage extends Object
 		StringBuffer sb=new StringBuffer(64);
 
 		sb.append("PhotoImage (");
-		sb.append(getFormatString());
+		sb.append(getFormatMime());
 		sb.append(") ");
 		sb.append(getWidth());
 		sb.append("x");
