@@ -3,6 +3,7 @@
 
 package net.spy.photo.struts;
 
+import java.util.Iterator;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,9 @@ import org.apache.struts.action.DynaActionForm;
 
 import net.spy.util.Base64;
 
+import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.search.SearchResult;
 import net.spy.photo.search.SearchResults;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.SessionWatcher;
@@ -52,9 +56,18 @@ public class ViewSessionAction extends PhotoAction {
 		String sessId=new String(base64.decode(sessIdB64));
 		PhotoSessionData otherData=SessionWatcher.getSessionData(sessId);
 
-		// Perform the search
+		// Grab the images from the session
 		SearchResults results=new SearchResults();
-		results.addAll(otherData.getImageSeenCollection());
+		int sid=0;
+		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+		for(Iterator i=otherData.getImageSeenCollection().iterator();
+			i.hasNext(); sid++) {
+
+			Integer id=(Integer)i.next();
+			PhotoImageData pid=pidf.getData(id.intValue());
+			results.add(new SearchResult(pid, sid));
+		}
+
 		// Set the viewing size
 		results.setMaxSize(sessionData.getOptimalDimensions());
 		// Hard code this for now
