@@ -1,5 +1,5 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
-// $Id: PhotoXSLT.java,v 1.6 2002/02/21 09:26:03 dustin Exp $
+// $Id: PhotoXSLT.java,v 1.7 2002/04/26 20:41:18 dustin Exp $
 
 package net.spy.photo;
 
@@ -27,15 +27,21 @@ public abstract class PhotoXSLT extends Object {
 
 		OutputStream out=response.getOutputStream();
 
+		sendXML(xml, stylesheet, out);
+	}
+
+	/**
+	 * Abstract XML sending thingy.
+	 */
+	public static void sendXML(String xml, String stylesheet,
+		OutputStream out) {
+
 		// Lookup the stylesheet
 		PhotoConfig conf=new PhotoConfig();
 		stylesheet=lookupStylesheet(conf, stylesheet);
-
 		// Make sure we have a processor ready.
 		verifyProcessor();
-
 		_processor.processXSLT(xml, stylesheet, out);
-
 	}
 
 	// Do what it takes to get the processor ready.
