@@ -239,7 +239,8 @@
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="User Category Report"/>
-		<set-property property="spt" value="net.spy.photo.sp.ReportUserCat"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.GetUserCat"/>
 
 		<forward name="success" path="/admin/reportDisplay.jsp"/>
 	</action>
@@ -249,7 +250,52 @@
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="User Image View Report"/>
-		<set-property property="spt" value="net.spy.photo.sp.GetImagesSeenByUser"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.GetImagesSeenByUser"/>
+
+		<forward name="success" path="/admin/reportDisplay.jsp"/>
+	</action>
+
+	<action path="/report/topImages"
+		className="net.spy.photo.struts.AdminReportMapping"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Top Images"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.MostViewedImages"/>
+
+		<forward name="success" path="/admin/reportDisplay.jsp"/>
+	</action>
+
+	<action path="/report/topImagesXd"
+		className="net.spy.photo.struts.AdminReportMapping"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Top Images"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.MostViewedImagesXd"/>
+
+		<forward name="success" path="/admin/reportDisplay.jsp"/>
+	</action>
+
+	<action path="/report/mostActiveUsers"
+		className="net.spy.photo.struts.AdminReportMapping"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Most Active Users"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.MostActiveUsers"/>
+
+		<forward name="success" path="/admin/reportDisplay.jsp"/>
+	</action>
+
+	<action path="/report/mostActiveUsersXd"
+		className="net.spy.photo.struts.AdminReportMapping"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Most Active Users"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.MostActiveUsersXd"/>
 
 		<forward name="success" path="/admin/reportDisplay.jsp"/>
 	</action>

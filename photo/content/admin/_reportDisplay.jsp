@@ -20,6 +20,7 @@
 <table border="1">
 
 <tr>
+	<th>RowNum</th>
 <%
 	ResultSet rs=(ResultSet)request.getAttribute("rs");
 	ResultSetMetaData rsmd=rs.getMetaData();
@@ -35,10 +36,13 @@
 </tr>
 
 <%
+	int rowNum=0;
 	while(rs.next()) {
+		rowNum++;
 %>
 
 	<tr>
+		<td align="right"><%= rowNum %></td>
 
 	<%
 		for(int i=1; i<=cols; i++) {
