@@ -1,7 +1,17 @@
-AuthType Basic
-AuthName Photo Album Admin
-AuthUserFile /home/dustin/.ht/passwd.modem
+ErrorDocument 401 /~dustin/errors/photo.noauth.shtml
 
-<Limit GET POST>
-require valid-user
-</Limit>
+Auth_PGhost localhost
+Auth_PGport 5432
+Auth_PGdatabase photo
+Auth_PGpwd_table wwwusers
+Auth_PGuid_field username
+Auth_PGpwd_field password
+Auth_PGgrp_table wwwgroup
+Auth_PGgid_field groupname
+Auth_PG_nopasswd off
+AuthName photo admin
+AuthType basic
+
+<LIMIT GET POST>
+require group admin
+</LIMIT>
