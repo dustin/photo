@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.17 2002/02/12 05:43:17 dustin Exp $
+-- $Id: photo.sql,v 1.18 2002/02/15 09:38:02 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -37,8 +37,10 @@ create table wwwusers(
 	primary key(id)
 );
 create unique index user_byname on wwwusers(username);
+create unique index user_byemail on wwwusers(email);
 grant all on wwwusers to nobody;
 grant all on wwwusers_id_seq to nobody;
+
 -- add guest and admin users
 insert into wwwusers(username, password, email, realname, canadd)
 	values('guest', '', 'photos@localhost', 'Guest User', false);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.83 2002/02/15 09:27:13 dustin Exp $
+ * $Id: PhotoSession.java,v 1.84 2002/02/15 09:38:02 dustin Exp $
  */
 
 package net.spy.photo;
@@ -317,6 +317,12 @@ public class PhotoSession extends Object
 
 	private void forgotPassword() throws Exception {
 		String username=request.getParameter("username");
+		if(username==null) {
+			throw new Exception("Username not provided.");
+		}
+		if(username.toLowerCase().equals("guest")) {
+			throw new Exception("Cannot change the password of guest.");
+		}
 		PhotoUser pu=security.getUser(username);
 		PhotoXML xml=new PhotoXML();
 
