@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.88 2002/02/20 11:32:12 dustin Exp $
+ * $Id: PhotoSession.java,v 1.89 2002/02/20 11:33:31 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1464,7 +1464,7 @@ public class PhotoSession extends Object
 			long l=System.currentTimeMillis();
 			// This is ten minutes in milliseconds.
 			l+=600000;
-			// response.setDateHeader("Expires", l);
+			response.setDateHeader("Expires", l);
 
 			PhotoDimensions pdim=null;
 			if(size!=null) {
