@@ -13,6 +13,7 @@
 		<script language="JavaScript" src="test.js"></script>
 		<script language="JavaScript">
 		var kws = new Array();
+		var kwmap = new Object();
 
 		// This assumes sorted arrays in order to be O(log n)
 		function arrayContains(a, key) {
@@ -63,11 +64,11 @@
 		}
 		function showResults() {
 			var div=document.getElementById("found");
-			var h="";
 			// Maximum number of images to show
 			var total = 50
 			var tmpimgs=getImageIds();
 			// h = tmpimgs.join(" ") + "<br>\n";
+			var h = "Found " + tmpimgs.length + " images:<br/>"
 			for(var i=0; i<tmpimgs.length; i++) {
 				var img=tmpimgs[i]
 				if(total > 0) {
@@ -111,17 +112,52 @@
 			div.innerHTML=h
 
 		}
+		function search() {
+			var field=document.getElementById("keywords");
+			var mykws=field.value.split(" ");
+			kws=new Array();
+			for(var i=0; i<mykws.length; i++) {
+				if(kwmap[mykws[i]] != undefined) {
+					// alert("Found " + mykws[i] + " as " + kwmap[mykws[i]]);
+					kws.push(kwmap[mykws[i]]);
+				}
+			}
+			kws.sort();
+			kws.reverse();
+			showResults();
+			// alert(mykws);
+		}
+		function pressedKey(v) {
+			var div = document.getElementById("keywordlist");
+			var h = "";
+			if(v.value.length > 0) {
+				var mykws=v.value.split(" ");
+				for(var i=0; i<mykws.length; i++) {
+					if(kwmap[mykws[i]] != undefined) {
+						h += mykws[i] + "-(" + imgs[kwmap[mykws[i]]].length + ") ";
+					} else {
+						h += mykws[i] + "-no match ";
+					}
+				}
+			}
+			div.innerHTML=h;
+		}
 		onload = function() {
-			initForm(document.bigform);
+			// initForm(document.bigform);
+			for(var i=0; i<keywords.length; i++) {
+				kwmap[keywords[i]]=i;
+			}
 		}
 		</script>
 
-		Form:<br/>
-		<form name="bigform" method="POST" action="">
+		<form name="bigform" method="POST" action=""
+			onsubmit="search(); return false;">
+			Keywords:
+			<input id="keywords" name="keywords" size="60" value=""
+				OnKeyUp="pressedKey(this);"/>
 			<div style="font-size: x-small" id="keywordlist"><span/></div>
 			<input type="submit" value="Search"/>
 		</form>
-		Found:
 		<div id="found"><span/></div>
 	</body>
 </html>
