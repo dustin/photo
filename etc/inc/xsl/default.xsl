@@ -54,6 +54,7 @@
 						<table border="0" width="100%">
 						<tr valign="top">
 						<td align="left">
+						<font size="-1">
 						Logged in as
 						<a href="{meta_stuff/self_uri}?func=credform">
 						<xsl:value-of
@@ -76,9 +77,11 @@
 									Enable XML</a>
 							</xsl:otherwise>
 						</xsl:choose>
+						</font>
 						</td>
 						<td align="right">
 							<xsl:call-template name="quick_search"/>
+							<font size="-1"><a href="{meta_stuff/self_uri}">[HOME]</a></font>
 						</td>
 						</tr>
 						</table>

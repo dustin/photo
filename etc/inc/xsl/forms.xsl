@@ -148,8 +148,27 @@
 <xsl:template match="find_form">
 
 	<xsl:call-template name="simple_search_form"/>
+	<xsl:call-template name="by_id_search_form"/>
 	<xsl:call-template name="advanced_search_form"/>
 
+</xsl:template>
+
+<xsl:template name="by_id_search_form">
+<p>
+
+		<xsl:call-template name="section_header">
+			<xsl:with-param name="title">
+				Find Image by ID
+			</xsl:with-param>
+		</xsl:call-template>
+
+		<form method="POST" action="{/page/meta_stuff/self_uri}">
+			<input type="hidden" name="func" value="display"/>
+			<input name="id" size="6"/>
+			<input type="submit" value="Lookup"/>
+		</form>
+
+</p>
 </xsl:template>
 
 <xsl:template name="simple_search_form">
