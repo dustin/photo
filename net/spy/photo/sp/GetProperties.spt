@@ -1,0 +1,24 @@
+#
+# Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
+#
+# $Id
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Load all properties from the DB.
+
+@sql
+select
+		name, value
+	from
+		properties
+
+@results
+name VARCHAR Name of the property (not null)
+value VARCHAR Value of the property (possibly null)
+
+@cachetime
+900

@@ -1,4 +1,7 @@
 <%@ page import="net.spy.photo.SavedSearch" %>
+
+<jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
+
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
@@ -64,7 +67,7 @@
 				</template:insert>
 
 				<div align="center">
-					<photo:imgLink id='3916'
+					<photo:imgLink id='<%= props.getProperty("photo_of_uot", "1") %>'
 						width="194" height="146"
 						alt="Image of the [Unit of Time]"
 						showThumbnail='true'/>

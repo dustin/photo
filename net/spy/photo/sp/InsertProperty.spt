@@ -1,0 +1,21 @@
+#
+# Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
+#
+# $Id
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Insert a new property.
+
+@sql
+insert
+	into
+		properties(name, value)
+	values(?,?)
+
+@params
+name required VARCHAR The name of the property
+value required VARCHAR The value of the property

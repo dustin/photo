@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LocalImageCacheImpl.java,v 1.4 2002/07/10 03:38:08 dustin Exp $
+// $Id: LocalImageCacheImpl.java,v 1.5 2002/09/13 20:28:46 dustin Exp $
 
 package net.spy.photo;
 
@@ -29,7 +29,7 @@ public class LocalImageCacheImpl extends Object implements ImageCache {
 	 * @see ImageCache
 	 */
 	public PhotoImage getImage(String key) throws PhotoException {
-		PhotoImage rv=(PhotoImage)cache.getObject(key);
+		PhotoImage rv=(PhotoImage)cache.get(key);
 		return(rv);
 	}
 
@@ -37,11 +37,7 @@ public class LocalImageCacheImpl extends Object implements ImageCache {
 	 * @see ImageCache
 	 */
 	public void putImage(String key, PhotoImage image) throws PhotoException {
-		try {
-			cache.storeObject(key, image);
-		} catch(IOException e) {
-			throw new PhotoException("Error storing image", e);
-		}
+		cache.put(key, image);
 	}
 
 }

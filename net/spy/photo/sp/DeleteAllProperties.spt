@@ -1,0 +1,15 @@
+#
+# Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
+#
+# $Id
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Delete all of the properties.  This is used along with {@link InsertProperty}
+to save the photo properties.
+
+@sql
+delete from properties
