@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.4 2000/06/25 09:08:30 dustin Exp $
+ * $Id: PhotoSession.java,v 1.5 2000/06/26 03:34:42 dustin Exp $
  */
 
 package net.spy.photo;
@@ -129,6 +129,12 @@ public class PhotoSession extends Object
 		} else if(func.equalsIgnoreCase("unsetadmin")) {
 			unsetAdmin();
 			doIndex();
+		} else if(func.equalsIgnoreCase("admcat")) {
+			admShowCategories();
+		} else if(func.equalsIgnoreCase("admcatedit")) {
+			admEditCategoryForm();
+		} else if(func.equalsIgnoreCase("admsavecat")) {
+			admSaveCategory();
 		} else {
 			throw new ServletException("No known function.");
 		}
@@ -153,6 +159,99 @@ public class PhotoSession extends Object
 	protected void getCreds() throws ServletException {
 		getUid();
 		log("Authenticated as " + remote_user);
+	}
+
+	// Show the category edit form
+	protected void admShowCategories() throws ServletException {
+		String output="";
+		if(!isAdmin()) {
+			throw new ServletException("Not admin");
+		}
+		Hashtable h = new Hashtable();
+		h.put("CATS", getCatList(-1));
+		output=tokenize("admin/admcat.inc", h);
+		send_response(output);
+	}
+
+	protected void admEditCategoryForm() throws ServletException {
+		String output="";
+		ServletException se=null;
+		if(!isAdmin()) {
+			throw new ServletException("Not admin");
+		}
+
+		Connection photo=null;
+
+		try {
+			String s_cat_id=request.getParameter("cat");
+			int cat_id=Integer.parseInt(s_cat_id);
+
+			Hashtable h=new Hashtable();
+
+			photo=getDBConn();
+			PreparedStatement st=photo.prepareStatement(
+				"select name from cat where id=?"
+				);
+			st.setInt(1, cat_id);
+			ResultSet rs=st.executeQuery();
+
+			while(rs.next()) {
+				h.put("CATID", s_cat_id);
+				h.put("CATNAME", rs.getString("name"));
+			}
+			output=tokenize("admin/editcat.inc", h);
+		} catch(Exception e) {
+			se=new ServletException("Error displaying cat:  " + e);
+		} finally {
+			freeDBConn(photo);
+		}
+
+		if(se!=null) {
+			throw(se);
+		}
+
+		send_response(output);
+	}
+
+	// Show the category edit form
+	protected void admSaveCategory() throws ServletException {
+		String output="";
+		if(!isAdmin()) {
+			throw new ServletException("Not admin");
+		}
+		Hashtable h = new Hashtable();
+		ServletException se=null;
+		Connection photo=null;
+		try {
+			String stmp=request.getParameter("id");
+			int cat_id=Integer.parseInt(stmp);
+			String cat_name=request.getParameter("name");
+
+			photo=getDBConn();
+			if(cat_id>0) {
+				PreparedStatement st=photo.prepareStatement(
+					"update cat set name=? where id=?"
+					);
+				st.setString(1, request.getParameter("name"));
+				st.setInt(2, cat_id);
+				st.executeUpdate();
+			} else {
+				PreparedStatement st=photo.prepareStatement(
+					"insert into cat(name) values(?)"
+					);
+				st.setString(1, cat_name);
+				st.executeUpdate();
+			}
+		} catch(Exception e) {
+			se=new ServletException("Error in admEditCategoryForm: " + e);
+		} finally {
+			freeDBConn(photo);
+		}
+		if(se!=null) {
+			throw(se);
+		}
+		// If we make it to the bottom, show the categories again
+		admShowCategories();
 	}
 
 	// Show the style form
@@ -655,7 +754,11 @@ public class PhotoSession extends Object
 		} catch(Exception e) {
 			h.put("SAVED", "");
 		}
-		output += tokenize("index.inc", h);
+		if(isAdmin()) {
+			output += tokenize("admin/index.inc", h);
+		} else {
+			output += tokenize("index.inc", h);
+		}
 		send_response(output);
 	}
 
