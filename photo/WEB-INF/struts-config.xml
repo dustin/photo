@@ -9,6 +9,7 @@
   <form-beans>
     <form-bean name="loginForm" type="net.spy.photo.struts.LoginForm"/>
     <form-bean name="searchForm" type="net.spy.photo.struts.SearchForm"/>
+    <form-bean name="cursorForm" type="net.spy.photo.struts.CursorForm"/>
   </form-beans>
 
   <action-mappings>
@@ -26,7 +27,14 @@
 		type="net.spy.photo.struts.SearchAction"
 		input="/search.jsp"
 		name="searchForm">
-		<forward name="success" path="/PhotoServlet?func=nextresults" />
+		<forward name="success" path="/results.jsp" />
+	</action>
+
+	<!-- Search result cursor movement -->
+	<action    path="/nextresults"
+		type="net.spy.photo.struts.ResultsAction"
+		name="cursorForm">
+		<forward name="success" path="/results.jsp" />
 	</action>
 
   </action-mappings>
