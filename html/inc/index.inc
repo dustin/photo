@@ -14,8 +14,7 @@
 <h2>Canned searches</h2>
 
 <ul>
-    <li><a href="/perl/dustin/photo/photo.cgi?func=search&order=a.ts&maxret=5&sdirection=desc">
-	Newest images</a></li>
+%SAVED%
 </ul>
 
 <p>
@@ -24,10 +23,8 @@ All pages herein were created using vi.  For more information on the vi
 web page publishing system, type <tt>man vi</tt> at your prompt.
 
 <!--
-    Logged in as:  <!--#echo var="REMOTE_USER"-->
+    Logged in as:  %REMOTE_USER%
 -->
-
-<!--#include virtual="../tail.shtml"-->
 
 </body>
 </html>
