@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: catview.cgi,v 1.1 1997/11/04 09:18:37 dustin Exp $
+# $Id: catview.cgi,v 1.2 1997/12/06 09:42:55 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -18,6 +18,16 @@ print $q->start_html(
 
 print "<h2>Category List</h2>\n";
 
+$query="select cat from wwwacl where username='$ENV{REMOTE_USER}'";
+
+$s=$dbh->execute($query);
+
+while(($ok)=$s->fetchrow())
+{
+    $ok[$ok]=1;
+}
+
+
 $query="select name,id,catsum(id) as cs from cat order by cs desc";
 
 print "<!--\n$query\n-->\n";
@@ -32,6 +42,7 @@ print "<ul>\n";
 
 while(@r=$s->fetchrow())
 {
+    next if($ok[$r[1]]!=1);
     next if($r[2]==0);
 
     if($r[2]==1)

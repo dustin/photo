@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: find.cgi,v 1.8 1997/11/04 23:19:26 dustin Exp $
+# $Id: find.cgi,v 1.9 1997/12/06 09:42:57 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -145,6 +145,22 @@ print $q->start_html(
     -title=>'Find results',
     -bgcolor=>'#FfFfFf');
 
+$query ="select a.username, a.cat, b.id, b.name from wwwacl a, cat b\n";
+$query.="    where a.cat=b.id and a.username='$ENV{REMOTE_USER}'\n";
+
+print "\n<!-- Auth query:\n$query\n-->\n";
+
+if(!($s=$dbh->execute($query)))
+{
+    print "Database Error:  $Postgres::error\n";
+    exit(0);
+}
+
+while(@r=$s->fetchrow())
+{
+    $ok{$r[3]}=1;
+}
+
 $query=buildQuery($q);
 
 print "<!--\n$query\n-->\n";
@@ -170,6 +186,7 @@ print "<h2>Found $n matches:</h2><br><ul>\n";
 while(($oid, $keywords, $descr, $cat, $size, $taken, $ts, $image)
     =$s->fetchrow())
 {
+    next if(!defined($ok{$cat}));
     next if($i++<$start);
 
     if($max>0)

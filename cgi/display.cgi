@@ -2,7 +2,7 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: display.cgi,v 1.2 1997/11/03 09:31:45 dustin Exp $
+# $Id: display.cgi,v 1.3 1997/12/06 09:42:56 dustin Exp $
 
 use Postgres;
 
@@ -21,8 +21,27 @@ if( !($s=$dbh->execute($query)) )
     exit(0);
 }
 
-($oid, $image, $keywords, $info, $size, $taken, $timestamp, $cat)
+($oid, $image, $keywords, $info, $size, $taken, $timestamp, $cat, $catnum)
     =$s->fetchrow();
+
+$query ="select count(*) from wwwacl where username='$ENV{REMOTE_USER}'\n";
+$query.="    and cat=$catnum\n";
+
+if( !($s=$dbh->execute($query)) )
+{
+    print "Content-type: text/html\n\n";
+    print "ERROR!!!  $Postgres::error<br>\n$query<br>\n";
+    exit(0);
+}
+
+($n)=$s->fetchrow();
+
+if($n==0)
+{
+    print "Content-type: text/html\n\n";
+    print "ACL ERROR!!!  We don't want your type here.\n";
+    exit(0);
+}
 
 print <<EOF;
 Content-type: text/html
