@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CategoryTag.java,v 1.1 2002/05/11 09:24:34 dustin Exp $
+// $Id: CategoryTag.java,v 1.2 2002/05/15 08:28:06 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -15,7 +15,7 @@ import net.spy.photo.*;
 /**
  * Present category lists.
  */
-public class CategoryTag extends TagSupport {
+public class CategoryTag extends PhotoTag {
 
 	private boolean showViewable=false;
 	private boolean showAddable=false;

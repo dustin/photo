@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GuestCheck.java,v 1.1 2002/05/07 08:38:49 dustin Exp $
+// $Id: GuestCheck.java,v 1.2 2002/05/15 08:28:06 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -14,7 +14,7 @@ import net.spy.photo.*;
  * Allow simple conditionals based on whether the user is logged in or
  * guest.
  */
-public class GuestCheck extends TagSupport {
+public class GuestCheck extends PhotoTag {
 
 	private boolean negate=false;
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: InitSessionData.java,v 1.1 2002/05/07 08:38:49 dustin Exp $
+// $Id: InitSessionData.java,v 1.2 2002/05/15 08:28:06 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -14,7 +14,7 @@ import net.spy.photo.*;
 /**
  * Taglib that makes sure the session data is initialized appropriately.
  */
-public class InitSessionData extends TagSupport {
+public class InitSessionData extends PhotoTag {
 
 	/**
 	 * Get an InitSessionData instance.

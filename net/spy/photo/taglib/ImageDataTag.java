@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageDataTag.java,v 1.1 2002/05/15 08:26:15 dustin Exp $
+// $Id: ImageDataTag.java,v 1.2 2002/05/15 08:28:06 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -32,7 +32,6 @@ public class ImageDataTag extends PhotoTag {
 	 */
 	public void setImageId(String imageId) {
 		this.imageId=imageId;
-		System.out.println("Set imageId=" + imageId);
 	}
 
 	/**
@@ -40,7 +39,6 @@ public class ImageDataTag extends PhotoTag {
 	 */
 	public void setSearchId(String searchId) {
 		this.searchId=searchId;
-		System.out.println("Set searchId=" + searchId);
 	}
 
 	// Get the results by image ID.

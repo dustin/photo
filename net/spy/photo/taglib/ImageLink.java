@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.2 2002/05/15 08:26:15 dustin Exp $
+// $Id: ImageLink.java,v 1.3 2002/05/15 08:28:06 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -48,7 +48,6 @@ public class ImageLink extends PhotoTag {
 	public void setShowThumbnail(String to) {
 		Boolean b=new Boolean(to);
 		this.showThumbnail=b.booleanValue();
-		System.out.println("Set thumbnail to " + showThumbnail);
 	}
 
 	/**
@@ -57,7 +56,6 @@ public class ImageLink extends PhotoTag {
 	public void setScale(String to) {
 		Boolean b=new Boolean(to);
 		this.scale=b.booleanValue();
-		System.out.println("Set scale to " + scale);
 	}
 
 	/**
@@ -65,7 +63,6 @@ public class ImageLink extends PhotoTag {
 	 */
 	public void setWidth(String width) {
 		this.width=width;
-		System.out.println("Set width to " + width);
 	}
 
 	/**
@@ -73,7 +70,6 @@ public class ImageLink extends PhotoTag {
 	 */
 	public void setHeight(String height) {
 		this.height=height;
-		System.out.println("Set height to " + height);
 	}
 
 	/**
@@ -81,15 +77,12 @@ public class ImageLink extends PhotoTag {
 	 */
 	public void setAlt(String altText) {
 		this.altText=altText;
-		System.out.println("Set alt text to " + altText);
 	}
 
 	/**
 	 * Start link.
 	 */
 	public int doStartTag() throws JspException {
-
-		System.out.println("Displaying image " + id);
 
 		StringBuffer sb=new StringBuffer();
 		sb.append("<img src=\"PhotoServlet?func=getimage&photo_id=");

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.1 2002/05/15 08:26:15 dustin Exp $
+// $Id: DisplayLink.java,v 1.2 2002/05/15 08:28:06 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -58,8 +58,6 @@ public class DisplayLink extends PhotoTag {
 	 * Start link.
 	 */
 	public int doStartTag() throws JspException {
-
-		System.out.println("Creating a link to " + id);
 
 		StringBuffer sb=new StringBuffer();
 		sb.append("<a href=\"display.jsp?id=");
