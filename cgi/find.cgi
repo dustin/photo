@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: find.cgi,v 1.5 1997/11/04 09:14:22 dustin Exp $
+# $Id: find.cgi,v 1.6 1997/11/04 09:36:56 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -12,6 +12,7 @@ sub buildQuery
 {
     my($q)=@_;
     my(%h, $query, $needao, $sub, @tmp, $tmp, $snao, $ln, $order);
+    my(@a);
 
     for($q->param)
     {
@@ -59,8 +60,35 @@ sub buildQuery
 
 	if($h{what} ne "")
 	{
+	    my($a, $b, $c);
+	    $c=0;
+
 	    $sub.=" $h{fieldjoin}" if($needao++>0);
-	    $sub.="\n      $h{field} ~* '$h{what}'";
+
+	    @a=split(/\s+/, $h{what});
+	    if($h{keyjoin} eq "and")
+	    {
+		$b="and"
+	    }
+	    else
+	    {
+		$b="or";
+	    }
+
+            if($#a>0)
+	    {
+		$sub.="\n      (";
+	        foreach $a (@a)
+	        {
+	            $sub.=" $b" if($c++>0);
+		    $sub.="\n\t$h{field} ~* '$a'";
+	        }
+		$sub.="\n       )";
+	    }
+	    else
+	    {
+	        $sub.="\n      $h{field} ~* '$h{what}'";
+	    }
 	}
 
 	if($h{tstart})
@@ -164,7 +192,7 @@ while(($oid, $keywords, $descr, $cat, $size, $taken, $ts, $image)
 print "</ul>\n";
 
 # Add a link to the next matches.
-if( ($start+$max) < $n)
+if( (($start+$max) < $n) && $max>0)
 {
     if(($n-($start+$max))<$max)
     {
