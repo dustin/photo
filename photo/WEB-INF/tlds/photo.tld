@@ -16,6 +16,16 @@
 		</attribute>
 	</tag>
 
+	<!-- A conditional blocked based on whether the user is an admin -->
+	<tag>
+		<name>admin</name>
+		<tagclass>net.spy.photo.taglib.AdminCheck</tagclass>
+		<attribute>
+			<name>negate</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+
 	<!-- A conditional blocked based on whether the can add. -->
 	<tag>
 		<name>canAdd</name>
