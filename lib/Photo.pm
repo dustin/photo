@@ -1,12 +1,13 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.8 1998/06/29 05:54:34 dustin Exp $
+# $Id: Photo.pm,v 1.9 1998/07/06 03:28:31 dustin Exp $
 
 package Photo;
 
 use CGI;
 use DBI;
+use DCache;
 use MIME::Base64;
 use strict;
 
@@ -174,6 +175,46 @@ sub saveSearch
 
     %p=('QUERY', $query);
     $self->showTemplate("$Photo::includes/savedsearch.inc", %p);
+}
+
+sub displayImage
+{
+    my($self, $img)=@_;
+    my($query, $r, $s, $c, $key, $tmp, $q, $type);
+
+    $q=CGI->new;
+
+    if($img=~/.jpg$/) {
+        $type="image/jpeg";
+    } else {
+        $type="image/gif";
+    }
+
+    print $q->header($type);
+
+    $key="photo-image: $img";
+
+    $c=DCache->new;
+
+    if(!$c->checkcache($key)) {
+
+	my($out);
+	$out="";
+
+        $query ="select * from image_store where id=\n";
+        $query.="(select id from image_map where name='$img')\n";
+        $query.="    order by line\n";
+
+        $s=$self->doQuery($query);
+
+        while($r=$s->fetch) {
+	    $out.=decode_base64($r->[2]);
+        }
+
+	$c->cache($key, $type, $out);
+    }
+
+    $c->printcache_only($key);
 }
 
 sub showSaved
