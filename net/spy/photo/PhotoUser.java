@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.6 2001/07/19 08:52:17 dustin Exp $
+// $Id: PhotoUser.java,v 1.7 2001/07/19 10:07:09 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -8,13 +8,14 @@ package net.spy.photo;
 
 import java.sql.*;
 import java.util.*;
+import java.io.Serializable;
 
 import net.spy.*;
 
 /**
  * Represents a user in the photo system.
  */
-public class PhotoUser extends Object {
+public class PhotoUser extends Object implements Serializable {
 	private int id=-1;
 	private String username=null;
 	private String password=null;
@@ -23,6 +24,7 @@ public class PhotoUser extends Object {
 	private boolean canadd=false;
 
 	private Hashtable acl=null;
+	private Hashtable groups=null;
 
 	/**
 	 * Get a new, empty user.
@@ -36,7 +38,14 @@ public class PhotoUser extends Object {
 	 * String me.
 	 */
 	public String toString() {
-		return("Photo User - " + username);
+		return(username);
+	}
+
+	/**
+	 * Get the username.
+	 */
+	public String getUsername() {
+		return(username);
 	}
 
 	/**
@@ -68,6 +77,51 @@ public class PhotoUser extends Object {
 	 */
 	public void removeAllACLEntries() {
 		acl.clear();
+	}
+
+	/**
+	 * Get an Enumeration of Strings describing all the groups this user is
+	 * in.
+	 */
+	public Enumeration getGroups() {
+		if(groups==null) {
+			initGroups();
+		}
+		return(groups.keys());
+	}
+
+	/**
+	 * True if the user is in the given group.
+	 */
+	public boolean isInGroup(String groupName) {
+		if(groups==null) {
+			initGroups();
+		}
+		return(groups.containsKey(groupName));
+	}
+
+	// Initialize the groups
+	private synchronized void initGroups() {
+		if(groups==null) {
+			try {
+				Hashtable h=new Hashtable();
+				SpyDB db=new SpyDB(new PhotoConfig());
+				PreparedStatement st=db.prepareStatement(
+					"select * from show_group where username = ?");
+				st.setString(1, getUsername());
+				ResultSet rs=st.executeQuery();
+				while(rs.next()) {
+					h.put(rs.getString("groupname"), "1");
+				}
+				rs.close();
+				st.close();
+				db.close();
+				groups=h;
+			} catch(Exception e) {
+				// Spill your guts.
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**

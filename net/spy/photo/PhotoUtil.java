@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.8 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.9 2001/07/19 10:07:09 dustin Exp $
  */
 
 package net.spy.photo;
@@ -32,12 +32,12 @@ public class PhotoUtil extends Object {
 
 		PhotoConfig conf = new PhotoConfig();
 
-		vars.put("SELF_URI", p.self_uri);
-		vars.put("REMOTE_USER", p.remote_user);
-		vars.put("REMOTE_UID", p.remote_uid.toString());
+		vars.put("SELF_URI", p.getSelfURI());
+		vars.put("REMOTE_USER", p.getUser().getUsername());
+		vars.put("REMOTE_UID", "" + p.getUser().getId());
 		vars.put("LAST_MODIFIED", "recently");
 		vars.put("STYLESHEET", "<link rel=\"stylesheet\"href=\""
-			+ p.self_uri + "?func=getstylesheet\">");
+			+ p.getSelfURI() + "?func=getstylesheet\">");
 		
 		ret = t.tokenize(new File(conf.get("includes") + "/" + file), vars);
 		return(ret);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.11 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.12 2001/07/19 10:07:09 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,13 +14,20 @@ import net.spy.*;
 import net.spy.cache.*;
 import net.spy.util.*;
 
+/**
+ * Security dispatch type stuff happens here.
+ */
 public class PhotoSecurity extends PhotoHelper {
 
 	public PhotoSecurity() throws Exception {
 		super();
 	}
 
-	// Verify a password against what is stored in the database.
+	/**
+	 * Verify a password against what is stored in the database.
+	 *
+	 * @deprecated Why would I want to do this?
+	 */
 	public boolean checkPW(String user, String pass) {
 		PhotoUser pu=getUser(user);
 		return(pu.checkPassword(pass));
@@ -43,7 +50,37 @@ public class PhotoSecurity extends PhotoHelper {
 		return(out.trim());
 	}
 
-	protected PhotoUser getUser(String username) {
+	// All the common stuff for loading a user happens here.
+	private PhotoUser getUser(Connection conn, PreparedStatement st)
+		throws Exception {
+
+			ResultSet rs=st.executeQuery();
+			if(!rs.next()) {
+				throw new Exception("No results while loading user.");
+			}
+
+			PhotoUser u = getUser(rs);
+
+			rs.close();
+			st.close();
+			st=conn.prepareStatement(
+				"select cat from wwwacl where userid=?");
+			st.setInt(1, u.getId());
+			rs=st.executeQuery();
+			// Add the ACL entries.
+			while(rs.next()) {
+				u.addACLEntry(rs.getInt("cat"));
+			}
+			rs.close();
+			st.close();
+
+			return(u);
+	}
+
+	/**
+	 * Get a user by username
+	 */
+	public PhotoUser getUser(String username) {
 		PhotoUser ret=null;
 
 		// Grab the cache
@@ -62,13 +99,12 @@ public class PhotoSecurity extends PhotoHelper {
 					"select * from wwwusers where username=?"
 					);
 				st.setString(1, username);
-				ResultSet rs=st.executeQuery();
-				while(rs.next()) {
-					PhotoUser u = getUser(rs);
-					// User cache is valid for 30 minutes
-					cache.store(key, u, 30*60*1000);
-					ret=u;
-				}
+				PhotoUser u=getUser(photo, st);
+
+				// User cache is valid for 30 minutes
+				cache.store(key, u, 30*60*1000);
+				ret=u;
+
 			} catch(Exception e) {
 				log("Error lookup up user " + username);
 				e.printStackTrace();
@@ -82,6 +118,9 @@ public class PhotoSecurity extends PhotoHelper {
 		return(ret);
 	}
 
+	/**
+	 * Get a user by integer ID
+	 */
 	public PhotoUser getUser(int id) {
 		PhotoUser ret=null;
 
@@ -101,13 +140,11 @@ public class PhotoSecurity extends PhotoHelper {
 					"select * from wwwusers where id=?"
 					);
 				st.setInt(1, id);
-				ResultSet rs=st.executeQuery();
-				while(rs.next()) {
-					PhotoUser u = getUser(rs);
-					// User cache is valid for 30 minutes
-					cache.store(key, u, 30*60*1000);
-					ret=u;
-				}
+				PhotoUser u=getUser(photo, st);
+
+				// User cache is valid for 30 minutes
+				cache.store(key, u, 30*60*1000);
+				ret=u;
 			} catch(Exception e) {
 				log("Error lookup up user " + id);
 				e.printStackTrace();
@@ -121,6 +158,7 @@ public class PhotoSecurity extends PhotoHelper {
 		return(ret);
 	}
 
+	// Load the user info from a result set
 	private PhotoUser getUser(ResultSet rs) throws Exception {
 		PhotoUser u = new PhotoUser();
 		u.setId(rs.getInt("id"));

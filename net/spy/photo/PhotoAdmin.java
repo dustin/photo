@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.15 2001/07/19 08:52:17 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.16 2001/07/19 10:07:09 dustin Exp $
  */
 
 package net.spy.photo;
@@ -329,7 +329,7 @@ public class PhotoAdmin extends PhotoHelper {
 				cat_id=rs.getInt(1);
 				// OK, grant ourselves access to it.
 				st=photo.prepareStatement("insert into wwwacl values(?,?)");
-				st.setInt(1, ps.remote_uid.intValue());
+				st.setInt(1, ps.getUser().getId());
 				st.setInt(2, cat_id);
 				st.executeUpdate();
 
