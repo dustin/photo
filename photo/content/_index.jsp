@@ -14,12 +14,12 @@
 						<li><a href="credform.jsp">Login</a></li>
 					</photo:guest>
 					<photo:guest negate="1">
-						<li><a href="PhotoServlet?func=addform">Add a New Image</a></li>
+						<li><a href="addform.jsp">Add a New Image</a></li>
 					</photo:guest>
 					<li><a href="search.jsp">Advanced Search</a></li>
 					<li><a href="PhotoServlet?func=catview">Category View</a></li>
 					<li><a href="listcomments.do">Show Recent Comments</a></li>
-					<li><a href="PhotoServlet?func=newuserform">Create an Account</a></li>
+					<li><a href="newuserform.jsp">Create an Account</a></li>
 				</ul>
 			</p>
 		</td>

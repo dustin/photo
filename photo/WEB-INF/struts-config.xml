@@ -27,7 +27,7 @@
 		type="net.spy.photo.struts.SearchAction"
 		input="/search.jsp"
 		name="searchForm">
-		<forward name="success" path="/results.jsp" />
+		<forward name="success" path="/nextresults.do" />
 	</action>
 
 	<!-- Search result cursor movement -->
@@ -40,7 +40,7 @@
 	<!-- Search result cursor movement -->
 	<action    path="/listcomments"
 		type="net.spy.photo.struts.ListCommentsAction">
-		<forward name="success" path="/comments.jsp" />
+		<forward name="success" path="/nextcomments.do" />
 	</action>
 
 	<!-- Search result cursor movement -->
