@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CursorAction.java,v 1.3 2002/05/27 04:56:31 dustin Exp $
+// $Id: CursorAction.java,v 1.4 2002/05/27 07:29:18 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -51,8 +51,9 @@ public class CursorAction extends PhotoAction {
 
 			// And set the offset.
 			int offset=Integer.parseInt(cf.getStartOffset());
-			System.out.println("CursorAction seeking to " + offset);
 			c.set(offset);
+			System.out.println("CursorAction sought to " + offset
+				+ ", yielding " + c);
 		}
 
 		return(mapping.findForward("success"));
