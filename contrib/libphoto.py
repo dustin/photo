@@ -29,7 +29,11 @@ class Photo(object):
 
     def __init__(self, d):
         for col in ['id', 'size', 'width', 'height', 'tnwidth', 'tnheight']:
-            self.__dict__[col]=int(d[col])
+            try:
+                self.__dict__[col]=int(d[col])
+            except ValueError, e:
+                print "Problem parsing", col, "from", d
+                raise e
         for col in ['addedby', 'taken', 'ts', 'keywords', 'descr', 'extension']:
             self.__dict__[col]=d[col]
 
@@ -49,6 +53,7 @@ class StaticIndexHandler(xml.sax.handler.ContentHandler):
     def __init__(self):
         xml.sax.handler.ContentHandler.__init__(self)
         self.current = None
+        self.lastwasspace = False
         self.el = None
 
     def startElement(self, name, attrs):
@@ -68,6 +73,10 @@ class StaticIndexHandler(xml.sax.handler.ContentHandler):
             self.current = None
 
     def characters(self, content):
+        if content[-1] == ' ':
+            self.lastwasspace=True
+        else:
+            self.lastwasspace=False
         if self.current is not None:
             # Grab the content.  If this looks a little weird, it's because of
             # how I deal with line wrapping and stuff.
@@ -76,7 +85,13 @@ class StaticIndexHandler(xml.sax.handler.ContentHandler):
             else:
                 x = content.strip()
                 if x != '':
-                    self.current[self.el] += " " + x
+                    pad = ""
+                    # If there's whitespace on either end of the incoming
+                    # content, or the previous content ended in a space,
+                    # include the pad.
+                    if content[0]==' ' or content[-1]==' ' or self.lastwasspace:
+                        pad=' '
+                    self.current[self.el] += pad + x
 
     def gotPhoto(self, photo):
         raise NotImplemented

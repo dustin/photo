@@ -288,6 +288,7 @@ def fetchImage(photo, destdir):
     return todo
 
 def processMonth(idx, y, m):
+    global config
     photos=idx[y][m]
     makeMonthPage(y, m, photos)
     dir="pages/%04d/%02d" % (y, m)
@@ -297,13 +298,16 @@ def processMonth(idx, y, m):
     for photo in photos:
         i = i + 1
         makePageForPhoto(dir, photo)
-        todo.extend(fetchImage(photo, dir))
+        # If we're not ignoring images, go get them.
+        if not config.has_key("-I"):
+            todo.extend(fetchImage(photo, dir))
     st=FetchStatus(len(todo))
     for t in todo:
         tp.addTask(ImageFetcher(t[0], t[1], t[2], t[3], t[4], st))
     status("Need to fetch %d images" % (len(todo), ))
     # Wait for the count to get back down to zero
-    tp.waitForTaskCount()
+    if tp is not None:
+        tp.waitForTaskCount()
 
 def go():
 
@@ -345,7 +349,7 @@ def go():
 def parseArgs():
     global config
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'vfFa:i:')
+        opts, args = getopt.getopt(sys.argv[1:], 'vfFa:i:I')
         config = dict(opts)
     except getopt.GetoptError, e:
         raise UsageError(e)
@@ -365,11 +369,12 @@ def parseArgs():
 # Start
 
 def usage():
-    print "Usage:  %s [-f] [-F] [-a user] [-i imgpath] photurl destdir" \
+    print "Usage:  %s [-f] [-F] [-a user] [-I] [-i imgpath] photurl destdir" \
         % (sys.argv[0], );
     print " -a authenticate as the given user"
     print " -f fetch index even if we already have one"
     print " -F fetch the full size images in addition to the smaller ones"
+    print " -I do not process images"
     print " -i allows you to specify an alt image path to fetch local copies"
     print "    (relative to destdir)"
     sys.exit(1)
@@ -380,10 +385,13 @@ if __name__ == '__main__':
         # Parse the arguments
         parseArgs()
         try:
-            tp=threadpool.ThreadPool(num=10)
+            # If we will be processing images, start a thread pool
+            if not config.has_key("-I"):
+                tp=threadpool.ThreadPool(num=10)
             go()
         finally:
             if tp is not None:
+                print "Shutting down pool"
                 tp.shutdown()
     except UsageError, e:
         print e
