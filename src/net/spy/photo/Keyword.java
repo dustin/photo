@@ -48,6 +48,8 @@ public class Keyword extends AbstractSavable implements Comparable {
 	private Keyword(ResultSet rs) throws Exception {
 		super();
 		initFromResultSet(rs);
+		setModified(false);
+		setNew(false);
 	}
 
 	private void initFromResultSet(ResultSet rs) throws Exception {
