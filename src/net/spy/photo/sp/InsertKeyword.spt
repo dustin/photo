@@ -1,0 +1,16 @@
+#
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Insert a new keyword.
+
+@sql
+insert into keywords(word_id, word) values(?, ?)
+
+@params
+id required INTEGER the keyword ID
+word required VARCHAR the keyword

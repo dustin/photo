@@ -1,0 +1,15 @@
+#
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Delete all of the keyword mappings for a given image.
+
+@sql
+delete from album_keywords_map where album_id = ?
+
+@params
+photo_id required INTEGER the id of the photo whose keywords should be deleted

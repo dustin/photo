@@ -3,6 +3,7 @@
 package net.spy.photo;
 
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -75,6 +76,15 @@ public class Search2XML extends SpyObject {
 		return(addNode(doc, name, tsFormat.format(d)));
 	}
 
+	private Element addKeywords(Document doc, String name, Collection c) {
+		Element el=doc.createElement(name);
+		for(Iterator i=c.iterator(); i.hasNext();) {
+			Keyword k=(Keyword)i.next();
+			el.appendChild(addNode(doc, "keyword", String.valueOf(k.getId())));
+		}
+		return(el);
+	}
+
 	private void stream(PhotoImageData pid, OutputStream os) throws Exception {
 		Document doc=dom.createDocument(null, "photo", null);
 		Element root=doc.getDocumentElement();
@@ -86,7 +96,7 @@ public class Search2XML extends SpyObject {
 		el.appendChild(addNode(doc, "cat", pid.getCatName()));
 		el.appendChild(addDate(doc, "taken", pid.getTaken()));
 		el.appendChild(addTimestamp(doc, "ts", pid.getTimestamp()));
-		el.appendChild(addNode(doc, "keywords", pid.getKeywords()));
+		el.appendChild(addKeywords(doc, "keywords", pid.getKeywords()));
 		el.appendChild(addNode(doc, "descr", pid.getDescr()));
 		el.appendChild(addNode(doc, "size", pid.getSize()));
 		el.appendChild(addNode(doc, "width", pid.getDimensions().getWidth()));

@@ -7,14 +7,16 @@ package net.spy.photo.rpc;
 import java.util.Date;
 import java.util.Hashtable;
 
+import net.spy.db.Saver;
+
 import net.spy.photo.Category;
-import net.spy.photo.Persistent;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoLogUploadEntry;
-import net.spy.photo.PhotoSaver;
+import net.spy.photo.SavablePhotoImageData;
 import net.spy.photo.PhotoUser;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.Persistent;
 
 /**
  * RPC method to add an image. 
@@ -41,7 +43,7 @@ public class AddImage extends RPCMethod {
 	 *  <li>image - the image itself</li>
 	 * </ul>
 	 */
-	public int addImage(Hashtable args) throws PhotoException {
+	public int addImage(Hashtable args) throws Exception {
 		// Verify all the arguments.
 		checkArg(args, "username", String.class);
 		checkArg(args, "password", String.class);
@@ -50,8 +52,6 @@ public class AddImage extends RPCMethod {
 		checkArg(args, "category", String.class);
 		checkArg(args, "taken", Date.class);
 		checkArg(args, "image", byte[].class);
-
-		int rv=-1;
 
 		// OK, now go ahead and pull out all of the args
 		String username=(String)args.get("username");
@@ -85,30 +85,26 @@ public class AddImage extends RPCMethod {
 		PhotoImage photoImage=new PhotoImage(image);
 
 		// Get the new image ID
-		rv=PhotoSaver.getNewImageId();
-		// Get the new saver
-		PhotoSaver saver=new PhotoSaver();
+		SavablePhotoImageData savable=new SavablePhotoImageData(photoImage);
 		// Populate the fields.
-		saver.setKeywords(keywords);
-		saver.setInfo(info);
-		saver.setCat(catId);
-		saver.setTaken(taken);
-		saver.setUser(user);
-		saver.setPhotoImage(photoImage);
-		saver.setId(rv);
+		savable.setKeywords(keywords);
+		savable.setDescr(info);
+		savable.setCatId(catId);
+		savable.setTaken(taken);
+		savable.setAddedBy(user);
 
-		// Now, queue it up for saving.
-		Persistent.getPhotoSaverThread().saveImage(saver);
+		Saver s=new Saver(PhotoConfig.getInstance());
+		s.save(savable);
 
 		// Log it.
 		// XXX  I really would like a way to get to the actual remote IP
 		// address.
 		Persistent.getPipeline().addTransaction(new PhotoLogUploadEntry(
-			user.getId(), rv, "127.0.0.1", "XMLRPC Image Upload"),
+			user.getId(), savable.getId(), "127.0.0.1", "XMLRPC Image Upload"),
 			PhotoConfig.getInstance());
 
 		// Return the new image ID
-		return(rv);
+		return(savable.getId());
 	}
 
 }

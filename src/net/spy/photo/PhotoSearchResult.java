@@ -5,6 +5,7 @@ package net.spy.photo;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.Collection;
 
 /**
  * A search result.
@@ -32,7 +33,7 @@ public class PhotoSearchResult extends Object
 		return(searchId);
 	}
 
-	public String getKeywords() {
+	public Collection getKeywords() {
 		return(imgData.getKeywords());
 	}
 

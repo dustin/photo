@@ -2,6 +2,7 @@
 
 package net.spy.photo;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -12,7 +13,7 @@ public interface PhotoImageData {
 	/** 
 	 * Get the keywords for this image (space separated).
 	 */
-	String getKeywords();
+	Collection getKeywords();
 
 	/** 
 	 * Get the description of this image.

@@ -1,0 +1,16 @@
+#
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get all keywords.
+
+@sql
+select word_id, word from keywords
+
+@results
+word_id INTEGER the keyword ID
+word VARCHAR the keyword

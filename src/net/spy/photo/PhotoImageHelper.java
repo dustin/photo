@@ -116,14 +116,4 @@ public class PhotoImageHelper extends PhotoHelper {
 
 		return(rv);
 	}
-
-	/**
-	 * Store an image.
-	 */
-	public void storeImage(PhotoImage imageData) throws Exception {
-		getLogger().info("Storing image " + imageId);
-		ImageServer server=ImageServerFactory.getImageServer();
-		server.storeImage(imageId, imageData);
-		getLogger().info("Stored image " + imageId);
-	}
 }

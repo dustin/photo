@@ -11,13 +11,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.spy.db.Saver;
+
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoLogUploadEntry;
-import net.spy.photo.PhotoSaver;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUser;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.SavablePhotoImageData;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -53,20 +55,20 @@ public class UploadAction extends PhotoAction {
 				sessionData.getUser() + " can't add to category " + cat);
 		}
 
-		// Get the ID
-		int id=PhotoSaver.getNewImageId();
-		PhotoSaver saver=new PhotoSaver();
+		// Get the Savable
+		SavablePhotoImageData savable=
+			new SavablePhotoImageData(uf.getPhotoImage());
 
-		saver.setKeywords(uf.getKeywords());
-		saver.setInfo(uf.getInfo());
-		saver.setCat(cat);
-		saver.setTaken(uf.getTaken());
-		saver.setUser(user);
-		saver.setPhotoImage(uf.getPhotoImage());
-		saver.setId(id);
+		savable.setKeywords(uf.getKeywords());
+		savable.setDescr(uf.getInfo());
+		savable.setCatId(cat);
+		savable.setTaken(uf.getTaken());
+		savable.setAddedBy(user);
 
-		// Tell the saver to save this image when it gets around to it.
-		Persistent.getPhotoSaverThread().saveImage(saver);
+		Saver s=new Saver(PhotoConfig.getInstance());
+		s.save(savable);
+
+		int id=savable.getId();
 
 		Persistent.getPipeline().addTransaction(new PhotoLogUploadEntry(
 			user.getId(), id, request), PhotoConfig.getInstance());

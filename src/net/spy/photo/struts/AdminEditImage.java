@@ -11,9 +11,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.PhotoConfig;
+import net.spy.db.Saver;
 
-import net.spy.photo.sp.EditImage;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImageDataImpl;
+import net.spy.photo.SavablePhotoImageData;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -41,20 +43,15 @@ public class AdminEditImage extends PhotoAction {
 
 		UploadForm uf=(UploadForm)form;
 
-		try {
-			EditImage ei=new EditImage(PhotoConfig.getInstance());
+		SavablePhotoImageData savable=new SavablePhotoImageData(
+			PhotoImageDataImpl.getData(Integer.parseInt(uf.getId())));
+		savable.setDescr(uf.getInfo());
+		savable.setKeywords(uf.getKeywords());
+		savable.setCatId(Integer.parseInt(uf.getCategory()));
+		savable.setTaken(uf.getTaken());
 
-			ei.setKeywords(uf.getKeywords());
-			ei.setDescr(uf.getInfo());
-			ei.setCat(Integer.parseInt(uf.getCategory()));
-			ei.setTaken(uf.getTaken());
-			ei.setId(Integer.parseInt(uf.getId()));
-
-			ei.executeUpdate();
-			ei.close();
-		} catch(Exception e) {
-			throw new ServletException("Error saving image data", e);
-		}
+		Saver s=new Saver(PhotoConfig.getInstance());
+		s.save(savable);
 
 		return(mapping.findForward("next"));
 	}

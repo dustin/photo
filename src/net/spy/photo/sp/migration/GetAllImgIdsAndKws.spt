@@ -1,0 +1,12 @@
+#
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.photo.sp.migration
+
+@description
+Get all of the IDs and keywords from the album
+
+@sql
+select id, keywords from album

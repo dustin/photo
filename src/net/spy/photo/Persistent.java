@@ -18,7 +18,6 @@ public class Persistent extends HttpServlet {
 
 	private static PhotoSecurity security = null;
 	private static TransactionPipeline pipeline = null;
-	private static PhotoSaverThread photoSaverThread=null;
 
 	/**
 	 * Get all of the persistent objects.
@@ -65,10 +64,6 @@ public class Persistent extends HttpServlet {
 			throw new ServletException("Can't create security stuff", e);
 		}
 
-		log("Initing PhotoSaverThread");
-		photoSaverThread=new PhotoSaverThread();
-		log("got PhotoSaverThread");
-
 		log("Initing TransactionPipeline");
 		pipeline=new TransactionPipeline();
 		log("got TransactionPipeline");
@@ -83,8 +78,6 @@ public class Persistent extends HttpServlet {
 		log("Shutting down transaction pipeline");
 		pipeline.shutdown();
 		log("pipeline shut down");
-		log("Stopping PhotoSaverThread");
-		photoSaverThread.stopRunning();
 		log("Calling super destroy.");
 		super.destroy();
 	}
@@ -107,17 +100,8 @@ public class Persistent extends HttpServlet {
 		return(pipeline);
 	}
 
-	/**
-	 * Get the PhotoSaverThread for this instance.
-	 */
-	public static PhotoSaverThread getPhotoSaverThread() {
-		verifyInitialized();
-		return(photoSaverThread);
-	}
-
 	private static void verifyInitialized() {
-		if(security==null || pipeline==null || photoSaverThread==null) {
-
+		if(security==null || pipeline==null) {
 			throw new NotInitializedException();
 		}
 	}

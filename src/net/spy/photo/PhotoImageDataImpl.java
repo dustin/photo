@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.io.ObjectStreamException;
 import java.io.InvalidObjectException;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
@@ -21,6 +23,7 @@ import net.spy.db.SpyDB;
 import net.spy.cache.SpyCache;
 
 import net.spy.photo.sp.GetPhotoInfo;
+import net.spy.photo.sp.GetAlbumKeywords;
 
 /**
  * This class represents, and retreives all useful data for a given image.
@@ -32,7 +35,7 @@ public class PhotoImageDataImpl extends SpyObject
 	private static final long CACHE_TIME=3600000;
 
 	private int id=-1;
-	private String keywords=null;
+	private Collection keywords=null;
 	private String descr=null;
 	private String catName=null;
 	private int catId=-1;
@@ -54,6 +57,7 @@ public class PhotoImageDataImpl extends SpyObject
 	private PhotoImageDataImpl(ResultSet rs) throws Exception {
 		super();
 		initFromResultSet(rs);
+		keywords=new HashSet();
 	}
 
 	/**
@@ -75,7 +79,6 @@ public class PhotoImageDataImpl extends SpyObject
 		if(rs.wasNull()) {
 			height=-1;
 		}
-		keywords=rs.getString("keywords");
 		descr=rs.getString("descr");
 		catName=rs.getString("catname");
 		timestamp=rs.getTimestamp("ts");
@@ -182,13 +185,29 @@ public class PhotoImageDataImpl extends SpyObject
 		rs.close();
 		db.close();
 
+		GetAlbumKeywords gkdb=new GetAlbumKeywords(PhotoConfig.getInstance());
+		rs=gkdb.executeQuery();
+		while(rs.next()) {
+			int photoid=rs.getInt("photo_id");
+			int keywordid=rs.getInt("word_id");
+			PhotoImageDataImpl pidi=(PhotoImageDataImpl)rv.get(
+				new Integer(photoid));
+			if(pidi == null) {
+				throw new Exception("Invalid keymap entry to " + photoid);
+			}
+			// Map it in
+			pidi.keywords.add(Keyword.getKeyword(keywordid));
+		}
+		rs.close();
+		gkdb.close();
+
 		return(rv);
 	}
 
 	/**
 	 * Get the keywords for this photo.
 	 */
-	public String getKeywords() {
+	public Collection getKeywords() {
 		return(keywords);
 	}
 

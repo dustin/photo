@@ -51,6 +51,25 @@ public abstract class PhotoMigration extends SpyObject {
 		return(ret);
 	}
 
+	/** 
+	 * Get the row count for the given table.
+	 * 
+	 * @param table the given table
+	 * @return the number of rows in the given table.
+	 */
+	protected int getRowCount(String table) throws Exception {
+		int rv=0;
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
+		ResultSet rs=db.executeQuery("select count(*) from " + table);
+		if(!rs.next()) {
+			throw new Exception("No rows returned!?");
+		}
+		rv=rs.getInt(1);
+		rs.close();
+		db.close();
+		return(rv);
+	}
+
 	// Find a URL to a file by class-ish name.
 	private static URL findPath(String rel)
 		throws FileNotFoundException {

@@ -1,24 +1,24 @@
 #
-# $Id: EditImage.spt,v 1.2 2003/01/04 10:42:14 dustin Exp $
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
 #
 
 @package
 net.spy.photo.sp
 
 @description
-Edit an image.
+Update image data.
 
 @sql
 update album
-	set keywords=?,
+	set
 		descr=?,
 		cat=?,
 		taken=?
-	where id=?
+	where
+		id=?
 
 @params
-keywords required VARCHAR Keywords for an image
 descr required VARCHAR Description of an image
 cat required INTEGER Category containing the image
-taken required VARCHAR Date the image was taken
+taken required DATE Date the image was taken
 id required INTEGER ID of the image

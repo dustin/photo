@@ -1,0 +1,16 @@
+#
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Insert a keyword mapping for a given photo.
+
+@sql
+insert into album_keywords_map values(?, ?)
+
+@params
+photo_id required INTEGER The ID of the photo
+word_id required INTEGER The keyword ID

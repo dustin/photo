@@ -6,6 +6,10 @@
 
 package net.spy.photo;
 
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
 import java.net.URLEncoder;
 
 import java.sql.PreparedStatement;
@@ -253,8 +257,7 @@ public class PhotoSearch extends PhotoHelper {
 	}
 
 	// Build the bigass complex search query from a SearchForm
-	private String buildQuery(SearchForm form, int remoteUid)
-		throws ServletException {
+	private String buildQuery(SearchForm form, int remoteUid) throws Exception {
 		String query="", sub="", stmp="", order="",
 			odirection="", fieldjoin="", join="";
 		boolean needao=false;
@@ -308,10 +311,18 @@ public class PhotoSearch extends PhotoHelper {
 			}
 		}
 
-		// OK, lets look for search strings now...
-		stmp = form.getWhat();
-		if(stmp != null && stmp.length() > 0) {
-			String field=null;
+		join = PhotoUtil.dbquoteStr(form.getKeyjoin());
+		// Default
+		if(join == null) {
+			join = "or";
+		}
+
+		// Keywords
+		if("keywords".equals(form.getField())) {
+			stmp = form.getWhat();
+			if(stmp == null) {
+				stmp="";
+			}
 			boolean needjoin=false;
 
 			// If we need an and or an or, stick it in here.
@@ -319,37 +330,77 @@ public class PhotoSearch extends PhotoHelper {
 				sub += " " + fieldjoin;
 			}
 			needao=true;
-
-			atmp = PhotoUtil.split(" ", stmp);
-
-			join = PhotoUtil.dbquoteStr(form.getKeyjoin());
-			// Default
-			if(join == null) {
-				join = "or";
+			ArrayList keywords=new ArrayList();
+			StringTokenizer st=new StringTokenizer(stmp);
+			while(st.hasMoreTokens()) {
+				Keyword kw=Keyword.getKeyword(st.nextToken());
+				if(kw != null) {
+					keywords.add(kw);
+				}
 			}
-
-			field = PhotoUtil.dbquoteStr(form.getField());
-			// Default
-			if(field == null) {
-				throw new ServletException("No field");
-			}
-
-			if(atmp.length > 1) {
-				sub += "\n     (";
-				for(int i=0; i<atmp.length; i++) {
+			if(keywords.size() == 1) {
+				Keyword kw=(Keyword)keywords.get(0);
+				if(needao) {
+					sub += " " + fieldjoin;
+				}
+				needao=true;
+				sub += "\n   exists (select 1 from album_keywords_map where "
+					+ " album_id = id and word_id = " + kw.getId()
+					+ " -- " + kw.getKeyword();
+			} else if(keywords.size() > 1) {
+				if(needao) {
+					sub += " " + fieldjoin;
+				}
+				needao=true;
+				sub += "\n    (";
+				for(Iterator i=keywords.iterator(); i.hasNext(); ) {
+					Keyword kw=(Keyword)i.next();
 					if(needjoin) {
 						sub += join;
 					} else {
 						needjoin=true;
 					}
-					sub += "\n\t" + field + " ~* '"
-						+ PhotoUtil.dbquoteStr(atmp[i]) + "' ";
+					sub += "\n\texists (select 1 from album_keywords_map "
+						+ "where album_id = id and word_id = " + kw.getId()
+						+ " -- " + kw.getKeyword();
 				}
-				sub += "\n     )";
+				sub += "\n    )";
 			} else {
-				sub += "\n    " + field + " ~* '"
-					+ PhotoUtil.dbquoteStr(stmp) + "' ";
+				// No keywords, ignore
 			}
+		} else if("descr".equals(form.getField())) {
+			// OK, lets look for search strings now...
+			stmp = form.getWhat();
+			if(stmp != null && stmp.length() > 0) {
+				boolean needjoin=false;
+
+				// If we need an and or an or, stick it in here.
+				if(needao) {
+					sub += " " + fieldjoin;
+				}
+				needao=true;
+
+				atmp = PhotoUtil.split(" ", stmp);
+
+				if(atmp.length > 1) {
+					sub += "\n     (";
+					for(int i=0; i<atmp.length; i++) {
+						if(needjoin) {
+							sub += join;
+						} else {
+							needjoin=true;
+						}
+						sub += "\n\tdescr ~* '"
+							+ PhotoUtil.dbquoteStr(atmp[i]) + "' ";
+					}
+					sub += "\n     )";
+				} else {
+					sub += "\n    descr ~* '"
+						+ PhotoUtil.dbquoteStr(stmp) + "' ";
+				}
+			}
+		} else {
+			throw new ServletException("Invalid field:  " + form.getField());
 		}
 
 		// Starts and ends

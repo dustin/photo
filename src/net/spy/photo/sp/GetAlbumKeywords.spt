@@ -1,0 +1,16 @@
+#
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get all of the keyword IDs for all of the images.
+
+@sql
+select album_id, word_id from album_keywords_map
+
+@results
+photo_id INTEGER The photo ID
+word_id INTEGER The word ID
