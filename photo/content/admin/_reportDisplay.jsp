@@ -4,8 +4,6 @@
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
-<photo:admin explodeOnImpact="true"/>
-
 <p>
 
 <h1><c:out value="${reportName}"/></h1>

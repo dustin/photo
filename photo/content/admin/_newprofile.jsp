@@ -4,8 +4,6 @@
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
-<photo:admin explodeOnImpact="true"/>
-
 <%
 	String lastProfile=(String)request.getAttribute("net.spy.photo.ProfileId");
 %>

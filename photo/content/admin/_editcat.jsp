@@ -5,8 +5,6 @@
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
-<photo:admin explodeOnImpact="true"/>
-
 <p>
 
 <div class="sectionheader">Category Administration</div>

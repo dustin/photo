@@ -7,8 +7,6 @@
 <jsp:useBean id="adminUserForm" scope="session"
 	class="net.spy.photo.struts.AdminUserForm"/>
 
-<photo:admin explodeOnImpact="true"/>
-
 <p>
 
 <div class="sectionheader">User Administration</div>

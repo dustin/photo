@@ -10,16 +10,12 @@
 	<jspversion>1.1</jspversion>
 	<shortname>photo</shortname>
 
-	<!-- A conditional blocked based on whether the user is an admin -->
+	<!-- A conditional blocked based on whether the user has the admin flag -->
 	<tag>
 		<name>admin</name>
 		<tagclass>net.spy.photo.taglib.AdminCheck</tagclass>
 		<attribute>
 			<name>negate</name>
-			<required>false</required>
-		</attribute>
-		<attribute>
-			<name>explodeOnImpact</name>
 			<required>false</required>
 		</attribute>
 	</tag>
