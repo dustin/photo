@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.36 2000/10/08 09:12:06 dustin Exp $
+ * $Id: PhotoSession.java,v 1.37 2000/10/17 07:12:21 dustin Exp $
  */
 
 package net.spy.photo;
@@ -19,6 +19,7 @@ import javax.servlet.http.*;
 import com.oreilly.servlet.*;
 
 import net.spy.*;
+import net.spy.cache.*;
 import net.spy.log.*;
 
 // The class
@@ -227,7 +228,7 @@ public class PhotoSession extends Object
 	protected String showSaved() {
 		String out="";
 		Connection photo=null;
-		PhotoCache cache=new PhotoCache();
+		SpyCache cache=new SpyCache();
 
 		out=(String)cache.get("saved_searches");
 
@@ -419,7 +420,7 @@ public class PhotoSession extends Object
 	public String getCatList(int def) {
 		String out="";
 		Connection photo=null;
-		PhotoCache cache=new PhotoCache();
+		SpyCache cache=new SpyCache();
 
 		String key="catList_" + def;
 
@@ -645,7 +646,7 @@ public class PhotoSession extends Object
 		String key="photo_total_images_shown";
 		NumberFormat nf=NumberFormat.getNumberInstance();
 
-		PhotoCache cache=new PhotoCache();
+		SpyCache cache=new SpyCache();
 
 		ret=(String)cache.get(key);
 		if(ret==null) {
@@ -665,7 +666,7 @@ public class PhotoSession extends Object
 		String key="photo_total_images";
 		NumberFormat nf=NumberFormat.getNumberInstance();
 
-		PhotoCache cache=new PhotoCache();
+		SpyCache cache=new SpyCache();
 
 		ret=(String)cache.get(key);
 		if(ret==null) {
@@ -849,7 +850,7 @@ public class PhotoSession extends Object
 			PrintWriter out = response.getWriter();
 
 			String tail=null;
-			PhotoCache cache=new PhotoCache();
+			SpyCache cache=new SpyCache();
 			String key="t_tail_" + remote_uid + "." + isAdmin();
 			tail=(String)cache.get(key);
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.3 2000/07/08 05:50:48 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.4 2000/10/17 07:12:21 dustin Exp $
  */
 
 package net.spy.photo;
@@ -13,6 +13,7 @@ import java.rmi.Naming;
 import sun.misc.*;
 
 import net.spy.*;
+import net.spy.cache.*;
 import net.spy.rmi.*;
 
 // The class
@@ -41,7 +42,7 @@ public class PhotoImageHelper extends PhotoHelper
 	// Get a thumbnail
 	public PhotoImage getThumbnail() throws Exception {
 		// Thumbnails are cachable.
-		PhotoCache cache=new PhotoCache();
+		SpyCache cache=new SpyCache();
 		String key="img_t_" + image_id;
 		PhotoImage pi=(PhotoImage)cache.get(key);
 

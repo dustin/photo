@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.9 2000/07/16 08:36:27 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.10 2000/10/17 07:12:21 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,6 +14,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import net.spy.*;
+import net.spy.cache.*;
 
 public class PhotoSearchResult extends PhotoHelper {
 	protected Hashtable mydata=null;
@@ -93,7 +94,7 @@ public class PhotoSearchResult extends PhotoHelper {
 		// If we are uninitialized, but have an ID, initialize.
 		if(id>=0 && mydata==null) {
 			try {
-				PhotoCache pc=new PhotoCache();
+				SpyCache pc=new SpyCache();
 				mydata=(Hashtable)pc.get("s_result_" + id);
 				if(mydata==null) {
 					find(id);

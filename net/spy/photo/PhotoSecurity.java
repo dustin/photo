@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.6 2000/07/07 06:05:37 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.7 2000/10/17 07:12:21 dustin Exp $
  */
 
 package net.spy.photo;
@@ -12,6 +12,7 @@ import java.sql.*;
 import sun.misc.*;
 
 import net.spy.*;
+import net.spy.cache.*;
 
 public class PhotoSecurity extends PhotoHelper {
 
@@ -65,7 +66,7 @@ public class PhotoSecurity extends PhotoHelper {
 		PhotoUser ret=null;
 
 		// Grab the cache
-		PhotoCache cache=new PhotoCache();
+		SpyCache cache=new SpyCache();
 		String key="sec_u_" + username;
 
 		// Get the data from cache

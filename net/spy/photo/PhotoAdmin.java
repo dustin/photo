@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.5 2000/07/24 08:47:35 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.6 2000/10/17 07:12:21 dustin Exp $
  */
 
 package net.spy.photo;
@@ -15,6 +15,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import net.spy.*;
+import net.spy.cache.*;
 
 public class PhotoAdmin extends PhotoHelper {
 
@@ -368,7 +369,7 @@ public class PhotoAdmin extends PhotoHelper {
 				st.executeUpdate();
 
 				// Now, let's uncache any cached category lists we have.
-				PhotoCache cache=new PhotoCache();
+				SpyCache cache=new SpyCache();
 				// Get rid of anything that starts with catList_
 				cache.uncacheLike("catList_");
 			}

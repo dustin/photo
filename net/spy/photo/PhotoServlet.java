@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.13 2000/10/13 08:20:24 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.14 2000/10/17 07:12:21 dustin Exp $
  */
 
 package net.spy.photo;
@@ -17,6 +17,7 @@ import javax.servlet.http.*;
 
 import net.spy.*;
 import net.spy.log.*;
+import net.spy.cache.*;
 
 // The class
 public class PhotoServlet extends HttpServlet
@@ -27,7 +28,7 @@ public class PhotoServlet extends HttpServlet
 
 	public SpyLog logger = null;
 
-	protected PhotoCache photoCache=null;
+	protected SpyCache photoCache=null;
 
 	protected PhotoLogFlusher logflusher=null;
 
@@ -52,7 +53,7 @@ public class PhotoServlet extends HttpServlet
 		// The photo cache storer
 		try {
 			log("Initing PhotoCache");
-			photoCache=new PhotoCache();
+			photoCache=new SpyCache();
 			log("Got the photoCache");
 		} catch(Exception e) {
 			log("Could not get photoCache:  " + e);
@@ -91,7 +92,7 @@ public class PhotoServlet extends HttpServlet
 	// Servlet info
 	public String getServletInfo() {
 		return("Copyright (c) 2000  Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.13 $");
+			+ " - $Revision: 1.14 $");
 	}
 
 	// Do a GET request
