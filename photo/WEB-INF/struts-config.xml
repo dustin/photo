@@ -125,14 +125,15 @@
 		input="top.credform"
 		scope="request"
 		name="loginForm">
-		<forward name="next" path="/index.do" />
-		<forward name="setadmin" path="/adminify.do?action=setadmin" />
+		<forward name="next" path="/index.do" redirect="true" />
+		<forward name="setadmin" path="/adminify.do?action=setadmin"
+			redirect="true" />
 	</action>
 
 	<!-- Logout -->
 	<action    path="/logout"
 		type="net.spy.photo.struts.LogoutAction">
-		<forward name="next" path="/index.do" />
+		<forward name="next" path="/index.do" redirect="true" />
 	</action>
 
 	<!-- How to handle displays -->
