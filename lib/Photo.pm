@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.1 1998/04/25 03:09:28 dustin Exp $
+# $Id: Photo.pm,v 1.2 1998/04/25 09:15:02 dustin Exp $
 
 package Photo;
 
@@ -105,6 +105,34 @@ sub showTemplate
     }
 
     close(IN);
+}
+
+sub deleteImage
+{
+    my($self, $oid)=@_;
+    my($query, $s, $r, %p);
+
+    $query ="select a.id,a.name,b.keywords,b.descr,b.fn,b.cat,b.oid\n";
+    $query.="    from cat a, album b\n";
+    $query.="    where a.id=b.cat and b.oid=$oid;";
+
+    $p{oid}=$oid;
+
+    $s=$self->doQuery($query);
+
+    if($r=$s->fetch)
+    {
+	($p{AID}, $p{CAT}, $p{KEYWORDS}, $p{DESCR}, $p{IMAGE})=@{$r};
+    }
+
+    $query="delete from album where oid=$oid;\n";
+    if($self->doQuery($query))
+    {
+	unlink("$Photo::Itop/$p{IMAGE}");
+	unlink("$Photo::Itop/tn/$p{IMAGE}");
+    }
+
+    $self->showTemplate("$Photo::includes/admin/killimage.inc", %p);
 }
 
 1;
