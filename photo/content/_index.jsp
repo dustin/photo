@@ -48,10 +48,11 @@
 
 				<ul>
 					<logic:iterate id="i"
-						collection="<%= SavedSearch.getSearches() %>">
-						<% SavedSearch s=(SavedSearch)i; %>
-						<li><a href="search.do?<%= s.getSearch() %>"><%=
-							s.getName() %></a></li>
+						collection="<%= SavedSearch.getSearches() %>"
+						type="net.spy.photo.SavedSearch">
+						<% String theSearchUrl="/search.do?" + i.getSearch(); %>
+						<li><photo:link url="<%= theSearchUrl %>"><%=
+							i.getName() %></photo:link></li>
 					</logic:iterate>
 				</ul>
 			</p>
