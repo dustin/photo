@@ -4,14 +4,19 @@
 
 package net.spy.photo.taglib;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.jsp.JspException;
 
 import net.spy.photo.PhotoUtil;
+import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImageDataImpl;
 import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoDimScaler;
 import net.spy.photo.PhotoImageHelper;
+import net.spy.photo.PhotoSessionData;
 
 /**
  * Taglib to link to an image.
@@ -20,6 +25,7 @@ public class ImageLink extends PhotoTag {
 
 	private int id=0;
 	private boolean showThumbnail=false;
+	private boolean showOptimal=false;
 	private String width=null;
 	private String height=null;
 	private boolean scale=false;
@@ -52,6 +58,13 @@ public class ImageLink extends PhotoTag {
 	 */
 	public void setShowThumbnail(String to) {
 		this.showThumbnail=Boolean.valueOf(to).booleanValue();
+	}
+
+	/**
+	 * If ``true'' show the optimal size.
+	 */
+	public void setShowOptimal(String to) {
+		this.showOptimal=Boolean.valueOf(to).booleanValue();
 	}
 
 	/**
@@ -94,6 +107,31 @@ public class ImageLink extends PhotoTag {
 
 		HttpServletRequest req=(HttpServletRequest)pageContext.getRequest();
 		url.append(PhotoUtil.getRelativeUri(req, "/PhotoServlet/"));
+
+		// Get the PhotoSessionData so we can figure out the width and height
+		HttpSession session=req.getSession(false);
+		PhotoSessionData sessionData=
+			(PhotoSessionData)session.getAttribute(PhotoSessionData.SES_ATTR);
+		if(sessionData==null) {
+			throw new JspException("No photoSession in session.");
+		}
+
+		if(showOptimal) {
+			scale=true;
+			try {
+				PhotoImageData pid=PhotoImageDataImpl.getData(id);
+				PhotoDimensions optdims=sessionData.getOptimalDimensions();
+				PhotoDimensions newDims=PhotoDimScaler.scaleTo(
+					pid.getDimensions(), optdims);
+
+				width=String.valueOf(newDims.getWidth());
+				height=String.valueOf(newDims.getHeight());
+			} catch(Exception e) {
+				JspException e2=new JspException("Couldn't get image");
+				e2.initCause(e);
+				throw e2;
+			}
+		}
 		
 		url.append(id);
 		url.append(".jpg?id=");

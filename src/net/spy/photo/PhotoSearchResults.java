@@ -31,12 +31,7 @@ public class PhotoSearchResults extends Cursor {
 	 * Add a search result to the list.
 	 */
 	public void add(PhotoImageData d) {
-		// Set the result id
-		d.setSearchId(size());
-		// Tell it the size we want the images
-		d.setMaxDims(maxSize);
-		// Now add it
-		super.add(d);
+		super.add(new PhotoSearchResult(d, size()));
 	}
 
 	/**
@@ -64,19 +59,18 @@ public class PhotoSearchResults extends Cursor {
 	 * Get the entry at the given location.
 	 */
 	public Object get(int which) {
-		PhotoImageData ret=null;
+		PhotoSearchResult ret=null;
 		Object o=super.get(which);
 		// We hope that it's a PhotoSearchResult, but an Integer will do.
 		try {
-			ret=(PhotoImageData)o;
+			ret=(PhotoSearchResult)o;
 		} catch(ClassCastException e) {
 			try {
 				// Synchronize on the object in this position.
 				synchronized(o) {
 					Integer i=(Integer)o;
-					ret=PhotoImageData.getData(i.intValue(), maxSize);
-					// Set the search ID.
-					ret.setSearchId(which);
+					PhotoImageData pid=PhotoImageDataImpl.getData(i.intValue());
+					ret=new PhotoSearchResult(pid, which);
 					// Next time, won't need to do this again.
 					set(which, ret);
 				}

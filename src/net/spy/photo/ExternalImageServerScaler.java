@@ -55,7 +55,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 		// OK, got our filenames, now let's calculate the new size:
 		PhotoDimensions imageSize=new PhotoDimensionsImpl(in.getWidth(),
 			in.getHeight());
-		PhotoDimensions newSize=PhotoDimScaler.scaleTo(dim, imageSize);
+		PhotoDimensions newSize=PhotoDimScaler.scaleTo(imageSize, dim);
 
 		FileInputStream fin=null;
 

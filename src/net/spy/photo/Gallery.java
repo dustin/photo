@@ -252,7 +252,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	 * Add a new image to the gallery.
 	 */
 	public void addImage(int imageId) throws Exception {
-		PhotoImageData pid=PhotoImageData.getData(imageId);
+		PhotoImageData pid=PhotoImageDataImpl.getData(imageId);
 		addImage(pid);
 	}
 

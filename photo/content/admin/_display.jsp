@@ -37,10 +37,7 @@
 	</table>
 
 	<div align="center">
-		<photo:imgSrc id="<%= "" + image.getId() %>"
-			width="<%= "" + image.getScaledDims().getWidth() %>"
-			height="<%= "" + image.getScaledDims().getHeight() %>"
-			scale="true"/>
+		<photo:imgSrc id="<%= "" + image.getId() %>" showOptimal="true" />
 	</div>
 
 	<html:form action="/admeditimage">

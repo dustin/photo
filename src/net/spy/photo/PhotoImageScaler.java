@@ -51,7 +51,7 @@ public class PhotoImageScaler extends Object {
 		Image image=Toolkit.getDefaultToolkit().createImage(pi.getData());
 
 		// Make the dimensions have the proper aspect ratio
-		PhotoDimensions sdim=PhotoDimScaler.scaleTo(dim, pi);
+		PhotoDimensions sdim=PhotoDimScaler.scaleTo(pi, dim);
 
 		// Scale it
 		Image img=image.getScaledInstance(sdim.getWidth(), sdim.getHeight(),

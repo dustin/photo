@@ -231,9 +231,9 @@ public class PhotoSearch extends PhotoHelper {
 
 				if(resultId<results.getMaxRet()) {
 					// Fully populate the first few search results.
-					PhotoImageData r=PhotoImageData.getData(photoId);
+					PhotoImageData r=PhotoImageDataImpl.getData(photoId);
 					// Add it to our search result set.
-					results.add(r);
+					results.add(new PhotoSearchResult(r, resultId));
 				} else {
 					// The remaining search results just reference their IDs
 					Integer i=new Integer(rs.getInt(7));

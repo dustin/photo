@@ -25,20 +25,20 @@ public class PhotoDimScaler extends Object {
 	 */
 	public static PhotoDimensions scaleTo(
 		PhotoDimensions from, PhotoDimensions to) {
-		float x=(float)to.getWidth();
-		float y=(float)to.getHeight();
+		float x=(float)from.getWidth();
+		float y=(float)from.getHeight();
 		float aspect=x/y;
-		int newx=to.getWidth();
-		int newy=to.getHeight();
+		int newx=from.getWidth();
+		int newy=from.getHeight();
 
-		if(from.getWidth() <= newx || from.getHeight() <= newy) {
+		if(to.getWidth() <= newx || to.getHeight() <= newy) {
 
-			newx=from.getWidth();
+			newx=to.getWidth();
 			newy=(int)((float)newx/aspect);
 
 			// If it exceeds the boundaries, do it the other way.
-			if(newx > from.getWidth() || newy > from.getHeight()) {
-				newy=from.getHeight();
+			if(newx > to.getWidth() || newy > to.getHeight()) {
+				newy=to.getHeight();
 				newx=(int)((float)newy*aspect);
 			}
 		}
@@ -46,13 +46,14 @@ public class PhotoDimScaler extends Object {
 		PhotoDimensions rv=new PhotoDimensionsImpl(newx, newy);
 
 		// Assertions
-		if(rv.getWidth() > from.getWidth()
-			|| rv.getHeight() > from.getHeight()) {
+		if(rv.getWidth() > to.getWidth()
+			|| rv.getHeight() > to.getHeight()) {
 			throw new RuntimeException(
 				"Results can't be outside of the input box");
 		}
 
-		if(rv.getWidth() > to.getWidth() || rv.getHeight() > to.getHeight()) {
+		if(rv.getWidth() > from.getWidth()
+			|| rv.getHeight() > from.getHeight()) {
 			throw new RuntimeException(
 				"Results can't be outside of the input size");
 		}

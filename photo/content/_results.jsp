@@ -47,7 +47,7 @@
 <table>
 
 <logic:iterate id="image" collection="<%= results %>"
-	type="net.spy.photo.PhotoImageData"
+	type="net.spy.photo.PhotoSearchResult"
 	length="<%= "" + results.getMaxRet() %>">
 
 <tr>

@@ -101,6 +101,10 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>showOptimal</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
 			<name>showThumbnail</name>
 			<required>false</required>
 		</attribute>

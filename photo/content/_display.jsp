@@ -44,10 +44,7 @@
 <% } %>
 
 	<div id="imgDisplay">
-		<photo:imgSrc id='<%= image.getId() %>'
-			width='<%= String.valueOf(image.getScaledDims().getWidth()) %>'
-			height='<%= String.valueOf(image.getScaledDims().getHeight()) %>'
-			scale="true"/>
+		<photo:imgSrc id='<%= image.getId() %>' showOptimal="true" />
 	</div>
 
 	<div>
