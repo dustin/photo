@@ -1,0 +1,69 @@
+<html><head><title>Find an Image</title></head>
+<body bgcolor="fFfFfF">
+
+<h2>Simple Search</h2>
+
+<form method="POST" action="/cgi-bin/dustin/photo/find.cgi">
+<input type="hidden" name="searchtype" value="simple">
+
+Find all images whose
+
+<select name="field">
+    <option value="keywords">Keyword
+    <option value="descr">Info (slow)
+</select>
+
+contains
+
+<input name="what"><br>
+
+<input type="submit" value="Find">
+</form>
+<hr>
+
+<h2>Advanced Search</h2>
+Only fields that are filled out will be used, default search will return
+all images.
+
+<form method="post" action="/cgi-bin/dustin/photo/find.cgi">
+<input type="hidden" name="searchtype" value="advanced">
+
+Category:
+<select name="cat" multiple size="5">
+    <!--#exec cgi="/cgi-bin/dustin/photo/listcats.cgi"-->
+</select>
+<p>
+
+<select name="fieldjoin">
+    <option>and
+    <option>or
+</select>
+<select name="field">
+    <option value="keywords">Keyword
+    <option value="descr">Info (slow)
+</select>
+contains
+<input name="what"><br>
+
+<select name="startjoin">
+    <option>and
+    <option>or
+</select>
+was added since (date)
+<input name="start"><br>
+
+<select name="endjoin">
+    <option>and
+    <option>or
+</select>
+was added before (date)
+<input name="end"><br>
+
+<br>
+<input type="submit" value="Find">
+
+</form>
+
+<!--#include virtual="../tail.shtml"-->
+</body>
+</html>

@@ -2,7 +2,7 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: display.cgi,v 1.1 1997/11/02 12:12:49 dustin Exp $
+# $Id: display.cgi,v 1.2 1997/11/02 12:41:53 dustin Exp $
 
 use Postgres;
 
@@ -57,7 +57,7 @@ $tmp
 </select><br>
 
 <input name="keywords" value="$keywords"><br>
-<textarea cols="60" rows="5" name="info">$info</textarea><br>
+<textarea cols="60" rows="5" name="info" wrap="hard">$info</textarea><br>
 
 <input type="submit" value="Save Info">
 <input type="reset" value="Restore to Original">
