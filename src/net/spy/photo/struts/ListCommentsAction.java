@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.spy.photo.Comment;
 import net.spy.photo.Cursor;
 import net.spy.photo.PhotoSessionData;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -42,7 +42,7 @@ public class ListCommentsAction extends PhotoAction {
 		getLogger().debug("Preparing a new comments cursor.");
 
 		PhotoSessionData sessionData=getSessionData(request);
-		PhotoUser user=sessionData.getUser();
+		User user=sessionData.getUser();
 		Cursor comments=new Cursor(Comment.getAllComments(user));
 		sessionData.setComments(comments);
 

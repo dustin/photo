@@ -47,12 +47,12 @@ public class ExportServlet extends JWHttpServlet {
 			// If we want to construct this for a different user, specify the
 			// username here.
 			if(req.getParameter("user") != null) {
-				PhotoUser thisUser=sessionData.getUser();
+				User thisUser=sessionData.getUser();
 				if(!thisUser.isInRole("admin")) {
 					throw new ServletException("You are not an admin");
 				}
 				String spec=req.getParameter("user");
-				PhotoUser thatUser=Persistent.getSecurity().getUser(spec);
+				User thatUser=Persistent.getSecurity().getUser(spec);
 				PhotoSessionData newSess=new PhotoSessionData();
 				newSess.setUser(thatUser);
 				newSess.setOptimalDimensions(

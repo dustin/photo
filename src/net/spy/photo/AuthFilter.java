@@ -61,7 +61,7 @@ public class AuthFilter extends SpyObject implements Filter {
 								PhotoSessionData.SES_ATTR);
 		boolean isguest=true;
 		if(psd != null) {
-			PhotoUser pu=psd.getUser();
+			User pu=psd.getUser();
 			if(!pu.isInRole("guest")) {
 				isguest=false;
 			}
@@ -73,8 +73,8 @@ public class AuthFilter extends SpyObject implements Filter {
 			for(int i=0; cookies!=null && i<cookies.length; i++) {
 				if(LoginAction.PERSESS_COOKIE.equals(cookies[i].getName())) {
 					try {
-						PhotoUser pu=PhotoUser.getPhotoUserByPersess(
-							cookies[i].getValue());
+						UserFactory uf=UserFactory.getInstance();
+						User pu=uf.getUserByPersess(cookies[i].getValue());
 						psd.setUser(pu);
 						getLogger().info("Logged in user via persess: " + pu);
 					} catch(PhotoUserException e) {

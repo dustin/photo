@@ -29,7 +29,7 @@ import net.spy.util.Base64;
 import net.spy.photo.Keyword;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSessionData;
@@ -69,7 +69,7 @@ public class Search extends SpyObject {
 	/**
 	 * Save a search.
 	 */
-	public void saveSearch(String name, String search, PhotoUser user)
+	public void saveSearch(String name, String search, User user)
 		throws Exception {
 		if(user==null || name==null || search==null) {
 			throw new Exception("Weird, invalid stuff.");
@@ -413,7 +413,7 @@ public class Search extends SpyObject {
 		return(matches);
 	}
 
-	private Collection getValidCats(PhotoUser u) throws Exception {
+	private Collection getValidCats(User u) throws Exception {
 		// Flip through all of the categories and get them as Integers
 		Collection validCats=new ArrayList(16);
 		CategoryFactory cf=CategoryFactory.getInstance();

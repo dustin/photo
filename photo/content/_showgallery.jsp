@@ -7,7 +7,7 @@
 	// Find the results
 	PhotoSessionData sessionData=
 		(PhotoSessionData)session.getAttribute("photoSession");
-	PhotoUser user=sessionData.getUser();
+	User user=sessionData.getUser();
 	int galleryId=Integer.parseInt(request.getParameter("id"));
 
 	Gallery g=Gallery.getGallery(user, galleryId);

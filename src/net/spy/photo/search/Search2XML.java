@@ -100,7 +100,7 @@ public class Search2XML extends SpyObject {
 		Element el=root;
 
 		el.appendChild(addNode(doc, "id", pid.getId()));
-		el.appendChild(addNode(doc, "addedby", pid.getAddedBy().getUsername()));
+		el.appendChild(addNode(doc, "addedby", pid.getAddedBy().getName()));
 		el.appendChild(addNode(doc, "cat", pid.getCatName()));
 		el.appendChild(addDate(doc, "taken", pid.getTaken()));
 		el.appendChild(addTimestamp(doc, "ts", pid.getTimestamp()));

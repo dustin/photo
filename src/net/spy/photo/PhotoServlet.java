@@ -74,7 +74,7 @@ public class PhotoServlet extends HttpServlet {
 
 		// Get the sessionData
 		HttpSession session=request.getSession(false);
-		PhotoUser pu=null;
+		User pu=null;
 		PhotoSessionData sessionData=null;
 		if(session==null) {
 			log("Session is null, using the default user");

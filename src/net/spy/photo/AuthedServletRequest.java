@@ -13,12 +13,12 @@ import javax.servlet.http.HttpServletRequestWrapper;
  */
 public class AuthedServletRequest extends HttpServletRequestWrapper {
 
-	private PhotoUser user=null;
+	private User user=null;
 
 	/**
 	 * Get an instance of AuthedServletRequest.
 	 */
-	public AuthedServletRequest(HttpServletRequest req, PhotoUser user) {
+	public AuthedServletRequest(HttpServletRequest req, User user) {
 		super(req);
 		this.user=user;
 	}

@@ -27,7 +27,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	public static final int ADMIN=1;
 	public static final int SUBADMIN=2;
 
-	private PhotoUser user=null;
+	private User user=null;
 
 	private String encodedSearch=null;
 	private PhotoDimensions optimalDimensions=null;
@@ -61,7 +61,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	/**
 	 * Get the user who owns this session.
 	 */
-	public PhotoUser getUser() {
+	public User getUser() {
 		return(user);
 	}
 
@@ -70,7 +70,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 *
 	 * Also, drop any administrative privs.
 	 */
-	public void setUser(PhotoUser user) {
+	public void setUser(User user) {
 		this.user=user;
 		unSetAdmin();
 	}

@@ -8,15 +8,16 @@ import java.util.Hashtable;
 import net.spy.rpc.services.Remote;
 
 import net.spy.photo.Persistent;
+import net.spy.photo.PhotoSecurity;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 
 /**
  * Superclass for all RPC handlers.
  */
 public abstract class RPCMethod extends Remote {
 
-	private PhotoUser user=null;
+	private User user=null;
 
 	/**
 	 * Get an instance of RPCMethod.
@@ -26,11 +27,11 @@ public abstract class RPCMethod extends Remote {
 	}
 
 	/**
-	 * Get the PhotoUser associated with this call.
+	 * Get the User associated with this call.
 	 *
 	 * @return the user, or null if a user has not been authenticated
 	 */
-	protected PhotoUser getUser() {
+	protected User getUser() {
 		return(user);
 	}
 
@@ -41,8 +42,9 @@ public abstract class RPCMethod extends Remote {
 		throws PhotoException {
 
 		// Get the user
-		PhotoUser tmp=Persistent.getSecurity().getUser(username);
-		if(tmp!=null && tmp.checkPassword(password)) {
+		PhotoSecurity sec=Persistent.getSecurity();
+		User tmp=sec.getUser(username);
+		if(tmp!=null && sec.checkPassword(tmp.getPassword(), password)) {
 			user=tmp;
 		} else {
 			throw new PhotoException("Invalid username or password.");

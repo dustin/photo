@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.spy.photo.Cursor;
 import net.spy.photo.Gallery;
 import net.spy.photo.PhotoSessionData;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -42,7 +42,7 @@ public class GetGalleryAction extends PhotoAction {
 		GetGalleryForm ggf=(GetGalleryForm)form;
 
 		PhotoSessionData sessionData=getSessionData(request);
-		PhotoUser user=sessionData.getUser();
+		User user=sessionData.getUser();
 
 		Gallery g=Gallery.getGallery(user, ggf.getId());
 		sessionData.setCursor("gallery", new Cursor(g.getImages()));

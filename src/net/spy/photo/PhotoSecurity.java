@@ -26,21 +26,30 @@ import net.spy.util.Base64;
  */
 public class PhotoSecurity extends SpyObject {
 
+	private UserFactory userFactory=null;
+
 	/**
 	 * Get a PhotoSecurity object.
 	 */
 	public PhotoSecurity() {
 		super();
+		userFactory=UserFactory.getInstance();
 	}
 
 	/**
 	 * Get a digest for a given string.
 	 */
-	public String getDigest(String input) throws Exception {
+	public String getDigest(String input) {
 		// We need the trim so we can ignore whitespace.
 		byte dataB[]=input.trim().getBytes();
 		PhotoConfig conf=PhotoConfig.getInstance();
-		MessageDigest md = MessageDigest.getInstance(conf.get("cryptohash"));
+		MessageDigest md = null;
+		try {
+			md=MessageDigest.getInstance(conf.get("cryptohash"));
+		} catch(Exception e) {
+			throw new RuntimeException("Could not instantiate "
+				+ conf.get("cryptohash"));
+		}
 		md.update(dataB);
 		Base64 base64=new Base64();
 		String out = base64.encode(md.digest());
@@ -53,24 +62,19 @@ public class PhotoSecurity extends SpyObject {
 		return(out.trim());
 	}
 
-	private static Logger getStaticLogger() {
-		Logger log=LoggerFactory.getLogger(PhotoSecurity.class);
-		return(log);
-	}
-
 	// Get the default user
-	PhotoUser getDefaultUser() {
-		PhotoUser ret=null;
+	User getDefaultUser() {
+		User ret=null;
 
 		// Get the username from the config
 		PhotoConfig conf=PhotoConfig.getInstance();
 		String username=conf.get("default_user", "guest");
 
 		try {
-			ret=PhotoUser.getPhotoUser(username);
+			ret=userFactory.getUser(username);
 		} catch(PhotoUserException e) {
 			// Ignore, return null
-			getStaticLogger().debug("Can't get default user", e);
+			getLogger().debug("Can't get default user", e);
 		}
 
 		return(ret);
@@ -79,21 +83,21 @@ public class PhotoSecurity extends SpyObject {
 	/**
 	 * Get a user by integer ID.
 	 */
-	public PhotoUser getUser(int id) throws PhotoUserException {
-		return(PhotoUser.getPhotoUser(id));
+	public User getUser(int id) throws PhotoUserException {
+		return(userFactory.getUser(id));
 	}
 
 	/** 
 	 * Get a user by username or email address.
 	 */
-	public PhotoUser getUser(String spec) throws PhotoUserException {
-		return(PhotoUser.getPhotoUser(spec));
+	public User getUser(String spec) throws PhotoUserException {
+		return(userFactory.getUser(spec));
 	}
 
 	/**
 	 * The preferred way to check a user's access to an image.
 	 */
-	public static void checkAccess(PhotoUser user, int imageId) throws
+	public void checkAccess(User user, int imageId) throws
 		Exception {
 
 		boolean ok=false;
@@ -104,12 +108,12 @@ public class PhotoSecurity extends SpyObject {
 			ok=user.canView(pid.getCatId());
 
 			if(!ok) {
-				PhotoUser u=PhotoUtil.getDefaultUser();
+				User u=PhotoUtil.getDefaultUser();
 				ok=u.canView(pid.getCatId());
 			}
 		} catch(Exception e) {
 			// Will return false
-			getStaticLogger().warn("Problem validating user " + user
+			getLogger().warn("Problem validating user " + user
 				+ "'s access to image " + imageId, e);
 		}
 
@@ -124,19 +128,29 @@ public class PhotoSecurity extends SpyObject {
 	 *
 	 * <b>Note</b>:  This is not generally the right way to do this.
 	 */
-	public static void checkAccess(int uid, int imageId) throws Exception {
+	public void checkAccess(int uid, int imageId) throws Exception {
 		PhotoSecurity sec=new PhotoSecurity();
-		PhotoUser u=sec.getUser(uid);
+		User u=sec.getUser(uid);
 
 		checkAccess(u, imageId);
+	}
+
+	/** 
+	 * Check the password against the given hash.
+	 */
+	public boolean checkPassword(String pass, String hash) {
+		boolean rv=false;
+		String tpw=getDigest(pass);
+		rv=tpw.equals(hash);
+		return(rv);
 	}
 
 	/**
 	 * List all users in alphabetical order by username.
 	 *
-	 * @return an List of PhotoUser objects
+	 * @return an List of User objects
 	 */
-	public static Collection getAllUsers() throws Exception {
-		return(PhotoUser.getAllPhotoUsers());
+	public Collection getAllUsers() throws Exception {
+		return(userFactory.getAllUsers());
 	}
 }

@@ -1,5 +1,5 @@
-<%@ page import="net.spy.photo.PhotoUser" %>
-<%@ page import="net.spy.photo.PhotoSecurity" %>
+<%@ page import="net.spy.photo.User" %>
+<%@ page import="net.spy.photo.UserFactory" %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
@@ -26,11 +26,11 @@
 			<th>Can Add</th>
 		</tr>
 
-		<logic:iterate id="user" type="net.spy.photo.PhotoUser"
-			collection="<%= PhotoSecurity.getAllUsers() %>">
+		<logic:iterate id="user" type="net.spy.photo.User"
+			collection="<%= UserFactory.getInstance().getAllUsers() %>">
 
 			<tr>
-				<td><%= user.getUsername() %> (<%= user.getRealname() %>)</td>
+				<td><%= user.getName() %> (<%= user.getRealname() %>)</td>
 				<td>
 					<html:multibox property="catAclView"
 						value="<%= "" + user.getId() %>"/>

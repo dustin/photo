@@ -13,7 +13,7 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.log.PhotoLogUploadEntry;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 
 
 /**
@@ -43,7 +43,7 @@ public class GetCategories extends RPCMethod {
 
 		Vector rv=new Vector();
 
-		PhotoUser u=getUser();
+		User u=getUser();
 		CategoryFactory cf=CategoryFactory.getInstance();
 		Collection cats=cf.getCatList(u.getId(), CategoryFactory.ACCESS_WRITE);
 		for(Iterator i=cats.iterator(); i.hasNext();) {

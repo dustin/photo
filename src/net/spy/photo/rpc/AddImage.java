@@ -14,7 +14,7 @@ import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.log.PhotoLogUploadEntry;
 import net.spy.photo.impl.SavablePhotoImageData;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.Persistent;
 
@@ -76,7 +76,7 @@ public class AddImage extends RPCMethod {
 		}
 
 		// Verify the user is allowed to add to this category
-		PhotoUser user=getUser();
+		User user=getUser();
 		if(!user.canAdd(catId)) {
 			throw new PhotoException("User is not allowed to add to "
 				+ category);

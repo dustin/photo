@@ -37,7 +37,8 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
         PhotoSessionData sessionData=new PhotoSessionData();
         // Set the user
 		try {
-			sessionData.setUser(PhotoUser.getPhotoUser("guest"));
+			UserFactory uf=UserFactory.getInstance();
+			sessionData.setUser(uf.getUser("guest"));
 		} catch(PhotoUserException e) {
 			getLogger().warn("Problem setting user", e);
 		}
@@ -77,7 +78,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 
 				// XXX:  I guess it's theoretically possible for some of
 				// this stuff to be null.
-				if(sessionData.getUser().getUsername().equals(username)) {
+				if(sessionData.getUser().getName().equals(username)) {
 					al.add(sessionData);
 				} // Found a match
 			} else {

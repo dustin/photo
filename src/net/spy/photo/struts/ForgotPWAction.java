@@ -15,7 +15,8 @@ import net.spy.db.Saver;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.Mailer;
 import net.spy.photo.Persistent;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
+import net.spy.photo.impl.DBUser;
 
 import net.spy.util.PwGen;
 
@@ -47,14 +48,15 @@ public class ForgotPWAction extends PhotoAction {
 		DynaActionForm fpf=(DynaActionForm)form;
 
 		// Get the user
-		PhotoUser user=null;
+		DBUser user=null;
 
 		try {
 			// Look up the user
-			user=Persistent.getSecurity().getUser((String)fpf.get("username"));
+			user=(DBUser)Persistent.getSecurity().getUser(
+				(String)fpf.get("username"));
 
 			// Verify the user doesn't end up being guest.
-			if(user.getUsername().equals("guest")) {
+			if(user.getName().equals("guest")) {
 				throw new ServletException("Can't set a password for guest");
 			}
 
@@ -66,11 +68,11 @@ public class ForgotPWAction extends PhotoAction {
 			Mailer m=new Mailer();
 			m.setTo(user.getEmail());
 			m.setSubject("New Password for Photo Album");
-			m.setBody("\n\nYour new password for " + user.getUsername()
+			m.setBody("\n\nYour new password for " + user.getName()
 				+ " is " + newPass + "\n\n");
 			m.send();
 
-			getLogger().info("Emailed new password to " + user.getUsername());
+			getLogger().info("Emailed new password to " + user.getName());
 
 		} catch(Exception e) {
 			throw new ServletException("Error setting new password", e);

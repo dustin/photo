@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import net.spy.photo.Gallery;
 import net.spy.photo.PhotoSessionData;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -46,7 +46,7 @@ public class AddToGalleryAction extends PhotoAction {
 		DynaActionForm atgf=(DynaActionForm)form;
 
 		PhotoSessionData sessionData=getSessionData(request);
-		PhotoUser user=sessionData.getUser();
+		User user=sessionData.getUser();
 
 		HttpSession session=request.getSession(false);
 

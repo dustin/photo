@@ -24,10 +24,10 @@
 
 	<% PhotoSessionData sessionData=
 		(PhotoSessionData)ses.getAttribute("photoSession"); %>
-	<% PhotoUser user=sessionData.getUser(); %>
+	<% User user=sessionData.getUser(); %>
 
 	<tr>
-		<td><%= user.getRealname() %> (<%= user.getUsername() %>)</td>
+		<td><%= user.getRealname() %> (<%= user.getName() %>)</td>
 		<td><%= new java.util.Date(ses.getCreationTime()) %></td>
 		<td><%= (double)(System.currentTimeMillis()
 			- ses.getLastAccessedTime())/1000.0 %></td>

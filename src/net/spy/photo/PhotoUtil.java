@@ -97,7 +97,7 @@ public class PhotoUtil extends Object {
 		int ret=-1;
 
 		try {
-			PhotoUser u=getDefaultUser();
+			User u=getDefaultUser();
 			ret=u.getId();
 		} catch(Exception e) {
 			ret=-1;
@@ -109,9 +109,9 @@ public class PhotoUtil extends Object {
 	/**
 	 * Get the default user.
 	 */
-	public static PhotoUser getDefaultUser() throws Exception {
+	public static User getDefaultUser() throws Exception {
 		PhotoSecurity s=new PhotoSecurity();
-		PhotoUser u=s.getDefaultUser();
+		User u=s.getDefaultUser();
 		return(u);
 	}
 

@@ -30,7 +30,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 
 	private int commentId=-1;
 
-	private PhotoUser user=null;
+	private User user=null;
 
 	private int photoId=-1;
 	private String note=null;
@@ -95,7 +95,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	 *
 	 * @see GroupedComments
 	 */
-	public static List getAllComments(PhotoUser user) throws Exception {
+	public static List getAllComments(User user) throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
 		ArrayList al=new ArrayList();
@@ -138,7 +138,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 		if(!isNew()) {
 			throw new SaveException("You can only save *new* comments.");
 		}
-		if(user.getUsername().equals("guest")) {
+		if(user.getName().equals("guest")) {
 			throw new SaveException("Guest is not allowed to comment.");
 		}
 
@@ -182,7 +182,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Set the user who'll own this comment.
 	 */
-	public void setUser(PhotoUser user) {
+	public void setUser(User user) {
 		this.user=user;
 		setModified(true);
 	}
@@ -190,7 +190,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Get the user who owns this comment.
 	 */
-	public PhotoUser getUser() {
+	public User getUser() {
 		return(user);
 	}
 

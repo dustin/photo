@@ -23,7 +23,7 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 import net.spy.photo.Format;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoException;
@@ -48,7 +48,7 @@ public class SavablePhotoImageData extends AbstractSavable
 	private int size=-1;
 	private PhotoDimensions dimensions=null;
 	private PhotoDimensions tnDims=null;
-	private PhotoUser addedBy=null;
+	private User addedBy=null;
 	private String catName=null;
 	private Date taken=null;
 	private Date timestamp=null;
@@ -287,12 +287,12 @@ public class SavablePhotoImageData extends AbstractSavable
 		return(tnDims);
 	}
 
-	public void setAddedBy(PhotoUser to) {
+	public void setAddedBy(User to) {
 		this.addedBy=to;
 		modify();
 	}
 
-	public PhotoUser getAddedBy() {
+	public User getAddedBy() {
 		return(addedBy);
 	}
 

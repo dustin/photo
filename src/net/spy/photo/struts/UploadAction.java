@@ -16,7 +16,7 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoException;
 import net.spy.photo.log.PhotoLogUploadEntry;
 import net.spy.photo.PhotoSessionData;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.impl.SavablePhotoImageData;
 
@@ -48,7 +48,7 @@ public class UploadAction extends PhotoAction {
 		int cat=Integer.parseInt(uf.getCategory());
 
 		// Get the user, and verify he/she can add to the requested category
-		PhotoUser user=sessionData.getUser();
+		User user=sessionData.getUser();
 		if(!user.canAdd(cat)) {
 			throw new ServletException(
 				sessionData.getUser() + " can't add to category " + cat);

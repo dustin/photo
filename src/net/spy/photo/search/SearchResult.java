@@ -10,7 +10,7 @@ import java.util.Collection;
 
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 import net.spy.photo.Format;
 
 /**
@@ -63,7 +63,7 @@ public class SearchResult extends Object
 		return(imgData.getTnDims());
 	}
 
-	public PhotoUser getAddedBy() {
+	public User getAddedBy() {
 		return(imgData.getAddedBy());
 	}
 

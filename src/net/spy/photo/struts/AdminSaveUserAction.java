@@ -20,7 +20,9 @@ import net.spy.db.Saver;
 
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSecurity;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
+import net.spy.photo.UserFactory;
+import net.spy.photo.impl.DBUser;
 import net.spy.photo.PhotoUserException;
 
 /**
@@ -51,17 +53,17 @@ public class AdminSaveUserAction extends PhotoAction {
 		PhotoSecurity security=new PhotoSecurity();
 
 		// Get the user, or a new one if this a new user.
-		PhotoUser user=null;
+		DBUser user=null;
 		try {
-			user=security.getUser(Integer.parseInt(auf.getUserId()));
+			user=(DBUser)security.getUser(Integer.parseInt(auf.getUserId()));
 		} catch(PhotoUserException e) {
 			e.printStackTrace();
 		}
 		if(user==null) {
-			user=new PhotoUser();
+			user=new DBUser();
 		}
 
-		user.setUsername(auf.getUsername());
+		user.setName(auf.getUsername());
 		user.setPassword(auf.getPassword());
 		user.setRealname(auf.getRealname());
 		user.setEmail(auf.getEmail());
@@ -91,7 +93,8 @@ public class AdminSaveUserAction extends PhotoAction {
 		saver.save(user);
 
 		// Recache the users.
-		PhotoUser.recache();
+		UserFactory uf=UserFactory.getInstance();
+		uf.recache();
 
 		// Update the groups...yeah, I guess I'm just going to do it right
 		// here for now.

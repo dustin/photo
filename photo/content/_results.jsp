@@ -72,7 +72,7 @@
 		Taken: <fmt:formatDate value="${image.taken}" pattern="yyyy-MM-dd"/><br/>
 		Added: <fmt:formatDate value="${image.timestamp}"
 			pattern="yyyy-MM-dd HH:mm:ss"/>
-				by <c:out value="${image.addedBy.username}"/>
+				by <c:out value="${image.addedBy.name}"/>
 	</td>
 </tr>
 <tr>

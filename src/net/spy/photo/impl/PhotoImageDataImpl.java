@@ -17,7 +17,7 @@ import net.spy.SpyObject;
 
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 import net.spy.photo.Format;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoConfig;
@@ -43,7 +43,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	// Dimensions of the thumbnail of this image.
 	private PhotoDimensions tnDims=null;
 
-	private PhotoUser addedBy=null;
+	private User addedBy=null;
 
 	private Date timestamp=null;
 	private Date taken=null;
@@ -154,9 +154,9 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	}
 
 	/**
-	 * Get the PhotoUser object representing the user who added this photo.
+	 * Get the User object representing the user who added this photo.
 	 */
-	public PhotoUser getAddedBy() {
+	public User getAddedBy() {
 		return(addedBy);
 	}
 
@@ -261,7 +261,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	/** 
 	 * Set the user who added this image.
 	 */
-	protected void setAddedBy(PhotoUser to) {
+	protected void setAddedBy(User to) {
 		this.addedBy=to;
 	}
 

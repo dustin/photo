@@ -46,7 +46,7 @@ public interface PhotoImageData extends Instance {
 	/** 
 	 * Get the user who added this image.
 	 */
-	PhotoUser getAddedBy();
+	User getAddedBy();
 
 	/** 
 	 * Get the name of the category of this image.

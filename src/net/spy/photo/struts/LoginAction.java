@@ -18,9 +18,13 @@ import net.spy.util.PwGen;
 import net.spy.photo.Persistent;
 import net.spy.photo.log.PhotoLogEntry;
 import net.spy.photo.PhotoSessionData;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
+import net.spy.photo.UserFactory;
+import net.spy.photo.impl.DBUser;
 import net.spy.photo.PhotoUserException;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.Persistent;
+import net.spy.photo.PhotoSecurity;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -44,7 +48,7 @@ public class LoginAction extends PhotoAction {
 		super();
 	}
 
-	private void persist(PhotoUser user,
+	private void persist(User user,
 		HttpServletRequest request,
 		HttpServletResponse response) throws Exception {
 
@@ -57,14 +61,16 @@ public class LoginAction extends PhotoAction {
 		c.setMaxAge(86400*30*2);
 		response.addCookie(c);
 
+
+		DBUser dbuser=(DBUser)user;
 		// Set the ID
-		user.setPersess(persess);
+		dbuser.setPersess(persess);
 		// Save the user
 		Saver saver=new Saver(PhotoConfig.getInstance());
-		saver.save(user);
+		saver.save(dbuser);
 
 		// Recache the users
-		PhotoUser.recache();
+		UserFactory.getInstance().recache();
 	}
 
 	/**
@@ -81,10 +87,11 @@ public class LoginAction extends PhotoAction {
 
 		PhotoSessionData sessionData=getSessionData(request);
 
-		PhotoUser user=Persistent.getSecurity().getUser(
+		User user=Persistent.getSecurity().getUser(
 			(String)lf.get("username"));
 
-		if(user.checkPassword((String)lf.get("password"))) {
+		PhotoSecurity sec=Persistent.getSecurity();
+		if(sec.checkPassword((String)lf.get("password"), user.getPassword())) {
 			sessionData.setUser(user);
 
 			PhotoLogEntry ple=new PhotoLogEntry(user.getId(), "Login", request);

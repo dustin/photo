@@ -28,10 +28,10 @@ public class PhotoImageHelper extends SpyObject {
 	/**
 	 * Get the full image on behalf of a user.
 	 */
-	public PhotoImage getImage(PhotoUser user, PhotoDimensions dim)
+	public PhotoImage getImage(User user, PhotoDimensions dim)
 		throws Exception {
 
-		PhotoSecurity.checkAccess(user, imageId);
+		Persistent.getSecurity().checkAccess(user, imageId);
 		return(getImage(dim));
 	}
 
@@ -87,7 +87,7 @@ public class PhotoImageHelper extends SpyObject {
 	 * Get the thumbnail for an image on behalf of a user.
 	 */
 	public PhotoImage getThumbnail(int uid) throws Exception {
-		PhotoSecurity.checkAccess(uid, imageId);
+		Persistent.getSecurity().checkAccess(uid, imageId);
 		return(getThumbnail());
 	}
 

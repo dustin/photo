@@ -42,13 +42,13 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	private String name=null;
 	private ArrayList images=null;
 	private boolean isPublic=false;
-	private PhotoUser owner=null;
+	private User owner=null;
 	private Date timestamp=null;
 
 	/**
 	 * Get an instance of Gallery belonging to a given owner.
 	 */
-	public Gallery(PhotoUser owner, String name) {
+	public Gallery(User owner, String name) {
 		super();
 		this.name=name;
 		this.owner=owner;
@@ -61,7 +61,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Get an instance of Gallery belonging to a given owner.
 	 */
-	public Gallery(PhotoUser owner) {
+	public Gallery(User owner) {
 		this(owner, null);
 	}
 
@@ -87,7 +87,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Get a list of all galleries visible by the user.
 	 */
-	public static Cursor getGalleries(PhotoUser user)
+	public static Cursor getGalleries(User user)
 		throws PhotoException {
 
 		Cursor rv=null;
@@ -112,7 +112,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 		return(rv);
 	}
 
-	private void loadMap(PhotoUser user) throws Exception {
+	private void loadMap(User user) throws Exception {
 		LookupGallery lg=new LookupGallery(PhotoConfig.getInstance());
 		lg.setGalleryId(id);
 		lg.setCurrentUser(user.getId());
@@ -134,7 +134,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	 *
 	 * @return the Gallery or null if there's no match.
 	 */
-	public static Gallery getGallery(PhotoUser user, int id)
+	public static Gallery getGallery(User user, int id)
 		throws PhotoException {
 
 		Gallery rv=null;
@@ -326,7 +326,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Get the owner of this gallery.
 	 */
-	public PhotoUser getOwner() {
+	public User getOwner() {
 		return(owner);
 	}
 

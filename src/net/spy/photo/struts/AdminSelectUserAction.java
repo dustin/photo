@@ -26,7 +26,7 @@ import net.spy.db.SpyDB;
 import net.spy.photo.PhotoACLEntry;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSecurity;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 import net.spy.photo.PhotoUserException;
 
 /**
@@ -68,10 +68,10 @@ public class AdminSelectUserAction extends PhotoAction {
 		} else {
 			// Look up the user
 			PhotoSecurity sec=new PhotoSecurity();
-			PhotoUser user=sec.getUser(userid);
+			User user=sec.getUser(userid);
 
 			// Set the easy stuff
-			auf.setUsername(user.getUsername());
+			auf.setUsername(user.getName());
 			auf.setPassword(user.getPassword());
 			auf.setRealname(user.getRealname());
 			auf.setEmail(user.getEmail());

@@ -21,7 +21,7 @@ public class Vote extends SpyObject implements java.io.Serializable {
 
 	private int voteId=-1;
 
-	private PhotoUser user=null;
+	private User user=null;
 
 	private int photoId=-1;
 	private int vote=0;
@@ -83,7 +83,7 @@ public class Vote extends SpyObject implements java.io.Serializable {
 		if(voteId!=-1) {
 			throw new Exception("You can only save *new* votes.");
 		}
-		if(user.getUsername().equals("guest")) {
+		if(user.getName().equals("guest")) {
 			throw new Exception("Guest is not allowed to vote.");
 		}
 		SpyDB db=new SpyDB(PhotoConfig.getInstance());
@@ -124,14 +124,14 @@ public class Vote extends SpyObject implements java.io.Serializable {
 	/**
 	 * Set the user who'll own this vote.
 	 */
-	public void setUser(PhotoUser user) {
+	public void setUser(User user) {
 		this.user=user;
 	}
 
 	/**
 	 * Get the user who owns this vote.
 	 */
-	public PhotoUser getUser() {
+	public User getUser() {
 		return(user);
 	}
 
@@ -213,7 +213,7 @@ public class Vote extends SpyObject implements java.io.Serializable {
 	public static void main(String args[]) throws Exception {
 		if(args.length==2) {
 			PhotoSecurity sec=new PhotoSecurity();
-			PhotoUser me=sec.getUser("dustin");
+			User me=sec.getUser("dustin");
 			System.out.println("Got user:  " + me);
 
 			Vote vote=new Vote();

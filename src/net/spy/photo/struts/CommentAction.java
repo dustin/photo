@@ -20,7 +20,7 @@ import net.spy.db.Saver;
 import net.spy.photo.Comment;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoSessionData;
-import net.spy.photo.PhotoUser;
+import net.spy.photo.User;
 import net.spy.photo.PhotoConfig;
 
 /**
@@ -50,7 +50,7 @@ public class CommentAction extends PhotoAction {
 		// Get the session data
 		PhotoSessionData sessionData=getSessionData(request);
 		// Get the user
-		PhotoUser user=sessionData.getUser();
+		User user=sessionData.getUser();
 
 		Integer imageInteger=(Integer)df.get("imageId");
 		int imageId=imageInteger.intValue();

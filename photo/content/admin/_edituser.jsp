@@ -1,5 +1,5 @@
-<%@ page import="net.spy.photo.PhotoUser" %>
 <%@ page import="net.spy.photo.Category" %>
+<%@ page import="net.spy.photo.CategoryFactory" %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
@@ -55,7 +55,7 @@
 		</tr>
 
 		<logic:iterate id="cat" type="net.spy.photo.Category"
-			collection="<%= Category.getAdminCatList() %>">
+			collection="<%= CategoryFactory.getInstance().getAdminCatList() %>">
 
 			<tr>
 				<td><%= cat.getName() %></td>
