@@ -1,0 +1,17 @@
+#
+# $Id: InsertProfileACL.spt,v 1.1 2002/12/15 09:25:07 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Insert a new ACL entry for a profile.
+
+@sql
+insert into user_profile_acls(profile_id,cat_id) values(?,?)
+
+@params
+profile_id required INTEGER The profile ID
+cat_id required INTEGER The category
+
