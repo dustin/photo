@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.64 1998/12/30 05:55:19 dustin Exp $
+# $Id: Photo.pm,v 1.65 1999/01/13 02:54:23 dustin Exp $
 
 package Photo;
 
@@ -48,30 +48,19 @@ sub doQuery
 {
 	my $self=shift;
 	my($query)=@_;
-	my($s, $done, $attempt);
+	my($s, $rv);
 
-		$done=0; $attempt=0;
+	$self->openDB unless($self->{'dbh'});
 
-	while($done==0 && $attempt<3) {
-			# OK, this is going to be odd...  We're going to try three times, in
-			# case of a database failure.
-		eval {
-			$self->openDB unless($self->{'dbh'});
+	$s=$self->{'dbh'}->prepare($query);
 
-			$s=$self->{'dbh'}->prepare($query)
-				  || die("Database Error:  $DBI::errstr\n<!--\n$query\n-->\n");
+	if(defined($s)) {
+		$rv=$s->execute;
+	}
 
-			$s->execute
-				  || die("Database Error:  $DBI::errstr\n<!--\n$query\n-->\n");
-			};
-
-			if($@) {
-				$done=0;
-					$attempt++;
-			} else {
-					$done=1;
-				}
-		}
+	if(!defined($rv)) {
+		die("Database Error:  $DBI::errstr\n<!--\n$query\n-->\n");
+	}
 
 	return($s);
 }
@@ -632,7 +621,8 @@ sub addImage
 		$query.="    '$ENV{'REMOTE_USER'}')\n";
 		$self->doQuery($query);
 		$query ="select currval('album_id_seq')\n";
-		$r=$self->doQuery($query)->fetch;
+		$s=$self->doQuery($query);
+		$r=$s->fetch;
 		$id=$r->[0];
 		$s->finish;
 
