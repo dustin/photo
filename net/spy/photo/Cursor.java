@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Cursor.java,v 1.5 2002/07/04 03:27:22 dustin Exp $
+ * $Id: Cursor.java,v 1.6 2002/07/04 03:55:46 dustin Exp $
  */
 
 package net.spy.photo;
@@ -52,6 +52,13 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 		} else {
 			_current=to;
 		}
+	}
+
+	/**
+	 * Return the iterator from the current position (not the beginning).
+	 */
+	public Iterator iterator() {
+		return(new CursorIterator(this));
 	}
 
 	/**
@@ -155,5 +162,39 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	 */
 	public int current() {
 		return(_current);
+	}
+
+	// Inner class to iterate a cursor
+	private class CursorIterator extends Object implements Iterator {
+
+		Cursor myCursor=null;
+	
+		// Get a cursor iterator in a given cursor
+		private CursorIterator(Cursor c) {
+			super();
+			this.myCursor=c;
+		}
+
+		/**
+		 * Get the next object.
+		 */
+		public Object next() {
+			return(myCursor.nextElement());
+		}
+
+		/**
+		 * True if there are elements remaining.
+		 */
+		public boolean hasNext() {
+			return(myCursor.hasMoreElements());
+		}
+
+		/**
+		 * Not implemented.
+		 */
+		public void remove() {
+			throw new UnsupportedOperationException("Not implemented.");
+		}
+
 	}
 }
