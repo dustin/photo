@@ -75,7 +75,7 @@ sub showTemplate
     $p{'CGIDIR'}=$cgidir;
     $p{'IMAGEDIR'}=$imagedir;
     $p{'ITOP'}=$Itop;
-    $P{'SELF_URI'}=&myself;
+    $p{'SELF_URI'}=&myself;
 
     $p{'ALL_VARS'}=join("\n", sort(keys(%p)));
 
