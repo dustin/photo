@@ -125,14 +125,14 @@
 		input="top.credform"
 		scope="request"
 		name="loginForm">
-		<forward name="next" path="index" />
+		<forward name="next" path="/index.do" />
 		<forward name="setadmin" path="/adminify.do?action=setadmin" />
 	</action>
 
 	<!-- Logout -->
 	<action    path="/logout"
 		type="net.spy.photo.struts.LogoutAction">
-		<forward name="next" path="index" />
+		<forward name="next" path="/index.do" />
 	</action>
 
 	<!-- How to handle displays -->
@@ -159,7 +159,7 @@
 		input="top.changepw"
 		scope="request"
 		name="changePWForm">
-		<forward name="next" path="index" />
+		<forward name="next" path="/index.do" />
 	</action>
 
 	<!-- Forgot password -->
@@ -184,7 +184,7 @@
 		type="net.spy.photo.struts.AdminifyAction"
 		scope="request"
 		name="adminifyForm">
-		<forward name="next" path="index"/>
+		<forward name="next" path="/index.do"/>
 	</action>
 
 	<!-- Set the optimal image size. -->
@@ -193,7 +193,7 @@
 		input="top.sizeform"
 		scope="request"
 		name="setSizeForm">
-		<forward name="next" path="index"/>
+		<forward name="next" path="/index.do"/>
 	</action>
 
 	<!-- Searches -->
@@ -219,7 +219,7 @@
 
 	<action path="/savedSearch"
 		type="net.spy.photo.struts.GetSavedSearchAction"
-		input="index"
+		input="/index.do"
 		name="savedSearchForm">
 
 		<!-- Send it on to the search class -->
@@ -289,7 +289,7 @@
 		input="top.newUserForm"
 		scope="request"
 		name="newUserForm">
-		<forward name="next" path="index" />
+		<forward name="next" path="/index.do" />
 	</action>
 
 	<!-- Add a new image to a gallery -->
@@ -306,7 +306,7 @@
 		input="top.saveGallery"
 		scope="request"
 		name="saveGalleryForm">
-		<forward name="next" path="index" />
+		<forward name="next" path="/index.do" />
 	</action>
 
 	<!-- View the images a given session has seen as a search results object.  -->
@@ -373,7 +373,7 @@
 		name="emptyForm"
 		input="admin.properties"
 		type="net.spy.photo.struts.AdminSaveProperties">
-		<forward name="next" path="index"/>
+		<forward name="next" path="/index.do"/>
 	</action>
 
 	<!-- REPORTING -->
