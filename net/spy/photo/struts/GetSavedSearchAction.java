@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetSavedSearchAction.java,v 1.1 2003/08/09 20:47:26 dustin Exp $
+// $Id: GetSavedSearchAction.java,v 1.2 2003/08/09 20:48:19 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -56,13 +56,17 @@ public class GetSavedSearchAction extends PhotoAction {
 			if(vs != null) {
 				String v=vs[0];
 				pu.setProperty(sf, straightCopy[i], v);
+				/*
 				getLogger().info("Set " + straightCopy[i] + " to " + v);
+				*/
 			}
 		}
 		String vs[]=(String[])m.get("cats");
 		if(vs != null) {
 			pu.setProperty(sf, "cats", vs);
+			/*
 			getLogger().info("Set cats to " + vs);
+			*/
 		}
 
 		return(sf);
@@ -92,8 +96,10 @@ public class GetSavedSearchAction extends PhotoAction {
 		HttpSession session=request.getSession();
 		session.setAttribute("searchForm", sf);
 
+		/*
 		PropertyUtils pu=new PropertyUtils();
 		getLogger().info("Search form:  " + pu.describe(sf));
+		*/
 
 		return(mapping.findForward("next"));
 	}
