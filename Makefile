@@ -95,6 +95,8 @@ CLASSES=\
 	net/spy/photo/struts/CursorForm.class \
 	net/spy/photo/struts/CursorAction.class \
 	net/spy/photo/struts/ListCommentsAction.class \
+	net/spy/photo/struts/UploadForm.class \
+	net/spy/photo/struts/UploadAction.class \
 	net/spy/photo/util/BackupEntry.class \
 	net/spy/photo/util/AlbumBackupEntry.class \
 	net/spy/photo/util/PhotoBackup.class \

@@ -13,7 +13,6 @@
 
 <html:form action="/search.do">
 	<html:errors/>
-	<html:hidden property="func" value="search"/>
 	<html:hidden property="maxret" value="6"/>
 	<html:hidden property="fieldjoin" value="and"/>
 	<html:hidden property="keyjoin" value="and"/>
@@ -39,8 +38,7 @@
 	<template:put name='title' content='Find image by ID' direct='true'/>
 </template:insert>
 
-<form method="GET" action="PhotoServlet">
-	<input type="hidden" name="func" value="display"/>
+<form method="GET" action="display.jsp">
 	ID:  <input name="id" size="6">
 	<input type="submit" value="Lookup">
 </form>
@@ -56,8 +54,6 @@
 <bean:message key="forms.search.adv.pre"/>
 
 <html:form action="/search.do">
-
-	<html:hidden property="func" value="search"/>
 
 	<p>
 		<bean:message key="forms.search.adv.cat"/>:<br/>

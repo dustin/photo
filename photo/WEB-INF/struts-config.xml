@@ -10,6 +10,7 @@
     <form-bean name="loginForm" type="net.spy.photo.struts.LoginForm"/>
     <form-bean name="searchForm" type="net.spy.photo.struts.SearchForm"/>
     <form-bean name="cursorForm" type="net.spy.photo.struts.CursorForm"/>
+    <form-bean name="uploadForm" type="net.spy.photo.struts.UploadForm"/>
   </form-beans>
 
   <action-mappings>
@@ -48,6 +49,13 @@
 		type="net.spy.photo.struts.CursorAction"
 		name="cursorForm">
 		<forward name="success" path="/comments.jsp" />
+	</action>
+
+	<!-- Image uploads -->
+	<action path="/upload"
+		type="net.spy.photo.struts.UploadAction"
+		name="uploadForm">
+		<forward name="success" path="/uploaded.jsp" />
 	</action>
 
   </action-mappings>

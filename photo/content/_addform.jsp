@@ -12,9 +12,7 @@
 	<template:put name='title' content='Add a Photo' direct='true'/>
 </template:insert>
 
-<form method="POST" enctype="multipart/form-data" action="PhotoServlet">
-
-	<input type=hidden name="func" value="addimage"/>
+<html:form action="upload.do" enctype="multipart/form-data">
 
 	<table border="0" width="100%">
 
@@ -24,15 +22,15 @@
 			<tr>
 				<td>Category:</td>
 				<td>
-					<select name="category" size="5">
+					<html:select property="category" size="5">
 					<photo:getCatList showAddable="true">
 						<logic:iterate id="i" name="catList">
 							<% Category category=(Category)i; %>
-							<option value="<%= "" + category.getId() %>">
-								<%= category.getName() %></option>
+							<html:option value="<%= "" + category.getId() %>">
+								<%= category.getName() %></html:option>
 						</logic:iterate>
 					</photo:getCatList>
-					</select>
+					</html:select>
 				</td>
 			</tr>
 			</table>
@@ -43,17 +41,16 @@
 				<tr>
 					<td>Date Taken:</td>
 					<td>
-						<input name="taken"
-							value="<%= PhotoUtil.getToday() %>"/>
+						<html:text property="taken"/>
 					</td>
 				</tr>
 				<tr>
 					<td>Keywords:</td>
-					<td><input name="keywords"/></td>
+					<td><html:text property="keywords"/></td>
 				</tr>
 				<tr>
 					<td>Picture:</td>
-					<td><input type="file" name="picture"/></td>
+					<td><html:file property="picture"/></td>
 				</tr>
 			</table>
 		</td>
@@ -66,7 +63,7 @@
 			<tr>
 			<td align="left">
 			Short Description:<br/>
-			<textarea name="info" cols="60" rows="5" wrap="hard"></textarea>
+			<html:textarea property="info" cols="60" rows="5"/>
 			</tr>
 			</td>
 		</table>
@@ -74,6 +71,6 @@
 		<input type="reset" value="Clear"/>
 	</center>
 
-</form>
+</html:form>
 
 </p>
