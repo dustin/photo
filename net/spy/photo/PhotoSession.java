@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.68 2001/12/28 22:46:16 dustin Exp $
+ * $Id: PhotoSession.java,v 1.69 2001/12/29 06:30:07 dustin Exp $
  */
 
 package net.spy.photo;
@@ -68,13 +68,17 @@ public class PhotoSession extends Object
 
 		// If we didn't get a session data, create a new one.
 		if(sessionData==null) {
+			// Get a conf.
+			PhotoConfig conf=new PhotoConfig();
+
 			// Get the object
 			sessionData=new PhotoSessionData();
 			// Initialize the user
 			sessionData.setUser(security.getUser("guest"));
 			// Initialize the optimal dimensions
 			sessionData.setOptimalDimensions(
-				new PhotoDimensionsImpl(800, 600));
+				new PhotoDimensionsImpl(
+					conf.get("optimal_image_size", "800x600"));
 
 			session.setAttribute("photoSession", sessionData);
 		}

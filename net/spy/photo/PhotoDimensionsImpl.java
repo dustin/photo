@@ -1,8 +1,9 @@
-// Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoDimensionsImpl.java,v 1.2 2001/12/28 04:45:29 dustin Exp $
+// $Id: PhotoDimensionsImpl.java,v 1.3 2001/12/29 06:30:07 dustin Exp $
 
 package net.spy.photo;
+
+import java.util.StringTokenizer;
 
 /**
  * A class that contains only a width and height.
@@ -23,6 +24,23 @@ public class PhotoDimensionsImpl
 	}
 
 	/**
+	 * Get a dimension set from a string describing the dimensions.
+	 * i.e.: 640x480.
+	 */
+	public PhotoDimensionsImpl(String dims) {
+		super();
+
+		StringTokenizer st=new StringTokenizer(dims, "x");
+		if(st.countTokens() < 2) {
+			throw new IllegalArgumentException(dims
+				+ " is not in the following format:  WIDTHxHEIGHT");
+		}
+
+		width=Integer.parseInt(st.nextToken());
+		height=Integer.parseInt(st.nextToken());
+	}
+
+	/**
 	 * String me.
 	 */
 	public String toString() {
@@ -40,6 +58,15 @@ public class PhotoDimensionsImpl
 	 */
 	public int getHeight() {
 		return(height);
+	}
+
+	/**
+	 * Test me.
+	 */
+	public static void main(String args[]) throws Exception {
+		PhotoDimensionsImpl dimpl=new PhotoDimensionsImpl(args[0]);
+
+		System.out.println(dimpl);
 	}
 
 }
