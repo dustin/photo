@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.24 2000/07/05 07:36:49 dustin Exp $
+ * $Id: PhotoSession.java,v 1.25 2000/07/05 08:15:42 dustin Exp $
  */
 
 package net.spy.photo;
@@ -792,29 +792,36 @@ public class PhotoSession extends Object
 			throw new ServletException("There are no search results!");
 		}
 
+		// We do the middle first, but, well, so what?
 		String middle="";
-		int i=0;
-		// if we have a starting point, let's start there.
-		try {
-			String startingS=request.getParameter("startfrom");
-			if(startingS!=null) {
-				int starting=Integer.parseInt(startingS);
-				results.set(starting);
-			}
-		} catch(Exception e) {
-			log("Error finding out starting point for search results:  " + e);
-		}
 
-		for(i=0; i<5; i++) {
-			PhotoSearchResult r=results.next();
-			if(r!=null) {
-				// No, this really doesn't belong here.
-				if( ((i) % 2) == 0) {
-					middle += "</tr>\n<tr>\n";
+		// Lock the results so the aheadfetcher can't mess us up once we
+		// get going.
+		synchronized(results) {
+			int i=0;
+			// if we have a starting point, let's start there.
+			try {
+				String startingS=request.getParameter("startfrom");
+				if(startingS!=null) {
+					int starting=Integer.parseInt(startingS);
+					results.set(starting);
 				}
-				middle += "<td>\n";
-				middle += r.showHTML(self_uri);
-				middle += "</td>\n";
+			} catch(Exception e) {
+				log("Error finding out starting point for search results:  "
+					+ e);
+			}
+
+			for(i=0; i<5; i++) {
+				PhotoSearchResult r=results.next();
+				if(r!=null) {
+					// No, this really doesn't belong here.
+					if( ((i) % 2) == 0) {
+						middle += "</tr>\n<tr>\n";
+					}
+					middle += "<td>\n";
+					middle += r.showHTML(self_uri);
+					middle += "</td>\n";
+				}
 			}
 		}
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.4 2000/07/05 07:36:49 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.5 2000/07/05 08:15:42 dustin Exp $
  */
 
 package net.spy.photo;
@@ -73,17 +73,23 @@ public class PhotoAheadFetcher extends Thread {
 			String self_uri=r.getURI();
 
 			for(int i=0; i<5; i++) {
-				PhotoSearchResult res=r.next();
+				PhotoSearchResult res=null;
+				// Synchronize on the result thingy so that the display
+				// doesn't get weird if the client is moving too fast.
+				synchronized(r) {
+					res=r.next();
+				}
 				if(res!=null) {
-					 Hashtable h=new Hashtable();
-					 // Populate the data thingies.
-					 res.addToHash(h);
-					 res.showHTML(self_uri);
+				 	Hashtable h=new Hashtable();
+				 	// Populate the data thingies.
+				 	res.addToHash(h);
+				 	res.showHTML(self_uri);
 
-					 // This will cache the thumbnails
-					 int image_id=Integer.parseInt((String)h.get("IMAGE"));
-					 PhotoImageHelper p = new PhotoImageHelper(image_id, null);
-					 p.getThumbnail();
+				 	// This will cache the thumbnails
+				 	int image_id=Integer.parseInt((String)h.get("IMAGE"));
+				 	PhotoImageHelper p =
+						new PhotoImageHelper(image_id, null);
+				 	p.getThumbnail();
 				}
 			} // end one resultset
 		} // end resultsets
