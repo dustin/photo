@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.16 2001/01/06 18:44:03 dustin Exp $
+ $Id: default.xsl,v 1.17 2001/01/06 20:50:32 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -291,34 +291,30 @@
 <!-- For displaying an individual image -->
 <xsl:template match="show_image">
 	<table width="100%">
-		<tr>
-			<xsl:if test="meta_stuff/prev">
-				<td align="left">
+		<tr valign="top">
+			<td align="left" width="10%">
+				<xsl:if test="meta_stuff/prev">
 					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={meta_stuff/prev}"><img
 					alt="&lt;&lt;&lt;" border="0" src="/~dustin/images/l_arrow.gif"/></a>
-				</td>
-			</xsl:if>
-			<xsl:if test="meta_stuff/next">
-				<td align="right">
+				</xsl:if>
+			</td>
+			<td align="center">
+				<b>
+					<font size="-3">
+						<xsl:apply-templates select="DESCR"/>
+					</font>
+				</b>
+			</td>
+			<td align="right" width="10%">
+				<xsl:if test="meta_stuff/next">
 					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={meta_stuff/next}"><img
 					alt="&gt;&gt;&gt;" border="0" src="/~dustin/images/r_arrow.gif"/></a>
-				</td>
-			</xsl:if>
+				</xsl:if>
+			</td>
 		</tr>
 	</table>
 
 	<center>
-		<table border="0">
-			<tr>
-				<td>
-					<b>
-						<font size="-3">
-							<xsl:apply-templates select="DESCR"/>
-						</font>
-					</b>
-				</td>
-			</tr>
-		</table>
 		<img width="{WIDTH}" height="{HEIGHT}"
 		  src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}"/>
 	</center>
