@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.25 2002/07/04 03:27:22 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.26 2002/07/09 21:33:20 dustin Exp $
  */
 
 package net.spy.photo;
@@ -100,7 +100,6 @@ public class PhotoSecurity extends PhotoHelper {
 
 		// If it's not cached, grab it from the DB.
 		if(ret==null) {
-			Connection photo=null;
 			try {
 				SpyDB db=new SpyDB(getConfig());
 				PreparedStatement st=db.prepareStatement(
@@ -135,7 +134,6 @@ public class PhotoSecurity extends PhotoHelper {
 
 		// If it's not cached, grab it from the DB.
 		if(ret==null) {
-			Connection photo=null;
 			try {
 				SpyDB db=new SpyDB(getConfig());
 				PreparedStatement st=db.prepareStatement(

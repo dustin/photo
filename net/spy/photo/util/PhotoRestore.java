@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoRestore.java,v 1.6 2002/06/24 21:50:30 dustin Exp $
+// $Id: PhotoRestore.java,v 1.7 2002/07/09 21:33:20 dustin Exp $
 
 package net.spy.photo.util;
 
@@ -71,6 +71,7 @@ public class PhotoRestore extends Object {
 			GZIPInputStream gis=new GZIPInputStream(fis);
 
 			BackupEntry be = pr.restore(gis);
+			System.out.println("Restored " + be);
 			gis.close();
 		}
 	}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.15 2002/07/04 03:27:22 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.16 2002/07/09 21:33:20 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -205,8 +205,6 @@ public class PhotoStorerThread extends Thread {
 		}
 		for(;;) {
 			try {
-				PhotoConfig p = new PhotoConfig();
-
 				// Wait up to 1 day to perform a scan.
 				synchronized(this) {
 					wait(86400*1000);

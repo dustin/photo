@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.27 2002/06/29 07:40:07 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.28 2002/07/09 21:33:19 dustin Exp $
  */
 
 package net.spy.photo;
@@ -47,8 +47,6 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		try {
-			String stmp=null;
-
 			String query = "insert into searches (name, addedby, search, ts)\n"
 				+ "  values(?, ?, ?, ?)";
 			SpyDB photo=new SpyDB(getConfig());
@@ -296,7 +294,7 @@ public class PhotoSearch extends PhotoHelper {
 		// OK, lets look for search strings now...
 		stmp = form.getWhat();
 		if(stmp != null && stmp.length() > 0) {
-			String a="", b="", field=null;
+			String field=null;
 			boolean needjoin=false;
 
 			// If we need an and or an or, stick it in here.

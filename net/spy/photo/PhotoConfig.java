@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoConfig.java,v 1.13 2002/06/23 07:01:03 dustin Exp $
+ * $Id: PhotoConfig.java,v 1.14 2002/07/09 21:33:19 dustin Exp $
  */
 
 package net.spy.photo;
@@ -30,8 +30,6 @@ public class PhotoConfig extends SpyConfig {
 	 */
 	public PhotoConfig() {
 		super();
-
-		boolean gotit=false;
 
 		if(staticConfigLocation==null) {
 			loadConfig(configs);

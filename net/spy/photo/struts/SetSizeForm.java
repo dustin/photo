@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SetSizeForm.java,v 1.1 2002/06/15 07:20:30 dustin Exp $
+// $Id: SetSizeForm.java,v 1.2 2002/07/09 21:33:20 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -33,7 +33,8 @@ public class SetSizeForm extends ActionForm {
 	 */
 	public void setDims(String to) {
 		try {
-			PhotoDimensions dimsTmp=new PhotoDimensionsImpl(to);
+			// Verify it's a dimensions object
+			new PhotoDimensionsImpl(to);
 			dims=to;
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();

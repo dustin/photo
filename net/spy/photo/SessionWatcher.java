@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.9 2002/07/04 04:41:13 dustin Exp $
+// $Id: SessionWatcher.java,v 1.10 2002/07/09 21:33:20 dustin Exp $
 
 package net.spy.photo;
 
@@ -119,10 +119,11 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 		synchronized(allSessions) {
 			for(Iterator i=allSessions.iterator(); i.hasNext();) {
 				HttpSession session=(HttpSession)i.next();
-				if(session.getAttribute("photoSession") != null) {
-					PhotoSessionData sessionData=
-						(PhotoSessionData)session.getAttribute("photoSession");
 
+				PhotoSessionData sessionData=
+					(PhotoSessionData)session.getAttribute("photoSession");
+
+				if(sessionData!=null) {
 					// Add the session to the result List
 					al.add(session);
 				} else {

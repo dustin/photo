@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.15 2002/06/27 04:09:15 dustin Exp $
+// $Id: PhotoImage.java,v 1.16 2002/07/09 21:33:19 dustin Exp $
 
 package net.spy.photo;
 
@@ -213,8 +213,7 @@ public class PhotoImage extends Object
 	}
 
 	private void calcDimGif() throws PhotoException {
-		int ch=-1, i=0;
-		int length=0;
+		int i=0;
 
 		if(!isGif()) {
 			throw new PhotoException("This isn't a GIF.");
@@ -255,7 +254,7 @@ public class PhotoImage extends Object
 	}
 
 	private void calcDimPng() throws PhotoException {
-		int ch=-1, i=0;
+		int i=0;
 		int length=0;
 
 		if(!isPng()) {

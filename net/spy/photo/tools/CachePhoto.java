@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePhoto.java,v 1.6 2002/07/04 03:27:22 dustin Exp $
+ * $Id: CachePhoto.java,v 1.7 2002/07/09 21:33:20 dustin Exp $
  */
 
 package net.spy.photo.tools;
@@ -35,7 +35,6 @@ public class CachePhoto extends Object {
 		super();
 
 		conf=new PhotoConfig();
-		String source=null;
 		server = (RemoteImageServer)Naming.lookup(conf.get("imageserver"));
 		errors=new ArrayList();
 	}

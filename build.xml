@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.16 2002/06/27 03:59:16 dustin Exp $
+	$Id: build.xml,v 1.17 2002/07/09 21:33:19 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -32,6 +32,7 @@
 				<include name="photo.jar"/>
 				<include name="photo.war"/>
 				<include name="photoservlet-*.zip"/>
+				<include name="pmd-*-report.html"/>
 			</fileset>
 		</delete>
 		<delete dir="docs"/>
@@ -111,6 +112,38 @@
 			<classpath refid="photo.classpath"/>
 			<include name="net/spy/photo/rmi/RemoteImageServerImpl.java"/>
 		</javac>
+	</target>
+
+	<!-- PMD code checker -->
+	<target name="pmd">
+		<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask">
+			<classpath>
+				<fileset dir="${user.home}/lib/java">
+					<include name="pmd-0.3.jar"/>
+				</fileset>
+			</classpath>
+		</taskdef>
+		<pmd reportFile="pmd-unused-report.html"
+			rulesetfiles="rulesets/unusedcode.xml"
+			format="html">
+			<fileset dir=".">
+				<include name="net/spy/photo/**/*.java"/>
+			</fileset>
+    </pmd>
+			<pmd reportFile="pmd-basic-report.html"
+				rulesetfiles="rulesets/basic.xml"
+			format="html">
+			<fileset dir=".">
+				<include name="net/spy/photo/**/*.java"/>
+			</fileset>
+    </pmd>
+			<pmd reportFile="pmd-design-report.html"
+				rulesetfiles="rulesets/design.xml"
+			format="html">
+			<fileset dir=".">
+				<include name="net/spy/photo/**/*.java"/>
+			</fileset>
+		</pmd>
 	</target>
 
 </project>

@@ -13,10 +13,10 @@ import net.spy.photo.*;
  */
 public abstract class PhotoMigration extends Object {
 
-    /**
-     * Try a query and see whether it would succeed.  This is used for
-     * testing tables, views, etc...
-     */
+	/**
+	 * Try a query and see whether it would succeed.  This is used for
+	 * testing tables, views, etc...
+	 */
 	protected boolean tryQuery(String query) throws Exception {
 		boolean ret=false;
 
@@ -39,7 +39,7 @@ public abstract class PhotoMigration extends Object {
 		return(ret);
 	}
 
-    // Find a URL to a file by class-ish name.
+	// Find a URL to a file by class-ish name.
 	private static URL findPath(String rel)
 		throws FileNotFoundException {
 		// Just need some object that will be loaded near the photo stuff
@@ -69,7 +69,7 @@ public abstract class PhotoMigration extends Object {
 	 * @param path The relative path to the migration sql script.
 	 * @param autocommit If false, the script will run as a single transaction.
 	 * @param errok If true, errors will be reported, but the script will
-	 * 				continue.
+	 *				continue.
 	 */
 	protected void runSqlScript(String path, boolean autocommit,
 		boolean errok) throws Exception {
@@ -147,17 +147,17 @@ public abstract class PhotoMigration extends Object {
 		lr.close();
 	}
 
-    /**
-     * True if the given table has the given column.
-     */
+	/**
+	 * True if the given table has the given column.
+	 */
 	protected boolean hasColumn(String table, String column) throws Exception {
 		return(tryQuery("select " + column + " from " + table + " where 1=2"));
 	}
 
-    /**
-     * Fetch all thumbnails.  This is used to populate caches and stuff
-     * like that.
-     */
+	/**
+	 * Fetch all thumbnails.  This is used to populate caches and stuff
+	 * like that.
+	 */
 	protected void fetchThumbnails() throws Exception {
 		SpyDB db=new SpyDB(new PhotoConfig());
 		ResultSet rs=db.executeQuery("select id from album order by ts desc");
@@ -166,6 +166,9 @@ public abstract class PhotoMigration extends Object {
 			System.out.println("Doing image #" + id);
 			PhotoImageHelper helper=new PhotoImageHelper(id);
 			PhotoImage image=helper.getThumbnail();
+			if(image==null) {
+				throw new Exception("Why did that return null?");
+			}
 			System.out.println("Done.");
 		}
 	}

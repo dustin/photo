@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ListCommentsAction.java,v 1.1 2002/05/18 05:31:55 dustin Exp $
+// $Id: ListCommentsAction.java,v 1.2 2002/07/09 21:33:20 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -37,8 +37,7 @@ public class ListCommentsAction extends PhotoAction {
 		PhotoSessionData sessionData=getSessionData(request);
 		try {
 			PhotoUser user=sessionData.getUser();
-			Cursor comments=new Cursor(
-				Comment.getAllComments(sessionData.getUser()));
+			Cursor comments=new Cursor(Comment.getAllComments(user));
 			sessionData.setComments(comments);
 		} catch(Exception e) {
 			throw new ServletException("Error preparing comments", e);

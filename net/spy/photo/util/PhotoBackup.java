@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoBackup.java,v 1.9 2002/07/04 03:27:22 dustin Exp $
+ * $Id: PhotoBackup.java,v 1.10 2002/07/09 21:33:20 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -82,8 +82,6 @@ public class PhotoBackup extends Object {
 			// Count one.
 			bs.click();
 
-			// Get the filename.
-			String filename=basedir+i;
 			File outfile=new File(basedir+i);
 			if(outfile.exists()) {
 				System.out.println("Not backing up " + i +", already exists.");

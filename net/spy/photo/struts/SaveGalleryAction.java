@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveGalleryAction.java,v 1.3 2002/07/03 06:27:14 dustin Exp $
+// $Id: SaveGalleryAction.java,v 1.4 2002/07/09 21:33:20 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -38,9 +38,6 @@ public class SaveGalleryAction extends PhotoAction {
 		throws IOException, ServletException {
 
 		SaveGalleryForm sgf=(SaveGalleryForm)form;
-
-		PhotoSessionData sessionData=getSessionData(request);
-		PhotoUser user=sessionData.getUser();
 
 		HttpSession session=request.getSession(false);
 

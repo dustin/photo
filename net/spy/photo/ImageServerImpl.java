@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.4 2002/06/26 21:12:49 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.5 2002/07/09 21:33:19 dustin Exp $
 
 package net.spy.photo;
 
@@ -153,7 +153,6 @@ public class ImageServerImpl extends Object implements ImageServer {
 		pi=cache.getImage(key);
 
 		if(pi==null) {
-			Connection photo=null;
 			StringBuffer sdata=new StringBuffer();
 
 			try {
