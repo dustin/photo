@@ -44,6 +44,8 @@
 											<photo:link url="/adminify.do?action=unsetadmin">(admin)
 											</photo:link>
 										</photo:admin>
+										<br/>
+										<photo:sessionInfo/>
 									</td>
 									<td align="right">
 										<template:insert
