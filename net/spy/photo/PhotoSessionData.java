@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.1 2001/12/28 12:39:37 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.2 2002/02/24 01:11:52 dustin Exp $
 
 package net.spy.photo;
 
@@ -12,7 +12,10 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	private boolean xmlraw=false;
 	private String stylesheet=null;
 	private PhotoUser user=null;
+	// Search results go here
 	private PhotoSearchResults results=null;
+	// A cursor for looking at image comments.
+	private Cursor comments=null;
 	private int searchId=0;
 	private String encodedSearch=null;
 	private boolean isadmin=false;
@@ -55,6 +58,20 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 
 	public void setResults(PhotoSearchResults results) {
 		this.results=results;
+	}
+
+	/**
+	 * Set the comments list.
+	 */
+	public void setComments(Cursor comments) {
+		this.comments=comments;
+	}
+
+	/**
+	 * Get the comments list.
+	 */
+	public Cursor getComments() {
+		return(comments);
 	}
 
 	public int getSearchId() {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.97 2002/02/23 23:14:01 dustin Exp $
+ * $Id: PhotoSession.java,v 1.98 2002/02/24 01:11:52 dustin Exp $
  */
 
 package net.spy.photo;
@@ -287,6 +287,8 @@ public class PhotoSession extends Object
 		} else if(func.equals("comment")) {
 			doComment();
 			out=doDisplay();
+		} else if(func.equals("listcomments")) {
+			out=listComments();
 		} else if(func.equals("setviewsize")) {
 			out=setViewingSize();
 		} else if(func.startsWith("adm")) {
@@ -301,6 +303,54 @@ public class PhotoSession extends Object
 			throw new ServletException("No known function.");
 		}
 		return(out);
+	}
+
+	private String listComments() throws Exception {
+		Cursor cursor=null;
+
+		// Figure out if we need to reset or create a new comment list
+		String fromScratch=request.getParameter("start");
+		if( (fromScratch!=null) || (sessionData.getComments() == null)) {
+			log("Loading new comment cursor for " + sessionData.getUser());
+			Cursor comments=new Cursor(
+				Comment.getAllComments(sessionData.getUser()));
+			sessionData.setComments(comments);
+		}
+		cursor=sessionData.getComments();
+
+		// if there's a startFrom listed, startFrom there.
+		String startFromS=request.getParameter("startfrom");
+		if(startFromS!=null) {
+			int startFrom=Integer.parseInt(startFromS);
+			cursor.set(startFrom);
+		}
+
+		// Grab some results.
+
+		StringBuffer sb=new StringBuffer();
+		sb.append("<all_comments>\n");
+
+		for(int i=0; cursor.nRemaining() > 0 && i<cursor.getMaxRet(); i++) {
+			Comment comment=(Comment)cursor.next();
+			sb.append(comment.toXML());
+		}
+
+		sb.append("<meta_stuff>\n");
+		sb.append(linkToMore(cursor));
+		sb.append("\t<total>");
+		sb.append("" + cursor.nResults());
+		sb.append("</total>\n");
+		sb.append("</meta_stuff>\n");
+
+		sb.append("</all_comments>\n");
+
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("Comment List");
+		xml.addBodyPart(getGlobalMeta());
+		xml.addBodyPart(sb.toString());
+		sendXML(xml.toString());
+
+		return(null);
 	}
 
 	private String setViewingSize() throws Exception {
@@ -1420,7 +1470,7 @@ public class PhotoSession extends Object
 	}
 
 	// Link to more search results
-	private String linkToMore(PhotoSearchResults results) {
+	private String linkToMore(Cursor results) {
 		String ret = null;
 		int remaining=results.nRemaining();
 

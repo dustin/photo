@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Cursor.java,v 1.1 2002/02/23 23:14:01 dustin Exp $
+ * $Id: Cursor.java,v 1.2 2002/02/24 01:11:52 dustin Exp $
  */
 
 package net.spy.photo;
@@ -17,7 +17,7 @@ import net.spy.*;
 public class Cursor extends Object implements Serializable {
 	private Vector _results=null;
 	private int _current=0;
-	private int maxret=5;
+	private int maxret=10;
 
 	/**
 	 * Get a search results object for the given URI.
@@ -25,6 +25,16 @@ public class Cursor extends Object implements Serializable {
 	public Cursor() {
 		super();
 		_results=new Vector();
+	}
+
+	/**
+	 * Get a new cursor on the given enumeration.
+	 */
+	public Cursor(Enumeration e) {
+		this();
+		while(e.hasMoreElements()) {
+			_results.addElement(e.nextElement());
+		}
 	}
 
 	/**

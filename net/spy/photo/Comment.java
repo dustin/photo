@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.2 2002/02/23 09:03:04 dustin Exp $
+// $Id: Comment.java,v 1.3 2002/02/24 01:11:52 dustin Exp $
 
 package net.spy.photo;
 
@@ -8,11 +8,12 @@ import java.sql.*;
 import java.util.*;
 
 import net.spy.*;
+import net.spy.photo.sp.*;
 
 /**
  * Comments on photos.
  */
-public class Comment extends Object {
+public class Comment extends Object implements java.io.Serializable {
 
 	private int commentId=-1;
 
@@ -66,6 +67,27 @@ public class Comment extends Object {
 
 		rs.close();
 		pst.close();
+		db.close();
+
+		return(v.elements());
+	}
+
+	/**
+	 * Get all of the comments a given user can see.
+	 */
+	public static Enumeration getAllComments(PhotoUser user) throws Exception {
+
+		PhotoSecurity security=new PhotoSecurity();
+		Vector v=new Vector();
+		FindImagesByComments db=new FindImagesByComments(new PhotoConfig());
+		db.set("user_id", user.getId());
+		ResultSet rs=db.executeQuery();
+
+		while(rs.next()) {
+			v.addElement(new Comment(security, rs));
+		}
+
+		rs.close();
 		db.close();
 
 		return(v.elements());
@@ -188,6 +210,9 @@ public class Comment extends Object {
 		sb.append("<comment_id>");
 		sb.append(getCommentId());
 		sb.append("</comment_id>\n");
+		sb.append("<photo_id>\n");
+		sb.append(getPhotoId());
+		sb.append("</photo_id>\n");
 		sb.append("<remote_addr>");
 		sb.append(getRemoteAddr());
 		sb.append("</remote_addr>\n");
