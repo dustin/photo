@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.6 2002/06/04 07:04:41 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.7 2002/06/10 20:02:38 dustin Exp $
 
 package net.spy.photo;
 
@@ -30,6 +30,13 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public PhotoSessionData() {
 		super();
+	}
+
+	/**
+	 * String me.
+	 */
+	public String toString() {
+		return("{PhotoSessionData for " + user + "}");
 	}
 
 	/**

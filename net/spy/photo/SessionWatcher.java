@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.2 2002/06/10 03:43:33 dustin Exp $
+// $Id: SessionWatcher.java,v 1.3 2002/06/10 20:02:38 dustin Exp $
 
 package net.spy.photo;
 
@@ -70,8 +70,11 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 					// this stuff to be null.
 					if(sessionData.getUser().getUsername().equals(username)) {
 						v.addElement(sessionData);
-					} // Correct username
-				} // Contains photo session data
+					} // Found a match
+				} else {
+					System.err.println(
+						"Warning:  Found a session without a photoSession");
+				}
 			} // Flipping through the sessions
 		} // allSession lock
 
@@ -86,7 +89,8 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 
 		for(Enumeration e=getSessionDataByUser(username);e.hasMoreElements();){
 			e.nextElement();
-		}
+            rv++;
+        }
 
 		return(rv);
 	}

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionInfo.java,v 1.1 2002/06/10 19:01:16 dustin Exp $
+// $Id: SessionInfo.java,v 1.2 2002/06/10 20:02:38 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -30,14 +30,20 @@ public class SessionInfo extends PhotoTag {
 	 */
 	public int doStartTag() throws JspException {
 		try {
-			// get the number formatter.
-			NumberFormat nf=NumberFormat.getNumberInstance();
 
-			String out="There are currently "
-				+ nf.format(SessionWatcher.totalSessions())
-				+ " people browsing, "
-				+ nf.format(SessionWatcher.getSessionCountByUser("guest"))
-				+ " are guest.";
+            Object args[]={
+                new Double(SessionWatcher.totalSessions()),
+                new Double(SessionWatcher.getSessionCountByUser("guest"))
+                };
+
+			String out=MessageFormat.format(
+				"There {0,choice,0#are|1#is|2#are} currently "
+					+ "{0,number,integer} "
+					+ "{0,choice,0#people|1#person|2#people} "
+					+ "browsing, {1,number,integer} "
+					+ "{1,choice,0#are|1#is|2#are} guest.",
+                args);
+
 			if(out!=null) {
 				pageContext.getOut().write(out);
 			}
