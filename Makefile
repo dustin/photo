@@ -43,6 +43,8 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoAdmin.class \
 	net/spy/photo/PhotoAheadFetcher.class \
 	net/spy/photo/PhotoXSLT.class \
+	net/spy/photo/xslt/ResinXSLT.class \
+	net/spy/photo/xslt/ApacheXSLT.class \
 	net/spy/photo/PhotoXML.class \
 	net/spy/photo/SetPW.class \
 	net/spy/photo/StopWatch.class \

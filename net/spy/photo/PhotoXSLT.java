@@ -1,5 +1,5 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
-// $Id: PhotoXSLT.java,v 1.4 2001/07/19 08:02:11 dustin Exp $
+// $Id: PhotoXSLT.java,v 1.5 2001/12/29 06:19:40 dustin Exp $
 
 package net.spy.photo;
 
@@ -11,21 +11,12 @@ import javax.servlet.http.*;
 import net.spy.SpyUtil;
 import net.spy.cache.*;
 
-// Resin XSL
-import com.caucho.transform.*;
-import com.caucho.xsl.*;
-
-// Apache XSL
-import org.apache.xalan.xslt.XSLTProcessorFactory;
-import org.apache.xalan.xslt.XSLTInputSource;
-import org.apache.xalan.xslt.XSLTResultTarget;
-import org.apache.xalan.xslt.XSLTProcessor;
-import org.xml.sax.SAXException;
-
 /**
  * Perform XSLT translations and stuff.
  */
-public class PhotoXSLT extends Object {
+public abstract class PhotoXSLT extends Object {
+
+	private static PhotoXSLT _processor=null;
 
 	/**
 	 * Abstract XML sending thingy.
@@ -40,40 +31,31 @@ public class PhotoXSLT extends Object {
 		PhotoConfig conf=new PhotoConfig();
 		stylesheet=lookupStylesheet(conf, stylesheet);
 
-		try {
-			sendXMLResin(xml, stylesheet, out);
-		} catch(Throwable t) {
-			t.printStackTrace();
-			sendXMLApache(xml, stylesheet, out);
+		// Make sure we have a processor ready.
+		verifyProcessor();
+
+		_processor.processXSLT(xml, stylesheet, out);
+
+	}
+
+	// Do what it takes to get the processor ready.
+	private static synchronized void verifyProcessor() throws Exception {
+		if(_processor==null) {
+			PhotoConfig conf=new PhotoConfig();
+			Class c=Class.forName(conf.get("xslt_processor"));
+			_processor=(PhotoXSLT)c.newInstance();
 		}
 	}
 
-	// The apache one.
-	private static void sendXMLApache(String xml, String stylesheet,
-		OutputStream out) throws Exception {
+	/**
+	 * Perform engine-specific processing.
+	 */
+	public abstract void processXSLT(String xml, String stylesheet,
+		OutputStream out) throws Exception;
 
-		// Get a StringReader for the XML input.
-		XSLTInputSource xml_input=new XSLTInputSource(new StringReader(xml));
-
-		XSLTProcessor processor = XSLTProcessorFactory.getProcessor();
-		XSLTInputSource xslt_stylesheet=new XSLTInputSource(stylesheet);
-		processor.process(xml_input, xslt_stylesheet,
-			new XSLTResultTarget(out));
-
-	}
-		
-	// Resin version of the sender.
-	private static void sendXMLResin(String xml, String stylesheet,
-		OutputStream out) throws Exception {
-
-		// Get a stylesheet factory
-		StylesheetFactory factory=new Xsl();
-		Stylesheet style=factory.newStylesheet(stylesheet);
-
-		StreamTransformer transformer=style.newStreamTransformer();
-		transformer.transformString(xml, out);
-	}
-
+	/**
+	 * Look up a stylesheet based on the name.
+	 */
 	protected static String lookupStylesheet(PhotoConfig conf, String ss) {
 		String ret=null;
 		if(ss==null) {
@@ -88,6 +70,9 @@ public class PhotoXSLT extends Object {
 		return(ret);
 	}
 
+	/**
+	 * Normalize a string for use in XML.
+	 */
 	public static String normalize(String s, boolean canonical) {
 		StringBuffer str=new StringBuffer();
 
