@@ -1,3 +1,93 @@
-Get ahold of me (dustin).
+This is a quick install guide.  I have to assume you know what you're doing
+with databases and servlets.
 
-$Id: HOWTO,v 1.1 2000/06/24 23:58:16 dustin Exp $
+BEFORE YOU BEGIN!!!
+
+Make sure you read the project home page and have all of the components listed
+under ``What Do I Need To Start My Own'' and that they're all working
+properly as best as you can tell.
+
+
+
+DATABASE SETUP
+
+I'm currently using postgres 7, but I believe a slightly older version will
+work.  Begin by creating the ``photo'' database, and the ``nobody'' user.
+Although photoservlet could theoretically be run with another database, it
+would require some application changes, and probably some other works.
+
+You can use another database name if you'd like, just make sure you modify
+all config files to reflect the new database name.  If you want to use
+a different username, you can do that as well, but you'll have to modify
+the bootstrap script (etc/photo.sql) and replace all references to
+``nobody'' with your new username.
+
+Once you can connect to the ``photo'' database as the user ``nobody,''
+execute all of the commands in the script etc/photo.sql.  You will need to
+do this as a user who has access to create tables in the database.  If
+there are any errors, report them as bugs, please, and try to get ahold of
+me.  :)
+
+
+
+HELPER APPLICATION SETUP
+
+There are two things that must be running for this to work, the servlet
+itself, and the helper applications.  The easiest way to start is probably
+going to be to take all of the .conf files in the etc directory, and copy
+them into /usr/local/etc.  It's probably a good idea to flip through the
+files and make sure they're correct for your environment.
+
+Make sure your CLASSPATH environment variable contains all of the classes
+required for operation including spy.jar, photo.jar, DbConnectionBroker,
+and the driver for your database (postgresql.jar).
+
+Start the applications with the following command:
+
+	java net.spy.SpyRunner /usr/local/etc/spyrunner.conf
+
+It'll produce some output telling you how it's doing.  It should start up
+all the necessary helper applications and let you know how each went.  If
+any fail, it's probably not going to work.
+
+
+SERVLET SETUP
+
+With your servlet engine having all of the necessary classes in its path
+(spy.jar, photo.jar, oro.jar, DbConnectionBroker, and postgreql.jar), you
+should be able to try out your photoservlet by making the following
+request:
+
+	http://myserver/servlet/net.spy.photo.PhotoServlet
+
+the ``myserver'' will obviously vary, and so will the /servlet/ portion.
+Some configurations use /servlet, some use /servlets, etc...  It's probably
+a good idea to run a couple of test servlets just to make sure you've got
+your servlet engine running correctly before you start.
+
+
+NOW WHAT
+
+When you're first setting up your photoservlet, you'll probably
+want to create categories and users and stuff.
+
+There's a non-obvious link at the bottom that tells you as what user you're
+authenticated.  Clicking on that will take you to the authentication
+screen.  By default, there's an ``admin'' user with the password ``admin''
+you can use to make all of the changes you need.  After authenticating, go
+back to the authentication screen and click on the ``Request Administrative
+Privileges'' link to go into admin mode.  This will give you a few more
+links you can play around in.
+
+Please, please, please change the admin password before anything else.  You
+can do that by going into the user admin, select ``admin,'' then type
+something into the password column, then clicking on the save button.
+Next, create a few categories for your images.
+
+It's probably a good idea to add a couple other users with access to add images
+and to see the various categories you created.  You don't want all of your
+images showing up as ``admin'' do you?  :)
+
+Let me know if you have any problems.
+
+$Id: HOWTO,v 1.2 2000/06/26 07:20:07 dustin Exp $
