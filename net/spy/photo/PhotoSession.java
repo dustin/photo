@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.82 2002/02/15 09:10:27 dustin Exp $
+ * $Id: PhotoSession.java,v 1.83 2002/02/15 09:27:13 dustin Exp $
  */
 
 package net.spy.photo;
@@ -337,6 +337,7 @@ public class PhotoSession extends Object
 			m.setBody("\n\nYour new password for " + pu.getUsername()
 				+ " is " + newPass + "\n\n");
 			m.send();
+			log("Sent new password to " + pu.getEmail());
 			xml.setTitle("Password Changed");
 			xml.addBodyPart(getGlobalMeta());
 			xml.addBodyPart("<generated_password>\n"
