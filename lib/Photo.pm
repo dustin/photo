@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.10 1998/07/06 07:06:12 dustin Exp $
+# $Id: Photo.pm,v 1.11 1998/07/06 07:20:59 dustin Exp $
 
 package Photo;
 
@@ -201,25 +201,25 @@ sub makeThumbnail
 	$c->cache($key, $type, $out);
     }
 
-    open(OUT, ">/tmp/photoout.$$");
+    open(OUT, ">/tmp/photoout.$img.$$");
     $c->printcache_only($key, \*OUT);
     close(OUT);
 
     system('/usr/local/bin/convert', '-size', '100x100',
-           "/tmp/photoout.$$", "/tmp/photoout.tn.$$");
+           "/tmp/photoout.$img.$$", "/tmp/photoout.tn.$img.$$");
 
-    unlink("/tmp/photoout.$$");
+    unlink("/tmp/photoout.$img.$$");
 
     $c=DCache->new;
     $key="photo-image: tn/$img";
 
     $out="";
-    open(IN, "/tmp/photoout.tn.$$");
+    open(IN, "/tmp/photoout.tn.$img.$$");
     while( read(IN, $tmp, 1024) ) {
 	$out.=$tmp;
     }
     close(IN);
-    unlink("/tmp/photoout.tn.$$");
+    unlink("/tmp/photoout.tn.$img.$$");
 
     $c->cache($key, $type, $out);
     $c->printcache_only($key);
