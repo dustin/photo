@@ -5,7 +5,9 @@
 <h2>Add a Photo</h2>
 
 <form method="POST" enctype="multipart/form-data"
-action="/cgi-bin/dustin/photo/addimg.cgi">
+action="/perl/dustin/photo/photo.cgi">
+
+<input type="hidden" name="func" value="addimage">
 
 <table>
    <tr>
