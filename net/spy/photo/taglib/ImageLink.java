@@ -1,13 +1,15 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.8 2002/09/14 06:09:10 dustin Exp $
+// $Id: ImageLink.java,v 1.9 2002/09/16 02:58:55 dustin Exp $
 
 package net.spy.photo.taglib;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.jsp.JspException;
 
+import net.spy.photo.PhotoUtil;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageHelper;
 
@@ -91,8 +93,10 @@ public class ImageLink extends PhotoTag {
 		StringBuffer url=new StringBuffer();
 
 		href.append("<img src=\"");
+
+		HttpServletRequest req=(HttpServletRequest)pageContext.getRequest();
+		url.append(PhotoUtil.getRelativeUri(req, "/PhotoServlet/"));
 		
-		url.append("PhotoServlet/");
 		url.append(id);
 		url.append(".jpg?id=");
 		url.append(id);
