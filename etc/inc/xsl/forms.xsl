@@ -192,7 +192,7 @@
 			<input type="hidden" name="func" value="search"/>
 			<p>
 				Category:<br/>
-				<select name="cat" size="5">
+				<select name="cat" size="5" multiple="">
 					<xsl:apply-templates select="cat_list"/>
 				</select>
 			</p>

@@ -11,7 +11,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.21 2001/01/07 23:37:00 dustin Exp $
+ $Id: default.xsl,v 1.22 2001/01/08 10:02:52 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -362,8 +362,8 @@
 		</tr>
 		<xsl:for-each select="cat_view_item">
 			<tr>
-				<td><a href="{link}"><xsl:value-of select="category"/></a></td>
-				<td><a href="{link}">
+				<td><a href="{/page/meta_stuff/self_uri}?func=search&amp;cat={cat_n}&amp;maxret=6"><xsl:value-of select="category"/></a></td>
+				<td><a href="{/page/meta_stuff/self_uri}?func=search&amp;cat={cat_n}&amp;maxret=6">
 						<xsl:value-of select="count"/>
 						<xsl:value-of select="qualifier"/>
 					</a></td>
