@@ -88,11 +88,21 @@ was added before (date)
 </tr>
 </table>
 
-Sort by when the picture was:
+Sort by when the picture was
 <select name="order">
     <option value="a.ts">added
     <option selected value="a.taken">taken
 </select>
+<br>
+Return at most
+<select name="maxret">
+    <option value="5">5
+    <option value="10">10
+    <option value="50">50
+    <option value="100">100
+    <option value="0">All
+</select>
+images.
 
 <br>
 <input type="submit" value="Find">
