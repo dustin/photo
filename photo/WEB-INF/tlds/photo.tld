@@ -67,6 +67,10 @@
 			<required>false</required>
 		</attribute>
 		<attribute>
+			<name>relative</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
 			<name>showThumbnail</name>
 			<required>false</required>
 		</attribute>
