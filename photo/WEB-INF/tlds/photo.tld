@@ -143,4 +143,14 @@
 		</attribute>
 	</tag>
 
+	<!-- Create a relative link to something within this webapp -->
+	<tag>
+		<name>link</name>
+		<tagclass>net.spy.photo.taglib.Link</tagclass>
+		<attribute>
+			<name>url</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+
 </taglib>

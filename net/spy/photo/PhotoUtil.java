@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.10 2002/03/05 04:32:23 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.11 2002/06/10 18:35:10 dustin Exp $
  */
 
 package net.spy.photo;
@@ -10,6 +10,8 @@ import java.lang.*;
 import java.util.*;
 import java.text.*;
 import java.io.File;
+
+import javax.servlet.http.HttpServletRequest;
 
 import net.spy.*;
 
@@ -93,5 +95,24 @@ public class PhotoUtil extends Object {
 		String user=conf.get("default_user", "guest");
 		PhotoUser u=s.getUser(user);
 		return(u);
+	}
+
+	/**
+	 * Get a relative URI inside the current webapp.
+	 *
+	 * @param req a servlet request within this webapp
+	 * @param uri A uri (beginning with /) within the webapp.
+	 */
+	public static String getRelativeUri(HttpServletRequest req, String uri) {
+		StringBuffer sb=new StringBuffer();
+		sb.append(req.getContextPath());
+
+		if(!uri.startsWith("/")) {
+			throw new IllegalArgumentException(
+				"uri parameter must begin with a slash.");
+		}
+		sb.append(uri);
+
+		return(sb.toString());
 	}
 }
