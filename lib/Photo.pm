@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.11 1998/07/06 07:20:59 dustin Exp $
+# $Id: Photo.pm,v 1.12 1998/07/07 05:36:40 dustin Exp $
 
 package Photo;
 
@@ -437,7 +437,7 @@ sub myquote
 sub addImage
 {
     my($self, $q)=@_;
-    my(@elements, %in, %tmp, $query, $ext, $fn, $f, @stat, $s, $r);
+    my(@elements, %in, %tmp, $query, $ext, $fn, $f, @stat, $s, $r, $dbh);
 
     @elements=qw(category keywords picture info taken);
     %tmp=map{$_,1}@elements;
@@ -468,20 +468,38 @@ sub addImage
 
     $fn=time()."$$.$ext";
     $f=$q->param('picture');
-    open(OUT, ">$Photo::ldir/$fn");
-    print OUT <$f>;
-    close(OUT);
-    @stat=stat("$Photo::ldir/$fn");
-    if($stat[7]==0)
-    {
-	unlink("$Photo::ldir/$fn");
-	%tmp=('FILENAME',$in{'picture'});
+
+    $dbh=$self->dbh;
+
+    $dbh->{AutoCommit}=0;
+    eval {
+        my($premime, $i, $n);
+        $query="insert into image_map(name) values('$fn');\n";
+        doQuery($query);
+        $s=doQuery("select last_value from image_store_seq;\n");
+        $r=$s->fetch;
+        $n=$r->[0];
+
+        $premime="";
+        $i=0;
+        while ( read($f, $premime, 60*57)) {
+            map {
+                $query="insert into image_store values($n, $i, '$_');\n";
+                print $query;
+                doQuery($query);
+                $i++;
+            } split(/\n/, encode_base64($premime));
+        }
+    };
+
+    if($@) {
 	$self->showTemplate("$Photo::includes/add_uploadfail.inc", %tmp);
 	return;
+    } else {
+	$dbh->commit;
     }
 
-    system('/usr/local/bin/convert', '-size', '100x100',
-         "$Photo::ldir/$fn", "$Photo::ldir/tn/$fn");
+    $dbh->{AutoCommit}=1;
 
     $query ="insert into album (fn, keywords, descr, cat, size, taken)\n";
     $query.="    values('$fn',\n\t$in{'keywords'},\n\t$in{'info'},\n";
