@@ -137,7 +137,7 @@
 	</action>
 
 	<action path="/refreshDisplay" type="net.spy.photo.struts.SetDisplayRefresh">
-		<forward name="success" path="/display.jsp"/>
+		<forward name="success" path="/display.do"/>
 	</action>
 
 	<!-- Change password -->
@@ -309,7 +309,7 @@
 	<!-- Modify an image's data -->
 	<action path="/admeditimage"
 		name="uploadForm"
-		input="/admin/display.jsp"
+		input="/display.do"
 		type="net.spy.photo.struts.AdminEditImage">
 		<forward name="success" path="/display.do"/>
 	</action>

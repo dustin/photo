@@ -9,16 +9,18 @@
 
 <%
 	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
-	Integer searchId=(Integer)request.getAttribute("search_id");
+	String searchIdS=(String)request.getParameter("search_id");
 %>
 
-<c:choose>
-	<c:when test="${not empty search_id}">
+<% if(searchIdS == null) { %>
+	<div class="displayBrief"><c:out value="${image.descr}"/></div>
+<% } else { %>
+	<%--
 	<table width="100%">
 		<tr valign="top">
 			<td align="left" width="10%">
 					<photo:imgLink id="0" relative="prev"
-						searchId='<%= String.valueOf(searchId) %>'>
+						searchId='<%= "" + searchIdS %>'>
 						<photo:imgsrc alt="previous" border="0" url="/images/prev.png"/>
 					</photo:imgLink>
 			</td>
@@ -28,24 +30,21 @@
 			</td>
 
 			<td align="right" width="10%">
-					<photo:link url='<%= "/display.do?search_id=" + searchId %>'>
+					<photo:link url='<%= "/display.do?search_id=" + searchIdS %>'>
 						<photo:imgsrc alt="pause" border="0" url="/images/pause.png"/>
 					</photo:link>
-					<photo:link url='<%= "/refreshDisplay.do?search_id=" + searchId %>'>
+					<photo:link url='<%= "/refreshDisplay.do?search_id=" + searchIdS %>'>
 						<photo:imgsrc alt="slideshow" border="0" url="/images/play.png"/>
 					</photo:link>
 					<photo:imgLink id="<%= 0 %>" relative="next"
-							searchId="<%= searchId.intValue() %>">
+							searchId="<%= "" + searchIdS %>">
 						<photo:imgsrc alt="next" border="0" url="/images/next.png"/>
 					</photo:imgLink>
 			</td>
 		</tr>
 	</table>
-	</c:when>
-	<c:otherwise>
-		<div class="displayBrief"><c:out value="${image.descr}"/></div>
-	</c:otherwise>
-</c:choose>
+--%>
+<% } %>
 
 	<div align="center">
 		<photo:imgSrc id='<%= image.getId() %>'
