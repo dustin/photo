@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaver.java,v 1.3 2002/06/25 00:18:01 dustin Exp $
+// $Id: PhotoSaver.java,v 1.4 2002/06/26 17:23:20 dustin Exp $
 
 package net.spy.photo;
 
@@ -67,7 +67,7 @@ public class PhotoSaver extends Object {
 	}
 
 	public void setTaken(java.util.Date taken) {
-		SimpleDateFormat sdf=new SimpleDateFormat("MM/DD/yyyy");
+		SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
 		this.taken=sdf.format(taken);
 	}
 
