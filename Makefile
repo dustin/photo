@@ -65,7 +65,6 @@ CLASSES=\
 	net/spy/photo/PhotoSession.class \
 	net/spy/photo/Cursor.class \
 	net/spy/photo/PhotoImageData.class \
-	net/spy/photo/PhotoSearchResult.class \
 	net/spy/photo/PhotoSearchResults.class \
 	net/spy/photo/PhotoReporting.class \
 	net/spy/photo/PhotoAdmin.class \
