@@ -9,7 +9,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.2 2000/11/10 07:17:18 dustin Exp $
+ $Id: default.xsl,v 1.3 2000/12/10 01:19:09 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -79,7 +79,7 @@
 				<p>
 				<font size="+1"><b>Photo of the [Unit of Time]</b></font><br/><br/>
 				<center>
-				<xsl:variable name="photo_of_the_day" select="445"/>
+				<xsl:variable name="photo_of_the_day" select="1639"/>
 				<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={$photo_of_the_day}">
 				<img border="0" src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={$photo_of_the_day}&amp;thumbnail=1"/>
 				</a>
@@ -128,39 +128,69 @@
 </xsl:template>
 
 <xsl:template match="search_results">
-	<table border="0">
+	<table border="0" colspan="1" width="100%">
 		<xsl:for-each select="search_result_row">
 			<tr>
-				<xsl:for-each select="search_result">
-					<td>
-						<table>
-							<tr>
-								<td>
-									Keywords: <xsl:value-of select="KEYWORDS"/>
-										<br/>
-									Category: <xsl:value-of select="CAT"/><br/>
-									Size:  <xsl:value-of select="WIDTH"/>x<xsl:value-of select="HEIGHT"/>
-									(<xsl:value-of select="SIZE"/> bytes)<br/>
-									Taken:  <xsl:value-of select="TAKEN"/><br/>
-									Added: <xsl:value-of select="TS"/> by
-										<xsl:value-of select="ADDEDBY"/><br/>
-								</td>
-								<td>
-									<a
-									href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={ID}">
-										<img border="0"
-											width="{TN_WIDTH}"
-											height="{TN_HEIGHT}"
-											src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}&amp;thumbnail=1"/>
-										</a>
-								</td>
-							</tr>
-						</table>
-						<blockquote>
-							<xsl:value-of select="DESCR"/>
-						</blockquote>
-					</td>
-				</xsl:for-each> <!-- Individual result -->
+				<td width="25%" align="center">
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={search_result[1]/ID}">
+						<img border="0"
+							width="{search_result[1]/TN_WIDTH}"
+							height="{search_result[1]/TN_HEIGHT}"
+							src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={search_result[1]/IMAGE}&amp;thumbnail=1"/>
+					</a>
+				</td>
+				<td width="25%" bgcolor="#efefff" valign="top">
+					<font size="-1">
+					Keywords: <xsl:value-of select="search_result[1]/KEYWORDS"/>
+						<br/>
+					Category: <xsl:value-of select="search_result[1]/CAT"/><br/>
+					Size:  <xsl:value-of select="search_result[1]/WIDTH"/>x<xsl:value-of select="search_result[1]/HEIGHT"/>
+					(<xsl:value-of select="search_result[1]/SIZE"/> bytes)<br/>
+					Taken:  <xsl:value-of select="search_result[1]/TAKEN"/><br/>
+					Added: <xsl:value-of select="search_result[1]/TS"/> by
+						<xsl:value-of select="search_result[1]/ADDEDBY"/><br/>
+					</font>
+				</td>
+				<xsl:if test="search_result[2]">
+				<td width="25%" bgcolor="#efefff" valign="top">
+					<font size="-1">
+					Keywords: <xsl:value-of select="search_result[2]/KEYWORDS"/>
+						<br/>
+					Category: <xsl:value-of select="search_result[2]/CAT"/><br/>
+					Size:  <xsl:value-of select="search_result[2]/WIDTH"/>x<xsl:value-of select="search_result[2]/HEIGHT"/>
+					(<xsl:value-of select="search_result[2]/SIZE"/> bytes)<br/>
+					Taken:  <xsl:value-of select="search_result[2]/TAKEN"/><br/>
+					Added: <xsl:value-of select="search_result[2]/TS"/> by
+						<xsl:value-of select="search_result[2]/ADDEDBY"/><br/>
+					</font>
+				</td>
+				<td width="25%" align="center">
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={search_result[2]/ID}">
+						<img border="0"
+							width="{search_result[2]/TN_WIDTH}"
+							height="{search_result[2]/TN_HEIGHT}"
+							src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={search_result[2]/IMAGE}&amp;thumbnail=1"/>
+					</a>
+				</td>
+				</xsl:if>
+			</tr>
+			<tr>
+				<td colspan="2" width="50%" valign="top" bgcolor="#efefff">
+					<blockquote>
+						<font size="-1">
+							<xsl:apply-templates select="search_result[1]/DESCR"/>
+						</font>
+					</blockquote>
+				</td>
+				<xsl:if test="search_result[2]">
+				<td colspan="2" width="50%" valign="top" bgcolor="#efefff">
+					<blockquote>
+						<font size="-1">
+							<xsl:apply-templates select="search_result[2]/DESCR"/>
+						</font>
+					</blockquote>
+				</td>
+				</xsl:if>
 			</tr>
 		</xsl:for-each> <!-- row of results -->
 	</table>
@@ -180,6 +210,17 @@
 	</table>
 
 	<center>
+		<table border="0">
+			<tr>
+				<td>
+					<b>
+						<font size="-3">
+							<xsl:apply-templates select="DESCR"/>
+						</font>
+					</b>
+				</td>
+			</tr>
+		</table>
 		<img width="{WIDTH}" height="{HEIGHT}"
 		  src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}"/>
 	</center>
@@ -190,7 +231,7 @@
 	Taken:  <xsl:value-of select="TAKEN"/><p/>
 	Added:  <xsl:value-of select="TS"/> by <xsl:value-of select="ADDEDBY"/><p/>
 	Keywords:  <xsl:value-of select="KEYWORDS"/><p/>
-	Info:<br/><xsl:value-of select="DESCR"/><p/>
+	Info:<br/><xsl:apply-templates select="DESCR"/><p/>
 
 	<a href="{/page/meta_stuff/self_uri}?func=logview&amp;view=viewers&amp;which={IMAGE}">
 	Who's seen this?</a><br/>

@@ -4,7 +4,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: common.xsl,v 1.3 2000/11/27 07:59:05 dustin Exp $
+ $Id: common.xsl,v 1.4 2000/12/10 01:19:09 dustin Exp $
  -->
 
 <!-- Default Section handling -->
@@ -35,6 +35,18 @@
 	<ul>
 		<xsl:apply-templates/>
 	</ul>
+</xsl:template>
+
+<xsl:template match="ul">
+	<xsl:copy>
+		<xsl:apply-templates/>
+	</xsl:copy>
+</xsl:template>
+
+<xsl:template match="li">
+	<xsl:copy>
+		<xsl:apply-templates/>
+	</xsl:copy>
 </xsl:template>
 
 <xsl:template match="item">
