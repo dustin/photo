@@ -12,13 +12,14 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import net.spy.photo.PhotoSessionData;
 
 /**
  * Superclass for all taglibs.
  */
-public abstract class PhotoTag extends TagSupport {
+public abstract class PhotoTag extends BodyTagSupport {
 
 	private PhotoSessionData sessionData=null;
 

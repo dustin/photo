@@ -248,7 +248,7 @@ public class DisplayLink extends PhotoTag {
 	/**
 	 * End link.
 	 */
-	public int doAfterBody() throws JspException {
+	public int doEndTag() throws JspException {
 		try {
 			pageContext.getOut().write("</a>");
 		} catch(Exception e) {
@@ -256,7 +256,7 @@ public class DisplayLink extends PhotoTag {
 			throw new JspException("Error sending output:  " + e);
 		}
 
-		return(SKIP_BODY);
+		return(EVAL_PAGE);
 	}
 
 	/**
