@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.40 2000/11/27 09:45:44 dustin Exp $
+ * $Id: PhotoSession.java,v 1.41 2000/12/25 23:39:06 dustin Exp $
  */
 
 package net.spy.photo;
@@ -72,34 +72,86 @@ public class PhotoSession extends Object
 	// process a request
 	public void process() throws ServletException, IOException {
 
-		String func, type;
+		String func=null, type=null, out=null;;
 
-		type = request.getContentType();
-		if(type != null && type.startsWith("multipart/form-data")) {
-			multi = new MultipartRequest(request, "/tmp");
-		} else {
-			multi = null;
-		}
-
-		// Set the self_uri
-		self_uri = request.getRequestURI();
-
-		getCreds();
-
-		getStyleSheet();
-
-		// Figure out what they want, default to index.
-		if(multi==null) {
-			func=request.getParameter("func");
-
-			// Find out if they want raw XML or not...
-			String tmp=request.getParameter("xmlraw");
-			if(tmp!=null) {
-				xmlraw=true;
+		try {
+			type = request.getContentType();
+			if(type != null && type.startsWith("multipart/form-data")) {
+				multi = new MultipartRequest(request, "/tmp");
+			} else {
+				multi = null;
 			}
-		} else {
-			func=multi.getParameter("func");
+
+			// Set the self_uri
+			self_uri = request.getRequestURI();
+
+			getCreds();
+
+			getStyleSheet();
+
+			// Figure out what they want, default to index.
+			if(multi==null) {
+				func=request.getParameter("func");
+
+				// Find out if they want raw XML or not...
+				String tmp=request.getParameter("xmlraw");
+				if(tmp!=null) {
+					xmlraw=true;
+				}
+			} else {
+				func=multi.getParameter("func");
+			}
+
+			out=dispatchFunction(func);
+
+		} catch(Exception e) {
+			log("Error:  " + e + "\nStack:  " + SpyUtil.getStack(e, 1));
+			out=createError(e);
+			try {
+				sendXML(out);
+			} catch(Exception e2) {
+				log("Compound error:  We also failed to send back the error, "
+					+ e2);
+				throw new ServletException("Error sending error message:  "
+					+ e2);
+			}
+			out=null;
 		}
+
+		// Some things handle their own responses, and return null.
+		if(out!=null) {
+			send_response(out);
+		}
+	}
+
+	protected String createError(Exception e) {
+		StringBuffer rv=new StringBuffer();
+
+		// XML header
+		rv.append("<?xml version=\"1.0\"?>\n");
+
+		rv.append("<exception>\n");
+		rv.append("\t<text>\n");
+		rv.append("\t\t" + PhotoXSLT.normalize(e.getMessage(), true) + "\n");
+		rv.append("\t</text>\n");
+		rv.append("\t<exception_class>\n");
+		rv.append("\t\t" + PhotoXSLT.normalize(e.getClass().getName(), true)
+			+ "\n");
+		rv.append("\t</exception_class>\n");
+		rv.append("\t<stack>\n");
+		String s[]=SpyUtil.split(",", SpyUtil.getStack(e, 1));
+		for(int i=0; i<s.length; i++) {
+			rv.append("\t\t<stack_entry>\n");
+			rv.append("\t\t\t" + PhotoXSLT.normalize(s[i], true) + "\n");
+			rv.append("\t\t</stack_entry>\n");
+		}
+		rv.append("\t</stack>\n");
+		rv.append("</exception>\n");
+
+		return(rv.toString());
+	}
+
+	protected String dispatchFunction(String func) throws Exception {
 
 		// If there's no function, set the function to index.
 		if(func==null) {
@@ -109,7 +161,6 @@ public class PhotoSession extends Object
 		// Lowercase it so that we don't have to keep doing case ignores
 		func=func.toLowerCase();
 		log(remote_user + " requested " + func);
-
 		String out=null;
 
 		// OK, see what they're doing.
@@ -174,11 +225,7 @@ public class PhotoSession extends Object
 		} else {
 			throw new ServletException("No known function.");
 		}
-
-		// Some things handle their own responses, and return null.
-		if(out!=null) {
-			send_response(out);
-		}
+		return(out);
 	}
 
 	protected String saveSearch() throws ServletException {
@@ -813,13 +860,34 @@ public class PhotoSession extends Object
 		return(gm);
 	}
 
+	// Send raw XML
+	protected void sendXML(String xml) throws Exception  {
+
+		SpyCache cache=new SpyCache();
+
+		if(xmlraw) {
+			response.setContentType("text/plain");
+		} else {
+			response.setContentType("text/html");
+		}
+
+		PrintWriter out=response.getWriter();
+
+		// If they want raw XML, get it that way.
+		if(xmlraw) {
+			out.print(xml);
+		} else {
+			PhotoXSLT.sendXML(xml, xslt_stylesheet, out);
+		}
+
+		out.close();
+	}
+
 	// Send (and cache) an XML template.
 	protected void sendXML(String tmplate, Hashtable h)
 		throws ServletException {
 		PhotoConfig conf = new PhotoConfig();
-
 		h.put("GLOBALMETA", getGlobalMeta());
-
 		String xml=null;
 		try {
 			SpyCache cache=new SpyCache();
@@ -834,7 +902,6 @@ public class PhotoSession extends Object
 			}
 			if(o==null) {
 				log(key + " was not cached...rebuilding.");
-
 				// If they want raw XML, get it that way.
 				if(xmlraw) {
 					// Raw XML will just include the parsed template

@@ -9,7 +9,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.3 2000/12/10 01:19:09 dustin Exp $
+ $Id: default.xsl,v 1.4 2000/12/25 23:39:06 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -79,7 +79,7 @@
 				<p>
 				<font size="+1"><b>Photo of the [Unit of Time]</b></font><br/><br/>
 				<center>
-				<xsl:variable name="photo_of_the_day" select="1639"/>
+				<xsl:variable name="photo_of_the_day" select="131"/>
 				<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={$photo_of_the_day}">
 				<img border="0" src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={$photo_of_the_day}&amp;thumbnail=1"/>
 				</a>

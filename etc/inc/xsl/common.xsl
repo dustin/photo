@@ -4,7 +4,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: common.xsl,v 1.4 2000/12/10 01:19:09 dustin Exp $
+ $Id: common.xsl,v 1.5 2000/12/25 23:39:06 dustin Exp $
  -->
 
 <!-- Default Section handling -->
@@ -152,6 +152,33 @@
 	<xsl:copy use-attribute-sets="textarea-stuff">
 		<xsl:apply-templates/>
 	</xsl:copy>
+</xsl:template>
+
+<xsl:template match="exception">
+	<html>
+		<head><title>PhotoServlet Error!</title></head>
+		<body bgcolor="#fFfFfF">
+			<h1>Error!</h1>
+			Photoservlet has encounted an error in doing your bidding.  The
+			error is as follows:
+
+			<p/>
+
+			<tt><xsl:value-of select="text"/></tt>
+
+			<p/>
+
+			Here's the stack:
+
+			<ol>
+				<xsl:for-each select="stack/stack_entry">
+					<li>
+						<xsl:value-of select="."/>
+					</li>
+				</xsl:for-each>
+			</ol>
+		</body>
+	</html>
 </xsl:template>
 
 </xsl:stylesheet>
