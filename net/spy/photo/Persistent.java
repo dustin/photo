@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Persistent.java,v 1.7 2002/11/04 03:11:24 dustin Exp $
+// $Id: Persistent.java,v 1.8 2002/12/06 08:42:37 dustin Exp $
 
 package net.spy.photo;
 
@@ -17,7 +17,6 @@ import net.spy.log.SpyLog;
 public class Persistent extends HttpServlet {
 
 	private static PhotoSecurity security = null;
-	private static PhotoAheadFetcher aheadfetcher=null;
 	private static SpyLog logger = null;
 	private static PhotoSaverThread photoSaverThread=null;
 	private PhotoLogFlusher logflusher=null;
@@ -67,16 +66,6 @@ public class Persistent extends HttpServlet {
 			throw new ServletException("Can't create security stuff", e);
 		}
 
-		// The photo ahead fetcher
-		try {
-			log("Initing PhotoAheadFetcher");
-			aheadfetcher=new PhotoAheadFetcher();
-			log("Got the PhotoAheadFetcher");
-		} catch(Exception e) {
-			log("Could not get PhotoAheadFetcher:  " + e);
-			aheadfetcher=null;
-		}
-
 		log("Initing logger");
 		logflusher=new PhotoLogFlusher();
 		logger = new SpyLog("PhotoLog", logflusher);
@@ -93,8 +82,6 @@ public class Persistent extends HttpServlet {
 	 * Shut everything down.
 	 */
 	public void destroy() {
-		log("Stopping aheadfetcher");
-		aheadfetcher.close();
 		log("Removing logflusher");
 		logger.removeFlusher(logflusher);
 		log("Stopping logflusher");
@@ -116,14 +103,6 @@ public class Persistent extends HttpServlet {
 	}
 
 	/**
-	 * Get the PhotoAheadFetcher for this instance.
-	 */
-	public static PhotoAheadFetcher getAheadFetcher() {
-		verifyInitialized();
-		return(aheadfetcher);
-	}
-
-	/**
 	 * Get the SpyLog object for this instance.
 	 */
 	public static SpyLog getLogger() {
@@ -140,8 +119,7 @@ public class Persistent extends HttpServlet {
 	}
 
 	private static void verifyInitialized() {
-		if(security==null || aheadfetcher==null
-			|| logger==null || photoSaverThread==null) {
+		if(security==null || logger==null || photoSaverThread==null) {
 
 			throw new NotInitializedException();
 		}
