@@ -117,6 +117,18 @@ headache while still allowing me to have it my way.  :)
 app and distributed image server and all that to avoid confusion.  If you
 want to try it, send me email.
 
+	It's assumed that the installer knows something about web-apps and
+servlet containers and all that.  PhotoServlet ships as a .war file, but it
+must be expanded and configured to be useful for most people.  that also
+makes it quite a bit easier to tweak the jsps and get what you want out of
+it.  :)
+
+	Go to your application directory, mkdir photo, and unzip the war, then
+edit WEB-INF/photo.conf to match your site config.
+
+	The most important thing to look at is the DB config (and it's at the
+top).  I'd encourage you to look around at other stuff as well.
+
 DATABASE SETUP
 
     I'm currently using postgres 7.1, but I believe a slightly
@@ -226,5 +238,5 @@ ERRATA
 photo=> insert into wwwgroup values(3, 'admin');
 
 ----------------------------------------------------------------------
-$Id: HOWTO,v 1.15 2002/06/23 03:01:47 dustin Exp $
+$Id: HOWTO,v 1.16 2002/06/23 03:11:12 dustin Exp $
 
