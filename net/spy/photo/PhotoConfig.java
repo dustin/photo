@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoConfig.java,v 1.12 2002/06/17 03:52:32 dustin Exp $
+ * $Id: PhotoConfig.java,v 1.13 2002/06/23 07:01:03 dustin Exp $
  */
 
 package net.spy.photo;
@@ -9,6 +9,9 @@ package net.spy.photo;
 import net.spy.*;
 import java.io.*;
 
+/**
+ * Configuration for PhotoServlet.
+ */
 public class PhotoConfig extends SpyConfig {
 
 	// If provided, this configuration will be used.
@@ -50,9 +53,9 @@ public class PhotoConfig extends SpyConfig {
 	private void loadDefaults() {
 		// Now add defaults
 		orput("dbDriverName", "org.postgresql.Driver");
-		orput("dbSource", "jdbc:postgresql://localhost/photo");
+		orput("dbSource", "jdbc:postgresql://db/photo");
 		orput("dbUser", "nobody");
-		orput("dbPass", "");
+		orput("dbPass", "nopassword");
 		orput("imageserver", "//localhost/ImageServer");
 		orput("includes", "/home/dustin/public_html/jphoto/inc/");
 		orput("timezone", "GMT");
@@ -63,8 +66,5 @@ public class PhotoConfig extends SpyConfig {
 		orput("mail_sender", "dustin+photoservlet@spy.net");
 
 		orput("thumbnail_size", "220x146");
-
-		// XSLT processor
-		orput("xslt_processor", "net.spy.photo.xslt.ResinXSLT");
 	}
 }

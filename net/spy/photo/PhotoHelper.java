@@ -1,40 +1,43 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoHelper.java,v 1.10 2002/05/13 07:22:48 dustin Exp $
+ * $Id: PhotoHelper.java,v 1.11 2002/06/23 07:01:03 dustin Exp $
  */
 
 package net.spy.photo;
 
 import java.sql.*;
 import java.util.*;
-import java.lang.*;
 
 import net.spy.*;
 import net.spy.log.*;
 
-// The class
-public class PhotoHelper
-{ 
-	SpyLog logger=null;
-	PhotoConfig conf=null;
+/**
+ * Superclass for general supplemental classes.
+ */
+public class PhotoHelper extends Object { 
 
+	private PhotoConfig conf=null;
+
+	/**
+	 * Instantiate the helper class.
+	 */
 	public PhotoHelper() {
 		super();
 		conf = new PhotoConfig();
 	}
 
-	private void initlog() {
-		logger = new SpyLog("PhotoLog");
+	/**
+	 * Get the configuration instance contained in this helper.
+	 */
+	protected PhotoConfig getConfig() {
+		return(conf);
 	}
 
 	/**
 	 * Log a message.
 	 */
 	protected void log(String message) {
-		if(logger==null) {
-			initlog();
-		}
-		System.err.println("PhotoHelper: " + message);
+		System.err.println(getClass().getName() + ": " + message);
 	}
 }

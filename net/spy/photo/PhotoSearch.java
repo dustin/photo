@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.24 2002/05/27 04:56:31 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.25 2002/06/23 07:01:03 dustin Exp $
  */
 
 package net.spy.photo;
@@ -85,7 +85,7 @@ public class PhotoSearch extends PhotoHelper {
 
 			String query = "insert into searches (name, addedby, search, ts)\n"
 				+ "  values(?, ?, ?, ?)";
-			SpyDB photo=new SpyDB(new PhotoConfig());
+			SpyDB photo=new SpyDB(getConfig());
 			PreparedStatement st=photo.prepareStatement(query);
 			st.setString(1, form.getName());
 			st.setInt(2, user.getId());
@@ -265,7 +265,7 @@ public class PhotoSearch extends PhotoHelper {
 
 			// Cache this query for fifteen minutes.  It's unique to the
 			// user, but the user is often guest.
-			SpyDB photo=new SpyDB(new PhotoConfig());
+			SpyDB photo=new SpyDB(getConfig());
 			ResultSet rs = photo.executeQuery(query);
 
 			// Figure out how many they want to display.
@@ -297,7 +297,7 @@ public class PhotoSearch extends PhotoHelper {
 		} catch(Exception e) {
 			throw new ServletException("Error performing search", e);
 		}
-		System.out.println("performSearch returning " + results);
+		log("performSearch returning " + results);
 		return(results);
 	}
 
@@ -486,7 +486,7 @@ public class PhotoSearch extends PhotoHelper {
 
 		query += "\n order by " + order;
 
-		System.err.println("Searching with the following query:\n" + query);
+		log("Searching with the following query:\n" + query);
 
 		return(query);
 	}

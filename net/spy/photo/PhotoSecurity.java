@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.22 2002/06/20 04:34:17 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.23 2002/06/23 07:01:03 dustin Exp $
  */
 
 package net.spy.photo;
@@ -29,10 +29,13 @@ public class PhotoSecurity extends PhotoHelper {
 		super();
 	}
 
-	// Get a digest for a string
+	/**
+	 * Get a digest for a given string.
+	 */
 	public String getDigest(String input) throws Exception {
 		// We need the trim so we can ignore whitespace.
 		byte dataB[]=input.trim().getBytes();
+		PhotoConfig conf=getConfig();
 		MessageDigest md = MessageDigest.getInstance(conf.get("cryptohash"));
 		md.update(dataB);
 		Base64 base64=new Base64();
@@ -80,9 +83,7 @@ public class PhotoSecurity extends PhotoHelper {
 			return(u);
 	}
 
-	/**
-	 * Get a user by username.
-	 */
+	// Get a user by username.
 	private PhotoUser getUserByUsername(String username) {
 		PhotoUser ret=null;
 
@@ -101,7 +102,7 @@ public class PhotoSecurity extends PhotoHelper {
 		if(ret==null) {
 			Connection photo=null;
 			try {
-				SpyDB db=new SpyDB(new PhotoConfig());
+				SpyDB db=new SpyDB(getConfig());
 				PreparedStatement st=db.prepareStatement(
 					"select * from wwwusers where username=?"
 					);
@@ -121,9 +122,7 @@ public class PhotoSecurity extends PhotoHelper {
 		return(ret);
 	}
 	
-	/**
-	 * Get a user by recorded Email address.
-	 */
+	// Get a user by recorded Email address.
 	private PhotoUser getUserByEmail(String email) {
 		PhotoUser ret=null;
 
@@ -138,7 +137,7 @@ public class PhotoSecurity extends PhotoHelper {
 		if(ret==null) {
 			Connection photo=null;
 			try {
-				SpyDB db=new SpyDB(new PhotoConfig());
+				SpyDB db=new SpyDB(getConfig());
 				PreparedStatement st=db.prepareStatement(
 					"select * from wwwusers where email=?"
 					);
@@ -190,7 +189,7 @@ public class PhotoSecurity extends PhotoHelper {
 		// If it's not cached, grab it from the DB.
 		if(ret==null) {
 			try {
-				SpyDB db=new SpyDB(new PhotoConfig());
+				SpyDB db=new SpyDB(getConfig());
 				PreparedStatement st=db.prepareStatement(
 					"select * from wwwusers where id=?"
 					);
