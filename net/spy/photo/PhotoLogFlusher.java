@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.3 2000/07/19 03:21:34 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.4 2000/07/26 09:29:13 dustin Exp $
  */
 
 package net.spy.photo;
@@ -18,6 +18,7 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 
 	public PhotoLogFlusher() {
 		super();
+		setName("PhotoLogFlusher");
 	}
 
 	public void doFlush() {
