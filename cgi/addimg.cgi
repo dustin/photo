@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: addimg.cgi,v 1.5 1997/12/07 04:09:42 dustin Exp $
+# $Id: addimg.cgi,v 1.6 1998/04/12 03:29:52 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -81,6 +81,7 @@ if(!($dbh->execute($query)))
 {
     print "Database Error:  $Postgres::error\n<!--\n$query\n-->\n";
     unlink("$ldir/$fn");
+    unlink("$ldir/tn/$fn");
     exit(0);
 }
 
