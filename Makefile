@@ -21,6 +21,9 @@ RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \
 
 CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoUtil.class \
+	net/spy/photo/PhotoDimensions.class \
+	net/spy/photo/PhotoDimensionsImpl.class \
+	net/spy/photo/PhotoDimScaler.class \
 	net/spy/photo/PhotoImageHelper.class \
 	net/spy/photo/PhotoImage.class \
 	net/spy/photo/PhotoLogFlusher.class \

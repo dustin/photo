@@ -53,12 +53,12 @@ public class PhotoMigration01 extends PhotoMigration {
 				PhotoImage image=helper.getImage();
 
 				System.out.println("Image " + id + " is "
-					+ image.width() + "x" + image.height());
+					+ image.getWidth() + "x" + image.getHeight());
 			
 				int dim[]=new int[3];
 				dim[0]=id;
-				dim[1]=image.width();
-				dim[2]=image.height();
+				dim[1]=image.getWidth();
+				dim[2]=image.getHeight();
 
 				v.addElement(dim);
 			}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.62 2001/12/21 07:50:08 dustin Exp $
+ * $Id: PhotoSession.java,v 1.63 2001/12/28 01:54:13 dustin Exp $
  */
 
 package net.spy.photo;
@@ -503,8 +503,8 @@ public class PhotoSession extends Object
 			st.setTimestamp(7,
 				new java.sql.Timestamp(System.currentTimeMillis()));
 			// Set the image width and height in the database.
-			st.setInt(8, photo_image.width());
-			st.setInt(9, photo_image.height());
+			st.setInt(8, photo_image.getWidth());
+			st.setInt(9, photo_image.getHeight());
 			st.executeUpdate();
 
 			query = "select currval('album_id_seq')\n";

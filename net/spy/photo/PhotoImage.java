@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.5 2000/11/10 07:17:18 dustin Exp $
+// $Id: PhotoImage.java,v 1.6 2001/12/28 01:54:13 dustin Exp $
 
 package net.spy.photo;
 
@@ -8,7 +8,12 @@ import java.lang.*;
 import java.util.*;
 import java.io.Serializable;
 
-public class PhotoImage extends Object implements Serializable {
+/**
+ * Represents the image itself, yo.
+ */
+public class PhotoImage extends Object
+	implements Serializable, PhotoDimensions {
+
 	// Meta stuff
 	protected int format_version=2;
 
@@ -41,7 +46,7 @@ public class PhotoImage extends Object implements Serializable {
 		return(image_data.length);
 	}
 
-	public int width() {
+	public int getWidth() {
 		if(_width<0) {
 			try {
 				calcDim();
@@ -52,7 +57,7 @@ public class PhotoImage extends Object implements Serializable {
 		return(_width);
 	}
 
-	public int height() {
+	public int getHeight() {
 		if(_height<0) {
 			try {
 				calcDim();

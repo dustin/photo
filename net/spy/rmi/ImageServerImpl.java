@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.10 2001/10/12 21:45:19 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.11 2001/12/28 01:54:13 dustin Exp $
 
 package net.spy.rmi;
 
@@ -46,14 +46,14 @@ public class ImageServerImpl extends UnicastRemoteObject
 			throw new RemoteException("Error fetching image", e);
 		}
 		// Calculate the width
-		image_data.width();
+		image_data.getWidth();
 		return(image_data);
 	}
 
 	public void storeImage(int image_id, PhotoImage image)
 		throws RemoteException {
 		// Make sure we've calculated the width and height
-		image.width();
+		image.getWidth();
 		if(rhash==null) {
 			getRhash();
 			if(rhash==null) {
@@ -188,8 +188,8 @@ public class ImageServerImpl extends UnicastRemoteObject
 					"update album set tn_width=?, tn_height=?\n"
 						+ " where id=?\n"
 					);
-				st.setInt(1, pi.width());
-				st.setInt(2, pi.height());
+				st.setInt(1, pi.getWidth());
+				st.setInt(2, pi.getHeight());
 				st.setInt(3, image_id);
 				st.executeUpdate();
 			} catch(Exception e) {
