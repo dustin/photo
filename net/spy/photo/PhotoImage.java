@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.3 2000/07/16 08:33:46 dustin Exp $
+// $Id: PhotoImage.java,v 1.4 2000/07/16 08:35:48 dustin Exp $
 
 package net.spy.photo;
 
@@ -80,7 +80,6 @@ public class PhotoImage extends Object implements Serializable {
 		if( ( getIntValue(0) != 0xFF)
 			|| ( getIntValue(1) != 0xD8 )
 			|| ( getIntValue(2) != 0xFF )
-			|| ( getIntValue(3) != 0xE0 )
 			) {
 			throw new Exception("That's not a JPEG");
 		}
