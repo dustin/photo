@@ -44,22 +44,6 @@ public class ExportServlet extends JWHttpServlet {
 			PhotoSessionData sessionData=(PhotoSessionData)ses.getAttribute(
 				PhotoSessionData.SES_ATTR);
 
-			// If we want to construct this for a different user, specify the
-			// username here.
-			if(req.getParameter("user") != null) {
-				User thisUser=sessionData.getUser();
-				if(!thisUser.isInRole("admin")) {
-					throw new ServletException("You are not an admin");
-				}
-				String spec=req.getParameter("user");
-				User thatUser=Persistent.getSecurity().getUser(spec);
-				PhotoSessionData newSess=new PhotoSessionData();
-				newSess.setUser(thatUser);
-				newSess.setOptimalDimensions(
-					sessionData.getOptimalDimensions());
-				sessionData=newSess;
-			}
-
 			SearchForm sf=new SearchForm();
 			sf.setSdirection("desc");
 			Search ps=Search.getInstance();
