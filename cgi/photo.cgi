@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: photo.cgi,v 1.8 1998/04/26 06:19:18 dustin Exp $
+# $Id: photo.cgi,v 1.9 1998/04/28 07:41:41 dustin Exp $
 
 use CGI;
 use Photo;
@@ -154,20 +154,15 @@ sub doFind
     if( (($start+$max) < $n) && $max>0) {
         if(($n-($start+$max))<$max) {
             $nn=($n-($start+$max));
-
-            if($nn==1) {
-                 $nn="match";
-            } else {
-                 $nn="$nn matches";
-            }
+	    $nn=($nn==1)?"match":"$nn matches";
         } else {
             $nn="$max matches";
         }
 
-        print $q->startform(-method=>'POST');
+        print $q->startform(-method=>'POST',-action=>$q->url);
         print $q->hidden(-name=>'qstart', -value=>$start+$max);
 
-        map { print $q->hidden(-name=>$_, -value=>$q->param($_)) }
+        print map { $q->hidden(-name=>$_, -value=>$q->param($_)) . "\n" }
         $q->param;
 
         print $q->submit(-value=>"Next $nn");
@@ -230,8 +225,8 @@ sub doCatView
 
         $t=($r->[2]==1?"image":"images");
 
-        print "<li>$r->[0]:  <a href=\"$Photo::cgidir/photo.cgi?func=search&";
-        print "searchtype=advanced&cat=$r->[1]\">$r->[2] $t</a></li>\n";
+        print "<li>$r->[0]:  <a href=\"$Photo::cgidir/photo.cgi?func=search&".
+        "searchtype=advanced&cat=$r->[1]&maxret=10\">$r->[2] $t</a></li>\n";
     }
 
     print "</ul>\n" . $q->end_html . "\n";
