@@ -1,12 +1,12 @@
 #
-# $Id: MostViewedImagesXd.spt,v 1.1 2003/05/12 05:04:01 dustin Exp $
+# $Id: MostViewedImagesXd.spt,v 1.2 2003/05/12 06:36:16 dustin Exp $
 #
 
 @package
 net.spy.photo.sp.reporting
 
 @description
-Get the top x images by how many times they have been vieweed.
+Get the top x images by how many times they have been viewed.
 
 @sql
 select
