@@ -61,14 +61,10 @@ public class AuthFilter extends SpyObject implements Filter {
 		boolean isguest=true;
 		if(psd != null) {
 			PhotoUser pu=psd.getUser();
-			if(!pu.getUsername().equals("guest")) {
+			if(!pu.isInRole("guest")) {
 				isguest=false;
 			}
 		}
-
-		// The wrapped request providing standard looking auth stuff
-		ServletRequest wrappedRequest=new AuthedServletRequest(
-			hreq, psd.getUser());
 
 		// Do the check whenever we're logged in as guest.
 		if(session.isNew() || isguest) {
@@ -86,6 +82,10 @@ public class AuthFilter extends SpyObject implements Filter {
 				}
 			}
 		}
+
+		// The wrapped request providing standard looking auth stuff
+		ServletRequest wrappedRequest=new AuthedServletRequest(
+			hreq, psd.getUser());
 
 		// Moving right along.
 		chain.doFilter(wrappedRequest, response);
