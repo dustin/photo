@@ -2,13 +2,15 @@
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
+
 <%-- The following tags must be kept as-is --%>
 <photo:initSessionData/>
 <%-- <photo:logRequest/> --%>
 <html><head><title><template:get name='title'/></title>
 <photo:stylesheet url="/style.css"/>
 </head>
-<body background='/~dustin/images/holiday.gif'>
+<body background='<%= props.getProperty("background_img", "") %>'>
 
 <center>
 	<table bgcolor="#000000">
