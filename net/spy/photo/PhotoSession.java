@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.67 2001/12/28 13:13:41 dustin Exp $
+ * $Id: PhotoSession.java,v 1.68 2001/12/28 22:46:16 dustin Exp $
  */
 
 package net.spy.photo;
@@ -72,8 +72,6 @@ public class PhotoSession extends Object
 			sessionData=new PhotoSessionData();
 			// Initialize the user
 			sessionData.setUser(security.getUser("guest"));
-			// Initialize the XML setting
-			initXMLStatus();
 			// Initialize the optimal dimensions
 			sessionData.setOptimalDimensions(
 				new PhotoDimensionsImpl(800, 600));
@@ -136,20 +134,6 @@ public class PhotoSession extends Object
 		// Some things handle their own responses, and return null.
 		if(out!=null) {
 			send_response(out);
-		}
-	}
-
-	// Initialize the XML settings
-	private void initXMLStatus() {
-
-		// Figure out the xml status
-		String agent=request.getHeader("User-Agent").toLowerCase();
-		if(agent!=null) {
-			if(agent.startsWith("mozilla/5")) {
-				xmlraw=true;
-				sessionData.setXmlraw(true);
-				log("Found a Mozilla client, sending raw XML");
-			}
 		}
 	}
 
@@ -296,7 +280,7 @@ public class PhotoSession extends Object
 		// Make sure something was passed in.
 		if(to!=null) {
 			// Make it immediately available.
-			xmlraw=Boolean.getBoolean(to);
+			xmlraw=Boolean.valueOf(to).booleanValue();
 			// Make it available for the session
 			sessionData.setXmlraw(xmlraw);
 		}
