@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoProperties.java,v 1.1 2002/09/13 20:28:46 dustin Exp $
+// $Id: PhotoProperties.java,v 1.2 2002/09/14 00:52:11 dustin Exp $
 
 package net.spy.photo;
 
@@ -105,6 +105,9 @@ public class PhotoProperties extends Properties implements Savable
 		}
 
 		ip.close();
+
+		isModified=false;
+		isNew=false;
 	}
 	// End Savable implementation
 
