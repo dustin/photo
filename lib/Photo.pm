@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.63 1998/12/30 04:46:52 dustin Exp $
+# $Id: Photo.pm,v 1.64 1998/12/30 05:55:19 dustin Exp $
 
 package Photo;
 
@@ -377,9 +377,9 @@ sub displayImage
 
 	$key="photo-image: $img";
 	$tn=0;
-	if($img=~/^tn./) {
+	if($img=~/^tn./o) {
 		$tn=1;
-		$img=~s/^tn.//;
+		$img=~s/^tn.//o;
 	}
 
 	$c=DCache->new;
@@ -781,8 +781,9 @@ sub base64image
 	$type="image/jpg";
 
 	$key="photo-image: $img";
+
 	$tn=0;
-	if($img+~/^tn./o) {
+	if($img=~/^tn./o) {
 		$tn=1;
 		$img=~s/^tn.//o;
 	}
@@ -790,7 +791,6 @@ sub base64image
 	$c=DCache->new;
 
 	if(!$c->checkcache($key)) {
-
 		if($tn) {
 			$self->makeThumbnail($img, $type);
 		} else {
