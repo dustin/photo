@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: Profile.java,v 1.7 2002/11/03 07:33:35 dustin Exp $
+// $Id: Profile.java,v 1.8 2002/12/15 09:24:38 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.SQLException;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -21,19 +22,30 @@ import java.util.Iterator;
 import java.util.Set;
 
 import net.spy.SpyDB;
+import net.spy.db.DBSP;
+import net.spy.db.Savable;
+import net.spy.db.SaveContext;
+import net.spy.db.SaveException;
 
 import net.spy.util.PwGen;
+
+import net.spy.photo.sp.GetGeneratedKey;
+import net.spy.photo.sp.InsertUserProfile;
+import net.spy.photo.sp.InsertProfileACL;
+import net.spy.photo.sp.UpdateUserProfile;
+import net.spy.photo.sp.DeleteACLForProfile;
 
 /**
  * Represents a user in the photo system.
  */
-public class Profile extends Object implements Serializable {
+public class Profile extends Object implements Serializable, Savable {
 	private int id=-1;
 	private String name=null;
 	private String description=null;
 	private Date expires=null;
 
 	private Set acl=null;
+	private boolean isModified=false;
 
 	/**
 	 * Get a new, empty user profile.
@@ -173,114 +185,73 @@ public class Profile extends Object implements Serializable {
 		this.id=id;
 	}
 
+	// Savable implementation
+
+	public boolean isNew() {
+		return(id == -1);
+	}
+
+	public boolean isModified() {
+		return(isModified);
+	}
+
+	public Collection getSavables(SaveContext context) {
+		return(null);
+	}
+
 	/**
 	 * Save the Profile.
 	 */
-	public void save() throws Exception {
-		// Get a DB handle
-		SpyDB db=new SpyDB(new PhotoConfig());
-		Connection conn=null;
-		try {
-			conn=db.getConn();
-			conn.setAutoCommit(false);
-			PreparedStatement st=null;
+	public void save(Connection conn, SaveContext context)
+		throws SaveException, SQLException {
 
-			// Determine whether this is a new user or not.
-			if(id>=0) {
-				st=conn.prepareStatement(
-					"update user_profiles set description=?, expires=? "
-						+ "\twhere id=?"
-					);
-				st.setInt(3, getId());
-			} else {
-				st=conn.prepareStatement(
-					"insert into user_profiles(description, expires, name)\n"
-						+ " values(?, ?, ?)"
-					);
-				st.setString(3, getName());
-			}
+		DBSP db=null;
 
-			// Set the common fields and update.
-			st.setString(1, getDescription());
-			st.setDate(2, new java.sql.Date(expires.getTime()));
-			st.executeUpdate();
-			st.close();
-
-			// For new users, We need to fetch the ID
-			if(id==-1) {
-				Statement st2=conn.createStatement();
-				ResultSet rs=st2.executeQuery(
-					"select currval('user_profiles_profile_id_seq')");
-				rs.next();
-				id=rs.getInt(1);
-				rs.close();
-				st2.close();
-			}
-
-			// OK, now let's save the ACL.
-
-			// First, out with the old.
-			st=conn.prepareStatement("delete from user_profile_acls\n"
-				+ " where profile_id=?");
-			st.setInt(1, getId());
-			st.executeUpdate();
-			st.close();
-
-			// Then in with the new.
-			st=conn.prepareStatement(
-				"insert into user_profile_acls(profile_id,cat_id) values(?,?)");
-
-			for(Iterator it=getACLEntries().iterator(); it.hasNext(); ) {
-				Integer i=(Integer)it.next();
-
-				st.setInt(1, getId());
-				st.setInt(2, i.intValue());
-				st.executeUpdate();
-			}
-			st.close();
-			conn.commit();
-
-		} catch(Exception e) {
-			if(conn!=null) {
-				conn.rollback();
-			}
-			throw e;
-		} finally {
-			if(conn!=null) {
-				conn.setAutoCommit(true);
-			}
-			// Tell it we're done.
-			db.close();
-		}
-	}
-
-	/**
-	 * Test.
-	 */
-	public static void main(String args[]) throws Exception {
-		Profile p=null;
-		if(args.length>0) {
-			p=new Profile(args[0]);
+		// Determine whether this is a new user or not.
+		if(isNew()) {
+			db=new InsertUserProfile(conn);
+			db.set("name", getName());
 		} else {
-			p=new Profile();
-			// p.addACLEntry(19);
-			// p.addACLEntry(15);
-			// p.addACLEntry(9);
-			// p.addACLEntry(4);
-			// p.addACLEntry(8);
-			// p.addACLEntry(3);
-
-			p.addACLEntry(8);
-			p.addACLEntry(19);
-			p.addACLEntry(4);
-			p.addACLEntry(1);
-			p.addACLEntry(3);
-			p.addACLEntry(9);
-
-			p.setDescription("Noelani's Special Thing");
-
-			p.save();
+			db=new UpdateUserProfile(conn);
+			db.set("profile_id", getId());
 		}
-		System.out.println(p);
+
+		// Set the common fields and update.
+		db.set("description", getDescription());
+		db.set("expires", new java.sql.Date(expires.getTime()));
+		db.executeUpdate();
+		db.close();
+
+		// For new users, We need to fetch the ID
+		if(isNew()) {
+			GetGeneratedKey gkey=new GetGeneratedKey(conn);
+			gkey.setSeq("user_profiles_profile_id_seq");
+			ResultSet rs=gkey.executeQuery();
+			rs.next();
+			id=rs.getInt("key");
+			rs.close();
+			gkey.close();
+		}
+
+		// OK, now let's save the ACL.
+
+		// First, out with the old.
+		DeleteACLForProfile dap=new DeleteACLForProfile(conn);
+		dap.setProfileId(getId());
+		dap.executeUpdate();
+		dap.close();
+
+		// Then in with the new.
+		InsertProfileACL ins=new InsertProfileACL(conn);
+		ins.setProfileId(getId());
+
+		for(Iterator it=getACLEntries().iterator(); it.hasNext(); ) {
+			Integer i=(Integer)it.next();
+
+			ins.setCatId(i.intValue());
+			ins.executeUpdate();
+		}
+		ins.close();
 	}
+
 }

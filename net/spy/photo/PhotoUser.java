@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.24 2002/12/15 09:02:25 dustin Exp $
+// $Id: PhotoUser.java,v 1.25 2002/12/15 09:24:38 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 package net.spy.photo;
@@ -314,11 +314,11 @@ public class PhotoUser extends Object implements Serializable, Savable {
 		DBSP db=null;
 
 		// Determine whether this is a new user or not.
-		if(id>=0) {
+		if(isNew()) {
+			db=new InsertUser(conn);
+		} else {
 			db=new ModifyUser(conn);
 			db.set("user_id", getId());
-		} else {
-			db=new InsertUser(conn);
 		}
 
 		// Set the common fields and update.

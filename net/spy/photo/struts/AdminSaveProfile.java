@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveProfile.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: AdminSaveProfile.java,v 1.3 2002/12/15 09:24:38 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -15,7 +15,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import net.spy.db.Saver;
+
 import net.spy.photo.Profile;
+import net.spy.photo.PhotoConfig;
 
 /**
  * Action used to save a new profile.
@@ -54,7 +57,8 @@ public class AdminSaveProfile extends AdminAction {
 
 		// Save the profile
 		try {
-			profile.save();
+			Saver saver=new Saver(new PhotoConfig());
+			saver.save(profile);
 		} catch(Exception e) {
 			throw new ServletException("Error saving profile", e);
 		}

@@ -1,0 +1,18 @@
+#
+# $Id: InsertUserProfile.spt,v 1.1 2002/12/15 09:24:38 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Insert a new user profile
+
+@sql
+insert into user_profiles(description, expires, name)
+	values(?, ?, ?)
+
+@params
+description required VARCHAR Description of this profile
+expires required DATE The date this profile expires
+name required VARCHAR The name of this profile

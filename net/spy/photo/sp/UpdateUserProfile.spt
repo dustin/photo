@@ -1,0 +1,19 @@
+#
+# $Id: UpdateUserProfile.spt,v 1.1 2002/12/15 09:24:38 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Update a user profile
+
+@sql
+update user_profiles set description=?, expires=?
+	where id=?
+
+@params
+description required VARCHAR Description of this profile
+expires required DATE The date this profile expires
+profile_id required INTEGER The ID of this profile
+
