@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.16 2002/06/16 07:14:13 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.17 2002/06/17 00:08:59 dustin Exp $
  */
 
 package net.spy.photo;
@@ -19,7 +19,6 @@ import net.spy.photo.rmi.*;
  */
 public class PhotoImageHelper extends PhotoHelper
 { 
-	private static RemoteImageServer server = null;
 	private int image_id=-1;
 	private PhotoImage image_data=null;
 
@@ -75,7 +74,7 @@ public class PhotoImageHelper extends PhotoHelper
 
 			// Grab it from the server
 			log("Grabbing " + key + " from image server");
-			ensureConnected();
+			ImageServer server=ImageServerFactory.getImageServer();
 			rv=server.getImage(image_id, dim);
 
 			// If it's small enough, cache it.
@@ -108,33 +107,9 @@ public class PhotoImageHelper extends PhotoHelper
 	 * Store an image.
 	 */
 	public void storeImage(PhotoImage image_data) throws Exception {
-		ensureConnected();
 		log("Storing image " + image_id);
+		ImageServer server=ImageServerFactory.getImageServer();
 		server.storeImage(image_id, image_data);
 		log("Stored image " + image_id);
-	}
-
-	// Make sure we're connected to an image server
-	private synchronized void ensureConnected() throws Exception {
-		boolean needconn=true;
-
-		try {
-			// If ping works, we don't need a new connection
-			if(server.ping()) {
-				needconn=false;
-			}
-		} catch(Exception e) {
-			// nevermind
-		}
-
-		if(needconn) {
-			log("Connecting to RemoteImageServer");
-			String serverpath=conf.get("imageserver");
-			log("Locating " + serverpath);
-			server=(RemoteImageServer)Naming.lookup(serverpath);
-			if(server==null) {
-				throw new Exception("Can't get a server object");
-			}
-		}
 	}
 }
