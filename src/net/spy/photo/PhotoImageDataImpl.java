@@ -258,11 +258,17 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	}
 
 	// Serialization voodoo
+	protected abstract Object writeReplace() throws ObjectStreamException;
+	/*
 	private Object writeReplace() throws ObjectStreamException {
-		return(new SerializedForm(id));
+		return(new SerializedForm(getId()));
 	}
+	*/
 
-	private static class SerializedForm implements Serializable {
+	/** 
+	 * Serialized form of a PhotoImageDataImpl.
+	 */
+	public static class SerializedForm implements Serializable {
 		private int imgId=0;
 
 		public SerializedForm(int i) {

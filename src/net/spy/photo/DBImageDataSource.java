@@ -1,9 +1,10 @@
-// Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
+// Copyright (c) 2005  Dustin Sallings <dustin@spy.net>
 
 package net.spy.photo;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.io.ObjectStreamException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -94,6 +95,10 @@ public class DBImageDataSource extends SpyObject
 
 		public void addKeyword(Keyword k) {
 			super.addKeyword(k);
+		}
+
+		protected Object writeReplace() throws ObjectStreamException {
+			return(new PhotoImageDataImpl.SerializedForm(getId()));
 		}
 	}
 
