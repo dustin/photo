@@ -53,6 +53,15 @@ sub addTail
 
     showTemplate("$includes/tail.inc", %p);
 }
+
+sub myself
+{
+    my($self);
+    $self=$ENV{REQUEST_URI};
+    $self=~s/(.*?)\?.*/$1/;
+    return($self);
+}
+
 sub showTemplate
 {
     my($fn, %p)=@_;
@@ -66,6 +75,7 @@ sub showTemplate
     $p{'CGIDIR'}=$cgidir;
     $p{'IMAGEDIR'}=$imagedir;
     $p{'ITOP'}=$Itop;
+    $P{'SELF_URI'}=&myself;
 
     $p{'ALL_VARS'}=join("\n", sort(keys(%p)));
 
