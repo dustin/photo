@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CursorAction.java,v 1.6 2003/05/25 08:17:41 dustin Exp $
+// $Id: CursorAction.java,v 1.7 2003/05/26 08:02:52 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -17,6 +17,7 @@ import net.spy.photo.PhotoSessionData;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
 
 /**
  * Action to adjust a cursor before sending it to a result page.
@@ -38,17 +39,19 @@ public class CursorAction extends PhotoAction {
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
 
-		CursorForm cf=(CursorForm)form;
+		DynaActionForm cf=(DynaActionForm)form;
 
 		// Verify there's something to do.
-		if(cf!=null && cf.getStartOffset()!=null && cf.getWhichCursor()!=null) {
+		Integer offset=(Integer)cf.get("startOffset");
+		String whichCursor=(String)cf.get("whichCursor");
+		if(offset!=null && whichCursor!=null) {
 			// Get the session data
 			PhotoSessionData sessionData=getSessionData(request);
 			// Get the cursoor
 			Cursor c=null;
-			if(cf.getWhichCursor().equals("results")) {
+			if(whichCursor.equals("results")) {
 				c=sessionData.getResults();
-			} else if(cf.getWhichCursor().equals("comments")) {
+			} else if(whichCursor.equals("comments")) {
 				c=sessionData.getComments();
 			} else {
 				throw new ServletException(
@@ -56,8 +59,7 @@ public class CursorAction extends PhotoAction {
 			}
 
 			// And set the offset.
-			int offset=Integer.parseInt(cf.getStartOffset());
-			c.set(offset);
+			c.set(offset.intValue());
 			System.out.println("CursorAction sought to " + offset
 				+ ", yielding " + c);
 		}

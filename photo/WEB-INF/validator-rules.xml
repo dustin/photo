@@ -43,6 +43,18 @@
 
    <global>
 
+
+			<!-- Looks at secondProperty -->
+			<validator name="twofields"
+				classname="net.spy.photo.struts.ValidationUtils"
+				method="validateTwoFields"
+				methodParams="java.lang.Object,
+					org.apache.commons.validator.ValidatorAction,
+					org.apache.commons.validator.Field,
+					org.apache.struts.action.ActionErrors,
+					javax.servlet.http.HttpServletRequest"
+				msg="errors.twofields"/>
+
       <validator name="required"
             classname="org.apache.struts.validator.FieldChecks"
                method="validateRequired"

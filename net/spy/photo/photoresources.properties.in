@@ -110,12 +110,12 @@ errors.header=<br/>The following errors were found:\
 	<div class="errors"> \
 	<ul>
 errors.footer=</ul></div>
-errors.required={0} is required.
-errors.minlength={0} can not be less than {1} characters.
-
-# Login errors
-error.login.username=<li>Username required.</li>
-error.login.password=<li>Password required.</li>
+errors.required=<li>{0} is required.</li>
+errors.minlength=<li>{0} can not be less than {1} characters.</li>
+errors.maxlength=<li>{0} can not be more than {1} characters.</li>
+errors.email=<li>Your email address looks invalid.</li>
+errors.twofields=<li>Passwords don't match.</li>
+errors.invalid=<li>{0} is not valid.</li>
 
 # Search errors
 error.search.fieldjoin=<li>fieldjoin may only be ``or'' or ``and''</li>
@@ -143,10 +143,6 @@ error.upload.id.nfe=<li>Image ID wasn't a number</li>
 error.savesearch.name=<li>Name of search required</li>
 error.savesearch.search=<li>Search to save required</li>
 
-# AdminifyForm
-error.adminify.invaction=<li>Action parameter must be ``setadmin'' \
-	or ``unsetadmin''</li>
-
 # new user (from profile) form
 error.newuser.username=<li>Username not provided</li>
 error.newuser.realname=<li>Invalid ``real name'' parameter</li>
@@ -163,10 +159,6 @@ error.setsize.dims.e=<li>Invalid ``dims'' parameter ({0})</li>
 error.changepw.oldpw=<li>Missing old password parameter</li>
 error.changepw.newpw1=<li>New password must be at least six characters</li>
 error.changepw.mismatch=<li>Old and new passwords don't match</li>
-
-# Forgot pw form
-error.forgotpw.username=<li>Must supply email address or username</li>
-error.forgotpw.guest=<li>Cannot change password for guest</li>
 
 # Admin user form
 error.adminuserform.userId=<li>User ID field not supplied</li>

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NewUserAction.java,v 1.8 2003/05/25 08:17:41 dustin Exp $
+// $Id: NewUserAction.java,v 1.9 2003/05/26 08:02:52 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -29,6 +29,7 @@ import net.spy.photo.Profile;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.validator.DynaValidatorForm;
 
 /**
  * Create a user from a profile.
@@ -50,29 +51,29 @@ public class NewUserAction extends PhotoAction {
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
 
-		NewUserForm nuf=(NewUserForm)form;
+		DynaValidatorForm nuf=(DynaValidatorForm)form;
 
 		// Get the profile
-		Profile p=new Profile(nuf.getProfile());
+		Profile p=new Profile((String)nuf.get("profile"));
 
 		// Verify the user doesn't already exist.
 		PhotoUser pu=null;
+		String username=(String)nuf.get("username");
 		try {
-			pu=Persistent.getSecurity().getUser(nuf.getUsername());
+			pu=Persistent.getSecurity().getUser(username);
 		} catch(NoSuchPhotoUserException e) {
 			// This is supposed to happen
 		}
 		if(pu!=null) {
-			throw new ServletException("User " + nuf.getUsername()
-				+ " already exists.");
+			throw new ServletException("User " + username + " already exists.");
 		}
 
 		// Get the new user and fill it with the data from the form
 		pu=new PhotoUser();
-		pu.setUsername(nuf.getUsername());
-		pu.setPassword(nuf.getPassword());
-		pu.setRealname(nuf.getRealname());
-		pu.setEmail(nuf.getEmail());
+		pu.setUsername(username);
+		pu.setPassword((String)nuf.get("password"));
+		pu.setRealname((String)nuf.get("realname"));
+		pu.setEmail((String)nuf.get("email"));
 
 		// Populate the ACL entries.
 		for(Iterator it=p.getACLEntries().iterator(); it.hasNext();) {
@@ -87,7 +88,7 @@ public class NewUserAction extends PhotoAction {
 		// Recache the photo stuff and get the cached version.
 		PhotoUser.recache();
 		// Get the user from the cache
-		pu=PhotoUser.getPhotoUser(nuf.getUsername());
+		pu=PhotoUser.getPhotoUser(username);
 
 		// Get the session data and assign the new credentials
 		PhotoSessionData sessionData=getSessionData(request);

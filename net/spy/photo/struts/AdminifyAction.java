@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminifyAction.java,v 1.3 2003/05/25 08:17:41 dustin Exp $
+// $Id: AdminifyAction.java,v 1.4 2003/05/26 08:02:52 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -17,6 +17,7 @@ import net.spy.photo.PhotoSessionData;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
 
 /**
  * Action for setting admin status.
@@ -40,21 +41,17 @@ public class AdminifyAction extends PhotoAction {
 
 		ActionForward rv=null;
 
-		AdminifyForm af=(AdminifyForm)form;
+		DynaActionForm af=(DynaActionForm)form;
 
 		PhotoSessionData sessionData=getSessionData(request);
 
-		if(af.getAction().equals("setadmin")) {
-			try {
-				sessionData.setAdmin();
-			} catch(PhotoException pe) {
-				throw new ServletException("Error setting admin", pe);
-			}
-		} else if(af.getAction().equals("unsetadmin")) {
+		String action=(String)af.get("action");
+		if(action.equals("setadmin")) {
+			sessionData.setAdmin();
+		} else if(action.equals("unsetadmin")) {
 			sessionData.unSetAdmin();
 		} else {
-			throw new ServletException("Invalid adminify action:  "
-				+ af.getAction());
+			throw new ServletException("Invalid adminify action:  " + action);
 		}
 
 		rv=mapping.findForward("success");

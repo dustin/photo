@@ -22,7 +22,9 @@
 			<!-- Comment form -->
 
 			<form name="commentForm">
-				<field property="imageId" depends="required"/>
+				<field property="imageId" depends="required">
+					<arg0 key="Image ID" resource="false"/>
+				</field>
 				<field property="comment" depends="required,minlength">
 					<arg0 key="Comment" resource="false"/>
 					<arg1 name="minlength" key="${var:minlength}" resource="false"/>
@@ -34,7 +36,71 @@
 			</form>
 
 			<form name="addToGalleryForm">
-				<field property="id" depends="required"/>
+				<field property="id" depends="required">
+					<arg0 key="Image ID" resource="false"/>
+				</field>
+			</form>
+
+			<form name="loginForm">
+				<field property="username" depends="required">
+					<arg0 key="Username" resource="false"/>
+				</field>
+				<field property="password" depends="required">
+					<arg0 key="Password" resource="false"/>
+				</field>
+			</form>
+
+			<form name="adminifyForm">
+				<field property="action" depends="required,mask">
+					<arg0 key="Admin action" resource="false"/>
+					<var>
+						<var-name>mask</var-name>
+						<var-value>(setadmin|unsetadmin)</var-value>
+					</var>
+				</field>
+			</form>
+
+			<form name="newUserForm">
+				<field property="username" depends="required">
+					<arg0 key="Username" resource="false"/>
+				</field>
+				<field property="realname" depends="required,minlength">
+					<arg0 key="Real name" resource="false"/>
+					<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+					<var>
+						<var-name>minlength</var-name>
+						<var-value>3</var-value>
+					</var>
+				</field>
+				<field property="profile" depends="required,minlength,maxlength">
+					<arg0 key="Profile ID" resource="false"/>
+					<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+					<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+					<var>
+						<var-name>minlength</var-name>
+						<var-value>16</var-value>
+					</var>
+					<var>
+						<var-name>maxlength</var-name>
+						<var-value>16</var-value>
+					</var>
+				</field>
+				<field property="email" depends="required,email"/>
+				<field property="password" depends="required,minlength">
+					<arg0 key="Password" resource="false"/>
+					<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+					<var>
+						<var-name>minlength</var-name>
+						<var-value>6</var-value>
+					</var>
+				</field>
+				<field property="pass2" depends="required,twofields">
+					<arg0 key="Password confirm" resource="false"/>
+					<var>
+						<var-name>secondproperty</var-name>
+						<var-value>password</var-value>
+					</var>
+				</field>
 			</form>
 
     </formset>

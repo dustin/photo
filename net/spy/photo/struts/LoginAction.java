@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginAction.java,v 1.12 2003/05/25 08:17:41 dustin Exp $
+// $Id: LoginAction.java,v 1.13 2003/05/26 08:02:52 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -20,6 +20,7 @@ import net.spy.photo.PhotoUserException;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
 
 /**
  * Validate user credentials and perform a login.
@@ -43,13 +44,14 @@ public class LoginAction extends PhotoAction {
 
 		ActionForward rv=null;
 
-		LoginForm lf=(LoginForm)form;
+		DynaActionForm lf=(DynaActionForm)form;
 
 		PhotoSessionData sessionData=getSessionData(request);
 
-		PhotoUser user=Persistent.getSecurity().getUser(lf.getUsername());
+		PhotoUser user=Persistent.getSecurity().getUser(
+			(String)lf.get("username"));
 
-		if(user.checkPassword(lf.getPassword())) {
+		if(user.checkPassword((String)lf.get("password"))) {
 			sessionData.setUser(user);
 
 			PhotoLogEntry ple=new PhotoLogEntry(user.getId(), "Login",request);
@@ -63,7 +65,8 @@ public class LoginAction extends PhotoAction {
 		}
 
 		// Find out of the user wanted to upgrade to admin privs after 
-		if(lf.getAdmin()) {
+		Boolean bol=(Boolean)lf.get("admin");
+		if(bol.booleanValue()) {
 			System.err.println(user + " logged in as admin");
 			rv=mapping.findForward("setadmin");
 		} else {

@@ -7,14 +7,44 @@
 <struts-config>
 
   <form-beans>
-    <form-bean name="loginForm" type="net.spy.photo.struts.LoginForm"/>
-    <form-bean name="adminifyForm" type="net.spy.photo.struts.AdminifyForm"/>
+
+		<form-bean name="loginForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="username" type="java.lang.String"/>
+			<form-property initial="" name="password" type="java.lang.String"/>
+			<form-property initial="false" name="admin" type="java.lang.Boolean"/>
+		</form-bean>
+
+		<form-bean name="adminifyForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="action" type="java.lang.String"/>
+		</form-bean>
+
     <form-bean name="searchForm" type="net.spy.photo.struts.SearchForm"/>
-    <form-bean name="cursorForm" type="net.spy.photo.struts.CursorForm"/>
+
+   <form-bean name="cursorForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="startOffset" type="java.lang.Integer"/>
+			<form-property name="whichCursor" type="java.lang.String"/>
+		</form-bean>
+
     <form-bean name="uploadForm" type="net.spy.photo.struts.UploadForm"/>
     <form-bean name="saveSearchForm"
 			type="net.spy.photo.struts.SaveSearchForm"/>
-    <form-bean name="newUserForm" type="net.spy.photo.struts.NewUserForm"/>
+
+    <form-bean name="newUserForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="username" type="java.lang.String"/>
+			<form-property name="password" type="java.lang.String"/>
+			<form-property name="pass2" type="java.lang.String"/>
+			<form-property name="realname" type="java.lang.String"/>
+			<form-property name="email" type="java.lang.String"/>
+			<form-property name="profile" type="java.lang.String"/>
+		</form-bean>
+
     <form-bean name="setSizeForm" type="net.spy.photo.struts.SetSizeForm"/>
 
     <form-bean name="changePWForm" type="net.spy.photo.struts.ChangePWForm"/>
@@ -57,6 +87,7 @@
 	<action    path="/login"
 		type="net.spy.photo.struts.LoginAction"
 		input="/credform.jsp"
+		scope="request"
 		name="loginForm">
 		<forward name="success" path="/index.jsp" />
 		<forward name="setadmin" path="/adminify.do?action=setadmin" />
