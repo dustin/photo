@@ -108,16 +108,22 @@
 		<foreach list="${lazy-wars}" target="install-lazy-war-var" param="which"/>
 	</target>
 
-	<target name="photo.war" depends="photo.jar">
-		<jar jarfile="${BUILDTOP}/photo.war" basedir="." excludes="**">
-			<zipfileset dir="photo" prefix="">
-				<patternset refid="arch-stuff"/>
-			</zipfileset>
-			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF/lib" includes="photo.jar"/>
-			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF" includes="photo.conf">
-				<patternset refid="arch-stuff"/>
-			</zipfileset>
-		</jar>
+	<target name="photo.war">
+		<antcall target="war-var">
+			<param name="which" value="photo"/>
+		</antcall>
+	</target>
+	<target name="photodemo.war">
+		<antcall target="war-var">
+			<param name="which" value="photodemo"/>
+		</antcall>
+	</target>
+
+	<target name="install-demo" description="Install demo war"
+		depends="photodemo.war">
+		<antcall target="install-lazy-war-var">
+			<param name="which" value="photodemo"/>
+		</antcall>
 	</target>
 
 	<target name="war-var" depends="photo.jar">

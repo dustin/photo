@@ -35,7 +35,7 @@
 		<td>
 			<% if(sessionData.getLastImageSeen() != 0) { %>
 				<photo:imgLink id="<%= sessionData.getLastImageSeen() %>"
-					alt="<%= "Image " + sessionData.getLastImageSeen() %>"
+					alt='<%= "Image " + sessionData.getLastImageSeen() %>'
 					showThumbnail='true'/>
 				<%
 					String theUrl="/viewSession.do?id="
