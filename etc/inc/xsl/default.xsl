@@ -333,6 +333,8 @@
 					</td>
 					<td width="25%" bgcolor="#efefff" valign="top">
 						<font size="-1">
+						ID:  <xsl:value-of select="search_result[1]/IMAGE"/>
+							<br/>
 						Keywords: <xsl:value-of select="search_result[1]/KEYWORDS"/>
 							<br/>
 						Category: <xsl:value-of select="search_result[1]/CAT"/><br/>
@@ -347,6 +349,8 @@
 				<xsl:if test="search_result[2]">
 				<td width="25%" bgcolor="#efefff" valign="top">
 					<font size="-1">
+					ID:  <xsl:value-of select="search_result[2]/IMAGE"/>
+						<br/>
 					Keywords: <xsl:value-of select="search_result[2]/KEYWORDS"/>
 						<br/>
 					Category: <xsl:value-of select="search_result[2]/CAT"/><br/>
@@ -420,18 +424,19 @@
 		  src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}&amp;scale={SCALED_WIDTH}x{SCALED_HEIGHT}"/>
 	</center>
 	<p/>
-	Category:  <xsl:value-of select="CAT"/><p/>
-	Size:  <xsl:value-of select="WIDTH"/>x<xsl:value-of select="HEIGHT"/>
-		(<xsl:value-of select="SIZE"/> bytes)<p/>
-	Taken:  <xsl:value-of select="TAKEN"/><p/>
-	Added:  <xsl:value-of select="TS"/> by <xsl:value-of select="ADDEDBY"/><p/>
-	Keywords:  <xsl:value-of select="KEYWORDS"/><p/>
-	Info:<br/><xsl:apply-templates select="DESCR"/><p/>
+	<b>Category</b>:  ``<xsl:value-of select="CAT"/>''&#160;
+	<b>Keywords</b>:  <i><xsl:value-of select="KEYWORDS"/></i><br/>
+	<b>Size</b>:  <xsl:value-of select="WIDTH"/>x<xsl:value-of select="HEIGHT"/>
+		(<xsl:value-of select="SIZE"/> bytes)<br/>
+	<b>Taken</b>:  <xsl:value-of select="TAKEN"/>&#160;
+	<b>Added</b>:  <xsl:value-of select="TS"/>
+		by <xsl:value-of select="ADDEDBY"/><br/>
+	<b>Info</b>:<blockquote><xsl:apply-templates select="DESCR"/></blockquote>
 
-	<a href="{/page/meta_stuff/self_uri}?func=logview&amp;view=viewers&amp;which={IMAGE}">
-	Who's seen this?</a><br/>
-	<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={IMAGE}">Linkable image</a><br/>
-	<a href="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}">Full Size Image</a><br/>
+	[<a href="{/page/meta_stuff/self_uri}?func=logview&amp;view=viewers&amp;which={IMAGE}">
+	Who's seen this?</a>] | 
+	[<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={IMAGE}">Linkable image</a>] |
+	[<a href="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}">Full Size Image</a>]
 
 	<xsl:if test="comments/photo_comment">
 		<p class="comments">
