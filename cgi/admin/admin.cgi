@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.4 1998/05/21 06:20:03 dustin Exp $
+# $Id: admin.cgi,v 1.5 1998/09/04 04:01:51 dustin Exp $
 
 use CGI;
 use Photo;
@@ -43,6 +43,7 @@ sub doDisplay
     $s=$p->doQuery($query);
 
     @r=@{$s->fetch};
+    $s->finish;
     @mapme=qw(OID IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM);
     map { $p{$mapme[$_]}=$r[$_] } (0..$#r);
 
@@ -51,11 +52,11 @@ sub doDisplay
     $p{'CATS'}="";
     $query ="select * from cat order by name";
     $s=$p->doQuery($query);
-    while($r=$s->fetch)
-    {
+    while($r=$s->fetch) {
 	$tmp=($r->[0]==$p{'CATNUM'})?"selected":"";
 	$p{'CATS'}.="    <option value=\"$r->[0]\" $tmp>$r->[1]\n";
     }
+    $s->finish;
 
     $p->showTemplate("$Photo::includes/admin/display.inc", %p);
 }
@@ -69,14 +70,12 @@ sub editCat
 
     print $q->start_html(-title=>"Editing category $cat", -bgcolor=>"#fFfFfF");
 
-    if($cat>0)
-    {
+    if($cat>0) {
 	$query="select * from cat where id=$cat;\n";
 	$s=$p->doQuery($query);
 	$r=$s->fetch;
-    }
-    else
-    {
+	$s->finish;
+    } else {
 	$r=[0,''];
     }
 
@@ -115,14 +114,14 @@ sub listRecent
     }
     $i=$maxret;
 
-    while($r=$s->fetch)
-    {
+    while($r=$s->fetch) {
         ($p{'AID'},$p{'CAT'},$p{'OID'},$p{'BCAT'},$p{'KEYWORDS'},
 	 $p{'TAKEN'},$p{'TS'},$p{'IMAGE'})=@{$r};
          $p->showTemplate("$Photo::includes/admin/recent_row.inc", %p);
 
 	 last if(--$i==0);
     }
+    $s->finish;
 
     print "</table>\n";
 
@@ -159,13 +158,13 @@ sub listUsers
     $query="select username from wwwusers order by username;";
     $s=$p->doQuery($query);
 
-    while($r=$s->fetch)
-    {
+    while($r=$s->fetch) {
          print "    <li>\n\t";
          print "<a href=\"/cgi-bin/dustin/photo/admin/admin.cgi".
 	       "?func=edituser&user=$r->[0]\">";
          print "$r->[0]</a></li>\n";
     }
+    $s->finish;
 
     print <<EOF;
 </ul>
@@ -187,15 +186,13 @@ sub editUser
     $user=$q->param('user');
 
 
-    if($user ne "")
-    {
+    if($user ne "") {
         $query="select * from wwwusers where username='$user';";
         $s=$p->doQuery($query);
 
         $r=$s->fetch;
-    }
-    else
-    {
+	$s->finish;
+    } else {
         $r=['', '', '', '', ''];
     }
 
@@ -235,10 +232,8 @@ sub editUser
 
     $s=$p->doQuery($query);
 
-    while($r=$s->fetch)
-    {
-        if($ok[$r->[0]]==1)
-        {
+    while($r=$s->fetch) {
+        if($ok[$r->[0]]==1) {
 	    $checkedon="checked";
 	    $checkedoff="";
 	    $color="007f00";
@@ -257,6 +252,7 @@ sub editUser
         print "name=\"cat$r->[0]\" $checkedoff value=\"0\">\n";
         print "</td></tr>\n";
     }
+    $s->finish;
 
     print <<EOF;
 </table>
@@ -286,8 +282,7 @@ sub listCats
 </tr>
 EOF
 
-    while($r=$s->fetch)
-    {
+    while($r=$s->fetch) {
         print "<tr>";
         print "<td><a href=\"$Photo::cgidir/admin/admin.cgi";
 	print "?func=editcat&cat=$r->[0]\">";
@@ -295,6 +290,7 @@ EOF
         print "<td>$r->[1]</td>\n";
         print "<tr>";
     }
+    $s->finish;
 
     print <<EOF;
 </table>
@@ -384,15 +380,14 @@ sub saveUser
     $p->doQuery($query);
     $s=$p->doQuery($query);
 
-    while($r=$s->fetch)
-    {
-	if($in{"cat$r->[0]"}==1)
-	{
+    while($r=$s->fetch) {
+	if($in{"cat$r->[0]"}==1) {
 	    $query="insert into wwwacl values('$in{'username'}', $r->[0])\n";
 	    print "<!-- $query -->\n";
 	    $p->doQuery($query);
 	}
     }
+    $s->finish;
 
     listUsers($q,$p);
 }
