@@ -9,7 +9,7 @@ page.links.size=[Size]
 page.links.sessions=[Who's On]
 page.links.logout=[Logout]
 
-page.content.footer=Copyright &copy; 1997-2004 Dustin Sallings of \
+page.content.footer=Copyright &copy; 1997-2005 Dustin Sallings of \
 	<a href="http://www.spy.net/">SPY Internetworking</a>. \
 	<br/> \
 	All images and other data within these pages \
