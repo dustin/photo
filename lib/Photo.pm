@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.48 1998/10/17 21:59:04 dustin Exp $
+# $Id: Photo.pm,v 1.49 1998/10/20 03:59:43 dustin Exp $
 
 package Photo;
 
@@ -292,7 +292,7 @@ sub displayImage
 		$type="image/gif";
 	}
 
-	print $q->header($type);
+	print $q->header($type, -expires => '+90d');
 
 	$key="photo-image: $img";
 	$tn=0;
