@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.2 2002/06/17 03:52:32 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.3 2002/06/24 22:06:14 dustin Exp $
 
 package net.spy.photo;
 
@@ -73,7 +73,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 			if(pi.equals(dim) || pi.smallerThan(dim)) {
 				log("Requested scaled size for " + image_id
 					+ "(" + dim + ") is equal to or "
-					+ " greater than its full size, ignoring.");
+					+ "greater than its full size, ignoring.");
 			} else {
 				// Scale it
 				pi=scaleImage(pi, dim);
