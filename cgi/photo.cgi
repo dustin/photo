@@ -1,11 +1,11 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: photo.cgi,v 1.5 1998/04/24 17:48:17 dustin Exp $
+# $Id: photo.cgi,v 1.6 1998/04/25 03:10:12 dustin Exp $
 
 use CGI;
-
-require 'photolib.pl';
+use Photo;
+use strict;
 
 sub buildQuery
 {
@@ -133,9 +133,8 @@ sub buildQuery
 
 sub doFind
 {
-    my($q)=@_;
-    my($query, $s, $n, $i, $start, $max, %p, %ok, $n, $nn);
-    my(@r);
+    my($q, $p)=@_;
+    my($query, $s, $i, $start, $max, %p, %ok, $n, $nn, $r);
 
     print $q->start_html(
         -title=>'Find results',
@@ -146,15 +145,15 @@ sub doFind
 
     print "\n<!-- Auth query:\n$query\n-->\n";
 
-    $s=doQuery($query);
+    $s=$p->doQuery($query);
 
-    while(@r=@{$s->fetch}) { $ok{$r[3]}=1; }
+    while($r=$s->fetch) { $ok{$r->[3]}=1; }
 
     $query=buildQuery($q);
 
     print "<!--\n$query\n-->\n";
 
-    $s=doQuery($query);
+    $s=$p->doQuery($query);
 
     $n=$s->rows;
     $i=0;
@@ -168,17 +167,17 @@ sub doFind
 
     print "<h2>Found $n matches:</h2><br><ul>\n";
 
-    while(($p{OID}, $p{KEYWORDS}, $p{DESCR}, $p{CAT}, $p{SIZE}, $p{TAKEN},
-        $p{TS}, $p{IMAGE})
-        =@{$s->fetch})
+    while($r=$s->fetch)
     {
+        ($p{OID}, $p{KEYWORDS}, $p{DESCR}, $p{CAT}, $p{SIZE}, $p{TAKEN},
+            $p{TS}, $p{IMAGE})=@{$r};
         next if(!defined($ok{$p{CAT}}));
         next if($i++<$start);
 
         last if( $max>0 && $i-$start>$max);
 
         print "<li>\n";
-        showTemplate("$includes/findmatch.inc", %p);
+        $p->showTemplate("$Photo::includes/findmatch.inc", %p);
         print "</li>\n";
     }
 
@@ -213,7 +212,7 @@ sub doFind
 
 sub doDisplay
 {
-    my($q)=@_;
+    my($q, $p)=@_;
     my($query, $s, @r, @mapme, %p, $n);
     %p=();
 
@@ -224,7 +223,7 @@ sub doDisplay
 
     print "<!-- Query:\n$query\n-->\n";
 
-    $s=doQuery($query);
+    $s=$p->doQuery($query);
 
     @r=@{$s->fetch};
     @mapme=qw(OID IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM);
@@ -234,21 +233,21 @@ sub doDisplay
     username='$ENV{REMOTE_USER}'\n";
     $query.="    and cat=$p{CATNUM}\n";
 
-    $s=doQuery($query);
+    $s=$p->doQuery($query);
 
     ($n)=@{$s->fetch};
 
     if($n==0) {
         print "ACL ERROR!!!  We don't want your type here.\n";
     } else {
-        showTemplate("$includes/display.inc", %p);
+        $p->showTemplate("$Photo::includes/display.inc", %p);
     }
 }
 
 sub doCatView
 {
-    my($q)=@_;
-    my(@ok, $ok, @r, $query);
+    my($q, $p)=@_;
+    my(@ok, $ok, $r, $query, $s, $t);
 
     print $q->start_html(
 	-title=>'View Images by Category',
@@ -257,25 +256,25 @@ sub doCatView
     print "<h2>Category List</h2>\n";
 
     $query="select cat from wwwacl where username='$ENV{REMOTE_USER}'";
-    $s=doQuery($query);
+    $s=$p->doQuery($query);
 
-    while(($ok)=@{$s->fetch}) { $ok[$ok]=1 }
+    while($ok=$s->fetch) { $ok[$ok->[0]]=1 }
 
     $query="select name,id,catsum(id) as cs from cat order by cs desc";
     print "<!--\n$query\n-->\n";
-    $s=doQuery($query);
+    $s=$p->doQuery($query);
 
     print "<ul>\n";
 
-    while(@r=@{$s->fetch})
+    while($r=$s->fetch)
     {
-	next if($ok[$r[1]]!=1);
-	next if($r[2]==0);
+	next if($ok[$r->[1]]!=1);
+	next if($r->[2]==0);
 
-	$t=($r[2]==1?"image":"images");
+	$t=($r->[2]==1?"image":"images");
 
-	print "<li>$r[0]:  <a href=\"$cgidir/photo.cgi?func=search&";
-	print "searchtype=advanced&cat=$r[1]\">$r[2] $t</a></li>\n";
+	print "<li>$r->[0]:  <a href=\"$Photo::cgidir/photo.cgi?func=search&";
+	print "searchtype=advanced&cat=$r->[1]\">$r->[2] $t</a></li>\n";
     }
 
     print "</ul>\n" . $q->end_html . "\n";
@@ -299,17 +298,18 @@ my %funcs=(
     'catview' => \&doCatView,
 );
 
-my($func, $q);
+my($func, $q, $p);
 $q=CGI->new;
+$p=Photo->new;
 
 print $q->header;
 
 $func=$q->param('func');
 
 if(defined($funcs{$func})) {
-    &{ $funcs{$func} }($q);
+    &{ $funcs{$func} }($q, $p);
 } else {
     badFunc($q, $q->param('func'));
 }
-&addTail;
+$p->addTail();
 print $q->end_html;
