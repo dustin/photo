@@ -27,8 +27,8 @@ function arrayContains(a, key) {
 	return rv;
 }
 
-// Get a union of all of the arrays passed in as arguments
-function arrayUnion(a) {
+// Get an intersection of all of the arrays passed in as arguments
+function arrayIntersection(a) {
 	var rv = null;
 	if(a.length < 1) {
 		rv=new Array();
@@ -47,17 +47,18 @@ function arrayUnion(a) {
 	return rv;
 }
 
-// Get a union of all of the IDs for all of the images with the given keyword
-// IDs
+// Get an intersection of all of the IDs for all of the images with the given
+// keyword IDs
 function getImageIds(kwidlist) {
 	var tmpa=new Array();
-	// This gets them in the most efficient order for performing the union
+	// This gets them in the most efficient order for performing the
+	// intersection
 	kwidlist.sort();
 	kwidlist.reverse();
 	for(var i = 0; i<kwidlist.length; i++) {
 		tmpa.push(imgs[kwidlist[i]]);
 	}
-	return arrayUnion(tmpa);
+	return arrayIntersection(tmpa);
 }
 
 // Set the search results text
