@@ -12,7 +12,12 @@ import net.spy.photo.*;
  * This is the base class for migration utilities.
  */
 public abstract class PhotoMigration extends Object {
-	public boolean tryQuery(String query) throws Exception {
+
+    /**
+     * Try a query and see whether it would succeed.  This is used for
+     * testing tables, views, etc...
+     */
+	protected boolean tryQuery(String query) throws Exception {
 		boolean ret=false;
 
 		// Make sure we can do a query.
@@ -34,6 +39,7 @@ public abstract class PhotoMigration extends Object {
 		return(ret);
 	}
 
+    // Find a URL to a file by class-ish name.
 	private static URL findPath(String rel)
 		throws FileNotFoundException {
 		// Just need some object that will be loaded near the photo stuff
@@ -61,7 +67,7 @@ public abstract class PhotoMigration extends Object {
 	 * transactional.
 	 *
 	 * @param path The relative path to the migration sql script.
-	 * @param autocommit If true, the script will run as a single transaction.
+	 * @param autocommit If false, the script will run as a single transaction.
 	 * @param errok If true, errors will be reported, but the script will
 	 * 				continue.
 	 */
@@ -141,13 +147,18 @@ public abstract class PhotoMigration extends Object {
 		lr.close();
 	}
 
-	// See if we have a needed column
-	public boolean hasColumn(String table, String column) throws Exception {
+    /**
+     * True if the given table has the given column.
+     */
+	protected boolean hasColumn(String table, String column) throws Exception {
 		return(tryQuery("select " + column + " from " + table + " where 1=2"));
 	}
 
-	// Fetch all thumbnails.
-	public void fetchThumbnails() throws Exception {
+    /**
+     * Fetch all thumbnails.  This is used to populate caches and stuff
+     * like that.
+     */
+	protected void fetchThumbnails() throws Exception {
 		SpyDB db=new SpyDB(new PhotoConfig());
 		ResultSet rs=db.executeQuery("select id from album order by ts desc");
 		while(rs.next()) {
