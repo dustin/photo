@@ -72,6 +72,44 @@
 			</p>
 		</td>
 	</tr>
+	<photo:admin>
+		<tr>
+			<td width="50%">
+				<p>
+					<template:insert template='/templates/section_header.jsp'>
+						<template:put name='title'
+							content='Admin Menu' direct='true'/>
+					</template:insert>
+
+					<ul>
+						<li>
+							<photo:link url="/PhotoServlet?func=admuser">
+								User Admin
+							</photo:link>
+						</li>
+						<li>
+							<photo:link url="/PhotoServlet?func=admcat">
+								Category Admin
+							</photo:link>
+						</li>
+						<li>
+							<photo:link url="/PhotoServlet?func=admnewprofileform">
+								New Profile
+							</photo:link>
+						</li>
+						<li>
+							<photo:link url="/adminify.do?action=unsetadmin">
+								Drop Privileges
+							</photo:link>
+						</li>
+					</ul>
+
+				</p>
+			</td>
+			<td width="50%">
+			</td>
+	</tr>
+	</photo:admin>
 </table>
 
 <p>
