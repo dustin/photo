@@ -23,7 +23,7 @@
 
 <p>
 
-<a href="%SELF_URI%?func=setadmin">Request Administrative Priviliges</a>.
+<a href="%SELF_URI%?func=setadmin">Request Administrative Privileges</a>.
 
 </form>
 

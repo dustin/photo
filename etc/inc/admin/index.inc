@@ -18,7 +18,7 @@
 <ul>
 	<li><a href="%SELF_URI%?func=admcat">Category Administration</a></li>
 	<li><a href="%SELF_URI%?func=admuser">User Administration</a></li>
-	<li><a href="%SELF_URI%?func=unsetadmin">Drop Priviliges</a></li>
+	<li><a href="%SELF_URI%?func=unsetadmin">Drop Privileges</a></li>
 </ul>
 
 <h2>Canned searches</h2>
