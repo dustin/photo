@@ -6,15 +6,9 @@ JAVAC=$(JAVAHOME)/bin/javac
 JAVA=$(JAVAHOME)/bin/java
 MYLIB=/home/dustin/lib/java
 C1=$(MYLIB)/jsdk.jar:$(MYLIB)/DBCB.jar
-C2=$(MYLIB)/RHash.jar:$(MYLIB)/cos.jar
-C3=$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/xml4j.jar
-C4=$(MYLIB)/ImageServer.jar
-CLASSPATH=$(C1):$(C2):$(C3):$(C4):.
+C2=$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
+CLASSPATH=$(C1):$(C2):.
 SERVLETRUNNER=/home/dustin/lib/java/JSDK2.0/bin/servletrunner
-
-SCP=rcp
-DEST=bleu.west.spy.net:/usr/local/apache/java
-# DEST=170.1.69.194:/usr/local/apache/java
 
 CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoUtil.class net/spy/photo/PhotoImage.class \
@@ -39,9 +33,6 @@ test: all
 
 setpw: net/spy/photo/SetPW.class
 	env CLASSPATH=$(CLASSPATH) $(JAVA) net.spy.photo.SetPW
-
-install: all
-	$(SCP) photo.jar $(DEST)
 
 clean:
 	rm -f $(CLASSES) photo.jar
