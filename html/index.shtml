@@ -14,6 +14,10 @@
 All pages herein were created using vi.  For more information on the vi
 web page publishing system, type <tt>man vi</tt> at your prompt.
 
+<!--
+    Logged in as:  <!--#echo var="REMOTE_USER"-->
+-->
+
 <!--#include virtual="../tail.shtml"-->
 
 </body>
