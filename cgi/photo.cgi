@@ -1,10 +1,9 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: photo.cgi,v 1.3 1998/04/24 07:42:46 dustin Exp $
+# $Id: photo.cgi,v 1.4 1998/04/24 17:09:16 dustin Exp $
 
 use CGI;
-use Postgres;
 
 require 'photolib.pl';
 
@@ -149,7 +148,7 @@ sub doFind
 
     $s=doQuery($query);
 
-    while(@r=$s->fetchrow()) { $ok{$r[3]}=1; }
+    while(@r=@{$s->fetch}) { $ok{$r[3]}=1; }
 
     $query=buildQuery($q);
 
@@ -171,7 +170,7 @@ sub doFind
 
     while(($p{OID}, $p{KEYWORDS}, $p{DESCR}, $p{CAT}, $p{SIZE}, $p{TAKEN},
         $p{TS}, $p{IMAGE})
-        =$s->fetchrow())
+        =@{$s->fetch})
     {
         next if(!defined($ok{$p{CAT}}));
         next if($i++<$start);
@@ -227,7 +226,7 @@ sub doDisplay
 
     $s=doQuery($query);
 
-    @r=$s->fetchrow();
+    @r=@{$s->fetch};
     @mapme=qw(OID IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM);
     map { $p{$mapme[$_]}=$r[$_] } (0..$#r);
 
@@ -237,7 +236,7 @@ sub doDisplay
 
     $s=doQuery($query);
 
-    ($n)=$s->fetchrow();
+    ($n)=@{$s->fetch};
 
     if($n==0) {
         print "ACL ERROR!!!  We don't want your type here.\n";
@@ -260,7 +259,7 @@ sub doCatView
     $query="select cat from wwwacl where username='$ENV{REMOTE_USER}'";
     $s=doQuery($query);
 
-    while(($ok)=$s->fetchrow()) { $ok[$ok]=1 }
+    while(($ok)=@{$s->fetch}) { $ok[$ok]=1 }
 
     $query="select name,id,catsum(id) as cs from cat order by cs desc";
     print "<!--\n$query\n-->\n";
@@ -268,7 +267,7 @@ sub doCatView
 
     print "<ul>\n";
 
-    while(@r=$s->fetchrow())
+    while(@r=@{$s->fetch})
     {
 	next if($ok[$r[1]]!=1);
 	next if($r[2]==0);

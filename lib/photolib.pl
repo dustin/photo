@@ -1,10 +1,10 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: photolib.pl,v 1.7 1998/04/12 05:18:53 dustin Exp $
+# $Id: photolib.pl,v 1.8 1998/04/24 17:09:19 dustin Exp $
 
 use CGI;
-use Postgres;
+use DBI;
 
 # Global stuffs
 $cgidir="/cgi-bin/dustin/photo";
@@ -19,7 +19,8 @@ local($dbh)=0;
 
 sub openDB
 {
-    $dbh=db_connect("photo") || die("Cannot connect to database\n");
+    $dbh=DBI->connect("dbi:Pg:dbname=photo", 'dustin','')
+         || die("Cannot connect to database\n");
 }
 
 sub doQuery
@@ -30,10 +31,12 @@ sub doQuery
     # Open the database if it's not already.
     openDB() unless($dbh);
 
-    if(!($s=$dbh->execute($query)))
-    {
-        die "Datbase error: $Postgres::error\n<!--\n$query\n-->\n";
-    }
+    $s=$dbh->prepare($query)
+	  || die("Database Error:  $DBI::err\n<!--\n$query\n-->\n");
+
+    $s->execute
+	  || die("Database Error:  $DBI::err\n<!--\n$query\n-->\n");
+
     return($s);
 }
 

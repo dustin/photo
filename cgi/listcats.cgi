@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: listcats.cgi,v 1.3 1998/04/12 22:30:51 dustin Exp $
+# $Id: listcats.cgi,v 1.4 1998/04/24 17:09:14 dustin Exp $
 
 use Postgres;
 use DCache;
@@ -18,7 +18,7 @@ sub getlist
 
     $s=doQuery($query);
 
-    while(($ok)=$s->fetchrow())
+    while(($ok)=@{$s->fetch})
     {
         $ok[$ok]=1;
     }
@@ -27,7 +27,7 @@ sub getlist
 
     $s=doQuery($query);
 
-    while(@r=$s->fetchrow())
+    while(@r=@{$s->fetch})
     {
         $ret.="    <option value=\"$r[0]\">$r[1]\n" if($ok[$r[0]]);
     }

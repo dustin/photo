@@ -2,9 +2,7 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: listrecent.cgi,v 1.3 1998/04/24 07:41:08 dustin Exp $
-
-use Postgres;
+# $Id: listrecent.cgi,v 1.4 1998/04/24 17:09:18 dustin Exp $
 
 require 'photolib.pl';
 
@@ -40,19 +38,13 @@ this.  :)
 
 EOF
 
-$dbh=db_connect('photo');
-
 $query ="select a.id,a.name,b.oid,b.cat,b.keywords,b.taken,b.ts,b.fn\n";
 $query.="    from cat a, album b where a.id=b.cat ";
 $query.="    order by a.name, b.ts;";
 
 # Let's see if we can successfully do the query first.
 
-if( !($s=$dbh->execute($query)) )
-{
-    print "Error!!!  $Postgres::error<br>\n$query<br>\n";
-    exit(0);
-}
+$s=doQuery($query);
 
 # Now start building the table.
 
@@ -64,7 +56,7 @@ print <<EOF;
 </tr>
 EOF
 
-while(@r=$s->fetchrow())
+while(@r=@{$s->fetch})
 {
     &displayrow(@r);
 }
