@@ -14,7 +14,7 @@
 
 </ul>
 
-<h2>Canned searches</h2>
+<h2>Canned Searches</h2>
 
 <ul>
   %SAVED%
