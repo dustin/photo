@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.14 2002/02/11 09:27:02 dustin Exp $
+-- $Id: photo.sql,v 1.15 2002/02/12 05:02:45 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -256,6 +256,21 @@ create table user_profile_acls (
 );
 create index user_profile_aclsbyp on user_profile_acls(profile_id);
 grant all on user_profile_acls to nobody;
+
+-- This table logs when users are created with profiles
+create table user_profile_log (
+	log_id serial,
+	profile_id integer not null,
+	wwwuser_id integer not null,
+	ts timestamp default now(),
+	remote_addr inet not null,
+	primary key(log_id),
+	foreign key(profile_id) references user_profiles(profile_id),
+	foreign key(wwwuser_id) references wwwusers(id)
+);
+create index user_profile_log_byuser on user_profile_log(wwwuser_id);
+create index user_profile_log_byprof on user_profile_log(profile_id);
+grant all on user_profile_log to nobody;
 
 -- View the profiles
 create view user_profile_view as

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.78 2002/01/13 11:08:32 dustin Exp $
+ * $Id: PhotoSession.java,v 1.79 2002/02/12 05:02:45 dustin Exp $
  */
 
 package net.spy.photo;
@@ -689,6 +689,24 @@ public class PhotoSession extends Object
 
 		pu.save();
 		setCreds();
+
+		// OK, let's try to log it.
+		try {
+			SpyDB db=new SpyDB(new PhotoConfig());
+			PreparedStatement pst=db.prepareStatement(
+				"insert into user_profile_log"
+				+ "(profile_id, wwwuser_id, remote_addr) "
+				+ "values(?,?,?)");
+			pst.setInt(1, p.getId());
+			pst.setInt(2, pu.getId());
+			pst.setString(3, request.getRemoteAddr());
+			pst.executeUpdate();
+			pst.close();
+			db.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
 		return(doIndex());
 	}
 
