@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.55 1998/11/09 07:07:36 dustin Exp $
+# $Id: Photo.pm,v 1.56 1998/11/09 07:10:12 dustin Exp $
 
 package Photo;
 
@@ -504,10 +504,11 @@ sub addImage
 
 	$self->start_html($q, 'Adding image');
 
-	$query="select * from wwwusers where username='$ENV{'REMOTE_USER'}'\n";
+	$query="select canadd from wwwusers\n".
+		   "where username='$ENV{'REMOTE_USER'}'\n";
 	$s=$self->doQuery($query);
 	$r=$s->fetch;
-	if($r->[4]!=1) {
+	if($r->[0]!=1) {
 		$self->showTemplate("$Photo::includes/add_denied.inc", ());
 		return;
 	}
