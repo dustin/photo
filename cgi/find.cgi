@@ -1,12 +1,12 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: find.cgi,v 1.10 1997/12/07 04:09:43 dustin Exp $
+# $Id: find.cgi,v 1.11 1998/01/19 10:14:42 dustin Exp $
 
 use CGI;
 use Postgres;
 
-$idir="/~dustin/photo/album";
+require 'photolib.pl';
 
 sub buildQuery
 {
@@ -182,10 +182,11 @@ $max+=0;                     # make it a number
 
 print "<h2>Found $n matches:</h2><br><ul>\n";
 
-while(($oid, $keywords, $descr, $cat, $size, $taken, $ts, $image)
+while(($p{OID}, $p{KEYWORDS}, $p{DESCR}, $p{CAT}, $p{SIZE}, $p{TAKEN},
+    $p{TS}, $p{IMAGE})
     =$s->fetchrow())
 {
-    next if(!defined($ok{$cat}));
+    next if(!defined($ok{$p{CAT}}));
     next if($i++<$start);
 
     if($max>0)
@@ -193,16 +194,9 @@ while(($oid, $keywords, $descr, $cat, $size, $taken, $ts, $image)
         last if($i-$start>$max);
     }
 
-    print "    <li>\n<table>\n<tr>\n<td valign=\"top\">\n";
-    print "\nKeywords: $keywords<br>\n";
-    print "Category:  $cat<br>\n";
-    print "Size:  $size bytes<br>\n";
-    print "Taken:  $taken<br>\n";
-    print "Added:  $ts<br>\n";
-    print "</td><td><a href=\"/cgi-bin/dustin/photo/display.cgi?$oid\">";
-    print "<img border=\"0\" src=\"$idir/tn/$image\"></a>\n";
-    print "</td></tr></table>\n";
-    print "<blockquote>\n$descr\n</blockquote>\n</li>\n";
+    print "<li>\n";
+    showTemplate("$includes/findmatch.inc", %p);
+    print "</li>\n";
 }
 
 print "</ul>\n";
