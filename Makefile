@@ -37,6 +37,7 @@ CLASSES=\
 	net/spy/photo/PhotoImage.class \
 	net/spy/photo/PhotoLogFlusher.class \
 	net/spy/photo/PhotoLogView.class \
+	net/spy/photo/PhotoLogEntry.class \
 	net/spy/photo/PhotoLogImageEntry.class \
 	net/spy/photo/PhotoACLEntry.class \
 	net/spy/photo/PhotoUser.class \
