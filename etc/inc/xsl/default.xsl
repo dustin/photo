@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.13 2001/01/06 05:14:50 dustin Exp $
+ $Id: default.xsl,v 1.14 2001/01/06 07:19:08 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -39,6 +39,9 @@
 						</p>
 
 						<hr/>
+						<table border="0" width="100%">
+						<tr valign="top">
+						<td align="left">
 						Logged in as
 						<a href="{meta_stuff/self_uri}?func=credform">
 						<xsl:value-of
@@ -50,6 +53,12 @@
 						Switch to
 						<a href="{meta_stuff/self_uri}?func=setstylesheet&amp;stylesheet=simple">simple</a>
 						view.
+						</td>
+						<td align="right">
+							<xsl:call-template name="quick_search"/>
+						</td>
+						</tr>
+						</table>
 						<p>
 						<font size="-2">
 						Copyright &#169; 1997-2000 Dustin Sallings of
@@ -79,56 +88,130 @@
 		<tr valign="top">
 
 			<td>
-				<xsl:apply-templates
-					select="sections/section[@name='options']"/>
 				<p>
-				<font size="+1"><b>Photo of the [Unit of Time]</b></font><br/><br/>
-				<center>
-				<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={$photo_of_the_day}">
-				<img border="0" src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={$photo_of_the_day}&amp;thumbnail=1"/>
-				</a>
-				</center>
+					<xsl:call-template name="section_header">
+						<xsl:with-param name="title">
+							Options
+						</xsl:with-param>
+					</xsl:call-template>
+					<ul>
+						<xsl:if test="/page/meta_stuff/photo_user/canadd">
+							<li>
+								<a href="{/page/meta_stuff/self_uri}?func=addform">Add a new Image</a>
+							</li>
+						</xsl:if>
+						<li>
+							<a href="{/page/meta_stuff/self_uri}?func=findform">Advanced Search</a>
+						</li>
+						<li>
+							<a href="{/page/meta_stuff/self_uri}?func=catview">Category View</a>
+						</li>
+					</ul>
 				</p>
+
 			</td>
 
 			<td>
-				<xsl:apply-templates
-					select="sections/section[@name='canned_searches']"/>
+				<p>
+					<xsl:call-template name="section_header">
+						<xsl:with-param name="title">
+							Canned Searches
+						</xsl:with-param>
+					</xsl:call-template>
+					<ul>
+						<xsl:for-each select="saved_searches/item">
+							<li>
+								<a href="{@link}"><xsl:value-of select="."/></a>
+							</li>
+						</xsl:for-each>
+					</ul>
+				</p>
 			</td>
 		</tr>
 		<tr valign="top">
-			<td>
-				<xsl:apply-templates
-					select="sections/section[@name='Credits']"/>
+
+		<td width="50%">
+				<p>
+					<xsl:call-template name="section_header">
+						<xsl:with-param name="title">
+							Photo of the [Unit of Time]
+						</xsl:with-param>
+					</xsl:call-template>
+					<center>
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={$photo_of_the_day}">
+					<img border="0" src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={$photo_of_the_day}&amp;thumbnail=1"/>
+					</a>
+					</center>
+				</p>
 			</td>
 			<td>
-				<xsl:apply-templates
-					select="sections/section[@name='quick_search']"/>
+				<p>
+					<xsl:call-template name="section_header">
+						<xsl:with-param name="title">Credits</xsl:with-param>
+					</xsl:call-template>
+					All pages herein were created using vi.  For more
+					information on the vi web page publishing system,
+					type <i>man vi</i> at your prompt.
+				</p>
+			</td>
+			<td>
+
+				<!--
+				<p>
+					<xsl:call-template name="section_header">
+						<xsl:with-param name="title">
+							Quick Search
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:call-template name="quick_search"/>
+				</p>
+				-->
+
 			</td>
 		</tr>
 	</table>
 
 	<!-- If we're in admin mode, display the adminu -->
 	<xsl:if test="/page/meta_stuff/isadmin">
-		<h1>Admin Menu</h1>
-		<ul>
-			<li><a
-				href="{/page/meta_stuff/self_uri}?func=admuser">User Admin</a>
-			</li>
-			<li><a
-				href="{/page/meta_stuff/self_uri}?func=admcat">Category Admin</a>
-			</li>
-			<li><a
-				href="{/page/meta_stuff/self_uri}?func=unsetadmin">Drop Privileges</a>
-			</li>
-		</ul>
-		<p/>
+		<p>
+			<xsl:call-template name="section_header">
+				<xsl:with-param name="title">
+					Admin Menu
+				</xsl:with-param>
+			</xsl:call-template>
+			<ul>
+				<li><a
+					href="{/page/meta_stuff/self_uri}?func=admuser">User Admin</a>
+				</li>
+				<li><a
+					href="{/page/meta_stuff/self_uri}?func=admcat">Category Admin</a>
+				</li>
+				<li><a
+					href="{/page/meta_stuff/self_uri}?func=unsetadmin">Drop Privileges</a>
+				</li>
+			</ul>
+		</p>
 	</xsl:if>
 
 	This database contains about
 	<xsl:value-of select="/page/meta_stuff/total_images"/> images and has
 	displayed about
 	<xsl:value-of select="/page/meta_stuff/total_images_shown"/>.
+</xsl:template>
+
+<!-- Anywhere we need quick search, we can call it by name -->
+<xsl:template name="quick_search" match="quick_search">
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<input type="hidden" name="func" value="search"/>
+		<input type="hidden" name="maxret" value="5"/>
+		<input type="hidden" name="fieldjoin" value="and"/>
+		<input type="hidden" name="keyjoin" value="and"/>
+		<input type="hidden" name="order" value="a.ts"/>
+		<input type="hidden" name="sdirection" value="desc"/>
+		<input type="hidden" name="field" value="keywords"/>
+		Quick Search:  <input name="what"/>
+		<input type="submit" value="Find"/>
+	</form>
 </xsl:template>
 
 <!-- Handling Search Results -->
@@ -233,14 +316,18 @@
 
 <!-- For displaying an individual image -->
 <xsl:template match="show_image">
-	<table width="100%"> <!-- % -->
+	<table width="100%">
 		<tr>
-			<td align="left">
-				<xsl:apply-templates select="meta_stuff/prev"/>
-			</td>
-			<td align="right">
-				<xsl:apply-templates select="meta_stuff/next"/>
-			</td>
+			<xsl:if test="meta_stuff/prev">
+				<td align="left">
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={meta_stuff/prev}">&lt;&lt;&lt;</a>
+				</td>
+			</xsl:if>
+			<xsl:if test="meta_stuff/next">
+				<td align="right">
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={meta_stuff/next}">&gt;&gt;&gt;</a>
+				</td>
+			</xsl:if>
 		</tr>
 	</table>
 
@@ -275,7 +362,8 @@
 </xsl:template>
 
 <!-- category view -->
-<xsl:template match="cat_view">
+<xsl:template match="category_view">
+
 	<table border="1">
 		<tr>
 			<th>Category</th>

@@ -4,16 +4,29 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: common.xsl,v 1.5 2000/12/25 23:39:06 dustin Exp $
+ $Id: common.xsl,v 1.6 2001/01/06 07:19:08 dustin Exp $
  -->
 
 <!-- Default Section handling -->
 <xsl:template match="sections">
 	<xsl:apply-templates select="section"/>
 </xsl:template>
+
+<!-- This is called with a parameter to produce a section header. -->
+<xsl:template name="section_header">
+	<font size="+1">
+		<b>
+			<xsl:value-of select="$title"/>
+		</b>
+	</font>
+	<br/><br/>
+</xsl:template>
+
 <xsl:template match="section">
 	<p>
-		<font size="+1"><b><xsl:value-of select="title"/></b></font><br/><br/>
+		<xsl:call-template name="section_header">
+			 <xsl:with-param name="title" select="title"/>
+		</xsl:call-template>
 		<xsl:apply-templates select="content"/>
 	</p>
 </xsl:template>

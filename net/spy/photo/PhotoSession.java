@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.48 2001/01/06 04:56:06 dustin Exp $
+ * $Id: PhotoSession.java,v 1.49 2001/01/06 07:19:08 dustin Exp $
  */
 
 package net.spy.photo;
@@ -232,20 +232,24 @@ public class PhotoSession extends Object
 	}
 
 	protected String saveSearch() throws ServletException {
-		String output="";
-
 		try {
 			PhotoSearch ps = new PhotoSearch();
 			PhotoUser user = security.getUser(remote_user);
 			ps.saveSearch(request, user);
-			output=tokenize("addsearch_success.inc", new Hashtable());
+
+			PhotoXML xml=new PhotoXML();
+			xml.setTitle("Saved Search");
+			xml.addBodyPart(getGlobalMeta());
+			xml.addBodyPart("<save_search_success/>");
+			sendXML(xml.toString());
+
 		} catch(Exception e) {
 			Hashtable h = new Hashtable();
 			log("Search save failed:  " + e);
-			h.put("MESSAGE", e.getMessage());
-			output=tokenize("addsearch_fail.inc", h);
+			throw new ServletException(
+				"Error saving search:  " + e);
 		}
-		return(output);
+		return(null);
 	}
 
 	// Set the stylesheet
@@ -764,9 +768,8 @@ public class PhotoSession extends Object
 	}
 
 	// View categories
-	protected String doCatView() throws ServletException {
+	protected String doCatView() throws Exception {
 		String catstuff="";
-		Hashtable h = new Hashtable();
 		Connection photo=null;
 
 		try {
@@ -811,29 +814,17 @@ public class PhotoSession extends Object
 		}
 		finally { freeDBConn(photo); }
 
-		h.put("CATSTUFF", catstuff);
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("View Images by Category");
+		xml.addBodyPart(getGlobalMeta());
+		xml.addBodyPart(
+			"<category_view>\n"
+			+ catstuff
+			+ "</category_view>\n"
+			);
 
-		sendXML("xml/catview.xinc", h);
+		sendXML(xml.toString());
 		return(null);
-	}
-
-	// Display the index page.
-	protected String doIndexInc() throws ServletException {
-		String output = "";;
-		Hashtable h = new Hashtable();
-
-		try {
-			h.put("SAVED", showSaved());
-		} catch(Exception e) {
-			log("Error getting saved search list:  " + e);
-			h.put("SAVED", "");
-		}
-		if(isAdmin()) {
-			output += tokenize("admin/index.inc", h);
-		} else {
-			output += tokenize("index.inc", h);
-		}
-		return(output);
 	}
 
 	// Some basic statistic stuff for the home page.
@@ -877,19 +868,28 @@ public class PhotoSession extends Object
 	}
 
 	// Display the index page.
-	protected String doIndex() throws ServletException {
-		Hashtable h = new Hashtable();
+	protected String doIndex() throws Exception {
+		String saved="";
 
 		// Get the saved searches.
 		try {
-			h.put("SAVED", showSaved());
+			saved=showSaved();
 		} catch(Exception e) {
 			log("Error getting saved search list:  " + e);
-			h.put("SAVED", "");
 		}
 
-		PhotoConfig pc = new PhotoConfig();
-		sendXML(pc.get("xinc_index", "xml/index.xinc"), h);
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("Dustin's Photo Album");
+		xml.addBodyPart(getGlobalMeta());
+		xml.addBodyPart(
+			"<index_page>\n"
+			+ "<saved_searches>\n"
+			+ saved
+			+ "</saved_searches>\n"
+			+ "</index_page>\n"
+			);
+
+		sendXML(xml.toString());
 
 		return(null);
 	}
@@ -1052,7 +1052,7 @@ public class PhotoSession extends Object
 	}
 
 	// Display dispatcher -- can be called from a helper
-	public String doDisplay() throws ServletException {
+	public String doDisplay() throws Exception {
 		String out="";
 		String id=null;
 		String search_id=null;
@@ -1089,8 +1089,27 @@ public class PhotoSession extends Object
 			h.put("CATS", getCatList(defcat));
 			out=tokenize("admin/display.inc", h);
 		} else {
-			h.put("DATA", datachunk);
-			sendXML("xml/display.xinc", h);
+
+			StringBuffer meta=new StringBuffer();
+			meta.append("<meta_stuff>\n");
+			if(h.get("PREV")!=null) {
+				meta.append("\t<prev>" + h.get("PREV") + "</prev>\n");
+			}
+			if(h.get("NEXT")!=null) {
+				meta.append("\t<next>" + h.get("NEXT") + "</next>\n");
+			}
+			meta.append("</meta_stuff>\n");
+
+			PhotoXML xml=new PhotoXML();
+			xml.setTitle("Displaying " + h.get("IMAGE"));
+			xml.addBodyPart(getGlobalMeta());
+			xml.addBodyPart("<show_image>\n"
+				+ meta
+				+ datachunk
+				+ "</show_image>\n"
+				);
+
+			sendXML(xml.toString());
 			out=null;
 		}
 
@@ -1107,23 +1126,11 @@ public class PhotoSession extends Object
 
 		// Add the PREV and NEXT button stuff, if applicable.
 		if(results.nResults() > which+1) {
-			h.put("NEXT",
-				"<a href=\""
-					+ PhotoXSLT.normalize(self_uri
-						+ "?func=display&search_id=" + (which+1), true )
-					+ "\">&gt;&gt;&gt;</a><br/>");
-		} else {
-			h.put("NEXT", "");
+			h.put("NEXT", "" + (which+1));
 		}
 
 		if(which>0) {
-			h.put("PREV",
-				"<a href=\""
-				+ PhotoXSLT.normalize(self_uri
-					+ "?func=display&search_id=" + (which-1), true )
-				+ "\">&lt;&lt;&lt;</a><br/>");
-		} else {
-			h.put("PREV", "");
+			h.put("PREV", "" + (which-1));
 		}
 		return(r);
 	}
@@ -1137,10 +1144,6 @@ public class PhotoSession extends Object
 		// Get the data
 		PhotoSearchResult r=new PhotoSearchResult();
 		r.find(image_id, remote_uid.intValue());
-
-		// These don't apply here, bu they need to be defined.
-		h.put("PREV", "");
-		h.put("NEXT", "");
 
 		return(r);
 	}
