@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoAction.java,v 1.1 2002/05/13 07:22:48 dustin Exp $
+// $Id: PhotoAction.java,v 1.2 2002/06/17 06:54:04 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -38,6 +38,13 @@ public abstract class PhotoAction extends Action {
 		}
 
 		return(sessionData);
+	}
+
+	/**
+	 * Log a message.
+	 */
+	protected void log(String msg) {
+		System.err.println(getClass().getName() + " - " + msg);
 	}
 
 }
