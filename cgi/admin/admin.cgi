@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.14 1998/11/13 07:46:09 dustin Exp $
+# $Id: admin.cgi,v 1.15 1999/01/17 23:28:28 dustin Exp $
 
 use CGI;
 use Photo;
@@ -346,29 +346,15 @@ sub saveUser
 			 -bgcolor=>"#fFfFfF");
     $in{'username'}=~s/\'/\\\'/g;
 
-    if(!($in{'password'}=~/[A-z0-9]/))
-    {
-        $in{'password'}="NULL";
-    }
-    else
-    {
-        $in{'password'}="'$in{'password'}'";
-    }
-
-    if($in{'newuser'} == 0)
-    {
+    if($in{'newuser'} == 0) {
         my @vars=('username', 'realname', 'email', 'canadd');
         $query ="update wwwusers set\n";
-        map {
-            $query.="    $_='$in{$_}',\n";
-        } @vars;
+        map { $query.="    $_='$in{$_}',\n"; } @vars;
         $query.="    password=$in{'password'}\n";
         $query.="    where username='$in{'username'}';";
 
         print "Saving $in{'username'}\n<br><hr>\n";
-    }
-    else
-    {
+    } else {
         $query ="insert into wwwusers (username, password, email, realname)\n";
         $query.="    values('$in{'username'}', $in{'password'},\n";
         $query.="           '$in{'email'}', '$in{'realname'}')";
