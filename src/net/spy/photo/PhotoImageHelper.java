@@ -63,10 +63,12 @@ public class PhotoImageHelper extends PhotoHelper {
 		// Always check the cache first
 		rv=(PhotoImage)cache.get(key);
 		if(rv==null) {
-			log("Cache miss on " + key);
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Cache miss on " + key);
+				// Grab it from the server
+				getLogger().debug("Grabbing " + key + " from image server");
+			}
 
-			// Grab it from the server
-			log("Grabbing " + key + " from image server");
 			ImageServer server=ImageServerFactory.getImageServer();
 			rv=server.getImage(imageId, dim);
 
@@ -117,9 +119,9 @@ public class PhotoImageHelper extends PhotoHelper {
 	 * Store an image.
 	 */
 	public void storeImage(PhotoImage imageData) throws Exception {
-		log("Storing image " + imageId);
+		getLogger().info("Storing image " + imageId);
 		ImageServer server=ImageServerFactory.getImageServer();
 		server.storeImage(imageId, imageData);
-		log("Stored image " + imageId);
+		getLogger().info("Stored image " + imageId);
 	}
 }

@@ -59,7 +59,7 @@ public class PhotoSearch extends PhotoHelper {
 
 			is.close();
 		} catch(Exception e) {
-			log("Error saving search", e);
+			getLogger().error("Error saving search", e);
 		}
 	}
 
@@ -247,7 +247,9 @@ public class PhotoSearch extends PhotoHelper {
 		} catch(Exception e) {
 			throw new ServletException("Error performing search", e);
 		}
-		log("performSearch returning " + results);
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("performSearch returning " + results);
+		}
 		return(results);
 	}
 
@@ -436,7 +438,9 @@ public class PhotoSearch extends PhotoHelper {
 
 		query += "\n order by " + order;
 
-		log("Searching with the following query:\n" + query);
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Searching with the following query:\n" + query);
+		}
 
 		return(query);
 	}

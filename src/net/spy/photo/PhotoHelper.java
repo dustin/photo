@@ -6,10 +6,12 @@
 
 package net.spy.photo;
 
+import net.spy.SpyObject;
+
 /**
  * Superclass for general supplemental classes.
  */
-public class PhotoHelper extends Object { 
+public class PhotoHelper extends SpyObject { 
 
 	private PhotoConfig conf=null;
 
@@ -28,19 +30,4 @@ public class PhotoHelper extends Object {
 		return(conf);
 	}
 
-	/**
-	 * Log a message.
-	 */
-	protected void log(String message) {
-		System.err.println(getClass().getName() + ": " + message);
-	}
-
-	/**
-	 * Log a message with an exception.
-	 */
-	protected void log(String message, Throwable t) {
-		System.err.println(getClass().getName() + ": " + message);
-		t.printStackTrace();
-	}
 }
-
