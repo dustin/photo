@@ -1,17 +1,22 @@
 ErrorDocument 401 /~dustin/errors/photo.noauth.shtml
 
-Auth_PGhost localhost
-Auth_PGport 5432
-Auth_PGdatabase photo
-Auth_PGpwd_table wwwusers
-Auth_PGuid_field username
-Auth_PGpwd_field password
-Auth_PGgrp_table wwwgroup
-Auth_PGgid_field groupname
-Auth_PG_nopasswd off
-AuthName photo admin
-AuthType basic
+AuthName "Photo user"
+AuthType Basic
+PerlAuthzHandler Apache::AuthzDBI
 
-<LIMIT GET POST>
+PerlSetVar Auth_DBI_data_source dbi:Pg:dbname=photo;host=bleu
+PerlSetVar Auth_DBI_username nobody
+PerlSetVar Auth_DBI_pwd_table wwwusers
+PerlSetVar Auth_DBI_grp_table wwwgroup
+
+PerlSetVar Auth_DBI_uid_field username
+PerlSetVar Auth_DBI_pwd_field password
+PerlSetVar Auth_DBI_grp_field groupname
+PerlSetVar Auth_DBI_cache_time 360
+
+# Allow guest
+PerlSetVar Auth_DBI_nopasswd on
+
+<Limit GET POST>
 require group admin
-</LIMIT>
+</Limit>
