@@ -4,6 +4,8 @@ var kwmap = new Object();
 var imgsPerPage = 50;
 var pageNum = 0;
 var newestFirst = false;
+// Cache of exact matches
+var partialCache = new Object();
 
 // Figure out if the given array contains the given key
 // This assumes sorted arrays in order to be O(log n)
@@ -123,17 +125,37 @@ function search() {
 }
 
 // Find partial matches for the given keyword
-function findPartial(kw, minmatches) {
-	var matches=0;
-	var rv="";
-	for(var i=0; matches < 10 && i<keywords.length; i++) {
-		if(keywords[i].substring(0, kw.length) == kw) {
-			matches++;
-			rv += "<li>" + keywords[i] + " (" + imgs[i].length + ")</li>\n";
+function findPartial(kw) {
+	var rv=null;
+	// Memoization...otherwise, this tends to get slow with a lot of keywords
+	// on a slow machine.
+	if(partialCache[kw]) {
+		rv=partialCache[kw];
+	} else {
+		rv = new Array();
+		for(var i=0; rv.length < 10 && i<keywords.length; i++) {
+			if(keywords[i].substring(0, kw.length) == kw) {
+				var o = new Object();
+				o.kw=keywords[i];
+				o.num=imgs[i].length;
+				rv.push(o);
+			}
 		}
+		partialCache[kw] = rv;
 	}
-	if(matches >= minmatches) {
-		rv = "Keywords beginning with <b>" + kw + "</b>:<ul>" + rv + "</ul>";
+	return rv;
+}
+
+// Convert the partial list to HTML
+function partial2Html(kw, partial, minmatches) {
+	var rv=null;
+	if(partial.length >= minmatches) {
+		rv = "Keywords beginning with <b>" + kw + "</b>:<ul>"
+		for(var i=0; i<partial.length; i++) {
+			o=partial[i];
+			rv += "<li>" + o.kw + " (" + o.num + ")</li>\n";
+		}
+		rv += "</ul>";
 	} else {
 		rv = "";
 	}
@@ -154,10 +176,12 @@ function updateKwInfo(inp) {
 			} else if(kwmap[mykws[i]] != undefined) {
 				kwtmp.push(kwmap[mykws[i]]);
 				h += mykws[i] + "-(" + imgs[kwmap[mykws[i]]].length + ") ";
-				partial += findPartial(mykws[i], 2);
+				var part=findPartial(mykws[i]);
+				partial += partial2Html(mykws[i], part, 2);
 			} else {
 				h += mykws[i] + "-[no match] ";
-				partial += findPartial(mykws[i], 1);
+				var part=findPartial(mykws[i]);
+				partial += partial2Html(mykws[i], part, 1);
 			}
 		}
 		var searchtmp=getImageIds(kwtmp);
@@ -188,5 +212,9 @@ onload = function() {
 	// Build a map of the keywords to their IDs
 	for(var i=0; i<keywords.length; i++) {
 		kwmap[keywords[i]]=i;
+	}
+	var kwfield=document.getElementById("keywords");
+	if(kwfield.value != '') {
+		search();
 	}
 }
