@@ -37,9 +37,12 @@
 								<tr valign="top">
 									<td align="left">
 										Logged in as
-										<a href="credform.jsp"><%= sessionData.getUser() %></a>
+										<photo:link url="/credform.jsp">
+											<%= sessionData.getUser() %>
+										</photo:link>
 										<photo:admin>
-											<a href="adminify.do?action=unsetadmin">(admin)</a>
+											<photo:link url="/adminify.do?action=unsetadmin">(admin)
+											</photo:link>
 										</photo:admin>
 									</td>
 									<td align="right">
@@ -51,10 +54,10 @@
 								<tr>
 									<td></td>
 									<td align="right">
-										<a href="index.jsp">[Home]</a>
-										| <a href="sizeform.jsp">[Size]</a>
+										<photo:link url="/">[Home]</photo:link>
+										| <photo:link url="/sizeform.jsp">[Size]</photo:link>
 										<photo:guest negate="true">
-											| <a href="logout.do">[Logout]</a>
+											| <photo:link url="/logout.do">[Logout]</photo:link>
 										</photo:guest>
 									</td>
 								</tr>
