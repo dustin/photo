@@ -162,9 +162,9 @@
 			</xsl:with-param>
 		</xsl:call-template>
 
-		<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<form method="GET" action="{/page/meta_stuff/self_uri}">
 			<input type="hidden" name="func" value="display"/>
-			<input name="id" size="6"/>
+			ID:  <input name="id" size="6"/>
 			<input type="submit" value="Lookup"/>
 		</form>
 
