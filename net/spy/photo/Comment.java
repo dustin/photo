@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.11 2002/07/10 04:00:17 dustin Exp $
+// $Id: Comment.java,v 1.12 2002/09/14 05:06:34 dustin Exp $
 
 package net.spy.photo;
 
@@ -90,7 +90,7 @@ public class Comment extends Object implements java.io.Serializable {
 		PhotoSecurity security=new PhotoSecurity();
 		ArrayList al=new ArrayList();
 		FindImagesByComments db=new FindImagesByComments(new PhotoConfig());
-		db.set("user_id", user.getId());
+		db.setUserId(user.getId());
 		ResultSet rs=db.executeQuery();
 
 		if(rs.next()) {

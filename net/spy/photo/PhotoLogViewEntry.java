@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoLogViewEntry.java,v 1.3 2002/07/10 03:38:08 dustin Exp $
+// $Id: PhotoLogViewEntry.java,v 1.4 2002/09/14 05:06:34 dustin Exp $
 
 package net.spy.photo;
 
@@ -61,7 +61,7 @@ public class PhotoLogViewEntry extends Object {
 		ArrayList al=new ArrayList();
 
 		GetViewersOfImage db=new GetViewersOfImage(new PhotoConfig());
-		db.set("image_id", photoId);
+		db.setImageId(photoId);
 
 		ResultSet rs=db.executeQuery();
 		while(rs.next()) {

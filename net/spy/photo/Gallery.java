@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.7 2002/07/10 03:38:08 dustin Exp $
+// $Id: Gallery.java,v 1.8 2002/09/14 05:06:34 dustin Exp $
 
 package net.spy.photo;
 
@@ -103,9 +103,9 @@ public class Gallery extends Object implements java.io.Serializable {
 
 	private void loadMap(PhotoUser user) throws Exception {
 		LookupGallery lg=new LookupGallery(new PhotoConfig());
-		lg.set("gallery_id", id);
-		lg.set("current_user", user.getId());
-		lg.set("default_user", PhotoUtil.getDefaultId());
+		lg.setGalleryId(id);
+		lg.setCurrentUser(user.getId());
+		lg.setDefaultUser(PhotoUtil.getDefaultId());
 
 		ResultSet rs=lg.executeQuery();
 

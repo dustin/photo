@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminEditImage.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: AdminEditImage.java,v 1.3 2002/09/14 05:06:34 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -47,11 +47,11 @@ public class AdminEditImage extends AdminAction {
 		try {
 			EditImage ei=new EditImage(new PhotoConfig());
 
-			ei.set("keywords", uf.getKeywords());
-			ei.set("descr", uf.getInfo());
-			ei.set("cat", Integer.parseInt(uf.getCategory()));
-			ei.set("taken", uf.getTaken());
-			ei.set("id", Integer.parseInt(uf.getId()));
+			ei.setKeywords(uf.getKeywords());
+			ei.setDescr(uf.getInfo());
+			ei.setCat(Integer.parseInt(uf.getCategory()));
+			ei.setTaken(uf.getTaken());
+			ei.setId(Integer.parseInt(uf.getId()));
 
 			ei.executeUpdate();
 			ei.close();
