@@ -12,6 +12,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 
+import org.apache.xerces.dom.DOMImplementationImpl;
+
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+
 import net.spy.photo.*;
 import net.spy.photo.struts.SearchForm;
 
@@ -23,14 +35,31 @@ public class MakeStaticSite extends Object {
 
 	private PhotoUser pu=null;
 	private SimpleDateFormat outFormat=null;
+	private SimpleDateFormat dateFormat=null;
+	private SimpleDateFormat tsFormat=null;
+
+	private String destDir=null;
+	private PhotoDimensions normaldim=null;
+
+	private Document doc=null;
+	private Element root=null;
 
 	/**
 	 * Get an instance of MakeStaticSite.
 	 */
-	public MakeStaticSite(PhotoUser pu) {
+	public MakeStaticSite(PhotoUser pu, String dir, PhotoDimensions dim) {
+
 		super();
 		this.pu=pu;
+		this.destDir=dir;
+		this.normaldim=dim;
 		outFormat=new SimpleDateFormat("yyyyMMdd");
+		dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+		tsFormat=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+		DOMImplementationImpl dom=new DOMImplementationImpl();
+		doc=dom.createDocument(null, "album", null);
+		root=doc.getDocumentElement();
 	}
 
 	private String getExtension(PhotoImage image) {
@@ -53,8 +82,84 @@ public class MakeStaticSite extends Object {
 		return(outFormat.format(d));
 	}
 
-	public void build(String destDir, PhotoDimensions normaldim)
-		throws Exception {
+	private String getImageDir(PhotoImageData pid) throws Exception {
+		String rv=destDir + "/images/" + fixDate(pid.getTaken());
+		File f=new File(rv);
+		f.mkdirs();
+
+		return(rv);
+	}
+
+	private void saveImage(PhotoImageData pid) throws Exception {
+
+		PhotoImageHelper pih=new PhotoImageHelper(pid.getId());
+
+		PhotoImage thumb=pih.getThumbnail(pu.getId());
+		PhotoImage image=pih.getImage(normaldim);
+		System.out.println("Got " + thumb + " and " + image);
+
+		// Store the images by date
+		String imgdir=getImageDir(pid);
+
+		FileOutputStream fos=new FileOutputStream(imgdir + "/"
+			+ pid.getId() + getExtension(image));
+		fos.write(image.getData());
+		fos.close();
+		fos=new FileOutputStream(imgdir + "/" + pid.getId() + "_t"
+			+ getExtension(thumb));
+		fos.write(thumb.getData());
+		fos.close();
+	}
+
+	private void saveTextMeta(PhotoImageData pid) throws Exception {
+
+		String imgdir=getImageDir(pid);
+
+		FileWriter fr=new FileWriter(imgdir + "/" + pid.getId() + "_k.txt");
+		fr.write(pid.getKeywords());
+		fr.close();
+
+		fr=new FileWriter(imgdir + "/" + pid.getId() + "_d.txt");
+		fr.write(pid.getDescr());
+		fr.close();
+	}
+
+	private Element addNode(String name, String val) {
+		Element el=doc.createElement(name);
+		el.appendChild(doc.createTextNode(val));
+		return(el);
+	}
+
+	private Element addNode(String name, int val) {
+		return(addNode(name, String.valueOf(val)));
+	}
+
+	private Element addDate(String name, Date d) {
+		return(addNode(name, dateFormat.format(d)));
+	}
+
+	private Element addTimestamp(String name, Date d) {
+		return(addNode(name, tsFormat.format(d)));
+	}
+
+	private void saveXmlMeta(PhotoImageData pid) throws Exception {
+		Element el=doc.createElement("photo");
+		root.appendChild(el);
+
+		el.appendChild(addNode("id", pid.getId()));
+		el.appendChild(addNode("cat", pid.getCatName()));
+		el.appendChild(addDate("taken", pid.getTaken()));
+		el.appendChild(addTimestamp("ts", pid.getTimestamp()));
+		el.appendChild(addNode("keywords", pid.getKeywords()));
+		el.appendChild(addNode("descr", pid.getDescr()));
+		el.appendChild(addNode("size", pid.getSize()));
+		el.appendChild(addNode("width", pid.getDimensions().getWidth()));
+		el.appendChild(addNode("height", pid.getDimensions().getHeight()));
+		el.appendChild(addNode("tnwidth", pid.getTnDims().getWidth()));
+		el.appendChild(addNode("tnheight", pid.getTnDims().getHeight()));
+	}
+
+	public void build() throws Exception {
 
 		PhotoSessionData sessionData=new PhotoSessionData();
 
@@ -68,37 +173,29 @@ public class MakeStaticSite extends Object {
 		System.out.println(psr);
 		for(Iterator i=psr.iterator(); i.hasNext(); ) {
 			PhotoImageData result=(PhotoImageData)i.next();
-			System.out.println(result);
-			PhotoImageHelper pih=new PhotoImageHelper(result.getId());
 
-			PhotoImage thumb=pih.getThumbnail(pu.getId());
-			PhotoImage image=pih.getImage(normaldim);
-			System.out.println("Got " + thumb + " and " + image);
+			System.out.println(psr);
 
-			// Store the images by date
-			String imgdir=destDir + "/images/" + fixDate(result.getTaken());
-			File f=new File(imgdir);
-			f.mkdirs();
+			// Save the image
+			saveImage(result);
 
-			FileOutputStream fos=new FileOutputStream(imgdir + "/"
-				+ result.getId() + getExtension(image));
-			fos.write(image.getData());
-			fos.close();
-			fos=new FileOutputStream(imgdir + "/" + result.getId() + "_t"
-				+ getExtension(thumb));
-			fos.write(thumb.getData());
-			fos.close();
+			// Save the textual meta data
+			saveTextMeta(result);
 
-			FileWriter fr=new FileWriter(imgdir + "/"
-				+ result.getId() + "_k.txt");
-			fr.write(result.getKeywords());
-			fr.close();
-
-			fr=new FileWriter(imgdir + "/"
-				+ result.getId() + "_d.txt");
-			fr.write(result.getDescr());
-			fr.close();
+			// Save the XML version
+			saveXmlMeta(result);
 		}
+
+		// Save the XML
+		FileOutputStream fos=new FileOutputStream(destDir + "/index.xml");
+
+		OutputFormat format = new OutputFormat(doc);
+		format.setIndenting(true);
+		XMLSerializer serial = new XMLSerializer(fos, format);
+		serial.asDOMSerializer();
+		serial.serialize(root);
+
+		fos.close();
 	}
 
 	/** 
@@ -120,8 +217,8 @@ public class MakeStaticSite extends Object {
 		PhotoUser pu=PhotoUser.getPhotoUser(username);
 		System.out.println("Creating site for " + pu + " max size:  " + maxdim);
 
-		MakeStaticSite mss=new MakeStaticSite(pu);
-		mss.build(destDir, maxdim);
+		MakeStaticSite mss=new MakeStaticSite(pu, destDir, maxdim);
+		mss.build();
 	}
 
 }
