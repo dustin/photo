@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ForgotPWAction.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: ForgotPWAction.java,v 1.3 2002/12/15 09:02:25 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -11,6 +11,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.spy.db.Saver;
+
+import net.spy.photo.PhotoConfig;
 import net.spy.photo.Mailer;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoUser;
@@ -52,7 +55,8 @@ public class ForgotPWAction extends PhotoAction {
 		try {
 			String newPass=PwGen.getPass(8);
 			user.setPassword(newPass);
-			user.save();
+			Saver saver=new Saver(new PhotoConfig());
+			saver.save(user);
 
 			Mailer m=new Mailer();
 			m.setTo(user.getEmail());

@@ -1,9 +1,8 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.23 2002/11/04 03:11:24 dustin Exp $
+// $Id: PhotoUser.java,v 1.24 2002/12/15 09:02:25 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
-
 package net.spy.photo;
 
 import java.io.Serializable;
@@ -12,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,11 +21,21 @@ import java.util.Iterator;
 import java.util.Set;
 
 import net.spy.SpyDB;
+import net.spy.db.DBSP;
+import net.spy.db.Savable;
+import net.spy.db.SaveException;
+import net.spy.db.SaveContext;
+
+import net.spy.photo.sp.ModifyUser;
+import net.spy.photo.sp.InsertUser;
+import net.spy.photo.sp.DeleteACLForUser;
+import net.spy.photo.sp.InsertACLEntry;
+import net.spy.photo.sp.GetGeneratedKey;
 
 /**
  * Represents a user in the photo system.
  */
-public class PhotoUser extends Object implements Serializable {
+public class PhotoUser extends Object implements Serializable, Savable {
 	private int id=-1;
 	private String username=null;
 	private String password=null;
@@ -35,6 +45,8 @@ public class PhotoUser extends Object implements Serializable {
 
 	private ArrayList acl=null;
 	private Set groups=null;
+
+	private boolean isModified=false;
 
 	/**
 	 * Get a new, empty user.
@@ -119,6 +131,7 @@ public class PhotoUser extends Object implements Serializable {
 	public void addViewACLEntry(int cat) {
 		PhotoACLEntry aclEntry=getACLEntryForCat2(cat);
 		aclEntry.setCanView(true);
+		isModified=true;
 	}
 
 	/**
@@ -127,6 +140,7 @@ public class PhotoUser extends Object implements Serializable {
 	public void addAddACLEntry(int cat) {
 		PhotoACLEntry aclEntry=getACLEntryForCat2(cat);
 		aclEntry.setCanAdd(true);
+		isModified=true;
 	}
 
 	/**
@@ -137,6 +151,7 @@ public class PhotoUser extends Object implements Serializable {
 		if(entry!=null) {
 			acl.remove(entry);
 		}
+		isModified=true;
 	}
 
 	/**
@@ -144,6 +159,7 @@ public class PhotoUser extends Object implements Serializable {
 	 */
 	public void removeAllACLEntries() {
 		acl.clear();
+		isModified=true;
 	}
 
 	/**
@@ -241,6 +257,7 @@ public class PhotoUser extends Object implements Serializable {
 	 */
 	public void setId(int id) {
 		this.id=id;
+		isModified=true;
 	}
 
 	/**
@@ -248,6 +265,7 @@ public class PhotoUser extends Object implements Serializable {
 	 */
 	public void setUsername(String username) {
 		this.username=username.toLowerCase();
+		isModified=true;
 	}
 
 	/**
@@ -255,6 +273,7 @@ public class PhotoUser extends Object implements Serializable {
 	 */
 	public void setRealname(String realname) {
 		this.realname=realname;
+		isModified=true;
 	}
 
 	/**
@@ -269,92 +288,81 @@ public class PhotoUser extends Object implements Serializable {
 	 */
 	public void setEmail(String email) {
 		this.email=email.toLowerCase();
+		isModified=true;
+	}
+
+	// Savable implementation
+
+	public Collection getSavables(SaveContext context) {
+		return(null);
+	}
+
+	public boolean isNew() {
+		return(id == -1);
+	}
+
+	public boolean isModified() {
+		return(isModified);
 	}
 
 	/**
 	 * Save the user.
 	 */
-	public void save() throws Exception {
-		// Get a DB handle
-		SpyDB db=new SpyDB(new PhotoConfig());
-		Connection conn=null;
-		try {
-			conn=db.getConn();
-			conn.setAutoCommit(false);
-			PreparedStatement st=null;
+	public void save(Connection conn, SaveContext context)
+		throws SaveException, SQLException {
 
-			// Determine whether this is a new user or not.
-			if(id>=0) {
-				st=conn.prepareStatement(
-					"update wwwusers set username=?, realname=?, email=?, "
-						+ "password=?, canadd=?\n"
-						+ "\twhere id=?"
-					);
-				st.setInt(6, getId());
-			} else {
-				st=conn.prepareStatement(
-					"insert into wwwusers(username, realname, email, "
-						+ "password, canadd) values(?, ?, ?, ?, ?)"
-					);
-			}
+		DBSP db=null;
 
-			// Set the common fields and update.
-			st.setString(1, username);
-			st.setString(2, realname);
-			st.setString(3, email);
-			st.setString(4, password);
-			st.setBoolean(5, canadd);
-			st.executeUpdate();
-			st.close();
-
-			// For new users, We need to fetch the ID
-			if(id==-1) {
-				Statement st2=conn.createStatement();
-				ResultSet rs=st2.executeQuery(
-					"select currval('wwwusers_id_seq')");
-				rs.next();
-				id=rs.getInt(1);
-				rs.close();
-				st2.close();
-			}
-
-			// OK, now let's save the ACL.
-
-			// First, out with the old.
-			st=conn.prepareStatement("delete from wwwacl where userid=?");
-			st.setInt(1, getId());
-			st.executeUpdate();
-			st.close();
-
-			// Then in with the new.
-			st=conn.prepareStatement(
-				"insert into wwwacl(userid,cat,canview,canadd) "
-				+ "values(?,?,?,?)");
-
-			for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
-				PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
-
-				st.setInt(1, getId());
-				st.setInt(2, aclEntry.getCat());
-				st.setBoolean(3, aclEntry.canView());
-				st.setBoolean(4, aclEntry.canAdd());
-				st.executeUpdate();
-			}
-			st.close();
-			conn.commit();
-
-		} catch(Exception e) {
-			if(conn!=null) {
-				conn.rollback();
-			}
-			throw e;
-		} finally {
-			if(conn!=null) {
-				conn.setAutoCommit(true);
-			}
-			// Tell it we're done.
-			db.close();
+		// Determine whether this is a new user or not.
+		if(id>=0) {
+			db=new ModifyUser(conn);
+			db.set("user_id", getId());
+		} else {
+			db=new InsertUser(conn);
 		}
+
+		// Set the common fields and update.
+		db.set("username", username);
+		db.set("realname", realname);
+		db.set("email", email);
+		db.set("password", password);
+		db.set("canadd", canadd);
+		db.executeUpdate();
+		db.close();
+		db=null;
+
+		// For new users, We need to fetch the ID
+		if(id==-1) {
+			GetGeneratedKey gkey=new GetGeneratedKey(conn);
+			gkey.setSeq("wwwusers_id_seq");
+			ResultSet rs=gkey.executeQuery();
+			rs.next();
+			id=rs.getInt("key");
+			rs.close();
+			gkey.close();
+		}
+
+		// OK, now let's save the ACL.
+
+		// First, out with the old.
+		DeleteACLForUser dacl=new DeleteACLForUser(conn);
+		dacl.setUserId(getId());
+		dacl.executeUpdate();
+		dacl.close();
+
+		// Then in with the new.
+		InsertACLEntry ins=new InsertACLEntry(conn);
+		ins.setUserId(getId());
+
+		for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
+			PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
+
+			ins.setCatId(aclEntry.getCat());
+			ins.setCanView(aclEntry.canView());
+			ins.setCanAdd(aclEntry.canAdd());
+			ins.executeUpdate();
+		}
+		ins.close();
 	}
 
 	/**
@@ -371,6 +379,7 @@ public class PhotoUser extends Object implements Serializable {
 			}
 		}
 		this.password=pass;
+		isModified=true;
 	}
 
 	/**

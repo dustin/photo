@@ -1,0 +1,15 @@
+#
+# $Id: DeleteACLForUser.spt,v 1.1 2002/12/15 09:02:25 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Remove all of the ACL entries for the given user.
+
+@sql
+delete from wwwacl where userid=?
+
+@params
+user_id required INTEGER Category ID.

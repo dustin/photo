@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.9 2002/11/10 09:41:59 dustin Exp $
+// $Id: Category.java,v 1.10 2002/12/15 09:02:25 dustin Exp $
 
 package net.spy.photo;
 
@@ -21,8 +21,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
+import net.spy.SpyObject;
 import net.spy.SpyDB;
 import net.spy.db.DBSP;
+import net.spy.db.Savable;
+import net.spy.db.SaveContext;
+import net.spy.db.SaveException;
 import net.spy.cache.SpyCache;
 
 import net.spy.photo.sp.GetAllCategories;
@@ -36,7 +40,7 @@ import net.spy.photo.sp.GetGeneratedKey;
 /**
  * Category representation.
  */
-public class Category extends Object implements Comparable {
+public class Category extends SpyObject implements Comparable, Savable {
 
 	/**
 	 * Flag to list categories that can be read by the user.
@@ -54,6 +58,7 @@ public class Category extends Object implements Comparable {
 	private String name=null;
 
 	private List acl=null;
+	private boolean isModified=false;
 
 	/**
 	 * Get an instance of Category.
@@ -169,6 +174,7 @@ public class Category extends Object implements Comparable {
 	// Overwrite the ACL entry
 	private void setAcl(List to) {
 		acl=to;
+		isModified=true;
 	}
 
 	/**
@@ -201,89 +207,86 @@ public class Category extends Object implements Comparable {
 		db.close();
 	}
 
+	// Savable implementation
+
+	public boolean isNew() {
+		return(id == -1);
+	}
+
+	public boolean isModified() {
+		return(isModified);
+	}
+
+	public Collection getSavables(SaveContext context) {
+		return(null);
+	}
+
 	/**
 	 * Save this category and ACL entries.
 	 */
-	public void save() throws Exception {
-		SpyDB db=new SpyDB(new PhotoConfig());
-		Connection conn=null;
-		try {
-			conn=db.getConn();
-			conn.setAutoCommit(false);
+	public void save(Connection conn, SaveContext context)
+		throws SaveException, SQLException {
+		DBSP saveCat=null;
 
-			DBSP saveCat=null;
-
-			// What to do here depends on whether it's a new category or a
-			// modification of an existing category.
-			if(id>=0) {
-				// Existing user
-				saveCat=new UpdateCategory(conn);
-				saveCat.set("id", id);
-			} else {
-				saveCat=new InsertCategory(conn);
-			}
-
-			// Set the common fields
-			saveCat.set("name", name);
-			// Save the category proper
-			saveCat.executeUpdate();
-			saveCat.close();
-			saveCat=null;
-
-			// If'n it's a new category, let's look up the ACL we just saved.
-			if(id==-1) {
-				GetGeneratedKey ggk=new GetGeneratedKey(conn);
-				ggk.setSeq("cat_id_seq");
-				ResultSet rs=ggk.executeQuery();
-				if(!rs.next()) {
-					throw new PhotoException(
-						"No results returned while looking up new cat id");
-				}
-				id=rs.getInt(1);
-				rs.close();
-				ggk.close();
-				System.err.println("New category:  " + id);
-			}
-
-			// OK, now deal with the ACLs
-
-			// Out with the old
-			DeleteACLForCat dacl=new DeleteACLForCat(conn);
-			dacl.setCat(id);
-			dacl.executeUpdate();
-			dacl.close();
-			dacl=null;
-
-			// In with the new
-
-			InsertACLEntry iacl=new InsertACLEntry(conn);
-
-			for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
-				PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
-
-				iacl.setUserId(aclEntry.getUid());
-				iacl.setCatId(id);
-				iacl.setCanView(aclEntry.canView());
-				iacl.setCanAdd(aclEntry.canAdd());
-				iacl.executeUpdate();
-			}
-			iacl.close();
-			iacl=null;
-
-			conn.commit();
-		} catch(Exception e) {
-			if(conn!=null) {
-				conn.rollback();
-			}
-			throw e;
-		} finally {
-			if(conn!=null) {
-				conn.setAutoCommit(true);
-			}
-			// Tell it we're done
-			db.close();
+		// What to do here depends on whether it's a new category or a
+		// modification of an existing category.
+		if(isNew()) {
+			saveCat=new InsertCategory(conn);
+		} else {
+			// Existing user
+			saveCat=new UpdateCategory(conn);
+			saveCat.set("id", id);
 		}
+
+		// Set the common fields
+		saveCat.set("name", name);
+		// Save the category proper
+		saveCat.executeUpdate();
+		saveCat.close();
+		saveCat=null;
+
+		// If'n it's a new category, let's look up the ACL we just saved.
+		if(id==-1) {
+			GetGeneratedKey ggk=new GetGeneratedKey(conn);
+			ggk.setSeq("cat_id_seq");
+			ResultSet rs=ggk.executeQuery();
+			if(!rs.next()) {
+				throw new SaveException(
+					"No results returned while looking up new cat id");
+			}
+			id=rs.getInt(1);
+			rs.close();
+			ggk.close();
+			getLogger().info("New category:  " + id);
+		}
+
+		// OK, now deal with the ACLs
+
+		// Out with the old
+		DeleteACLForCat dacl=new DeleteACLForCat(conn);
+		dacl.setCat(id);
+		dacl.executeUpdate();
+		dacl.close();
+		dacl=null;
+
+		// In with the new
+
+		InsertACLEntry iacl=new InsertACLEntry(conn);
+
+		for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
+			PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
+
+			iacl.setUserId(aclEntry.getUid());
+			iacl.setCatId(id);
+			iacl.setCanView(aclEntry.canView());
+			iacl.setCanAdd(aclEntry.canAdd());
+			iacl.executeUpdate();
+		}
+		iacl.close();
+		iacl=null;
 	}
+
+	// End savable implementation
 
 	/**
 	 * Get the ACL entries for this category.
@@ -452,6 +455,7 @@ public class Category extends Object implements Comparable {
 	 */
 	public void setName(String to) {
 		this.name=to;
+		isModified=true;
 	}
 
 	/**

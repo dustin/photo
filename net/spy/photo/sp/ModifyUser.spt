@@ -1,0 +1,23 @@
+#
+# $Id: ModifyUser.spt,v 1.1 2002/12/15 09:02:25 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Update a user
+
+@sql
+update wwwusers
+	set username=?, realname=?, email=?, password=?, canadd=?
+	where id=?
+
+@params
+username required VARCHAR The username ff the user
+realname required VARCHAR The real name of the user
+email required VARCHAR The email address of the user
+password required VARCHAR The encoded password
+canadd required BIT true if the user can add
+user_id required INTEGER The ID number of this user
+

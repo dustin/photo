@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveCatAction.java,v 1.4 2002/11/04 03:11:24 dustin Exp $
+// $Id: AdminSaveCatAction.java,v 1.5 2002/12/15 09:02:25 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -11,11 +11,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.Category;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import net.spy.db.Saver;
+
+import net.spy.photo.Category;
+import net.spy.photo.PhotoConfig;
 
 /**
  * Action used to save a category.
@@ -77,7 +80,8 @@ public class AdminSaveCatAction extends AdminAction {
 		}
 
 		try {
-			cat.save();
+			Saver saver=new Saver(new PhotoConfig());
+			saver.save(cat);
 		} catch(Exception e) {
 			throw new ServletException("Error saving category", e);
 		}

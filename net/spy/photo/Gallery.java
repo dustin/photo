@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.9 2002/11/10 09:41:59 dustin Exp $
+// $Id: Gallery.java,v 1.10 2002/12/15 09:02:25 dustin Exp $
 
 package net.spy.photo;
 
@@ -18,16 +18,25 @@ import java.util.Iterator;
 
 import net.spy.SpyDB;
 
+import net.spy.db.DBSP;
 import net.spy.db.SpyCacheDB;
+import net.spy.db.Savable;
+import net.spy.db.SaveException;
+import net.spy.db.SaveContext;
 
 import net.spy.photo.sp.LookupGallery;
 import net.spy.photo.sp.GetGalleriesForUser;
 import net.spy.photo.sp.GetGalleryForUser;
+import net.spy.photo.sp.GetGeneratedKey;
+import net.spy.photo.sp.InsertGallery;
+import net.spy.photo.sp.UpdateGallery;
+import net.spy.photo.sp.InsertGalleryMap;
+import net.spy.photo.sp.DeleteGalleryMappings;
 
 /**
  * A named collection of images.
  */
-public class Gallery extends Object implements java.io.Serializable {
+public class Gallery extends Object implements java.io.Serializable, Savable {
 
 	private int id=-1;
 	private String name=null;
@@ -35,6 +44,8 @@ public class Gallery extends Object implements java.io.Serializable {
 	private boolean isPublic=false;
 	private PhotoUser owner=null;
 	private Date timestamp=null;
+
+	private boolean isModified=false;
 
 	/**
 	 * Get an instance of Gallery belonging to a given owner.
@@ -146,112 +157,88 @@ public class Gallery extends Object implements java.io.Serializable {
 		return(rv);
 	}
 
+	// Savable implementation
+
+	public boolean isNew() {
+		return(id==-1);
+	}
+
+	public boolean isModified() {
+		return(isModified);
+	}
+
+	public Collection getSavables(SaveContext context) {
+		return(null);
+	}
+
 	/**
 	 * Save a new gallery.
 	 */
-	public void save() throws PhotoException {
-		SpyDB db=new SpyDB(new PhotoConfig());
-		Connection conn=null;
+	public void save(Connection conn, SaveContext context)
+		throws SaveException, SQLException {
 
 		if(name==null) {
-			throw new PhotoException("Gallery name not provided.");
+			throw new SaveException("Gallery name not provided.");
 		}
 
-		try {
-			conn=db.getConn();
-			conn.setAutoCommit(false);
-			PreparedStatement pst=null;
+		DBSP db=null;
 
-			// Different prepared statement for new vs. update
-			if(id==-1) {
-				pst=conn.prepareStatement(
-					"insert into galleries "
-						+ "(gallery_name, wwwuser_id, ispublic)\n"
-						+ " values(?,?,?)");
-			} else {
-				pst=conn.prepareStatement(
-					"update galleries "
-						+ "set gallery_name=?, wwwuser_id=?, ispublic=?\n"
-						+ "  where gallery_id=?");
-				pst.setInt(4, id);
-			}
-			// Set the common fields
-			pst.setString(1, getName());
-			pst.setInt(2, getOwner().getId());
-			pst.setBoolean(3, isPublic());
+		// Different prepared statement for new vs. update
+		if(isNew()) {
+			db=new InsertGallery(conn);
+		} else {
+			db=new UpdateGallery(conn);
+			db.set("gallery_id", id);
+		}
+		// Set the common fields
+		db.set("gallery_name", getName());
+		db.set("user_id", getOwner().getId());
+		db.set("is_public", isPublic());
 
-			// Perform the update
-			int affected=pst.executeUpdate();
+		// Perform the update
+		int affected=db.executeUpdate();
 
-			// Make sure we didn't mess up
+		// Make sure we didn't mess up
+		if(affected!=1) {
+			throw new SaveException(
+				"Expected to affect one row, affected " + affected);
+		}
+
+		// Close the statement.
+		db.close();
+
+		// If it's a new record, get the ID
+		if(isNew()) {
+			GetGeneratedKey gkey=new GetGeneratedKey(conn);
+			gkey.setSeq("galleries_gallery_id_seq");
+			ResultSet rs=gkey.executeQuery();
+			rs.next();
+			id=rs.getInt("key");
+			rs.close();
+			gkey.close();
+		}
+
+		// Save the mappings
+
+		// Delete any old mappings that might exist
+		DeleteGalleryMappings dgm=new DeleteGalleryMappings(conn);
+		dgm.setGalleryId(id);
+		dgm.executeUpdate();
+		dgm.close();
+
+		// Load the new gallery
+		InsertGalleryMap igm=new InsertGalleryMap(conn);
+		igm.setGalleryId(id);
+
+		for(Iterator i=images.iterator(); i.hasNext(); ) {
+			PhotoImageData pid=(PhotoImageData)i.next();
+
+			igm.setAlbumId(pid.getId());
+			affected=igm.executeUpdate();
 			if(affected!=1) {
-				throw new PhotoException(
+				throw new SaveException(
 					"Expected to affect one row, affected " + affected);
 			}
-
-			// Close the statement.
-			pst.close();
-
-			// If it's a new record, get the ID
-			if(id==-1) {
-				Statement st2=conn.createStatement();
-				ResultSet rs=st2.executeQuery(
-					"select currval('galleries_gallery_id_seq')");
-				rs.next();
-				id=rs.getInt(1);
-				rs.close();
-				st2.close();
-			}
-
-			// Save the mappings
-
-			// Delete any old mappings that might exist
-			pst=conn.prepareStatement(
-				"delete from galleries_map where gallery_id=?");
-			pst.setInt(1, id);
-			pst.executeUpdate();
-			pst.close();
-
-			// Load the new gallery
-			pst=conn.prepareStatement(
-				"insert into galleries_map(gallery_id,album_id)\n"
-					+ " values(?,?)");
-			pst.setInt(1, id);
-
-			for(Iterator i=images.iterator(); i.hasNext(); ) {
-				PhotoImageData pid=(PhotoImageData)i.next();
-
-				pst.setInt(2, pid.getId());
-				affected=pst.executeUpdate();
-				if(affected!=1) {
-					throw new PhotoException(
-						"Expected to affect one row, affected " + affected);
-				}
-			}
-			pst.close();
-
-			// Done, commit
-			conn.commit();
-
-		} catch(Exception e) {
-			if(conn!=null) {
-				try {
-					conn.rollback();
-				} catch(SQLException sqle) {
-					sqle.printStackTrace();
-				}
-			}
-			throw new PhotoException("Error saving new gallery", e);
-		} finally {
-			if(conn!=null) {
-				try {
-					conn.setAutoCommit(true);
-				} catch(SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			// Close the DB
-			db.close();
 		}
 	}
 
@@ -348,36 +335,6 @@ public class Gallery extends Object implements java.io.Serializable {
 	 */
 	public int size() {
 		return(images.size());
-	}
-
-	/**
-	 * Testing and what not.
-	 */
-	public static void main(String args[]) throws Exception {
-
-		PhotoSecurity sec=new PhotoSecurity();
-		if(args.length == 0) {
-			PhotoUser user=sec.getUser("dustin");
-			Gallery g=new Gallery(user, "Test Gallery");
-
-			g.addImage(3985);
-			g.addImage(3929);
-			g.addImage(4009);
-
-			g.save();
-
-			System.out.println(g);
-		} else if(args.length == 1) {
-			PhotoUser user=sec.getUser(args[0]);
-			for(Cursor c=getGalleries(user); c.hasMoreElements(); ) {
-				Gallery g=(Gallery)c.nextElement();
-				System.out.println(g);
-			}
-		} else {
-			PhotoUser user=sec.getUser(args[0]);
-			Gallery g=getGallery(user, Integer.parseInt(args[1]));
-			System.out.println(g);
-		}
 	}
 
 }

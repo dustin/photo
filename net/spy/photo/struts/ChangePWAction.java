@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ChangePWAction.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: ChangePWAction.java,v 1.3 2002/12/15 09:02:25 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -11,6 +11,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.spy.db.Saver;
+
+import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUser;
 
@@ -50,7 +53,8 @@ public class ChangePWAction extends PhotoAction {
 		// Set the password
 		try {
 			user.setPassword(cpf.getNewpw1());
-			user.save();
+			Saver saver=new Saver(new PhotoConfig());
+			saver.save(user);
 		} catch(Exception e) {
 			throw new ServletException("Error setting/save new password", e);
 		}

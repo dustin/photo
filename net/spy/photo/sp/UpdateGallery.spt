@@ -1,0 +1,20 @@
+#
+# $Id: UpdateGallery.spt,v 1.1 2002/12/15 09:02:25 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Modify a gallery
+
+@sql
+update galleries
+	set gallery_name=?, wwwuser_id=?, ispublic=?
+	where gallery_id=?
+
+@params
+gallery_name required VARCHAR The name of the gallery
+user_id required INTEGER The ID of the owner
+is_public required BIT True if the gallery is public
+gallery_id required INTEGER The ID of this gallery

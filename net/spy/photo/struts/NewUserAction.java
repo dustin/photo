@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NewUserAction.java,v 1.4 2002/07/10 03:38:09 dustin Exp $
+// $Id: NewUserAction.java,v 1.5 2002/12/15 09:02:25 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.spy.SpyDB;
+import net.spy.db.Saver;
 
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
@@ -83,7 +84,8 @@ public class NewUserAction extends PhotoAction {
 
 		// Save the new user
 		try {
-			pu.save();
+			Saver saver=new Saver(new PhotoConfig());
+			saver.save(pu);
 		} catch(Exception e) {
 			throw new ServletException("Error saving user", e);
 		}

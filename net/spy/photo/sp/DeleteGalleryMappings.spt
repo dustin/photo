@@ -1,0 +1,16 @@
+#
+# $Id: DeleteGalleryMappings.spt,v 1.1 2002/12/15 09:02:25 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Delete all mappings for a given gallery.
+
+@sql
+delete from galleries_map where gallery_id=?
+
+@params
+gallery_id required INTEGER The gallery whose mappings will be deleted
+

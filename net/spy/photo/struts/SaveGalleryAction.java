@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveGalleryAction.java,v 1.5 2002/07/10 03:38:09 dustin Exp $
+// $Id: SaveGalleryAction.java,v 1.6 2002/12/15 09:02:25 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -12,11 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.spy.photo.Gallery;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import net.spy.db.Saver;
+
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.Gallery;
 
 /**
  * Action to save a gallery.
@@ -57,7 +60,8 @@ public class SaveGalleryAction extends PhotoAction {
 
 		// Add the new image
 		try {
-			g.save();
+			Saver saver=new Saver(new PhotoConfig());
+			saver.save(g);
 		} catch(Exception e) {
 			throw new ServletException("Error saving gallery", e);
 		}

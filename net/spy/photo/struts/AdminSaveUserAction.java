@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveUserAction.java,v 1.7 2002/08/20 03:09:16 dustin Exp $
+// $Id: AdminSaveUserAction.java,v 1.8 2002/12/15 09:02:25 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -17,6 +17,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import net.spy.SpyDB;
+import net.spy.db.Saver;
 
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSecurity;
@@ -89,7 +90,8 @@ public class AdminSaveUserAction extends AdminAction {
 		}
 
 		try {
-			user.save();
+			Saver saver=new Saver(new PhotoConfig());
+			saver.save(user);
 		} catch(Exception e) {
 			throw new ServletException("Error saving user", e);
 		}
