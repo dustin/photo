@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SetDisplayRefresh.java,v 1.4 2003/07/23 04:29:26 dustin Exp $
+// $Id: SetDisplayRefresh.java,v 1.5 2003/08/03 18:35:38 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -24,6 +24,11 @@ import net.spy.photo.PhotoUtil;
  * If requested, set up a display refresh for the display page.
  */
 public class SetDisplayRefresh extends PhotoAction {
+
+	/** 
+	 * Request attribute set when slideshow mode is activated.
+	 */
+	public static final String SLIDESHOW_MODE="slideshowMode";
 
 	/**
 	 * Get an instance of SetDisplayRefresh.
@@ -56,6 +61,8 @@ public class SetDisplayRefresh extends PhotoAction {
 				String aLoc=PhotoUtil.getRelativeUri(request, loc);
 				getLogger().info("Refreshing to:  " + aLoc);
 				response.addHeader("Refresh", "5; URL=" + aLoc);
+
+				request.setAttribute(SLIDESHOW_MODE, "1");
 			}
 		}
 

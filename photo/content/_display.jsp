@@ -16,7 +16,7 @@
 <% } else { %>
 	<table width="100%">
 		<tr valign="top">
-			<td align="left" width="10%">
+			<td align="left" width="30%">
 					<photo:imgLink id="0" relative="prev"
 						searchId='<%= "" + searchIdS %>'>
 						<photo:imgsrc alt="previous" border="0" url="/images/prev.png"/>
@@ -27,7 +27,7 @@
 				<div class="displayBrief"><c:out value="${image.descr}"/></div>
 			</td>
 
-			<td align="right" width="10%">
+			<td align="right" width="30%">
 					<photo:link url='<%= "/display.do?search_id=" + searchIdS %>'>
 						<photo:imgsrc alt="pause" border="0" url="/images/pause.png"/>
 					</photo:link>
@@ -51,7 +51,8 @@
 	</div>
 
 	<p>
-		<b>Category</b>: ``<c:out value="${image.catName}"/>''&nbsp;<b>Keywords</b>:
+		<b>Category</b>: &#147;<c:out
+			value="${image.catName}"/>&#148;&nbsp;<b>Keywords</b>:
 			<i><c:out value="${image.keywords}"/></i><br>
 		<b>Size</b>:  <c:out value="${image.dimensions}"/>
 			(<c:out value="${image.size}"/> bytes)<br>

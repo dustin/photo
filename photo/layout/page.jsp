@@ -7,6 +7,9 @@
 
 <html><head><title><tiles:insert attribute='title'/></title>
 <photo:stylesheet url="/style.css"/>
+<c:if test="${slideshowMode eq 1}">
+	<photo:stylesheet url="/slideshow.css"/>
+</c:if>
 </head>
 <body background='<%= props.getProperty("background_img", "") %>'>
 
