@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!--
+	Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
+	$Id: find.xinc,v 1.2 2000/11/10 07:17:18 dustin Exp $
+-->
+
+<page>
+	<heading>
+		<title>Find an Image</title>
+	</heading>
+
+	%GLOBALMETA%
+
+	<sections>
+		<section>
+			<title>Simple Search</title>
+			<content>
+				<form method="POST" action="%SELF_URI%">
+					<input type="hidden" name="func" value="search"/>
+					<input type="hidden" name="maxret" value="5"/>
+					<input type="hidden" name="fieldjoin" value="and"/>
+					<input type="hidden" name="keyjoin" value="and"/>
+					<input type="hidden" name="order" value="a.ts"/>
+					<input type="hidden" name="sdirection" value="desc"/>
+					Find all images whose
+					<select name="field">
+    					<option value="keywords"/>Keyword
+    					<option value="descr"/>Info (slow)
+					</select>
+					contains
+					<input name="what"/><br/>
+					<input type="submit" value="Find"/>
+				</form>
+			</content>
+		</section>
+
+		<section>
+			<title>Advanced Search</title>
+			<content>
+				Only fields that are filled out will be used, default search
+				will return all images.
+
+				<form method="POST" action="%SELF_URI%">
+				<input type="hidden" name="func" value="search"/>
+				Category:
+				<select name="cat" multiple="1" size="5">
+				%CAT_LIST%
+				</select>
+				<p/>
+
+				<select name="fieldjoin">
+					<option value="and"/>and
+					<option value="or"/>or
+				</select>
+
+				<select name="field">
+					<option value="keywords"/>Keyword
+					<option value="descr"/>Info
+				</select>
+
+				contains
+
+				<select name="keyjoin">
+					<option value="or"/>one of
+					<option value="and"/>all of
+				</select>
+
+				<input name="what"/><br/>
+
+				<table>
+					<tr>
+						<td>
+							<select name="tstartjoin">
+								<option value="and"/>and
+								<option value="or"/>or
+							</select>
+							was taken since (date)
+							<input name="tstart"/>
+						</td>
+						<td>
+							<select name="tendjoin">
+								<option value="and"/>and
+								<option value="or"/>or
+							</select>
+							was added since (date)
+							<input name="tend"/><br/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<select name="startjoin">
+								<option value="and"/>and
+								<option value="or"/>or
+							</select>
+							was added since (date)
+							<input name="start"/><br/>
+						</td>
+						<td>
+							<select name="endjoin">
+								<option value="and"/>and
+								<option value="or"/>or
+							</select>
+							was added before (date)
+							<input name="end"/><br/>
+						</td>
+					</tr>
+				</table>
+
+				Sort by when the picture was
+				<select name="order">
+					<option value="a.taken"/>taken
+					<option value="a.ts"/>added
+				</select>
+				and show
+				<select name="sdirection">
+					<option/>oldest
+					<option value="desc"/>newest
+				</select>
+				images first.
+
+				<br/>
+
+				<input type="submit" value="Find"/>
+				<input type="reset" value="Clear Form"/>
+
+				</form>
+
+			</content>
+		</section>
+	</sections>
+
+</page>

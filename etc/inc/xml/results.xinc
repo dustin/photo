@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+	Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
+	$Id: results.xinc,v 1.2 2000/11/10 07:17:18 dustin Exp $
+-->
+
+<page>
+
+	<heading>
+		<title>Search Results</title>
+	</heading>
+
+	%GLOBALMETA%
+
+	<search_results_page>
+		<meta_stuff>
+			%LINKTOMORE%
+			<total>%TOTAL%</total>
+		</meta_stuff>
+		<sections>
+			<section>
+				<title>Search matched %TOTAL% entries</title>
+				<content>
+						<search_results>
+							%RESULTS%
+						</search_results>
+				</content>
+			</section>
+
+		</sections>
+	</search_results_page>
+
+</page>

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+	Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
+	$Id: index.xinc,v 1.2 2000/11/10 07:17:18 dustin Exp $
+-->
+
+<page>
+
+	<heading>
+		<title>Dustin's Photo Album</title>
+	</heading>
+
+	%GLOBALMETA%
+
+	<index_page>
+
+		<sections>
+
+			<section name="options">
+				<title>Options</title>
+				<content>
+					<list>
+    					<item link="%SELF_URI%?func=addform">Add an image</item>
+    					<item link="%SELF_URI%?func=findform">Find an image</item>
+    					<item link="%SELF_URI%?func=catview"> Category view</item>
+					</list>
+				</content>
+			</section>
+
+			<section name="canned_searches">
+				<title>Canned Searches</title>
+				<content>
+					<list>
+  						%SAVED%
+					</list>
+				</content>
+			</section>
+
+			<section name="quick_search">
+				<title>Quick Search</title>
+				<content>
+					<form method="POST" action="%SELF_URI%">
+					<input type="hidden" name="func" value="search"/>
+					<input type="hidden" name="maxret" value="5"/>
+					<input type="hidden" name="fieldjoin" value="and"/>
+					<input type="hidden" name="keyjoin" value="and"/>
+					<input type="hidden" name="order" value="a.ts"/>
+					<input type="hidden" name="sdirection" value="desc"/>
+					<input type="hidden" name="field" value="keywords"/>
+					Quick Search:  <input name="what"/>
+					<input type="submit" value="Find"/>
+					</form>
+				</content>
+			</section>
+
+			<section name="Credits">
+				<title>Credits</title>
+				<content>
+					All pages herein were created using vi.  For more
+					information on the vi web page publishing system, type
+					<i>man vi</i> at your prompt.
+				</content>
+			</section>
+
+		</sections>
+
+	</index_page>
+
+</page>
