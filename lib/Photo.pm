@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.6 1998/04/30 05:56:34 dustin Exp $
+# $Id: Photo.pm,v 1.7 1998/04/30 07:08:22 dustin Exp $
 
 package Photo;
 
@@ -285,7 +285,7 @@ sub myquote
 sub addImage
 {
     my($self, $q)=@_;
-    my(@elements, %in, %tmp, $query, $ext, $fn, $f, @stat, $s);
+    my(@elements, %in, %tmp, $query, $ext, $fn, $f, @stat, $s, $r);
 
     @elements=qw(category keywords picture info taken);
     %tmp=map{$_,1}@elements;
@@ -294,6 +294,15 @@ sub addImage
     }$q->param;
 
     print $q->start_html(-title=>'Adding image',-bgcolor=>'#fFfFfF');
+
+    $query="select * from wwwusers where username='$ENV{'REMOTE_USER'}'\n";
+    $s=$self->doQuery($query);
+    $r=$s->fetch;
+    if($r->[4]!=1)
+    {
+	$self->showTemplate("$Photo::includes/add_denied.inc", ());
+	return;
+    }
 
     if($in{'picture'}=~/jpg.$/i) {
 	$ext="jpg";
