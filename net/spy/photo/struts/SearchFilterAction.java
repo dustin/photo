@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchFilterAction.java,v 1.4 2003/04/25 06:32:23 dustin Exp $
+// $Id: SearchFilterAction.java,v 1.5 2003/05/04 06:49:54 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -16,7 +16,10 @@ import net.spy.photo.PhotoSearchResults;
 import net.spy.photo.PhotoSessionData;
 
 import net.spy.photo.filter.Filter;
+import net.spy.photo.filter.SortingFilter;
 import net.spy.photo.filter.OnceAMonthFilter;
+import net.spy.photo.filter.OnceAWeekFilter;
+import net.spy.photo.filter.OnceADayFilter;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -60,16 +63,24 @@ public class SearchFilterAction extends PhotoAction {
 
 			// Figure out what filter to use
 			if(filterName.equals("onceamonth")) {
-				OnceAMonthFilter oam=new OnceAMonthFilter();
-				// Save the sort direction.
-				if(sf.getSdirection().equals("desc")) {
-					oam.setSortDirection(OnceAMonthFilter.SORT_REVERSE);
-				} else {
-					oam.setSortDirection(OnceAMonthFilter.SORT_FORWARD);
-				}
-				filter=oam;
+				filter=new OnceAMonthFilter();
+			} else if(filterName.equals("onceaweek")) {
+				filter=new OnceAWeekFilter();
+			} else if(filterName.equals("onceaday")) {
+				filter=new OnceADayFilter();
 			} else {
 				throw new ServletException("Unknown filter:  " + filterName);
+			}
+
+			// Filters that deal with sorting
+			if(filter instanceof SortingFilter) {
+				SortingFilter sfil=(SortingFilter)filter;
+				// Save the sort direction.
+				if(sf.getSdirection().equals("desc")) {
+					sfil.setSortDirection(SortingFilter.SORT_REVERSE);
+				} else {
+					sfil.setSortDirection(SortingFilter.SORT_FORWARD);
+				}
 			}
 
 			// perform the filtration and set the results.

@@ -186,6 +186,12 @@
 			<html:option value="onceamonth">
 				<bean:message key="forms.search.adv.filter.onceamonth"/>
 			</html:option>
+			<html:option value="onceaweek">
+				<bean:message key="forms.search.adv.filter.onceaweek"/>
+			</html:option>
+			<html:option value="onceaday">
+				<bean:message key="forms.search.adv.filter.onceaday"/>
+			</html:option>
 		</html:select>
 
 		<br/>
