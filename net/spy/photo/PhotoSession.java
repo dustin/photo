@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.10 2000/06/28 06:41:50 dustin Exp $
+ * $Id: PhotoSession.java,v 1.11 2000/06/28 21:47:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -30,7 +30,6 @@ public class PhotoSession extends Object
 	protected MultipartRequest multi=null;
 	protected SpyLog logger=null;
 	protected PhotoSecurity security = null;
-	protected HttpSession session=null;
 
 	protected PhotoStorerThread storer_thread = null;
 
@@ -38,8 +37,10 @@ public class PhotoSession extends Object
 
 	protected Hashtable groups=null;
 
-	HttpServletRequest request=null;
-	HttpServletResponse response=null;
+	// These are public because they may be used by PhotoHelpers
+	public HttpServletRequest request=null;
+	public HttpServletResponse response=null;
+	public HttpSession session=null;
 
 	public PhotoSession(PhotoServlet p,
 		HttpServletRequest request,
@@ -90,77 +91,77 @@ public class PhotoSession extends Object
 			log("func is " + func);
 		}
 
+		String out=null;
+
 		// OK, see what they're doing.
 		if(func == null) {
-			doIndex();
+			out=doIndex();
 		} else if(func.equals("search")) {
-			doFind();
+			out=doFind();
 		} else if(func.equals("nextresults")) {
-			displaySearchResults();
+			out=displaySearchResults();
 		} else if(func.equals("addimage")) {
-			doAddPhoto();
+			out=doAddPhoto();
 		} else if(func.equals("index")) {
-			doIndex();
+			out=doIndex();
 		} else if(func.equals("findform")) {
-			doFindForm();
+			out=doFindForm();
 		} else if(func.equals("addform")) {
-			doAddForm();
+			out=doAddForm();
 		} else if(func.equals("catview")) {
-			doCatView();
+			out=doCatView();
 		} else if(func.equals("setstyle")) {
-			doSetStyle();
+			out=doSetStyle();
 		} else if(func.equals("styleform")) {
-			doStyleForm();
+			out=doStyleForm();
 		} else if(func.equals("getstylesheet")) {
-			doGetStylesheet();
+			out=doGetStylesheet();
 		} else if(func.equals("display")) {
-			doDisplay();
+			out=doDisplay();
 		} else if(func.equals("logview")) {
-			doLogView();
+			out=doLogView();
 		} else if(func.equals("getimage")) {
-			showImage();
+			out=showImage();
 		} else if(func.equals("credform")) {
-			showCredForm();
+			out=showCredForm();
 		} else if(func.equals("savesearch")) {
-			saveSearch();
-		} else if(func.equals("edittext")) {
-			saveImageInfo();
-			doDisplay();
+			out=saveSearch();
 		} else if(func.equals("setcred")) {
 			setCreds();
-			doIndex();
+			out=doIndex();
 		} else if(func.equals("setadmin")) {
 			setAdmin();
-			doIndex();
+			out=doIndex();
 		} else if(func.equals("unsetadmin")) {
 			unsetAdmin();
-			doIndex();
-		} else if(func.equals("admcat")) {
-			admShowCategories();
-		} else if(func.equals("admcatedit")) {
-			admEditCategoryForm();
-		} else if(func.equals("admsavecat")) {
-			admSaveCategory();
-		} else if(func.equals("admuser")) {
-			admShowUsers();
-		} else if(func.equals("admuseredit")) {
-			admEditUserForm();
-		} else if(func.equals("admsaveuser")) {
-			admSaveUser();
+			out=doIndex();
+		} else if(func.startsWith("adm")) {
+			// Anything that starts with rep is probably reporting.
+			try {
+				PhotoAdmin adm=new PhotoAdmin(this);
+				out=adm.process(func);
+			} catch(Exception e) {
+				throw new ServletException("Admin Exception:  " + e);
+			}
 		} else if(func.startsWith("rep")) {
 			// Anything that starts with rep is probably reporting.
 			try {
 				PhotoReporting rep=new PhotoReporting(this);
-				send_response(rep.process(func));
+				out=rep.process(func);
 			} catch(Exception e) {
 				throw new ServletException("Reporting Exception:  " + e);
 			}
 		} else {
 			throw new ServletException("No known function.");
 		}
+
+		// Some things handle their own responses, and return null.
+		if(out!=null) {
+			send_response(out);
+		}
 	}
 
-	protected void saveSearch() throws ServletException {
+	protected String saveSearch() throws ServletException {
 		PhotoSearch ps = new PhotoSearch();
 		PhotoUser user = security.getUser(remote_user);
 		String output="";
@@ -173,339 +174,12 @@ public class PhotoSession extends Object
 			h.put("MESSAGE", e.getMessage());
 			output=tokenize("addsearch_fail.inc", h);
 		}
-		send_response(output);
+		return(output);
 	}
 
 	protected void getCreds() throws ServletException {
 		getUid();
 		log("Authenticated as " + remote_user);
-	}
-
-	// Show the user edit form
-	protected void admShowUsers() throws ServletException {
-		ServletException se=null;
-		if(!isAdmin()) {
-			throw new ServletException("Not admin");
-		}
-		Hashtable h = new Hashtable();
-		Connection photo=null;
-		try {
-			photo=getDBConn();
-			String users="";
-
-			Statement st=photo.createStatement();
-			ResultSet rs=st.executeQuery(
-				"select id, username from wwwusers"
-				);
-			while(rs.next()) {
-				users+="\t\t<option value=\""
-					+ rs.getInt("id") + "\">"
-					+ rs.getString("username") + "\n";
-			}
-			h.put("USERS", users);
-
-			String output=tokenize("admin/admuser.inc", h);
-			send_response(output);
-		} catch(Exception e) {
-			se=new ServletException("Error showing users:  " + e);
-		} finally {
-			freeDBConn(photo);
-		}
-
-		if(se!=null) {
-			throw(se);
-		}
-	}
-
-	// Show a user to be edited
-	protected void admEditUserForm() throws ServletException {
-		String output="";
-		ServletException se=null;
-		if(!isAdmin()) {
-			throw new ServletException("Not admin");
-		}
-		Connection photo=null;
-		try {
-			String s_user_id=request.getParameter("userid");
-			int userid=Integer.parseInt(s_user_id);
-			Hashtable h=new Hashtable();
-			Hashtable cats=new Hashtable();
-			String acltable="";
-
-			// Defaults -- Basically for a new uesr
-			h.put("USERID", s_user_id);
-			h.put("USER", "New User");
-			h.put("REALNAME", "New User");
-			h.put("EMAIL", "");
-			h.put("PASS", "");
-			h.put("CANADD", "");
-			h.put("CANNOTADD", "checked");
-
-			photo=getDBConn();
-
-			// First DB query is to get the user info
-			PreparedStatement st=photo.prepareStatement(
-				"select * from wwwusers where id=?"
-				);
-			st.setInt(1, userid);
-			ResultSet rs=st.executeQuery();
-			while(rs.next()) {
-				h.put("USERID", rs.getString("id"));
-				h.put("USER", rs.getString("username"));
-				h.put("PASS", rs.getString("password"));
-				h.put("EMAIL", rs.getString("email"));
-				h.put("REALNAME", rs.getString("realname"));
-
-				if(rs.getBoolean("canadd")) {
-					h.put("CANADD", "checked");
-					h.put("CANNOTADD", "");
-				} else {
-					h.put("CANADD", "");
-					h.put("CANNOTADD", "checked");
-				}
-			}
-
-			// Second DB query gets a list of the categories the user can see
-			st=photo.prepareStatement(
-				"select cat from wwwacl where userid=?"
-				);
-			st.setInt(1, userid);
-			rs=st.executeQuery();
-			while(rs.next()) {
-				cats.put(rs.getString("cat"), "1");
-			}
-
-			// Third DB query gets all of the categories
-			st=photo.prepareStatement(
-				"select * from cat order by name"
-				);
-			rs=st.executeQuery();
-			while(rs.next()) {
-				String catname=rs.getString("name");
-				String cat_id_s=rs.getString("id");
-				int cat_id=rs.getInt("id");
-
-				if(cats.containsKey(cat_id_s)) {
-					acltable+="<tr>\n\t<td><font color=green>"
-						+ rs.getString("name")
-						+ "</font></td>";
-					acltable+="<td><input type=checkbox name=catacl checked "
-						+ "value=" + cat_id + "></td></tr>\n";
-				} else {
-					acltable+="<tr>\n\t<td><font color=red>"
-						+ rs.getString("name")
-						+ "</font></td>";
-					acltable+="<td><input type=checkbox name=catacl "
-						+ "value=" + cat_id + "></td></tr>\n";
-				}
-			}
-
-			h.put("ACLTABLE", acltable);
-
-			output=tokenize("admin/userform.inc", h);
-		} catch(Exception e) {
-			se=new ServletException("Error displaying user:  " + e);
-		} finally {
-			freeDBConn(photo);
-		}
-		if(se!=null) {
-			throw(se);
-		}
-		send_response(output);
-	}
-
-	protected void admSaveUser() throws ServletException {
-		String output="";
-
-		Connection photo=null;
-
-		try {
-			String pass=request.getParameter("password");
-			// At 13 or more, it's probably a crypt() or other hash.
-			if(pass.length()<13) {
-				pass=security.getDigest(pass);
-			}
-			String user_id_s=request.getParameter("userid");
-			int user_id=Integer.parseInt(user_id_s);
-
-			photo=getDBConn();
-			photo.setAutoCommit(false);
-
-			PreparedStatement st=null;
-			
-			// Decide whether it's a new user, or a used user
-			if(user_id>0) {
-				// Used user
-				st=photo.prepareStatement(
-					"update wwwusers set username=?, realname=?, email=?, "
-						+ "password=?, canadd=?\n"
-						+ "\twhere id=?"
-					);
-				st.setString(1, request.getParameter("username"));
-				st.setString(2, request.getParameter("realname"));
-				st.setString(3, request.getParameter("email"));
-				st.setString(4, pass);
-				st.setString(5, request.getParameter("canadd"));
-				st.setInt(6, user_id);
-				st.executeUpdate();
-			} else {
-				// New user
-				st=photo.prepareStatement(
-					"insert into wwwusers(username, realname, email, "
-						+ "password, canadd) values(?, ?, ?, ?, ?)"
-					);
-				st.setString(1, request.getParameter("username"));
-				st.setString(2, request.getParameter("realname"));
-				st.setString(3, request.getParameter("email"));
-				st.setString(4, pass);
-				st.setString(5, request.getParameter("canadd"));
-				st.executeUpdate();
-
-				st=photo.prepareStatement("select currval('wwwusers_id_seq')");
-				ResultSet rs=st.executeQuery();
-				rs.next();
-				// Get the user_id we just inserted.
-				user_id=rs.getInt(1);
-			}
-
-			// Delete all of the ACLs
-			st=photo.prepareStatement("delete from wwwacl where userid=?");
-			st.setInt(1, user_id);
-			st.executeUpdate();
-
-			// Add the new ACLs for the user
-			String acls[]=request.getParameterValues("catacl");
-			if(acls!=null) {
-				for(int i=0; i<acls.length; i++) {
-					int cat_id=Integer.parseInt(acls[i]);
-					st=photo.prepareStatement(
-						"insert into wwwacl(userid,cat) values(?,?)"
-						);
-					st.setInt(1, user_id);
-					st.setInt(2, cat_id);
-					st.executeUpdate();
-				}
-			}
-
-			photo.commit();
-		} catch(Exception e) {
-			log("Error saving user:  " + e);
-			e.printStackTrace();
-			try {
-				if(photo!=null) {
-					photo.rollback();
-				}
-			} catch(Exception e2) {
-				// Don't mind this...
-			}
-		} finally {
-			if(photo != null) {
-				try {
-					photo.setAutoCommit(true);
-					freeDBConn(photo);
-				} catch(Exception e) {
-					log(e.getMessage());
-				}
-			}
-			freeDBConn(photo);
-		}
-		admShowUsers();
-	}
-
-	// Show the category edit form
-	protected void admShowCategories() throws ServletException {
-		String output="";
-		if(!isAdmin()) {
-			throw new ServletException("Not admin");
-		}
-		Hashtable h = new Hashtable();
-		h.put("CATS", getCatList(-1));
-		output=tokenize("admin/admcat.inc", h);
-		send_response(output);
-	}
-
-	protected void admEditCategoryForm() throws ServletException {
-		String output="";
-		ServletException se=null;
-		if(!isAdmin()) {
-			throw new ServletException("Not admin");
-		}
-		Connection photo=null;
-		try {
-			String s_cat_id=request.getParameter("cat");
-			int cat_id=Integer.parseInt(s_cat_id);
-			Hashtable h=new Hashtable();
-			h.put("CATID", "-1");
-			h.put("CATNAME", "");
-			photo=getDBConn();
-			PreparedStatement st=photo.prepareStatement(
-				"select name from cat where id=?"
-				);
-			st.setInt(1, cat_id);
-			ResultSet rs=st.executeQuery();
-			while(rs.next()) {
-				h.put("CATID", s_cat_id);
-				h.put("CATNAME", rs.getString("name"));
-			}
-			output=tokenize("admin/editcat.inc", h);
-		} catch(Exception e) {
-			se=new ServletException("Error displaying cat:  " + e);
-		} finally {
-			freeDBConn(photo);
-		}
-		if(se!=null) {
-			throw(se);
-		}
-		send_response(output);
-	}
-
-	// Show the category edit form
-	protected void admSaveCategory() throws ServletException {
-		String output="";
-		if(!isAdmin()) {
-			throw new ServletException("Not admin");
-		}
-		Hashtable h = new Hashtable();
-		ServletException se=null;
-		Connection photo=null;
-		try {
-			String stmp=request.getParameter("id");
-			int cat_id=Integer.parseInt(stmp);
-			String cat_name=request.getParameter("name");
-
-			photo=getDBConn();
-			if(cat_id>0) {
-				PreparedStatement st=photo.prepareStatement(
-					"update cat set name=? where id=?"
-					);
-				st.setString(1, request.getParameter("name"));
-				st.setInt(2, cat_id);
-				st.executeUpdate();
-			} else {
-				PreparedStatement st=photo.prepareStatement(
-					"insert into cat(name) values(?)"
-					);
-				st.setString(1, cat_name);
-				st.executeUpdate();
-			}
-		} catch(Exception e) {
-			se=new ServletException("Error in admEditCategoryForm: " + e);
-		} finally {
-			freeDBConn(photo);
-		}
-		if(se!=null) {
-			throw(se);
-		}
-		// If we make it to the bottom, show the categories again
-		admShowCategories();
-	}
-
-	// Show the style form
-	protected void showCredForm () throws ServletException {
-		String output;
-
-		output = tokenize("authform.inc", new Hashtable());
-		send_response(output);
 	}
 
 	public void setCreds () throws ServletException, IOException {
@@ -597,57 +271,8 @@ public class PhotoSession extends Object
 		return(r);
 	}
 
-	// Save the new data
-	protected void saveImageInfo() throws ServletException {
-		if(!isAdmin()) {
-			throw new ServletException("Must be an admin to do this.");
-		}
-
-		String keywords="", info="", taken="";
-		String out="", stmp=null;
-		int id=-1;
-		int category=-1;
-
-		// We need a short lifetime for whatever page this produces
-        long l=new java.util.Date().getTime();
-        l+=10000L;
-        response.setDateHeader("Expires", l);
-
-		// Get the ID
-		stmp=request.getParameter("id");
-		id=Integer.parseInt(stmp);
-
-		// Get the category ID
-		stmp=request.getParameter("cat");
-		category=Integer.parseInt(stmp);
-
-		// Get the string data
-		taken=request.getParameter("taken");
-		keywords=request.getParameter("keywords");
-		info=request.getParameter("info");
-
-		Connection photo=null;
-		try {
-			photo=getDBConn();
-			PreparedStatement st=photo.prepareStatement(
-				"update album set cat=?, keywords=?, descr=?, taken=?\n"
-				+ " where id=?"
-				);
-			st.setInt(1, category);
-			st.setString(2, keywords);
-			st.setString(3, info);
-			st.setString(4, taken);
-			st.setInt(5, id);
-			st.executeUpdate();
-		} catch(Exception e) {
-			log("Error updating information:  " + e);
-		} finally {
-			freeDBConn(photo);
-		}
-	}
-
 	// Add an image
-	protected void doAddPhoto() throws ServletException {
+	protected String doAddPhoto() throws ServletException {
 		String category="", keywords="", picture="", info="", taken="";
 		String query="", out="", stmp, type;
 		int id;
@@ -663,8 +288,7 @@ public class PhotoSession extends Object
 
 		// Make sure the user can add.
 		if(!canadd()) {
-			send_response(tokenize("add_denied.inc", h));
-			return;
+			return(tokenize("add_denied.inc", h));
 		}
 
 		File f;
@@ -676,13 +300,13 @@ public class PhotoSession extends Object
 		if( type == null || (! (type.startsWith("image/jpeg"))) ) {
 			h.put("FILENAME", multi.getFilesystemName("picture"));
 			h.put("FILETYPE", type);
-			send_response(tokenize("add_badfiletype.inc", h));
+			out=tokenize("add_badfiletype.inc", h);
 			try {
 				f.delete();
 			} catch(Exception e) {
 				log(e.getMessage());
 			}
-			return;
+			return(out);
 		}
 
 		stmp=multi.getParameter("category");
@@ -790,11 +414,12 @@ public class PhotoSession extends Object
 			}
 		}
 
-		send_response(out);
+		return(out);
 	}
 
 	// Get a list of categories for a select list
-	protected String getCatList(int def) {
+	// Public because helpers use it
+	public String getCatList(int def) {
 		String query, out="";
 		Connection photo=null;
 		try {
@@ -826,16 +451,18 @@ public class PhotoSession extends Object
 		return(out);
 	}
 
-	// Show the style form
-	protected void doStyleForm () throws ServletException {
-		String output;
+	// Show the ``login'' form
+	protected String showCredForm () throws ServletException {
+		return(tokenize("authform.inc", new Hashtable()));
+	}
 
-		output = tokenize("presetstyle.inc", new Hashtable());
-		send_response(output);
+	// Show the style form
+	protected String doStyleForm () throws ServletException {
+		return(tokenize("presetstyle.inc", new Hashtable()));
 	}
 
 	// Get the stylesheet from the cookie, or the default.
-	protected void doGetStylesheet () throws ServletException {
+	protected String doGetStylesheet () throws ServletException {
 		Cookie cookies[];
 		String output = null;
 		int i;
@@ -867,10 +494,12 @@ public class PhotoSession extends Object
 			out.close();
 		} catch(Exception e) {
 		}
+		// We handled our own response.
+		return(null);
 	}
 
 	// Set the style cookie from the POST data.
-	protected void doSetStyle() throws ServletException {
+	protected String doSetStyle() throws ServletException {
 		Cookie c;
 		String stmp="", font="", bgcolor="", c_text="";
 		Hashtable h = new Hashtable();
@@ -915,11 +544,11 @@ public class PhotoSession extends Object
 		h.put("STYLE", c_text);
 
 		stmp = tokenize("setstyle.inc", h);
-		send_response(stmp);
+		return(stmp);
 	}
 
 	// Show the add an image form.
-	protected void doAddForm() throws ServletException {
+	protected String doAddForm() throws ServletException {
 		String output = new String("");
 		Hashtable h = new Hashtable();
 
@@ -930,11 +559,11 @@ public class PhotoSession extends Object
 		}
 		h.put("TODAY", PhotoUtil.getToday());
 		output += tokenize("addform.inc", h);
-		send_response(output);
+		return(output);
 	}
 
 	// Show the search form.
-	protected void doFindForm() throws ServletException {
+	protected String doFindForm() throws ServletException {
 		String output = new String("");
 		Hashtable h = new Hashtable();
 
@@ -944,11 +573,11 @@ public class PhotoSession extends Object
 			h.put("CAT_LIST", "");
 		}
 		output += tokenize("findform.inc", h);
-		send_response(output);
+		return(output);
 	}
 
 	// View categories
-	protected void doCatView() throws ServletException {
+	protected String doCatView() throws ServletException {
 		String output = new String("");
 		String query, catstuff="";
 		Hashtable h = new Hashtable();
@@ -990,11 +619,11 @@ public class PhotoSession extends Object
 		h.put("CATSTUFF", catstuff);
 
 		output += tokenize("catview.inc", h);
-		send_response(output);
+		return(output);
 	}
 
 	// Display the index page.
-	protected void doIndex() throws ServletException {
+	protected String doIndex() throws ServletException {
 		String output = new String("");;
 		Hashtable h = new Hashtable();
 
@@ -1008,7 +637,7 @@ public class PhotoSession extends Object
 		} else {
 			output += tokenize("index.inc", h);
 		}
-		send_response(output);
+		return(output);
 	}
 
 	// Get the UID
@@ -1058,8 +687,9 @@ public class PhotoSession extends Object
 		}
 	}
 
-	// Display dispatcher
-	protected void doDisplay() throws ServletException {
+	// Display dispatcher -- can be called from a helper
+	public String doDisplay() throws ServletException {
+		String out="";
 		String id=null;
 		String search_id=null;
 
@@ -1067,13 +697,14 @@ public class PhotoSession extends Object
 		search_id = request.getParameter("search_id");
 
 		if(id!=null) {
-			doDisplayByID();
+			out=doDisplayByID();
 		} else if(search_id!=null) {
-			doDisplayBySearchId();
+			out=doDisplayBySearchId();
 		}
+		return(out);
 	}
 
-	protected void doDisplayBySearchId() throws ServletException {
+	protected String doDisplayBySearchId() throws ServletException {
 		PhotoSearchResults results=null;
 		results=(PhotoSearchResults)session.getValue("search_results");
 		int which=Integer.parseInt(request.getParameter("search_id"));
@@ -1115,11 +746,11 @@ public class PhotoSession extends Object
 		} else {
 			output=tokenize("display.inc", h);
 		}
-		send_response(output);
+		return(output);
 	}
 
 	// Find and display images.
-	protected void doDisplayByID() throws ServletException {
+	protected String doDisplayByID() throws ServletException {
 		String query, output = "";
 		int i;
 		Integer image_id;
@@ -1186,7 +817,7 @@ public class PhotoSession extends Object
 		}
 		finally { freeDBConn(photo); }
 
-		send_response(output);
+		return(output);
 	}
 
 	// Send the response text...
@@ -1214,7 +845,7 @@ public class PhotoSession extends Object
 
 	// Display search results
 	// This whole thing will fail if there's no session.
-	protected void displaySearchResults() throws ServletException {
+	protected String displaySearchResults() throws ServletException {
 		if(session==null) {
 			throw new ServletException("There's no session!");
 		}
@@ -1272,11 +903,11 @@ public class PhotoSession extends Object
 		output += middle;
 		h.put("LINKTOMORE", linkToMore(results)); 
 		output += tokenize("find_bottom.inc", h);
-		send_response(output);
+		return(output);
 	}
 
 	// Find images.
-	protected void doFind() throws ServletException {
+	protected String doFind() throws ServletException {
 		String output = "", middle = "";
 		PhotoSearch ps = new PhotoSearch();
 		PhotoUser user = security.getUser(remote_user);
@@ -1294,7 +925,7 @@ public class PhotoSession extends Object
 		session.putValue("encoded_search",
 			ps.encodeSearch(request));
 
-		displaySearchResults();
+		return(displaySearchResults());
 	}
 
 	// Link to more search results
@@ -1321,7 +952,7 @@ public class PhotoSession extends Object
 	}
 
 	// Show an image
-	protected void showImage() throws ServletException {
+	protected String showImage() throws ServletException {
 
 		Vector v;
 		int i, which;
@@ -1370,9 +1001,11 @@ public class PhotoSession extends Object
 		} catch(Exception e) {
 			throw new ServletException("IOException:  " + e.getMessage());
 		}
+		// We handle our own response here, because this is an image.
+		return(null);
 	}
 
-	protected void doLogView() throws ServletException {
+	protected String doLogView() throws ServletException {
 		String view, out="";
 		PhotoLogView logview=null;
 
@@ -1399,7 +1032,7 @@ public class PhotoSession extends Object
 				throw new ServletException(e.getMessage());
 			}
 		}
-		send_response(out);
+		return(out);
 	}
 
 	// Set administrative privys
@@ -1422,7 +1055,7 @@ public class PhotoSession extends Object
 	}
 
 	// Returns true if the session is an admin session
-	protected boolean isAdmin() {
+	public boolean isAdmin() {
 		boolean ret=false;
 		if(session!=null) {
 			String admin= (String)session.getValue("is_admin");
