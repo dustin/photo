@@ -29,12 +29,13 @@
 
 <h1>Forget your Password</h1>
 
-<form method="POST" action="PhotoServlet">
-	Email address or username:  <input name="username"/><br/>
-	<input type="submit" value="Password Reset"/>
-	<input type="reset" value="Clear"/>
-	<input type="hidden" name="func" value="forgotpassword"/>
-</form>
+<html:form action="/forgotpw">
+	<html:errors/>
+	<bean:message key="forms.forgotpw.username"/>:
+		<html:text property="username"/><br/>
+	<html:submit><bean:message key="forms.forgotpw.submit"/></html:submit>
+	<html:reset><bean:message key="forms.forgotpw.rstbutton"/></html:reset>
+</html:form>
 
 </p>
 
