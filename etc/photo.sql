@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.5 2000/11/10 07:17:18 dustin Exp $
+-- $Id: photo.sql,v 1.6 2001/07/16 01:48:32 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -98,6 +98,7 @@ create table wwwacl(
 );
 
 create index acl_byid on wwwacl(userid);
+create index acl_bycat on wwwacl(cat);
 grant all on wwwacl to nobody;
 
 -- view for showing acls by name
