@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoCleanup.java,v 1.1 2000/12/26 04:16:11 dustin Exp $
+ * $Id: PhotoCleanup.java,v 1.2 2002/02/21 09:26:03 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -22,11 +22,11 @@ public class PhotoCleanup extends Thread {
 		this.setDaemon(true);
 	}
 
-	protected void log(String msg) {
+	private void log(String msg) {
 		System.err.println("PhotoCleanup:  " + msg);
 	}
 
-	protected void cleanup() throws Exception {
+	private void cleanup() throws Exception {
 		PhotoConfig p = new PhotoConfig();
 
 		SpyDB db=new SpyDB(p);

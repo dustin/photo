@@ -8,7 +8,7 @@ import net.spy.photo.*;
 
 public class PhotoMigration03 extends PhotoMigration {
 
-	protected void addTables() throws Exception {
+	private void addTables() throws Exception {
 		SpyDB db=new SpyDB(new PhotoConfig());
 		try {
 			// User profiles

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoBackup.java,v 1.5 2000/11/29 07:02:19 dustin Exp $
+ * $Id: PhotoBackup.java,v 1.6 2002/02/21 09:26:03 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -25,7 +25,7 @@ public class PhotoBackup extends Object {
 		backupAlbum(db, dir);
 	}
 
-	protected void backupAlbum(SpyDB db, String dir) throws Exception {
+	private void backupAlbum(SpyDB db, String dir) throws Exception {
 
 		// First, make our directory.
 		String basedir=dir + "/album/";
@@ -87,13 +87,13 @@ public class PhotoBackup extends Object {
 	}
 
 	private class BackupStats extends Object {
-		protected int done=0;
-		protected int left=0;
-		protected long startTime=0;
-		protected long totalTime=0;
+		private int done=0;
+		private int left=0;
+		private long startTime=0;
+		private long totalTime=0;
 
-		protected long lastTime=0;
-		protected long lastProcessTime=0;
+		private long lastTime=0;
+		private long lastProcessTime=0;
 
 		public BackupStats(int size) {
 			super();

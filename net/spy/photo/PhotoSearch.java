@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.17 2002/02/21 07:51:44 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.18 2002/02/21 09:26:03 dustin Exp $
  */
 
 package net.spy.photo;
@@ -145,7 +145,7 @@ public class PhotoSearch extends PhotoHelper {
 	}
 
 	// Build the bigass complex search query.
-	protected String buildQuery(HttpServletRequest request, int remote_uid)
+	private String buildQuery(HttpServletRequest request, int remote_uid)
 		throws ServletException {
 		String query="", sub="", stmp="", order="",
 			odirection="", fieldjoin="", join="";

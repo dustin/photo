@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.19 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.20 2002/02/21 09:26:03 dustin Exp $
  */
 
 package net.spy.photo;
@@ -27,9 +27,9 @@ public class PhotoServlet extends HttpServlet
 
 	public SpyLog logger = null;
 
-	protected SpyCache photoCache=null;
+	private SpyCache photoCache=null;
 
-	protected PhotoLogFlusher logflusher=null;
+	private PhotoLogFlusher logflusher=null;
 
 	// The once only init thingy.
 	public void init(ServletConfig config) throws ServletException {
@@ -92,7 +92,7 @@ public class PhotoServlet extends HttpServlet
 	// Servlet info
 	public String getServletInfo() {
 		return("Copyright (c) 2000  Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.19 $");
+			+ " - $Revision: 1.20 $");
 	}
 
 	// Do a GET request

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.9 2002/02/21 07:51:44 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.10 2002/02/21 09:26:03 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -17,13 +17,13 @@ public class AlbumBackupEntry extends BackupEntry {
 
 	public AlbumBackupEntry(int id) throws Exception {
 		super();
-		nodeType="photo_album_object";
+		setNodeType("photo_album_object");
 		init(id);
 	}
 
 	public AlbumBackupEntry(Node n) throws Exception {
 		super(n);
-		nodeType="photo_album_object";
+		setNodeType("photo_album_object");
 	}
 
 	public void restore() throws Exception {
@@ -168,9 +168,9 @@ public class AlbumBackupEntry extends BackupEntry {
 		return(rv.toString());
 	}
 
-	protected void init(int id) throws Exception {
+	private void init(int id) throws Exception {
 		// Get an element for storing the data
-		Element root = doc.createElement(nodeType);
+		Element root = doc.createElement(getNodeType());
 
 		// Get the data
 		SpyDB db=new SpyDB(new PhotoConfig());

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: BackupEntry.java,v 1.5 2000/11/29 10:00:27 dustin Exp $
+ * $Id: BackupEntry.java,v 1.6 2002/02/21 09:26:03 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -19,6 +19,9 @@ import org.apache.xerces.dom.DocumentImpl;
 import net.spy.*;
 import net.spy.photo.*;
 
+/**
+ * Backup Entries subclass here.
+ */
 public abstract class BackupEntry extends Object implements Serializable {
 
 	// Data stored here.
@@ -26,11 +29,25 @@ public abstract class BackupEntry extends Object implements Serializable {
 	protected Element myData=null;
 
 	// Node type
-	protected String nodeType="unknown_node_type";
+	private String nodeType="unknown_node_type";
 
 	public BackupEntry() throws Exception {
 		super();
 		doc=new DocumentImpl();
+	}
+
+	/**
+	 * Set the type of this node.
+	 */
+	protected void setNodeType(String nodeType) {
+		this.nodeType=nodeType;
+	}
+
+	/**
+	 * Get the node type.
+	 */
+	public String getNodeType() {
+		return(nodeType);
 	}
 
 	public abstract void restore() throws Exception;

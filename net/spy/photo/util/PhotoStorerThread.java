@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.5 2002/02/20 11:32:12 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.6 2002/02/21 09:26:03 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -27,7 +27,7 @@ public class PhotoStorerThread extends Thread {
 	}
 
 	// Query to store an image
-	protected void storeQuery(int image_id, int line,
+	private void storeQuery(int image_id, int line,
 		Statement st, String data) throws Exception {
 		String query = "insert into image_store values(" + image_id
 			+ ", " + line + ", '" + data + "')";
@@ -41,7 +41,7 @@ public class PhotoStorerThread extends Thread {
 	// Takes and image_id, pulls in the image from cache, and goes about
 	// encoding it to put it into the database in a transaction.  The last
 	// query in the transaction records the image having been stored.
-	protected void storeImage(int image_id) throws Exception {
+	private void storeImage(int image_id) throws Exception {
 		PhotoImageHelper p = new PhotoImageHelper(image_id);
 		SpyDB pdb = getDB();
 		Connection db = null;
@@ -128,9 +128,8 @@ public class PhotoStorerThread extends Thread {
 
 	// Get a DB connection from the storer pool.
 	// We need a different log file to get the thing to work at all.
-	protected SpyDB getDB() {
+	private SpyDB getDB() {
 		PhotoConfig conf=new PhotoConfig();
-		conf.put("dbcbLogFilePath", "/tmp/storer_db.log");
 		SpyDB pdb = new SpyDB(conf);
 		return(pdb);
 	}

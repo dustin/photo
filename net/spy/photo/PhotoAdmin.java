@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.21 2002/02/15 08:28:07 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.22 2002/02/21 09:26:03 dustin Exp $
  */
 
 package net.spy.photo;
@@ -19,7 +19,7 @@ import net.spy.cache.*;
 
 public class PhotoAdmin extends PhotoHelper {
 
-	protected boolean debug=true;
+	private boolean debug=true;
 
 	private PhotoSession ps=null;
 
@@ -93,7 +93,7 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Show a user to be edited
-	protected String admEditUserForm() throws ServletException {
+	private String admEditUserForm() throws ServletException {
 		String output="";
 		ServletException se=null;
 		if(!isAdmin()) {
@@ -342,7 +342,7 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Show the category edit form
-	protected String admShowCategories() throws ServletException {
+	private String admShowCategories() throws ServletException {
 		if(!isAdmin()) {
 			throw new ServletException("Not admin");
 		}
@@ -352,7 +352,7 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Show the form to edit categories.
-	protected String admEditCategoryForm() throws ServletException {
+	private String admEditCategoryForm() throws ServletException {
 		String output="";
 		ServletException se=null;
 		if(!isAdmin()) {
@@ -386,7 +386,7 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Show the category edit form
-	protected String admSaveCategory() throws ServletException {
+	private String admSaveCategory() throws ServletException {
 		if(!isAdmin()) {
 			throw new ServletException("Not admin");
 		}
@@ -440,7 +440,7 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Save the image stuff
-	protected void saveImageInfo() throws ServletException {
+	private void saveImageInfo() throws ServletException {
 		if(!isAdmin()) {
 			throw new ServletException("Must be an admin to do this.");
 		}
@@ -495,18 +495,18 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Shortcut to isAdmin();
-	protected boolean isAdmin() {
+	private boolean isAdmin() {
 		return(ps.isAdmin());
 	}
 
-	protected void debug(String msg) {
+	private void debug(String msg) {
 		if (debug) {
 			log ("PhotoAdmin debug: " + msg);
 		}
 	}
 
 	// Shortcut to tokenize()
-	protected String tokenize(String what, Hashtable h)
+	private String tokenize(String what, Hashtable h)
 		throws ServletException {
 
 		String rv=PhotoUtil.tokenize(ps, what, h);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.18 2002/02/21 07:51:44 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.19 2002/02/21 09:26:03 dustin Exp $
  */
 
 package net.spy.photo;
@@ -111,7 +111,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		return(h);
 	}
 
-	protected void initialize() {
+	private void initialize() {
 		// If we are uninitialized, but have an ID, initialize.
 		if(id>=0 && mydata==null) {
 			try {
@@ -171,7 +171,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		}
 	}
 
-	protected void find(int id) throws Exception {
+	private void find(int id) throws Exception {
 		this.id=id;
 
 		Exception ex=null;
@@ -199,7 +199,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		}
 	}
 
-	protected void storeResult(ResultSet rs) throws Exception {
+	private void storeResult(ResultSet rs) throws Exception {
 		// If there's not a result, error
 		if(!rs.next()) {
 			throw new Exception("No result received for " + id);

@@ -8,7 +8,7 @@ import net.spy.photo.*;
 
 public class PhotoMigration02 extends PhotoMigration {
 
-	protected void addColumns() throws Exception {
+	private void addColumns() throws Exception {
 		SpyDB db=new SpyDB(new PhotoConfig());
 		try {
 			db.executeUpdate("alter table wwwacl add column canview boolean");

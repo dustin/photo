@@ -10,7 +10,7 @@ import net.spy.photo.*;
 
 public class PhotoMigration01 extends PhotoMigration {
 
-	protected void addColumns() throws Exception {
+	private void addColumns() throws Exception {
 		SpyDB db=new SpyDB(new PhotoConfig());
 		try {
 			db.executeUpdate("alter table album add column width integer");
@@ -34,7 +34,7 @@ public class PhotoMigration01 extends PhotoMigration {
 		}
 	}
 
-	protected void getImages() throws Exception {
+	private void getImages() throws Exception {
 		int n=1;
 		SpyDB db=new SpyDB(new PhotoConfig());
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoReporting.java,v 1.4 2002/02/15 08:28:07 dustin Exp $
+ * $Id: PhotoReporting.java,v 1.5 2002/02/21 09:26:03 dustin Exp $
  */
 
 package net.spy.photo;
@@ -75,7 +75,7 @@ public class PhotoReporting extends PhotoHelper {
 		return(out);
 	}
 
-	protected String tokenize(String what, Hashtable h) {
+	private String tokenize(String what, Hashtable h) {
 		return(PhotoUtil.tokenize(ps, what, h));
 	}
 }

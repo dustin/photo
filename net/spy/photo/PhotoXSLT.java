@@ -1,5 +1,5 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
-// $Id: PhotoXSLT.java,v 1.5 2001/12/29 06:19:40 dustin Exp $
+// $Id: PhotoXSLT.java,v 1.6 2002/02/21 09:26:03 dustin Exp $
 
 package net.spy.photo;
 
@@ -56,7 +56,7 @@ public abstract class PhotoXSLT extends Object {
 	/**
 	 * Look up a stylesheet based on the name.
 	 */
-	protected static String lookupStylesheet(PhotoConfig conf, String ss) {
+	private static String lookupStylesheet(PhotoConfig conf, String ss) {
 		String ret=null;
 		if(ss==null) {
 			ret=conf.get("xslt.default");
