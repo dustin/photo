@@ -20,7 +20,7 @@ public class PhotoHelper extends SpyObject {
 	 */
 	public PhotoHelper() {
 		super();
-		conf = new PhotoConfig();
+		conf = PhotoConfig.getInstance();
 	}
 
 	/**

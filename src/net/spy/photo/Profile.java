@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 import net.spy.db.DBSP;
 import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
@@ -65,7 +65,7 @@ public class Profile extends AbstractSavable implements Serializable {
 	 */
 	public Profile(String id) throws Exception {
 		super();
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select * from user_profiles where name=? and expires>now()");
 		pst.setString(1, id);
@@ -93,7 +93,7 @@ public class Profile extends AbstractSavable implements Serializable {
 	// Get the ACL entries out of the DB.
 	private void initACLs() throws Exception {
 		acl=new HashSet();
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select cat_id from user_profile_acls where profile_id=?");
 		pst.setInt(1, getId());

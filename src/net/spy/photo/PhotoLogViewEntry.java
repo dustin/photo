@@ -60,7 +60,7 @@ public class PhotoLogViewEntry extends Object {
 	public static Collection getViewersOf(int photoId) throws Exception {
 		ArrayList al=new ArrayList();
 
-		GetViewersOfImage db=new GetViewersOfImage(new PhotoConfig());
+		GetViewersOfImage db=new GetViewersOfImage(PhotoConfig.getInstance());
 		db.setImageId(photoId);
 
 		ResultSet rs=db.executeQuery();

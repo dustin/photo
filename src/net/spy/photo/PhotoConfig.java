@@ -8,7 +8,7 @@ package net.spy.photo;
 
 import java.io.File;
 
-import net.spy.SpyConfig;
+import net.spy.util.SpyConfig;
 
 /**
  * Configuration for PhotoServlet.
@@ -17,6 +17,8 @@ public class PhotoConfig extends SpyConfig {
 
 	// If provided, this configuration will be used.
 	private static File staticConfigLocation=null;
+
+	private static PhotoConfig instance=null;
 
 	// Places to look for config files.
 	private File configs[]={
@@ -29,7 +31,7 @@ public class PhotoConfig extends SpyConfig {
 	/**
 	 * Get a configuration.
 	 */
-	public PhotoConfig() {
+	private PhotoConfig() {
 		super();
 
 		if(staticConfigLocation==null) {
@@ -41,12 +43,28 @@ public class PhotoConfig extends SpyConfig {
 		loadDefaults();
 	}
 
+	/** 
+	 * Get a PhotoConfig instance.
+	 */
+	public static synchronized PhotoConfig getInstance() {
+		if(instance == null) {
+			instance=new PhotoConfig();
+		}
+		return(instance);
+	}
+
+	private static synchronized void killInstance() {
+		instance=null;
+	}
+
 	/**
 	 * Set the configuration location for all future instances of
 	 * PhotoConfig.
 	 */
 	public void setStaticConfigLocation(String to) {
 		staticConfigLocation=new File(to);
+		// Kill any given instance
+		killInstance();
 	}
 
 	private void loadDefaults() {

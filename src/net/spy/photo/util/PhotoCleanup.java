@@ -6,7 +6,7 @@
 
 package net.spy.photo.util;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 
 import net.spy.photo.PhotoConfig;
 
@@ -28,7 +28,7 @@ public class PhotoCleanup extends Thread {
 	}
 
 	private void cleanup() throws Exception {
-		PhotoConfig p = new PhotoConfig();
+		PhotoConfig p = PhotoConfig.getInstance();
 
 		SpyDB db=new SpyDB(p);
 		for(int i=1; p.get("cleaner.query" + i) != null; i++) {
@@ -55,7 +55,7 @@ public class PhotoCleanup extends Thread {
 			}
 
 			try {
-				PhotoConfig p = new PhotoConfig();
+				PhotoConfig p = PhotoConfig.getInstance();
 				int m=p.getInt("cleaner_sleep", 1440);
 				// Check every x minutes
 				log("Sleeping for " + m + " minutes...");

@@ -1,11 +1,11 @@
-<%@ page import="java.sql.*, net.spy.*, net.spy.photo.*" %>
+<%@ page import="java.sql.*, net.spy.db.SpyDB, net.spy.photo.*" %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <%
 	PhotoSessionData sessionData=
 		(PhotoSessionData)session.getAttribute("photoSession");
 
-	SpyDB photo=new SpyDB(new PhotoConfig());
+	SpyDB photo=new SpyDB(PhotoConfig.getInstance());
 
 	String query = "select name,id,catsum(id) as cs from cat\n"
 		+ "where id in\n"

@@ -4,8 +4,8 @@
 
 package net.spy.photo;
 
-import net.spy.SpyConfig;
 import net.spy.SpyObject;
+import net.spy.util.SpyConfig;
 
 /**
  * Interface for scaling images.

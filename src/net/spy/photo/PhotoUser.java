@@ -27,8 +27,8 @@ import java.util.HashMap;
 
 import java.security.Principal;
 
-import net.spy.SpyDB;
 import net.spy.cache.SpyCache;
+import net.spy.db.SpyDB;
 import net.spy.db.DBSP;
 import net.spy.db.AbstractSavable;
 import net.spy.db.SaveException;
@@ -93,7 +93,7 @@ public class PhotoUser extends AbstractSavable
 	private static void initACLs(Map userMap, PhotoUser defaultUser)
 		throws PhotoUserException {
 		try {
-			GetAllACLs db=new GetAllACLs(new PhotoConfig());
+			GetAllACLs db=new GetAllACLs(PhotoConfig.getInstance());
 
 			ResultSet rs=db.executeQuery();
 			while(rs.next()) {
@@ -134,7 +134,7 @@ public class PhotoUser extends AbstractSavable
 	}
 
 	private static CacheEntry initCacheEntry() throws PhotoUserException {
-		PhotoConfig conf=new PhotoConfig();
+		PhotoConfig conf=PhotoConfig.getInstance();
 		CacheEntry rv=new CacheEntry();
 		try {
 			Map users=new HashMap();

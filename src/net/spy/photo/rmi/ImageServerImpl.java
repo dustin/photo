@@ -51,7 +51,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 	 * @see ImageServer
 	 */
 	public PhotoImage getThumbnail(int imageId) throws PhotoException {
-		PhotoConfig conf=new PhotoConfig();
+		PhotoConfig conf=PhotoConfig.getInstance();
 		PhotoDimensions pdim=
 			new PhotoDimensionsImpl(conf.get("thumbnail_size"));
 		return(getImage(imageId, pdim));
@@ -86,7 +86,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 		}
 
 		if(needconn) {
-			PhotoConfig conf=new PhotoConfig();
+			PhotoConfig conf=PhotoConfig.getInstance();
 			String serverPath=conf.get("imageserver");
 			log("Connecting to RemoteImageServer at " + serverPath);
 			try {

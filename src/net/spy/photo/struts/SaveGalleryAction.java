@@ -59,7 +59,7 @@ public class SaveGalleryAction extends PhotoAction {
 		g.setPublic(sgf.getIsPublic());
 
 		// Add the new image
-		Saver saver=new Saver(new PhotoConfig());
+		Saver saver=new Saver(PhotoConfig.getInstance());
 		saver.save(g);
 
 		// Throw it away, freeing us up to create a new gallery.

@@ -17,6 +17,7 @@ import net.spy.photo.PhotoLogUploadEntry;
 import net.spy.photo.PhotoSaver;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUser;
+import net.spy.photo.PhotoConfig;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -67,8 +68,8 @@ public class UploadAction extends PhotoAction {
 		// Tell the saver to save this image when it gets around to it.
 		Persistent.getPhotoSaverThread().saveImage(saver);
 
-		Persistent.getLogger().log(new PhotoLogUploadEntry(
-			user.getId(), id, request));
+		Persistent.getPipeline().addTransaction(new PhotoLogUploadEntry(
+			user.getId(), id, request), PhotoConfig.getInstance());
 
 		// Before we return, make the ID available to the next handler
 		request.setAttribute("net.spy.photo.UploadID", new Integer(id));

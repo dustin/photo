@@ -105,15 +105,13 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 
 	/**
 	 * Get the search results that are currently being accessed.
-	 *
-	 * @deprecated use getCursor instead
 	 */
 	public PhotoSearchResults getResults() {
 		return((PhotoSearchResults)getCursor("searchResults"));
 	}
 
 	/**
-	 * @deprecated use setCursor instead
+	 * Set the results cursor.
 	 */
 	public void setResults(PhotoSearchResults results) {
 		setCursor("searchResults", results);
@@ -137,8 +135,6 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 
 	/**
 	 * Set the comments list.
-	 *
-	 * @deprecated use setCursor instead
 	 */
 	public void setComments(Cursor comments) {
 		setCursor("comments", comments);
@@ -146,8 +142,6 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 
 	/**
 	 * Get the comments list.
-	 *
-	 * @deprecated use getCursor instead
 	 */
 	public Cursor getComments() {
 		return(getCursor("comments"));
@@ -259,7 +253,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	public PhotoDimensions getOptimalDimensions() {
 		// If not set, initialize.
 		if(optimalDimensions == null) {
-			PhotoConfig conf=new PhotoConfig();
+			PhotoConfig conf=PhotoConfig.getInstance();
 			PhotoDimensions dim=new PhotoDimensionsImpl(
 				conf.get("optimal_image_size", "800x600"));
 			setOptimalDimensions(dim);

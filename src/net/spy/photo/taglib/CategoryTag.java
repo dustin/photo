@@ -9,7 +9,7 @@ import java.util.Collection;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
-import net.spy.SpyUtil;
+import net.spy.util.SpyUtil;
 
 import net.spy.photo.Category;
 import net.spy.photo.PhotoException;

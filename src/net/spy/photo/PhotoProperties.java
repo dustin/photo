@@ -17,7 +17,7 @@ import java.util.Collection;
 
 import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
-import net.spy.db.SavableNode;
+import net.spy.db.Savable;
 
 import net.spy.cache.SpyCache;
 
@@ -28,7 +28,7 @@ import net.spy.photo.sp.InsertProperty;
 /**
  * Persistent configuration stuff that can be changed dynamically.
  */
-public class PhotoProperties extends Properties implements SavableNode {
+public class PhotoProperties extends Properties implements Savable {
 
 	private boolean isNew=false;
 	private boolean isModified=false;
@@ -37,7 +37,7 @@ public class PhotoProperties extends Properties implements SavableNode {
 	 * Get an instance of PhotoProperties (defaulted by the PhotoConfig).
 	 */
 	public PhotoProperties() throws SQLException {
-		super(new PhotoConfig());
+		super(PhotoConfig.getInstance());
 
 		init();
 
@@ -61,7 +61,7 @@ public class PhotoProperties extends Properties implements SavableNode {
 
 	private Map initFromDB() throws SQLException {
 		HashMap hm=new HashMap();
-		GetProperties gp=new GetProperties(new PhotoConfig());
+		GetProperties gp=new GetProperties(PhotoConfig.getInstance());
 
 		ResultSet rs=gp.executeQuery();
 		while(rs.next()) {
@@ -93,9 +93,6 @@ public class PhotoProperties extends Properties implements SavableNode {
 	}
 	public boolean isNew() {
 		return(isNew);
-	}
-	public Collection getSavables(SaveContext context) {
-		return(null);
 	}
 	public Collection getPreSavables(SaveContext context) {
 		return(null);

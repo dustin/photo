@@ -1,0 +1,36 @@
+#
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Insert a photo log record.
+
+@sql
+insert into photo_logs(
+		log_type,
+		photo_id,
+		wwwuser_id,
+		remote_addr,
+		user_agent,
+		extra_info,
+		ts)
+	values (
+		get_log_type(?),
+		?,
+		?,
+		?,
+		get_agent(?),
+		?,
+		?)
+
+@params
+log_type required VARCHAR Name of this log type
+photo_id required INTEGER Photo ID (nullable)
+wwwuser_id required INTEGER User ID
+remote_addr required VARCHAR IP address of requestor
+user_agent required VARCHAR Name of this user agent
+extra_info required VARCHAR Extra info to log
+timestamp required TIMESTAMP Time of this log

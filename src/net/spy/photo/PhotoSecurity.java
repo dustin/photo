@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
 

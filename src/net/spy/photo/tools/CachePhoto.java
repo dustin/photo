@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.spy.SpyObject;
-import net.spy.SpyConfig;
-import net.spy.SpyDB;
+import net.spy.util.SpyConfig;
+import net.spy.db.SpyDB;
 
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
@@ -45,7 +45,7 @@ public class CachePhoto extends SpyObject {
 	public CachePhoto() throws Exception {
 		super();
 
-		conf=new PhotoConfig();
+		conf=PhotoConfig.getInstance();
 		server = (RemoteImageServer)Naming.lookup(conf.get("imageserver"));
 		errors=new ArrayList();
 	}

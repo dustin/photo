@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 
 import net.spy.cache.SpyCache;
 
@@ -128,7 +128,7 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 	private void calculateThumbnail() {
 		if(dimensions!=null) {
 			// get the optimal thumbnail dimensions
-			PhotoConfig conf=new PhotoConfig();
+			PhotoConfig conf=PhotoConfig.getInstance();
 			PhotoDimensions tdim=new PhotoDimensionsImpl(
 				conf.get("thumbnail_size"));
 
@@ -194,7 +194,7 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 	private static PhotoImageData getDataFromDB(int id) throws Exception {
 		PhotoImageData rv=new PhotoImageData();
 
-		GetPhotoInfo db=new GetPhotoInfo(new PhotoConfig());
+		GetPhotoInfo db=new GetPhotoInfo(PhotoConfig.getInstance());
 		db.setPhotoId(id);
 
 		ResultSet rs=db.executeQuery();

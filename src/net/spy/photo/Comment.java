@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 import net.spy.db.AbstractSavable;
 import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
@@ -74,7 +74,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 
 		PhotoSecurity security=new PhotoSecurity();
 		ArrayList al=new ArrayList();
-		GetCommentsForPhoto db=new GetCommentsForPhoto(new PhotoConfig());
+		GetCommentsForPhoto db=
+			new GetCommentsForPhoto(PhotoConfig.getInstance());
 		db.setPhotoId(imageId);
 		ResultSet rs=db.executeQuery();
 
@@ -99,7 +100,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 
 		PhotoSecurity security=new PhotoSecurity();
 		ArrayList al=new ArrayList();
-		FindImagesByComments db=new FindImagesByComments(new PhotoConfig());
+		FindImagesByComments db=
+			new FindImagesByComments(PhotoConfig.getInstance());
 		db.setUserId(user.getId());
 		ResultSet rs=db.executeQuery();
 

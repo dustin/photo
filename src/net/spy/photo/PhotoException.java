@@ -4,12 +4,10 @@
 
 package net.spy.photo;
 
-import net.spy.util.NestedException;
-
 /**
  * Exceptions thrown by the servlet engine.
  */
-public class PhotoException extends NestedException {
+public class PhotoException extends Exception {
 
 	/**
 	 * Get an instance of PhotoException.

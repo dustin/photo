@@ -11,8 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
-import net.spy.SpyDB;
-import net.spy.SpyUtil;
+import net.spy.db.SpyDB;
+import net.spy.util.SpyUtil;
 
 import net.spy.db.SpyCacheDB;
 
@@ -52,7 +52,7 @@ public class AlbumBackupEntry extends BackupEntry {
 
 		Connection conn=null;
 		try {
-			SpyDB db=new SpyDB(new PhotoConfig());
+			SpyDB db=new SpyDB(PhotoConfig.getInstance());
 			conn=db.getConn();
 			conn.setAutoCommit(false);
 
@@ -146,7 +146,7 @@ public class AlbumBackupEntry extends BackupEntry {
 	}
 
 	private int getCat() throws Exception {
-		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+		SpyCacheDB db=new SpyCacheDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select id from cat where name=?", 3600
 			);
@@ -161,7 +161,7 @@ public class AlbumBackupEntry extends BackupEntry {
 	}
 
 	private int getUserid() throws Exception {
-		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+		SpyCacheDB db=new SpyCacheDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select id from wwwusers where username=?", 3600
 			);
@@ -198,7 +198,7 @@ public class AlbumBackupEntry extends BackupEntry {
 		Element root = doc.createElement(getNodeType());
 
 		// Get the data
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select keywords, descr, cat.name as cat, taken, size,\n"
 				+ " wwwusers.username as addedby,\n"

@@ -42,7 +42,7 @@ public class AdminEditImage extends PhotoAction {
 		UploadForm uf=(UploadForm)form;
 
 		try {
-			EditImage ei=new EditImage(new PhotoConfig());
+			EditImage ei=new EditImage(PhotoConfig.getInstance());
 
 			ei.setKeywords(uf.getKeywords());
 			ei.setDescr(uf.getInfo());

@@ -22,7 +22,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 
 import net.spy.photo.PhotoACLEntry;
 import net.spy.photo.PhotoConfig;
@@ -98,7 +98,7 @@ public class AdminSelectUserAction extends PhotoAction {
 			auf.setCatAclView((String[])viewable.toArray(new String[0]));
 
 			// Look up the group thingy.
-			SpyDB db=new SpyDB(new PhotoConfig());
+			SpyDB db=new SpyDB(PhotoConfig.getInstance());
 			PreparedStatement pst=db.prepareStatement(
 				"select groupname from wwwgroup where userid=?");
 			pst.setInt(1, user.getId());

@@ -13,8 +13,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.spy.SpyDB;
 import net.spy.SpyThread;
+import net.spy.db.SpyDB;
 
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
@@ -47,7 +47,7 @@ public class PhotoStorerThread extends SpyThread {
 	// query in the transaction records the image having been stored.
 	private void storeImage(int imageId) throws Exception {
 		PhotoImageHelper p = new PhotoImageHelper(imageId);
-		SpyDB pdb = new SpyDB(new PhotoConfig());
+		SpyDB pdb = new SpyDB(PhotoConfig.getInstance());
 		PhotoImage pi = p.getImage();
 		getLogger().info("Storer: Got image for " + imageId + " " 
 			+ pi.size() + " bytes of data to store.");
@@ -163,7 +163,7 @@ public class PhotoStorerThread extends SpyThread {
 	// the database.
 	// Returns the number of things found to flush
 	private int doFlush() {
-		SpyDB db = new SpyDB(new PhotoConfig());
+		SpyDB db = new SpyDB(PhotoConfig.getInstance());
 		int rv=0;
 		ArrayList al = new ArrayList();
 		try {

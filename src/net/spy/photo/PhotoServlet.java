@@ -70,7 +70,7 @@ public class PhotoServlet extends HttpServlet {
 		int which=-1;
 		String size=null;
 		ServletOutputStream out=null;
-		PhotoConfig conf=new PhotoConfig();
+		PhotoConfig conf=PhotoConfig.getInstance();
 
 		// Get the sessionData
 		HttpSession session=request.getSession(false);
@@ -136,8 +136,8 @@ public class PhotoServlet extends HttpServlet {
 			PhotoImage image=p.getImage(pu, pdim);
 
 			// Log it
-			Persistent.getLogger().log(new PhotoLogImageEntry(
-				pu.getId(), which, pdim, request));
+			Persistent.getPipeline().addTransaction(new PhotoLogImageEntry(
+				pu.getId(), which, pdim, request), PhotoConfig.getInstance());
 
 			// Tell the client what we're sending
 			response.setContentType("image/" + image.getFormatString());

@@ -61,7 +61,7 @@ public class LoginAction extends PhotoAction {
 		// Set the ID
 		user.setPersess(persess);
 		// Save the user
-		Saver saver=new Saver(new PhotoConfig());
+		Saver saver=new Saver(PhotoConfig.getInstance());
 		saver.save(user);
 
 		// Recache the users
@@ -88,12 +88,14 @@ public class LoginAction extends PhotoAction {
 		if(user.checkPassword((String)lf.get("password"))) {
 			sessionData.setUser(user);
 
-			PhotoLogEntry ple=new PhotoLogEntry(user.getId(), "Login",request);
-			Persistent.getLogger().log(ple);
+			PhotoLogEntry ple=new PhotoLogEntry(user.getId(), "Login", request);
+			Persistent.getPipeline().addTransaction(ple,
+				PhotoConfig.getInstance());
 		} else {
 			PhotoLogEntry ple=new PhotoLogEntry(
 				user.getId(), "AuthFail", request);
-			Persistent.getLogger().log(ple);
+			Persistent.getPipeline().addTransaction(ple,
+				PhotoConfig.getInstance());
 			throw new ServletException(
 				"Your username or password is incorrect.");
 		}

@@ -67,7 +67,7 @@ public class AdminSaveProperties extends PhotoAction {
 			}
 		}
 
-		Saver s=new Saver(new PhotoConfig());
+		Saver s=new Saver(PhotoConfig.getInstance());
 		s.save(props);
 		System.err.println("Saved new properties:  " + props);
 

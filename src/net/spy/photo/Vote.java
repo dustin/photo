@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.spy.SpyDB;
 import net.spy.SpyObject;
+import net.spy.db.SpyDB;
 
 /**
  * Votes on photos.
@@ -60,7 +60,7 @@ public class Vote extends SpyObject implements java.io.Serializable {
 
 		PhotoSecurity security=new PhotoSecurity();
 		ArrayList al=new ArrayList();
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select * from votes where photo_id=? order by ts desc");
 		pst.setInt(1, imageId);
@@ -87,7 +87,7 @@ public class Vote extends SpyObject implements java.io.Serializable {
 		if(user.getUsername().equals("guest")) {
 			throw new Exception("Guest is not allowed to vote.");
 		}
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"insert into votes(wwwuser_id,photo_id,vote,remote_addr,ts)\n"
 			+ " values(?,?,?,?,?)");

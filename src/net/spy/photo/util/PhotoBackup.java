@@ -17,7 +17,7 @@ import java.util.Iterator;
 
 import java.util.zip.GZIPOutputStream;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 
 import net.spy.photo.PhotoConfig;
 
@@ -37,7 +37,7 @@ public class PhotoBackup extends Object {
 	 * @param dir the directory to which to write the backup
 	 */
 	public void backup(String cat, String dir) throws Exception {
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 
 		if(dir==null) {
 			throw new NullPointerException("Directory was null.");

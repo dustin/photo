@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import net.spy.SpyObject;
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 import net.spy.db.DBSP;
 import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
@@ -75,14 +75,14 @@ public class Category extends AbstractSavable implements Comparable {
 
 	private static Map getCategoryMap() throws SQLException {
 		Map rv=null;
-		
+
 		SpyCache sc=SpyCache.getInstance();
 
 		rv=(Map)sc.get(CACHE_KEY);
 		if (rv==null) {
 			rv=new HashMap();
 
-			GetAllCategories db=new GetAllCategories(new PhotoConfig());
+			GetAllCategories db=new GetAllCategories(PhotoConfig.getInstance());
 
 			ResultSet rs=db.executeQuery();
 			while(rs.next()) {
@@ -192,8 +192,8 @@ public class Category extends AbstractSavable implements Comparable {
 	 * Load the ACLs for this Category instance.
 	 */
 	private static void loadACLs(Collection categories) throws SQLException {
-		
-		GetACLsForCategory db=new GetACLsForCategory(new PhotoConfig());
+
+		GetACLsForCategory db=new GetACLsForCategory(PhotoConfig.getInstance());
 
 		for (Iterator i=categories.iterator(); i.hasNext(); ) {
 			Category cat=(Category)i.next();

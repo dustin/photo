@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
 
-import net.spy.log.SpyLog;
+import net.spy.db.TransactionPipeline;
 
 /**
  * All persistent objects will be available through this class.
@@ -17,9 +17,8 @@ import net.spy.log.SpyLog;
 public class Persistent extends HttpServlet {
 
 	private static PhotoSecurity security = null;
-	private static SpyLog logger = null;
+	private static TransactionPipeline pipeline = null;
 	private static PhotoSaverThread photoSaverThread=null;
-	private PhotoLogFlusher logflusher=null;
 
 	/**
 	 * Get all of the persistent objects.
@@ -30,7 +29,7 @@ public class Persistent extends HttpServlet {
 		// This is pasted from PhotoServlet...I'm not sure which occurs
 		// first and I'm being a bit lazy right now.  I think this will end
 		// up being the permanent home.
-		PhotoConfig conf = new PhotoConfig();
+		PhotoConfig conf = PhotoConfig.getInstance();
 		// See if we need to provide a new configuration location
 		String confpath=config.getInitParameter("configFile");
 		if(confpath!=null) {
@@ -41,7 +40,7 @@ public class Persistent extends HttpServlet {
 			// Set the path
 			conf.setStaticConfigLocation(confpath);
 			// Get a new config for the changes to take effect
-			conf=new PhotoConfig();
+			conf=PhotoConfig.getInstance();
 		}
 
 		// initialize the category list early on, because it's simple DB
@@ -66,14 +65,13 @@ public class Persistent extends HttpServlet {
 			throw new ServletException("Can't create security stuff", e);
 		}
 
-		log("Initing logger");
-		logflusher=new PhotoLogFlusher();
-		logger = new SpyLog("PhotoLog", logflusher);
-		log("got logger");
-
 		log("Initing PhotoSaverThread");
 		photoSaverThread=new PhotoSaverThread();
 		log("got PhotoSaverThread");
+
+		log("Initing TransactionPipeline");
+		pipeline=new TransactionPipeline();
+		log("got TransactionPipeline");
 
 		log("Initialization complete");
 	}
@@ -82,10 +80,9 @@ public class Persistent extends HttpServlet {
 	 * Shut everything down.
 	 */
 	public void destroy() {
-		log("Removing logflusher");
-		logger.removeFlusher(logflusher);
-		log("Stopping logflusher");
-		logflusher.close();
+		log("Shutting down transaction pipeline");
+		pipeline.shutdown();
+		log("pipeline shut down");
 		log("Stopping PhotoSaverThread");
 		photoSaverThread.stopRunning();
 		log("Calling super destroy.");
@@ -103,11 +100,11 @@ public class Persistent extends HttpServlet {
 	}
 
 	/**
-	 * Get the SpyLog object for this instance.
+	 * Get the TransactionPipeline object for this instance.
 	 */
-	public static SpyLog getLogger() {
+	public static TransactionPipeline getPipeline() {
 		verifyInitialized();
-		return(logger);
+		return(pipeline);
 	}
 
 	/**
@@ -119,7 +116,7 @@ public class Persistent extends HttpServlet {
 	}
 
 	private static void verifyInitialized() {
-		if(security==null || logger==null || photoSaverThread==null) {
+		if(security==null || pipeline==null || photoSaverThread==null) {
 
 			throw new NotInitializedException();
 		}

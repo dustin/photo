@@ -13,9 +13,8 @@ import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 import net.spy.util.Base64;
-import net.spy.util.NestedRuntimeException;
 
 import net.spy.photo.struts.SearchForm;
 
@@ -69,7 +68,7 @@ public class PhotoSearch extends PhotoHelper {
 		try {
 			rv=URLEncoder.encode(msg, CHARSET);
 		} catch(java.io.UnsupportedEncodingException e) {
-			throw new NestedRuntimeException(CHARSET + " is not supported.", e);
+			throw new RuntimeException(CHARSET + " is not supported.", e);
 		}
 		return(rv);
 	}

@@ -35,7 +35,7 @@ public class ImageServerFactory extends Object {
 
 	// Load the instance
 	private static void getServer() throws Exception {
-		PhotoConfig conf=new PhotoConfig();
+		PhotoConfig conf=PhotoConfig.getInstance();
 		String className=conf.get("imageserverimpl",
 			"net.spy.photo.rmi.ImageServerImpl");
 		Class c=Class.forName(className);

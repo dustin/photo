@@ -53,7 +53,7 @@ public class AdminSaveProfile extends PhotoAction {
 		}
 
 		// Save the profile
-		Saver saver=new Saver(new PhotoConfig());
+		Saver saver=new Saver(PhotoConfig.getInstance());
 		saver.save(profile);
 
 		// Record the new profile identifier.

@@ -4,9 +4,7 @@
 
 package net.spy.photo;
 
-import net.spy.RHash;
-
-import net.spy.util.NestedException;
+import net.spy.photo.rmi.RHash;
 
 /**
  * ImageCache that uses RMI.
@@ -18,10 +16,10 @@ public class RemoteImageCacheImpl extends Object implements ImageCache {
 	/**
 	 * Get an instance of RemoteImageCacheImpl.
 	 */
-	public RemoteImageCacheImpl() throws NestedException {
+	public RemoteImageCacheImpl() throws Exception {
 		super();
 
-		PhotoConfig conf=new PhotoConfig();
+		PhotoConfig conf=PhotoConfig.getInstance();
 		rhash=new RHash(conf.get("rhash.url", "//localhost/RObjectServer"));
 	}
 

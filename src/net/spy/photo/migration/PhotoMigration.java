@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import net.spy.SpyObject;
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 import net.spy.db.SQLRunner;
 
 import net.spy.photo.PhotoConfig;
@@ -33,7 +33,7 @@ public abstract class PhotoMigration extends SpyObject {
 		boolean ret=false;
 
 		// Make sure we can do a query.
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		ResultSet rs=db.executeQuery("select 1");
 		rs.next();
 		rs.close();
@@ -55,7 +55,7 @@ public abstract class PhotoMigration extends SpyObject {
 	private static URL findPath(String rel)
 		throws FileNotFoundException {
 		// Just need some object that will be loaded near the photo stuff
-		PhotoConfig conf=new PhotoConfig();
+		PhotoConfig conf=PhotoConfig.getInstance();
 		ClassLoader cl=conf.getClass().getClassLoader();
 		URL u=cl.getResource(rel);
 		if(u==null) {
@@ -88,7 +88,7 @@ public abstract class PhotoMigration extends SpyObject {
 
 		URL u=findPath(path);
 
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		Connection conn=db.getConn();
 
 		InputStream is=u.openStream();
@@ -116,7 +116,7 @@ public abstract class PhotoMigration extends SpyObject {
 	 * like that.
 	 */
 	protected void fetchThumbnails() throws Exception {
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		ResultSet rs=db.executeQuery("select id from album order by ts desc");
 		while(rs.next()) {
 			int id=rs.getInt(1);

@@ -61,7 +61,7 @@ public class ForgotPWAction extends PhotoAction {
 
 			String newPass=PwGen.getPass(8);
 			user.setPassword(newPass);
-			Saver saver=new Saver(new PhotoConfig());
+			Saver saver=new Saver(PhotoConfig.getInstance());
 			saver.save(user);
 
 			Mailer m=new Mailer();

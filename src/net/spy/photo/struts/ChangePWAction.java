@@ -55,7 +55,7 @@ public class ChangePWAction extends PhotoAction {
 
 		// Set the password
 		user.setPassword(newpw);
-		Saver saver=new Saver(new PhotoConfig());
+		Saver saver=new Saver(PhotoConfig.getInstance());
 		saver.save(user);
 
 		return(mapping.findForward("next"));

@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 
 import net.spy.db.DBSP;
 import net.spy.db.SpyCacheDB;
@@ -94,7 +94,8 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 		Cursor rv=null;
 
 		try {
-			GetGalleriesForUser db=new GetGalleriesForUser(new PhotoConfig());
+			GetGalleriesForUser db=
+				new GetGalleriesForUser(PhotoConfig.getInstance());
 			db.setUserId(user.getId());
 			ResultSet rs=db.executeQuery();
 			rv=new Cursor();
@@ -113,7 +114,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	}
 
 	private void loadMap(PhotoUser user) throws Exception {
-		LookupGallery lg=new LookupGallery(new PhotoConfig());
+		LookupGallery lg=new LookupGallery(PhotoConfig.getInstance());
 		lg.setGalleryId(id);
 		lg.setCurrentUser(user.getId());
 		lg.setDefaultUser(PhotoUtil.getDefaultId());
@@ -140,7 +141,8 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 		Gallery rv=null;
 
 		try {
-			GetGalleryForUser db=new GetGalleryForUser(new PhotoConfig());
+			GetGalleryForUser db=
+				new GetGalleryForUser(PhotoConfig.getInstance());
 			db.setGalleryId(id);
 			db.setUserId(user.getId());
 			ResultSet rs=db.executeQuery();

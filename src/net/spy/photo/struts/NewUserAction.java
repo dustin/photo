@@ -15,7 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 import net.spy.db.Saver;
 
 import net.spy.photo.Persistent;
@@ -82,7 +82,7 @@ public class NewUserAction extends PhotoAction {
 		}
 
 		// Save the new user
-		Saver saver=new Saver(new PhotoConfig());
+		Saver saver=new Saver(PhotoConfig.getInstance());
 		saver.save(pu);
 
 		// Recache the photo stuff and get the cached version.
@@ -95,7 +95,7 @@ public class NewUserAction extends PhotoAction {
 		sessionData.setUser(pu);
 
 		// Try to log it.
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"insert into user_profile_log"
 			+ "(profile_id, wwwuser_id, remote_addr) "

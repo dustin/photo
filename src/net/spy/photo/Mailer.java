@@ -49,7 +49,7 @@ public class Mailer extends Object {
 	 * Send the message.
 	 */
 	public void send() throws Exception {
-		PhotoConfig conf=new PhotoConfig();
+		PhotoConfig conf=PhotoConfig.getInstance();
 		MailMessage mail=new MailMessage(conf.get("mail_server"));
 		mail.from(conf.get("mail_sender"));
 		mail.to(to);

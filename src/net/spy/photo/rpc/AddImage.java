@@ -14,6 +14,7 @@ import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoLogUploadEntry;
 import net.spy.photo.PhotoSaver;
 import net.spy.photo.PhotoUser;
+import net.spy.photo.PhotoConfig;
 
 /**
  * RPC method to add an image. 
@@ -102,8 +103,9 @@ public class AddImage extends RPCMethod {
 		// Log it.
 		// XXX  I really would like a way to get to the actual remote IP
 		// address.
-		Persistent.getLogger().log(new PhotoLogUploadEntry(
-			user.getId(), rv, "127.0.0.1", "XMLRPC Image Upload"));
+		Persistent.getPipeline().addTransaction(new PhotoLogUploadEntry(
+			user.getId(), rv, "127.0.0.1", "XMLRPC Image Upload"),
+			PhotoConfig.getInstance());
 
 		// Return the new image ID
 		return(rv);

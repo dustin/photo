@@ -10,7 +10,7 @@ import java.text.NumberFormat;
 
 import javax.servlet.jsp.JspException;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 
 import net.spy.cache.SpyCache;
 
@@ -37,7 +37,7 @@ public class MetaInfo extends PhotoTag {
 
 		Integer rvi=(Integer)cache.get(key);
 		if(rvi==null) {
-			SpyDB db=new SpyDB(new PhotoConfig());
+			SpyDB db=new SpyDB(PhotoConfig.getInstance());
 			ResultSet rs=db.executeQuery(query);
 			rs.next();
 			rv=rs.getInt(1);

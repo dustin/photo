@@ -6,14 +6,21 @@
 
 package net.spy.photo;
 
+import java.sql.SQLException;
+import java.sql.Connection;
+
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.log.SpyLogEntry;
+import net.spy.db.AbstractSavable;
+import net.spy.db.SaveContext;
+import net.spy.db.SaveException;
+
+import net.spy.photo.sp.InsertPhotoLog;
 
 /**
  * Log entries for image requests.
  */
-public class PhotoLogEntry extends SpyLogEntry {
+public class PhotoLogEntry extends AbstractSavable {
 
 	private Integer photoId=null;
 	private int wwwuserId=-1;
@@ -76,52 +83,23 @@ public class PhotoLogEntry extends SpyLogEntry {
 		this.photoId=to;
 	}
 
-	/**
-	 * String me.
+	/** 
+	 * Save this log entry.
 	 */
-	public String toString() {
-		java.sql.Timestamp ts=new java.sql.Timestamp(timestamp);
-		StringBuffer sb=new StringBuffer(128);
+	public void save(Connection conn, SaveContext context)
+		throws SaveException, SQLException {
 
-		sb.append("insert into photo_logs(log_type, photo_id, wwwuser_id,");
-		sb.append(" remote_addr, user_agent, extra_info, ts) values(");
+		InsertPhotoLog ipl=new InsertPhotoLog(conn);
+		ipl.setLogType(type);
+		ipl.setPhotoId(photoId);
+		ipl.setWwwuserId(wwwuserId);
+		ipl.setRemoteAddr(remoteAddr);
+		ipl.setUserAgent(userAgent);
+		ipl.setExtraInfo(extraInfo);
+		ipl.setTimestamp(new java.sql.Timestamp(timestamp));
 
-		sb.append("get_log_type('");
-		sb.append(type);
-		sb.append("'), ");
+		ipl.executeUpdate();
 
-		if(photoId==null) {
-			sb.append("null, ");
-		} else {
-			sb.append(photoId);
-			sb.append(", ");
-		}
-
-		sb.append(wwwuserId);
-		sb.append(", ");
-
-		sb.append("'");
-		sb.append(remoteAddr);
-		sb.append("', ");
-
-		sb.append("get_agent('");
-		sb.append(PhotoUtil.dbquoteStr(userAgent));
-		sb.append("'), ");
-
-		if(extraInfo==null) {
-			sb.append("null, ");
-		} else {
-			sb.append("'");
-			sb.append(PhotoUtil.dbquoteStr(extraInfo));
-			sb.append("', ");
-		}
-
-		sb.append("'");
-		sb.append(ts);
-		sb.append("'");
-
-		sb.append(")");
-
-		return(sb.toString());
+		setSaved();
 	}
 }

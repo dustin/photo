@@ -82,7 +82,7 @@ public class PhotoImageScaler extends Object {
 		int imageId=Integer.parseInt(args[0]);
 		PhotoDimensions dim=new PhotoDimensionsImpl(args[1]);
 
-		PhotoConfig conf=new PhotoConfig();
+		PhotoConfig conf=PhotoConfig.getInstance();
 
 		RemoteImageServer server=null;
 		System.out.println("Connecting to image server.");

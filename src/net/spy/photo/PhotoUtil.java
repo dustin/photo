@@ -12,14 +12,14 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.SpyDB;
-import net.spy.SpyUtil;
+import net.spy.db.SpyDB;
+import net.spy.util.SpyUtil;
 import net.spy.jwebkit.RequestUtil;
 
 /**
  * Utilities.
  */
-public class PhotoUtil extends Object { 
+public class PhotoUtil extends Object {
 
 	/**
 	 * Simple splitter.

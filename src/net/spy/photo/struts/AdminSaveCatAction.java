@@ -76,7 +76,7 @@ public class AdminSaveCatAction extends PhotoAction {
 			cat.addAddACLEntry(uid);
 		}
 
-		Saver saver=new Saver(new PhotoConfig());
+		Saver saver=new Saver(PhotoConfig.getInstance());
 		saver.save(cat);
 
 		Category.recache();

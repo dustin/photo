@@ -21,7 +21,7 @@ public class LocalImageCacheImpl extends Object implements ImageCache {
 	public LocalImageCacheImpl() {
 		super();
 
-		PhotoConfig conf=new PhotoConfig();
+		PhotoConfig conf=PhotoConfig.getInstance();
 		cache=new DiskCache(conf.get("cache.dir", "/var/tmp/photocache"));
 	}
 

@@ -99,7 +99,7 @@ public class SavedSearch extends Object {
 	private static Map initSearchesMap() throws PhotoException {
 		Map rv=null;
 		try {
-			GetSearches db=new GetSearches(new PhotoConfig());
+			GetSearches db=new GetSearches(PhotoConfig.getInstance());
 			ResultSet rs=db.executeQuery();
 
 			rv=new HashMap();

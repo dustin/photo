@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
@@ -17,7 +17,7 @@ import net.spy.photo.PhotoImageHelper;
 public class PhotoMigration01 extends PhotoMigration {
 
 	private void addColumns() throws Exception {
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		try {
 			db.executeUpdate("alter table album add column width integer");
 		} catch(Exception e) {
@@ -42,7 +42,7 @@ public class PhotoMigration01 extends PhotoMigration {
 
 	private void getImages() throws Exception {
 		int n=1;
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 
 		while(n>0) {
 			ArrayList al=new ArrayList();

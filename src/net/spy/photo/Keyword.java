@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 
 import java.util.Collection;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 
 /**
  * This class represents a keyword in the database.
@@ -39,7 +39,7 @@ public class Keyword extends Object {
 	}
 
 	private void getNewId() throws Exception {
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		ResultSet rs=db.executeQuery("select nextval('keywords_word_id_seq')");
 		if(!rs.next()) {
 			throw new Exception("No id found in sequence.");

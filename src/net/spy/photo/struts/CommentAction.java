@@ -71,7 +71,7 @@ public class CommentAction extends PhotoAction {
 		comment.setNote( (String)df.get("comment") );
 
 		try {
-			Saver s=new Saver(new PhotoConfig());
+			Saver s=new Saver(PhotoConfig.getInstance());
 			s.save(comment);
 		} catch(Exception e) {
 			throw new ServletException("Error saving comment", e);

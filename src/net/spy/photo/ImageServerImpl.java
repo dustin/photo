@@ -6,8 +6,8 @@ package net.spy.photo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import net.spy.SpyDB;
 import net.spy.SpyObject;
+import net.spy.db.SpyDB;
 
 import net.spy.util.Base64;
 
@@ -27,7 +27,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	 */
 	public ImageServerImpl() {
 		super();
-		conf=new PhotoConfig();
+		conf=PhotoConfig.getInstance();
 		// Make sure the storer thread gets started immediately.
 		checkStorerThread();
 	}
@@ -147,7 +147,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 			StringBuffer sdata=new StringBuffer(512*1024);
 
 			try {
-				SpyDB db=new SpyDB(new PhotoConfig());
+				SpyDB db=new SpyDB(PhotoConfig.getInstance());
 				String query="select * from image_store where id = ?\n"
 					+ " order by line";
 				PreparedStatement st = db.prepareStatement(query);

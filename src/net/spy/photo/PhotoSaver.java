@@ -12,8 +12,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
-import net.spy.SpyDB;
 import net.spy.SpyObject;
+import net.spy.db.SpyDB;
 
 import net.spy.photo.sp.InsertImage;
 
@@ -133,7 +133,7 @@ public class PhotoSaver extends SpyObject {
 	public static int getNewImageId() throws PhotoException {
 		int rv=0;
 		try {
-			SpyDB db=new SpyDB(new PhotoConfig());
+			SpyDB db=new SpyDB(PhotoConfig.getInstance());
 			ResultSet rs=db.executeQuery("select nextval('album_id_seq')");
 			if(!rs.next()) {
 				throw new PhotoException("No result for new album ID");
@@ -184,7 +184,7 @@ public class PhotoSaver extends SpyObject {
 		Connection conn=null;
 		try {
 			String query=null;
-			db=new SpyDB(new PhotoConfig());
+			db=new SpyDB(PhotoConfig.getInstance());
 			conn=db.getConn();
 			conn.setAutoCommit(false);
 

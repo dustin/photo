@@ -16,7 +16,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import net.spy.SpyDB;
+import net.spy.db.SpyDB;
 import net.spy.db.Saver;
 
 import net.spy.photo.PhotoConfig;
@@ -88,7 +88,7 @@ public class AdminSaveUserAction extends PhotoAction {
 			user.addAddACLEntry(cat);
 		}
 
-		Saver saver=new Saver(new PhotoConfig());
+		Saver saver=new Saver(PhotoConfig.getInstance());
 		saver.save(user);
 
 		// Recache the users.
@@ -98,7 +98,7 @@ public class AdminSaveUserAction extends PhotoAction {
 		// here for now.
 		// I won't even bother doing this in a transaction, worse case,
 		// user doesn't get permissions and we get an exception.
-		SpyDB db=new SpyDB(new PhotoConfig());
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 
 		// Delete any old group relations for this user
 		PreparedStatement pst=db.prepareStatement(
