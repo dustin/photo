@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.27 1998/08/30 03:57:48 dustin Exp $
+# $Id: Photo.pm,v 1.28 1998/09/04 03:07:56 dustin Exp $
 
 package Photo;
 
@@ -34,7 +34,7 @@ sub openDB
          || die("Cannot connect to database\n");
 }
 
-sub finished
+sub DESTROY
 {
     my($self)=@_;
 
