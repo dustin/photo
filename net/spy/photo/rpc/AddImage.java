@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddImage.java,v 1.2 2002/06/25 03:40:16 dustin Exp $
+// $Id: AddImage.java,v 1.3 2002/06/25 23:00:08 dustin Exp $
 
 package net.spy.photo.rpc;
 
@@ -67,6 +67,13 @@ public class AddImage extends RPCMethod {
 			throw new PhotoException("Error looking up category.", e);
 		}
 
+		// Verify the user is allowed to add to this category
+		PhotoUser user=getUser();
+		if(!user.canAdd(catId)) {
+			throw new PhotoException("User is not allowed to add to "
+				+ category);
+		}
+
 		// Create a PhotoImage from the raw data.
 		PhotoImage photoImage=new PhotoImage(image);
 
@@ -79,7 +86,7 @@ public class AddImage extends RPCMethod {
 		saver.setInfo(info);
 		saver.setCat(catId);
 		saver.setTaken(taken);
-		saver.setUser(getUser());
+		saver.setUser(user);
 		saver.setPhotoImage(photoImage);
 		saver.setId(rv);
 
@@ -90,7 +97,7 @@ public class AddImage extends RPCMethod {
 		// XXX  I really would like a way to get to the actual remote IP
 		// address.
 		Persistent.getLogger().log(new PhotoLogUploadEntry(
-			getUser().getId(), rv, "127.0.0.1", "XMLRPC Image Upload"));
+			user.getId(), rv, "127.0.0.1", "XMLRPC Image Upload"));
 
 		// Return the new image ID
 		return(rv);
