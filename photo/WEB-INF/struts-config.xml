@@ -24,6 +24,8 @@
 		<form-bean name="adminUserForm" type="net.spy.photo.struts.AdminUserForm"/>
 		<form-bean name="adminCatForm"
 			type="net.spy.photo.struts.AdminCategoryForm"/>
+		<form-bean name="adminNewProfileForm"
+			type="net.spy.photo.struts.AdminNewProfileForm"/>
   </form-beans>
 
   <action-mappings>
@@ -137,6 +139,7 @@
 	<!-- Admin stuff -->
 	<!-- ***************************************************************** -->
 
+	<!-- Managing users -->
 	<action path="/admuseredit"
 		name="adminUserForm"
 		input="/admin/users.jsp"
@@ -151,6 +154,7 @@
 		<forward name="success" path="/admin/users.jsp" />
 	</action>
 
+	<!-- Managing categories -->
 	<action path="/admcatedit"
 		name="adminCatForm"
 		input="/admin/categories.jsp"
@@ -163,6 +167,14 @@
 		input="/admin/editcat.jsp"
 		type="net.spy.photo.struts.AdminSaveCatAction">
 		<forward name="success" path="/admin/categories.jsp" />
+	</action>
+
+	<!-- Creating a profile -->
+	<action path="/admnewprofile"
+		name="adminNewProfileForm"
+		input="/admin/newprofile.jsp"
+		type="net.spy.photo.struts.AdminSaveProfile">
+		<forward name="success" path="/admin/newprofile.jsp" />
 	</action>
 
   </action-mappings>

@@ -7,16 +7,28 @@
 
 <photo:admin explodeOnImpact="true"/>
 
+<%
+	String lastProfile=(String)request.getAttribute("net.spy.photo.ProfileId");
+%>
+
+<% if(lastProfile!=null) { %>
+
+<p>
+	Profile created, ID is <code><%= lastProfile %></code>.
+	<hr/>
+</p>
+
+<% } %>
+
 <p>
 
 <template:insert template='/templates/section_header.jsp'>
 	<template:put name='title' content='New Profile' direct='true'/>
 </template:insert>
 
-<form method="POST" action="/photo/PhotoServlet">
-	<input type=hidden name=func value=admnewprofile>
+<html:form action="/admnewprofile">
 
-	Profile description: <input name="name"><br/>
+	Profile description: <html:text property="name"/><br/>
 
 	<table border="1">
 
@@ -31,12 +43,14 @@
 		<tr>
 			<td><%= cat.getName() %></td>
 			<td>
-				<input type="checkbox" name="catacl_view" value="<%= cat.getId() %>">
+				<html:multibox property="categories" value="<%= "" + cat.getId() %>"/>
 			</td>
 		</tr>
 	</logic:iterate>
 
 	</table>
 
-	<input type="submit" value="Create Profile">
-</form>
+	<html:submit>Create Profile</html:submit>
+</html:form>
+
+</p>
