@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchForm.java,v 1.3 2002/05/12 08:58:33 dustin Exp $
+// $Id: SearchForm.java,v 1.4 2002/05/12 09:01:01 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -46,7 +46,6 @@ public class SearchForm extends ActionForm {
 	 * Add a category.
 	 */
 	public void setCat(String cat[]) {
-		System.out.println("Added cat " + cat);
 		cats=cat;
 	}
 
