@@ -3,13 +3,14 @@
 
 <!-- import common stuff -->
 <xsl:import href="common.xsl"/>
+<xsl:import href="forms.xsl"/>
 
 <!-- set output method -->
 <xsl:output method="html"/>
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: simple.xsl,v 1.5 2001/01/06 07:32:08 dustin Exp $
+ $Id: simple.xsl,v 1.6 2001/01/07 07:51:35 dustin Exp $
  -->
 
 <xsl:template match="page">
