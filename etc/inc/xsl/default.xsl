@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.15 2001/01/06 07:32:08 dustin Exp $
+ $Id: default.xsl,v 1.16 2001/01/06 18:44:03 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -294,12 +294,14 @@
 		<tr>
 			<xsl:if test="meta_stuff/prev">
 				<td align="left">
-					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={meta_stuff/prev}">&lt;&lt;&lt;</a>
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={meta_stuff/prev}"><img
+					alt="&lt;&lt;&lt;" border="0" src="/~dustin/images/l_arrow.gif"/></a>
 				</td>
 			</xsl:if>
 			<xsl:if test="meta_stuff/next">
 				<td align="right">
-					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={meta_stuff/next}">&gt;&gt;&gt;</a>
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={meta_stuff/next}"><img
+					alt="&gt;&gt;&gt;" border="0" src="/~dustin/images/r_arrow.gif"/></a>
 				</td>
 			</xsl:if>
 		</tr>
