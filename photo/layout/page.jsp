@@ -7,12 +7,12 @@
 <%-- The following tags must be kept as-is --%>
 <photo:initSessionData/>
 <%-- <photo:logRequest/> --%>
-<html><head><title><tiles:getAsString name='title'/></title>
+<html><head><title><tiles:insert attribute='title'/></title>
 <photo:stylesheet url="/style.css"/>
 </head>
 <body background='<%= props.getProperty("background_img", "") %>'>
 
-	<div id="pagetitle"><tiles:getAsString name='title'/></div>
+	<div id="pagetitle"><tiles:insert attribute='title'/></div>
 
 	<div id="pagebody">
 			<tiles:insert attribute='body'/>

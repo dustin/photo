@@ -8,7 +8,7 @@
 
 	<!-- The page layout -->
 	<definition name="pageLayout" path="/layout/page.jsp">
-		<put name="title" value="My Photo Album"/>
+		<put name="title" type="string" value="My Photo Album"/>
 		<put name="body" value=""/>
 	</definition>
 
@@ -19,138 +19,138 @@
 
 	<!-- Regular top-level pages -->
 	<definition name="top.display" extends="pageLayout">
-		<put name="title" value="Image Display"/>
+		<put name="title" type="string" value="Image Display"/>
 		<put name="body" value="/content/_display.jsp"/>
 	</definition>
 
 	<definition name="top.addImage" extends="pageLayout">
-		<put name="title" value="Add a New Image"/>
+		<put name="title" type="string" value="Add a New Image"/>
 		<put name="body" value="/content/_addform.jsp"/>
 	</definition>
 
 	<definition name="top.catView" extends="pageLayout">
-		<put name="title" value="Category View"/>
+		<put name="title" type="string" value="Category View"/>
 		<put name="body" value="/content/_catview.jsp"/>
 	</definition>
 
 	<definition name="top.changePw" extends="pageLayout">
-		<put name="title" value="Change Password"/>
+		<put name="title" type="string" value="Change Password"/>
 		<put name="body" value="/content/_changepw.jsp"/>
 	</definition>
 
 	<definition name="top.commentInput" extends="pageLayout">
-		<put name="title" value="Comment on an Image"/>
+		<put name="title" type="string" value="Comment on an Image"/>
 		<put name="body" value="/content/_commentinput.jsp"/>
 	</definition>
 
 	<definition name="top.comments" extends="pageLayout">
-		<put name="title" value="Comments"/>
+		<put name="title" type="string" value="Comments"/>
 		<put name="body" value="/content/_comments.jsp"/>
 	</definition>
 
 	<definition name="top.credform" extends="pageLayout">
-		<put name="title" value="Authentication Form"/>
+		<put name="title" type="string" value="Authentication Form"/>
 		<put name="body" value="/content/_credform.jsp"/>
 	</definition>
 
 	<definition name="top.forgotPwOut" extends="pageLayout">
-		<put name="title" value="New Password Sent"/>
+		<put name="title" type="string" value="New Password Sent"/>
 		<put name="body" value="/content/_forgotpw_out.jsp"/>
 	</definition>
 
 	<definition name="top.galleryList" extends="pageLayout">
-		<put name="title" value="Gallery List"/>
+		<put name="title" type="string" value="Gallery List"/>
 		<put name="body" value="/content/_listgalleries.jsp"/>
 	</definition>
 
 	<definition name="top.logView" extends="pageLayout">
-		<put name="title" value="Log View"/>
+		<put name="title" type="string" value="Log View"/>
 		<put name="body" value="/content/_logview.jsp"/>
 	</definition>
 
 	<definition name="top.newUserForm" extends="pageLayout">
-		<put name="title" value="Create an Account"/>
+		<put name="title" type="string" value="Create an Account"/>
 		<put name="body" value="/content/_newuserform.jsp"/>
 	</definition>
 
 	<definition name="top.searchResults" extends="pageLayout">
-		<put name="title" value="Search Results"/>
+		<put name="title" type="string" value="Search Results"/>
 		<put name="body" value="/content/_results.jsp"/>
 	</definition>
 
 	<definition name="top.savedSearch" extends="pageLayout">
-		<put name="title" value="Search Saved"/>
+		<put name="title" type="string" value="Search Saved"/>
 		<put name="body" value="/content/_savedsearch.jsp"/>
 	</definition>
 
 	<definition name="top.saveGallery" extends="pageLayout">
-		<put name="title" value="Save a Gallery"/>
+		<put name="title" type="string" value="Save a Gallery"/>
 		<put name="body" value="/content/_savegallery.jsp"/>
 	</definition>
 
 	<definition name="top.searchForm" extends="pageLayout">
-		<put name="title" value="Advanced Search Form"/>
+		<put name="title" type="string" value="Advanced Search Form"/>
 		<put name="body" value="/content/_search.jsp"/>
 	</definition>
 
 	<definition name="top.sessions" extends="pageLayout">
-		<put name="title" value="Active User Sessions"/>
+		<put name="title" type="string" value="Active User Sessions"/>
 		<put name="body" value="/content/_sessions.jsp"/>
 	</definition>
 
 	<definition name="top.showGallery" extends="pageLayout">
-		<put name="title" value="Display a Gallery"/>
+		<put name="title" type="string" value="Display a Gallery"/>
 		<put name="body" value="/content/_showgallery.jsp"/>
 	</definition>
 
 	<definition name="top.sizeForm" extends="pageLayout">
-		<put name="title" value="Set Viewing Size"/>
+		<put name="title" type="string" value="Set Viewing Size"/>
 		<put name="body" value="/content/_sizeform.jsp"/>
 	</definition>
 
 	<!-- Admin pages -->
 	<definition name="admin.display" extends="pageLayout">
-		<put name="title" value="Admin Display"/>
+		<put name="title" type="string" value="Admin Display"/>
 		<put name="body" value="/content/admin/_display.jsp"/>
 	</definition>
 
 	<definition name="admin.catlist" extends="pageLayout">
-		<put name="title" value="Category Administration"/>
+		<put name="title" type="string" value="Category Administration"/>
 		<put name="body" value="/content/admin/_categories.jsp"/>
 	</definition>
 
 	<definition name="admin.editcat" extends="pageLayout">
-		<put name="title" value="Category Administration"/>
+		<put name="title" type="string" value="Category Administration"/>
 		<put name="body" value="/content/admin/_editcat.jsp"/>
 	</definition>
 
 	<definition name="admin.userlist" extends="pageLayout">
-		<put name="title" value="User Administration"/>
+		<put name="title" type="string" value="User Administration"/>
 		<put name="body" value="/content/admin/_users.jsp"/>
 	</definition>
 
 	<definition name="admin.edituser" extends="pageLayout">
-		<put name="title" value="User Administration"/>
+		<put name="title" type="string" value="User Administration"/>
 		<put name="body" value="/content/admin/_edituser.jsp"/>
 	</definition>
 
 	<definition name="admin.reporting" extends="pageLayout">
-		<put name="title" value="Reporting"/>
+		<put name="title" type="string" value="Reporting"/>
 		<put name="body" value="/content/admin/_reporting.jsp"/>
 	</definition>
 
 	<definition name="admin.properties" extends="pageLayout">
-		<put name="title" value="Property Administration"/>
+		<put name="title" type="string" value="Property Administration"/>
 		<put name="body" value="/content/admin/_properties.jsp"/>
 	</definition>
 
 	<definition name="admin.reportDisplay" extends="pageLayout">
-		<put name="title" value="Report Display"/>
+		<put name="title" type="string" value="Report Display"/>
 		<put name="body" value="/content/admin/_reportDisplay.jsp"/>
 	</definition>
 
 	<definition name="admin.newprofile" extends="pageLayout">
-		<put name="title" value="Create a Profile"/>
+		<put name="title" type="string" value="Create a Profile"/>
 		<put name="body" value="/content/admin/_newprofile.jsp"/>
 	</definition>
 
