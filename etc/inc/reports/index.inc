@@ -11,6 +11,7 @@
 		(last 30 days)</a></li>
     <li><a href="%SELF_URI%?func=repmostcommonip">Common IP Addresses</a></li>
     <li><a href="%SELF_URI%?func=repauth">Auth Report</a></li>
+    <li><a href="%SELF_URI%?func=replogs">Logs</a></li>
 </ul>
 
 </body>
