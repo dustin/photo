@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.8 2002/02/24 22:50:29 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.9 2002/03/01 10:22:37 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -103,7 +103,7 @@ public class PhotoStorerThread extends Thread {
 			pst2.setInt(1, image_id);
 			int rows=pst2.executeUpdate();
 			if(rows!=1) {
-				throw new Exception("Didn't update any rows.");
+				throw new Exception("Meant to update 1 row, updated " + rows);
 			}
 			db.commit();
 			// Go ahead and generate a thumbnail.
@@ -136,12 +136,13 @@ public class PhotoStorerThread extends Thread {
 		int rv=0;
 		Vector v = new Vector();
 		try {
-			String query = "select * from photo_logs\n"
-				+ " where extra_info is null\n"
-				+ " and log_type = get_log_type('Upload')";
+			// See what's not been stored.
+			String query="select distinct s.id as sid, a.id as aid\n"
+				+ " from album a left outer join image_store s using (id)\n"
+				+ " where s.id is null";
 			ResultSet rs=db.executeQuery(query);
 			while(rs.next()) {
-				v.addElement(rs.getString("photo_id"));
+				v.addElement(rs.getString("aid"));
 			}
 			rs.close();
 			db.close();

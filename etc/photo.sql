@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.27 2002/02/25 02:46:41 dustin Exp $
+-- $Id: photo.sql,v 1.28 2002/03/01 10:22:36 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -264,7 +264,6 @@ create table photo_logs (
 	primary key(log_id),
 	foreign key(log_type) references log_types(log_type_id),
 	foreign key(wwwuser_id) references wwwusers(id),
-	foreign key(photo_id) references album(id) on delete set null,
 	foreign key(user_agent) references user_agent(user_agent_id)
 );
 create index photo_logs_bytype on photo_logs(log_type);
@@ -339,7 +338,8 @@ create view user_profile_view as
 		order by
 			p.expires
 ;
-grant select on user_profile_view to nobody;
+grant select on user_profile_view to nobody
+;
 
 -- Log view
 create view log_user_ip_agent as
@@ -352,16 +352,18 @@ create view log_user_ip_agent as
 		and t.log_type ='ImgView';
 ;
 
-grant select on log_user_ip_agent to nobody;
+grant select on log_user_ip_agent to nobody
+;
 
 create view log_user_ip_keywords as
 	select a.id as photo_id, u.username, l.remote_addr, a.keywords, l.ts
-		from wwwusers u, photo_log l, album a
+		from wwwusers u, photo_logs l, album a
 	  where u.id = l.wwwuser_id and
 	    a.id = l.photo_id
 ;
 
-grant select on log_user_ip_keywords to nobody;
+grant select on log_user_ip_keywords to nobody
+;
 
 -- For viewing auth logs
 create view auth_log_view as

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.108 2002/02/25 19:49:13 dustin Exp $
+ * $Id: PhotoSession.java,v 1.109 2002/03/01 10:22:36 dustin Exp $
  */
 
 package net.spy.photo;
@@ -481,37 +481,24 @@ public class PhotoSession extends Object
 				"Your username or password is incorrect.");
 		}
 
-		String query = "insert into photo_logs "
-			+ "(log_type, wwwuser_id, remote_addr, user_agent)\n"
-			+ "  values(get_log_type(?), ?, ?, get_agent(?))\n";
+		// We don't do anything unless the password is correct.
+		if(user.checkPassword(pass)) {
+			// Save the username.
+			sessionData.setUser(user);
 
-		SpyDB db=new SpyDB(conf);
-		PreparedStatement pst=db.prepareStatement(query);
-		pst.setInt(2, user.getId());
-		pst.setString(3, request.getRemoteAddr());
-		pst.setString(4, request.getHeader("User-Agent"));
+			PhotoLogEntry ple=new PhotoLogEntry(
+				user.getId(), "Login", request);
+			logger.log(ple);
+			log("Authenticated as " + username);
+		} else {
+			PhotoLogEntry ple=new PhotoLogEntry(
+				user.getId(), "AuthFail", request);
+			logger.log(ple);
+			log("AUTH FAILURE:  " + username);
 
-		try {
-			// We don't do anything unless the password is correct.
-			if(user.checkPassword(pass)) {
-				// Save the username.
-				sessionData.setUser(user);
-
-				pst.setString(1, "Login");
-				log("Authenticated as " + username);
-			} else {
-				pst.setString(1, "AuthFail");
-				log("AUTH FAILURE:  " + username);
-
-				throw new ServletException(
-					"Your username or password is incorrect.");
-			}
-		} finally {
-			pst.executeUpdate();
-			pst.close();
-			db.close();
+			throw new ServletException(
+				"Your username or password is incorrect.");
 		}
-
 	}
 
 	// Get the saved searches.
@@ -666,46 +653,9 @@ public class PhotoSession extends Object
 
 			photo.commit();
 
-			// OK, really, really ugly, but I need to do this outside of
-			// the current transaction to avoid a deadlock problem until I
-			// find a better solution.
-			SpyDB db2=new SpyDB(conf);
-			// Log that the data was stored in the cache, so that, perhaps,
-			// it can be permanently stored later on.
-			query = "insert into photo_logs "
-				+ "(log_type, photo_id, wwwuser_id, remote_addr, user_agent)\n"
-				+ "  values(get_log_type('Upload'), ?, ?, ?, get_agent(?))\n";
-			st=db2.prepareStatement(query);
-			st.setInt(1, id);
-			st.setInt(2, sessionData.getUser().getId());
-			st.setString(3, request.getRemoteAddr());
-			st.setString(4, request.getHeader("User-Agent"));
-			// Try this up to three times if there's a deadlock
-			boolean success=false;
-			for(int i=0; i<3 && success==false; i++) {
-				try {
-					st.executeUpdate();
-					success=true;
-				} catch(SQLException se) {
-					String msg=se.getMessage();
-					if(msg!=null && msg.indexOf("Deadlock detected")>=0) {
-						log("Got a deadlock, retrying.");
-					} else {
-						throw new ServletException(
-							"Not good, couldn't record the entry in the log, "
-							+ "the image is available, but it will not be "
-							+ "stored in the DB!", se);
-					} // Examining error
-				} // catch
-			} // Retry loop
-			st.close();
-			db2.close();
-			if(success==false) {
-				throw new ServletException(
-					"Not good, couldn't record the entry in the log, "
-					+ "the image is available, but will not be stored in "
-					+ "the DB.");
-			}
+			// Log it
+			logger.log(new PhotoLogUploadEntry(
+				sessionData.getUser().getId(), id, request));
 
 			PhotoXML xml=new PhotoXML();
 			xml.setTitle("Upload Succesful");

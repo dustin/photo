@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.12 2002/02/25 09:58:55 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.13 2002/03/01 10:22:36 dustin Exp $
  */
 
 package net.spy.photo;
@@ -48,6 +48,9 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 					debug.debug(l.toString());
 					boolean tryagain=true;
 					for(int i=0; i<3 && tryagain; i++) {
+						if(i>0) {
+							System.err.println("Attempt " + i);
+						}
 						try {
 							st.executeUpdate(l.toString());
 							tryagain=false;
@@ -59,6 +62,7 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 								&& msg.indexOf("Deadlock detected")>=0) {
 								System.err.println(
 									"Got deadlock trying to flush.");
+								se.printStackTrace();
 								try {
 									sleep(5000);
 								} catch(InterruptedException ise) {

@@ -47,7 +47,6 @@ create table photo_logs (
 	primary key(log_id),
 	foreign key(log_type) references log_types(log_type_id),
 	foreign key(wwwuser_id) references wwwusers(id),
-	foreign key(photo_id) references album(id) on delete set null,
 	foreign key(user_agent) references user_agent(user_agent_id)
 )
 ;
