@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.93 2002/02/23 00:37:55 dustin Exp $
+ * $Id: PhotoSession.java,v 1.94 2002/02/23 07:51:29 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1200,12 +1200,23 @@ public class PhotoSession extends Object
 			}
 			meta.append("</meta_stuff>\n");
 
+			StringBuffer comments=new StringBuffer();
+			comments.append("<comments>\n");
+			for(Enumeration e=Comment.getCommentsForPhoto(r.getImageId());
+				e.hasMoreElements();) {
+
+				Comment c=(Comment)e.nextElement();
+				comments.append(c.toXML());
+			}
+			comments.append("</comments>\n");
+
 			PhotoXML xml=new PhotoXML();
 			xml.setTitle("Displaying " + h.get("IMAGE"));
 			xml.addBodyPart(getGlobalMeta());
 			xml.addBodyPart("<show_image>\n"
 				+ meta
 				+ datachunk
+				+ comments
 				+ "</show_image>\n"
 				);
 

@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.11 2002/02/15 21:52:37 dustin Exp $
+// $Id: PhotoUser.java,v 1.12 2002/02/23 07:51:29 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -372,7 +372,7 @@ public class PhotoUser extends Object implements Serializable {
 
 		sb.append("\t<email>");
 		sb.append(email);
-		sb.append("\t</email>\n");
+		sb.append("</email>\n");
 
 		sb.append("\t<realname>");
 		sb.append(realname);

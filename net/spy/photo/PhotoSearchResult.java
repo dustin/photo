@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.20 2002/02/21 09:36:17 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.21 2002/02/23 07:51:29 dustin Exp $
  */
 
 package net.spy.photo;
@@ -327,5 +327,12 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		initialize();
 		int ret=Integer.parseInt((String)mydata.get("CATNUM"));
 		return(ret);
+	}
+
+	/**
+	 * Get the Image ID.
+	 */
+	public int getImageId() {
+		return(id);
 	}
 }

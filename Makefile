@@ -39,6 +39,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoSecurity.class \
 	net/spy/photo/PhotoConfig.class \
 	net/spy/photo/PhotoSearch.class \
+	net/spy/photo/Comment.class \
 	net/spy/photo/PhotoSessionData.class \
 	net/spy/photo/Mailer.class \
 	net/spy/photo/PhotoImageObserver.class \
