@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.9 2001/07/03 08:08:01 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.10 2001/10/12 21:45:19 dustin Exp $
 
 package net.spy.rmi;
 
@@ -194,6 +194,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 				st.executeUpdate();
 			} catch(Exception e) {
 				log("Error updating thumbnail info:  " + e);
+				e.printStackTrace();
 			} finally {
 				freeDBConn(conn);
 			}
@@ -280,6 +281,8 @@ public class ImageServerImpl extends UnicastRemoteObject
 		try {
 			rhash = new RHash(conf.get("rhash.url"));
 		} catch(Exception e) {
+			log("Error getting RHash");
+			e.printStackTrace();
 			rhash=null;
 		}
 	}
