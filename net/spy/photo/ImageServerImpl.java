@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.1 2002/06/17 02:13:21 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.2 2002/06/17 03:52:32 dustin Exp $
 
 package net.spy.photo;
 
@@ -22,7 +22,7 @@ import net.spy.util.*;
 public class ImageServerImpl extends Object implements ImageServer {
 
 	private PhotoConfig conf = null;
-	private RHash rhash=null;
+	private ImageCache cache=null;
 	private PhotoStorerThread storer=null;
 
 	/**
@@ -64,8 +64,8 @@ public class ImageServerImpl extends Object implements ImageServer {
 			+ dim.getWidth() + "x" + dim.getHeight();
 
 		// Try cache first
-		getRhash();
-		pi=(PhotoImage)rhash.get(key);
+		getCache();
+		pi=cache.getImage(key);
 		if(pi==null) {
 			// Not in cache, get it
 			pi=fetchImage(image_id);
@@ -78,7 +78,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 				// Scale it
 				pi=scaleImage(pi, dim);
 				// Store it
-				rhash.put(key, pi);
+				cache.putImage(key, pi);
 				log("Stored " + image_id + " with key " + key);
 			}
 		}
@@ -103,8 +103,8 @@ public class ImageServerImpl extends Object implements ImageServer {
 		// Make sure we've calculated the width and height
 		image.getWidth();
 		try {
-			getRhash();
-			rhash.put("photo_" + image_id, image);
+			getCache();
+			cache.putImage("photo_" + image_id, image);
 		} catch(Exception e) {
 			log("Error caching image:  " + e);
 			e.printStackTrace();
@@ -147,8 +147,8 @@ public class ImageServerImpl extends Object implements ImageServer {
 
 		key = "photo_" + image_id;
 
-		getRhash();
-		pi=(PhotoImage)rhash.get(key);
+		getCache();
+		pi=cache.getImage(key);
 
 		if(pi==null) {
 			Connection photo=null;
@@ -178,23 +178,25 @@ public class ImageServerImpl extends Object implements ImageServer {
 			Base64 base64 = new Base64();
 			byte data[]=base64.decode(sdata.toString());
 			pi=new PhotoImage(data);
-			rhash.put(key, pi);
+			cache.putImage(key, pi);
 		}
 
 		return(pi);
 	}
 
 	// Get a cache object server
-	private void getRhash() throws RemoteException {
+	private void getCache() throws PhotoException {
 		try {
-			if(rhash==null) {
-				rhash = new RHash(conf.get("rhash.url"));
+			if(cache==null) {
+				Class c=Class.forName(conf.get("imagecacheimpl",
+					"net.spy.photo.LocalImageCacheImpl"));
+				cache=(ImageCache)c.newInstance();
 			}
 		} catch(Exception e) {
-			log("Error getting RHash");
+			log("Error getting cache server");
 			e.printStackTrace();
-			rhash=null;
-			throw new RemoteException("Error getting RHash", e);
+			cache=null;
+			throw new PhotoException("Error getting cache server", e);
 		}
 	}
 }
