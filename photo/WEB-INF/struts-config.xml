@@ -96,6 +96,12 @@
     <form-bean name="emptyForm"
 			type="net.spy.photo.struts.EmptyForm"/>
 
+		<form-bean name="sessionForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="id" type="java.lang.String"/>
+		</form-bean>
+
 		<!-- Admin beans -->
 		<form-bean name="adminUserForm" type="net.spy.photo.struts.AdminUserForm"/>
 		<form-bean name="adminCatForm"
@@ -266,6 +272,16 @@
 		scope="request"
 		name="saveGalleryForm">
 		<forward name="next" path="index" />
+	</action>
+
+	<!-- View the images a given session has seen as a search results object.  -->
+	<action path="/viewSession"
+		type="net.spy.photo.struts.ViewSessionAction"
+		input="top.sessions"
+		scope="request"
+		name="sessionForm">
+
+		<forward name="next" path="/nextresults.do"/>
 	</action>
 
 	<!-- ***************************************************************** -->

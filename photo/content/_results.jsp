@@ -18,6 +18,7 @@
 <table width="100%">
 <tr>
 <photo:canAdd>
+	<% if(sessionData.getEncodedSearch() != null) { %>
 	<td valign="top" align="left">
 		<form method="POST" action="savesearch.do">
 			<input type="hidden" name="search"
@@ -26,6 +27,7 @@
 			<input type="submit" value="Save"/>
 		</form>
 	</td>
+	<% } %>
 </photo:canAdd>
 
 	<td valign="top" align="right">

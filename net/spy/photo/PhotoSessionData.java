@@ -1,12 +1,15 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.14 2002/07/10 04:00:17 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.15 2003/07/25 20:29:35 dustin Exp $
 
 package net.spy.photo;
 
 import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.spy.util.RingBuffer;
 
 /**
  * Session data goes here.
@@ -32,6 +35,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	private int imagesSeen=0;
     // Keep track of the last image the user viewed.
     private int lastImageSeen=0;
+	private RingBuffer imagesSeenBuf=null;
 
 	/**
 	 * Get an instance of PhotoSessionData.
@@ -39,6 +43,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	public PhotoSessionData() {
 		super();
 		cursors=Collections.synchronizedMap(new HashMap());
+		imagesSeenBuf=new RingBuffer(128);
 	}
 
 	/**
@@ -270,6 +275,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	public synchronized void sawImage(int imageId) {
 		imagesSeen++;
 		lastImageSeen=imageId;
+		imagesSeenBuf.add(new Integer(imageId));
 	}
 
 	/**
@@ -284,6 +290,13 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public int getImagesSeen() {
 		return(imagesSeen);
+	}
+
+	/** 
+	 * Get a Collection of the images this user session has seen.
+	 */
+	public Collection getImageSeenCollection() {
+		return(imagesSeenBuf);
 	}
 
 }

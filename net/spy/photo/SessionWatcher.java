@@ -1,12 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.12 2003/01/07 09:38:52 dustin Exp $
+// $Id: SessionWatcher.java,v 1.13 2003/07/25 20:29:35 dustin Exp $
 
 package net.spy.photo;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpSession;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSessionListener;
  */
 public class SessionWatcher extends Object implements HttpSessionListener {
 
-	private static HashSet allSessions=new HashSet();
+	private static HashMap allSessions=new HashMap();
 
 	/**
 	 * Get an instance of SessionWatcher.
@@ -48,7 +48,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 
         // OK, now add that to our list.
 		synchronized(allSessions) {
-			allSessions.add(se.getSession());
+			allSessions.put(session.getId(), session);
 		}
 	}
 
@@ -57,7 +57,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	 */
 	public void sessionDestroyed(HttpSessionEvent se) {
 		synchronized(allSessions) {
-			allSessions.remove(se.getSession());
+			allSessions.remove(se.getSession().getId());
 		}
 	}
 
@@ -80,7 +80,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 		ArrayList al=new ArrayList();
 
 		synchronized(allSessions) {
-			for(Iterator i=allSessions.iterator(); i.hasNext(); ) {
+			for(Iterator i=allSessions.values().iterator(); i.hasNext(); ) {
 				HttpSession session=(HttpSession)i.next();
 
 				if(session.getAttribute("photoSession") != null) {
@@ -124,7 +124,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 		ArrayList al=new ArrayList();
 
 		synchronized(allSessions) {
-			for(Iterator i=allSessions.iterator(); i.hasNext();) {
+			for(Iterator i=allSessions.values().iterator(); i.hasNext();) {
 				HttpSession session=(HttpSession)i.next();
 
 				PhotoSessionData sessionData=
@@ -141,6 +141,23 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 		}
 
 		return(al);
+	}
+
+	/** 
+	 * Get the PhotoSessionData for the named session.
+	 * @return the session, or null if there is none
+	 */
+	public static PhotoSessionData getSessionData(String id) {
+		PhotoSessionData rv=null;
+
+		synchronized(allSessions) {
+			HttpSession session=(HttpSession)allSessions.get(id);
+			if(session != null) {
+				rv=(PhotoSessionData)session.getAttribute("photoSession");
+			}
+		}
+
+		return(rv);
 	}
 
 }

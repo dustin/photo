@@ -4,6 +4,9 @@
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<%-- Need a base64 encoder --%>
+<jsp:useBean id="base64" class="net.spy.util.Base64" scope="application"/>
+
 <p>
 
 <table width="100%" border="1">
@@ -34,6 +37,13 @@
 				<photo:imgLink id="<%= sessionData.getLastImageSeen() %>"
 					alt="<%= "Image " + sessionData.getLastImageSeen() %>"
 					showThumbnail='true'/>
+				<%
+					String theUrl="/viewSession.do?id="
+						+ base64.encode(ses.getId().getBytes());
+				 %>
+				 <div class="commentmore">
+				 	<photo:link url="<%= theUrl %>">(more)</photo:link>
+				 </div>
 			<% } else { %>
 				n/a
 			<% } %>
