@@ -66,6 +66,10 @@ public class AuthFilter extends SpyObject implements Filter {
 			}
 		}
 
+		// The wrapped request providing standard looking auth stuff
+		ServletRequest wrappedRequest=new AuthedServletRequest(
+			hreq, psd.getUser());
+
 		// Do the check whenever we're logged in as guest.
 		if(session.isNew() || isguest) {
 			Cookie cookies[]=hreq.getCookies();
@@ -84,7 +88,7 @@ public class AuthFilter extends SpyObject implements Filter {
 		}
 
 		// Moving right along.
-		chain.doFilter(request, response);
+		chain.doFilter(wrappedRequest, response);
 	}
 
 }

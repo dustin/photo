@@ -22,7 +22,7 @@ import org.apache.struts.action.ActionMapping;
  * This action operates as a content switch, directing the user to
  * different content based on admin status.
  */
-public class AdminSwitchAction extends AdminAction {
+public class AdminSwitchAction extends PhotoAction {
 
 	/**
 	 * Get an instance of AdminSwitchAction.

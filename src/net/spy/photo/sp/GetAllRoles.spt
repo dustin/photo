@@ -1,0 +1,16 @@
+#
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get all user -> role mappings
+
+@sql
+select userid, groupname from wwwgroup
+
+@results
+userid VARCHAR The id of the user
+groupname VARCHAR the name of the role

@@ -22,7 +22,7 @@ import org.apache.struts.action.ActionMapping;
 /**
  * Edit images.
  */
-public class AdminEditImage extends AdminAction {
+public class AdminEditImage extends PhotoAction {
 
 	/**
 	 * Get an instance of AdminEditImage.
@@ -38,9 +38,6 @@ public class AdminEditImage extends AdminAction {
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
-
-		// Verify the user is an admin or subadmin
-		checkAdminOrSubadmin(request);
 
 		UploadForm uf=(UploadForm)form;
 

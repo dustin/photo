@@ -23,7 +23,7 @@ import net.spy.photo.PhotoConfig;
 /**
  * Action used to save a new profile.
  */
-public class AdminSaveProfile extends AdminAction {
+public class AdminSaveProfile extends PhotoAction {
 
 	/**
 	 * Get an instance of AdminSaveProfile.
@@ -39,9 +39,6 @@ public class AdminSaveProfile extends AdminAction {
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
-
-		// Verify the user is an admin
-		checkAdminOrSubadmin(request);
 
 		// Get the form
 		AdminNewProfileForm anpf=(AdminNewProfileForm)form;

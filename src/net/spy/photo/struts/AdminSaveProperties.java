@@ -29,7 +29,7 @@ import net.spy.photo.PhotoProperties;
 /**
  * Save the properties.
  */
-public class AdminSaveProperties extends AdminAction {
+public class AdminSaveProperties extends PhotoAction {
 
 	/**
 	 * Get an instance of AdminSaveProperties.

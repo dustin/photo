@@ -24,7 +24,7 @@ import org.apache.struts.action.ActionMapping;
 /**
  * Action used to begin editing a category.
  */
-public class AdminSelectCatAction extends AdminAction {
+public class AdminSelectCatAction extends PhotoAction {
 
 	/**
 	 * Get an instance of AdminSelectCatAction.
@@ -40,9 +40,6 @@ public class AdminSelectCatAction extends AdminAction {
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
-
-		// Verify the user is an admin
-		checkAdmin(request);
 
 		// Get the form
 		AdminCategoryForm acf=(AdminCategoryForm)form;

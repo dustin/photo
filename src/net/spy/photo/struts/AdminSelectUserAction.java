@@ -33,7 +33,7 @@ import net.spy.photo.PhotoUserException;
 /**
  * Action used to begin editing a new user.
  */
-public class AdminSelectUserAction extends AdminAction {
+public class AdminSelectUserAction extends PhotoAction {
 
 	/**
 	 * Get an instance of AdminSelectUserAction.
@@ -49,9 +49,6 @@ public class AdminSelectUserAction extends AdminAction {
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
-
-		// Verify the user is an admin
-		checkAdmin(request);
 
 		// Get the form
 		AdminUserForm auf=(AdminUserForm)form;

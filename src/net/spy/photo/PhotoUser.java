@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 
+import java.security.Principal;
+
 import net.spy.SpyDB;
 import net.spy.cache.SpyCache;
 import net.spy.db.DBSP;
@@ -39,13 +41,14 @@ import net.spy.photo.sp.DeleteACLForUser;
 import net.spy.photo.sp.InsertACLEntry;
 import net.spy.photo.sp.GetGeneratedKey;
 import net.spy.photo.sp.GetAllUsers;
-import net.spy.photo.sp.GetACLForUser;
+import net.spy.photo.sp.GetAllACLs;
+import net.spy.photo.sp.GetAllRoles;
 
 /**
  * Represents a user in the photo system.
  */
 public class PhotoUser extends AbstractSavable
-	implements Comparable, Serializable {
+	implements Comparable, Serializable, Principal {
 
 	private int id=-1;
 	private String username=null;
@@ -56,7 +59,7 @@ public class PhotoUser extends AbstractSavable
 	private String persess=null;
 
 	private ArrayList acl=null;
-	private Set groups=null;
+	private Set roles=null;
 
 	private static final String CACHE_KEY="n.s.p.PhotoUserMap";
 	private static final int CACHE_TIME=3600000; // one hour
@@ -67,6 +70,7 @@ public class PhotoUser extends AbstractSavable
 	public PhotoUser() {
 		super();
 		acl=new ArrayList();
+		roles=new HashSet();
 		setNew(true);
 		setModified(false);
 	}
@@ -86,20 +90,25 @@ public class PhotoUser extends AbstractSavable
 		setModified(false);
 	}
 
-	private void initACLs(int defaultId) throws PhotoUserException {
+	private static void initACLs(Map userMap, PhotoUser defaultUser)
+		throws PhotoUserException {
 		try {
-			GetACLForUser db=new GetACLForUser(new PhotoConfig());
-			db.setUserId(getId());
-			db.setDefaultUserId(defaultId);
+			GetAllACLs db=new GetAllACLs(new PhotoConfig());
 
 			ResultSet rs=db.executeQuery();
 			while(rs.next()) {
+				Integer userId=new Integer(rs.getInt("userid"));
+				PhotoUser pu=(PhotoUser)userMap.get(userId);
+				if(pu == null) {
+					throw new PhotoUserException("Invalid user in acl map: "
+						+ userId);
+				}
 				int cat=rs.getInt("cat");
 				if(rs.getBoolean("canview")) {
-					addViewACLEntry(cat);
+					pu.addViewACLEntry(cat);
 				}
 				if(rs.getBoolean("canadd")) {
-					addAddACLEntry(cat);
+					pu.addAddACLEntry(cat);
 				}
 			}
 			rs.close();
@@ -107,15 +116,30 @@ public class PhotoUser extends AbstractSavable
 		} catch(SQLException e) {
 			throw new PhotoUserException("Error initializing ACLs", e);
 		}
+		// Add all of the permissions of the default user to all other users
+		for(Iterator i=userMap.values().iterator(); i.hasNext(); ) {
+			PhotoUser u=(PhotoUser)i.next();
+
+			for(Iterator i2=u.getACLEntries().iterator(); i2.hasNext(); ) {
+				PhotoACLEntry acl=(PhotoACLEntry)i2.next();
+
+				if(acl.canView()) {
+					u.addViewACLEntry(acl.getCat());
+				}
+				if(acl.canAdd()) {
+					u.addAddACLEntry(acl.getCat());
+				}
+			}
+		}
 	}
 
 	private static CacheEntry initCacheEntry() throws PhotoUserException {
 		PhotoConfig conf=new PhotoConfig();
 		CacheEntry rv=new CacheEntry();
 		try {
-			List users=new ArrayList();
+			Map users=new HashMap();
 
-			GetAllUsers db=new GetAllUsers(conf);
+			DBSP db=new GetAllUsers(conf);
 			ResultSet rs=db.executeQuery();
 			while(rs.next()) {
 				PhotoUser pu=new PhotoUser(rs);
@@ -123,7 +147,7 @@ public class PhotoUser extends AbstractSavable
 				pu.setModified(false);
 
 				// Add it to the list so we can initialize the ACLs.
-				users.add(pu);
+				users.put(new Integer(pu.getId()), pu);
 
 				// Map the various thingies.
 				rv.byId.put(new Integer(pu.getId()), pu);
@@ -145,11 +169,22 @@ public class PhotoUser extends AbstractSavable
 				throw new PhotoUserException("Default user not found.");
 			}
 
-			// Now that the base stuff is initialized, initialize the ACLs.
-			for(Iterator i=users.iterator(); i.hasNext();) {
-				PhotoUser pu=(PhotoUser)i.next();
-				pu.initACLs(defaultUser.getId());
+			// Initialize all the ACLs for all the users
+			initACLs(users, defaultUser);
+
+			db=new GetAllRoles(conf);
+			rs=db.executeQuery();
+			while(rs.next()) {
+				Integer id=new Integer(rs.getInt("userid"));
+				String r=rs.getString("groupname");
+				PhotoUser pu=(PhotoUser)users.get(id);
+				if(pu == null) {
+					throw new PhotoException("Invalid user in role map: " + id);
+				}
+				pu.addRole(r);
 			}
+			rs.close();
+			db.close();
 
 		} catch(SQLException e) {
 			throw new PhotoUserException("Problem initializing user map", e);
@@ -313,6 +348,13 @@ public class PhotoUser extends AbstractSavable
 		return(username);
 	}
 
+	/** 
+	 * The principal name (username).
+	 */
+	public String getName() {
+		return(getUsername());
+	}
+
 	/**
 	 * Get the user's E-mail address.
 	 */
@@ -416,49 +458,22 @@ public class PhotoUser extends AbstractSavable
 		setModified(true);
 	}
 
+	void addRole(String role) {
+		roles.add(role);
+	}
+
 	/**
-	 * Get a Collection of Strings describing all the groups this user is
-	 * in.
+	 * Get a Collection of Strings describing all the roles this user has.
 	 */
-	public Collection getGroups() {
-		if(groups==null) {
-			initGroups();
-		}
-		return(Collections.unmodifiableSet(groups));
+	public Collection getRoles() {
+		return(Collections.unmodifiableSet(roles));
 	}
 
 	/**
 	 * True if the user is in the given group.
 	 */
-	public boolean isInGroup(String groupName) {
-		if(groups==null) {
-			initGroups();
-		}
-		return(groups.contains(groupName));
-	}
-
-	// Initialize the groups
-	private synchronized void initGroups() {
-		if(groups==null) {
-			try {
-				HashSet s=new HashSet();
-				SpyDB db=new SpyDB(new PhotoConfig());
-				PreparedStatement st=db.prepareStatement(
-					"select * from show_group where username = ?");
-				st.setString(1, getUsername());
-				ResultSet rs=st.executeQuery();
-				while(rs.next()) {
-					s.add(rs.getString("groupname"));
-				}
-				rs.close();
-				st.close();
-				db.close();
-				groups=s;
-			} catch(Exception e) {
-				// Spill your guts.
-				e.printStackTrace();
-			}
-		}
+	public boolean isInRole(String roleName) {
+		return(roles.contains(roleName));
 	}
 
 	/**

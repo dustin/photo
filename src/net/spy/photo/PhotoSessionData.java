@@ -210,13 +210,13 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 
 		switch(to) {
 			case ADMIN:
-				if(!getUser().isInGroup("admin")) {
+				if(!getUser().isInRole("admin")) {
 					throw new PhotoException(
 						"Requested admin for non-admin user.");
 				}
 				break;
 			case SUBADMIN:
-				if(!getUser().isInGroup("subadmin")) {
+				if(!getUser().isInRole("subadmin")) {
 					throw new PhotoException(
 						"Requested subadmin for non-admin user.");
 				}
@@ -237,9 +237,9 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 * Set the default administrative privilege for this user.
 	 */
 	public void setAdmin() throws PhotoException {
-		if(getUser().isInGroup("admin")) {
+		if(getUser().isInRole("admin")) {
 			setAdmin(ADMIN);
-		} else if(getUser().isInGroup("subadmin")) {
+		} else if(getUser().isInRole("subadmin")) {
 			setAdmin(SUBADMIN);
 		}
 	}

@@ -10,18 +10,12 @@ Get the ACL for the given user.
 
 @sql
 select distinct
-		cat, canview, canadd
+		userid, cat, canview, canadd
 	from
 		wwwacl
-	where
-		userid = ?
-		or userid = ?
-
-@params
-user_id required INTEGER The ID of the user whose permissions you want
-default_user_id required INTEGER The ID of the default user
 
 @results
+userid INTEGER the user ID
 cat INTEGER Category ID
 canview BIT True if the user can view this category
 canadd BIT True if the user can add to this category

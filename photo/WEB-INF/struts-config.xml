@@ -326,6 +326,7 @@
 	<action path="/admuseredit"
 		name="adminUserForm"
 		input="admin.userlist"
+		roles="admin"
 		type="net.spy.photo.struts.AdminSelectUserAction">
 		<forward name="next" path="admin.edituser" />
 	</action>
@@ -333,6 +334,7 @@
 	<action path="/admusersave"
 		name="adminUserForm"
 		input="admin.edituser"
+		roles="admin"
 		type="net.spy.photo.struts.AdminSaveUserAction">
 		<forward name="next" path="admin.userlist" />
 	</action>
@@ -341,6 +343,7 @@
 	<action path="/admcatedit"
 		name="adminCatForm"
 		input="admin.catlist"
+		roles="admin"
 		type="net.spy.photo.struts.AdminSelectCatAction">
 		<forward name="next" path="admin.editcat" />
 	</action>
@@ -348,6 +351,7 @@
 	<action path="/admcatsave"
 		name="adminCatForm"
 		input="admin.editcat"
+		roles="admin"
 		type="net.spy.photo.struts.AdminSaveCatAction">
 		<forward name="next" path="admin.catlist" />
 	</action>
@@ -356,6 +360,7 @@
 	<action path="/admnewprofile"
 		name="adminNewProfileForm"
 		input="admin.newprofile"
+		roles="admin"
 		type="net.spy.photo.struts.AdminSaveProfile">
 		<forward name="next" path="admin.newprofile" />
 	</action>
@@ -364,6 +369,7 @@
 	<action path="/admeditimage"
 		name="uploadForm"
 		input="/display.do"
+		roles="admin,subadmin"
 		type="net.spy.photo.struts.AdminEditImage">
 		<forward name="next" path="/display.do"/>
 	</action>
@@ -371,6 +377,7 @@
 	<action path="/admin/saveProperties"
 		name="emptyForm"
 		input="admin.properties"
+		roles="admin"
 		type="net.spy.photo.struts.AdminSaveProperties">
 		<forward name="next" path="/index.do"/>
 	</action>
@@ -486,11 +493,11 @@
 	<action path="/showGallery" forward="top.showGallery"/>
 	<action path="/sizeForm" forward="top.sizeForm"/>
 	<!-- Admin stuff -->
-	<action path="/admin/catList" forward="admin.catlist"/>
-	<action path="/admin/userList" forward="admin.userlist"/>
-	<action path="/admin/reporting" forward="admin.reporting"/>
-	<action path="/admin/properties" forward="admin.properties"/>
-	<action path="/admin/newprofile" forward="admin.newprofile"/>
+	<action path="/admin/catList" roles="admin" forward="admin.catlist"/>
+	<action path="/admin/userList" roles="admin" forward="admin.userlist"/>
+	<action path="/admin/reporting" roles="admin" forward="admin.reporting"/>
+	<action path="/admin/properties" roles="admin" forward="admin.properties"/>
+	<action path="/admin/newprofile" roles="admin" forward="admin.newprofile"/>
 
   </action-mappings>
 

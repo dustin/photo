@@ -23,7 +23,7 @@ import net.spy.photo.PhotoConfig;
 /**
  * Action used to save a category.
  */
-public class AdminSaveCatAction extends AdminAction {
+public class AdminSaveCatAction extends PhotoAction {
 
 	/**
 	 * Get an instance of AdminSaveCatAction.
@@ -39,9 +39,6 @@ public class AdminSaveCatAction extends AdminAction {
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
-
-		// Verify the user is an admin
-		checkAdmin(request);
 
 		// Get the form
 		AdminCategoryForm acf=(AdminCategoryForm)form;
