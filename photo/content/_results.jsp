@@ -41,7 +41,7 @@
 <table>
 
 <logic:iterate id="i" collection="<%= results %>"
-	length="6">
+	length="<%= "" + results.getMaxRet() %>">
 	<% PhotoImageData image=(PhotoImageData)i; %>
 
 <tr>
