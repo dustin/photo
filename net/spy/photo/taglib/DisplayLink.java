@@ -1,12 +1,14 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.5 2002/05/21 07:45:09 dustin Exp $
+// $Id: DisplayLink.java,v 1.6 2002/05/23 07:56:31 dustin Exp $
 
 package net.spy.photo.taglib;
 
 import javax.servlet.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
+
+import net.spy.photo.*;
 
 /**
  * Taglib to link to an image.
@@ -19,6 +21,11 @@ public class DisplayLink extends PhotoTag {
 	private String altText=null;
 	private String width=null;
 	private String height=null;
+
+	private String relative=null;
+
+	// If true, process this link display.
+	private boolean process=true;
 
 	/**
 	 * Get an instance of ImageLink.
@@ -60,7 +67,9 @@ public class DisplayLink extends PhotoTag {
 	 * Set the search ID.
 	 */
 	public void setSearchId(String to) {
-		searchId=Integer.parseInt(to);
+		if(to!=null) {
+			searchId=Integer.parseInt(to);
+		}
 	}
 
 	/**
@@ -86,17 +95,71 @@ public class DisplayLink extends PhotoTag {
 	}
 
 	/**
+	 * Set a relative type for this link.
+	 *
+	 * Relative links to search offsets may be of type ``prev'' or
+	 * ``next.''
+	 */
+	public void setRelative(String relative) {
+		this.relative=relative;
+	}
+
+	/**
+	 * Get the relative type.
+	 */
+	public String getRelative() {
+		return(relative);
+	}
+
+	/**
 	 * Start link.
 	 */
 	public int doStartTag() throws JspException {
 
 		StringBuffer sb=new StringBuffer();
+
 		sb.append("<a href=\"display.jsp?");
 		// Figure out whether to link to the search ID or the real ID.
 		if(searchId>=0) {
 			sb.append("search_id=");
+
+			PhotoSessionData sessionData=getSessionData();
+			PhotoSearchResults results=sessionData.getResults();
+			if(results==null) {
+				throw new JspException("No search results found.");
+			}
+
+			// Figure out the maximum number of results.
+			int maxIndex=results.nResults();
+
+			// Since this is a search offset, figure out whether it's
+			// relative the the actual value or not.
+			if(relative==null) {
+				// Nothing
+			} else if(relative.equals("prev")) {
+				if(searchId == 0) {
+					process=false; // Don't process
+				} else {
+					searchId--;
+				}
+			} else if(relative.equals("next")) {
+				if(searchId>=maxIndex) {
+					process=false; // Don't process
+				} else {
+					searchId++;
+				}
+			} else {
+				throw new JspException("Invalid relative type:  " + relative);
+			}
+
 			sb.append(searchId);
+
 		} else {
+			// This is meant to be a relative link, but didn't get a search ID.
+			if(relative!=null) {
+				process=false;
+			}
+			// real ID.
 			sb.append("id=");
 			sb.append(id);
 		}
@@ -124,13 +187,18 @@ public class DisplayLink extends PhotoTag {
 		}
 
 		try {
-			pageContext.getOut().write(sb.toString());
+			if(process) {
+				pageContext.getOut().write(sb.toString());
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new JspException("Error sending output:  " + e);
 		}
 
-		return(EVAL_BODY_INCLUDE);
+		// Figure out the return value
+		int rv=process?EVAL_BODY_INCLUDE:SKIP_BODY;
+
+		return(rv);
 	}
 
 	/**
@@ -138,7 +206,9 @@ public class DisplayLink extends PhotoTag {
 	 */
 	public int doEndTag() throws JspException {
 		try {
-			pageContext.getOut().write("</a>");
+			if(process) {
+				pageContext.getOut().write("</a>");
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new JspException("Error sending output:  " + e);
@@ -154,6 +224,7 @@ public class DisplayLink extends PhotoTag {
 		id=0;
 		showThumbnail=false;
 		altText=null;
+		process=true;
 	}
 
 }
