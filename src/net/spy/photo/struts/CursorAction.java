@@ -60,7 +60,7 @@ public class CursorAction extends PhotoAction {
 
 			// And set the offset.
 			c.set(offset.intValue());
-			System.out.println("CursorAction sought to " + offset
+			getLogger().debug("CursorAction sought to " + offset
 				+ ", yielding " + c);
 		}
 
