@@ -1,5 +1,5 @@
 #
-# $Id: MostActiveUsersXd.spt,v 1.1 2003/05/12 05:04:01 dustin Exp $
+# $Id: MostActiveUsersXd.spt,v 1.2 2003/08/09 04:22:27 dustin Exp $
 #
 
 @package
@@ -10,7 +10,7 @@ Get the most active users.
 
 @sql
 select
-		u.username, u.realname, count(*) as count
+		u.id as user_id, u.username, u.realname, count(*) as count
 	from
 		wwwusers u,
 		photo_logs l,
@@ -21,7 +21,7 @@ select
 		and l.wwwuser_id = u.id
 		and l.ts > now() - (? || ' days')::interval
 	group by
-		username, realname
+		user_id, username, realname
 	order by
 		count desc
 

@@ -1,5 +1,5 @@
 #
-# $Id: GetImagesSeenByUser.spt,v 1.2 2003/08/09 04:22:27 dustin Exp $
+# $Id: RecentImagesByUser.spt,v 1.1 2003/08/09 04:22:27 dustin Exp $
 #
 
 @package
@@ -14,7 +14,7 @@ select
 		a.keywords as keywords,
 		c.id as category_id,
 		c.name as category_name,
-		count(*) as count
+		l.ts as view_time
 	from
 		album a,
 		cat c,
@@ -26,11 +26,8 @@ select
 		and l.log_type = t.log_type_id
 		and t.log_type = 'ImgView'
 		and l.wwwuser_id = ?
-	group by
-		image_id, keywords, category_name, category_id
 	order by
-		c.name,
-		count(*) desc
+		view_time desc
 	limit
 		?
 
@@ -47,4 +44,4 @@ image_id INTEGER the image ID
 keywords VARCHAR Keywords for the image
 category_name VARCHAR The name of the category
 category_id INTEGER the ID of the category
-count INTEGER The number of times the user saw the image
+view_time TIMESTAMP The Time the image was viewed

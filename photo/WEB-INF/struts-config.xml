@@ -376,6 +376,17 @@
 		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
+	<action path="/report/userRecent"
+		className="net.spy.jwebkit.struts.DBSPMapping"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Recent Images for User"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.RecentImagesByUser"/>
+
+		<forward name="next" path="admin.reportDisplay"/>
+	</action>
+
 	<action path="/report/topImages"
 		className="net.spy.jwebkit.struts.DBSPMapping"
 		type="net.spy.photo.struts.AdminReportAction">

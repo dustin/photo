@@ -72,10 +72,16 @@
 	</table>
 
 	<html:submit>Save</html:submit>
-	<p>
-		<% String uid=adminUserForm.getUserId();
-			String theUrl="/report/userImgs.do?p.i.user_id=" + uid;
-		%>
-		<photo:link url='<%= theUrl %>'>Photos this user has seen</photo:link>
-	</p>
 </html:form>
+<div>
+	<% String uid=adminUserForm.getUserId();
+		String theUrl="/report/userImgs.do?p.i.user_id=" + uid;
+	%>
+	<photo:link url='<%= theUrl %>'>Photos this user has seen</photo:link>
+</div>
+<div>
+	<%
+		theUrl="/report/userRecent.do?p.i.user_id=" + uid;
+	%>
+	<photo:link url='<%= theUrl %>'>Recent photos this user has seen</photo:link>
+</div>

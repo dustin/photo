@@ -1,5 +1,5 @@
 #
-# $Id: MostActiveUsers.spt,v 1.1 2003/05/12 05:04:01 dustin Exp $
+# $Id: MostActiveUsers.spt,v 1.2 2003/08/09 04:22:27 dustin Exp $
 #
 
 @package
@@ -10,7 +10,7 @@ Get the most active users.
 
 @sql
 select
-		u.username, u.realname, count(*) as count
+		u.id as user_id, u.username, u.realname, count(*) as count
 	from
 		wwwusers u,
 		photo_logs l,
@@ -20,6 +20,6 @@ select
 		and l.log_type = t.log_type_id
 		and l.wwwuser_id = u.id
 	group by
-		username, realname
+		user_id, username, realname
 	order by
 		count desc

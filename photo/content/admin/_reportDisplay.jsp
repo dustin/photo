@@ -25,6 +25,7 @@
 		<c:forEach var="col" varStatus="cst" items="${row}">
 			<td>
 				<c:choose>
+					<%-- Special case for image ID --%>
 					<c:when test="${columnNames[cst.index] eq 'image_id'}">
 						<bean:define type="java.lang.String"
 							id="imgId"><c:out value="${col}"/></bean:define>
@@ -32,6 +33,16 @@
 							<c:out value="${col}"/>
 						</photo:imgLink>
 					</c:when>
+					<%-- Special case for user ID --%>
+					<c:when test="${columnNames[cst.index] eq 'user_id'}">
+						<bean:define type="java.lang.String"
+							id="userId"><c:out value="${col}"/></bean:define>
+						<% String theLink = "/admuseredit.do?userId=" + userId; %>
+						<photo:link url="<%= theLink %>">
+							<c:out value="${col}"/>
+						</photo:link>
+					</c:when>
+					<%-- All other cases --%>
 					<c:otherwise>
 						<c:out value="${col}"/>
 					</c:otherwise>
