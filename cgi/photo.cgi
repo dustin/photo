@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: photo.cgi,v 1.12 1998/05/02 22:55:43 dustin Exp $
+# $Id: photo.cgi,v 1.13 1998/06/29 05:08:08 dustin Exp $
 
 use CGI;
 use Photo;
@@ -19,10 +19,11 @@ $q=CGI->new;
 $p=Photo->new;
 
 %funcs=(
-    'search'   =>  sub{$p->doFind($q)},
-    'display'  =>  sub{$p->doDisplay($q)},
-    'catview'  =>  sub{$p->doCatView($q)},
-    'addimage' =>  sub{$p->addImage($q)},
+    'search'     =>  sub{$p->doFind($q)},
+    'display'    =>  sub{$p->doDisplay($q)},
+    'catview'    =>  sub{$p->doCatView($q)},
+    'addimage'   =>  sub{$p->addImage($q)},
+    'savesearch' =>  sub{$p->saveSearch($q)},
 );
 
 print $q->header;
