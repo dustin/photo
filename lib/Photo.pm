@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.26 1998/08/30 03:53:10 dustin Exp $
+# $Id: Photo.pm,v 1.27 1998/08/30 03:57:48 dustin Exp $
 
 package Photo;
 
@@ -37,10 +37,11 @@ sub openDB
 sub finished
 {
     my($self)=@_;
-	my($dbh);
 
-	$dbh->disconnect();
-	undef($dbh);
+	if($self->{'dbh'}) {
+	    $self->{'dbh'}->disconnect();
+	    undef($self->{'dbh'});
+	}
 }
 
 sub doQuery
