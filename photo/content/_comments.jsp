@@ -22,7 +22,7 @@
 	length="6">
 
 	<tr valign="top">
-		<td class="comment_image">
+		<td class="commentimage">
 			<photo:imgLink showThumbnail="true"
 				id="<%= comments.getPhotoId() %>"/>
 		</td>
@@ -31,20 +31,20 @@
 				<logic:iterate id="comment"
 					type="net.spy.photo.Comment"
 					collection="<%= comments %>">
-					<tr valign="top" class="comment_header">
+					<tr valign="top" class="commentheader">
 						<td>At <%= comment.getTimestamp() %>
 							<%= comment.getUser().getRealname() %>
 							said the following:
 						</td>
 					</tr>
-					<tr valign="top" class="comment_body">
+					<tr valign="top" class="commentbody">
 						<td>
 							<%= comment.getNote() %>
 						</td>
 					</tr>
 				</logic:iterate>
 				<% if(comments.hasMore()) { %>
-					<tr class="comment_more">
+					<tr class="commentmore">
 						<td>
 							<photo:imgLink id="<%= comments.getPhotoId() %>">
 								More comments available on the image page.

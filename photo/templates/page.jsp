@@ -12,85 +12,45 @@
 </head>
 <body background='<%= props.getProperty("background_img", "") %>'>
 
-<center>
-	<table bgcolor="#000000">
-		<tr><td>
-			<table border="5" bgcolor="#fFfFfF">
-				<tr><td>
-					<div class="pagetitle"><template:get name='title'/></div>
-				</td></tr>
-			</table>
-		</td></tr>
-	</table>
+	<div id="pagetitle"><template:get name='title'/></div>
 
-	<table bgcolor="#000000" width="75%">
-		<tr><td>
-			<table bgcolor="#fFfFfF" width="100%">
-           		<tr><td>
-					<p>
-						<template:get name='content'/>
-					</p>
-					<p>
+	<div id="pagebody">
+			<template:get name='content'/>
+	</div>
+	<div class="footer"> <!-- Footer -->
+		<div class="leftstuff">
+			<div>
+				Logged in as
+				<photo:link url="/credform.jsp">
+					<%= sessionData.getUser().getRealname() %>
+				</photo:link>
+				<photo:admin>
+					<photo:link url="/adminify.do?action=unsetadmin">(admin)</photo:link>
+				</photo:admin>
+			</div>
+			<div>
+				<photo:sessionInfo/>
+			</div>
+			<div class="footerfineprint">
+				<bean:message key="page.content.footer"/><br/>
+				Build <bean:message key="build.number"/> from
+				<bean:message key="build.dtstamp"/>
+			</div> <!-- footerfineprint -->
+		</div><div class="rightstuff">
+				<template:insert template='/templates/quicksearch.jsp' />
+				<photo:link url="/" message="page.links.home"/>
+				| <photo:link url="/sizeform.jsp" message="page.links.size"/>
+				<photo:guest negate="true">
+					| <photo:link url="/sessions.jsp" message="page.links.sessions"/>
+					| <photo:link url="/logout.do" message="page.links.logout"/>
+				</photo:guest>
+		</div> <!-- /rightstuff -->
+	</div> <!-- /Footer -->
 
-						<hr>
-
-						<div class="footer">
-
-							<table width="100%">
-								<tr valign="top">
-									<td align="left">
-										Logged in as
-										<photo:link url="/credform.jsp">
-											<%= sessionData.getUser().getRealname() %>
-										</photo:link>
-										<photo:admin>
-											<photo:link url="/adminify.do?action=unsetadmin">(admin)
-											</photo:link>
-										</photo:admin>
-										<br/>
-										<photo:sessionInfo/>
-									</td>
-									<td align="right">
-										<template:insert
-											template='/templates/quicksearch.jsp'>
-										</template:insert>
-									</td>
-								</tr>
-								<tr>
-									<td></td>
-									<td align="right">
-										<photo:link url="/" message="page.links.home"/>
-										| <photo:link url="/sizeform.jsp"
-											message="page.links.size"/>
-										<photo:guest negate="true">
-											| <photo:link url="/sessions.jsp"
-													message="page.links.sessions"/>
-											| <photo:link url="/logout.do"
-													message="page.links.logout"/>
-										</photo:guest>
-									</td>
-								</tr>
-							</table>
-
-							<br/>
-
-							<div class="footerfineprint">
-								<bean:message key="page.content.footer"/><br/>
-								Build <bean:message key="build.number"/> from
-									<bean:message key="build.dtstamp"/>
-							</div>
-						</div>
-
-					</p>
-				</td></tr>
-			</table>
-		</tr></td>
-	</table>
-
-	<a href="http://photoservlet.sourceforge.net/"><img border="0"
-		width="88" height="31" alt="SourceForge"
-		src="http://sourceforge.net/sflogo.php?group_id=7312&type=1"/></a>
-
-</center>
+	<div id="sflogo">
+		<a href="http://photoservlet.sourceforge.net/"><img border="0"
+			width="88" height="31" alt="SourceForge"
+			src="http://sourceforge.net/sflogo.php?group_id=7312&type=1"/></a>
+	</div>
 
 </body></html>

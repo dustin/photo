@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
  *
- * $Id: style.css,v 1.6 2002/05/23 06:53:23 dustin Exp $
+ * $Id: style.css,v 1.7 2003/07/16 17:03:47 dustin Exp $
  */
 body {
 	font-family: Arial, Helvetica, sans-serif;
-	background-color: #cfcfff;
+	/* background: #cfcfff; */
+	text-align: center;
 }
 
 h1,h2,h3,h4,h5,th {
@@ -14,16 +15,30 @@ h1,h2,h3,h4,h5,th {
 }
 
 a:hover {
-	background-color: #cccccc;
+	background: #cccccc;
 }
 
 h1 { font-size: x-large; }
 
 h2 { font-size: large; }
 
-.pagetitle {
+#pagetitle {
 	font-size: xx-large;
 	font-weight: bold;
+	border-style: outset;
+	border-width: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 33%;
+}
+
+#pagebody {
+	text-align: left;
+	background: white;
+	border-style: solid;
+	width: 75%;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .sectionheader {
@@ -32,16 +47,46 @@ h2 { font-size: large; }
 }
 
 .footer {
+	border-style: none solid solid solid;
 	font-size: x-small;
+	width: 75%;
+	background: white;
+	margin-left: auto;
+	margin-right: auto;
+	vertical-align: bottom;
+	background: white;
+	height: 7em;
 }
 
 .footerfineprint {
 	font-size: smaller;
 }
 
+#sflogo {
+	padding-top: 1em;
+}
+
+.leftstuff {
+	/* border-style: none none solid solid; */
+	float: left;
+	width: 49%;
+	text-align: left;
+	background: white;
+	height: 6em;
+}
+
+.rightstuff {
+	/* border-style: none solid solid none; */
+	float: left;
+	width: 49%;
+	text-align: right;
+	background: white;
+	height: 6em;
+}
+
 /* Errors are in a div of this class */
 .errors {
-	font-color: #ff0000;
+	color: #ff0000;
 	font-weight: bold;
 }
 
@@ -52,35 +97,35 @@ h2 { font-size: large; }
 }
 
 .comments {
-	background-color: #ccccff;
+	background: #ccccff;
 }
 
-.comment_image {
-	background-color: #ccccff;
+.commentimage {
+	background: #ccccff;
 	vertical-align: middle;
 	text-align: center;
 }
 
-.comment_more {
+.commentmore {
 	font-size: x-small;
 	font-style: italic;
 }
 
-.comment_header {
+.commentheader {
 	font-size: x-small;
-	background-color: #999999;
+	background: #999999;
 }
 
 /*
-.comment_body {
-	background-color: #ccccff;
+.commentbody {
+	background: #ccccff;
 }
 */
 
-.search_matches {
+.searchmatches {
 	font-weight: bold;
 }
 
-.search_results {
+.searchresults {
 	/* At some point */
 }
