@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadForm.java,v 1.3 2002/05/22 00:19:50 dustin Exp $
+// $Id: UploadForm.java,v 1.4 2002/06/23 05:26:06 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -18,6 +18,7 @@ import net.spy.photo.*;
 public class UploadForm extends ActionForm {
 
 	private FormFile picture=null;
+	private String id=null;
 	private String category=null;
 	private String taken=null;
 	private String keywords=null;
@@ -121,29 +122,43 @@ public class UploadForm extends ActionForm {
 			}
 		}
 
-		// Get and verify the picture.
-		if( (picture==null) || (picture.getFileSize() == 0) ) {
-			errors.add("picture", new ActionError("error.upload.picture"));
+		// Get and verify the picture if this is an upload
+		if(mapping.getType().equals(UploadAction.class.getName())) {
+			// Make sure the ID is provided.
+			if(id==null || id.length() < 1) {
+				errors.add("id", new ActionError("error.upload.id"));
+			} else {
+				try {
+					Integer.parseInt(id);
+				} catch(NumberFormatException e) {
+					errors.add("id", new ActionError("error.upload.id.nfe"));
+				}
+			}
 		} else {
-			// Get the PhotoImage
-			byte data[]=new byte[picture.getFileSize()];
-			try {
-				int length=picture.getInputStream().read(data);
+			if( (picture==null) || (picture.getFileSize() == 0) ) {
+				errors.add("picture", new ActionError("error.upload.picture"));
+			} else {
+				// Get the PhotoImage
+				byte data[]=new byte[picture.getFileSize()];
+				try {
+					int length=picture.getInputStream().read(data);
 
-				// verify we read enough data
-				if(length != picture.getFileSize()) {
+					// verify we read enough data
+					if(length != picture.getFileSize()) {
+						errors.add("picture",
+							new ActionError("error.upload.picture.notread"));
+					}
+
+					// Create a PhotoImage out of it.
+					photoImage=new PhotoImage(data);
+					System.out.println("Mime type is "
+						+ picture.getContentType()
+						+ " format is " + photoImage.getFormatString());
+				} catch(Exception e) {
+					e.printStackTrace();
 					errors.add("picture",
 						new ActionError("error.upload.picture.notread"));
 				}
-
-				// Create a PhotoImage out of it.
-				photoImage=new PhotoImage(data);
-				System.out.println("Mime type is " + picture.getContentType()
-					+ " format is " + photoImage.getFormatString());
-			} catch(Exception e) {
-				e.printStackTrace();
-				errors.add("picture",
-					new ActionError("error.upload.picture.notread"));
 			}
 		}
 

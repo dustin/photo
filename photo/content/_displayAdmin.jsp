@@ -45,41 +45,40 @@
 			scale="true"/>
 	</div>
 
-	<form method="POST" action="PhotoServlet">
-		<input type="hidden" name="func" value="admedittext"/>
-		<input type="hidden" name="id" value="<%= image.getId() %>"/>
+	<html:form action="/admeditimage">
+		<html:hidden property="id" value="<%= "" + image.getId() %>"/>
 
 	<p>
 		<b>Category</b>:
-		<select name="cat" size="5">
+		<html:select property="cat" size="5">
 			<photo:getCatList showAddable="true">
 				<logic:iterate id="i" name="catList"> 
 					<% Category category=(Category)i; %>
-					<option value="<%= category.getId() %>">
-						<%= category.getName() %></option>
+					<html:option value="<%= category.getId() %>">
+						<%= category.getName() %></html:option>
 				</logic:iterate>
 			</photo:getCatList>
-		</select>
+		</html:select>
 
 		<br/>
 		<b>Keywords</b>:
-			<input name="keywords" value="<%= image.getKeywords() %>"><br>
+			<html:text property="keywords" value="<%= image.getKeywords() %>"/><br>
 		<b>Size</b>:  <%= image.getDimensions() %>
 			(<%= image.getSize() %> bytes)<br>
-		<b>Taken</b>:  <input name="taken" value="<%= image.getTaken() %>"/>
+		<b>Taken</b>:  <html:text name="taken" value="<%= image.getTaken() %>"/>
 			<b>Added</b>:
 			<%= image.getTimestamp() %>
 		by <%= image.getAddedBy() %><br>
 		<b>Info</b>:
-		<textarea cols="60" rows="5"
-			name="info"><%= image.getDescr() %></textarea>
+		<html:textarea cols="60" rows="5" name="info"><%=
+			image.getDescr() %></html:textarea>
 
 	</p>
 
-	<input type="submit" value="Save Info">
-	<input type="reset" value="Restore to Original">
+	<html:submit>Save Info</html:submit>
+	<html:reset>Restore to Original</html:reset>
 
-	</form>
+	</html:form>
 
 [<a href="logview.jsp?id=<%= "" + image.getId() %>"> Who's seen this?</a>] |
 [<a href="display.jsp?id=<%= "" + image.getId() %>">Linkable image</a>] |

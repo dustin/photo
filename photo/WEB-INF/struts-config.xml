@@ -177,6 +177,14 @@
 		<forward name="success" path="/admin/newprofile.jsp" />
 	</action>
 
+	<!-- Modify an image's data -->
+	<action path="/admeditimage"
+		name="uploadForm"
+		input="/displayAdmin.jsp"
+		type="net.spy.photo.struts.AdminEditImage">
+		<forward name="success" path="/displayAdmin.jsp"/>
+	</action>
+
   </action-mappings>
 
 </struts-config>
