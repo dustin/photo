@@ -7,8 +7,10 @@
 package net.spy.photo;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -266,7 +268,7 @@ public class PhotoSearch extends PhotoHelper {
 	// In the case of dates, we do an explicit OR between the two date range
 	// sets, and then AND the results back to current response set
 	private void processDates(Set rset, String astart, String aend,
-		String tstart, String tend) {
+		String tstart, String tend) throws Exception {
 		Collection aset=processRange(BY_TS, astart, aend);
 		Collection tset=processRange(BY_TAKEN, tstart, tend);
 
