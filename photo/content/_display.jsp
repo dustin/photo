@@ -68,7 +68,7 @@
 [<photo:imgLink id='<%= "" + image.getId() %>'>
 	Linkable image
 </photo:imgLink>] |
-[<photo:link url='<%= "/PhotoServlet/" + image.getId() + ".jpg?photo_id=" + image.getId() %>'>Full Size Image</photo:link>]
+[<photo:link url='<%= "/PhotoServlet/" + image.getId() + ".jpg?id=" + image.getId() %>'>Full Size Image</photo:link>]
 <%--
 [<photo:imgLink id="<%= "" + image.getId() %>">Full Size Image</photo:imgLink>]
 --%>
