@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.31 1998/09/05 03:46:41 dustin Exp $
+# $Id: Photo.pm,v 1.32 1998/09/05 03:53:09 dustin Exp $
 
 package Photo;
 
@@ -336,8 +336,8 @@ sub doFind
     $max+=0;                     # make it a number
 
     print "<h2>Found $n match".(($n==1)?"":"es")."</h2>\n";
-    print "Displaying ".($start>0?$start:1).
-          "-".(($start+$max>$n)?$n:$start+$max). ":<br>\n";
+    print "Displaying ".($start+1)."-".
+          (($start+$max>$n)?$n:$start+$max). ":<br>\n";
     print "<table><tr>\n";
 
     while($r=$s->fetch) {
