@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.33 2002/12/15 07:08:25 dustin Exp $
+-- $Id: photo.sql,v 1.34 2003/01/09 07:06:00 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -75,7 +75,7 @@ create table album(
 	addedby    integer not null,
 	width      integer default 0,
 	height     integer default 0,
-	ts         datetime not null,
+	ts         timestamp not null,
 	id         serial,
 	primary key(id),
 	foreign key(cat) references cat(id),
@@ -195,7 +195,7 @@ create table searches (
 	name		text not null,
 	addedby		integer not null,
 	search		text not null,
-	ts			datetime not null,
+	ts			timestamp not null,
 	primary key(searches_id),
 	foreign key(addedby) references wwwusers(id)
 );
@@ -283,7 +283,7 @@ create table photo_logs (
 	remote_addr inet not null,
 	user_agent integer not null,
 	extra_info text,
-	ts datetime default now(),
+	ts timestamp default now(),
 	primary key(log_id),
 	foreign key(log_type) references log_types(log_type_id),
 	foreign key(wwwuser_id) references wwwusers(id),
