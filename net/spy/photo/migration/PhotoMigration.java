@@ -3,8 +3,7 @@
 package net.spy.photo.migration;
 
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
+import java.io.InputStream;
 
 import java.net.URL;
 
@@ -14,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import net.spy.SpyDB;
+import net.spy.db.SQLRunner;
 
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
@@ -87,75 +87,15 @@ public abstract class PhotoMigration extends Object {
 
 		URL u=findPath(path);
 
-		if(autocommit==false && errok==true) {
-			throw new Exception("Can't ignore errors on autocommit.");
-		}
-
-		System.out.println("Running SQL script from " + u);
-
 		SpyDB db=new SpyDB(new PhotoConfig());
 		Connection conn=db.getConn();
-		conn.setAutoCommit(autocommit);
 
-		LineNumberReader lr=new LineNumberReader(
-			new InputStreamReader(u.openStream()));
+		InputStream is=u.openStream();
 
-		try {
-			String curline=null;
-			StringBuffer query=new StringBuffer();
-			while( (curline=lr.readLine()) != null) {
-				curline=curline.trim();
+		SQLRunner sr=new SQLRunner(conn);
+		sr.runScript(is, autocommit, errok);
 
-				if(curline.equals(";")) {
-					Statement st=conn.createStatement();
-					int updated=0;
-					long starttime=System.currentTimeMillis();
-					try {
-						updated=st.executeUpdate(query.toString());
-					} catch(SQLException se) {
-						if(errok) {
-							System.err.println("Query:\n" + query);
-							se.printStackTrace();
-							System.err.println("Continuing...");
-						} else {
-							throw se;
-						}
-					}
-					long stoptime=System.currentTimeMillis();
-					st.close();
-					st=null;
-					String rows=" rows";
-					if(updated==1) {
-						rows=" row";
-					}
-					System.out.println("Updated " + updated + rows + " in "
-						+ (stoptime-starttime) + "ms");
-					query=new StringBuffer();
-				} else if(curline.startsWith("--")) {
-					System.out.println(lr.getLineNumber() + ": " + curline);
-				} else {
-					if(curline.length()>0) {
-						query.append(curline);
-						query.append("\n");
-					}
-				}
-
-			}
-
-			if(!autocommit) {
-				conn.commit();
-			}
-		} catch(Exception e) {
-			if(!autocommit) {
-				conn.rollback();
-			}
-			throw e;
-		} finally {
-			conn.setAutoCommit(true);
-			db.close();
-		}
-
-		lr.close();
+		is.close();
 	}
 
 	/**

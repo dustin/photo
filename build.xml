@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.45 2003/08/08 05:52:55 dustin Exp $
+	$Id: build.xml,v 1.46 2003/08/11 04:25:08 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -107,6 +107,9 @@
 		</antcall>
 		<antcall target="install-web-app-var">
 			<param name="location" value="wisephoto"/>
+		</antcall>
+		<antcall target="install-web-app-var">
+			<param name="location" value="jasonphoto"/>
 		</antcall>
 	</target>
 
