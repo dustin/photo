@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogView.java,v 1.6 2002/02/24 23:49:26 dustin Exp $
+ * $Id: PhotoLogView.java,v 1.7 2002/06/12 07:01:06 dustin Exp $
  */
 
 package net.spy.photo;
@@ -35,55 +35,51 @@ public class PhotoLogView extends PhotoHelper
 			  + "    and log.log_type = get_log_type('ImgView')\n"
 			  + "  order by log.ts desc\n"
 			  + "  limit 100\n";
-		try {
-			Hashtable htmp = new Hashtable();
+		Hashtable htmp = new Hashtable();
 
-			SpyDB db=new SpyDB(new PhotoConfig());
-			ResultSet rs=db.executeQuery(
-				"select count(*) from photo_logs\n"
-				+ " where photo_id = " + photo_id + "\n"
-				+ " and log_type = get_log_type('ImgView')");
-			if(!rs.next()) {
-				throw new Exception("No results?");
-			}
-			int views=rs.getInt(1);
-			htmp.put("TOTAL_VIEWS", "" + views);
-			if(views>100) {
-				htmp.put("DISPLAYED_VIEWS", "100");
-			} else {
-				htmp.put("DISPLAYED_VIEWS", "" + views);
-			}
-
-			rs.close();
-
-			rs = db.executeQuery(query);
-
-			htmp.put("PHOTO_ID", "" + photo_id);
-			out=PhotoUtil.tokenize(photosession, "log/viewers_top.inc", htmp);
-
-			while(rs.next()) {
-				try {
-					Hashtable h = new Hashtable();
-					h.put("USERNAME", rs.getString("username"));
-					h.put("REMOTE_ADDR", rs.getString("remote_addr"));
-					h.put("USER_AGENT", ns(rs.getString("user_agent")));
-					h.put("IMG_SIZE", ns(rs.getString("img_size")));
-					h.put("TS", rs.getString("ts"));
-					out+=PhotoUtil.tokenize(photosession,
-						"log/viewers_match.inc", h);
-				} catch(Exception e) {
-					log("Error reporting log entry for " + rs.getInt("id"));
-					e.printStackTrace();
-				}
-			}
-
-			out+=PhotoUtil.tokenize(photosession, "log/viewers_bottom.inc",
-				new Hashtable());
-
-			db.close();
-		} catch(Exception e) {
-			throw new Exception(e.getMessage());
+		SpyDB db=new SpyDB(new PhotoConfig());
+		ResultSet rs=db.executeQuery(
+			"select count(*) from photo_logs\n"
+			+ " where photo_id = " + photo_id + "\n"
+			+ " and log_type = get_log_type('ImgView')");
+		if(!rs.next()) {
+			throw new Exception("No results?");
 		}
+		int views=rs.getInt(1);
+		htmp.put("TOTAL_VIEWS", "" + views);
+		if(views>100) {
+			htmp.put("DISPLAYED_VIEWS", "100");
+		} else {
+			htmp.put("DISPLAYED_VIEWS", "" + views);
+		}
+
+		rs.close();
+
+		rs = db.executeQuery(query);
+
+		htmp.put("PHOTO_ID", "" + photo_id);
+		out=PhotoUtil.tokenize(photosession, "log/viewers_top.inc", htmp);
+
+		while(rs.next()) {
+			try {
+				Hashtable h = new Hashtable();
+				h.put("USERNAME", rs.getString("username"));
+				h.put("REMOTE_ADDR", rs.getString("remote_addr"));
+				h.put("USER_AGENT", ns(rs.getString("user_agent")));
+				h.put("IMG_SIZE", ns(rs.getString("img_size")));
+				h.put("TS", rs.getString("ts"));
+				out+=PhotoUtil.tokenize(photosession,
+					"log/viewers_match.inc", h);
+			} catch(Exception e) {
+				log("Error reporting log entry for " + rs.getInt("id"));
+				e.printStackTrace();
+			}
+		}
+
+		out+=PhotoUtil.tokenize(photosession, "log/viewers_bottom.inc",
+			new Hashtable());
+
+		db.close();
 
 		return(out);
 	}

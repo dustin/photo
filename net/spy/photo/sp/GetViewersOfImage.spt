@@ -1,0 +1,34 @@
+#
+# $Id
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get all of the viewers of a given image.
+
+@sql
+select log.log_id as id, wwwusers.username,
+		text(log.remote_addr) as remote_addr, user_agent.user_agent,
+		log.extra_info as img_size, log.ts
+	from wwwusers, photo_logs log, user_agent
+	where log.wwwuser_id = wwwusers.id
+		and log.photo_id = ?
+		and user_agent.user_agent_id = log.user_agent
+		and log.log_type = get_log_type('ImgView')
+	order by log.ts desc
+	limit 100
+
+@params
+image_id required INTEGER The image id for which we want the viewers.
+
+@results
+username VARCHAR The user who saw the image.
+remote_addr VARCHAR The IP address to which the image was served.
+user_agent VARCHAR The user agent that requested the image.
+img_size VARCHAR The dimensions at which the image was requested.
+ts TIMESTAMP The time at which the image was served.
+
+@cachetime
+3600
