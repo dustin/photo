@@ -7,156 +7,36 @@
 <html>
 	<head>
 		<title>Testing</title>
+		<link rel="stylesheet" href="style.css"/>
 	</head>
 
 	<body>
+
 		<script language="JavaScript" src="test.js"></script>
-		<script language="JavaScript">
-		var kws = new Array();
-		var kwmap = new Object();
-
-		// This assumes sorted arrays in order to be O(log n)
-		function arrayContains(a, key) {
-			var rv = false;
-			var low = 0;
-			var high = a.length - 1;
-			while(rv == false && low <= high) {
-				var middle = Math.floor((low + high) / 2);
-
-				if(key == a[middle]) {
-					rv = true;
-				} else if(key < a[middle]) {
-					high = middle - 1;
-				} else {
-					low = middle + 1;
-				}
-			}
-			return rv;
-		}
-
-		// Get a union of all of the arrays passed in as arguments
-		function arrayUnion(a) {
-			var rv = null;
-			if(a.length < 1) {
-				rv=new Array();
-			} else {
-				rv = a[0];
-				for(var i=1; i<a.length; i++) {
-					var tmprv=new Array();
-					for(var j=0; j<rv.length; j++) {
-						if(arrayContains(a[i], rv[j])) {
-							tmprv.push(rv[j]);
-						}
-					}
-					rv=tmprv;
-				}
-			}
-			return rv;
-		}
-
-		// This should perform some kind of and logic across selections
-		function getImageIds() {
-			var tmpa=new Array();
-			for(var i = 0; i<kws.length; i++) {
-				tmpa.push(imgs[kws[i]]);
-			}
-			return arrayUnion(tmpa);
-		}
-		function showResults() {
-			var div=document.getElementById("found");
-			// Maximum number of images to show
-			var total = 50
-			var tmpimgs=getImageIds();
-			// h = tmpimgs.join(" ") + "<br>\n";
-			var h = "Found " + tmpimgs.length + " images:<br/>"
-			for(var i=0; i<tmpimgs.length; i++) {
-				var img=tmpimgs[i]
-				if(total > 0) {
-					h += '<a href="pages/' + photloc[img] + "/" + img + '.html">';
-					h += '<img src="pages/' + photloc[img] + '/' + img + '_tn.jpg"/> ';
-					h += '</a>';
-				} else if(total == 0) {
-					h += " ... ";
-				}
-				total -= 1
-			}
-			div.innerHTML = h;
-		}
-		function checkedKwBox(c, kwi) {
-			// First, remove it from the kws
-			var tmp = new Array()
-			for(var i=0; i<kws.length; i++) {
-				if(kws[i] != kwi) {
-					tmp.push(kws[i]);
-				}
-			}
-			kws=tmp;
-			if(c.checked) {
-				kws.push(kwi);
-			}
-			// this will get the shortest list first which makes unions faster
-			kws.sort();
-			kws.reverse();
-			// Update the display
-			showResults();
-		}
-		function initForm(f) {
-			var h ="";
-			var div = document.getElementById("keywordlist");
-			for(var i=0; i<keywords.length; i++) {
-				var k=keywords[i];
-				h += '<input type="checkbox" name="keyword" value="' + k 
-					+ ' " onclick="checkedKwBox(this, ' + i + ')" />' + k + "("
-					+ imgs[i].length + ")  ";
-			}
-			div.innerHTML=h
-
-		}
-		function search() {
-			var field=document.getElementById("keywords");
-			var mykws=field.value.split(" ");
-			kws=new Array();
-			for(var i=0; i<mykws.length; i++) {
-				if(kwmap[mykws[i]] != undefined) {
-					// alert("Found " + mykws[i] + " as " + kwmap[mykws[i]]);
-					kws.push(kwmap[mykws[i]]);
-				}
-			}
-			kws.sort();
-			kws.reverse();
-			showResults();
-			// alert(mykws);
-		}
-		function pressedKey(v) {
-			var div = document.getElementById("keywordlist");
-			var h = "";
-			if(v.value.length > 0) {
-				var mykws=v.value.split(" ");
-				for(var i=0; i<mykws.length; i++) {
-					if(kwmap[mykws[i]] != undefined) {
-						h += mykws[i] + "-(" + imgs[kwmap[mykws[i]]].length + ") ";
-					} else {
-						h += mykws[i] + "-no match ";
-					}
-				}
-			}
-			div.innerHTML=h;
-		}
-		onload = function() {
-			// initForm(document.bigform);
-			for(var i=0; i<keywords.length; i++) {
-				kwmap[keywords[i]]=i;
-			}
-		}
-		</script>
+		<script language="JavaScript" src="searchfun.js"></script>
 
 		<form name="bigform" method="POST" action=""
 			onsubmit="search(); return false;">
 			Keywords:
 			<input id="keywords" name="keywords" size="60" value=""
-				OnKeyUp="pressedKey(this);"/>
+				OnKeyUp="pressedKey(this.value);"/>
 			<div style="font-size: x-small" id="keywordlist"><span/></div>
+			Newest images
+			<select id="sdir" name="sdir">
+				<option value="newfirst">first</option>
+				<option value="newlast" selected="selected">last</option>
+			</select>
+			<br/>
+			Results Per Page:
+			<select id="perpage" name="perpage">
+				<option value="10">10</option>
+				<option value="50" selected="selected">50</option>
+				<option value="100">100</option>
+			</select>
+			<br/>
 			<input type="submit" value="Search"/>
+			<input type="reset" value="Clear"
+				onclick="pressedKey(''); setResults('');"/>
 		</form>
 		<div id="found"><span/></div>
 	</body>

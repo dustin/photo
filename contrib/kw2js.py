@@ -32,12 +32,9 @@ def kwcmp(a, b):
 if __name__ == '__main__':
     kwh=KwHandler()
     libphoto.parseIndex("index.xml", kwh)
-    # Keep only the keywords that match more than one image
+    # Sort all of the keywords
     for k in kwh.keywords.items():
-        if len(k[1]) == 1:
-            del kwh.keywords[k[0]]
-        else:
-            kwh.keywords[k[0]].sort()
+        kwh.keywords[k[0]].sort()
     keywords=kwh.keywords.items()
     keywords.sort(kwcmp)
 
