@@ -37,6 +37,11 @@ index.content.credits=All pages herein were created using vi.  For more \
 	information on the vi web page publishing system, type \
 	<i>man vi</i> at your prompt.
 
+###### Display
+display.comment=Submit a comment:
+comment.form.error.imageId=Image ID
+comment.form.error.comment=Comment
+
 ###### Forms
 
 # Login form
@@ -105,6 +110,8 @@ errors.header=<br/>The following errors were found:\
 	<div class="errors"> \
 	<ul>
 errors.footer=</ul></div>
+errors.required={0} is required.
+errors.minlength={0} can not be less than {1} characters.
 
 # Login errors
 error.login.username=<li>Username required.</li>
@@ -160,11 +167,6 @@ error.changepw.mismatch=<li>Old and new passwords don't match</li>
 # Forgot pw form
 error.forgotpw.username=<li>Must supply email address or username</li>
 error.forgotpw.guest=<li>Cannot change password for guest</li>
-
-# Comment form
-error.comment.comment=<li>Comment field was blank</li>
-error.comment.imageId=<li>Image ID field was blank</li>
-error.comment.nfe=<li>Image ID was not a number</li>
 
 # Admin user form
 error.adminuserform.userId=<li>User ID field not supplied</li>

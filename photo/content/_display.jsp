@@ -5,6 +5,7 @@
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
+<%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <%
@@ -109,9 +110,17 @@
 
 <p>
 
-	Submit a comment:<br/>
-
 	<photo:guest negate="true">
+		<bean:message key="display.comment"/><br/>
+		<logic:messagesPresent>
+			<bean:message key="errors.header"/>
+			<ul>
+				<html:messages id="error">
+				<li><bean:write name="error"/></li>
+				</html:messages>
+			</ul><hr>
+		</logic:messagesPresent>
+
 		<html:form action="/addcomment">
 			<html:errors/>
 			<html:hidden property="imageId" value="<%= "" + image.getId() %>"/>

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CommentAction.java,v 1.4 2002/12/15 07:08:25 dustin Exp $
+// $Id: CommentAction.java,v 1.5 2003/05/24 08:24:29 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
 
 import net.spy.db.Saver;
 
@@ -36,21 +37,24 @@ public class CommentAction extends PhotoAction {
 	}
 
 	/**
-	 * Process the forgotten password request.
+	 * Process the comment thing.
 	 */
-	public ActionForward perform(ActionMapping mapping,
-		ActionForm form,
-		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+	public ActionForward execute(
+		ActionMapping mapping, ActionForm form,
+		HttpServletRequest request, HttpServletResponse response) 
+		throws Exception {
 
-		CommentForm cf=(CommentForm)form;
+		DynaActionForm df=(DynaActionForm)form;
+
+		System.err.println("Processing comment:  " + df);
 
 		// Get the session data
 		PhotoSessionData sessionData=getSessionData(request);
 		// Get the user
 		PhotoUser user=sessionData.getUser();
 
-		int imageId=Integer.parseInt(cf.getImageId());
+		Integer imageInteger=(Integer)df.get("imageId");
+		int imageId=imageInteger.intValue();
 
 		// Check permission
 		try {
@@ -64,7 +68,7 @@ public class CommentAction extends PhotoAction {
 		comment.setUser(user);
 		comment.setPhotoId(imageId);
 		comment.setRemoteAddr(request.getRemoteAddr());
-		comment.setNote(cf.getComment());
+		comment.setNote( (String)df.get("comment") );
 
 		try {
 			Saver s=new Saver(new PhotoConfig());

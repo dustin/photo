@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.34 2003/01/09 07:50:43 dustin Exp $
+	$Id: build.xml,v 1.35 2003/05/24 08:24:28 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -73,6 +73,8 @@
 				<include name="WEB-INF/lib/*.jar"/>
 				<include name="WEB-INF/struts-config.xml"/>
 				<include name="WEB-INF/web.xml"/>
+				<include name="WEB-INF/validator-rules.xml"/>
+				<include name="WEB-INF/validation.xml"/>
 				<include name="WEB-INF/tlds/*.tld"/>
 				<!-- Avoid overwriting spy.jar in case I've done specific upgrades. -->
 				<exclude name="WEB-INF/lib/spy.jar"/>
@@ -82,18 +84,23 @@
 			tofile="/afs/.spy.net/misc/web/root/${location}/WEB-INF/lib/photo.jar"/>
 	</target>
 
-	<target name="install-web-app" depends="photo.jar">
+	<target name="install-web-app" depends="photo.jar,install-demo">
 		<antcall target="install-web-app-var">
 			<param name="location" value="photo"/>
-		</antcall>
-		<antcall target="install-web-app-var">
-			<param name="location" value="photodemo"/>
 		</antcall>
 		<antcall target="install-web-app-var">
 			<param name="location" value="beckerphoto"/>
 		</antcall>
 		<antcall target="install-web-app-var">
 			<param name="location" value="wisephoto"/>
+		</antcall>
+	</target>
+
+	<target name="install-demo"
+			description="Update the demo installation"
+			depends="photo.jar">
+		<antcall target="install-web-app-var">
+			<param name="location" value="photodemo"/>
 		</antcall>
 	</target>
 

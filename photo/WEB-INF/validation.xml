@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE form-validation PUBLIC
+	"-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.0//EN"
+	"http://jakarta.apache.org/commons/dtds/validator_1_0.dtd">
+
+<form-validation>
+
+    <global>
+
+        <!-- An example global constant
+        <constant>
+            <constant-name>postalCode</constant-name>
+            <constant-value>^\d{5}\d*$</constant-value>
+        </constant>
+        end example-->
+
+    </global>
+
+    <formset>
+
+			<!-- Comment form -->
+
+			<form name="commentForm">
+				<field property="imageId" depends="required"/>
+				<field property="comment" depends="required,minlength">
+					<arg0 key="Comment" resource="false"/>
+					<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+					<var>
+						<var-name>minlength</var-name>
+						<var-value>2</var-value>
+					</var>
+				</field>
+			</form>
+
+    </formset>
+
+</form-validation>

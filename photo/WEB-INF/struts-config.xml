@@ -16,9 +16,17 @@
 			type="net.spy.photo.struts.SaveSearchForm"/>
     <form-bean name="newUserForm" type="net.spy.photo.struts.NewUserForm"/>
     <form-bean name="setSizeForm" type="net.spy.photo.struts.SetSizeForm"/>
+
     <form-bean name="changePWForm" type="net.spy.photo.struts.ChangePWForm"/>
     <form-bean name="forgotPWForm" type="net.spy.photo.struts.ForgotPWForm"/>
-    <form-bean name="commentForm" type="net.spy.photo.struts.CommentForm"/>
+
+    <form-bean name="commentForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="imageId" type="java.lang.Integer"/>
+			<form-property name="comment" type="java.lang.String"/>
+		</form-bean>
+
     <form-bean name="addToGalleryForm"
 			type="net.spy.photo.struts.AddToGalleryForm"/>
     <form-bean name="saveGalleryForm"
@@ -314,5 +322,13 @@
 	<!-- End of reporting -->
 
   </action-mappings>
+
+	<message-resources parameter="net.spy.photo.photoresources"/>
+
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn" >
+		<set-property
+			property="pathnames"
+			value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/>
+	</plug-in>
 
 </struts-config>
