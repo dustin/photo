@@ -110,88 +110,91 @@ errors.header=<br/>The following errors were found:\
 	<div class="errors"> \
 	<ul>
 errors.footer=</ul></div>
-errors.required=<li>{0} is required.</li>
-errors.minlength=<li>{0} can not be less than {1} characters.</li>
-errors.maxlength=<li>{0} can not be more than {1} characters.</li>
-errors.email=<li>Your email address looks invalid.</li>
-errors.twofields=<li>Passwords don't match.</li>
-errors.invalid=<li>{0} is not valid.</li>
+errors.prefix=<li>
+errors.suffix=</li>
+
+errors.required={0} is required.
+errors.minlength={0} can not be less than {1} characters.
+errors.maxlength={0} can not be more than {1} characters.
+errors.email=Your email address looks invalid.
+errors.twofields=Passwords don't match.
+errors.invalid={0} is not valid.
 
 # Search errors
-error.search.fieldjoin=<li>fieldjoin may only be ``or'' or ``and''</li>
-error.search.field=<li>field may only be ``keywords'' or ``descr''</li>
-error.search.keyjoin=<li>keyjoin may only be ``or'' or ``and''</li>
-error.search.tstartjoin=<li>tstartjoin may only be ``or'' or ``and''</li>
-error.search.tendjoin=<li>tendjoin may only be ``or'' or ``and''</li>
-error.search.startjoin=<li>startjoin may only be ``or'' or ``and''</li>
-error.search.endjoin=<li>endjoin may only be ``or'' or ``and''</li>
-error.search.order=<li>order may only be ``a.taken'' or ``a.ts''</li>
-error.search.sdirection=<li>sdirection may only be empty or ``desc''</li>
+error.search.fieldjoin=fieldjoin may only be ``or'' or ``and''
+error.search.field=field may only be ``keywords'' or ``descr''
+error.search.keyjoin=keyjoin may only be ``or'' or ``and''
+error.search.tstartjoin=tstartjoin may only be ``or'' or ``and''
+error.search.tendjoin=tendjoin may only be ``or'' or ``and''
+error.search.startjoin=startjoin may only be ``or'' or ``and''
+error.search.endjoin=endjoin may only be ``or'' or ``and''
+error.search.order=order may only be ``a.taken'' or ``a.ts''
+error.search.sdirection=sdirection may only be empty or ``desc''
 
 # Upload errors
-error.upload.keywords=<li>Keywords required</li>
-error.upload.info=<li>Description text required</li>
-error.upload.taken=<li>Date taken required</li>
-error.upload.category=<li>Upload category required</li>
-error.upload.category.nfe=<li>Category wasn't a number?</li>
-error.upload.picture=<li>Picture required</li>
-error.upload.picture.notread=<li>Error reading picture</li>
-error.upload.id=<li>Image ID required</li>
-error.upload.id.nfe=<li>Image ID wasn't a number</li>
+error.upload.keywords=Keywords required
+error.upload.info=Description text required
+error.upload.taken=Date taken required
+error.upload.category=Upload category required
+error.upload.category.nfe=Category wasn't a number?
+error.upload.picture=Picture required
+error.upload.picture.notread=Error reading picture
+error.upload.id=Image ID required
+error.upload.id.nfe=Image ID wasn't a number
 
 # Save search form
-error.savesearch.name=<li>Name of search required</li>
-error.savesearch.search=<li>Search to save required</li>
+error.savesearch.name=Name of search required
+error.savesearch.search=Search to save required
 
 # new user (from profile) form
-error.newuser.username=<li>Username not provided</li>
-error.newuser.realname=<li>Invalid ``real name'' parameter</li>
-error.newuser.password=<li>Password field must be at least 6 \
-	characters</li>
-error.newuser.pwmismatch=<li>Passwords don't match</li>
-error.newuser.email=<li>Invalid email address</li>
+error.newuser.username=Username not provided
+error.newuser.realname=Invalid ``real name'' parameter
+error.newuser.password=Password field must be at least 6 \
+	characters
+error.newuser.pwmismatch=Passwords don't match
+error.newuser.email=Invalid email address
 
 # Set size form
-error.setsize.dims=<li>Missing ``dims'' parameter</li>
-error.setsize.dims.e=<li>Invalid ``dims'' parameter ({0})</li>
+error.setsize.dims=Missing ``dims'' parameter
+error.setsize.dims.e=Invalid ``dims'' parameter ({0})
 
 # ChangePW form
-error.changepw.oldpw=<li>Missing old password parameter</li>
-error.changepw.newpw1=<li>New password must be at least six characters</li>
-error.changepw.mismatch=<li>Old and new passwords don't match</li>
+error.changepw.oldpw=Missing old password parameter
+error.changepw.newpw1=New password must be at least six characters
+error.changepw.mismatch=Old and new passwords don't match
 
 # Admin user form
-error.adminuserform.userId=<li>User ID field not supplied</li>
-error.adminuserform.userId.nfe=<li>User ID field not a number</li>
-error.adminuserform.username=<li>Username field empty</li>
-error.adminuserform.password=<li>Password field empty</li>
-error.adminuserform.realname=<li>Real name field empty</li>
-error.adminuserform.email=<li>Email field empty</li>
-error.adminuserform.email.inv=<li>Invalid email address</li>
-error.adminuserform.catAclView=<li>View ACL not provided</li>
-error.adminuserform.catAclAdd=<li>Add ACL not provided</li>
-error.adminuserform.adminStatus=<li>Admin Status field not provided</li>
-error.adminuserform.adminStatus.inv=<li>Admin Status field invalid</li>
+error.adminuserform.userId=User ID field not supplied
+error.adminuserform.userId.nfe=User ID field not a number
+error.adminuserform.username=Username field empty
+error.adminuserform.password=Password field empty
+error.adminuserform.realname=Real name field empty
+error.adminuserform.email=Email field empty
+error.adminuserform.email.inv=Invalid email address
+error.adminuserform.catAclView=View ACL not provided
+error.adminuserform.catAclAdd=Add ACL not provided
+error.adminuserform.adminStatus=Admin Status field not provided
+error.adminuserform.adminStatus.inv=Admin Status field invalid
 
 # Admin category form
-error.admincatform.catId=<li>Category ID field not supplied</li>
-error.admincatform.catId.nfe=<li>Category ID field not a number</li>
-error.admincatform.name=<li>Category name field not supplied</li>
-error.admincatform.catAclAdd=<li>Add ACL field not supplied</li>
-error.admincatform.catAclView=<li>View ACL field not supplied</li>
+error.admincatform.catId=Category ID field not supplied
+error.admincatform.catId.nfe=Category ID field not a number
+error.admincatform.name=Category name field not supplied
+error.admincatform.catAclAdd=Add ACL field not supplied
+error.admincatform.catAclView=View ACL field not supplied
 
 # Admin new profile form
-error.adminnewprofileform.name=<li>Profile name field not supplied</li>
-error.adminnewprofileform.categories=<li>Profile categories not supplied</li>
+error.adminnewprofileform.name=Profile name field not supplied
+error.adminnewprofileform.categories=Profile categories not supplied
 
 # Add to gallery form
-error.addtogallery.id=<li>Required parameter ``id'' not provided</li>
+error.addtogallery.id=Required parameter ``id'' not provided
 
 # Save gallery form
-error.savegallery.name=<li>Required parameter ``name'' not provided</li>
+error.savegallery.name=Required parameter ``name'' not provided
 
 # GetGalleryForm
-error.getgallery.id=<li>Required parameter ``id'' not provided</li>
+error.getgallery.id=Required parameter ``id'' not provided
 
 # Reporting stuff
 reporting.links.userCat=User/Category Report
