@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.28 1998/09/04 03:07:56 dustin Exp $
+# $Id: Photo.pm,v 1.29 1998/09/04 03:21:12 dustin Exp $
 
 package Photo;
 
@@ -200,6 +200,7 @@ sub makeThumbnail
 	while($r=$s->fetch) {
 	    $out.=decode_base64($r->[2]);
 	}
+	$s->finish;
 
 	$c->cache($key, $type, $out);
     }
@@ -266,6 +267,7 @@ sub displayImage
         while($r=$s->fetch) {
 	    $out.=decode_base64($r->[2]);
         }
+	$s->finish;
 
 	$c->cache($key, $type, $out);
     }
@@ -295,6 +297,7 @@ sub showSaved
 	$out.= "    <li><a href=\"$cgi?" . decode_base64($r->[3])
 	       . "\">$r->[1]</a></li>\n";
     }
+    $s->finish;
 
     return($out);
 }
@@ -335,8 +338,7 @@ sub doFind
     print "<h2>Found $n match".(($n==1)?"":"es").":</h2><br>\n";
     print "<table><tr>\n";
 
-    while($r=$s->fetch)
-    {
+    while($r=$s->fetch) {
         ($p{OID}, $p{KEYWORDS}, $p{DESCR}, $p{CAT}, $p{SIZE}, $p{TAKEN},
             $p{TS}, $p{IMAGE}, $p{CATNUM}, $p{ADDEDBY})=@{$r};
         next if($i++<$start);
@@ -350,6 +352,7 @@ sub doFind
         $self->showTemplate("$Photo::includes/findmatch.inc", %p);
         print "</td>\n";
     }
+    $s->finish;
 
     print "</tr></table>\n";
 
@@ -400,6 +403,7 @@ sub doDisplay
         map { $p{$mapme[$_]}=$r[$_] } (0..$#r);
         $self->showTemplate("$Photo::includes/display.inc", %p);
     }
+    $s->finish;
 }
 
 sub doCatView
@@ -422,8 +426,7 @@ sub doCatView
 
     print "<ul>\n";
 
-    while($r=$s->fetch)
-    {
+    while($r=$s->fetch) {
         next if($r->[2]==0);
 
         $t=($r->[2]==1?"image":"images");
@@ -431,6 +434,7 @@ sub doCatView
         print "<li>$r->[0]:  <a href=\"$Photo::cgidir/photo.cgi?func=search&".
         "searchtype=advanced&cat=$r->[1]&maxret=5\">$r->[2] $t</a></li>\n";
     }
+    $s->finish;
 
     print "</ul>\n" . $q->end_html . "\n";
 }
@@ -458,11 +462,11 @@ sub addImage
     $query="select * from wwwusers where username='$ENV{'REMOTE_USER'}'\n";
     $s=$self->doQuery($query);
     $r=$s->fetch;
-    if($r->[4]!=1)
-    {
+    if($r->[4]!=1) {
 	$self->showTemplate("$Photo::includes/add_denied.inc", ());
 	return;
     }
+    $s->finish;
 
     if($in{'picture'}=~/jpg.$/i) {
 	$ext="jpg";
@@ -500,6 +504,7 @@ sub addImage
                 $i++;
             } split(/\n/, encode_base64($premime));
         }
+	$s->finish;
     };
 
     if($@) {
@@ -519,7 +524,7 @@ sub addImage
     $query.="\t$in{'category'},\n\t$size,\n\t$in{'taken'},\n";
     $query.="\t'$ENV{'REMOTE_USER'}');";
 
-    eval { $s=$self->doQuery($query); };
+    eval { $self->doQuery($query); };
 
     if($@) {
 	# Try to clean up:
