@@ -175,6 +175,7 @@
 	<!-- Search result cursor movement -->
 	<action    path="/nextresults"
 		type="net.spy.photo.struts.CursorAction"
+		scope="request"
 		name="cursorForm">
 		<forward name="success" path="/results.jsp" />
 	</action>
@@ -188,6 +189,7 @@
 	<!-- Search result cursor movement -->
 	<action    path="/nextcomments"
 		type="net.spy.photo.struts.CursorAction"
+		scope="request"
 		name="cursorForm">
 		<forward name="success" path="/comments.jsp" />
 	</action>

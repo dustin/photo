@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchFilterAction.java,v 1.6 2003/05/25 08:17:42 dustin Exp $
+// $Id: SearchFilterAction.java,v 1.7 2003/05/27 04:22:07 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -50,11 +50,14 @@ public class SearchFilterAction extends PhotoAction {
 
 		String filterName=sf.getFilter();
 
+		log("Filter called with " + filterName);
+
 		// Don't do anything if there's not a filter.
 		if(filterName!=null && !filterName.equals("")) {
 			// Get the search results
 			PhotoSessionData sessionData=getSessionData(request);
 			PhotoSearchResults results=sessionData.getResults();
+			log("Filtering results:  " + results);
 			if(results==null) {
 				throw new ServletException("No search results found!");
 			}
@@ -85,6 +88,7 @@ public class SearchFilterAction extends PhotoAction {
 
 			// perform the filtration and set the results.
 			results=filter.filter(results);
+			log("Filtered results to:  " + results + " with " + filter);
 			sessionData.setResults(results);
 		}
 
