@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: OnceAMonthFilter.java,v 1.6 2003/05/04 06:49:54 dustin Exp $
+// $Id: OnceAMonthFilter.java,v 1.7 2003/05/04 08:19:29 dustin Exp $
 
 package net.spy.photo.filter;
 
@@ -27,6 +27,9 @@ public class OnceAMonthFilter extends DateFilter {
 		Calendar cal=Calendar.getInstance();
 		cal.setTime(d);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
 		return(cal.getTime());
 	}
 

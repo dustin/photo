@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Cursor.java,v 1.10 2002/11/03 07:33:35 dustin Exp $
+ * $Id: Cursor.java,v 1.11 2003/05/04 08:19:28 dustin Exp $
  */
 
 package net.spy.photo;
@@ -23,10 +23,17 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	private int maxret=10;
 
 	/**
-	 * Get a search results object for the given URI.
+	 * Get an empty Cursor object.
 	 */
 	public Cursor() {
 		super();
+	}
+
+	/**
+	 * Get Cursor object with the specified initial capacity.
+	 */
+	public Cursor(int capacity) {
+		super(capacity);
 	}
 
 	/**

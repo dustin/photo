@@ -1,8 +1,10 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Filter.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
+// $Id: Filter.java,v 1.3 2003/05/04 08:19:29 dustin Exp $
 
 package net.spy.photo.filter;
+
+import net.spy.SpyObject;
 
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoSearchResults;
@@ -10,7 +12,7 @@ import net.spy.photo.PhotoSearchResults;
 /**
  * Superclass for search filters.
  */
-public abstract class Filter extends Object {
+public abstract class Filter extends SpyObject {
 
 	/**
 	 * Get an instance of Filter.

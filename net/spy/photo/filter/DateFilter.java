@@ -1,12 +1,13 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DateFilter.java,v 1.1 2003/05/04 06:49:54 dustin Exp $
+// $Id: DateFilter.java,v 1.2 2003/05/04 08:19:29 dustin Exp $
 
 package net.spy.photo.filter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -39,7 +40,7 @@ public abstract class DateFilter extends SortingFilter {
 	public DateFilter() {
 		super();
 
-		sdf=new SimpleDateFormat("yyyy-mm-DD");
+		sdf=new SimpleDateFormat("yyyy-MM-dd");
 	}
 
 	/** 
@@ -69,7 +70,7 @@ public abstract class DateFilter extends SortingFilter {
 		throws PhotoException {
 
 		// Get a base copy of the result set.
-		PhotoSearchResults rv=new PhotoSearchResults();
+		PhotoSearchResults rv=new PhotoSearchResults(in.size());
 		rv.setMaxSize(in.getMaxSize());
 		rv.setMaxRet(in.getMaxRet());
 
@@ -97,6 +98,13 @@ public abstract class DateFilter extends SortingFilter {
 
 			// Truncate the date appropriately
 			Date taken=roundDate(dtmp);
+			/*
+			if(getLogger().isInfoEnabled()) {
+				getLogger().info("Rounded " + sdf.format(dtmp)
+					+ " to " + sdf.format(taken)
+					+ " (from " + pid.getTaken() + ")");
+			}
+			*/
 
 			// Get a vector from the date
 			ArrayList a=(ArrayList)months.get(taken);
@@ -108,22 +116,24 @@ public abstract class DateFilter extends SortingFilter {
 			a.add(pid);
 		}
 
-		// OK, now get the parts (since that's a TreeMap, they'll be sorted)
-        Collection values=months.values();
-
 		// Get a new random object
 		Random r=new Random();
 
 		// OK, now we'll flip through the keys to do one per month
-		for(Iterator i=values.iterator(); i.hasNext(); ) {
+		for(Iterator i=months.entrySet().iterator(); i.hasNext(); ) {
+			// The entry
+			Map.Entry me=(Map.Entry)i.next();
 			// Grab the List
-			List l=(List)i.next();
+			List l=(List)me.getValue();
 
 			// Get a random object from vector
 			PhotoImageData pid=(PhotoImageData)l.get(r.nextInt(l.size()));
 
 			// Add it to the results
 			rv.add(pid);
+
+			// getLogger().info("Selected " + pid + " for " + me.getKey());
+
 		}
 
 		// Return the new result set
