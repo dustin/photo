@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.3 2000/07/01 00:39:57 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.4 2000/07/16 08:31:00 dustin Exp $
 
 package net.spy.rmi;
 
@@ -48,11 +48,15 @@ public class ImageServerImpl extends UnicastRemoteObject
 			e.printStackTrace();
 			throw new RemoteException("Error fetching image", e);
 		}
+		// Calculate the width
+		image_data.width();
 		return(image_data);
 	}
 
 	public void storeImage(int image_id, PhotoImage image)
 		throws RemoteException {
+		// Make sure we've calculated the width and height
+		image.width();
 		if(rhash==null) {
 			getRhash();
 			if(rhash==null) {
@@ -137,6 +141,24 @@ public class ImageServerImpl extends UnicastRemoteObject
 				log("Done storing object.");
 			} else {
 				log("The rhash is null.");
+			}
+
+			// See if we can record this...
+			Connection conn=null;
+			try {
+				conn=getDBConn();
+				PreparedStatement st=conn.prepareStatement(
+					"update album set tn_width=?, tn_height=?\n"
+						+ " where id=?\n"
+					);
+				st.setInt(1, pi.width());
+				st.setInt(2, pi.height());
+				st.setInt(3, image_id);
+				st.executeUpdate();
+			} catch(Exception e) {
+				System.err.println("Error updating thumbnail info:  " + e);
+			} finally {
+				freeDBConn(conn);
 			}
 		}
 
