@@ -8,6 +8,16 @@
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
 
+	<property name="SRCDIR" value="src"/>
+	<property name="BUILDTOP" value="=build"/>
+	<property name="BUILDDIR" value="${BUILDTOP}/classes"/>
+	<property name="GENDIR" value="=build/gen"/>
+	<property name="PROJECT" value="spyshop"/>
+	<property name="LIBDIR" value="${BUILDTOP}/lib"/>
+	<property name="TLDDIR" value="${BUILDTOP}/tmp/tlds"/>
+	<property name="BUILDTMP" value="${BUILDTOP}/tmp/"/>
+	<property name="DOCDIR" value="${BUILDTOP}/docs/"/>
+
 	<!-- Set up the class path -->
 	<path id="photo.classpath">
 		<fileset dir="photo/WEB-INF/lib">
@@ -20,35 +30,32 @@
 			<include name="sax.jar"/>
 			<include name="xerces.jar"/>
 		</fileset>
+		<pathelement path="${BUILDDIR}"/>
 	</path>
 
+	<patternset id="arch-stuff">
+		<exclude name="**/*.arch-ids/**"/>
+	</patternset>
+
+	<target name="prepare">
+		<mkdir dir="${BUILDDIR}"/>
+		<mkdir dir="${GENDIR}"/>
+		<mkdir dir="${TLDDIR}"/>
+		<mkdir dir="${LIBDIR}"/>
+	</target>
+
 	<target name="clean" description="Clean up all generated files.">
-		<delete>
-			<fileset dir="net">
-				<include name="**/*.class"/>
-				<include name="spy/photo/sp/*.java"/>
-				<include name="spy/photo/sp/*/*.java"/>
-				<include name="spy/photo/photoresources.properties"/>
-			</fileset>
-			<fileset dir=".">
-				<include name="photo.jar"/>
-				<include name="photo.war"/>
-				<include name="photoservlet-*.zip"/>
-				<include name="pmd-*-report.html"/>
-				<include name="checkstyle.txt"/>
-			</fileset>
-		</delete>
-		<delete dir="docs"/>
+		<delete dir="=build"/>
 	</target>
 
 	<target name="docs" depends="photoresources.properties,spfiles"
 			description="Create the documentation.">
-		<mkdir dir="docs"/>
-		<javadoc destdir="docs"
+		<mkdir dir="${DOCDIR}"/>
+		<javadoc destdir="${DOCDIR}"
 			author="true"
 			version="true"
 			use="true"
-			sourcepath="."
+			sourcepath="${SRCDIR}"
 			packagenames="net.spy.*"
 			classpathref="photo.classpath"
 			windowtitle="PhotoServlet API Documentation - build ${build.number} from ${build.date}"
@@ -95,7 +102,7 @@
 				<exclude name="WEB-INF/lib/spy.jar"/>
 			</fileset>
 		</copy>
-		<copy file="photo.jar"
+		<copy file="${BUILDTOP}/photo.jar"
 			tofile="/afs/.spy.net/misc/web/root/${location}/WEB-INF/lib/photo.jar"/>
 	</target>
 
@@ -129,7 +136,7 @@
 		description="Install the documentation"
 		depends="docs">
 		<copy todir="/afs/spy.net/home/dustin/public_html/doc/photo">
-			<fileset dir="docs">
+			<fileset dir="${DOCDIR}">
 				<include name="**/*.html"/>
 				<include name="**/*.css"/>
 				<include name="**/package-list"/>
@@ -140,7 +147,7 @@
 	<target name="photo.jar"
 		description="Create photo.jar"
 		depends="all,photoresources.properties,validateconfigs">
-		<jar jarfile="photo.jar" basedir=".">
+		<jar jarfile="${BUILDTOP}/photo.jar" basedir="${BUILDDIR}">
 			<include name="**/*.class"/>
 			<include name="net/**/*.properties"/>
 			<include name="net/**/*.sql"/>
@@ -158,20 +165,29 @@
 	</target>
 
 	<target name="photo.war" depends="photo.jar">
-		<jar jarfile="photo.war" basedir="." excludes="**">
-			<zipfileset dir="photo" prefix=""/>
-			<zipfileset dir="." prefix="WEB-INF/lib" includes="photo.jar"/>
-			<zipfileset dir="etc" prefix="WEB-INF" includes="photo.conf"/>
+		<jar jarfile="${BUILDTOP}/photo.war" basedir="." excludes="**">
+			<zipfileset dir="photo" prefix="">
+				<patternset refid="arch-stuff"/>
+			</zipfileset>
+			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF/lib" includes="photo.jar"/>
+			<zipfileset dir="etc" prefix="WEB-INF" includes="photo.conf">
+				<patternset refid="arch-stuff"/>
+			</zipfileset>
 		</jar>
 	</target>
 
 	<target name="photo.zip" depends="photo.war,docs">
-		<zip zipfile="photo.zip" basedir="." excludes="**">
-			<zipfileset dir="." prefix="" includes="doc/**"/>
-			<zipfileset dir="docs" prefix="doc/api" includes="**"/>
-			<zipfileset dir="." prefix="" excludes="**/CVS" includes="etc/*"/>
-			<zipfileset dir="." prefix="" excludes="**/CVS" includes="contrib/*"/>
-			<zipfileset dir="." prefix="" includes="photo.war"/>
+		<zip zipfile="${BUILDTOP}/photo.zip" basedir="${BUILDTOP}" excludes="**">
+			<zipfileset dir="${BUILDTOP}" prefix="" includes="doc/**"/>
+			<zipfileset dir="${DOCDIR}" prefix="doc/api" includes="**"/>
+			<zipfileset dir="." prefix="" excludes="**/CVS" includes="etc/*">
+				<patternset refid="arch-stuff"/>
+			</zipfileset>
+			<zipfileset dir="." prefix="" excludes="**/CVS" includes="contrib/*">
+				<patternset refid="arch-stuff"/>
+			</zipfileset>
+			<zipfileset dir="${BUILDTOP}" prefix="" includes="photo.war"/>
+			<zipfileset dir="doc" prefix="" includes="HOWTO"/>
 		</zip>
 	</target>
 
@@ -179,27 +195,29 @@
 		description="Create a release."
 		depends="photo.zip">
 		<tstamp/>
-		<move file="photo.zip" tofile="photoservlet-${DSTAMP}.zip"/>
+		<move file="${BUILDTOP}/photo.zip"
+			tofile="${BUILDTOP}/photoservlet-${DSTAMP}.zip"/>
 	</target>
 
 	<target name="photoresources.properties" unless="properties.upToDate">
 		<buildnumber file="etc/build.number"/>
 		<tstamp/>
-		<copy file="net/spy/photo/photoresources.properties.in"
-			tofile="net/spy/photo/photoresources.properties"/>
-		<propertyfile file="net/spy/photo/photoresources.properties">
+		<copy file="${SRCDIR}/net/spy/photo/photoresources.properties.in"
+			tofile="${BUILDDIR}/net/spy/photo/photoresources.properties"/>
+		<propertyfile file="${BUILDDIR}/net/spy/photo/photoresources.properties">
 			<entry key="build.date" type="date" value="now"/>
 			<entry key="build.dstamp" value="${DSTAMP}"/>
 			<entry key="build.tstamp" value="${TSTAMP}"/>
 			<entry key="build.dtstamp" value="${DSTAMP}${TSTAMP}"/>
 			<entry key="build.number" value="${build.number}"/>
 		</propertyfile>
-		<property file="net/spy/photo/photoresources.properties"/>
+		<property file="${BUILDDIR}/net/spy/photo/photoresources.properties"/>
 		<property name="properties.upToDate" value="true"/>
 	</target>
 
-	<target name="all" depends="rmic,spfiles">
-		<javac srcdir="." destdir="." deprecation="on" debug="on" verbose="false">
+	<target name="all" depends="prepare,rmic,spfiles">
+		<javac srcdir="${SRCDIR}" destdir="${BUILDDIR}"
+			deprecation="on" debug="on" verbose="false">
 			<classpath refid="photo.classpath"/>
 			<include name="net/spy/photo/**/*.java"/>
 			<include name="net/spy/rmi/**/*.java"/>
@@ -210,17 +228,23 @@
 		<taskdef name="spgen" classname="net.spy.util.SPGenTask">
 			<classpath refid="photo.classpath"/>
 		</taskdef>
-		<spgen srcdir="." destdir="."/>
+		<spgen srcdir="${SRCDIR}" destdir="${GENDIR}"/>
+		<javac srcdir="${GENDIR}" destdir="${BUILDDIR}"
+			deprecation="on" debug="on" verbose="false">
+			<classpath refid="photo.classpath"/>
+		</javac>
 	</target>
 
 	<target name="rmic" depends="pre-rmic">
-		<rmic base="." classname="net.spy.photo.rmi.RemoteImageServerImpl">
+		<rmic base="${BUILDDIR}"
+			classname="net.spy.photo.rmi.RemoteImageServerImpl">
 			<classpath refid="photo.classpath"/>
 		</rmic>
 	</target>
 
 	<target name="pre-rmic" depends="spfiles">
-		<javac srcdir="." destdir="." deprecation="on" debug="on" verbose="false">
+		<javac srcdir="${SRCDIR}" destdir="${BUILDDIR}"
+			deprecation="on" debug="on" verbose="false">
 			<classpath refid="photo.classpath"/>
 			<include name="net/spy/photo/rmi/RemoteImageServerImpl.java"/>
 		</javac>
@@ -238,7 +262,8 @@
 			</classpath>
 		</taskdef>
 
-		<scrub root="." format="each" sortjavalibshigh="true" recurse="true"/>
+		<scrub root="${SRCDIR}"
+			format="each" sortjavalibshigh="true" recurse="true"/>
 	</target>
 
 	<target name="staticsite"
