@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
  *
- * $Id: style.css,v 1.9 2003/07/19 05:47:05 dustin Exp $
+ * $Id: style.css,v 1.10 2003/07/23 20:01:44 dustin Exp $
  */
 body {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -22,7 +22,7 @@ h1 { font-size: x-large; }
 h2 { font-size: large; }
 
 #pagetitle {
-	background: white;
+	background: #eeeeff;
 	font-size: xx-large;
 	font-weight: bold;
 	border-style: outset;
