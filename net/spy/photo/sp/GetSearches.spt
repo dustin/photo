@@ -1,0 +1,18 @@
+#
+# $Id: GetSearches.spt,v 1.1 2003/08/09 08:37:17 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get all of the saved searches.
+
+@sql
+select searches_id, name, search
+	from searches
+
+@results
+searches_id INTEGER The search ID
+name VARCHAR The name of the search
+search VARCHAR The search string

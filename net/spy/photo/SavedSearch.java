@@ -1,10 +1,14 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SavedSearch.java,v 1.4 2003/08/08 05:52:56 dustin Exp $
+// $Id: SavedSearch.java,v 1.5 2003/08/09 08:37:17 dustin Exp $
 
 package net.spy.photo;
 
 import java.net.URLEncoder;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.TreeMap;
 
 import java.io.UnsupportedEncodingException;
 
@@ -15,9 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.spy.db.SpyCacheDB;
-
+import net.spy.cache.SpyCache;
 import net.spy.util.Base64;
+
+import net.spy.photo.sp.GetSearches;
+import net.spy.photo.struts.SearchForm;
 
 /**
  * Represents a saved search entry.
@@ -26,6 +32,10 @@ public class SavedSearch extends Object {
 
 	private static final String CHARSET="UTF-8";
 
+	private static final String CACHE_KEY="net.spy.photo.searches";
+	private static final long CACHE_TIME=900000;
+
+	private int id=0;
 	private String name=null;
 	private String search=null;
 
@@ -38,6 +48,7 @@ public class SavedSearch extends Object {
 
 	private SavedSearch(ResultSet rs) throws SQLException {
 		Base64 base64=new Base64();
+		id=rs.getInt("searches_id");
 		name=rs.getString("name");
 		byte data[]=base64.decode(rs.getString("search"));
 		search=new String(data);
@@ -78,22 +89,74 @@ public class SavedSearch extends Object {
 		return(URLEncoder.encode(search, CHARSET));
 	}
 
+	private static Map initSearchesMap() throws PhotoException {
+		Map rv=null;
+		try {
+			GetSearches db=new GetSearches(new PhotoConfig());
+			ResultSet rs=db.executeQuery();
+
+			rv=new HashMap();
+			while(rs.next()) {
+				SavedSearch ss=new SavedSearch(rs);
+				rv.put(new Integer(ss.id), ss);
+			}
+			rs.close();
+			db.close();
+		} catch(SQLException e) {
+			throw new PhotoException("Problem loading searches", e);
+		}
+
+		return(rv);
+	}
+
+	private Map parseQuery(String q) {
+		Map rv=null;
+		// XXX:  Insert implementation
+		return(rv);
+	}
+
+	/** 
+	 * Get this search as a SearchForm object (NOT IMPLEMENTED).
+	 */
+	public SearchForm getSearchForm() {
+		SearchForm sf=new SearchForm();
+		Map m=parseQuery(search);
+		return(sf);
+	}
+
+	private static Map getSearchesMap() throws PhotoException {
+		SpyCache sc=SpyCache.getInstance();
+		Map rv=(Map)sc.get(CACHE_KEY);
+		if(rv == null) {
+			rv=initSearchesMap();
+			sc.store(CACHE_KEY, rv, CACHE_TIME);
+		}
+		return(rv);
+	}
+
 	/**
 	 * Get the current set of saved searches (cached 15 minutes).
 	 */
-	public static Collection getSearches() throws SQLException {
-		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
-		ResultSet rs=db.executeQuery("select * from searches order by name",
-			900);
-
-		ArrayList l=new ArrayList();
-		while(rs.next()) {
-			l.add(new SavedSearch(rs));
+	public static Collection getSearches() throws PhotoException {
+		TreeMap tm=new TreeMap();
+		Map m=getSearchesMap();
+		for(Iterator i=m.values().iterator();i.hasNext();) {
+			SavedSearch ss=(SavedSearch)i.next();
+			tm.put(ss.name, ss);
 		}
-		rs.close();
-		db.close();
+		return(tm.values());
+	}
 
-		return(l);
+	/** 
+	 * Get a search by ID.
+	 */
+	public static SavedSearch getSearch(int id) throws PhotoException {
+		Map m=getSearchesMap();
+		SavedSearch ss=(SavedSearch)m.get(new Integer(id));
+		if(ss == null) {
+			throw new PhotoException("No such saved search:  " + id);
+		}
+		return(ss);
 	}
 
 	/**

@@ -43,7 +43,7 @@
 				<logic:iterate id="i"
 					collection="<%= SavedSearch.getSearches() %>"
 					type="net.spy.photo.SavedSearch">
-					<% String theSearchUrl="/search.do?" + i.getSearchURL(); %>
+					<% String theSearchUrl="/search.do?" + i.getSearch(); %>
 					<li><photo:link url="<%= theSearchUrl %>"><%=
 						i.getName() %></photo:link></li>
 				</logic:iterate>
