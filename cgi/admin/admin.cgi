@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: admin.cgi,v 1.1 1998/04/25 08:57:46 dustin Exp $
+# $Id: admin.cgi,v 1.2 1998/04/30 07:06:54 dustin Exp $
 
 use CGI;
 use Photo;
@@ -138,8 +138,8 @@ sub listUsers
 </ul>
 
 <br>
-<a href="/cgi-bin/dustin/photo/admin/edituser.cgi">Add a new user</a>
-
+<a
+href="$Photo::cgidir/admin/admin.cgi?func=edituser">Add a new user</a>
 </body>
 </html>
 EOF
@@ -163,10 +163,17 @@ sub editUser
     }
     else
     {
-        $r=['', '', '', ''];
+        $r=['', '', '', '', ''];
     }
 
-    ($p{'USER'}, $p{'PASS'}, $p{'EMAIL'}, $p{'REALNAME'})=@{$r};
+    ($p{'USER'}, $p{'PASS'}, $p{'EMAIL'}, $p{'REALNAME'}, $p{'ADDVAL'})=@{$r};
+    if($p{'ADDVAL'}==1) {
+	$p{'CANADD'}='CHECKED';
+	$p{'CANNOTADD'}='';
+    } else {
+	$p{'CANADD'}='';
+	$p{'CANNOTADD'}='CHECKED';
+    }
 
     print $q->start_html(-title=>"Editing $r->[0]", -bgcolor=>'#fFfFfF');
 
@@ -313,7 +320,7 @@ sub saveUser
 
     if($in{'newuser'} == 0)
     {
-        my @vars=('username', 'realname', 'email');
+        my @vars=('username', 'realname', 'email', 'canadd');
         $query ="update wwwusers set\n";
         map {
             $query.="    $_='$in{$_}',\n";
@@ -333,11 +340,15 @@ sub saveUser
     }
 
     print "<!-- $query -->\n";
+    $p->doQuery($query);
 
     $query="delete from wwwacl where username='$in{'username'}'\n";
+    print "<!-- $query -->\n";
     $p->doQuery($query);
 
     $query="select id from cat\n";
+    print "<!-- $query -->\n";
+    $p->doQuery($query);
     $s=$p->doQuery($query);
 
     while($r=$s->fetch)
