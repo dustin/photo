@@ -21,21 +21,7 @@ public class PhotoImage extends Object
 	private int width=-1;
 	private int height=-1;
 
-	public static final int FORMAT_UNKNOWN=0;
-	public static final int FORMAT_JPEG=1;
-	public static final int FORMAT_PNG=2;
-	public static final int FORMAT_GIF=3;
-
-	// Format definitions from above
-	private static String formatMime[]={
-		"image/unknown",
-		"image/jpeg",
-		"image/png",
-		"image/gif"
-	};
-	private static String formatExt[]={ "unk", "jpg", "png", "gif" };
-
-	private int format=FORMAT_UNKNOWN;
+	private int format=Format.FORMAT_ID_UNKNOWN;
 
 	/**
 	 * Get an empty PhotoImage object.
@@ -79,22 +65,8 @@ public class PhotoImage extends Object
 	/**
 	 * Get the format of this image.
 	 */
-	public int getFormat() {
-		return(format);
-	}
-
-	/**
-	 * Get the name of the format of this image.
-	 */
-	public String getFormatMime() {
-		return(formatMime[format]);
-	}
-
-	/** 
-	 * Get the extension to be used for this format.
-	 */
-	public String getFormatExtension() {
-		return(formatExt[format]);
+	public Format getFormat() {
+		return(Format.getFormat(format));
 	}
 
 	/**
@@ -104,7 +76,7 @@ public class PhotoImage extends Object
 		StringBuffer sb=new StringBuffer(64);
 
 		sb.append("PhotoImage (");
-		sb.append(getFormatMime());
+		sb.append(getFormat());
 		sb.append(") ");
 		sb.append(getWidth());
 		sb.append("x");
@@ -179,11 +151,11 @@ public class PhotoImage extends Object
             throw new PhotoException("imageData is empty");
         }
 		if(isJpeg()) {
-			format=FORMAT_JPEG;
+			format=Format.FORMAT_ID_JPEG;
 		} else if(isPng()) {
-			format=FORMAT_PNG;
+			format=Format.FORMAT_ID_PNG;
 		} else if(isGif()) {
-			format=FORMAT_GIF;
+			format=Format.FORMAT_ID_GIF;
 		} else {
 			throw new PhotoException("Cannot determine format ("
                 + "imageData is " + imageData.length + " bytes)");
@@ -195,13 +167,13 @@ public class PhotoImage extends Object
 		determineFormat();
 
 		switch(format) {
-			case FORMAT_JPEG:
+			case Format.FORMAT_ID_JPEG:
 				calcDimJpeg();
 				break;
-			case FORMAT_PNG:
+			case Format.FORMAT_ID_PNG:
 				calcDimPng();
 				break;
-			case FORMAT_GIF:
+			case Format.FORMAT_ID_GIF:
 				calcDimGif();
 				break;
 			default:

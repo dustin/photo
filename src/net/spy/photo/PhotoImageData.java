@@ -64,4 +64,9 @@ public interface PhotoImageData {
 	 */
 	int getId();
 
+	/** 
+	 * Get the format of this image.
+	 */
+	Format getFormat();
+
 }

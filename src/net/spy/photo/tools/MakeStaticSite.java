@@ -76,15 +76,13 @@ public class MakeStaticSite extends SpyObject {
 
 		// Store the images by date
 		String imgdir=getImageDir(pid);
-		// I need the image to begin with so I can calculate the extension.  I
-		// should probably fix this at some point.
-		PhotoImage image=pih.getImage(normaldim);
 
-		String ext=image.getFormatExtension();
+		String ext=pid.getFormat().getExtension();
 
 		// Handle the regular file path
 		File iFile=new File(imgdir + "/" + pid.getId() + ext);
 		if(!iFile.exists()) {
+			PhotoImage image=pih.getImage(normaldim);
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Need to get full image for " + pid);
 			}

@@ -76,10 +76,6 @@ public class Search2XML extends SpyObject {
 	}
 
 	private void stream(PhotoImageData pid, OutputStream os) throws Exception {
-		// Get the image to figure out the extension.
-		PhotoImageHelper pih=new PhotoImageHelper(pid.getId());
-		PhotoImage image=pih.getImage();
-
 		Document doc=dom.createDocument(null, "photo", null);
 		Element root=doc.getDocumentElement();
 
@@ -97,7 +93,8 @@ public class Search2XML extends SpyObject {
 		el.appendChild(addNode(doc, "height", pid.getDimensions().getHeight()));
 		el.appendChild(addNode(doc, "tnwidth", pid.getTnDims().getWidth()));
 		el.appendChild(addNode(doc, "tnheight", pid.getTnDims().getHeight()));
-		el.appendChild(addNode(doc, "extension", image.getFormatExtension()));
+		el.appendChild(addNode(doc, "extension",
+			pid.getFormat().getExtension()));
 
 		OutputFormat format = new OutputFormat(doc);
 		format.setIndenting(true);

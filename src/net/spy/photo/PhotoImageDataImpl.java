@@ -49,6 +49,8 @@ public class PhotoImageDataImpl extends SpyObject
 	private Date timestamp=null;
 	private Date taken=null;
 
+	private Format format=null;
+
 	private PhotoImageDataImpl(ResultSet rs) throws Exception {
 		super();
 		initFromResultSet(rs);
@@ -78,6 +80,9 @@ public class PhotoImageDataImpl extends SpyObject
 		catName=rs.getString("catname");
 		timestamp=rs.getTimestamp("ts");
 		taken=rs.getDate("taken");
+
+		// Look up the format
+		format=Format.getFormat(rs.getInt("format_id"));
 
 		// Look up the user
 		addedBy=Persistent.getSecurity().getUser(rs.getInt("addedby"));
@@ -255,6 +260,13 @@ public class PhotoImageDataImpl extends SpyObject
 	 */
 	public int getId() {
 		return(id);
+	}
+
+	/** 
+	 * Get the format of this image.
+	 */
+	public Format getFormat() {
+		return(format);
 	}
 
 	// Serialization voodoo

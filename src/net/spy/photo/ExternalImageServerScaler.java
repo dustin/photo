@@ -48,8 +48,8 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 
 		Random r = new Random();
 		String part = "/tmp/image." + Math.abs(r.nextInt());
-		String thumbfilename = part + ".tn." + in.getFormatExtension();
-		String tmpfilename=part + "." + in.getFormatExtension();
+		String thumbfilename = part + ".tn." + in.getFormat().getExtension();
+		String tmpfilename=part + "." + in.getFormat().getExtension();
 		byte b[]=null;
 
 		// OK, got our filenames, now let's calculate the new size:

@@ -76,4 +76,8 @@ public class PhotoSearchResult extends Object
 		return(imgData.getId());
 	}
 
+	public Format getFormat() {
+		return(imgData.getFormat());
+	}
+
 }

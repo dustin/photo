@@ -285,6 +285,18 @@
 			format="each" sortjavalibshigh="true" recurse="true"/>
 	</target>
 
+	<target name="run"
+		description="Run a class with the build classpath (define RUNCLASS)"
+			depends="all">
+		<java classname="${RUNCLASS}" fork="yes">
+			<classpath refid="photo.classpath"/>
+			<classpath>
+				<pathelement path="."/>
+				<pathelement path="${SRCDIR}"/>
+			</classpath>
+		</java>
+	</target>
+
 	<target name="staticsite"
 		description="Build a static site (define USERNAME and DESTDIR)"
 			depends="all">

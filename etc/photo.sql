@@ -72,6 +72,20 @@ create unique index keywords_byword on keywords(word);
 grant all on keywords to nobody;
 grant all on keywords_word_id_seq to nobody;
 
+-- File formats
+create table format (
+	format_id integer not null,
+	extension varchar(4) not null,
+	mime_type varchar(16) not null,
+	primary key(format_id)
+);
+grant all on format to nobody;
+
+insert into format values(0, 'unk', 'image/unknown');
+insert into format values(1, 'jpg', 'image/jpeg');
+insert into format values(2, 'png', 'image/png');
+insert into format values(3, 'gif', 'image/gif');
+
 -- Where the picture info is stored.
 
 create table album(
@@ -83,11 +97,13 @@ create table album(
 	addedby    integer not null,
 	width      integer default 0,
 	height     integer default 0,
+	format_id  integer default 0,
 	ts         timestamp not null,
 	id         serial,
 	primary key(id),
 	foreign key(cat) references cat(id),
-	foreign key(addedby) references wwwusers(id)
+	foreign key(addedby) references wwwusers(id),
+	foreign key(format_id) references format(format_id)
 );
 
 create index album_bycat on album(cat);

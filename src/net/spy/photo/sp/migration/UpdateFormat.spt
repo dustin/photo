@@ -1,0 +1,16 @@
+#
+# Copyright (c) 2004 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.photo.sp.migration
+
+@description
+Update the format for an image.
+
+@sql
+update album set format_id = ? where id = ?
+
+@params
+format_id required INTEGER the format ID
+id required INTEGER The image ID

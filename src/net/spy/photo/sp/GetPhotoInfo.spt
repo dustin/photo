@@ -18,6 +18,7 @@ select
 		a.addedby,
 		a.width,
 		a.height,
+		a.format_id,
 		a.ts,
 		a.id,
 		c.name as catname
@@ -33,6 +34,7 @@ size INTEGER Size (in bytes) of this image
 addedby INTEGER The ID of the user who added this image
 width INTEGER Width of this image
 height INTEGER Height of this image
+format_id INTEGER The format ID
 ts TIMESTAMP Time this image made it into the database
 id INTEGER ID of this image
 catname VARCHAR Name of the category in which this image is
