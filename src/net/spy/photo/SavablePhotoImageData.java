@@ -213,8 +213,9 @@ public class SavablePhotoImageData extends AbstractSavable
 		keywords.clear();
 		StringTokenizer st=new StringTokenizer(kw);
 		while(st.hasMoreTokens()) {
-			keywords.add(Keyword.getKeyword(st.nextToken()));
+			keywords.add(Keyword.getKeyword(st.nextToken(), true));
 		}
+		modify();
 	}
 
 	public void setKeywords(Collection to) {

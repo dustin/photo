@@ -216,6 +216,8 @@ public class PhotoSearch extends PhotoHelper {
 			// Go get a query
 			String query=buildQuery(form, sessionData.getUser().getId());
 
+			// getLogger().info("Search query: " + query);
+
 			// Cache this query for fifteen minutes.  It's unique to the
 			// user, but the user is often guest.
 			SpyDB photo=new SpyDB(getConfig());
@@ -231,7 +233,7 @@ public class PhotoSearch extends PhotoHelper {
 			int resultId=0;
 
 			while(rs.next()) {
-				int photoId=rs.getInt(7);
+				int photoId=rs.getInt("id");
 
 				if(resultId<results.getMaxRet()) {
 					// Fully populate the first few search results.
@@ -263,9 +265,7 @@ public class PhotoSearch extends PhotoHelper {
 		boolean needao=false;
 		String atmp[];
 
-		query = "select distinct a.keywords,a.descr,b.name,\n"
-			+ " a.size,a.taken,a.ts,a.id,a.cat,c.username,b.id,\n"
-			+ " a.width,a.height\n"
+		query = "select distinct a.id, a.taken, a.ts\n"
 			+ "   from album a, cat b, wwwusers c, wwwacl acl\n"
 			+ "       where a.cat=b.id\n"
 			+ "       and a.addedby=c.id\n"
@@ -325,11 +325,6 @@ public class PhotoSearch extends PhotoHelper {
 			}
 			boolean needjoin=false;
 
-			// If we need an and or an or, stick it in here.
-			if(needao) {
-				sub += " " + fieldjoin;
-			}
-			needao=true;
 			ArrayList keywords=new ArrayList();
 			StringTokenizer st=new StringTokenizer(stmp);
 			while(st.hasMoreTokens()) {
@@ -345,8 +340,8 @@ public class PhotoSearch extends PhotoHelper {
 				}
 				needao=true;
 				sub += "\n   exists (select 1 from album_keywords_map where "
-					+ " album_id = id and word_id = " + kw.getId()
-					+ " -- " + kw.getKeyword();
+					+ " album_id = a.id and word_id = " + kw.getId()
+					+ " ) -- " + kw.getKeyword();
 			} else if(keywords.size() > 1) {
 				if(needao) {
 					sub += " " + fieldjoin;
@@ -356,13 +351,13 @@ public class PhotoSearch extends PhotoHelper {
 				for(Iterator i=keywords.iterator(); i.hasNext(); ) {
 					Keyword kw=(Keyword)i.next();
 					if(needjoin) {
-						sub += join;
+						sub += "\n  " + join;
 					} else {
 						needjoin=true;
 					}
 					sub += "\n\texists (select 1 from album_keywords_map "
-						+ "where album_id = id and word_id = " + kw.getId()
-						+ " -- " + kw.getKeyword();
+						+ "where album_id = a.id and word_id = " + kw.getId()
+						+ ") -- " + kw.getKeyword();
 				}
 				sub += "\n    )";
 			} else {

@@ -188,7 +188,7 @@ public class PhotoImageDataImpl extends SpyObject
 		GetAlbumKeywords gkdb=new GetAlbumKeywords(PhotoConfig.getInstance());
 		rs=gkdb.executeQuery();
 		while(rs.next()) {
-			int photoid=rs.getInt("photo_id");
+			int photoid=rs.getInt("album_id");
 			int keywordid=rs.getInt("word_id");
 			PhotoImageDataImpl pidi=(PhotoImageDataImpl)rv.get(
 				new Integer(photoid));
