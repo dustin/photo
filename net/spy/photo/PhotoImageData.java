@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.11 2002/11/10 09:41:59 dustin Exp $
+// $Id: PhotoImageData.java,v 1.12 2003/06/02 00:40:33 dustin Exp $
 
 package net.spy.photo;
 
@@ -276,6 +276,8 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 
 	/**
 	 * Get the date this photo was taken.
+	 *
+	 * @return Format:  yyyy-MM-dd
 	 */
 	public String getTaken() {
 		return(taken);

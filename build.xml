@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.37 2003/05/27 05:16:26 dustin Exp $
+	$Id: build.xml,v 1.38 2003/06/02 00:40:32 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -213,6 +213,17 @@
 		</taskdef>
 
 		<scrub root="." format="each" sortjavalibshigh="true" recurse="true"/>
+	</target>
+
+	<target name="staticsite"
+		description="Build a static site (define USERNAME)" depends="all">
+		<java classname="net.spy.photo.tools.MakeStaticSite" fork="yes">
+			<classpath refid="photo.classpath"/>
+			<classpath>
+				<pathelement path="."/>
+			</classpath>
+			<arg value="${USERNAME}"/>
+		</java>
 	</target>
 
 	<!-- PMD code checker -->
