@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.10 1998/11/08 01:17:26 dustin Exp $
+# $Id: admin.cgi,v 1.11 1998/11/09 06:47:21 dustin Exp $
 
 use CGI;
 use Photo;
@@ -161,7 +161,7 @@ sub listUsers
     print "<h2>User List</h2>\nClick on the id # to edit the entry.\n";
     print "<ul>\n";
 
-    $query="select username from wwwusers order by username;";
+    $query="select username from wwwusers order by username";
     $s=$p->doQuery($query);
 
     while($r=$s->fetch) {
@@ -202,14 +202,15 @@ sub editUser
         $r=['', '', '', '', ''];
     }
 
-    ($p{'USER'}, $p{'PASS'}, $p{'EMAIL'}, $p{'REALNAME'}, $p{'ADDVAL'})=@{$r};
-    if($p{'ADDVAL'}==1) {
-	$p{'CANADD'}='CHECKED';
-	$p{'CANNOTADD'}='';
-    } else {
-	$p{'CANADD'}='';
-	$p{'CANNOTADD'}='CHECKED';
-    }
+    ($p{'USERID'}, $p{'USER'}, $p{'PASS'}, $p{'EMAIL'}, $p{'REALNAME'},
+		$p{'ADDVAL'})=@{$r};
+	if($p{'ADDVAL'}==1) {
+		$p{'CANADD'}='CHECKED';
+		$p{'CANNOTADD'}='';
+	} else {
+		$p{'CANADD'}='';
+		$p{'CANNOTADD'}='CHECKED';
+	}
 
     print $q->start_html(-title=>"Editing $r->[0]", -bgcolor=>'#fFfFfF');
 
@@ -228,7 +229,7 @@ sub editUser
 
     $p->showTemplate("$Photo::includes/admin/userform.inc", %p);
 
-    $query="select cat from wwwacl where username='$user'";
+    $query="select cat from wwwacl where userid=getwwwuser('$user')";
 
     $s=$p->doQuery($query);
 
@@ -377,7 +378,7 @@ sub saveUser
     print "<!-- $query -->\n";
     $p->doQuery($query);
 
-    $query="delete from wwwacl where username='$in{'username'}'\n";
+    $query="delete from wwwacl where userid=$in{'username'}\n";
     print "<!-- $query -->\n";
     $p->doQuery($query);
 
@@ -388,7 +389,7 @@ sub saveUser
 
     while($r=$s->fetch) {
 	if($in{"cat$r->[0]"}==1) {
-	    $query="insert into wwwacl values('$in{'username'}', $r->[0])\n";
+	    $query="insert into wwwacl values($in{'username'}, $r->[0])\n";
 	    print "<!-- $query -->\n";
 	    $p->doQuery($query);
 	}
