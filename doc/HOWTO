@@ -44,72 +44,15 @@ Step 2. Put the jars in in your CLASSPATH
 The jars need to be added to the directory(ies) that you keep all
 your java classes in. Keep backups of your old copies.
 
-Step 3. Copy your the new includes
+Step 3.  Update configuration
 
-Backup your includes. Copy all the new includes over the old includes.
-Remember here, you have to use cp -R to bring the directories 
-(subdirectories) with.
+I'd recommend dropping in a new config and changing whatever values are
+different for you.
 
-Step 4. Restart the Servlet Engine (Jserv) and the PhotoServlet
+Step 4. Restart the Servlet Engine
 
-Restart the servlet engine and the helper app, and you should be off 
-and running.
-
-Step 5.  Update configuration
-
-The most thorough way to do this is to look at the configurations provided,
-and see if there's anything in there that you don't have.  Things *should*
-figure out how to work properly when left unconfigured, but you never know
-what you're missing.
-
-
-If you're upgrading from a PhotoServlet older than 2000/12/25, you will
-need to update your config files for a slightly different type of cleanup.
-Basically, you do the following in your spyrunner.conf:
-	
-	Change the following line:
-	 
-	photo_cleanup.class   net.spy.photo.PhotoStorerThread
-
-	to
-
-	photo_cleanup.class   net.spy.photo.util.PhotoCleanup
-
-The new PhotoCleanup class still runs the same old storer thread, but also
-gives you the ability to run a set of arbitrary cleanup type queries on a
-fixed interval.
-
-For example, you could create a TrashCan category, and move pictures into it.
-If your interval is 1440 minutes (the default), once a day, you could delete
-all images in that category by adding the following to your photo.conf:
-
-  cleaner.query1 = delete from album where cat in \
-  	(select id from cat where name ='TrashCan')
-
-
-If you're upgrading from a PhotoServlet older than 2000/06/30, you will
-need to update your config files, specifically, spyrunner.conf.  DoBindings
-will no longer work.  If possible, grab the new config out of the etc
-directory and modify it for your needs.
-
-If you would prefer to to just update your existing config, then you'll need
-to do the following things:
- 
- 5a.
-
-   remove ``spyservices'' from the ``apps'' line of the spyrunner.conf and
-       replace it with two entries, one for ``rcache'' and one for
-	   ``imageserver''
-
- 5b.
-
-    Add the following entries:
-
-	   rhash.class          net.spy.rmi.RObjectImpl
-	   rhash.args           /path/to/cache/store
-
-	   imageserver.class    net.spy.rmi.ImageServerImpl
-	   imageserver.args     /path/to/imageserver.conf
+Restart the servlet engine (and the helper app if you use it),
+and you should be off and running.
 
 ----------------------------------------------------------------------
 
@@ -119,7 +62,7 @@ If you are upgrading to a release before 2002/02/20, you will need to run
 the third, fourth, and fifth migration kits.
 
 NOTE:  A few things changed about the image format, so you'll need to clear
-	   your cache again before trying to use it.
+       your cache again before trying to use it.
 
 If you are upgrading to a release before 2001/12/27, you will need to run
 the second migration kit.
@@ -145,11 +88,11 @@ Once you've got your data backed up, cache cleared, and spyservices running
 under the new version, you can use the following commands to begin the
 migration:
 
-	java net.spy.photo.migration.PhotoMigration01
-	java net.spy.photo.migration.PhotoMigration02
-	java net.spy.photo.migration.PhotoMigration03
-	java net.spy.photo.migration.PhotoMigration04
-	java net.spy.photo.migration.PhotoMigration05
+    java net.spy.photo.migration.PhotoMigration01
+    java net.spy.photo.migration.PhotoMigration02
+    java net.spy.photo.migration.PhotoMigration03
+    java net.spy.photo.migration.PhotoMigration04
+    java net.spy.photo.migration.PhotoMigration05
 
 Make sure to run this with the same class path you used to start the
 application server.
@@ -164,134 +107,73 @@ them again.
 
 INSTALLING FROM SCRATCH
 
-  While you can change some of the locations of these files, until you get
-    everything working, you should install files in default locations.
-    You should especially be careful to put the photo.conf in /usr/local/etc
-    as the servlet doesn't yet know where else to find it.  It will break in
-    weird and mundane ways if it cannot find this file. (12/25/2000)
+    Installation is a lot easier than it used to be.  For one thing, I no
+longer force my swank distributed architecture on everybody (I think I was
+the only person running PhotoServlet on more than one machine anyway).
+This is now a configuration option and saves first-time users a bunch of
+headache while still allowing me to have it my way.  :)
+
+    I'm going to skip configution and management of the old-style helper
+app and distributed image server and all that to avoid confusion.  If you
+want to try it, send me email.
 
 DATABASE SETUP
 
-I'm currently using postgres 7, but I believe a slightly older version will
-work.
+    I'm currently using postgres 7.1, but I believe a slightly
+older version will work.  Some changes in Postgres 7.2 prevent this
+software from running out of the box, but minor changes can be made
+to the bootstrap SQL script to get it going.
 
-Although photoservlet could theoretically be run with another database, it
-would require changes to the application, the procedural language, and other
-areas.  (none of which are priorities at this time)
+    Although photoservlet could theoretically be run with
+another database, it would require changes to the application, the
+procedural language, and other areas.  (none of which are priorities
+at this time)
 
-You can use another database name (photo) if you'd like, just make sure 
-you modify all config files to reflect the new database name.  If you 
-want to use a different username, you can do that as well, but you'll 
-have to modify the bootstrap script (etc/photo.sql) and replace all 
-references to ``nobody'' with your new username.
+    You can use another database name (photo) if you'd like,
+just make sure you modify the config file to reflect the new database
+name.  If you want to use a different username, you can do that as
+well, but you'll have to modify the bootstrap script (etc/photo.sql)
+and replace all references to ``nobody'' with your new username.
 
-Begin by creating the ``photo'' database, and the ``nobody'' user.
-If you do not have an administrative user, please create one to create
-tables under.  The example administrative user here is ``berry''.
+    Begin by creating the ``photo'' database, and the ``nobody''
+user.  If you do not have an administrative user, please create
+one to create tables under.  The example administrative user here
+is ``berry''.
 
 As postgres:
 
-	$ createdb photo
-	CREATE DATABASE
-	$
-	
-	$ createuser nobody
-	Shall the new user be allowed to create databases? (y/n) n  
-	Shall the new user be allowed to create more new users? (y/n) n
-	CREATE USER
-	$
-	
-	$ createuser berry
-	Shall the new user be allowed to create databases? (y/n) y
-	Shall the new user be allowed to create more new users? (y/n) y
-	CREATE USER
-	$
-	
-Once you can connect to the ``photo'' database as the user ``nobody,''
-execute all of the commands in the script etc/photo.sql.  You will need to
-do this as a user who has access to create tables in the database.  If
-there are any errors, report them as bugs, please, and try to get ahold of
-me.  :)
-	
-	$ psql photo berry < photo.sql
-	BEGIN
-	CREATE
-	[...]
-	COMMIT
-	$
+    $ createdb photo
+    CREATE DATABASE
+    $
+    
+    $ createuser nobody
+    Shall the new user be allowed to create databases? (y/n) n  
+    Shall the new user be allowed to create more new users? (y/n) n
+    CREATE USER
+    $
+    
+    $ createuser berry
+    Shall the new user be allowed to create databases? (y/n) y
+    Shall the new user be allowed to create more new users? (y/n) y
+    CREATE USER
+    $
 
-The photo.sql script should not generate errors.  If it does, it's likely
-you're running as a user not capable of creating tables.
+    Once you can connect to the ``photo'' database as the user
+``nobody,'' execute all of the commands in the script etc/photo.sql.
+You will need to do this as a user who has access to create tables
+in the database.  If there are any errors, report them as bugs,
+please, and try to get ahold of me.  :)
 
-APPLICATION SERVER SETUP
+    $ psql -f photo.sql photo berry
+    BEGIN
+    CREATE
+    [...]
+    COMMIT
+    $
 
-
-There are two things that must be running for this to work, the servlet
-itself, and the application server.  
-
-It's a good idea to run a couple of the test servlets 
-(http://myserver/servlets/Hello, others) to make sure your servlet engine 
-is running correctly before you start.
-
-The PhotoServlet itself is launched from the servlet engine.  The easiest way 
-to start is to copy the etc/*.conf files into /usr/local/etc.  Other 
-installation locations are not supported at this time.  Look through the files
-and make sure they're valid for your environment.
-
-Make sure your CLASSPATH environment variable contains all of the classes
-required for operation including spy.jar, photo.jar, and the driver for your
-database (postgresql.jar).
-
-The current list of external jars (very subject to change) includes:
-
-photo.jar      - spy.net PhotoServlet jar
-spy.jar        - spy.net libraries
-cos.jar        - O'Reilly upload tools
-xalan.jar      - xml.apache.org's xalan jar (java1)
-xerces.jar     - xml.apache.org's xerces jar (also java1)
-postgresql.jar - postgres jdbc driver
-jsdk.jar       - Java Servlet Development Kit
-
-Start the application server with the following command:
-
-	java net.spy.SpyRunner /usr/local/etc/spyrunner.conf
-
-It'll produce some output telling you how it's doing.  It should start up
-all the necessary helper applications and let you know how each went.  If
-any fail, it's probably not going to work.
-
-Good:
-
-[DING! Mon 25] escort~> java net.spy.SpyRunner /usr/local/etc/spyrunner.conf
-Starting sun.rmi.registry.RegistryImpl
-Started...
-Starting net.spy.rmi.RObjectImpl
-Started...
-Starting net.spy.rmi.ImageServerImpl
-Started...
-RObjectServer bound in registry
-ImageServer bound in registry
-Starting net.spy.photo.PhotoStorerThread
-Started...
-
-Bad: 
-
-[5:00am Mon 25] escort~> java net.spy.SpyRunner /wrong/place/spyrunner.conf
-java.lang.NullPointerException
-        at java.util.StringTokenizer.<init>(Compiled Code)
-        at java.util.StringTokenizer.<init>(Compiled Code)
-        at net.spy.SpyUtil.split(Compiled Code)
-        at net.spy.SpyRunner.main(Compiled Code)
-
-Since you've got all the necessary classes in the CLASSPATH for your servlet
-engine (spy.jar, photo.jar, cos.jar, postgreql.jar etc.), you should be able 
-to try out your photoservlet by making the following request:
-
-	http://myserver/servlet/net.spy.photo.PhotoServlet
-
-The ``myserver'' will be site-specific, as so will the /servlet/ portion.
-Some configurations use /servlet, some use /servlets, etc.  (Apache Jserv 
-1.1.2 supports both)
+    The photo.sql script should not generate errors.  If it does, it's
+likely you're running as a user not capable of creating tables, or are
+running a version of postgres that isn't quite up-to-date.
 
 ----------------------------------------------------------------------
 
@@ -303,17 +185,21 @@ There's a link at the bottom that tells you which user you're authenticated as.
 Clicking on that will take you to the authentication screen.  
 
 The default user is ``admin'' with the password ``admin''.  Please, please,
-please change the admin password before anything else.  Go into the user admin
-(PhotoServlet?func=admuser), select ``admin,'' then type a new password into 
-the password column, then clicking on the save button.
+please change the admin password before anything else (changepw.jsp).
+
+The admin user is only special in that it has access to administrative
+functions by default.  That is to say, any user may have equal
+administrative access to the default user admin (and, for example, there is
+no user ``admin'' in my photo album).
+
+If you have administrative access enabled (either with the checkbox on the
+login form, or if you enabled it after logging in (from credform.jsp)), you
+will have an administrative menu available from the index page that gives
+you all your management needs.
 
 Next, create a few categories for your images.  Since categories are currently
 made visible to the users through the user administration window, it's easier
 to setup the categories, -then- the users.
-
-After authenticating, go back to the authentication screen and click on the 
-``Request Administrative Privileges'' link to go into admin mode.  This will 
-let you do more and more interesting things.
 
 Add users for yourself and your friends, capable of adding images. 
 As you add the users, allow them access to the various categories you created.
@@ -325,50 +211,20 @@ Let us know if you have any problems at dustin@spy.net or berry@housebsd.org.
 
 ERRATA
 
-1. You need xerces and xalan from xml.apache.org.  You will want the version 
-    for Java 1, not 2.
+1. There's no UI yet for giving yourself admin privileges, but if you insert
+    your userid into the group 'admin' in wwwgroup, you'll be able to request
+    admin privs as yourself.
 
-2. To add additional stylesheets, add to Photo.conf:
+      $ pgsql photo nobody 
 
-	# A stylesheet on a local filesystem
-	xslt.localstylesheet /path/to/file.xsl
-	# A stylesheet on a remote web server
-    xslt.remotestylesheet  http://some.web.server/path/file.xsl
-
-    then go to PhotoServlet?func=setstylesheet&stylesheet=remotestylesheet
-	to request ``remotestylesheet'' be used.  Every request you make to the
-	servlet engine for the remainder of your session will use the specified
-	stylesheet.
-
-3. There's no UI for giving yourself admin privileges, but if you insert your
-    userid into the group 'admin' in wwwgroup, you'll be able to request admin
-	privs as yourself.
-
-	  $	pgsql photo nobody 
-
-	  photo=> select id from wwwusers where username='berry';
-	   id 
-	  ----
-	    3
-	  (1 row)
+      photo=> select id from wwwusers where username='berry';
+       id 
+      ----
+        3
+      (1 row)
 
 photo=> insert into wwwgroup values(3, 'admin');
 
-4. When creating a new category, the category number shows up as -1.  This is
-    not very useful from a display point of view.  Once it's in XSLT, it'll
-    say something more useful.
-
-5. If you add the following to your zone.properties (jserv), you can refer to
-	the servlet under Apache solely as Photo, rather than 
-    net.spy.photo.PhotoServlet:
-
-    servlet.Photo.code=net.spy.photo.PhotoServlet
-
-    Also, if you add the following to the similar area of jserv.conf, you can
-    refer to servlets as /s/Photo instead of /servlet/Photo and soforth:
- 
-    ApJServMount /s /root
-
 ----------------------------------------------------------------------
-$Id: HOWTO,v 1.14 2002/03/01 22:24:09 dustin Exp $
+$Id: HOWTO,v 1.15 2002/06/23 03:01:47 dustin Exp $
 
