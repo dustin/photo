@@ -165,7 +165,6 @@
 		<html:select property="sdirection">
 			<html:option value="">oldest</html:option>
 			<html:option value="desc">newest</html:option>
-			<html:option value="hack">hack direction</html:option>
 		</html:select>
 		<bean:message key="forms.search.adv.imagesfirst"/>
 
