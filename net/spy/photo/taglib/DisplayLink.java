@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.7 2002/05/23 16:24:49 dustin Exp $
+// $Id: DisplayLink.java,v 1.8 2002/06/23 02:14:23 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -165,7 +165,7 @@ public class DisplayLink extends PhotoTag {
 		}
 		sb.append("\">");
 		if(showThumbnail) {
-			sb.append("<img src=\"PhotoServlet?func=getimage&photo_id=");
+			sb.append("<img src=\"PhotoServlet?photo_id=");
 			sb.append(id);
 			sb.append("&thumbnail=1\" border=\"0\"");
 			if(altText!=null) {

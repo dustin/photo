@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.3 2002/05/15 08:28:06 dustin Exp $
+// $Id: ImageLink.java,v 1.4 2002/06/23 02:14:23 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -85,7 +85,7 @@ public class ImageLink extends PhotoTag {
 	public int doStartTag() throws JspException {
 
 		StringBuffer sb=new StringBuffer();
-		sb.append("<img src=\"PhotoServlet?func=getimage&photo_id=");
+		sb.append("<img src=\"PhotoServlet?photo_id=");
 		sb.append(id);
 		if(scale && (width!=null) && (height!=null)) {
 			sb.append("&scale=");
