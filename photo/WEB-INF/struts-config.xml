@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <!DOCTYPE struts-config PUBLIC
-          "-//Apache Software Foundation//DTD Struts Configuration 1.0//EN"
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
           "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
 
 <struts-config>
@@ -19,6 +19,14 @@
 			type="org.apache.struts.validator.DynaValidatorForm">
 
 			<form-property name="action" type="java.lang.String"/>
+		</form-bean>
+
+   <form-bean name="displayForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="id" type="java.lang.Integer"/>
+			<form-property name="search_id" type="java.lang.Integer"/>
+			<form-property name="image_id" type="java.lang.Integer"/>
 		</form-bean>
 
     <form-bean name="searchForm" type="net.spy.photo.struts.SearchForm"/>
@@ -115,7 +123,15 @@
 	</action>
 
 	<!-- How to handle displays -->
-	<action path="/display" type="net.spy.photo.struts.AdminSwitchAction">
+	<action
+		path="/display"
+		name="displayForm"
+		scope="request"
+		type="net.spy.photo.struts.GetImageDataAction">
+		<forward name="next" path="/displaySwitch.do"/>
+	</action>
+
+	<action path="/displaySwitch" type="net.spy.photo.struts.AdminSwitchAction">
 		<forward name="subadmin" path="/admin/display.jsp"/>
 		<forward name="noadmin" path="/display.jsp"/>
 	</action>

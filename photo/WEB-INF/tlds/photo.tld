@@ -136,21 +136,6 @@
 		</attribute>
 	</tag>
 
-	<!-- Provides image data for image pages. -->
-	<tag>
-		<name>getImage</name>
-		<tagclass>net.spy.photo.taglib.ImageDataTag</tagclass>
-		<teiclass>net.spy.photo.taglib.ImageDataTagExtraInfo</teiclass>
-		<attribute>
-			<name>imageId</name>
-			<required>false</required>
-		</attribute>
-		<attribute>
-			<name>searchId</name>
-			<required>false</required>
-		</attribute>
-	</tag>
-
 	<!-- Create a relative link to something within this webapp -->
 	<tag>
 		<name>link</name>

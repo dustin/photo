@@ -1,7 +1,6 @@
-<%@ page import="net.spy.photo.Category" %>
+<%@ page import="net.spy.photo.PhotoImageData" %>
 <%@ page import="net.spy.photo.Comment" %>
-<%@ page import="net.spy.photo.PhotoSessionData" %>
-<%@ page import="net.spy.photo.PhotoSearchResults" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
@@ -9,72 +8,74 @@
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <%
-	String imageId=request.getParameter("id");
-	if(imageId==null) {
-		imageId=request.getParameter("image_id");
-	}
-	String searchId=request.getParameter("search_id");
+	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
+	Integer searchId=(Integer)request.getAttribute("search_id");
 %>
 
-<photo:getImage imageId="<%= imageId %>" searchId="<%= searchId %>">
-
+<c:choose>
+	<c:when test="${not empty search_id}">
 	<table width="100%">
 		<tr valign="top">
 			<td align="left" width="10%">
-				<photo:imgLink id="<%= 0 %>" relative="prev" searchId="<%= searchId %>">
-					<photo:imgsrc alt="previous" border="0" url="/images/prev.png"/>
-				</photo:imgLink>
+					<photo:imgLink id="0" relative="prev"
+						searchId='<%= String.valueOf(searchId) %>'>
+						<photo:imgsrc alt="previous" border="0" url="/images/prev.png"/>
+					</photo:imgLink>
 			</td>
 
 			<td align="center">
-				<div class="displayBrief"><%= image.getDescr() %></div>
+				<div class="displayBrief"><c:out value="${image.descr}"/></div>
 			</td>
 
 			<td align="right" width="10%">
-				<% if(searchId != null) { %>
 					<photo:link url='<%= "/display.do?search_id=" + searchId %>'>
 						<photo:imgsrc alt="pause" border="0" url="/images/pause.png"/>
 					</photo:link>
 					<photo:link url='<%= "/refreshDisplay.do?search_id=" + searchId %>'>
 						<photo:imgsrc alt="slideshow" border="0" url="/images/play.png"/>
 					</photo:link>
-				<% } %>
-				<photo:imgLink id="<%= 0 %>" relative="next" searchId="<%= searchId %>">
-					<photo:imgsrc alt="next" border="0" url="/images/next.png"/>
-				</photo:imgLink>
+					<photo:imgLink id="<%= 0 %>" relative="next"
+							searchId="<%= searchId.intValue() %>">
+						<photo:imgsrc alt="next" border="0" url="/images/next.png"/>
+					</photo:imgLink>
 			</td>
 		</tr>
 	</table>
+	</c:when>
+	<c:otherwise>
+		<div class="displayBrief"><c:out value="${image.descr}"/></div>
+	</c:otherwise>
+</c:choose>
 
 	<div align="center">
-		<photo:imgSrc id="<%= "" + image.getId() %>"
-			width="<%= "" + image.getScaledDims().getWidth() %>"
-			height="<%= "" + image.getScaledDims().getHeight() %>"
+		<photo:imgSrc id='<%= image.getId() %>'
+			width='<%= String.valueOf(image.getScaledDims().getWidth()) %>'
+			height='<%= String.valueOf(image.getScaledDims().getHeight()) %>'
 			scale="true"/>
 	</div>
 
 	<p>
-		<b>Category</b>:  ``<%= image.getCatName() %>''&nbsp;<b>Keywords</b>:
-			<i><%= image.getKeywords() %></i><br>
-		<b>Size</b>:  <%= image.getDimensions() %>
-			(<%= image.getSize() %> bytes)<br>
-		<b>Taken</b>:  <%= image.getTaken() %>&nbsp; <b>Added</b>:
-			<%= image.getTimestamp() %>
-		by <%= image.getAddedBy().getRealname() %><br>
+		<b>Category</b>: ``<c:out value="${image.catName}"/>''&nbsp;<b>Keywords</b>:
+			<i><c:out value="${image.keywords}"/></i><br>
+		<b>Size</b>:  <c:out value="${image.dimensions}"/>
+			(<c:out value="${image.size}"/> bytes)<br>
+		<b>Taken</b>:  <c:out value="${image.taken}"/>&nbsp; <b>Added</b>:
+			<c:out value="${image.timestamp}"/>
+		by <c:out value="${image.addedBy.realName}"/><br>
 		<b>Info</b>:
-		<blockquote><%= image.getDescr()%></blockquote>
+		<blockquote><c:out value="${image.descr}"/></blockquote>
 
 	</p>
 
 <photo:guest negate="true">
-	[<photo:link url="/logview.jsp" id="<%= "" + image.getId() %>">
+	[<photo:link url="/logview.jsp" id="<%= String.valueOf(image.getId()) %>">
 			Who's seen this?
 	</photo:link>] | 
-	[<photo:link url="/addToGallery.do" id="<%= "" + image.getId() %>">
+	[<photo:link url="/addToGallery.do" id="<%= String.valueOf(image.getId()) %>">
 		Add to Gallery
 	</photo:link>] | 
 </photo:guest>
-[<photo:imgLink id='<%= "" + image.getId() %>'>
+[<photo:imgLink id='<%= String.valueOf(image.getId()) %>'>
 	Linkable image
 </photo:imgLink>] |
 [<photo:link url='<%= "/PhotoServlet/" + image.getId() + ".jpg?id=" + image.getId() %>'>Full Size Image</photo:link>]
@@ -123,15 +124,10 @@
 
 		<html:form action="/addcomment">
 			<html:errors/>
-			<html:hidden property="imageId" value="<%= "" + image.getId() %>"/>
+			<html:hidden property="imageId"
+				value="<%= String.valueOf(image.getId()) %>"/>
 			<html:textarea property="comment" cols="50" rows="2"/>
 			<br/>
 			<html:submit>Add Comment</html:submit>
 		</html:form>
 	</photo:guest>
-
-<p>
-
-</p>
-
-</photo:getImage>

@@ -56,6 +56,21 @@
 		<pre>
 <% exception.printStackTrace(response.getWriter()); %>
 		</pre>
+		<%
+			Throwable strutsT=
+				(Throwable)request.getAttribute("org.apache.struts.action.EXCEPTION");
+
+			if(strutsT != null) {
+				strutsT.printStackTrace();
+		%>
+
+		Struts exception:
+
+<pre>
+<% strutsT.printStackTrace(response.getWriter()); %>
+</pre>
+
+		<% } %>
 	</a>
 
 </body>

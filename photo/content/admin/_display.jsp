@@ -1,41 +1,41 @@
-<%@ page import="net.spy.photo.Category" %>
 <%@ page import="net.spy.photo.Comment" %>
-<%@ page import="net.spy.photo.PhotoSessionData" %>
-<%@ page import="net.spy.photo.PhotoSearchResults" %>
+<%@ page import="net.spy.photo.PhotoImageData" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <%
-	String imageId=request.getParameter("id");
-	if(imageId==null) {
-		imageId=request.getParameter("image_id");
-	}
-	String searchId=request.getParameter("search_id");
+	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
+	Integer searchId=(Integer)request.getAttribute("search_id");
 %>
 
 <h1>ADMIN DISPLAY</h1>
 
-<photo:getImage imageId="<%= imageId %>" searchId="<%= searchId %>">
-
 	<table width="100%">
 		<tr valign="top">
-			<td align="left" width="10%">
-				<photo:imgLink id="<%= 0 %>" relative="prev" searchId="<%= searchId %>">
-					<photo:imgsrc alt="<<<" border="0" url="/images/l_arrow.gif"/>
-				</photo:imgLink>
-			</td>
+			<c:if test="{not empty searchId}">
+				<td align="left" width="10%">
+					<photo:imgLink id="<%= 0 %>" relative="prev"
+							searchId="<%= String.valueOf(searchId) %>">
+						<photo:imgsrc alt="<<<" border="0" url="/images/l_arrow.gif"/>
+					</photo:imgLink>
+				</td>
+			</c:if>
 
 			<td align="center">
 				<div class="displayBrief"><%= image.getDescr() %></div>
 			</td>
 
-			<td align="right" width="10%">
-				<photo:imgLink id="<%= 0 %>" relative="next" searchId="<%= searchId %>">
-					<photo:imgsrc alt=">>>" border="0" url="/images/r_arrow.gif"/>
-				</photo:imgLink>
-			</td>
+			<c:if test="{not empty searchId}">
+				<td align="right" width="10%">
+					<photo:imgLink id="<%= 0 %>" relative="next"
+							searchId="<%= String.valueOf(searchId) %>">
+						<photo:imgsrc alt=">>>" border="0" url="/images/r_arrow.gif"/>
+					</photo:imgLink>
+				</td>
+			</c:if>
 		</tr>
 	</table>
 
@@ -126,9 +126,3 @@ Size Image</a>]
 			<html:submit>Add Comment</html:submit>
 		</html:form>
 	</photo:guest>
-
-<p>
-
-</p>
-
-</photo:getImage>

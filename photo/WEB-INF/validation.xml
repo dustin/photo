@@ -36,8 +36,20 @@
 			</form>
 
 			<form name="addToGalleryForm">
-				<field property="id" depends="required">
+				<field property="id" depends="required,integer">
 					<arg0 key="Image ID" resource="false"/>
+				</field>
+			</form>
+
+			<form name="displayForm">
+				<field property="id" depends="integer">
+					<arg0 key="Image ID" resource="false"/>
+				</field>
+				<field property="image_id" depends="integer">
+					<arg0 key="Image ID" resource="false"/>
+				</field>
+				<field property="search_id" depends="integer">
+					<arg0 key="Search ID" resource="false"/>
 				</field>
 			</form>
 
