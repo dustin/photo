@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: addimg.cgi,v 1.4 1997/11/04 08:01:42 dustin Exp $
+# $Id: addimg.cgi,v 1.5 1997/12/07 04:09:42 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -35,6 +35,7 @@ $taken=$q->param('taken');
 $taken=~s/\'/\\\'/g;
 
 $cat=$q->param('category');
+$cat=~s/\D//g;
 
 if($img=~/jpg$/i)
 {

@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: find.cgi,v 1.9 1997/12/06 09:42:57 dustin Exp $
+# $Id: find.cgi,v 1.10 1997/12/07 04:09:43 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -17,10 +17,9 @@ sub buildQuery
     for($q->param)
     {
         $h{$_}=$q->param($_);
+        $h{$_}=~s/\'/\\\'/g;
     }
 
-
-    $h{what}=~s/\'/\\\'/g;
 
     $query ="select a.oid,a.keywords,a.descr,b.name,\n";
     $query.="    a.size,a.taken,a.ts,a.fn,a.cat,b.id\n";
