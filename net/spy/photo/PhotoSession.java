@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.51 2001/01/07 08:17:56 dustin Exp $
+ * $Id: PhotoSession.java,v 1.52 2001/01/16 07:36:15 knitterb Exp $
  */
 
 package net.spy.photo;
@@ -376,6 +376,7 @@ public class PhotoSession extends Object
 	// Add an image
 	protected String doAddPhoto() throws ServletException {
 		String type=null;
+		String userAgent=null;
 		int id=-1;
 		Connection photo=null;
 
@@ -393,10 +394,33 @@ public class PhotoSession extends Object
 
 		File f = multi.getFile("picture");
 
-		// Check that it's the right file type.
+		// Get the upload meta data
 		type = multi.getContentType("picture");
+		userAgent=this.request.getHeader("User-Agent").toLowerCase();;
+
+		// Check that it's the right file type.
 		log("Type is " + type);
-		if( type == null || (! (type.startsWith("image/jpeg"))) ) {
+		if( type == null) {
+			try {
+				f.delete();
+			} catch(Exception e) {
+				log("Error deleting file " + f + ": "  + e);
+			}
+			// Throw an exception declaring the type to be bad.
+			throw new ServletException(
+				multi.getFilesystemName("picture") + " NULL is a bad type, only image/jpeg " +
+					"image/pjpeg is accepted");
+		}
+		if ( 
+				// netscape
+				(type.startsWith("image/jpeg"))
+				||
+				// explorer
+				(type.startsWith("image/pjpeg") && userAgent.indexOf("msie")>=0)   
+			)  {
+			// it will upload it then
+
+		} else {
 			try {
 				f.delete();
 			} catch(Exception e) {
@@ -405,7 +429,8 @@ public class PhotoSession extends Object
 			// Throw an exception declaring the type to be bad.
 			throw new ServletException(
 				multi.getFilesystemName("picture") + " ("
-				+ type + ") is a bad type, only image/jpeg is accepted");
+				+ type + ") is a bad type, only image/jpeg and " +
+					"image/pjpeg is accepted.  Your browser was " + userAgent + ".");
 		}
 
 		// OK, things look good, let's try to store our data.
@@ -879,7 +904,7 @@ public class PhotoSession extends Object
 		}
 
 		PhotoXML xml=new PhotoXML();
-		xml.setTitle("Dustin's Photo Album");
+		xml.setTitle("My Photo Album");
 		xml.addBodyPart(getGlobalMeta());
 		xml.addBodyPart(
 			"<index_page>\n"
