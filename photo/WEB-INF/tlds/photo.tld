@@ -166,6 +166,10 @@
 			<required>true</required>
 		</attribute>
 		<attribute>
+			<name>border</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
 			<name>width</name>
 			<required>false</required>
 		</attribute>
