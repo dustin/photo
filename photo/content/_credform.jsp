@@ -1,35 +1,36 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
-<%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <html:xhtml/>
 
 <div>
-<h1><bean:message key="forms.login.header"/></h1>
+<h1><fmt:message key="forms.login.header"/></h1>
 <html:form action="/login" focus="username">
 	<div>
 	<html:errors/>
 	<table>
 		<tr>
-			<td><bean:message key="forms.login.username"/>:</td>
+			<td><fmt:message key="forms.login.username"/>:</td>
 			<td>
 				<html:text property="username" maxlength="16" size="8"/>
 			</td>
 		</tr>
 		<tr>
-			<td><bean:message key="forms.login.password"/>:</td>
+			<td><fmt:message key="forms.login.password"/>:</td>
 			<td><html:password property="password" size="8"/></td>
 		</tr>
 		<tr>
-			<td><bean:message key="forms.login.setadmin"/>:</td>
+			<td><fmt:message key="forms.login.setadmin"/>:</td>
 			<td><html:checkbox property="admin"/></td>
 		</tr>
 	</table>
 	<html:submit>
-		<bean:message key="forms.login.authbutton"/>
+		<fmt:message key="forms.login.authbutton"/>
 	</html:submit>
 	<html:reset>
-		<bean:message key="forms.login.rstbutton"/>
+		<fmt:message key="forms.login.rstbutton"/>
 	</html:reset>
 	</div>
 </html:form>
@@ -43,13 +44,13 @@
 <html:form action="/forgotpw">
 	<div>
 	<html:errors/>
-	<bean:message key="forms.forgotpw.username"/>:
+	<fmt:message key="forms.forgotpw.username"/>:
 		<html:text property="username"/><br/>
 	<html:submit>
-		<bean:message key="forms.forgotpw.submit"/>
+		<fmt:message key="forms.forgotpw.submit"/>
 	</html:submit>
 	<html:reset>
-		<bean:message key="forms.forgotpw.rstbutton"/>
+		<fmt:message key="forms.forgotpw.rstbutton"/>
 	</html:reset>
 	</div>
 </html:form>

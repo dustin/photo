@@ -1,9 +1,9 @@
 <%@ page import="net.spy.photo.PhotoImageData" %>
 <%@ page import="net.spy.photo.Comment" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
-<%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <%
@@ -105,15 +105,8 @@
 <div>
 
 	<photo:guest negate="true">
-		<bean:message key="display.comment"/><br/>
-		<logic:messagesPresent>
-			<bean:message key="errors.header"/>
-			<ul>
-				<html:messages id="error">
-				<li><bean:write name="error"/></li>
-				</html:messages>
-			</ul><hr>
-		</logic:messagesPresent>
+		<fmt:message key="display.comment"/><br/>
+		<html:errors/>
 
 		<html:form action="/addcomment">
 			<html:errors/>

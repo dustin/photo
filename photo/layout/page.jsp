@@ -3,8 +3,8 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib uri="/tlds/struts-tiles.tld" prefix="tiles" %>
-<%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
@@ -46,9 +46,9 @@
 				<photo:sessionInfo/>
 			</div>
 			<div class="footerfineprint">
-				<bean:message key="page.content.footer"/><br/>
-				Build <bean:message key="build.number"/> from
-				<bean:message key="build.dtstamp"/>
+				<fmt:message key="page.content.footer"/><br/>
+				Build <fmt:message key="build.number"/> from
+				<fmt:message key="build.dtstamp"/>
 			</div> <!-- footerfineprint -->
 		</div><div class="rightstuff">
 				<tiles:insert page='/templates/quicksearch.jsp' />

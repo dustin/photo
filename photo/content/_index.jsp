@@ -2,9 +2,10 @@
 
 <jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
-<%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
+
 <table style="width: 100%">
 	<tr valign="top">
 		<td style="width: 50%">
@@ -61,7 +62,7 @@
 		</td>
 		<td style="width: 50%">
 			<div class="sectionheader">Credits</div>
-			<bean:message key="index.content.credits"/>
+			<fmt:message key="index.content.credits"/>
 		</td>
 	</tr>
 	<photo:admin>

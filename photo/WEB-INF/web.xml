@@ -6,6 +6,11 @@
 
 <web-app>
 
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+		<param-value>net.spy.photo.photoresources</param-value>
+	</context-param>
+
 	<!-- Watch the sessions -->
 	<listener>
 		<listener-class>net.spy.photo.SessionWatcher</listener-class>
