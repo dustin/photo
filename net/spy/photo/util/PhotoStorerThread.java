@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.10 2002/03/01 20:57:57 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.11 2002/03/01 22:24:09 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -102,8 +102,20 @@ public class PhotoStorerThread extends Thread {
 					+ "  and log_type = get_log_type('Upload')");
 			pst2.setInt(1, image_id);
 			int rows=pst2.executeUpdate();
-			if(rows!=1) {
-				throw new Exception("Meant to update 1 row, updated " + rows);
+			// We should update exactly one row.  We can live with 0, but
+			// more than one could be bad.
+			switch(rows) {
+				case 0:
+					System.err.println("WARNING:  No upload log entry was "
+						+ "found for " + image_id);
+					break;
+				case 1:
+					// Expected
+					break;
+				default:
+					throw new Exception(
+						"Expected to update 1 upload log entry , updated "
+						+ rows);
 			}
 			db.commit();
 			// Go ahead and generate a thumbnail.

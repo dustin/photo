@@ -116,7 +116,7 @@ to do the following things:
 MIGRATION
 
 If you are upgrading to a release before 2002/02/20, you will need to run
-the third migration kit.
+the third, fourth, and fifth migration kits.
 
 NOTE:  A few things changed about the image format, so you'll need to clear
 	   your cache again before trying to use it.
@@ -130,9 +130,14 @@ the first migration kit.
 Please be sure to back up your data before you attempt to run the migration
 kit.  Backups are essential to data integrity!
 
-Also, this release uses a new PhotoImage format, so you'll need to rm -rf
+Also, this release uses a new PhotoImage format, so you'll need to move
 your cache before restarting the spyservices.  This is located in 
 /var/tmp/rcache by default, or as defined by rhash.args in the spyrunner.conf. 
+It's recommended to back up the cache, just in case something goes wrong.
+This is both the first place your images are stored, and the first place
+the image server looks for your images.  The storage is not portable across
+versions (thanks to java), but if you need to roll back, it's good to have
+around.
 
 Restart the application server with the new classfile in place.
 
@@ -143,6 +148,8 @@ migration:
 	java net.spy.photo.migration.PhotoMigration01
 	java net.spy.photo.migration.PhotoMigration02
 	java net.spy.photo.migration.PhotoMigration03
+	java net.spy.photo.migration.PhotoMigration04
+	java net.spy.photo.migration.PhotoMigration05
 
 Make sure to run this with the same class path you used to start the
 application server.
@@ -363,5 +370,5 @@ photo=> insert into wwwgroup values(3, 'admin');
     ApJServMount /s /root
 
 ----------------------------------------------------------------------
-$Id: HOWTO,v 1.13 2002/02/21 09:47:03 dustin Exp $
+$Id: HOWTO,v 1.14 2002/03/01 22:24:09 dustin Exp $
 
