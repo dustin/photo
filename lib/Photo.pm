@@ -1,12 +1,13 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.7 1998/04/30 07:08:22 dustin Exp $
+# $Id: Photo.pm,v 1.8 1998/06/29 05:54:34 dustin Exp $
 
 package Photo;
 
 use CGI;
 use DBI;
+use MIME::Base64;
 use strict;
 
 use vars qw($cgidir $imagedir $uriroot $Itop $includes $adminc $ldir);
@@ -152,6 +153,51 @@ sub buildQuery
     return($query);
 }
 
+sub saveSearch
+{
+    my($self, $q)=@_;
+    my($query, $name, %p);
+
+    print $q->start_html(
+	-title=>'Saving your Search',
+	-bgcolor=>'#fFfFfF'
+    );
+
+    $name=$q->param('name');
+
+    $query ="insert into searches (name, addedby, search) ";
+    $query.="values(\n\t'$name', '$ENV{REMOTE_USER}',\n'",
+    $query.=$q->param('search');
+    $query.="');\n";
+
+    $self->doQuery($query);
+
+    %p=('QUERY', $query);
+    $self->showTemplate("$Photo::includes/savedsearch.inc", %p);
+}
+
+sub showSaved
+{
+    my($self, $q)=@_;
+    my($query, $name, $param, $s, $r, $cgi, %p, $out);
+
+    $query="select * from searches order by name,addedby\n";
+
+    $s=$self->doQuery($query);
+
+    # $r is id, name, addedby, search
+
+    $cgi =$Photo::cgidir;
+    $cgi.="/photo.cgi";
+
+    while($r=$s->fetch) {
+	$out.= "    <li><a href=\"$cgi?" . decode_base64($r->[3])
+	       . "\">$r->[1]</a></li>\n";
+    }
+
+    return($out);
+}
+
 sub doFind
 {
     my($self, $q)=@_;
@@ -173,6 +219,14 @@ sub doFind
     $start=$q->param('qstart');  # Find the desired starting point
     $start+=0;                   # make it a number
     $q->delete('qstart');        # Delete it so we can add it later
+
+    if($start==0) { # is this your first time?
+	my($selfurl, %stuff);
+	$selfurl=encode_base64($q->query_string);
+
+	%stuff=("SEARCH" => $selfurl);
+        $self->showTemplate("$Photo::includes/savesearch.inc", %stuff);
+    }
 
     $max=$q->param('maxret');    # Find the desired max return
     $max+=0;                     # make it a number
