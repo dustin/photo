@@ -8,6 +8,14 @@
     <li><a href="find.shtml">Find an image</a></li>
     <li><a href="/perl/dustin/photo/photo.cgi?func=catview">
 	Category view</a></li>
+
+</ul>
+
+<h2>Canned searches</h2>
+
+<ul>
+    <li><a href="/perl/dustin/photo/photo.cgi?func=search&order=a.ts&maxret=5&sdirection=desc">
+	Newest images</a></li>
 </ul>
 
 <p>
