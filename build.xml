@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.20 2002/07/10 03:38:08 dustin Exp $
+	$Id: build.xml,v 1.21 2002/07/23 03:29:07 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -27,6 +27,7 @@
 			<fileset dir="net">
 				<include name="**/*.class"/>
 				<include name="spy/photo/sp/*.java"/>
+				<include name="spy/photo/photo/photoresources.properties"/>
 			</fileset>
 			<fileset dir=".">
 				<include name="photo.jar"/>
@@ -87,7 +88,25 @@
 		<move file="photo.zip" tofile="photoservlet-${DSTAMP}.zip"/>
 	</target>
 
-	<target name="all" depends="rmic,spfiles">
+	<target name="buildnumber">
+		<buildnumber/>
+		<property file="build.number"/>
+	</target>
+
+	<target name="photoresources.properties" depends="buildnumber">
+		<tstamp/>
+		<copy file="net/spy/photo/photoresources.properties.in"
+			tofile="net/spy/photo/photoresources.properties"/>
+		<propertyfile file="net/spy/photo/photoresources.properties">
+			<entry key="build.date" type="date" value="now"/>
+			<entry key="build.dstamp" value="${DSTAMP}"/>
+			<entry key="build.tstamp" value="${TSTAMP}"/>
+			<entry key="build.dtstamp" value="${DSTAMP}${TSTAMP}"/>
+			<entry key="build.number" value="${build.number}"/>
+		</propertyfile>
+	</target>
+
+	<target name="all" depends="photoresources.properties,rmic,spfiles">
 		<javac srcdir="." destdir="." deprecation="on" debug="on" verbose="false">
 			<classpath refid="photo.classpath"/>
 			<include name="net/spy/photo/**/*.java"/>
