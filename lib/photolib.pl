@@ -1,5 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
+#
+# $Id: photolib.pl,v 1.7 1998/04/12 05:18:53 dustin Exp $
 
 use CGI;
 use Postgres;
