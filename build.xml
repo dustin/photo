@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.3 2002/05/23 06:54:51 dustin Exp $
+	$Id: build.xml,v 1.4 2002/05/24 00:27:10 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -31,6 +31,18 @@
 		</delete>
 	</target>
 
+  <target name="docs">
+    <javadoc destdir="docs"
+      author="true"
+      version="true"
+      use="true"
+      sourcepath="."
+      packagenames="net.spy.*"
+      classpathref="photo.classpath"
+      windowtitle="PhotoServlet API Documentation"/>
+  </target>
+
+  <!-- This is specific to my development at home. -->
 	<target name="install" depends="photo.jar">
 		<copy file="photo.jar"
 			tofile="/afs/.spy.net/misc/web/root/photo/WEB-INF/lib/photo.jar"/>
