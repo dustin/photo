@@ -54,15 +54,22 @@ public class AuthFilter extends SpyObject implements Filter {
 
 		HttpServletRequest hreq=(HttpServletRequest)request;
 		HttpSession session=hreq.getSession(true);
+		PhotoSessionData psd=(PhotoSessionData)session.getAttribute(
+								PhotoSessionData.SES_ATTR);
+		boolean isguest=true;
+		if(psd != null) {
+			PhotoUser pu=psd.getUser();
+			if(!pu.getUsername().equals("guest")) {
+				isguest=false;
+			}
+		}
 
-		if(session.isNew()) {
+		// Do the check whenever we're logged in as guest.
+		if(session.isNew() || isguest) {
 			Cookie cookies[]=hreq.getCookies();
 			for(int i=0; cookies!=null && i<cookies.length; i++) {
 				if("persess".equals(cookies[i].getName())) {
 					try {
-						PhotoSessionData psd=
-							(PhotoSessionData)session.getAttribute(
-								PhotoSessionData.SES_ATTR);
 						PhotoUser pu=PhotoUser.getPhotoUserByPersess(
 							cookies[i].getValue());
 						psd.setUser(pu);
