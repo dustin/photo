@@ -8,6 +8,7 @@
 <ul>
     <li><a href="/perl/dustin/photo/admin/admin.cgi?func=listrecent">List
         additions</a></li>
+    <li><a href="find.shtml">Search</a></li>
     <li><a href="/perl/dustin/photo/admin/admin.cgi?func=listcats">List
         Categories</a></li>
     <li><a href="/perl/dustin/photo/admin/admin.cgi?func=listusers">List
