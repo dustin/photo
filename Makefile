@@ -12,7 +12,7 @@ C1=$(MYLIB)/jsdk.jar:$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
 C2=$(MYLIB)/resin-xsl.jar:$(MYLIB)/sax.jar:$(MYLIB)/dom.jar
 C3=$(MYLIB)/xerces.jar:$(MYLIB)/xalan.jar:$S
 CLASSPATH=$(C1):$(C2):$(C3):.
-SERVLETRUNNER=/home/dustin/lib/java/JSDK2.0/bin/servletrunner
+SERVLETRUNNER=$(MYLIB)/jswdk/startserver
 
 RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \
 	net/spy/rmi/ImageServerImpl_Stub.class \
@@ -59,7 +59,7 @@ photo.jar: $(CLASSES)
 	$(JAR) cv0f $@ `find net/spy -name "*.class"`
 
 test: $(CLASSES)
-	env CLASSPATH=$(CLASSPATH) $(SERVLETRUNNER) -d $(PWD)
+	env CLASSPATH=$(CLASSPATH) $(SERVLETRUNNER)
 
 setpw: net/spy/photo/SetPW.class
 	env CLASSPATH=$(CLASSPATH) $(JAVA) net.spy.photo.SetPW
@@ -87,7 +87,6 @@ net/spy/rmi/ImageServerImpl_Stub.class: net/spy/rmi/ImageServerImpl_Skel.class
 net/spy/rmi/ImageServerImpl_Skel.class: net/spy/rmi/ImageServer.class \
 		net/spy/rmi/ImageServerImpl.class
 	env CLASSPATH=$(CLASSPATH) $(RMIC) -d . net.spy.rmi.ImageServerImpl
-
 
 .java.class:
 	env CLASSPATH=$(CLASSPATH) $(JAVAC) -deprecation $<
