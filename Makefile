@@ -49,6 +49,7 @@ CLASSES=\
 	net/spy/photo/Profile.class \
 	net/spy/photo/PhotoSecurity.class \
 	net/spy/photo/PhotoConfig.class \
+	net/spy/photo/SavedSearch.class \
 	net/spy/photo/PhotoSearch.class \
 	net/spy/photo/Comment.class \
 	net/spy/photo/Vote.class \

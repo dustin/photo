@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.116 2002/05/05 08:46:20 dustin Exp $
+ * $Id: PhotoSession.java,v 1.117 2002/05/08 02:54:43 dustin Exp $
  */
 
 package net.spy.photo;
@@ -503,36 +503,25 @@ public class PhotoSession extends Object
 
 	// Get the saved searches.
 	private String showSaved() {
-		String out="";
-		SpyCache cache=new SpyCache();
-		out=(String)cache.get("saved_searches");
-		// If we don't have it cached, grab it and cache it.
-		if(out==null) {
-			log("saved_searches was not cached, must fetch from the db");
-			try {
-				out="";
-				SpyDB photo=new SpyDB(conf);
-				Base64 base64 = new Base64();
-
-				String query = "select * from searches order by name\n";
-				ResultSet rs = photo.executeQuery(query);
-				while(rs.next()) {
-					byte data[];
-					data=base64.decode(rs.getString(4));
-					String tmp = new String(data);
-					out += "    <item link=\"" + self_uri + "?"
-						+ PhotoXSLT.normalize(tmp, true) + "\">"
-						+ rs.getString(2) + "</item>\n";
-				}
-				// Cache for fifteen minutes.
-				cache.store("saved_searches", out, 15*60*1000);
-				photo.close();
-			} catch(Exception e) {
-				log("Error getting search data, returning none", e);
+		StringBuffer out=new StringBuffer();
+		
+		try {
+			Collection c=SavedSearch.getSearches();
+			for(Iterator i=c.iterator(); i.hasNext();) {
+				SavedSearch s=(SavedSearch)i.next();
+				out.append("    <item link=\"");
+				out.append(self_uri);
+				out.append("?");
+				out.append(PhotoXSLT.normalize(s.getSearch(), true));
+				out.append("\">");
+				out.append(s.getName());
+				out.append("</item>\n");
 			}
+		} catch(SQLException se) {
+			log("Error getting saved searches, proceeding without.", se);
 		}
 
-		return(out);
+		return(out.toString());
 	}
 
 	// Find out if the authenticated user can add stuff to the given category
