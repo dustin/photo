@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.9 2002/02/22 00:50:34 dustin Exp $
+// $Id: PhotoImage.java,v 1.10 2002/02/22 01:07:01 dustin Exp $
 
 package net.spy.photo;
 
@@ -167,6 +167,8 @@ public class PhotoImage extends Object
 			format=FORMAT_JPEG;
 		} else if(isPng()) {
 			format=FORMAT_PNG;
+		} else if(isGif()) {
+			format=FORMAT_GIF;
 		} else {
 			throw new Exception("Cannot determine format.");
 		}
