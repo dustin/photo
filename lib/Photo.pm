@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.68 1999/01/30 22:24:27 dustin Exp $
+# $Id: Photo.pm,v 1.69 1999/01/30 22:29:18 dustin Exp $
 
 package Photo;
 
@@ -45,6 +45,8 @@ sub configure
 	if($tmp) {
 		while(<_CONF>) {
 			my(@a);
+			next if(/^#/);
+			next unless(/\w/);
 			chomp;
 			@a=split(/\s+=\s+/);
 			$h{$a[0]}=$a[1];
