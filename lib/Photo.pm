@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.45 1998/10/17 10:05:44 dustin Exp $
+# $Id: Photo.pm,v 1.46 1998/10/17 21:48:33 dustin Exp $
 
 package Photo;
 
@@ -187,9 +187,7 @@ sub saveSearch
 	my($self, $q)=@_;
 	my($query, $name, %p);
 
-	print "<html><head><title>Saving your Search</title>\n<head>\n".
-		  "<link rel=\"stylesheet\" href=\"$Photo::uriroot/inc/style.css\">".
-		  "</head><body bgcolor=\"#fFfFfF\">";
+	$self->start_html($q, 'Saving your Search');
 
 	$name=$q->param('name');
 
@@ -345,9 +343,7 @@ sub doFind
 	my($self, $q)=@_;
 	my($query, $s, $i, $start, $max, %p, $n, $nn, $r);
 
-	print "<html><head><title>Find results</title>\n<head>\n".
-		  "<link rel=\"stylesheet\" href=\"$Photo::uriroot/inc/style.css\">".
-		  "</head><body bgcolor=\"#fFfFfF\">";
+	$self->start_html($q, 'Find results');
 
 	$query=$self->buildQuery($q);
 
@@ -451,9 +447,7 @@ sub doCatView
 	my($self, $q)=@_;
 	my($r, $query, $s, $t);
 
-	print "<html><head><title>View Images by Category</title>\n<head>\n".
-		  "<link rel=\"stylesheet\" href=\"$Photo::uriroot/inc/style.css\">".
-		  "</head><body bgcolor=\"#fFfFfF\">";
+	$self->start_html($q, 'View Images by Category');
 
 	print "<h2>Category List</h2>\n";
 
@@ -497,9 +491,7 @@ sub addImage
 	  $_,defined($tmp{$_})?$self->myquote($q->param($_)):$q->param($_)
 	}$q->param;
 
-	print "<html><head><title>Adding image</title>\n<head>\n".
-		  "<link rel=\"stylesheet\" href=\"$Photo::uriroot/inc/style.css\">".
-		  "</head><body bgcolor=\"#fFfFfF\">";
+	$self->start_html($q, 'Adding image');
 
 	$query="select * from wwwusers where username='$ENV{'REMOTE_USER'}'\n";
 	$s=$self->doQuery($query);
@@ -673,6 +665,15 @@ sub deleteImage
 	};
 
 	$self->showTemplate("$Photo::includes/admin/killimage.inc", %p);
+}
+
+sub start_html
+{
+	my($self, $cgi, $title)=@_;
+
+	print "<html><head><title>$title</title>\n<head>\n".
+		  "<link rel=\"stylesheet\" href=\"$Photo::uriroot/inc/style.css\">".
+		  "</head><body bgcolor=\"#fFfFfF\">";
 }
 
 1;
