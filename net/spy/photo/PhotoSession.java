@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.71 2001/12/29 07:02:48 dustin Exp $
+ * $Id: PhotoSession.java,v 1.72 2001/12/29 07:25:55 dustin Exp $
  */
 
 package net.spy.photo;
@@ -108,8 +108,6 @@ public class PhotoSession extends Object
 
 			// Set the self_uri
 			self_uri = request.getRequestURI();
-
-			getCreds();
 
 			// Figure out what they want, default to index.
 			if(multi==null) {
@@ -294,10 +292,6 @@ public class PhotoSession extends Object
 		}
 	}
 
-	private void getCreds() throws ServletException {
-		log("Authenticated as " + sessionData.getUser());
-	}
-
 	public void setCreds() throws ServletException, IOException {
 		String username=request.getParameter("username");
 		String pass=request.getParameter("password");
@@ -311,6 +305,9 @@ public class PhotoSession extends Object
 		if(user.checkPassword(pass)) {
 			// Save the username.
 			sessionData.setUser(user);
+			log("Authenticated as " + username);
+		} else {
+			log("AUTH FAILURE:  " + username);
 		}
 	}
 
