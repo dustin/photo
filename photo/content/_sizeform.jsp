@@ -1,7 +1,3 @@
-<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
-<%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
-<%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
-
 <p>
 <h1>Login</h1>
 <form method="POST" action="PhotoServlet">
@@ -19,5 +15,4 @@
 	<input type="submit" value="Set Size">
 
 </form>
-
 </p>

@@ -16,7 +16,7 @@
 					<photo:guest negate="1">
 						<li><a href="PhotoServlet?func=addform">Add a New Image</a></li>
 					</photo:guest>
-					<li><a href="PhotoServlet?func=findform">Advanced Search</a></li>
+					<li><a href="search.do">Advanced Search</a></li>
 					<li><a href="PhotoServlet?func=catview">Category View</a></li>
 					<li><a href="PhotoServlet?func=listcomments&start=true">Show Recent Comments</a></li>
 					<li><a href="PhotoServlet?func=newuserform">Create an Account</a></li>

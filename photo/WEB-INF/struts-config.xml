@@ -8,17 +8,26 @@
 
   <form-beans>
     <form-bean name="loginForm" type="net.spy.photo.struts.LoginForm"/>
+    <form-bean name="searchForm" type="net.spy.photo.struts.SearchForm"/>
   </form-beans>
 
   <action-mappings>
 
-    <!-- Login -->
-    <action    path="/login"
-               type="net.spy.photo.struts.LoginAction"
-			   input="/credform.jsp"
-               name="loginForm">
-        <forward name="success" path="/index.jsp" />
-   </action>
+	<!-- Login -->
+	<action    path="/login"
+		type="net.spy.photo.struts.LoginAction"
+		input="/credform.jsp"
+		name="loginForm">
+		<forward name="success" path="/index.jsp" />
+	</action>
+
+	<!-- Searches -->
+	<action    path="/search"
+		type="net.spy.photo.struts.SearchAction"
+		input="/search.jsp"
+		name="searchForm">
+		<forward name="success" path="/PhotoServlet?func=search" />
+	</action>
 
   </action-mappings>
 

@@ -23,4 +23,19 @@
 		<teiclass>net.spy.photo.taglib.InitSessionDataExtraInfo</teiclass>
 	</tag>
 
+	<!-- Get category lists. -->
+	<tag>
+		<name>getCatList</name>
+		<tagclass>net.spy.photo.taglib.CategoryTag</tagclass>
+		<teiclass>net.spy.photo.taglib.CategoryTagExtraInfo</teiclass>
+		<attribute>
+			<name>showViewable</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>showAddable</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+
 </taglib>
