@@ -50,7 +50,9 @@
 	<div>
 		<b>Category</b>: <q><c:out
 			value="${image.catName}"/></q>&nbsp;<b>Keywords</b>:
-			<i><c:out value="${image.keywords}"/></i><br />
+			<i><c:forEach var="kw" items="${image.keywords}">
+				<c:out value="${kw.keyword}"/>
+			</c:forEach></i><br/>
 		<b>Size</b>:  <c:out value="${image.dimensions}"/>
 			(<c:out value="${image.size}"/> bytes)<br />
 		<b>Taken</b>:  <c:out value="${image.taken}"/> <b>Added</b>:

@@ -1,6 +1,8 @@
+<%@ page import="java.util.Iterator" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="net.spy.photo.Comment" %>
 <%@ page import="net.spy.photo.PhotoImageData" %>
+<%@ page import="net.spy.photo.Keyword" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
@@ -10,6 +12,13 @@
 	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
 	Integer searchId=(Integer)request.getAttribute("search_id");
 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+
+	String keywordString="";
+	for(Iterator i=image.getKeywords().iterator(); i.hasNext(); ) {
+		Keyword kw=(Keyword)i.next();
+		keywordString += kw.getKeyword() + " ";
+	}
+	keywordString=keywordString.trim();
 %>
 
 	<table width="100%">
@@ -60,7 +69,8 @@
 
 		<br/>
 		<b>Keywords</b>:
-			<html:text property="keywords" value="<%= image.getKeywords() %>"/><br/>
+			<html:text property="keywords"
+				value="<%= keywordString %>"/><br/>
 		<b>Size</b>:  <%= image.getDimensions() %>
 			(<%= image.getSize() %> bytes)<br/>
 		<b>Taken</b>:  <html:text property="taken"

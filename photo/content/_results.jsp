@@ -63,7 +63,9 @@
 	</td>
 	<td style="width: 25%; background: #eFeFef;" class="leftAligned" valign="top">
 		ID: <c:out value="${image.id}"/><br/>
-		Keywords: <c:out value="${image.keywords}"/><br/>
+		Keywords: <c:forEach var="kw" items="${image.keywords}">
+			<c:out value="${kw.keyword}"/>
+		</c:forEach><br/>
 		Category: <c:out value="${image.catName}"/><br/>
 		Size: <c:out value="${image.dimensions}"/><br/>
 		Taken: <fmt:formatDate value="${image.taken}" pattern="yyyy-MM-dd"/><br/>
