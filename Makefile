@@ -32,6 +32,10 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoSearchResults.class \
 	net/spy/photo/PhotoReporting.class \
 	net/spy/photo/PhotoAdmin.class \
+	net/spy/photo/PhotoCache.class \
+	net/spy/photo/PhotoCacheCleaner.class \
+	net/spy/photo/PhotoCacheItem.class \
+	net/spy/photo/PhotoAheadFetcher.class \
 	net/spy/photo/SetPW.class \
 	$(RCLASSES)
 
