@@ -119,6 +119,9 @@
 						<li>
 							<a href="{/page/meta_stuff/self_uri}?func=catview">Category View</a>
 						</li>
+						<li>
+							<a href="{/page/meta_stuff/self_uri}?func=newuserform">Create an Account</a>
+						</li>
 					</ul>
 				</p>
 
@@ -408,6 +411,10 @@
 	<form method="POST" action="{/page/meta_stuff/self_uri}">
 		<input type="hidden" name="func" value="adduser"/>
 		<center>
+		<p>
+		Registering an account requires a valid profile ID.  If you don't
+		have one, you probably shouldn't be here.
+		</p>
 		<table>
 			<tr>
 				<td>Profile</td>
