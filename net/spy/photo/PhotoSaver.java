@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaver.java,v 1.4 2002/06/26 17:23:20 dustin Exp $
+// $Id: PhotoSaver.java,v 1.5 2002/06/27 02:11:53 dustin Exp $
 
 package net.spy.photo;
 
@@ -152,6 +152,12 @@ public class PhotoSaver extends Object {
 
 		if(id==-1) {
 			throw new PhotoException("ID not set.");
+		}
+
+		// Check access.
+		if(!user.canAdd(cat)) {
+			throw new PhotoException("User " + user
+				+ " has no access to category " + cat);
 		}
 
 		SpyDB db=null;
