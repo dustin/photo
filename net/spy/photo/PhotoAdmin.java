@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.10 2001/01/06 23:34:12 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.11 2001/01/09 00:20:04 dustin Exp $
  */
 
 package net.spy.photo;
@@ -461,7 +461,15 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Shortcut to tokenize()
-	protected String tokenize(String what, Hashtable h) {
-		return(PhotoUtil.tokenize(ps, what, h));
+	protected String tokenize(String what, Hashtable h)
+		throws ServletException {
+
+		String rv=PhotoUtil.tokenize(ps, what, h);
+
+		if(rv==null) {
+			throw new ServletException("Tokenizer returned null, perhaps the "
+				+ " template " + what + " could not be found?");
+		}
+		return(rv);
 	}
 }
