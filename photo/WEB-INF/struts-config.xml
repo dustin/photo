@@ -26,7 +26,7 @@
 		type="net.spy.photo.struts.SearchAction"
 		input="/search.jsp"
 		name="searchForm">
-		<forward name="success" path="/PhotoServlet?func=search" />
+		<forward name="success" path="/PhotoServlet?func=nextresults" />
 	</action>
 
   </action-mappings>
