@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.74 2001/12/29 09:17:36 dustin Exp $
+ * $Id: PhotoSession.java,v 1.75 2001/12/30 22:15:31 dustin Exp $
  */
 
 package net.spy.photo;
@@ -89,6 +89,11 @@ public class PhotoSession extends Object
 		photo_servlet.log(whu);
 	}
 
+	// Same here
+	private void log(String whu, Exception e) {
+		photo_servlet.log(whu, e);
+	}
+
 	// process a request
 	public void process() throws ServletException, IOException {
 
@@ -135,8 +140,8 @@ public class PhotoSession extends Object
 			try {
 				sendXML(out);
 			} catch(Exception e2) {
-				log("Compound error:  We also failed to send back the error, "
-					+ e2);
+				log("Compound error:  We also failed to send back the error",
+					e2);
 				throw new ServletException("Error sending error message", e2);
 			}
 			out=null;
@@ -278,7 +283,7 @@ public class PhotoSession extends Object
 
 		} catch(Exception e) {
 			Hashtable h = new Hashtable();
-			log("Search save failed:  " + e);
+			log("Search save failed", e);
 			throw new ServletException(
 				"Error saving search", e);
 		}
@@ -315,6 +320,10 @@ public class PhotoSession extends Object
 		unsetAdmin();
 
 		PhotoUser user=security.getUser(username);
+		if(user==null) {
+			throw new ServletException(
+				"Your username or password is incorrect.");
+		}
 
 		// We don't do anything unless the password is correct.
 		if(user.checkPassword(pass)) {
@@ -323,6 +332,8 @@ public class PhotoSession extends Object
 			log("Authenticated as " + username);
 		} else {
 			log("AUTH FAILURE:  " + username);
+			throw new ServletException(
+				"Your username or password is incorrect.");
 		}
 	}
 
@@ -366,7 +377,7 @@ public class PhotoSession extends Object
 				// Cache for fifteen minutes.
 				cache.store("saved_searches", out, 15*60*1000);
 			} catch(Exception e) {
-				log("Error getting search data, returning none:  " + e);
+				log("Error getting search data, returning none", e);
 			} finally {
 				if(photo != null) {
 					freeDBConn(photo);
@@ -410,20 +421,18 @@ public class PhotoSession extends Object
 		type = multi.getContentType("picture");
 		userAgent=this.request.getHeader("User-Agent").toLowerCase();;
 
-		// Check that it's the right file type.
+		// Make sure it has a type.
 		log("Type is " + type);
 		if( type == null) {
-			try {
-				f.delete();
-			} catch(Exception e) {
-				log("Error deleting file " + f + ": "  + e);
-			}
+			f.delete();
 			// Throw an exception declaring the type to be bad.
 			throw new ServletException(
 				multi.getFilesystemName("picture")
 				+ " NULL is a bad type, only image/jpeg or " +
 					"image/pjpeg is accepted");
 		}
+
+		// Make sure the type is acceptable
 		if ( 
 				// netscape
 				(type.startsWith("image/jpeg"))
@@ -434,17 +443,21 @@ public class PhotoSession extends Object
 			// it will upload it then
 
 		} else {
-			try {
-				f.delete();
-			} catch(Exception e) {
-				log("Error deleting file " + f + ": "  + e);
-			}
+			f.delete();
 			// Throw an exception declaring the type to be bad.
 			throw new ServletException(
 				multi.getFilesystemName("picture") + " ("
 				+ type + ") is a bad type, only image/jpeg and "
 				+ "image/pjpeg is accepted.  Your browser was "
 				+ userAgent + ".");
+		}
+
+		// Verify the file has a length
+		if(f.length()==0) {
+			f.delete();
+			throw new ServletException(
+				"I did not receive any data for the file you uploaded.  "
+				+ "Perhaps you selected a file that doesn't exist?");
 		}
 
 		// OK, things look good, let's try to store our data.
@@ -529,11 +542,11 @@ public class PhotoSession extends Object
 
 			sendXML(xml.toString());
 		} catch(Exception e) {
-			log("Error adding new image to database:  " + e);
+			log("Error adding new image to database", e);
 			try {
 				photo.rollback();
 			} catch(Exception e2) {
-				log("Error rolling back and/or reporting add falure:  " + e2);
+				log("Error rolling back and/or reporting add falure", e2);
 			}
 			throw new ServletException("Error adding image", e);
 		} finally {
@@ -542,16 +555,10 @@ public class PhotoSession extends Object
 					photo.setAutoCommit(true);
 					freeDBConn(photo);
 				} catch(Exception e) {
-					log("Error cleaning up database after adding an image: "
-						+ e);
+					log("Error cleaning up database after adding an image", e);
 				}
 			}
-			try {
-				f.delete();
-			} catch(Exception e) {
-				log("Error removing temporary file after adding an image:  "
-					+ e);
-			}
+			f.delete();
 		}
 
 		return(null);
@@ -595,7 +602,7 @@ public class PhotoSession extends Object
 				// Cache it for five minutes
 				cache.store(key, out, 5*60*1000);
 			} catch(Exception e) {
-				log("Error getting category list:  " + e);
+				log("Error getting category list", e);
 			} finally {
 					if(photo != null) {
 						freeDBConn(photo);
@@ -702,7 +709,7 @@ public class PhotoSession extends Object
 			out.print(output);
 			out.close();
 		} catch(Exception e) {
-			log("Error producing stylesheet output:  " + e);
+			log("Error producing stylesheet output", e);
 		}
 		// We handled our own response.
 		return(null);
@@ -887,7 +894,7 @@ public class PhotoSession extends Object
 				catstuff += "</cat_view_item>\n\n";
 			}
 		} catch(Exception e) {
-			log("Error producing category view:  " + e);
+			log("Error producing category view", e);
 		}
 		finally { freeDBConn(photo); }
 
@@ -954,7 +961,7 @@ public class PhotoSession extends Object
 		try {
 			saved=showSaved();
 		} catch(Exception e) {
-			log("Error getting saved search list:  " + e);
+			log("Error getting saved search list", e);
 		}
 
 		PhotoXML xml=new PhotoXML();
@@ -1000,13 +1007,13 @@ public class PhotoSession extends Object
 		try {
 			tmp=getTotalImagesShown();
 		} catch(Exception e) {
-			log("Error gathering global meta data:  " + e);
+			log("Error gathering global meta data", e);
 		}
 		sb.append("<total_images_shown>" + tmp + "</total_images_shown>\n");
 		try {
 			tmp=getTotalImages();
 		} catch(Exception e) {
-			log("Error gathering global meta data:  " + e);
+			log("Error gathering global meta data", e);
 		}
 		sb.append("<total_images>" + tmp + "</total_images>\n");
 		// If the user has requested admin privs, set this flag.
@@ -1113,8 +1120,6 @@ public class PhotoSession extends Object
 		int which=Integer.parseInt(request.getParameter("search_id"));
 		PhotoSearchResult r = results.get(which);
 
-		log("Displaying by search id:  " + which);
-
 		// Add the PREV and NEXT button stuff, if applicable.
 		if(results.nResults() > which+1) {
 			h.put("NEXT", "" + (which+1));
@@ -1131,8 +1136,6 @@ public class PhotoSession extends Object
 		// Get the image_id.  We know it exists, because you can't get to
 		// this function without one...of course, it may not parse.
 		int image_id=Integer.parseInt(request.getParameter("id"));
-
-		log("Displaying by id:  " + image_id);
 
 		// Get the data
 		PhotoSearchResult r=new PhotoSearchResult();
@@ -1178,7 +1181,7 @@ public class PhotoSession extends Object
 			out.print(text + tail);
 			out.close();
 		} catch(Exception e) {
-			log("Error sending response:  " + e);
+			log("Error sending response", e);
 		}
 	}
 
@@ -1205,8 +1208,7 @@ public class PhotoSession extends Object
 					results.set(starting);
 				}
 			} catch(Exception e) {
-				log("Error finding out starting point for search results:  "
-					+ e);
+				log("Error finding out starting point for search results", e);
 			}
 
 			middle.append("<search_result_row>\n");
@@ -1268,7 +1270,7 @@ public class PhotoSession extends Object
 			sessionData.setResults(results);
 			sessionData.setEncodedSearch(ps.encodeSearch(request));
 		} catch(Exception e) {
-			log("Error performing search:  " + e);
+			log("Error performing search", e);
 		}
 
 		return(displaySearchResults());
@@ -1397,7 +1399,7 @@ public class PhotoSession extends Object
 				sessionData.setIsadmin(true);
 			}
 		} catch(Exception e) {
-			log("Error setting admin privs:  " + e);
+			log("Error setting admin privs", e);
 		}
 	}
 
