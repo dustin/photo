@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageDataTag.java,v 1.2 2002/05/15 08:28:06 dustin Exp $
+// $Id: ImageDataTag.java,v 1.3 2002/05/21 07:45:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -42,7 +42,7 @@ public class ImageDataTag extends PhotoTag {
 	}
 
 	// Get the results by image ID.
-	private PhotoSearchResult doDisplayByID(int id) throws JspException {
+	private PhotoImageData doDisplayByID(int id) throws JspException {
 		PhotoSessionData sessionData=getSessionData();
 
 		try {
@@ -52,22 +52,20 @@ public class ImageDataTag extends PhotoTag {
 			throw new JspException("You're not allowed to see " + id);
 		}
 		// Get the data
-		PhotoSearchResult r=new PhotoSearchResult();
+		PhotoImageData r=null;
 		// Fetch up the image
 		try {
-			r.find(id);
+			r=PhotoImageData.getData(id, sessionData.getOptimalDimensions());
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new JspException("Couldn't find image:  " + e);
 		}
-		// Set the scaling stuff.
-		r.setMaxSize(sessionData.getOptimalDimensions());
 
 		return(r);
 	}
 
 	// get the results by search ID.
-	private PhotoSearchResult doDisplayBySearchId(int id) throws JspException {
+	private PhotoImageData doDisplayBySearchId(int id) throws JspException {
 
 		PhotoSessionData sessionData=getSessionData();
 		PhotoSearchResults results=sessionData.getResults();
@@ -75,13 +73,10 @@ public class ImageDataTag extends PhotoTag {
 			throw new JspException("No results in session.");
 		}
 
-		PhotoSearchResult r = (PhotoSearchResult)results.get(id);
+		PhotoImageData r = (PhotoImageData)results.get(id);
 		if(r==null) {
 			throw new JspException("No matching result found in session.");
 		}
-
-		// Set the scaling stuff.
-		r.setMaxSize(sessionData.getOptimalDimensions());
 
 		return(r);
 	}
@@ -96,7 +91,7 @@ public class ImageDataTag extends PhotoTag {
 					+ "(imageId=" + imageId + ", searchId=" + searchId + ")");
 		}
 
-		PhotoSearchResult r=null;
+		PhotoImageData r=null;
 
 		if(imageId!=null) {
 			r=doDisplayByID(Integer.parseInt(imageId));

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageDataTagExtraInfo.java,v 1.1 2002/05/15 08:26:15 dustin Exp $
+// $Id: ImageDataTagExtraInfo.java,v 1.2 2002/05/21 07:45:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -20,7 +20,7 @@ public class ImageDataTagExtraInfo extends TagExtraInfo {
 	public VariableInfo[] getVariableInfo(TagData data) {
 		return(new VariableInfo[] {
 			new VariableInfo(
-				"image", "net.spy.photo.PhotoSearchResult", true,
+				"image", "net.spy.photo.PhotoImageData", true,
 				VariableInfo.NESTED)});
 	}
 

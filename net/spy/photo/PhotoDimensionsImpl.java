@@ -1,5 +1,5 @@
 //
-// $Id: PhotoDimensionsImpl.java,v 1.4 2002/02/21 10:41:32 dustin Exp $
+// $Id: PhotoDimensionsImpl.java,v 1.5 2002/05/21 07:45:08 dustin Exp $
 
 package net.spy.photo;
 
@@ -82,7 +82,9 @@ public class PhotoDimensionsImpl
 	 * String me.
 	 */
 	public String toString() {
-		return("PhotoDimensionsImpl@" + width + "x" + height);
+		// return("PhotoDimensionsImpl@" + width + "x" + height);
+		// Try a strictly functional toString for now.
+		return(width + "x" + height);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.21 2002/05/18 09:08:43 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.22 2002/05/21 07:45:08 dustin Exp $
  */
 
 package net.spy.photo;
@@ -267,20 +267,8 @@ public class PhotoSearch extends PhotoHelper {
 				int photo_id=rs.getInt(7);
 
 				if(result_id<results.getMaxRet()) {
-					// Fully populate the first ten search results.
-					PhotoSearchResult r=new PhotoSearchResult();
-					r.setKeywords(rs.getString(1));
-					r.setDescr(   rs.getString(2));
-					r.setCat(     rs.getString(3));
-					r.setSize(    rs.getString(4));
-					r.setTaken(   rs.getString(5));
-					r.setTs(      rs.getString(6));
-					r.setImage(   rs.getString(7));
-					r.setCatNum(  rs.getString(8));
-					r.setAddedBy( rs.getString(9));
-					r.setWidth( rs.getString(11));
-					r.setHeight( rs.getString(12));
-					r.calculateThumbnailSize();
+					// Fully populate the first few search results.
+					PhotoImageData r=PhotoImageData.getData(photo_id);
 					// Add it to our search result set.
 					results.add(r);
 				} else {

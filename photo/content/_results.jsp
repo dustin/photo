@@ -19,22 +19,23 @@
 
 <logic:iterate id="i" collection="<%= results %>"
 	length="6">
-	<% PhotoSearchResult image=(PhotoSearchResult)i; %>
+	<% PhotoImageData image=(PhotoImageData)i; %>
 
 <tr>
 	<td width="25%" align="center">
-		<photo:imgLink id="<%= image.getImage() %>"
-			width="<%= image.getTnWidth() %>"
-			height="<%= image.getTnHeight() %>"
+		<photo:imgLink id="<%= image.getId() %>"
+			searchId="<%= image.getSearchId() %>"
+			width="<%= "" + image.getTnDims().getWidth() %>"
+			height="<%= "" + image.getTnDims().getHeight() %>"
 			showThumbnail="true"/>
 	</td>
 	<td width="25%" align="left" valign="top" bgcolor="#eFeFef">
-		ID:  <%= image.getImage() %><br/>
+		ID:  <%= image.getId() %><br/>
 		Keywords:  <%= image.getKeywords() %><br/>
-		Category:  <%= image.getCat() %><br/>
-		Size:  <%= image.getWidth() %>x<%= image.getHeight() %><br/>
+		Category:  <%= image.getCatName() %><br/>
+		Size:  <%= image.getDimensions() %><br/>
 		Taken:  <%= image.getTaken() %><br/>
-		Added:  <%= image.getTs() %> by <%= image.getAddedBy() %>
+		Added:  <%= image.getTimestamp() %> by <%= image.getAddedBy() %>
 	</td>
 </tr>
 <tr>

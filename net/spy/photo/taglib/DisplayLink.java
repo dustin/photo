@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.4 2002/05/18 03:02:28 dustin Exp $
+// $Id: DisplayLink.java,v 1.5 2002/05/21 07:45:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -13,7 +13,8 @@ import javax.servlet.jsp.tagext.*;
  */
 public class DisplayLink extends PhotoTag {
 
-	private int id=0;
+	private int id=-1;
+	private int searchId=-1;
 	private boolean showThumbnail=false;
 	private String altText=null;
 	private String width=null;
@@ -56,6 +57,20 @@ public class DisplayLink extends PhotoTag {
 	}
 
 	/**
+	 * Set the search ID.
+	 */
+	public void setSearchId(String to) {
+		searchId=Integer.parseInt(to);
+	}
+
+	/**
+	 * Set the search ID.
+	 */
+	public void setSearchId(int to) {
+		searchId=to;
+	}
+
+	/**
 	 * If ``true'' show a thumbnail.
 	 */
 	public void setShowThumbnail(String to) {
@@ -76,8 +91,15 @@ public class DisplayLink extends PhotoTag {
 	public int doStartTag() throws JspException {
 
 		StringBuffer sb=new StringBuffer();
-		sb.append("<a href=\"display.jsp?id=");
-		sb.append(id);
+		sb.append("<a href=\"display.jsp?");
+		// Figure out whether to link to the search ID or the real ID.
+		if(searchId>=0) {
+			sb.append("search_id=");
+			sb.append(searchId);
+		} else {
+			sb.append("id=");
+			sb.append(id);
+		}
 		sb.append("\">");
 		if(showThumbnail) {
 			sb.append("<img src=\"PhotoServlet?func=getimage&photo_id=");

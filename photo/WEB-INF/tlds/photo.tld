@@ -50,7 +50,7 @@
 		<tagclass>net.spy.photo.taglib.DisplayLink</tagclass>
 		<attribute>
 			<name>id</name>
-			<required>false</required>
+			<required>true</required>
 		</attribute>
 		<attribute>
 			<name>searchId</name>

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.15 2002/03/05 04:32:23 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.16 2002/05/21 07:45:08 dustin Exp $
  */
 
 package net.spy.photo;
@@ -74,19 +74,13 @@ public class PhotoAheadFetcher extends Object {
 			int current=r.current();
 			// Loop on the result set using our own counter.
 			for(int i=0; i<r.getMaxRet() && (current+i)<r.nResults(); i++) {
-				PhotoSearchResult res=null;
-				res=(PhotoSearchResult)r.get(current+i);
+				PhotoImageData res=null;
+				res=(PhotoImageData)r.get(current+i);
 				if(res!=null) {
-				 	Hashtable h=new Hashtable();
-				 	// Populate the data thingies.
-				 	res.addToHash(h);
-				 	res.showXML(self_uri);
-
 				 	// This will cache the thumbnails
-				 	int image_id=Integer.parseInt((String)h.get("IMAGE"));
-				 	PhotoImageHelper p=new PhotoImageHelper(image_id);
+				 	PhotoImageHelper p=new PhotoImageHelper(res.getId());
 					System.out.println("PhotoAheadFetcher fetching "
-						+ image_id);
+						+ res.getId());
 				 	p.getThumbnail();
 				} // Got a result
 			} // end for loop on a given result set

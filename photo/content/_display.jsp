@@ -27,9 +27,9 @@
 	</table>
 
 	<div align="center">
-		<photo:imgSrc id="<%= image.getImage() %>"
-			width="<%= image.getScaledWidth() %>"
-			height="<%= image.getScaledHeight() %>"
+		<photo:imgSrc id="<%= "" + image.getId() %>"
+			width="<%= "" + image.getScaledDims().getWidth() %>"
+			height="<%= "" + image.getScaledDims().getHeight() %>"
 			scale="true"/>
 	</div>
 
@@ -39,23 +39,23 @@
 	--%>
 
 	<p>
-		<b>Category</b>:  ``<%= image.getCat() %>''&nbsp;<b>Keywords</b>:
+		<b>Category</b>:  ``<%= image.getCatName() %>''&nbsp;<b>Keywords</b>:
 			<i><%= image.getKeywords() %></i><br>
-		<b>Size</b>:  <%= image.getWidth() %>x<%= image.getHeight() %>
+		<b>Size</b>:  <%= image.getDimensions() %>
 			(<%= image.getSize() %> bytes)<br>
 		<b>Taken</b>:  <%= image.getTaken() %>&nbsp; <b>Added</b>:
-			<%= image.getTs() %>
+			<%= image.getTimestamp() %>
 		by <%= image.getAddedBy() %><br>
 		<b>Info</b>:
 		<blockquote><%= image.getDescr()%></blockquote>
 
 	</p>
 
-[<a href="PhotoServlet?func=logview&view=viewers&which=<%= image.getImage() %>">
+[<a href="PhotoServlet?func=logview&view=viewers&which=<%=
+	"" + image.getId() %>">
 Who's seen this?</a>] | 
-[<a
-href="display.jsp?id=<%= image.getImage() %>">Linkable image</a>] |
-[<a href="PhotoServlet?func=getimage&photo_id=<%= image.getImage() %>">Full
+[<a href="display.jsp?id=<%= "" + image.getId() %>">Linkable image</a>] |
+[<a href="PhotoServlet?func=getimage&photo_id=<%= "" + image.getId() %>">Full
 Size Image</a>]
 
 
@@ -64,7 +64,7 @@ Size Image</a>]
 	<h1>Comments</h1>
 
 	<logic:iterate id="i"
-		collection="<%= Comment.getCommentsForPhoto(Integer.parseInt(image.getImage())) %>">
+		collection="<%= Comment.getCommentsForPhoto(image.getId()) %>">
 
 		<% Comment comment=(Comment)i; %>
 
@@ -93,7 +93,7 @@ Size Image</a>]
 		<form method="POST" action="PhotoServlet">
 			<input type="hidden" name="func" value="comment"/>
 			<input type="hidden" name="image_id"
-				value="<%= image.getImage() %>"/>
+				value="<%= "" + image.getId() %>"/>
 			<textarea name="comment" wrap="hard" cols="50" rows="2"></textarea>
 			<br/>
 			<input type="submit" value="Comment"/>

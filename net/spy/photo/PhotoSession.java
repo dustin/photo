@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.120 2002/05/18 03:02:27 dustin Exp $
+ * $Id: PhotoSession.java,v 1.121 2002/05/21 07:45:09 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1268,17 +1268,13 @@ public class PhotoSession extends Object
 		}
 		search_id = request.getParameter("search_id");
 
-		// A search displayer thing may use this to add additional
-		// information
-		Hashtable h=new Hashtable();
-
-		PhotoSearchResult r=null;
+		PhotoImageData r=null;
 
 		try {
 			if(id!=null) {
-				r=doDisplayByID(Integer.parseInt(id), h);
+				r=doDisplayByID(Integer.parseInt(id));
 			} else if(search_id!=null) {
-				r=doDisplayBySearchId(h);
+				r=doDisplayBySearchId();
 			} else {
 				throw new ServletException("No search id, and no search_id");
 			}
@@ -1286,18 +1282,19 @@ public class PhotoSession extends Object
 			throw new ServletException("Error displaying image", e);
 		}
 
-		// Populate the hash with the image parts.
-		r.addToHash(h);
 		// Generate the XML
-		String datachunk=r.showXML(self_uri);
+		String datachunk=r.toXML();
 
 		if(isAdmin() || isSubAdmin()) {
 			// Admin needs CATS
-			int defcat=r.getCatNum();
-			h.put("CATS", getCatList(defcat, "canadd"));
-			out=tokenize("admin/display.inc", h);
+			int defcat=r.getCatId();
+			// h.put("CATS", getCatList(defcat, "canadd"));
+			// out=tokenize("admin/display.inc", h);
+			throw new ServletException(
+				"Admin functionality currently not available.");
 		} else {
 
+			/*
 			StringBuffer meta=new StringBuffer();
 			meta.append("<meta_stuff>\n");
 			if(h.get("PREV")!=null) {
@@ -1312,10 +1309,11 @@ public class PhotoSession extends Object
 				meta.append("\t<last>" + (results.nResults()-1) + "</last>\n");
 			}
 			meta.append("</meta_stuff>\n");
+			*/
 
 			StringBuffer comments=new StringBuffer();
 			comments.append("<comments>\n");
-			for(Enumeration e=Comment.getCommentsForPhoto(r.getImageId());
+			for(Enumeration e=Comment.getCommentsForPhoto(r.getId());
 				e.hasMoreElements();) {
 
 				Comment c=(Comment)e.nextElement();
@@ -1324,10 +1322,10 @@ public class PhotoSession extends Object
 			comments.append("</comments>\n");
 
 			PhotoXML xml=new PhotoXML();
-			xml.setTitle("Displaying " + h.get("IMAGE"));
+			xml.setTitle("Displaying " + r.getId());
 			xml.addBodyPart(getGlobalMeta());
 			xml.addBodyPart("<show_image>\n"
-				+ meta
+				// + meta
 				+ datachunk
 				+ comments
 				+ "</show_image>\n"
@@ -1340,20 +1338,20 @@ public class PhotoSession extends Object
 		return(out);
 	}
 
-	private PhotoSearchResult doDisplayBySearchId(Hashtable h)
-		throws Exception {
+	private PhotoImageData doDisplayBySearchId() throws Exception {
 
 		PhotoSearchResults results=sessionData.getResults();
 		if(results==null) {
 			throw new ServletException("No results in session.");
 		}
 		int which=Integer.parseInt(request.getParameter("search_id"));
-		PhotoSearchResult r = (PhotoSearchResult)results.get(which);
+		PhotoImageData r = (PhotoImageData)results.get(which);
 		if(r==null) {
 			throw new ServletException("No result in session.");
 		}
 
 		// Add the PREV and NEXT button stuff, if applicable.
+		/*
 		if(results.nResults() > which+1) {
 			h.put("NEXT", "" + (which+1));
 		}
@@ -1361,21 +1359,19 @@ public class PhotoSession extends Object
 		if(which>0) {
 			h.put("PREV", "" + (which-1));
 		}
+		*/
 		return(r);
 	}
 
 	// Find and display images.
-	private PhotoSearchResult doDisplayByID(int image_id, Hashtable h)
+	private PhotoImageData doDisplayByID(int image_id)
 		throws Exception {
 
 		// Check access
 		security.checkAccess(sessionData.getUser(), image_id);
 		// Get the data
-		PhotoSearchResult r=new PhotoSearchResult();
-		// Fetch up the image
-		r.find(image_id);
-		// Set the scaling stuff.
-		r.setMaxSize(sessionData.getOptimalDimensions());
+		PhotoImageData r=PhotoImageData.getData(image_id,
+			sessionData.getOptimalDimensions());
 
 		return(r);
 	}
@@ -1444,7 +1440,7 @@ public class PhotoSession extends Object
 		middle.append("<search_result_row>\n");
 
 		for(i=0; i<results.getMaxRet(); i++) {
-			PhotoSearchResult r=(PhotoSearchResult)results.next();
+			PhotoImageData r=(PhotoImageData)results.next();
 			if(r!=null) {
 				// No, this really doesn't belong here.
 				if( (i>0) && ((i) % 2) == 0) {
@@ -1452,7 +1448,7 @@ public class PhotoSession extends Object
 					middle.append("<search_result_row>\n");
 				}
 				middle.append("<search_result>\n");
-				middle.append(r.showXML(self_uri));
+				middle.append(r.toXML());
 				middle.append("</search_result>\n");
 			}
 		}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.14 2002/05/18 03:02:27 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.15 2002/05/21 07:45:09 dustin Exp $
  */
 
 package net.spy.photo;
@@ -30,13 +30,13 @@ public class PhotoSearchResults extends Cursor {
 	/**
 	 * Add a search result to the list.
 	 */
-	public void add(PhotoSearchResult r) {
+	public void add(PhotoImageData d) {
 		// Set the result id
-		r.setId(nResults());
+		d.setSearchId(nResults());
 		// Tell it the size we want the images
-		r.setMaxSize(maxSize);
+		d.setMaxDims(maxSize);
 		// Now add it
-		addElement(r);
+		addElement(d);
 	}
 
 	/**
@@ -71,19 +71,19 @@ public class PhotoSearchResults extends Cursor {
 	 * Get the entry at the given location.
 	 */
 	public Object get(int which) {
-		PhotoSearchResult ret=null;
+		PhotoImageData ret=null;
 		Object o=super.get(which);
 		// We hope that it's a PhotoSearchResult, but an Integer will do.
 		try {
-			ret=(PhotoSearchResult)o;
+			ret=(PhotoImageData)o;
 		} catch(ClassCastException e) {
 			try {
 				// Synchronize on the object in this position.
 				synchronized(o) {
 					Integer i=(Integer)o;
-					ret=new PhotoSearchResult(i.intValue(), which);
-					// Add the max dimensions so it'll scale.
-					ret.setMaxSize(maxSize);
+					ret=PhotoImageData.getData(i.intValue(), maxSize);
+					// Set the search ID.
+					ret.setSearchId(which);
 					// Next time, won't need to do this again.
 					replace(which, ret);
 				}
