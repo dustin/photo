@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.8 2002/07/04 03:27:22 dustin Exp $
+// $Id: SessionWatcher.java,v 1.9 2002/07/04 04:41:13 dustin Exp $
 
 package net.spy.photo;
 
@@ -110,7 +110,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	}
 
 	/**
-	 * Get an Enumeration of HttpSession objects representing all users
+	 * Get a Collection of HttpSession objects representing all users
 	 * currently in the system.
 	 */
 	public static Collection listSessions() {

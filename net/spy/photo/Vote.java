@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Vote.java,v 1.4 2002/07/04 03:27:22 dustin Exp $
+// $Id: Vote.java,v 1.5 2002/07/04 04:41:13 dustin Exp $
 
 package net.spy.photo;
 
@@ -46,7 +46,7 @@ public class Vote extends Object implements java.io.Serializable {
 	}
 
 	/**
-	 * Get an Enumeration of Vote objects for all of the comments on a
+	 * Get a Collection of Vote objects for all of the comments on a
 	 * given image.
 	 */
 	public static Collection getVotesForPhoto(int image_id)

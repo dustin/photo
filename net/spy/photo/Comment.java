@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.8 2002/07/04 03:27:22 dustin Exp $
+// $Id: Comment.java,v 1.9 2002/07/04 04:41:13 dustin Exp $
 
 package net.spy.photo;
 
@@ -47,7 +47,7 @@ public class Comment extends Object implements java.io.Serializable {
 	}
 
 	/**
-	 * Get an Enumeration of Comment objects for all of the comments on a
+	 * Get a Collection of Comment objects for all of the comments on a
 	 * given image.
 	 */
 	public static Collection getCommentsForPhoto(int image_id)

@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ParseBackup.java,v 1.1 2002/06/28 23:13:09 dustin Exp $
+// $Id: ParseBackup.java,v 1.2 2002/07/04 04:41:13 dustin Exp $
 
 package net.spy.photo.util;
 
@@ -70,8 +70,8 @@ public class ParseBackup extends DefaultHandler {
 		tagnumber++;
 		nodes.addElement(name);
 		prefix="";
-		for(Enumeration e=nodes.elements(); e.hasMoreElements();) {
-			String n=(String)e.nextElement();
+		for(Iterator i=nodes.iterator(); i.hasNext();) {
+			String n=(String)i.next();
 			prefix += "/" + n;
 		}
 
