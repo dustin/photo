@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.10 2001/04/29 08:18:11 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.11 2001/07/16 08:01:05 dustin Exp $
  */
 
 package net.spy.photo;
@@ -89,13 +89,14 @@ public class PhotoAheadFetcher extends Thread {
 			PhotoSearchResults r=(PhotoSearchResults)e.nextElement();
 			String self_uri=r.getURI();
 
-			for(int i=0; i<r.getMaxRet(); i++) {
+			// OK, we're not going to use the normal next() method on the
+			// resultset because we don't want to modify the result set.
+
+			int current=r.current();
+			// Loop on the result set using our own counter.
+			for(int i=0; i<r.getMaxRet() && (current+i)<r.nResults(); i++) {
 				PhotoSearchResult res=null;
-				// Synchronize on the result thingy so that the display
-				// doesn't get weird if the client is moving too fast.
-				synchronized(r) {
-					res=r.next();
-				}
+				res=r.get(current+i);
 				if(res!=null) {
 				 	Hashtable h=new Hashtable();
 				 	// Populate the data thingies.
@@ -104,12 +105,11 @@ public class PhotoAheadFetcher extends Thread {
 
 				 	// This will cache the thumbnails
 				 	int image_id=Integer.parseInt((String)h.get("IMAGE"));
-				 	PhotoImageHelper p =
-						new PhotoImageHelper(image_id);
+				 	PhotoImageHelper p=new PhotoImageHelper(image_id);
 				 	p.getThumbnail();
-				}
-			} // end one resultset
-		} // end resultsets
+				} // Got a result
+			} // end for loop on a given result set
+		} // end for loop on all result sets
 
 	}
 
