@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.7 2000/11/29 10:00:27 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.8 2000/12/24 07:27:19 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -111,13 +111,13 @@ public class AlbumBackupEntry extends BackupEntry {
 	private String cleanData(String data) {
 		StringBuffer sb=new StringBuffer();
 
-		String s[]=SpyUtil.split("\n", data);
+		String s[]=SpyUtil.split("\n ", data);
 		for(int i=0; i<s.length; i++) {
 			sb.append(s[i].trim());
 			sb.append("\n");
 		}
 
-		return(sb.toString());
+		return(sb.toString().trim());
 	}
 
 	private int getCat() throws Exception {
