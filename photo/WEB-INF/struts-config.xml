@@ -190,6 +190,8 @@
 		name="searchForm">
 		<forward name="next" path="/filterSearch.do" />
 		<forward name="showResults" path="/filterSearch.do" />
+		<!-- Backwards compatibility -->
+		<forward name="success" path="/filterSearch.do" />
 	</action>
 
 	<!-- Search result cursor movement -->
@@ -220,6 +222,8 @@
 		name="searchForm">
 		<forward name="next" path="/nextresults.do"/>
 		<forward name="showResults" path="/refreshDisplay.do?search_id=0" />
+		<!-- Backwards compatibility -->
+		<forward name="success" path="/nextresults.do" />
 	</action>
 
 	<!-- Image uploads -->
