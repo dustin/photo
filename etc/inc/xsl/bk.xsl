@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<!-- Import the common stuff -->
+<xsl:import href="common.xsl"/>
+<xsl:import href="forms.xsl"/>
+<xsl:import href="variables.xsl"/>
+
+<!-- Declare the output method -->
 <xsl:output method="html"/>
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: bk.xsl,v 1.2 2000/11/10 07:17:18 dustin Exp $
+ $Id: bk.xsl,v 1.3 2001/01/07 20:10:32 knitterb Exp $
  -->
 
 <xsl:template match="page">
@@ -15,7 +22,7 @@
 				<xsl:value-of select="heading/title"/>
 			</title>
 		</head>
-		<body bgcolor="#cFcFfF">
+		<body background="http://bleu.west.spy.net/~dustin/images/holiday.gif" bgcolor="#cFcFfF">
 			<center>
 				<b>
 					<font size="+3">
@@ -31,10 +38,50 @@
 							<!-- Here's where all the real body goes -->
 							<xsl:apply-templates/>
 						</p>
+
+						<hr/>
+						<table border="0" width="100%">
+						<tr valign="top">
+						<td align="left">
+						Home
+						</td>
+						</tr>
+						<tr valign="top">
+						<td align="left">
+						Logged in as
+						<a href="{meta_stuff/self_uri}?func=credform">
+						<xsl:value-of
+							select="meta_stuff/photo_user/username"/></a>
+							<xsl:if test="meta_stuff/isadmin">
+								<a href="{meta_stuff/self_uri}?func=unsetadmin">(admin mode)</a>
+							</xsl:if>
+						<br/>
+						Switch to
+						<a href="{meta_stuff/self_uri}?func=setstylesheet&amp;stylesheet=simple">simple</a>
+						view.
+						</td>
+						<td align="right">
+							<xsl:call-template name="quick_search"/>
+						</td>
+						</tr>
+						</table>
+						<p>
+						<font size="-2">
+						Copyright &#169; 1997-2000 Dustin Sallings of
+						<a href="http://www.spy.net/">SPY
+						internetworking</a><br/>
+						All images and other data
+						within these pages are property of their owners,
+						and may not be used without permission.</font>
+						</p>
 						</td></tr>
 					</table>
 					</td></tr>
 				</table>
+
+			<a href="http://photoservlet.sourceforge.net/">
+			<img border="0" width="88" height="31" alt="SourceForge"
+			src="http://sourceforge.net/sflogo.php?group_id=7312&amp;type=1"/></a>
 
 			</center>
 		</body>
@@ -42,170 +89,274 @@
 
 </xsl:template>
 
-<xsl:template match="title">
-	<!-- Don't do title again -->
-</xsl:template>
+<xsl:template match="index_page">
+	<table>
+		<tr valign="top">
 
-<xsl:template match="image">
-	<!-- Don't do image again -->
-</xsl:template>
+			<td>
+				<p>
+					<xsl:call-template name="section_header">
+						<xsl:with-param name="title">
+							Options
+						</xsl:with-param>
+					</xsl:call-template>
+					<ul>
+						<xsl:if test="/page/meta_stuff/photo_user/canadd">
+							<li>
+								<a href="{/page/meta_stuff/self_uri}?func=addform">Add a new Image</a>
+							</li>
+						</xsl:if>
+						<li>
+							<a href="{/page/meta_stuff/self_uri}?func=findform">Advanced Search</a>
+						</li>
+						<li>
+							<a href="{/page/meta_stuff/self_uri}?func=catview">Category View</a>
+						</li>
+					</ul>
+				</p>
 
-<xsl:template match="list">
-	<center>
-		<b><xsl:value-of select="@title"/></b>
-	</center>
-	<ul>
-		<xsl:apply-templates/>
-	</ul>
-</xsl:template>
+			</td>
 
-<xsl:template match="item">
-	 <li><a href="{@link}"><xsl:apply-templates/></a></li>
-</xsl:template>
+			<td>
+				<p>
+					<xsl:call-template name="section_header">
+						<xsl:with-param name="title">
+							Canned Searches
+						</xsl:with-param>
+					</xsl:call-template>
+					<ul>
+						<xsl:for-each select="saved_searches/item">
+							<li>
+								<a href="{@link}"><xsl:value-of select="."/></a>
+							</li>
+						</xsl:for-each>
+					</ul>
+				</p>
+			</td>
+		</tr>
+		<tr valign="top">
 
-<xsl:template match="section">
-	<p>
-		<font size="+1"><b><xsl:value-of select="title"/></b></font><br/><br/>
-		<xsl:apply-templates select="content"/>
-	</p>
-</xsl:template>
+		<td width="50%">
+				<p>
+					<xsl:call-template name="section_header">
+						<xsl:with-param name="title">
+							Photo of the [Unit of Time]
+						</xsl:with-param>
+					</xsl:call-template>
+					<center>
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={$photo_of_the_day}">
+					<img border="0" src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={$photo_of_the_day}&amp;thumbnail=1"/>
+					</a>
+					</center>
+				</p>
+			</td>
+			<td>
+				<p>
+					<xsl:call-template name="section_header">
+						<xsl:with-param name="title">Credits</xsl:with-param>
+					</xsl:call-template>
+					All pages herein were created using vi.  For more
+					information on the vi web page publishing system,
+					type <i>man vi</i> at your prompt.
+				</p>
+			</td>
+			<td>
 
-<!-- Handle (ignore) HTML forms. -->
+			</td>
+		</tr>
+	</table>
 
-<xsl:attribute-set name="input-stuff">
-	<xsl:attribute name="type"><xsl:value-of select="@type"/></xsl:attribute>
-	<xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>
-	<xsl:attribute name="name"><xsl:value-of select="@name"/></xsl:attribute>
-</xsl:attribute-set>
+	<!-- If we're in admin mode, display the adminu -->
+	<xsl:if test="/page/meta_stuff/isadmin">
+		<p>
+			<xsl:call-template name="section_header">
+				<xsl:with-param name="title">
+					Admin Menu
+				</xsl:with-param>
+			</xsl:call-template>
+			<ul>
+				<li><a
+					href="{/page/meta_stuff/self_uri}?func=admuser">User Admin</a>
+				</li>
+				<li><a
+					href="{/page/meta_stuff/self_uri}?func=admcat">Category Admin</a>
+				</li>
+				<li><a
+					href="{/page/meta_stuff/self_uri}?func=unsetadmin">Drop Privileges</a>
+				</li>
+			</ul>
+		</p>
+	</xsl:if>
 
-<xsl:attribute-set name="select-stuff">
-	<xsl:attribute name="size"><xsl:value-of select="@size"/></xsl:attribute>
-	<xsl:attribute name="name"><xsl:value-of select="@name"/></xsl:attribute>
-</xsl:attribute-set>
-
-<xsl:attribute-set name="option-stuff">
-	<xsl:attribute name="value"><xsl:value-of select="@value"/></xsl:attribute>
-</xsl:attribute-set>
-
-<xsl:attribute-set name="textarea-stuff">
-	<xsl:attribute name="name">
-		<xsl:value-of select="@name"/>
-	</xsl:attribute>
-	<xsl:attribute name="cols">
-		<xsl:value-of select="@cols"/>
-	</xsl:attribute>
-	<xsl:attribute name="rows">
-		<xsl:value-of select="@rows"/>
-	</xsl:attribute>
-	<xsl:attribute name="wrap">
-		<xsl:value-of select="@wrap"/>
-	</xsl:attribute>
-</xsl:attribute-set>
-
-<xsl:attribute-set name="form-stuff">
-	<xsl:attribute name="method">
-		<xsl:value-of select="@method"/>
-	</xsl:attribute>
-	<xsl:attribute name="action">
-		<xsl:value-of select="@action"/>
-	</xsl:attribute>
-	<xsl:attribute name="enctype">
-		<xsl:value-of select="@enctype"/>
-	</xsl:attribute>
-</xsl:attribute-set>
-
-<xsl:template match="form">
-	<xsl:copy use-attribute-sets="form-stuff">
-		<xsl:apply-templates/>
-	</xsl:copy>
-</xsl:template>
-<xsl:template match="input">
-	<xsl:copy use-attribute-sets="input-stuff">
-		<xsl:apply-templates/>
-	</xsl:copy>
-</xsl:template>
-<xsl:template match="select">
-	<xsl:copy use-attribute-sets="select-stuff">
-		<xsl:apply-templates/>
-	</xsl:copy>
-</xsl:template>
-<xsl:template match="option">
-	<xsl:copy use-attribute-sets="option-stuff">
-		<xsl:apply-templates/>
-	</xsl:copy>
-</xsl:template>
-<xsl:template match="textarea">
-	<xsl:copy use-attribute-sets="textarea-stuff">
-		<xsl:apply-templates/>
-	</xsl:copy>
+	This database contains about
+	<xsl:value-of select="/page/meta_stuff/total_images"/> images and has
+	displayed about
+	<xsl:value-of select="/page/meta_stuff/total_images_shown"/>.
 </xsl:template>
 
 <!-- Handling Search Results -->
 
+<xsl:template match="search_results_page">
+
+	<!-- If the user can add, put a little form at the top to save the search -->
+	<xsl:if test="/page/meta_stuff/photo_user/canadd">
+		<form method="POST" action="{/page/meta_stuff/self_uri}">
+			<input type="hidden" name="func" value="savesearch"/>
+			<input type="hidden" name="search"
+				value="{meta_stuff/search_query}"/>
+			Save search as:  <input name="name"/>
+			<input type="submit" value="Save"/>
+		</form>
+	</xsl:if>
+
+	<!-- Let us know how many results we've got -->
+	<div align="right">
+		<font size="+2">
+			Search matched <xsl:value-of select="meta_stuff/total"/> entries.
+		</font>
+	</div>
+
+	<p>
+
+		<!-- Put the actual results here -->
+		<xsl:apply-templates select="search_results"/>
+
+	</p>
+
+	<!-- if there are more, link to them -->
+	<xsl:variable name="r" select="meta_stuff/linktomore/remaining"/>
+	<xsl:if test="$r>0">
+		<xsl:value-of select="$r"/> results remaining.<p/>
+		<form method="POST" action="{/page/meta_stuff/self_uri}">
+			<input type="hidden" name="func" value="nextresults"/>
+			<input type="hidden" name="startfrom"
+				value="{meta_stuff/linktomore/startfrom}"/>
+			<input type="submit"
+				value="Next {meta_stuff/linktomore/nextpage}"/>
+		</form>
+	</xsl:if>
+
+</xsl:template>
+
 <xsl:template match="search_results">
-	<xsl:value-of select="linktomore/remaining"/> results remaining.<p/>
-	<table border="0">
+	<table border="0" colspan="1" width="100%">
 		<xsl:for-each select="search_result_row">
 			<tr>
-				<xsl:for-each select="search_result">
-					<td>
-						<table>
-							<tr>
-								<td>
-									Keywords: <xsl:value-of select="KEYWORDS"/>
-										<br/>
-									Category: <xsl:value-of select="CAT"/><br/>
-									Size:  <xsl:value-of select="SIZE"/><br/>
-									Taken:  <xsl:value-of select="TAKEN"/><br/>
-									Added: <xsl:value-of select="TS"/> by
-										<xsl:value-of select="ADDEDBY"/><br/>
-								</td>
-								<td>
-									<a
-									href="{SELF_URI}?func=display&amp;search_id={ID}">
-										<img border="0"
-											width="{TN_WIDTH}"
-											height="{TN_HEIGHT}"
-											src="{SELF_URI}?func=getimage&amp;photo_id={IMAGE}&amp;thumbnail=1"/>
-										</a>
-								</td>
-							</tr>
-						</table>
-						<blockquote>
-							<xsl:value-of select="DESCR"/>
-						</blockquote>
+				<xsl:if test="search_result[1]">
+					<td width="25%" align="center">
+						<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={search_result[1]/ID}">
+							<img border="0"
+								width="{search_result[1]/TN_WIDTH}"
+								height="{search_result[1]/TN_HEIGHT}"
+								src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={search_result[1]/IMAGE}&amp;thumbnail=1"/>
+						</a>
 					</td>
-				</xsl:for-each> <!-- Individual result -->
+					<td width="25%" bgcolor="#efefff" valign="top">
+						<font size="-1">
+						Keywords: <xsl:value-of select="search_result[1]/KEYWORDS"/>
+							<br/>
+						Category: <xsl:value-of select="search_result[1]/CAT"/><br/>
+						Size:  <xsl:value-of select="search_result[1]/WIDTH"/>x<xsl:value-of select="search_result[1]/HEIGHT"/>
+						(<xsl:value-of select="search_result[1]/SIZE"/> bytes)<br/>
+						Taken:  <xsl:value-of select="search_result[1]/TAKEN"/><br/>
+						Added: <xsl:value-of select="search_result[1]/TS"/> by
+							<xsl:value-of select="search_result[1]/ADDEDBY"/><br/>
+						</font>
+					</td>
+				</xsl:if>
+				<xsl:if test="search_result[2]">
+				<td width="25%" bgcolor="#efefff" valign="top">
+					<font size="-1">
+					Keywords: <xsl:value-of select="search_result[2]/KEYWORDS"/>
+						<br/>
+					Category: <xsl:value-of select="search_result[2]/CAT"/><br/>
+					Size:  <xsl:value-of select="search_result[2]/WIDTH"/>x<xsl:value-of select="search_result[2]/HEIGHT"/>
+					(<xsl:value-of select="search_result[2]/SIZE"/> bytes)<br/>
+					Taken:  <xsl:value-of select="search_result[2]/TAKEN"/><br/>
+					Added: <xsl:value-of select="search_result[2]/TS"/> by
+						<xsl:value-of select="search_result[2]/ADDEDBY"/><br/>
+					</font>
+				</td>
+				<td width="25%" align="center">
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={search_result[2]/ID}">
+						<img border="0"
+							width="{search_result[2]/TN_WIDTH}"
+							height="{search_result[2]/TN_HEIGHT}"
+							src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={search_result[2]/IMAGE}&amp;thumbnail=1"/>
+					</a>
+				</td>
+				</xsl:if>
+			</tr>
+			<tr>
+				<td colspan="2" width="50%" valign="top" bgcolor="#efefff">
+					<blockquote>
+						<font size="-1">
+							<xsl:apply-templates select="search_result[1]/DESCR"/>
+						</font>
+					</blockquote>
+				</td>
+				<xsl:if test="search_result[2]">
+				<td colspan="2" width="50%" valign="top" bgcolor="#efefff">
+					<blockquote>
+						<font size="-1">
+							<xsl:apply-templates select="search_result[2]/DESCR"/>
+						</font>
+					</blockquote>
+				</td>
+				</xsl:if>
 			</tr>
 		</xsl:for-each> <!-- row of results -->
 	</table>
 </xsl:template>
 
-<xsl:template match="linktomore">
-	<form method="POST" action="{SELF_URI}">
-		<input type="hidden" name="func" value="nextresults"/>
-		<input type="hidden" name="startfrom" value="{startfrom}"/>
-		<input type="submit" value="Next {nextpage}"/>
-	</form>
-</xsl:template>
-
 <!-- For displaying an individual image -->
 <xsl:template match="show_image">
+	<table width="100%">
+		<tr valign="top">
+			<td align="left" width="10%">
+				<xsl:if test="meta_stuff/prev">
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={meta_stuff/prev}"><img
+					alt="&lt;&lt;&lt;" border="0" src="/~dustin/images/l_arrow.gif"/></a>
+				</xsl:if>
+			</td>
+			<td align="center">
+				<b>
+					<font size="-3">
+						<xsl:apply-templates select="DESCR"/>
+					</font>
+				</b>
+			</td>
+			<td align="right" width="10%">
+				<xsl:if test="meta_stuff/next">
+					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={meta_stuff/next}"><img
+					alt="&gt;&gt;&gt;" border="0" src="/~dustin/images/r_arrow.gif"/></a>
+				</xsl:if>
+			</td>
+		</tr>
+	</table>
+
 	<center>
-		<img src="{SELF_URI}?func=getimage&amp;photo_id={IMAGE}"/>
+		<img width="{WIDTH}" height="{HEIGHT}"
+		  src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}"/>
 	</center>
 	<p/>
 	Category:  <xsl:value-of select="CAT"/><p/>
-	Size:  <xsl:value-of select="SIZE"/><p/>
-	Taken:  <xsl:value-of select="TAKEN"/><p/>
+	Size:  <xsl:value-of select="WIDTH"/>x<xsl:value-of select="HEIGHT"/>
+		(<xsl:value-of select="SIZE"/> bytes)<p/>
 	Taken:  <xsl:value-of select="TAKEN"/><p/>
 	Added:  <xsl:value-of select="TS"/> by <xsl:value-of select="ADDEDBY"/><p/>
 	Keywords:  <xsl:value-of select="KEYWORDS"/><p/>
-	Info:<br/><xsl:value-of select="DESCR"/><p/>
+	Info:<br/><xsl:apply-templates select="DESCR"/><p/>
+
+	<a href="{/page/meta_stuff/self_uri}?func=logview&amp;view=viewers&amp;which={IMAGE}">
+	Who's seen this?</a><br/>
+	<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={IMAGE}">Linkable image</a><br/>
+
 </xsl:template>
 
 <!-- category view -->
-<xsl:template match="cat_view">
+<xsl:template match="category_view">
+
 	<table border="1">
 		<tr>
 			<th>Category</th>
@@ -223,20 +374,27 @@
 	</table>
 </xsl:template>
 
-<xsl:template match="br">
-	<xsl:copy><xsl:apply-templates/></xsl:copy>
+<!-- Display the results of the password change. -->
+<xsl:template match="changed_password">
+	<xsl:choose>
+		<xsl:when test="error">
+			Error saving password:  <xsl:value-of select="error"/>
+		</xsl:when>
+		<xsl:when test="ok">
+			Password save complete.
+		</xsl:when>
+	</xsl:choose>
 </xsl:template>
-<xsl:template match="tr">
-	<xsl:copy><xsl:apply-templates/></xsl:copy>
+
+<xsl:template match="upload_success">
+	Well, it looks like your image made it.
+	The ID is <xsl:value-of select="id"/>.  It can be seen by clicking
+	<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={id}">here</a>.
 </xsl:template>
-<xsl:template match="th">
-	<xsl:copy><xsl:apply-templates/></xsl:copy>
-</xsl:template>
-<xsl:template match="td">
-	<xsl:copy><xsl:apply-templates/></xsl:copy>
-</xsl:template>
-<xsl:template match="table">
-	<xsl:copy><xsl:apply-templates/></xsl:copy>
+
+<xsl:template match="save_search_success">
+	Your search has been saved, press the ``back'' button on your browser
+	to continue with your search.
 </xsl:template>
 
 </xsl:stylesheet>
