@@ -58,10 +58,10 @@
 	</p>
 
 <photo:guest negate="true">
-	[<photo:link url='<%= "/logview.jsp?id=" + image.getId() %>'>
+	[<photo:link url="/logview.jsp" id="<%= "" + image.getId() %>">
 			Who's seen this?
 	</photo:link>] | 
-	[<photo:link url='<%= "/addToGallery.do?id=" + image.getId() %>'>
+	[<photo:link url="/addToGallery.do" id="<%= "" + image.getId() %>">
 		Add to Gallery
 	</photo:link>] | 
 </photo:guest>

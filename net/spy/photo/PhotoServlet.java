@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.23 2002/06/23 02:10:40 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.24 2002/07/01 18:03:19 dustin Exp $
  */
 
 package net.spy.photo;
@@ -38,7 +38,7 @@ public class PhotoServlet extends HttpServlet {
 	 */
 	public String getServletInfo() {
 		return("Copyright (c) 2000  Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.23 $");
+			+ " - $Revision: 1.24 $");
 	}
 
 	/**
@@ -79,9 +79,14 @@ public class PhotoServlet extends HttpServlet {
 			throw new ServletException("No sesion data in session");
 		}
 
-		String stmp=request.getParameter("photo_id");
+		String stmp=request.getParameter("id");
 		if(stmp==null) {
-			throw new ServletException("photo_id required");
+			// If the above failed, try ``photo_id'' (for backwards
+			// compatibility).
+			stmp=request.getParameter("photo_id");
+			if(stmp==null) {
+				throw new ServletException("id required");
+			}
 		}
 		// Parse the string.
 		which=Integer.parseInt(stmp);

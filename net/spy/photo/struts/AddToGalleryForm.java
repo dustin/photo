@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddToGalleryForm.java,v 1.1 2002/07/01 07:07:54 dustin Exp $
+// $Id: AddToGalleryForm.java,v 1.2 2002/07/01 18:03:19 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -15,7 +15,7 @@ import org.apache.struts.action.ActionMapping;
  */
 public class AddToGalleryForm extends ActionForm {
 
-	private int imageId=-1;
+	private int id=-1;
 
 	/**
 	 * Get an instance of AddToGalleryForm.
@@ -27,15 +27,15 @@ public class AddToGalleryForm extends ActionForm {
 	/**
 	 * Get the image ID the form is mapping.
 	 */
-	public int getImageId() {
-		return(imageId);
+	public int getId() {
+		return(id);
 	}
 
 	/**
 	 * Set the image ID to add to the gallery.
 	 */
-	public void setImageId(int imageId) {
-		this.imageId=imageId;
+	public void setId(int id) {
+		this.id=id;
 	}
 
 	/**
@@ -46,9 +46,8 @@ public class AddToGalleryForm extends ActionForm {
 
 		ActionErrors errors = new ActionErrors();
 
-		if(imageId==-1) {
-			errors.add("imageId",
-				new ActionError("error.addtogallery.imageid"));
+		if(id==-1) {
+			errors.add("id", new ActionError("error.addtogallery.id"));
 		}
 
 		return(errors);

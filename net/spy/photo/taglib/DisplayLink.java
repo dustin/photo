@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.9 2002/06/30 05:09:10 dustin Exp $
+// $Id: DisplayLink.java,v 1.10 2002/07/01 18:03:19 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -177,7 +177,7 @@ public class DisplayLink extends PhotoTag {
 			href.append("<img src=\"");
 
 			StringBuffer tmpurl=new StringBuffer();
-			tmpurl.append("PhotoServlet?photo_id=");
+			tmpurl.append("PhotoServlet?id=");
 			tmpurl.append(id);
 			tmpurl.append("&thumbnail=1");
 

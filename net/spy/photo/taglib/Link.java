@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Link.java,v 1.4 2002/06/30 05:09:10 dustin Exp $
+// $Id: Link.java,v 1.5 2002/07/01 18:03:19 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -20,6 +20,7 @@ public class Link extends PhotoTag {
 
 	private String url=null;
 	private String message=null;
+	private String id=null;
 
 	/**
 	 * Get an instance of Link.
@@ -58,6 +59,20 @@ public class Link extends PhotoTag {
 	}
 
 	/**
+	 * Set the image ID to include in this link.
+	 */
+	public void setId String(id) {
+		this.id=id;
+	}
+
+	/**
+	 * Get the image ID to include in this link.
+	 */
+	public String getId() {
+		return(id);
+	}
+
+	/**
 	 * Start link.
 	 */
 	public int doStartTag() throws JspException {
@@ -71,8 +86,19 @@ public class Link extends PhotoTag {
 		HttpServletRequest req=(HttpServletRequest)pageContext.getRequest();
 		HttpServletResponse res=(HttpServletResponse)pageContext.getResponse();
 
+		StringBuffer tmpUrl=new StringBuffer(url);
+		if(id!=null) {
+			if(url.indexOf("?")>=0) {
+				url.append("&");
+			} else {
+				url.append("?");
+			}
+			tmpUrl.append("id=");
+			tmpUrl.append(id);
+		}
+
 		// Get the URL
-		String relurl=PhotoUtil.getRelativeUri(req, url);
+		String relurl=PhotoUtil.getRelativeUri(req, tmpUrl.toString());
 		// Add it (rewritten).
 		sb.append(res.encodeURL(relurl));
 		sb.append("\">");

@@ -160,6 +160,12 @@
 			<name>message</name>
 			<required>false</required>
 		</attribute>
+		<attribute>
+			<!-- Optionally include an id=blah parameter to keep things
+				simple -->
+			<name>id</name>
+			<required>false</required>
+		</attribute>
 	</tag>
 
 	<!-- Create a relative stylesheet link -->

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.5 2002/06/30 05:09:10 dustin Exp $
+// $Id: ImageLink.java,v 1.6 2002/07/01 18:03:19 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -90,7 +90,9 @@ public class ImageLink extends PhotoTag {
 
 		href.append("<img src=\"");
 		
-		url.append("PhotoServlet?photo_id=");
+		url.append("PhotoServlet/");
+		url.append(id);
+		url.append(".jpg?id=");
 		url.append(id);
 		if(scale && (width!=null) && (height!=null)) {
 			url.append("&scale=");

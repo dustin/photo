@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddToGalleryAction.java,v 1.1 2002/07/01 07:07:54 dustin Exp $
+// $Id: AddToGalleryAction.java,v 1.2 2002/07/01 18:03:19 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -55,7 +55,7 @@ public class AddToGalleryAction extends PhotoAction {
 
 		// Add the new image
 		try {
-			g.addImage(atgf.getImageId());
+			g.addImage(atgf.getId());
 		} catch(Exception e) {
 			throw new ServletException("Error adding new image", e);
 		}
