@@ -77,7 +77,7 @@
 	<html:submit>Save</html:submit>
 	<p>
 		<% String uid=adminUserForm.getUserId();
-			String theUrl="/admin/userPhotos.jsp?user=" + uid;
+			String theUrl="/report/userImgs.do?p.i.user_id=" + uid;
 		%>
 		<photo:link url='<%= theUrl %>'>Photos this user has seen</photo:link>
 	</p>

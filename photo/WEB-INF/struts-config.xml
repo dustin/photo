@@ -232,6 +232,30 @@
 		<forward name="success" path="/index.jsp"/>
 	</action>
 
+	<!-- REPORTING -->
+
+	<action path="/report/userCat"
+		className="net.spy.photo.struts.AdminReportMapping"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="User Category Report"/>
+		<set-property property="spt" value="net.spy.photo.sp.ReportUserCat"/>
+
+		<forward name="success" path="/admin/reportDisplay.jsp"/>
+	</action>
+
+	<action path="/report/userImgs"
+		className="net.spy.photo.struts.AdminReportMapping"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="User Image View Report"/>
+		<set-property property="spt" value="net.spy.photo.sp.GetImagesSeenByUser"/>
+
+		<forward name="success" path="/admin/reportDisplay.jsp"/>
+	</action>
+
+	<!-- End of reporting -->
+
   </action-mappings>
 
 </struts-config>
