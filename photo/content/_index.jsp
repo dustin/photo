@@ -88,7 +88,7 @@
 							</photo:link>
 						</li>
 						<li>
-							<photo:link url="/PhotoServlet?func=admcat">
+							<photo:link url="/admin/categories.jsp">
 								Category Admin
 							</photo:link>
 						</li>
