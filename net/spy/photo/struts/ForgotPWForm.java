@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ForgotPWForm.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: ForgotPWForm.java,v 1.3 2003/01/07 09:38:53 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoUser;
+import net.spy.photo.PhotoUserException;
 
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
@@ -54,8 +55,18 @@ public class ForgotPWForm extends ActionForm {
 		if(username==null || username.length() < 1) {
 			errors.add("username", new ActionError("error.forgotpw.username"));
 		} else {
+
 			// Check for guest
-			PhotoUser user=Persistent.getSecurity().getUser(username);
+			PhotoUser user=null;
+			try {
+				user=Persistent.getSecurity().getUser(username);
+			} catch(PhotoUserException e) {
+				// Don't error here.  Let them try it before telling them
+				// the user doesn't exist.
+				e.printStackTrace();
+			}
+
+			// Make sure it's not guest.
 			if(user!=null) {
 				if(user.getUsername().equals("guest")) {
 					errors.add("username",

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: InitSessionData.java,v 1.4 2002/07/10 03:38:09 dustin Exp $
+// $Id: InitSessionData.java,v 1.5 2003/01/07 09:38:53 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -13,6 +13,7 @@ import javax.servlet.jsp.PageContext;
 
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoUserException;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoDimensionsImpl;
 import net.spy.photo.PhotoSessionData;
@@ -44,7 +45,12 @@ public class InitSessionData extends PhotoTag {
 			// Get the object
 			sessionData=new PhotoSessionData();
 			// Initialize the user
-			sessionData.setUser(Persistent.getSecurity().getUser("guest"));
+			try {
+				sessionData.setUser(Persistent.getSecurity().getUser("guest"));
+			} catch(PhotoUserException e) {
+				e.printStackTrace();
+				throw new JspException("Error making you a guest.");
+			}
 
 			// Initialize the optimal dimensions
 			// Start with cookies

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.11 2002/07/10 03:38:08 dustin Exp $
+// $Id: SessionWatcher.java,v 1.12 2003/01/07 09:38:52 dustin Exp $
 
 package net.spy.photo;
 
@@ -36,7 +36,11 @@ public class SessionWatcher extends Object implements HttpSessionListener {
         // Create the session data.
         PhotoSessionData sessionData=new PhotoSessionData();
         // Set the user
-        sessionData.setUser(Persistent.getSecurity().getUser("guest"));
+		try {
+        	sessionData.setUser(PhotoUser.getPhotoUser("guest"));
+		} catch(PhotoUserException e) {
+			e.printStackTrace();
+		}
         // The rest of the stuff will remain null until something comes
         // along with something better.
         // Now, add it to the session.

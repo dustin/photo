@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: Profile.java,v 1.9 2003/01/04 10:03:50 dustin Exp $
+// $Id: Profile.java,v 1.10 2003/01/07 09:38:51 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -23,7 +23,7 @@ import java.util.Set;
 
 import net.spy.SpyDB;
 import net.spy.db.DBSP;
-import net.spy.db.Savable;
+import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 
@@ -39,14 +39,13 @@ import net.spy.photo.sp.DeleteACLForProfile;
 /**
  * Represents a user in the photo system.
  */
-public class Profile extends Object implements Serializable, Savable {
+public class Profile extends AbstractSavable implements Serializable {
 	private int id=-1;
 	private String name=null;
 	private String description=null;
 	private Date expires=null;
 
 	private Set acl=null;
-	private boolean isModified=false;
 
 	/**
 	 * Get a new, empty user profile.
@@ -57,6 +56,8 @@ public class Profile extends Object implements Serializable, Savable {
 		name=PwGen.getPass(16);
 		// Expires in thirty days.
 		expires=new Date(System.currentTimeMillis() + (86400L*30L*1000L));
+		setNew(true);
+		setModified(false);
 	}
 
 	/**
@@ -84,6 +85,9 @@ public class Profile extends Object implements Serializable, Savable {
 		pst.close();
 		db.close();
 		initACLs();
+
+		setNew(false);
+		setModified(false);
 	}
 
 	// Get the ACL entries out of the DB.
@@ -139,6 +143,7 @@ public class Profile extends Object implements Serializable, Savable {
 	 */
 	public void setDescription(String description) {
 		this.description=description;
+		setModified(true);
 	}
 
 	/**
@@ -184,21 +189,10 @@ public class Profile extends Object implements Serializable, Savable {
 	 */
 	public void setId(int id) {
 		this.id=id;
+		setModified(true);
 	}
 
 	// Savable implementation
-
-	public boolean isNew() {
-		return(id == -1);
-	}
-
-	public boolean isModified() {
-		return(isModified);
-	}
-
-	public Collection getSavables(SaveContext context) {
-		return(null);
-	}
 
 	/**
 	 * Save the Profile.
@@ -253,6 +247,8 @@ public class Profile extends Object implements Serializable, Savable {
 			ins.executeUpdate();
 		}
 		ins.close();
+
+		setSaved();
 	}
 
 }

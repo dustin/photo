@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.26 2003/01/03 22:23:11 dustin Exp $
+// $Id: PhotoUser.java,v 1.27 2003/01/07 09:38:51 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 package net.spy.photo;
@@ -13,16 +13,20 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 import net.spy.SpyDB;
+import net.spy.cache.SpyCache;
 import net.spy.db.DBSP;
-import net.spy.db.Savable;
+import net.spy.db.AbstractSavable;
 import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
 
@@ -32,11 +36,13 @@ import net.spy.photo.sp.UpdateUser;
 import net.spy.photo.sp.DeleteACLForUser;
 import net.spy.photo.sp.InsertACLEntry;
 import net.spy.photo.sp.GetGeneratedKey;
+import net.spy.photo.sp.GetAllUsers;
+import net.spy.photo.sp.GetACLForUser;
 
 /**
  * Represents a user in the photo system.
  */
-public class PhotoUser extends Object implements Serializable, Savable {
+public class PhotoUser extends AbstractSavable implements Serializable {
 	private int id=-1;
 	private String username=null;
 	private String password=null;
@@ -47,7 +53,8 @@ public class PhotoUser extends Object implements Serializable, Savable {
 	private ArrayList acl=null;
 	private Set groups=null;
 
-	private boolean isModified=false;
+	private static final String CACHE_KEY="n.s.p.PhotoUserMap";
+	private static final int CACHE_TIME=3600;
 
 	/**
 	 * Get a new, empty user.
@@ -55,6 +62,165 @@ public class PhotoUser extends Object implements Serializable, Savable {
 	public PhotoUser() {
 		super();
 		acl=new ArrayList();
+		setNew(true);
+		setModified(false);
+	}
+
+	// Get the user represented by the current row of this result set
+	private PhotoUser(ResultSet rs) throws SQLException, PhotoException {
+		this();
+		setId(rs.getInt("id"));
+		setUsername(rs.getString("username"));
+		setPassword(rs.getString("password"));
+		setEmail(rs.getString("email"));
+		setRealname(rs.getString("realname"));
+		canAdd(rs.getBoolean("canadd"));
+
+		setNew(false);
+		setModified(false);
+	}
+
+	private void initACLs(int defaultId) throws PhotoUserException {
+		try {
+			GetACLForUser db=new GetACLForUser(new PhotoConfig());
+			db.setUserId(getId());
+			db.setDefaultUserId(defaultId);
+
+			ResultSet rs=db.executeQuery();
+			while(rs.next()) {
+				int cat=rs.getInt("cat");
+				if(rs.getBoolean("canview")) {
+					addViewACLEntry(cat);
+				}
+				if(rs.getBoolean("canadd")) {
+					addAddACLEntry(cat);
+				}
+			}
+			rs.close();
+			db.close();
+		} catch(SQLException e) {
+			throw new PhotoUserException("Error innitializing ACLs", e);
+		}
+	}
+
+	private static Map initUserMap() throws PhotoUserException {
+		PhotoConfig conf=new PhotoConfig();
+		Map rv=new HashMap();
+		try {
+			List users=new ArrayList();
+
+			GetAllUsers db=new GetAllUsers(conf);
+			ResultSet rs=db.executeQuery();
+			while(rs.next()) {
+				PhotoUser pu=new PhotoUser(rs);
+				pu.setNew(false);
+				pu.setModified(false);
+
+				// Add it to the list so we can initialize the ACLs.
+				users.add(pu);
+
+				// Map the various thingies.
+				rv.put(new Integer(pu.getId()), pu);
+				rv.put(pu.getUsername().toLowerCase(), pu);
+				rv.put(pu.getEmail().toLowerCase(), pu);
+			}
+			rs.close();
+			db.close();
+
+			// Find the default user so we can initialize the ACLs.
+			String defUsername=conf.get("default_user", "guest");
+			PhotoUser defaultUser=(PhotoUser)rv.get(defUsername);
+			if(defaultUser==null) {
+				throw new PhotoUserException("Default user not found.");
+			}
+
+			// Now that the base stuff is initialized, initialize the ACLs.
+			for(Iterator i=users.iterator(); i.hasNext();) {
+				PhotoUser pu=(PhotoUser)i.next();
+				pu.initACLs(defaultUser.getId());
+			}
+
+		} catch(SQLException e) {
+			throw new PhotoUserException("Problem initializing user map", e);
+		} catch(PhotoException e) {
+			throw new PhotoUserException("Problem initializing user map", e);
+		}
+		return(rv);
+	}
+
+	private static Map getUserMap() throws PhotoUserException {
+		SpyCache sc=SpyCache.getInstance();
+		Map rv=(Map)sc.get(CACHE_KEY);
+		if(rv==null) {
+			rv=initUserMap();
+			sc.store(CACHE_KEY, rv, CACHE_TIME);
+		}
+
+		return(rv);
+	}
+
+	/** 
+	 * Look up a user by name or email address.
+	 * 
+	 * @param spec the username or email address
+	 * @return the user
+	 *
+	 * @throws NoSuchPhotoUserException if the user does not exist
+	 * @throws PhotoUserException if there's a problem looking up the user
+	 */
+	public static PhotoUser getPhotoUser(String spec)
+		throws PhotoUserException {
+
+		if(spec==null) {
+			throw new NoSuchPhotoUserException("There is no null user.");
+		}
+
+		Map m=getUserMap();
+		PhotoUser rv=(PhotoUser)m.get(spec.toLowerCase());
+		if(rv==null) {
+			throw new NoSuchPhotoUserException("No such user:  " + spec);
+		}
+
+		return(rv);
+	}
+
+	/** 
+	 * Look up a user by user ID.
+	 * 
+	 * @param id the user ID
+	 * @return the user
+	 *
+	 * @throws NoSuchPhotoUserException if the user does not exist
+	 * @throws PhotoUserException if there's a problem looking up the user
+	 */
+	public static PhotoUser getPhotoUser(int id)
+		throws PhotoUserException {
+
+		Map m=getUserMap();
+		PhotoUser rv=(PhotoUser)m.get(new Integer(id));
+		if(rv==null) {
+			throw new NoSuchPhotoUserException("No such user (id):  " + id);
+		}
+
+		return(rv);
+	}
+
+	/** 
+	 * Get all known users.
+	 */
+	public static Collection getAllPhotoUsers() throws PhotoUserException {
+		Map m=getUserMap();
+		Collection rv=new ArrayList(m.size() / 3);
+
+		// Find every instance with an integer key.
+		for(Iterator i=m.entrySet().iterator(); i.hasNext(); ) {
+			Map.Entry me=(Map.Entry)i.next();
+			if(me.getKey() instanceof Integer) {
+				rv.add(me.getValue());
+			}
+		}
+
+		return(rv);
 	}
 
 	/**
@@ -132,7 +298,7 @@ public class PhotoUser extends Object implements Serializable, Savable {
 	public void addViewACLEntry(int cat) {
 		PhotoACLEntry aclEntry=getACLEntryForCat2(cat);
 		aclEntry.setCanView(true);
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -141,7 +307,7 @@ public class PhotoUser extends Object implements Serializable, Savable {
 	public void addAddACLEntry(int cat) {
 		PhotoACLEntry aclEntry=getACLEntryForCat2(cat);
 		aclEntry.setCanAdd(true);
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -152,7 +318,7 @@ public class PhotoUser extends Object implements Serializable, Savable {
 		if(entry!=null) {
 			acl.remove(entry);
 		}
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -160,7 +326,7 @@ public class PhotoUser extends Object implements Serializable, Savable {
 	 */
 	public void removeAllACLEntries() {
 		acl.clear();
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -258,7 +424,7 @@ public class PhotoUser extends Object implements Serializable, Savable {
 	 */
 	public void setId(int id) {
 		this.id=id;
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -266,7 +432,7 @@ public class PhotoUser extends Object implements Serializable, Savable {
 	 */
 	public void setUsername(String username) {
 		this.username=username.toLowerCase();
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -274,7 +440,7 @@ public class PhotoUser extends Object implements Serializable, Savable {
 	 */
 	public void setRealname(String realname) {
 		this.realname=realname;
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -289,22 +455,10 @@ public class PhotoUser extends Object implements Serializable, Savable {
 	 */
 	public void setEmail(String email) {
 		this.email=email.toLowerCase();
-		isModified=true;
+		setModified(true);
 	}
 
 	// Savable implementation
-
-	public Collection getSavables(SaveContext context) {
-		return(null);
-	}
-
-	public boolean isNew() {
-		return(id == -1);
-	}
-
-	public boolean isModified() {
-		return(isModified);
-	}
 
 	/**
 	 * Save the user.
@@ -365,6 +519,8 @@ public class PhotoUser extends Object implements Serializable, Savable {
 			ins.executeUpdate();
 		}
 		ins.close();
+
+		setSaved();
 	}
 
 	/**
@@ -381,7 +537,7 @@ public class PhotoUser extends Object implements Serializable, Savable {
 			}
 		}
 		this.password=pass;
-		isModified=true;
+		setModified(true);
 	}
 
 	/**

@@ -1,0 +1,23 @@
+#
+# $Id: GetAllUsers.spt,v 1.1 2003/01/07 09:38:52 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get all users.
+
+@sql
+select
+		id, username, password, email, realname, canadd
+	from
+		wwwusers
+
+@results
+id INTEGER User ID
+username VARCHAR The username
+password VARCHAR The hashed password of the user
+email VARCHAR The email address of the user
+realname VARCHAR The name of the user
+canadd BIT True if the user can add

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.11 2003/01/03 22:23:10 dustin Exp $
+// $Id: Category.java,v 1.12 2003/01/07 09:38:49 dustin Exp $
 
 package net.spy.photo;
 
@@ -24,7 +24,7 @@ import java.util.Iterator;
 import net.spy.SpyObject;
 import net.spy.SpyDB;
 import net.spy.db.DBSP;
-import net.spy.db.Savable;
+import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 import net.spy.cache.SpyCache;
@@ -41,7 +41,7 @@ import net.spy.photo.sp.GetGeneratedKey;
 /**
  * Category representation.
  */
-public class Category extends SpyObject implements Comparable, Savable {
+public class Category extends AbstractSavable implements Comparable {
 
 	/**
 	 * Flag to list categories that can be read by the user.
@@ -59,7 +59,6 @@ public class Category extends SpyObject implements Comparable, Savable {
 	private String name=null;
 
 	private List acl=null;
-	private boolean isModified=false;
 
 	/**
 	 * Get an instance of Category.
@@ -175,7 +174,7 @@ public class Category extends SpyObject implements Comparable, Savable {
 	// Overwrite the ACL entry
 	private void setAcl(List to) {
 		acl=to;
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -209,18 +208,6 @@ public class Category extends SpyObject implements Comparable, Savable {
 	}
 
 	// Savable implementation
-
-	public boolean isNew() {
-		return(id == -1);
-	}
-
-	public boolean isModified() {
-		return(isModified);
-	}
-
-	public Collection getSavables(SaveContext context) {
-		return(null);
-	}
 
 	/**
 	 * Save this category and ACL entries.
@@ -285,6 +272,8 @@ public class Category extends SpyObject implements Comparable, Savable {
 		}
 		iacl.close();
 		iacl=null;
+
+		setSaved();
 	}
 
 	// End savable implementation
@@ -456,7 +445,7 @@ public class Category extends SpyObject implements Comparable, Savable {
 	 */
 	public void setName(String to) {
 		this.name=to;
-		isModified=true;
+		setModified(true);
 	}
 
 	/**

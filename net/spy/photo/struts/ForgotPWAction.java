@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ForgotPWAction.java,v 1.3 2002/12/15 09:02:25 dustin Exp $
+// $Id: ForgotPWAction.java,v 1.4 2003/01/07 09:38:52 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -47,12 +47,12 @@ public class ForgotPWAction extends PhotoAction {
 		ForgotPWForm fpf=(ForgotPWForm)form;
 
 		// Get the user
-		PhotoUser user=Persistent.getSecurity().getUser(fpf.getUsername());
-		if(user==null) {
-			throw new ServletException("No user matching " + fpf.getUsername());
-		}
+		PhotoUser user=null;
 
 		try {
+			// Look up the user
+			user=Persistent.getSecurity().getUser(fpf.getUsername());
+
 			String newPass=PwGen.getPass(8);
 			user.setPassword(newPass);
 			Saver saver=new Saver(new PhotoConfig());

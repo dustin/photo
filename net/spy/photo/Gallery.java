@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.11 2003/01/04 10:03:49 dustin Exp $
+// $Id: Gallery.java,v 1.12 2003/01/07 09:38:50 dustin Exp $
 
 package net.spy.photo;
 
@@ -20,7 +20,7 @@ import net.spy.SpyDB;
 
 import net.spy.db.DBSP;
 import net.spy.db.SpyCacheDB;
-import net.spy.db.Savable;
+import net.spy.db.AbstractSavable;
 import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
 
@@ -37,7 +37,7 @@ import net.spy.photo.sp.DeleteGalleryMappings;
 /**
  * A named collection of images.
  */
-public class Gallery extends Object implements java.io.Serializable, Savable {
+public class Gallery extends AbstractSavable implements java.io.Serializable {
 
 	private int id=-1;
 	private String name=null;
@@ -45,8 +45,6 @@ public class Gallery extends Object implements java.io.Serializable, Savable {
 	private boolean isPublic=false;
 	private PhotoUser owner=null;
 	private Date timestamp=null;
-
-	private boolean isModified=false;
 
 	/**
 	 * Get an instance of Gallery belonging to a given owner.
@@ -56,15 +54,16 @@ public class Gallery extends Object implements java.io.Serializable, Savable {
 		this.name=name;
 		this.owner=owner;
 		this.images=new ArrayList();
+
+		setNew(true);
+		setModified(false);
 	}
 
 	/**
 	 * Get an instance of Gallery belonging to a given owner.
 	 */
 	public Gallery(PhotoUser owner) {
-		super();
-		this.owner=owner;
-		this.images=new ArrayList();
+		this(owner, null);
 	}
 
 	// Get the gallery for the current row in the given resultset
@@ -81,6 +80,9 @@ public class Gallery extends Object implements java.io.Serializable, Savable {
 			throw new PhotoException("User " + rs.getInt("wwwuser_id")
 				+ "not found");
 		}
+
+		setNew(false);
+		setModified(false);
 	}
 
 	/**
@@ -160,18 +162,6 @@ public class Gallery extends Object implements java.io.Serializable, Savable {
 
 	// Savable implementation
 
-	public boolean isNew() {
-		return(id==-1);
-	}
-
-	public boolean isModified() {
-		return(isModified);
-	}
-
-	public Collection getSavables(SaveContext context) {
-		return(null);
-	}
-
 	/**
 	 * Save a new gallery.
 	 */
@@ -241,6 +231,8 @@ public class Gallery extends Object implements java.io.Serializable, Savable {
 					"Expected to affect one row, affected " + affected);
 			}
 		}
+
+		setSaved();
 	}
 
 	/**
@@ -249,6 +241,7 @@ public class Gallery extends Object implements java.io.Serializable, Savable {
 	public void addImage(PhotoImageData pid) {
 		removeImage(pid);
 		images.add(pid);
+		setModified(true);
 	}
 
 	/**
@@ -293,6 +286,7 @@ public class Gallery extends Object implements java.io.Serializable, Savable {
 	 */
 	public void setName(String to) {
 		this.name=to;
+		setModified(true);
 	}
 
 	/**
@@ -315,6 +309,7 @@ public class Gallery extends Object implements java.io.Serializable, Savable {
 	 */
 	public void setPublic(boolean isPublic) {
 		this.isPublic=isPublic;
+		setModified(true);
 	}
 
 	/**

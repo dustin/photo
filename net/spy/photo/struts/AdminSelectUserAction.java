@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectUserAction.java,v 1.9 2002/08/20 03:09:16 dustin Exp $
+// $Id: AdminSelectUserAction.java,v 1.10 2003/01/07 09:38:52 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -28,6 +28,7 @@ import net.spy.photo.PhotoACLEntry;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSecurity;
 import net.spy.photo.PhotoUser;
+import net.spy.photo.PhotoUserException;
 
 /**
  * Action used to begin editing a new user.
@@ -71,10 +72,11 @@ public class AdminSelectUserAction extends AdminAction {
 		} else {
 			// Look up the user
 			PhotoSecurity sec=new PhotoSecurity();
-			PhotoUser user=sec.getUser(userid);
-
-			if(user==null) {
-				throw new ServletException("No such user:  " + userid);
+			PhotoUser user=null;
+			try {
+				user=sec.getUser(userid);
+			} catch(PhotoUserException e) {
+				throw new ServletException("No such user", e);
 			}
 
 			// Set the easy stuff

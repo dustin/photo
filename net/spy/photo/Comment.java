@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.15 2002/12/15 07:08:25 dustin Exp $
+// $Id: Comment.java,v 1.16 2003/01/07 09:38:50 dustin Exp $
 
 package net.spy.photo;
 
@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.spy.SpyDB;
-import net.spy.db.Savable;
+import net.spy.db.AbstractSavable;
 import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
 
@@ -27,7 +27,7 @@ import net.spy.photo.sp.GetGeneratedKey;
 /**
  * Comments on photos.
  */
-public class Comment extends Object implements Savable, java.io.Serializable {
+public class Comment extends AbstractSavable implements java.io.Serializable {
 
 	private int commentId=-1;
 
@@ -38,8 +38,6 @@ public class Comment extends Object implements Savable, java.io.Serializable {
 	private String remoteAddr=null;
 	private Timestamp timestamp=null;
 	private String timestampString=null;
-	private boolean isNew=false;
-	private boolean isModified=false;
 
 	/**
 	 * Get an instance of Comment.
@@ -48,7 +46,8 @@ public class Comment extends Object implements Savable, java.io.Serializable {
 		super();
 		timestamp=new Timestamp(System.currentTimeMillis());
 		timestampString=timestamp.toString();
-		isNew=true;
+		setNew(true);
+		setModified(false);
 	}
 
 	// Get a comment from a result row
@@ -61,7 +60,9 @@ public class Comment extends Object implements Savable, java.io.Serializable {
 		timestampString=rs.getString("ts");
 		remoteAddr=rs.getString("remote_addr");
 		user=sec.getUser(rs.getInt("user_id"));
-		isNew=false;
+
+		setNew(false);
+		setModified(false);
 	}
 
 	/**
@@ -127,20 +128,6 @@ public class Comment extends Object implements Savable, java.io.Serializable {
 
 	// Savable implementation
 
-	/** 
-	 * True if this is a new object.
-	 */
-	public boolean isNew() {
-		return(isNew);
-	}
-
-	/** 
-	 * True if this object has been modified;
-	 */
-	public boolean isModified() {
-		return(isModified);
-	}
-
 	/**
 	 * Save a new comment.
 	 */
@@ -178,13 +165,8 @@ public class Comment extends Object implements Savable, java.io.Serializable {
 		}
 		rs.close();
 		ggk.close();
-	}
 
-	/** 
-	 * Get the dependent objects.
-	 */
-	public Collection getSavables(SaveContext context) {
-		return(null);
+		setSaved();
 	}
 
 	// End savable implementation
@@ -201,7 +183,7 @@ public class Comment extends Object implements Savable, java.io.Serializable {
 	 */
 	public void setUser(PhotoUser user) {
 		this.user=user;
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -216,7 +198,7 @@ public class Comment extends Object implements Savable, java.io.Serializable {
 	 */
 	public void setPhotoId(int photoId) {
 		this.photoId=photoId;
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -231,7 +213,7 @@ public class Comment extends Object implements Savable, java.io.Serializable {
 	 */
 	public void setNote(String note) {
 		this.note=note;
-		isModified=true;
+		setModified(true);
 	}
 
 	/**
@@ -246,7 +228,7 @@ public class Comment extends Object implements Savable, java.io.Serializable {
 	 */
 	public void setRemoteAddr(String remoteAddr) {
 		this.remoteAddr=remoteAddr;
-		isModified=true;
+		setModified(true);
 	}
 
 	/**

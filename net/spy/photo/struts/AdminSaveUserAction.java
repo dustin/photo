@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveUserAction.java,v 1.8 2002/12/15 09:02:25 dustin Exp $
+// $Id: AdminSaveUserAction.java,v 1.9 2003/01/07 09:38:52 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -22,6 +22,7 @@ import net.spy.db.Saver;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSecurity;
 import net.spy.photo.PhotoUser;
+import net.spy.photo.PhotoUserException;
 
 /**
  * Action used to save a new user
@@ -54,7 +55,12 @@ public class AdminSaveUserAction extends AdminAction {
 		PhotoSecurity security=new PhotoSecurity();
 
 		// Get the user, or a new one if this a new user.
-		PhotoUser user=security.getUser(Integer.parseInt(auf.getUserId()));
+		PhotoUser user=null;
+		try {
+			user=security.getUser(Integer.parseInt(auf.getUserId()));
+		} catch(PhotoUserException e) {
+			e.printStackTrace();
+		}
 		if(user==null) {
 			user=new PhotoUser();
 		}
