@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.18 2001/12/28 12:39:37 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.19 2001/12/28 12:46:55 dustin Exp $
  */
 
 package net.spy.photo;
@@ -179,7 +179,7 @@ public class PhotoAdmin extends PhotoHelper {
 							acltable+= "checked=\"1\" ";
 						}
 						acltable+= "value=\"" + cat_id
-								+ "\"></td></tr>\n";
+								+ "\"></td>\n";
 
 						acltable+="<td><input type=\"checkbox\" "
 							+ "name=\"catacl_add\" ";
@@ -196,7 +196,7 @@ public class PhotoAdmin extends PhotoHelper {
 						+ "</font></td>";
 					acltable+="<td><input type=\"checkbox\" "
 						+ "name=\"catacl_view\" "
-						+ "value=\"" + cat_id + "\"></td></tr>\n";
+						+ "value=\"" + cat_id + "\"></td>\n";
 					acltable+="<td><input type=\"checkbox\" "
 						+ "name=\"catacl_add\" "
 						+ "value=\"" + cat_id + "\"></td></tr>\n";
