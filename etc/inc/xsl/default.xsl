@@ -469,6 +469,16 @@
 	to continue with your search.
 </xsl:template>
 
+<xsl:template match="no_such_user">
+	The username or E-mail address ``<xsl:value-of select="id"/>'' does not
+exist.  Please check the number and try again.
+</xsl:template>
+
+<xsl:template match="generated_password">
+	A new password for user ``<xsl:value-of select="username"/>'' has been
+E-mailed to you.
+</xsl:template>
+
 <xsl:template match="profile_add_user">
 	<form method="POST" action="{/page/meta_stuff/self_uri}">
 		<input type="hidden" name="func" value="adduser"/>

@@ -33,6 +33,7 @@
 
 <!-- Authenticate form -->
 <xsl:template match="auth_form">
+	<h1>Login</h1>
 	<form method="POST" action="{/page/meta_stuff/self_uri}">
 		<input type="hidden" name="func" value="setcred"/>
 
@@ -50,6 +51,19 @@
 	</form>
 
 	<p/>
+
+	<h1>Forgot Your Password?</h1>
+
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		Email address or username:  <input name="username"/><br/>
+		<input type="submit" value="Password Reset"/>
+		<input type="reset" value="Clear"/>
+		<input type="hidden" name="func" value="forgotpassword"/>
+	</form>
+
+	<p/>
+
+	<h1>Other Services</h1>
 
 	<a href="{/page/meta_stuff/self_uri}?func=setadmin">Request
 		Administrative Privileges</a>
