@@ -4,7 +4,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: common.xsl,v 1.7 2001/01/06 07:32:08 dustin Exp $
+ $Id: common.xsl,v 1.8 2001/01/06 08:22:42 dustin Exp $
  -->
 
 <!-- Default Section handling -->
@@ -198,7 +198,7 @@
 <xsl:template name="quick_search" match="quick_search">
 	<form method="POST" action="{/page/meta_stuff/self_uri}">
 		<input type="hidden" name="func" value="search"/>
-		<input type="hidden" name="maxret" value="5"/>
+		<input type="hidden" name="maxret" value="6"/>
 		<input type="hidden" name="fieldjoin" value="and"/>
 		<input type="hidden" name="keyjoin" value="and"/>
 		<input type="hidden" name="order" value="a.ts"/>
