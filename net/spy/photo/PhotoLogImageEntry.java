@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogImageEntry.java,v 1.3 2000/11/10 07:17:18 dustin Exp $
+ * $Id: PhotoLogImageEntry.java,v 1.4 2002/02/24 21:04:29 dustin Exp $
  */
 
 package net.spy.photo;
@@ -18,38 +18,47 @@ import net.spy.log.*;
 
 public class PhotoLogImageEntry extends SpyLogEntry {
 
-	private int photo_id;
-	private int wwwuser_id;
-	private Date timestamp;
-	private String remote_addr;
-	private String server_host;
-	private String user_agent;
-	private boolean cached;
+	private int photo_id=null;
+	private int wwwuser_id=null;
+	private long timestamp;
+	private String remote_addr=null;
+	private String user_agent=null;
+	private PhotoDimensions size=null;
 
-	public PhotoLogImageEntry(int u, int p, boolean c,
+	/**
+	 * Get a new PhotoLogImageEntry for a photo request.
+	 *
+	 * @param u The user ID making the request.
+	 * @param p The photo ID that was requested.
+	 * @param size The size of the image that was requested.
+	 * @param request The HTTP request (to get remote addr and user agent).
+	 */
+	public PhotoLogImageEntry(int u, int p, PhotoDimensions size,
 		HttpServletRequest request) {
 		super();
-		photo_id=p;
-		wwwuser_id=u;
-		cached=c;
-		remote_addr=request.getRemoteAddr();
-		server_host=request.getServerName();
-		user_agent=request.getHeader("User-Agent");
-		timestamp = new Date();
+		this.photo_id=p;
+		this.wwwuser_id=u;
+		this.remote_addr=request.getRemoteAddr();
+		this.user_agent=request.getHeader("User-Agent");
+		this.timestamp = System.currentTimeMillis();
+		this.size=size;
 	}
 
 	public String toString() {
 		String r;
 		SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		PhotoConfig conf = new PhotoConfig();
+		java.sql.Timestamp ts=new java.sql.Timestamp(timestamp);
 
-		r="insert into photo_log(photo_id, wwwuser_id, remote_addr, "
-			+ "server_host, user_agent, cached, ts) values("
+		r="insert into photo_log(log_type, photo_id, wwwuser_id, remote_addr, "
+			+ "user_agent, extra_info, ts) values("
+			+ "get_log_type('ImgView'), "
 			+ photo_id + ", " + wwwuser_id + ", '" + remote_addr 
-			+ "', '" + server_host
-			+ "', get_agent('" + PhotoUtil.dbquote_str(user_agent) + "'), '"
-			+ cached + "', '" + f.format(timestamp) + " "
-			+ conf.get("timezone") + "')";
+			+ "', get_agent('" + PhotoUtil.dbquote_str(user_agent) + "'),"
+			+ "'" + size.getWidth() + "x" + size.getHeight() + "', "
+			+ "'" + f.format(timestamp) + " "
+			+ conf.get("timezone") + "', "
+			+ ")";
 
 		return(r);
 	}

@@ -23,6 +23,12 @@ insert into log_types(log_type) values('ImgView')
 insert into log_types(log_type) values('Upload')
 ;
 
+-- A function for looking up log types
+create function get_log_type(TEXT) returns INTEGER as
+	'select log_type_id from log_types where log_type = $1'
+	language 'sql' with (iscachable)
+;
+
 -- New way to do logs
 
 create table photo_logs (
