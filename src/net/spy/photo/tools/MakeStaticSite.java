@@ -160,6 +160,13 @@ public class MakeStaticSite extends SpyObject {
 	}
 
 	private void saveXmlMeta(PhotoImageData pid) throws Exception {
+		// Store the images by date
+		String imgdir=getImageDir(pid);
+
+		// Get the image to figure out the extension.
+		PhotoImageHelper pih=new PhotoImageHelper(pid.getId());
+		PhotoImage image=pih.getImage();
+
 		Element el=doc.createElement("photo");
 		root.appendChild(el);
 
@@ -175,6 +182,7 @@ public class MakeStaticSite extends SpyObject {
 		el.appendChild(addNode("height", pid.getDimensions().getHeight()));
 		el.appendChild(addNode("tnwidth", pid.getTnDims().getWidth()));
 		el.appendChild(addNode("tnheight", pid.getTnDims().getHeight()));
+		el.appendChild(addNode("extension", getExtension(image)));
 	}
 
 	public void build() throws Exception {

@@ -101,8 +101,8 @@ def makeMonthPage(y, m, photos):
     for photo in photos:
         f.write('<a href="%s/%d.html">' % (month, photo.id))
         (yr,mn,dt)=photo.dateParts()
-        f.write('<img alt="%d" src="../images/%04d%02d%02d/%d_t.%s"/></a>\n' \
-                % (photo.id, yr, mn, dt, photo.id, "jpg"))
+        f.write('<img alt="%d" src="../images/%04d%02d%02d/%d_t%s"/></a>\n' \
+                % (photo.id, yr, mn, dt, photo.id, photo.extension))
     f.write("</div>\n")
     f.write('<div id="footer">')
     f.write("<a href=\"../index.html\">[Index]</a>")
@@ -120,7 +120,7 @@ def makePageForPhoto(dir, photo):
     f.write("<a href=\"http://bleu.west.spy.net/photo/display.do?id=")
     f.write(`photo.id` + "\">")
     (y,m,d)=photo.dateParts()
-    shortpath="%04d%02d%02d/%d.%s" % (y, m, d, photo.id, "jpg")
+    shortpath="%04d%02d%02d/%d%s" % (y, m, d, photo.id, photo.extension)
     f.write('<img alt="%d" src="../../images/%s"/>' % (photo.id, shortpath))
     f.write("</a>\n")
 
@@ -157,7 +157,7 @@ class Photo(object):
     def __init__(self, el):
         for col in ['id', 'size', 'width', 'height', 'tnwidth', 'tnheight']:
             self.__dict__[col]=int(self.__getText(el, col))
-        for col in ['addedby', 'taken', 'ts', 'keywords', 'descr']:
+        for col in ['addedby', 'taken', 'ts', 'keywords', 'descr', 'extension']:
             self.__dict__[col]=self.__getText(el, col)
 
     def __getText(self, e, which):
