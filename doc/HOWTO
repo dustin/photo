@@ -7,6 +7,31 @@ Make sure you read the project home page and have all of the components listed
 under ``What Do I Need To Start My Own'' and that they're all working
 properly as best as you can tell.
 
+UPGRADING FROM A PREVIOUS VERSION OF THE PHOTOSERVLET
+
+Step 1. Getting the updated files.
+
+If you have the latest version of this tarball, you're almost set. Grab the latest 
+release of the spy.jar (set of classes required to run the servlet) This can be obtained 
+from: http://bleu.west.spy.net/~dustin/spyjar/
+Got that yet ? Good. On to the next step....
+
+Step 2. Put the jars in in your CLASSPATH 
+
+The jars need to be added to the directory(ies) that you keep all your java classes
+in. Once you copy these into place (keep backups of your old copies, it's a good thing)
+you're ready to move ahead again.
+
+Step 3. Copy your the new includes
+
+The next step involves more interaction, copy your old includes to a backup. Then
+proceed to copy all the new includes over the top of the old. remember here, you
+have to use cp -R to bring the directories (subdirectories) with.
+
+Step 4. Restart the Servlet Engine (Jserv) and the PhotoServlet
+
+This step is already in detail. Just restart the serlvet engine and the PhotoServlet
+itself, and you should be off and running.
 
 
 DATABASE SETUP
@@ -90,4 +115,4 @@ images showing up as ``admin'' do you?  :)
 
 Let me know if you have any problems.
 
-$Id: HOWTO,v 1.2 2000/06/26 07:20:07 dustin Exp $
+$Id: HOWTO,v 1.3 2000/06/27 06:27:20 nbinder Exp $
