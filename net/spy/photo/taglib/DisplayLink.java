@@ -1,15 +1,17 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.12 2002/07/10 03:38:09 dustin Exp $
+// $Id: DisplayLink.java,v 1.13 2002/08/14 04:31:23 dustin Exp $
 
 package net.spy.photo.taglib;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import javax.servlet.jsp.JspException;
 
 import net.spy.photo.PhotoSearchResults;
 import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoUtil;
 
 /**
  * Taglib to link to an image.
@@ -119,8 +121,11 @@ public class DisplayLink extends PhotoTag {
 
 		// This variable is the full HREF that will be rendered
 		StringBuffer href=new StringBuffer();
+
+		HttpServletRequest req=(HttpServletRequest)pageContext.getRequest();
 		// This is just the URL inside the HREF.
-		StringBuffer url=new StringBuffer("display.jsp?");
+		StringBuffer url=new StringBuffer();
+		url.append(PhotoUtil.getRelativeUri(req, "/display.do?"));
 
 		href.append("<a href=\"");
 		// Figure out whether to link to the search ID or the real ID.
