@@ -133,7 +133,18 @@
 	<target name="war-var" depends="photo.jar">
 		<echo message="Building ${which}.war"/>
 		<filter token="INSTANCE" value="${which}"/>
-		<copy file="etc/photo.conf" tofile="${BUILDTOP}/photo.conf"
+		<!-- Find the source config, which will either be etc/photo.conf, or a site
+				specific config. -->
+		<condition property="confsrc" value="etc/photo.conf">
+			<not>
+				<available file="etc/photo.${which}.conf"/>
+			</not>
+		</condition>
+		<condition property="confsrc" value="etc/photo.${which}.conf">
+			<available file="etc/photo.${which}.conf"/>
+		</condition>
+		<echo message="Conf source:  ${confsrc}"/>
+		<copy file="${confsrc}" tofile="${BUILDTOP}/photo.conf"
 			filtering="true"/>
 		<jar jarfile="${WARDIR}/${which}.war" basedir="." excludes="**">
 			<zipfileset dir="photo" prefix="">
