@@ -470,8 +470,10 @@
 
 	<!-- Tiles stuff -->
 	<action path="/index"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="index"/>
+		type="net.spy.photo.struts.GetSavedSearchesAction">
+		<forward name="next" path="index"/>
+	</action>
+
 	<action path="/addform"
 		type="org.apache.struts.actions.ForwardAction"
 		parameter="top.addImage"/>

@@ -4,7 +4,6 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
-<%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <table style="width: 100%">
@@ -40,13 +39,16 @@
 			<div class="sectionheader">Canned Searches</div>
 
 			<ul>
-				<logic:iterate id="i"
-					collection="<%= SavedSearch.getSearches() %>"
-					type="net.spy.photo.SavedSearch">
-					<% String theSearchUrl="/savedSearch.do?searchId=" + i.getId(); %>
-					<li><photo:link url="<%= theSearchUrl %>"><%=
-						i.getName() %></photo:link></li>
-				</logic:iterate>
+				<c:forEach var="i" items="${searches}">
+					<li>
+						<c:set var="su">
+							<c:url value="/savedSearch.do">
+								<c:param name="searchId" value="${i.id}"/>
+							</c:url>
+						</c:set>
+						<c:out escapeXml="false" value='<a href="${su}">${i.name}</a>'/>
+					</li>
+				</c:forEach>
 			</ul>
 		</td>
 	</tr>
@@ -55,10 +57,16 @@
 		<td style="width: 50%">
 			<div class="sectionheader">Photo of the [Unit of Time]</div>
 
+			<c:set var="pou"><%= props.getProperty("photo_of_uot", "1") %></c:set>
+			<c:set var="pourl">
+				<c:url value="/PhotoServlet/${pou}.jpg">
+					<c:param name="id" value="${pou}"/>
+					<c:param name="thumbnail" value="1"/>
+				</c:url>
+			</c:set>
 			<div class="centered">
-				<photo:imgLink id='<%= props.getProperty("photo_of_uot", "1") %>'
-					alt="Image of the [Unit of Time]"
-					showThumbnail='true'/>
+				<c:out escapeXml="false"
+					value='<img src="${pourl}" alt="Image of the [Unit of Time]"/>'/>
 			</div>
 		</td>
 		<td style="width: 50%">
