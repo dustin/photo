@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadForm.java,v 1.7 2002/07/10 03:38:09 dustin Exp $
+// $Id: UploadForm.java,v 1.8 2002/11/21 07:37:47 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -124,7 +124,7 @@ public class UploadForm extends ActionForm {
 		// Verify the category format
 		if( (category==null) || (category.length() < 1) ) {
 			errors.add("category", new ActionError("error.upload.category"));
-
+		} else {
 			try {
 				Integer.parseInt(category);
 			} catch(NumberFormatException nfe) {
