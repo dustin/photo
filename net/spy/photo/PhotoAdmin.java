@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.14 2001/07/19 08:09:47 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.15 2001/07/19 08:52:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -186,106 +186,65 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Save a user
-	protected String admSaveUser() throws ServletException {
-		Connection photo=null;
+	private String admSaveUser() throws Exception {
+		PhotoSecurity security=new PhotoSecurity();
+		String user_id_s=ps.request.getParameter("userid");
+		int user_id=Integer.parseInt(user_id_s);
 
-		try {
-			PhotoSecurity security=new PhotoSecurity();
-			String user_id_s=ps.request.getParameter("userid");
-			int user_id=Integer.parseInt(user_id_s);
+		// Try to see if'n we can get one of these already done
+		PhotoUser user = security.getUser(user_id);
 
-			// Try to see if'n we can get one of these already done
-			PhotoUser user = security.getUser(user_id);
-
-			// If we didn't get one, we will this time.
-			if(user==null) {
-				user=new PhotoUser();
-			}
-
-			// Username
-			String tmp=ps.request.getParameter("username");
-			if(tmp!=null) {
-				user.setUsername(tmp);
-			}
-
-			// Password
-			tmp=ps.request.getParameter("password");
-			if(tmp!=null) {
-				user.setPassword(tmp);
-			}
-
-			// Real name
-			tmp=ps.request.getParameter("realname");
-			if(tmp!=null) {
-				user.setRealname(tmp);
-			}
-
-			// Email
-			tmp=ps.request.getParameter("email");
-			if(tmp!=null) {
-				user.setEmail(tmp);
-			}
-
-			// CanAdd
-			tmp=ps.request.getParameter("canadd");
-			if(tmp!=null) {
-				boolean tmpb=false;
-				if(tmp.startsWith("t")) {
-					tmpb=true;
-				}
-				user.canAdd(tmpb);
-			}
-
-			// Save the settings.
-			user.save();
-
-			// Now save the ACLs and stuff.
-			photo=getDBConn();
-			photo.setAutoCommit(false);
-
-			PreparedStatement st=null;
-
-			// Delete all of the ACLs
-			st=photo.prepareStatement("delete from wwwacl where userid=?");
-			st.setInt(1, user.getId());
-			st.executeUpdate();
-
-			// Add the new ACLs for the user
-			String acls[]=ps.request.getParameterValues("catacl");
-			if(acls!=null) {
-				for(int i=0; i<acls.length; i++) {
-					int cat_id=Integer.parseInt(acls[i]);
-					st=photo.prepareStatement(
-						"insert into wwwacl(userid,cat) values(?,?)"
-						);
-					st.setInt(1, user.getId());
-					st.setInt(2, cat_id);
-					st.executeUpdate();
-				}
-			}
-
-			photo.commit();
-		} catch(Exception e) {
-			log("Error saving user:  " + e);
-			e.printStackTrace();
-			try {
-				if(photo!=null) {
-					photo.rollback();
-				}
-			} catch(Exception e2) {
-				// Don't mind this...
-			}
-		} finally {
-			if(photo != null) {
-				try {
-					photo.setAutoCommit(true);
-					freeDBConn(photo);
-				} catch(Exception e) {
-					log(e.getMessage());
-				}
-			}
-			freeDBConn(photo);
+		// If we didn't get one, we will this time.
+		if(user==null) {
+			user=new PhotoUser();
 		}
+
+		// Username
+		String tmp=ps.request.getParameter("username");
+		if(tmp!=null) {
+			user.setUsername(tmp);
+		}
+
+		// Password
+		tmp=ps.request.getParameter("password");
+		if(tmp!=null) {
+			user.setPassword(tmp);
+		}
+
+		// Real name
+		tmp=ps.request.getParameter("realname");
+		if(tmp!=null) {
+			user.setRealname(tmp);
+		}
+
+		// Email
+		tmp=ps.request.getParameter("email");
+		if(tmp!=null) {
+			user.setEmail(tmp);
+		}
+
+		// CanAdd
+		tmp=ps.request.getParameter("canadd");
+		if(tmp!=null) {
+			boolean tmpb=false;
+			if(tmp.startsWith("t")) {
+				tmpb=true;
+			}
+			user.canAdd(tmpb);
+		}
+
+		// Add the new ACLs for the user
+		String acls[]=ps.request.getParameterValues("catacl");
+		if(acls!=null) {
+			for(int i=0; i<acls.length; i++) {
+				int cat_id=Integer.parseInt(acls[i]);
+				user.addACLEntry(cat_id);
+			}
+		}
+
+		// Save the settings.
+		user.save();
+
 		return(admShowUsers());
 	}
 
