@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.8 2002/06/11 00:35:01 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.9 2002/06/11 23:31:37 dustin Exp $
 
 package net.spy.photo;
 
@@ -24,6 +24,11 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	private PhotoDimensions optimalDimensions=null;
 
 	private int admin_type=NOADMIN;
+
+	// Keep track of how many images have been served up to this user.
+	private int imagesSeen=0;
+    // Keep track of the last image the user viewed.
+    private int lastImageSeen=0;
 
 	/**
 	 * Get an instance of PhotoSessionData.
@@ -228,6 +233,28 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public void setOptimalDimensions(PhotoDimensions optimalDimensions) {
 		this.optimalDimensions=optimalDimensions;
+	}
+
+	/**
+	 * Mark another image as having been served up.
+	 */
+	public synchronized void sawImage(int imageId) {
+		imagesSeen++;
+		lastImageSeen=imageId;
+	}
+
+	/**
+	 * Get the ID of the last image this session served up.
+	 */
+	public int getLastImageSeen() {
+		return(lastImageSeen);
+	}
+
+	/**
+	 * How many images has this user seen?
+	 */
+	public int getImagesSeen() {
+		return(imagesSeen);
 	}
 
 }

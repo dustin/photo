@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.123 2002/06/11 22:08:13 dustin Exp $
+ * $Id: PhotoSession.java,v 1.124 2002/06/11 23:31:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1581,6 +1581,9 @@ public class PhotoSession extends Object
 			response.setContentLength(image.size());
 
 			out.write(image.getData());
+
+			// Mark the image has having been sent to this user.
+			sessionData.sawImage(which);
 
 		} catch(Exception e) {
 			throw new ServletException("Error displaying image", e);
