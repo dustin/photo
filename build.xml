@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.13 2002/06/23 07:34:27 dustin Exp $
+	$Id: build.xml,v 1.14 2002/06/23 07:56:10 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -31,7 +31,7 @@
 			<fileset dir=".">
 				<include name="photo.jar"/>
 				<include name="photo.war"/>
-				<include name="photo.zip"/>
+				<include name="photoservlet-*.zip"/>
 			</fileset>
 		</delete>
 		<delete dir="docs"/>
