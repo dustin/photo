@@ -127,8 +127,8 @@ them into /usr/local/etc.  It's probably a good idea to flip through the
 files and make sure they're correct for your environment.
 
 Make sure your CLASSPATH environment variable contains all of the classes
-required for operation including spy.jar, photo.jar, DbConnectionBroker,
-and the driver for your database (postgresql.jar).
+required for operation including spy.jar, photo.jar, and the driver for your
+database (postgresql.jar).
 
 Start the applications with the following command:
 
@@ -143,9 +143,8 @@ any fail, it's probably not going to work.
 SERVLET SETUP
 
 With your servlet engine having all of the necessary classes in its path
-(spy.jar, photo.jar, oro.jar, DbConnectionBroker, and postgreql.jar), you
-should be able to try out your photoservlet by making the following
-request:
+(spy.jar, photo.jar, cos.jar, and postgreql.jar), you should be able to try
+out your photoservlet by making the following request:
 
 	http://myserver/servlet/net.spy.photo.PhotoServlet
 
@@ -180,4 +179,4 @@ images showing up as ``admin'' do you?  :)
 
 Let me know if you have any problems.
 
-$Id: HOWTO,v 1.7 2000/11/10 07:17:18 dustin Exp $
+$Id: HOWTO,v 1.8 2000/11/21 22:23:29 dustin Exp $
