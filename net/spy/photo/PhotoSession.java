@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.38 2000/11/10 07:17:18 dustin Exp $
+ * $Id: PhotoSession.java,v 1.39 2000/11/27 07:12:22 dustin Exp $
  */
 
 package net.spy.photo;
@@ -492,7 +492,7 @@ public class PhotoSession extends Object
 						selected=" selected=\"1\"";
 					}
 					out += "    <option value=\"" + id + "\"" + selected
-						+ "/>" + rs.getString("name") + "\n";
+						+ ">" + rs.getString("name") + "</option>\n";
 				}
 				// Cache it for five minutes
 				cache.store(key, out, 5*60*1000);

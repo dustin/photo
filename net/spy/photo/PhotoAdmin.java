@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.7 2000/11/10 07:17:18 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.8 2000/11/27 07:12:22 dustin Exp $
  */
 
 package net.spy.photo;
@@ -72,7 +72,7 @@ public class PhotoAdmin extends PhotoHelper {
 			while(rs.next()) {
 				users+="\t\t<option value=\""
 					+ rs.getInt("id") + "\">"
-					+ rs.getString("username") + "\n";
+					+ rs.getString("username") + "</option>\n";
 			}
 			h.put("USERS", users);
 			out=tokenize("admin/admuser.inc", h);
