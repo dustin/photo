@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.12 2002/06/25 01:11:23 dustin Exp $
+// $Id: PhotoImage.java,v 1.13 2002/06/25 03:40:16 dustin Exp $
 
 package net.spy.photo;
 
@@ -202,8 +202,13 @@ public class PhotoImage extends Object
 	/**
 	 * True if this is a GIF.
 	 */
-	private boolean isGif() {
+	private boolean isGif() throws PhotoException {
 		int i=0;
+		if(image_data.length < 3) {
+			throw new PhotoException(
+				"Image data too small to be a GIF, it's only "
+					+ image_data.length + " bytes.");
+		}
 		return(	   ((image_data[i++]&0xff)=='G')
 				&& ((image_data[i++]&0xff)=='I')
 				&& ((image_data[i++]&0xff)=='F'));
@@ -234,8 +239,13 @@ public class PhotoImage extends Object
 	/**
 	 * True if this is a PNG.
 	 */
-	private boolean isPng() {
+	private boolean isPng() throws PhotoException {
 		int i=0;
+		if(image_data.length < 8) {
+			throw new PhotoException(
+				"Image data too short to be a PNG, it's only "
+					+ image_data.length + " bytes.");
+		}
 		return(	   ((image_data[i++]&0xff)==0x89)
 				&& ((image_data[i++]&0xff)=='P')
 				&& ((image_data[i++]&0xff)=='N')
@@ -291,7 +301,12 @@ public class PhotoImage extends Object
 	// JPEG SUPPORT
 
 	// Return true if the given data is a jpeg.
-	private boolean isJpeg() {
+	private boolean isJpeg() throws PhotoException {
+		if(image_data.length < 24) {
+			throw new PhotoException(
+				"Too short for a jpeg header, your image data is only "
+					+ image_data.length + " bytes long.");
+		}
 		return( (getIntValue(0)==0xff)
 				&& ( getIntValue(1) == 0xd8 )
 				&& ( getIntValue(2) == 0xff ));

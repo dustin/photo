@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddImage.java,v 1.1 2002/06/25 00:18:01 dustin Exp $
+// $Id: AddImage.java,v 1.2 2002/06/25 03:40:16 dustin Exp $
 
 package net.spy.photo.rpc;
 
@@ -85,6 +85,12 @@ public class AddImage extends RPCMethod {
 
 		// Now, queue it up for saving.
 		Persistent.getPhotoSaverThread().saveImage(saver);
+
+		// Log it.
+		// XXX  I really would like a way to get to the actual remote IP
+		// address.
+		Persistent.getLogger().log(new PhotoLogUploadEntry(
+			getUser().getId(), rv, "127.0.0.1", "XMLRPC Image Upload"));
 
 		// Return the new image ID
 		return(rv);

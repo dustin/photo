@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogEntry.java,v 1.3 2002/02/25 03:08:25 dustin Exp $
+ * $Id: PhotoLogEntry.java,v 1.4 2002/06/25 03:40:16 dustin Exp $
  */
 
 package net.spy.photo;
@@ -32,13 +32,27 @@ public class PhotoLogEntry extends SpyLogEntry {
 	 * @param type The log type (by string name)
 	 * @param request The HTTP request (to get remote addr and user agent).
 	 */
-	public PhotoLogEntry(int u, String type,
-		HttpServletRequest request) {
+	public PhotoLogEntry(int u, String type, HttpServletRequest request) {
+		this(u, type, request.getRemoteAddr(), request.getHeader("User-Agent"));
+	}
+
+	/**
+	 * Get a new PhotoLogEntry.
+	 *
+	 * @param u The user ID making the request.
+	 * @param p The photo ID that was requested.
+	 * @param type The log type (by string name).
+	 * @param remoteAddr The address from which the request was made.
+	 * @param userAgent The agent that added the image.
+	 */
+	public PhotoLogEntry(int u, String type, String remoteAddr,
+		String userAgent) {
 		super();
+
 		this.wwwuser_id=u;
 		this.type=type;
-		this.remote_addr=request.getRemoteAddr();
-		this.user_agent=request.getHeader("User-Agent");
+		this.remote_addr=remoteAddr;
+		this.user_agent=userAgent;
 		this.timestamp = System.currentTimeMillis();
 	}
 
