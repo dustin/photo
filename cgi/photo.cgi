@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: photo.cgi,v 1.1 1998/04/12 03:29:56 dustin Exp $
+# $Id: photo.cgi,v 1.2 1998/04/12 03:46:10 dustin Exp $
 
 use CGI::Fast;
 use Postgres;
@@ -317,5 +317,6 @@ while(1)
     } else {
         badFunc($q, $q->param('func'));
     }
+    &addTail;
     print $q->end_html;
 }
