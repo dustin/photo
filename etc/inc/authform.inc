@@ -21,5 +21,9 @@
 <input type="submit" value="Authenticate">
 <input type="reset" value="Clear">
 
+<p>
+
+<a href="%SELF_URI%?func=setadmin">Request Administrative Priviliges</a>.
+
 </form>
 
