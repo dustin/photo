@@ -1,116 +1,54 @@
 
--- New table to define log types
-
-create table log_types (
-	log_type_id serial,
-	log_type varchar(32),
-	primary key(log_type_id)
-);
-create unique index log_types_bytype on log_types(log_type);
-grant all on log_types to nobody;
-grant all on log_types_log_type_id_seq to nobody;
-
--- Insert some log types
-
-insert into log_types(log_type) values('Login');
-insert into log_types(log_type) values('ImgView');
-insert into log_types(log_type) values('Upload');
-
--- New way to do logs
-
-create table photo_logs (
-	log_id serial,
-	log_type integer not null,
+-- Creating the commentary table
+create table commentary (
+	comment_id serial,
 	wwwuser_id integer not null,
-	photo_id integer,
+	photo_id integer not null,
+	note text not null,
 	remote_addr inet not null,
-	user_agent integer not null,
-	extra_info text,
-	ts datetime default now(),
-	primary key(log_id),
-	foreign key(log_type) references log_types(log_type_id),
+	ts timestamp default now(),
+	primary key(comment_id),
 	foreign key(wwwuser_id) references wwwusers(id),
-	foreign key(photo_id) references album(id) on delete set null,
-	foreign key(user_agent) references user_agent(user_agent_id)
-);
-create index photo_logs_bytype on photo_logs(log_type);
-create index photo_logs_byuser on photo_logs(wwwuser_id);
-create index photo_logs_byphoto on photo_logs(photo_id);
-grant all on photo_logs to nobody;
-grant all on photo_logs_log_id_seq to nobody;
-
--- Insert all of the view logs
-
-insert into photo_logs (log_type,wwwuser_id,photo_id,remote_addr,user_agent,ts)
-	select t.log_type_id,
-		l.wwwuser_id, l.photo_id, l.remote_addr, l.user_agent, l.ts
-	from
-		photo_log l, log_types t
-	where
-		t.log_type='ImgView'
+	foreign key(photo_id) references album(id)
+)
+;
+create index commentary_byphoto on commentary(photo_id)
+;
+create index commentary_byuser on commentary(wwwuser_id)
+;
+grant all on commentary to nobody
+;
+grant all on commentary_comment_id_seq to nobody
 ;
 
--- Create a temporary table for guessing the IP address a user was using
--- while uploading images.
-
-select
-	distinct on(wwwuser_id, month)
-		wwwuser_id, remote_addr, date_trunc('month', ts) as month
-into
-	tmpaddrtable
-from
-	photo_log
-;
-create unique index tmpad_idx on tmpaddrtable(wwwuser_id, month)
+-- Creating a function to get the latest date a comment was submitted for a
+-- given photo
+create function latestcomment(integer) returns timestamp as
+	'select max(ts) from commentary where photo_id = $1'
+	language 'sql'
 ;
 
--- Create a temporary table for guessing the browser a user was using
--- while uploading images.
-
-select
-	distinct on(wwwuser_id, month)
-		wwwuser_id, user_agent, date_trunc('month', ts) as month
-into
-	tmpagenttable
-from
-	photo_log
+-- Creating a table to store image ranks
+create table votes (
+	vote_id serial,
+	wwwuser_id integer not null,
+	photo_id integer not null,
+	vote smallint not null,
+	remote_addr inet not null,
+	ts timestamp default now(),
+	primary key(vote_id),
+	foreign key(wwwuser_id) references wwwusers(id),
+	foreign key(photo_id) references album(id)
+)
 ;
-create unique index tmpag_idx on tmpagenttable(wwwuser_id, month)
+create unique index votes_byui on votes(wwwuser_id, photo_id)
 ;
-
--- Quick pass to make sure there's nothing that needed to be set to null
--- by the null settin' trigger
-update upload_log
-	set photo_id = null
-		where photo_id not in (select id from album)
+create index votes_byphoto on votes(photo_id)
 ;
-
--- Insert all of the old upload logs
-
-insert into photo_logs
-	(log_type,wwwuser_id,photo_id,remote_addr,user_agent,extra_info,ts)
-	select t.log_type_id,
-		l.wwwuser_id, l.photo_id,
-		ad.remote_addr,
-		ag.user_agent,
-		text(stored),
-		l.ts
-	from
-		upload_log l,
-		log_types t,
-		tmpagenttable ag,
-		tmpaddrtable ad
-	where
-		t.log_type='Upload'
-		and ad.wwwuser_id=l.wwwuser_id
-		and ad.month=date_trunc('month', l.ts)
-		and ag.wwwuser_id=l.wwwuser_id
-		and ag.month=date_trunc('month', l.ts)
+create index votes_byuser on votes(wwwuser_id)
+;
+grant all on votes to nobody
+;
+grant all on votes_vote_id_seq to nobody
 ;
 
--- Drop temporary tables
-
-drop table tmpaddrtable
-;
-drop table tmpagenttable
-;

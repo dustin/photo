@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.22 2002/02/24 08:52:52 dustin Exp $
+-- $Id: photo.sql,v 1.23 2002/02/24 11:17:01 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -228,42 +228,42 @@ begin
 end;
 ' language 'plpgsql';
 
--- 'Log image retrievals.
+-- Log various activities
 
-create table photo_log (
-	photo_id integer not null,
+create table log_types (
+	log_type_id serial,
+	log_type varchar(32),
+	primary key(log_type_id)
+);
+create unique index log_types_bytype on log_types(log_type);
+grant all on log_types to nobody;
+grant all on log_types_log_type_id_seq to nobody;
+
+-- Insert some data.
+insert into log_types(log_type) values('Login');
+insert into log_types(log_type) values('ImgView');
+insert into log_types(log_type) values('Upload');
+
+create table photo_logs (
+	log_id serial,
+	log_type integer not null,
 	wwwuser_id integer not null,
+	photo_id integer,
 	remote_addr inet not null,
-	server_host text not null,
 	user_agent integer not null,
-	cached boolean not null,
-	ts datetime not null,
-	foreign key(photo_id) references album(id),
+	extra_info text,
+	ts datetime default now(),
+	primary key(log_id),
+	foreign key(log_type) references log_types(log_type_id),
 	foreign key(wwwuser_id) references wwwusers(id),
+	foreign key(photo_id) references album(id) on delete set null,
 	foreign key(user_agent) references user_agent(user_agent_id)
 );
-
-grant all on photo_log to nobody;
-
-create index photo_log_photo_id on photo_log(photo_id);
-create index photo_log_wwwuser_id on photo_log(wwwuser_id);
-create index photo_log_remote_addr on photo_log(remote_addr);
-
--- Log of uploaded images.
-
--- This table allows null photo IDs so's that photos may be deleted, but
--- their essense may remain
-create table upload_log (
-	photo_id integer,
-	wwwuser_id integer not null,
-	stored datetime,
-	ts datetime not null,
-	foreign key(photo_id) references album(id) on delete set null,
-	foreign key(wwwuser_id) references wwwusers(id)
-);
-
-grant all on upload_log to nobody;
-create unique index upload_log_photo on upload_log(photo_id);
+create index photo_logs_bytype on photo_logs(log_type);
+create index photo_logs_byuser on photo_logs(wwwuser_id);
+create index photo_logs_byphoto on photo_logs(photo_id);
+grant all on photo_logs to nobody;
+grant all on photo_logs_log_id_seq to nobody;
 
 -- New user profiles
 create table user_profiles (

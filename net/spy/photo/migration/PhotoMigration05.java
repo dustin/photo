@@ -4,20 +4,20 @@ package net.spy.photo.migration;
 
 import net.spy.photo.*;
 
-public class PhotoMigration04 extends PhotoMigration {
+public class PhotoMigration05 extends PhotoMigration {
 
 	public void migrate() throws Exception {
-		if( (hasColumn("commentary", "comment_id"))
-			&& (hasColumn("votes", "vote_id"))) {
+		if( (hasColumn("photo_logs", "wwwuser_id"))
+			&& (hasColumn("photo_logs", "log_id"))) {
 			System.err.println("Looks like you've already run this kit.");
 		} else {
 			// Add the new columns.
-			runSqlScript("net/spy/photo/migration/migration04.sql");
+			runSqlScript("net/spy/photo/migration/migration05.sql");
 		}
 	}
 
 	public static void main(String args[]) throws Exception {
-		PhotoMigration04 mig=new PhotoMigration04();
+		PhotoMigration05 mig=new PhotoMigration05();
 		mig.migrate();
 	}
 }

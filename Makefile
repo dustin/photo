@@ -75,6 +75,8 @@ CLASSES=\
 	net/spy/photo/migration/PhotoMigration01.class \
 	net/spy/photo/migration/PhotoMigration02.class \
 	net/spy/photo/migration/PhotoMigration03.class \
+	net/spy/photo/migration/PhotoMigration04.class \
+	net/spy/photo/migration/PhotoMigration05.class \
 	$(RCLASSES)
 
 .SUFFIXES: .spt .java .class .jar
@@ -82,7 +84,8 @@ CLASSES=\
 .PHONY: test
 
 photo.jar: $(CLASSES)
-	$(JAR) cv0f $@ `find net/spy -name "*.class"`
+	$(JAR) cv0f $@ `find net/spy -name "*.class"` \
+		`find net/spy -name "*.sql"`
 
 all: $(CLASSES)
 

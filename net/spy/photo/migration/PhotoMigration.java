@@ -34,7 +34,7 @@ public abstract class PhotoMigration extends Object {
 		return(ret);
 	}
 
-	private static File findPath(String rel)
+	private static URL findPath(String rel)
 		throws FileNotFoundException {
 		// Just need some object that will be loaded near the photo stuff
 		PhotoConfig conf=new PhotoConfig();
@@ -43,17 +43,20 @@ public abstract class PhotoMigration extends Object {
 		if(u==null) {
 			throw new FileNotFoundException("Can't find " + rel);
 		}
-		return(new File(u.getFile()));
+		return(u);
 	}
 
 	protected void runSqlScript(String path) throws Exception {
-		File f=findPath(path);
+		URL u=findPath(path);
+
+		System.out.println("Running SQL script from " + u);
 
 		SpyDB db=new SpyDB(new PhotoConfig());
 		Connection conn=db.getConn();
 		conn.setAutoCommit(false);
 
-		LineNumberReader lr=new LineNumberReader(new FileReader(f));
+		LineNumberReader lr=new LineNumberReader(
+			new InputStreamReader(u.openStream()));
 
 		try {
 			String curline=null;
@@ -63,9 +66,13 @@ public abstract class PhotoMigration extends Object {
 
 				if(curline.equals(";")) {
 					Statement st=conn.createStatement();
+					long starttime=System.currentTimeMillis();
 					st.executeUpdate(query.toString());
+					long stoptime=System.currentTimeMillis();
 					st.close();
 					st=null;
+					System.out.println("Completed query in "
+						+ (stoptime-starttime) + "ms");
 					query=new StringBuffer();
 				} else if(curline.startsWith("--")) {
 					System.out.println(lr.getLineNumber() + ": " + curline);
