@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaverThread.java,v 1.8 2002/11/03 07:33:35 dustin Exp $
+// $Id: PhotoSaverThread.java,v 1.9 2003/07/26 08:38:27 dustin Exp $
 
 package net.spy.photo;
 
@@ -56,7 +56,7 @@ public class PhotoSaverThread extends Thread {
 
 		// Notify so we'll shut down immediately.
 		synchronized(jobQueue) {
-			jobQueue.notify();
+			jobQueue.notifyAll();
 		}
 	}
 
@@ -68,7 +68,7 @@ public class PhotoSaverThread extends Thread {
 		ps.passivate();
 		jobQueue.push(ps);
 		synchronized(jobQueue) {
-			jobQueue.notify();
+			jobQueue.notifyAll();
 		}
 	}
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.18 2002/07/10 04:00:18 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.19 2003/07/26 08:38:27 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -140,7 +140,9 @@ public class PhotoStorerThread extends Thread {
 			// If anything happens, roll it back.
 			e.printStackTrace();
 			try {
-				db.rollback();
+				if(db!=null) {
+					db.rollback();
+				}
 			} catch(Exception e3) {
 				e3.printStackTrace();
 			}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.18 2002/12/15 09:04:51 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.19 2003/07/26 08:38:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -103,7 +103,9 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 				} // LogEntry loop
 				st.close();
 			} finally {
-				photodb.close();
+				if(photodb != null) {
+					photodb.close();
+				}
 				flushing=false;
 			}
 			getLogger().debug("Flush complete.");

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageObserver.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
+// $Id: PhotoImageObserver.java,v 1.3 2003/07/26 08:38:27 dustin Exp $
 
 package net.spy.photo;
 
@@ -35,14 +35,12 @@ public class PhotoImageObserver extends Object implements ImageObserver {
 	/**
 	 * @see ImageObserver
 	 */
-	public boolean imageUpdate(Image i, int infoflags,
+	public synchronized boolean imageUpdate(Image i, int infoflags,
 		int x, int y, int width, int height) {
 
 		if( (infoflags&ALLBITS) != 0) {
 			allbits=true;
-			synchronized(this) {
-				notify();
-			}
+			notifyAll();
 		}
 		return(!allbits);
 	}
@@ -57,7 +55,7 @@ public class PhotoImageObserver extends Object implements ImageObserver {
 		if(!pio.allBitsP()) {
 			synchronized(pio) {
 				try {
-					pio.wait();
+					pio.wait(15000);
 				} catch(InterruptedException e) {
 					e.printStackTrace();
 				}

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.12 2003/06/02 00:40:33 dustin Exp $
+// $Id: PhotoImageData.java,v 1.13 2003/07/26 08:38:27 dustin Exp $
 
 package net.spy.photo;
 
@@ -113,6 +113,15 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 		}
 
 		return(rv);
+	}
+
+	/** 
+	 * Get the hash code for this object.
+	 * 
+	 * @return the id
+	 */
+	public int hashCode() {
+		return(id);
 	}
 
 	// Calculate the thumbnail size

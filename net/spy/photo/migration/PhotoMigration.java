@@ -41,7 +41,7 @@ public abstract class PhotoMigration extends Object {
 			rs=db.executeQuery(query);
 			rs.next();
 			ret=true;
-		} catch(Exception e) {
+		} catch(SQLException e) {
 			// Ignore errors, we just want to know if that would have worked.
 		}
 

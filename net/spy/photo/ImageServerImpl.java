@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.8 2002/11/03 07:33:35 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.9 2003/07/26 08:38:27 dustin Exp $
 
 package net.spy.photo;
 
@@ -112,7 +112,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 		// Let the storer thread know to wake up and start storing images.
 		checkStorerThread();
 		synchronized(storer) {
-			storer.notify();
+			storer.notifyAll();
 		}
 	}
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaver.java,v 1.8 2002/11/10 09:41:59 dustin Exp $
+// $Id: PhotoSaver.java,v 1.9 2003/07/26 08:38:27 dustin Exp $
 
 package net.spy.photo;
 
@@ -215,7 +215,9 @@ public class PhotoSaver extends Object {
 
 		} catch(Exception e) {
 			try {
-				conn.rollback();
+				if(conn!=null) {
+					conn.rollback();
+				}
 			} catch(Exception e2) {
 				e2.printStackTrace();
 			}
@@ -224,7 +226,9 @@ public class PhotoSaver extends Object {
 			if(conn!=null) {
 				try {
 					conn.setAutoCommit(true);
-					db.close();
+					if(db != null) {
+						db.close();
+					}
 				} catch(Exception e) {
 					e.printStackTrace();
 				}

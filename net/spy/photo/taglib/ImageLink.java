@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.9 2002/09/16 02:58:55 dustin Exp $
+// $Id: ImageLink.java,v 1.10 2003/07/26 08:38:27 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -51,16 +51,14 @@ public class ImageLink extends PhotoTag {
 	 * If ``true'' show a thumbnail.
 	 */
 	public void setShowThumbnail(String to) {
-		Boolean b=new Boolean(to);
-		this.showThumbnail=b.booleanValue();
+		this.showThumbnail=Boolean.getBoolean(to);
 	}
 
 	/**
 	 * If ``true'' scale the image to the given width and height.
 	 */
 	public void setScale(String to) {
-		Boolean b=new Boolean(to);
-		this.scale=b.booleanValue();
+		this.scale=Boolean.getBoolean(to);
 	}
 
 	/**

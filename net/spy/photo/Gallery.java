@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.12 2003/01/07 09:38:50 dustin Exp $
+// $Id: Gallery.java,v 1.13 2003/07/26 08:38:27 dustin Exp $
 
 package net.spy.photo;
 
@@ -151,7 +151,9 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 			db.close();
 
 			// Load the map
-			rv.loadMap(user);
+			if(rv != null) {
+				rv.loadMap(user);
+			}
 
 		} catch(Exception e) {
 			throw new PhotoException("Couldn't look up gallery", e);

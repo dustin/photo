@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ExternalImageServerScaler.java,v 1.3 2002/07/10 03:38:08 dustin Exp $
+// $Id: ExternalImageServerScaler.java,v 1.4 2003/07/26 08:38:27 dustin Exp $
 
 package net.spy.photo;
 
@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.IOException;
 
 import java.util.Random;
 
@@ -58,6 +59,8 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 		PhotoDimScaler pds=new PhotoDimScaler(imageSize);
 		PhotoDimensions newSize=pds.scaleTo(dim);
 
+		FileInputStream fin=null;
+
 		try {
 			// Need these for the process.
 			InputStream stderr=null;
@@ -104,7 +107,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 			File file=new File(thumbfilename);
 			b=new byte[(int)file.length()];
 
-			FileInputStream fin = new FileInputStream(file);
+			fin = new FileInputStream(file);
 
 			fin.read(b);
 
@@ -113,11 +116,14 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 			throw e;
 		} finally {
 			try {
+				if(fin != null) {
+					fin.close();
+				}
 				File f = new File(tmpfilename);
 				f.delete();
 				f = new File(thumbfilename);
 				f.delete();
-			} catch(Exception e2) {
+			} catch(IOException e2) {
 				// No need to do anything, that's just cleanup.
 			}
 		}

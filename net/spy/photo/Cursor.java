@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Cursor.java,v 1.11 2003/05/04 08:19:28 dustin Exp $
+ * $Id: Cursor.java,v 1.12 2003/07/26 08:38:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -68,7 +68,7 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	 * Return the iterator from the current position (not the beginning).
 	 */
 	public Iterator iterator() {
-		return(new CursorIterator(this));
+		return(new CursorIterator());
 	}
 
 	/**
@@ -112,12 +112,14 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	/**
 	 * Get the next result, or null if we're done
 	 */
-	public Object next() {
+	public Object next() throws NoSuchElementException {
 		Object r=null;
 
 		if(current<size()) {
 			r=get(current);
 			current++;
+		} else {
+			throw new NoSuchElementException();
 		}
 		return(r);
 	}
@@ -170,26 +172,23 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	// Inner class to iterate a cursor
 	private class CursorIterator extends Object implements Iterator {
 
-		private Cursor myCursor=null;
-	
 		// Get a cursor iterator in a given cursor
-		private CursorIterator(Cursor c) {
+		private CursorIterator() {
 			super();
-			this.myCursor=c;
 		}
 
 		/**
 		 * Get the next object.
 		 */
 		public Object next() {
-			return(myCursor.nextElement());
+			return(nextElement());
 		}
 
 		/**
 		 * True if there are elements remaining.
 		 */
 		public boolean hasNext() {
-			return(myCursor.hasMoreElements());
+			return(hasMoreElements());
 		}
 
 		/**

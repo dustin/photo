@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoRestore.java,v 1.8 2002/07/10 03:38:09 dustin Exp $
+// $Id: PhotoRestore.java,v 1.9 2003/07/26 08:38:27 dustin Exp $
 
 package net.spy.photo.util;
 
@@ -58,7 +58,9 @@ public class PhotoRestore extends Object {
 			ret=new AlbumBackupEntry(n);
 		}
 
-		ret.restore();
+		if(ret!=null) {
+			ret.restore();
+		}
 
 		return(ret);
 	}

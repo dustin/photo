@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePhoto.java,v 1.10 2002/11/03 08:56:01 dustin Exp $
+ * $Id: CachePhoto.java,v 1.11 2003/07/26 08:38:27 dustin Exp $
  */
 
 package net.spy.photo.tools;
@@ -187,7 +187,7 @@ public class CachePhoto extends Object {
 	}
 
 	// Inner exception for reporting image data differences
-	private class ImageDataException extends Exception {
+	private static class ImageDataException extends Exception {
 		private int id=0;
 		public ImageDataException(String s, int id) {
 			super(s);
@@ -199,10 +199,9 @@ public class CachePhoto extends Object {
 	}
 
 	// Inner class for stats
-	private class Stats extends Object {
+	private static class Stats extends Object {
 		private int done=0;
 		private int left=0;
-		private long startTime=0;
 		private long totalTime=0;
 		private long lastTime=0;
 		private long lastProcessTime=0;
@@ -210,7 +209,6 @@ public class CachePhoto extends Object {
 		public Stats(int size) {
 			super();
 
-			this.startTime=System.currentTimeMillis();
 			this.left=size;
 		}
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.19 2002/07/10 03:38:08 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.20 2003/07/26 08:38:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -39,7 +39,7 @@ public class PhotoAheadFetcher extends Object {
 	}
 
 	// This class uses the thread pool to fetch ahead.
-	private class FetchAhead extends Object implements Runnable {
+	private static class FetchAhead extends Object implements Runnable {
 
 		private PhotoSearchResults results=null;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.23 2002/11/03 07:33:35 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.24 2003/07/26 08:38:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,7 +14,6 @@ import net.spy.cache.SpyCache;
 public class PhotoImageHelper extends PhotoHelper { 
 
 	private int imageId=-1;
-	private PhotoImage imageData=null;
 
 	/**
 	 * Get a PhotoHelper for the given image on behalf.

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageWatcher.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
+// $Id: ImageWatcher.java,v 1.3 2003/07/26 08:38:27 dustin Exp $
 
 package net.spy.photo;
 
@@ -32,7 +32,7 @@ public class ImageWatcher extends Object implements ImageObserver {
 		if(!isLoaded) {
 			Toolkit.getDefaultToolkit().prepareImage(image, -1, -1, this);
 			synchronized(this) {
-				wait();
+				wait(15000);
 			}
 		}
 	}
@@ -46,7 +46,7 @@ public class ImageWatcher extends Object implements ImageObserver {
 		if( (infoflags&ALLBITS) != 0) {
 			isLoaded=true;
 			synchronized(this) {
-				notify();
+				notifyAll();
 			}
 		}
 
