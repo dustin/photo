@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.29 1998/09/04 03:21:12 dustin Exp $
+# $Id: Photo.pm,v 1.30 1998/09/05 03:36:16 dustin Exp $
 
 package Photo;
 
@@ -524,7 +524,7 @@ sub addImage
     $query.="\t$in{'category'},\n\t$size,\n\t$in{'taken'},\n";
     $query.="\t'$ENV{'REMOTE_USER'}');";
 
-    eval { $self->doQuery($query); };
+    eval { $s=$self->doQuery($query); };
 
     if($@) {
 	# Try to clean up:
@@ -539,6 +539,9 @@ sub addImage
 	    'QUERY' => $query
 	);
 	$self->showTemplate("$Photo::includes/add_success.inc", %tmp);
+    }
+    if($s) {
+        $s->finish;
     }
 }
 
