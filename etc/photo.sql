@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.7 2001/07/20 09:51:56 dustin Exp $
+-- $Id: photo.sql,v 1.8 2001/07/20 10:14:00 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -225,6 +225,7 @@ create table user_profiles (
 	profile_id serial,
 	name varchar(32) not null,
 	description text not null,
+	expires date not null,
 	primary key(profile_id)
 );
 create unique index user_profilesbyname on user_profiles(name);

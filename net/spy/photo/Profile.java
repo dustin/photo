@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: Profile.java,v 1.1 2001/07/20 09:51:56 dustin Exp $
+// $Id: Profile.java,v 1.2 2001/07/20 10:14:00 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -8,6 +8,7 @@ package net.spy.photo;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 import java.io.Serializable;
 
 import net.spy.*;
@@ -20,6 +21,7 @@ public class Profile extends Object implements Serializable {
 	private int id=-1;
 	private String name=null;
 	private String description=null;
+	private Date expires=null;
 
 	private Hashtable acl=null;
 
@@ -30,6 +32,8 @@ public class Profile extends Object implements Serializable {
 		super();
 		acl=new Hashtable();
 		name=PwGen.getPass(16);
+		// Expires in thirty days.
+		expires=new Date(System.currentTimeMillis() + (86400l*30l*1000l));
 	}
 
 	/**
@@ -39,7 +43,7 @@ public class Profile extends Object implements Serializable {
 		super();
 		SpyDB db=new SpyDB(new PhotoConfig());
 		PreparedStatement pst=db.prepareStatement(
-			"select * from user_profiles where name=?");
+			"select * from user_profiles where name=? and expires>now()");
 		pst.setString(1, id);
 		ResultSet rs=pst.executeQuery();
 		if(!rs.next()) {
@@ -52,6 +56,7 @@ public class Profile extends Object implements Serializable {
 		this.description=rs.getString("description");
 		this.id=rs.getInt("profile_id");
 		this.name=id;
+		this.expires=rs.getDate("expires");
 		rs.close();
 		pst.close();
 		db.close();
@@ -81,6 +86,8 @@ public class Profile extends Object implements Serializable {
 		StringBuffer sb=new StringBuffer();
 		sb.append("Profile:  ");
 		sb.append(name);
+		sb.append(", expires:  ");
+		sb.append(expires);
 		sb.append(":\n");
 		for(Enumeration e=getACLEntries(); e.hasMoreElements(); ) {
 			sb.append("\t");
@@ -171,20 +178,21 @@ public class Profile extends Object implements Serializable {
 			// Determine whether this is a new user or not.
 			if(id>=0) {
 				st=conn.prepareStatement(
-					"update user_profiles set description=? "
+					"update user_profiles set description=?, expires=? "
 						+ "\twhere id=?"
 					);
-				st.setInt(2, getId());
+				st.setInt(3, getId());
 			} else {
 				st=conn.prepareStatement(
-					"insert into user_profiles(description, name)\n"
-						+ " values(?, ?)"
+					"insert into user_profiles(description, expires, name)\n"
+						+ " values(?, ?, ?)"
 					);
-				st.setString(2, getName());
+				st.setString(3, getName());
 			}
 
 			// Set the common fields and update.
 			st.setString(1, getDescription());
+			st.setDate(2, new java.sql.Date(expires.getTime()));
 			st.executeUpdate();
 			st.close();
 
