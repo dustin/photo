@@ -1,9 +1,12 @@
 #
-# $Id: UpdateCategory.spt,v 1.1 2002/11/10 09:41:59 dustin Exp $
+# $Id: UpdateCategory.spt,v 1.2 2003/01/03 22:23:13 dustin Exp $
 #
 
 @package
 net.spy.photo.sp
+
+@implements
+ModifyCategory
 
 @description
 Give a category a new name.

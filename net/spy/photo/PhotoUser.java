@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.25 2002/12/15 09:24:38 dustin Exp $
+// $Id: PhotoUser.java,v 1.26 2003/01/03 22:23:11 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 package net.spy.photo;
@@ -28,6 +28,7 @@ import net.spy.db.SaveContext;
 
 import net.spy.photo.sp.ModifyUser;
 import net.spy.photo.sp.InsertUser;
+import net.spy.photo.sp.UpdateUser;
 import net.spy.photo.sp.DeleteACLForUser;
 import net.spy.photo.sp.InsertACLEntry;
 import net.spy.photo.sp.GetGeneratedKey;
@@ -311,22 +312,23 @@ public class PhotoUser extends Object implements Serializable, Savable {
 	public void save(Connection conn, SaveContext context)
 		throws SaveException, SQLException {
 
-		DBSP db=null;
+		ModifyUser db=null;
 
 		// Determine whether this is a new user or not.
 		if(isNew()) {
 			db=new InsertUser(conn);
 		} else {
-			db=new ModifyUser(conn);
-			db.set("user_id", getId());
+			db=new UpdateUser(conn);
+			((UpdateUser)db).setUserId(getId());
 		}
 
 		// Set the common fields and update.
-		db.set("username", username);
-		db.set("realname", realname);
-		db.set("email", email);
-		db.set("password", password);
-		db.set("canadd", canadd);
+		db.setUsername(username);
+		db.setRealname(realname);
+		db.setEmail(email);
+		db.setPassword(password);
+		db.setCanadd(canadd);
+
 		db.executeUpdate();
 		db.close();
 		db=null;

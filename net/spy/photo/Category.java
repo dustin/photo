@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.10 2002/12/15 09:02:25 dustin Exp $
+// $Id: Category.java,v 1.11 2003/01/03 22:23:10 dustin Exp $
 
 package net.spy.photo;
 
@@ -34,6 +34,7 @@ import net.spy.photo.sp.DeleteACLForCat;
 import net.spy.photo.sp.InsertACLEntry;
 import net.spy.photo.sp.InsertCategory;
 import net.spy.photo.sp.UpdateCategory;
+import net.spy.photo.sp.ModifyCategory;
 import net.spy.photo.sp.GetACLsForCategory;
 import net.spy.photo.sp.GetGeneratedKey;
 
@@ -226,7 +227,7 @@ public class Category extends SpyObject implements Comparable, Savable {
 	 */
 	public void save(Connection conn, SaveContext context)
 		throws SaveException, SQLException {
-		DBSP saveCat=null;
+		ModifyCategory saveCat=null;
 
 		// What to do here depends on whether it's a new category or a
 		// modification of an existing category.
@@ -235,11 +236,11 @@ public class Category extends SpyObject implements Comparable, Savable {
 		} else {
 			// Existing user
 			saveCat=new UpdateCategory(conn);
-			saveCat.set("id", id);
+			((UpdateCategory)saveCat).setId(id);
 		}
 
 		// Set the common fields
-		saveCat.set("name", name);
+		saveCat.setName(name);
 		// Save the category proper
 		saveCat.executeUpdate();
 		saveCat.close();

@@ -1,0 +1,12 @@
+#
+# $Id: ModifyCategory.spt,v 1.1 2003/01/03 22:23:13 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Modify a category
+
+@params
+name required VARCHAR Name of the new category.
