@@ -59,8 +59,8 @@ sub showTemplate
     my($q);
 
     $q=CGI->new;
-    map { $p{uc($_)}=$q->param($_) if(!defined($p{$_}))} $q->param;
-    map { $p{$_}=$ENV{$_} if(!defined($p{$_})) } keys(%ENV);
+    map { $p{uc($_)}=$q->param($_) unless(defined($p{uc($_)}))} $q->param;
+    map { $p{$_}=$ENV{$_} unless(defined($p{uc($_)})) } keys(%ENV);
 
     $p{'URIROOT'}=$uriroot;
     $p{'CGIDIR'}=$cgidir;
