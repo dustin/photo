@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddToGalleryAction.java,v 1.3 2002/07/02 07:03:41 dustin Exp $
+// $Id: AddToGalleryAction.java,v 1.4 2002/07/03 04:32:50 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -41,16 +41,6 @@ public class AddToGalleryAction extends PhotoAction {
 		throws IOException, ServletException {
 
 		AddToGalleryForm atgf=(AddToGalleryForm)form;
-		if(atgf==null) {
-			// If we didn't get one, make one here...this is ugly, but
-			// whatever.
-			atgf=new AddToGalleryForm();
-			atgf.setId(Integer.parseInt(request.getParameter("id")));
-			ActionErrors e=atgf.validate(mapping, request);
-			if(e!=null && e.size()>0) {
-				throw new ServletException("Form is broken.");
-			}
-		}
 
 		PhotoSessionData sessionData=getSessionData(request);
 		PhotoUser user=sessionData.getUser();
