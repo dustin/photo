@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadForm.java,v 1.1 2002/05/18 05:31:55 dustin Exp $
+// $Id: UploadForm.java,v 1.2 2002/05/18 07:30:11 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -115,6 +115,7 @@ public class UploadForm extends ActionForm {
 			try {
 				Integer.parseInt(category);
 			} catch(NumberFormatException nfe) {
+				nfe.printStackTrace();
 				errors.add("category",
 					new ActionError("error.upload.category.nfe"));
 			}
@@ -140,6 +141,7 @@ public class UploadForm extends ActionForm {
 				System.out.println("Mime type is " + picture.getContentType()
 					+ " format is " + photoImage.getFormatString());
 			} catch(Exception e) {
+				e.printStackTrace();
 				errors.add("picture",
 					new ActionError("error.upload.picture.notread"));
 			}

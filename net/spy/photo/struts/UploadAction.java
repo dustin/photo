@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadAction.java,v 1.1 2002/05/18 05:31:55 dustin Exp $
+// $Id: UploadAction.java,v 1.2 2002/05/18 07:30:11 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -28,6 +28,9 @@ public class UploadAction extends PhotoAction {
 		super();
 	}
 
+	/**
+	 * Process the upload.
+	 */
 	public ActionForward perform(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
