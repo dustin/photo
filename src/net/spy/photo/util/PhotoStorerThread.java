@@ -188,6 +188,7 @@ public class PhotoStorerThread extends SpyThread {
 			String stmp = (String)i.next();
 			try {
 				storeImage(Integer.valueOf(stmp).intValue());
+				rv++;
 			} catch(Exception e) {
 				e.printStackTrace();
 				// Return 0 so we won't try again *right now*, but we will
