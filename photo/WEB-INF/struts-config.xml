@@ -18,6 +18,7 @@
     <form-bean name="setSizeForm" type="net.spy.photo.struts.SetSizeForm"/>
     <form-bean name="changePWForm" type="net.spy.photo.struts.ChangePWForm"/>
     <form-bean name="forgotPWForm" type="net.spy.photo.struts.ForgotPWForm"/>
+    <form-bean name="commentForm" type="net.spy.photo.struts.CommentForm"/>
   </form-beans>
 
   <action-mappings>
@@ -51,6 +52,14 @@
 		name="forgotPWForm">
 		<forward name="success" path="/forgotpw_out.jsp" />
 	</action>
+
+  <!-- Add a new comment -->
+  <action path="/addcomment"
+    type="net.spy.photo.struts.CommentAction"
+    input="/commentinput.jsp"
+    name="commentForm">
+		<forward name="success" path="/display.jsp" />
+  </action>
 
 	<!-- Enable/disable administrative access. -->
 	<action path="/adminify"
