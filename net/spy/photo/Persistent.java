@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Persistent.java,v 1.4 2002/06/14 18:34:55 dustin Exp $
+// $Id: Persistent.java,v 1.5 2002/06/30 07:51:31 dustin Exp $
 
 package net.spy.photo;
 
@@ -99,7 +99,9 @@ public class Persistent extends HttpServlet {
 	 * Get the PhotoSecurity object for this instance.
 	 */
 	public static PhotoSecurity getSecurity() {
-		verifyInitialized();
+		if(security==null) {
+			security=new PhotoSecurity();
+		}
 		return(security);
 	}
 

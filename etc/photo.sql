@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.28 2002/03/01 10:22:36 dustin Exp $
+-- $Id: photo.sql,v 1.29 2002/06/30 07:51:31 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -309,6 +309,30 @@ create index user_profile_log_byuser on user_profile_log(wwwuser_id);
 create index user_profile_log_byprof on user_profile_log(profile_id);
 grant all on user_profile_log_log_id_seq to nobody;
 grant all on user_profile_log to nobody;
+
+-- Table for galleries
+create table galleries (
+	gallery_id serial,
+	gallery_name varchar(64) not null,
+	wwwuser_id integer not null,
+	ispublic boolean not null,
+	ts timestamp default now(),
+	primary key(gallery_id),
+	foreign key(wwwuser_id) references wwwusers(id)
+);
+grant all on galleries to nobody;
+grant all on galleries_gallery_id_seq to nobody;
+
+-- The actual images stored in the galleries
+create table galleries_map (
+	gallery_id integer not null,
+	album_id integer not null,
+	foreign key(gallery_id) references galleries(gallery_id),
+	foreign key(album_id) references album(id)
+);
+create index galleries_mapbygal on galleries_map(gallery_id);
+create index galleries_mapbyalbum on galleries_map(album_id);
+grant all on galleries_map to nobody;
 
 -- Show the profile users along with the profiles that created them
 create view user_byprofiles as

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.6 2002/06/29 07:13:56 dustin Exp $
+// $Id: PhotoImageData.java,v 1.7 2002/06/30 07:51:31 dustin Exp $
 
 package net.spy.photo;
 
@@ -90,6 +90,24 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 	public void setMaxDims(PhotoDimensions maxDims) {
 		this.maxDims=maxDims;
 		calculateScaled();
+	}
+
+	/**
+	 * True if the given object is a PhotoImageData object representing the
+	 * same image.
+	 */
+	public boolean equals(Object o) {
+		boolean rv=false;
+
+		if(o instanceof PhotoImageData) {
+			PhotoImageData pid=(PhotoImageData)o;
+
+			if(id == pid.getId()) {
+				rv=true;
+			}
+		}
+
+		return(rv);
 	}
 
 	// Calculate the thumbnail size
