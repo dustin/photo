@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.118 2002/05/15 08:26:15 dustin Exp $
+ * $Id: PhotoSession.java,v 1.119 2002/05/16 05:54:58 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1429,39 +1429,35 @@ public class PhotoSession extends Object
 		// We do the middle first, but, well, so what?
 		StringBuffer middle=new StringBuffer();
 
-		// Lock the results so the aheadfetcher can't mess us up once we
-		// get going.
-		synchronized(results) {
-			int i=0;
-			// if we have a starting point, let's start there.
-			try {
-				String startingS=request.getParameter("startfrom");
-				if(startingS!=null) {
-					int starting=Integer.parseInt(startingS);
-					results.set(starting);
-				}
-			} catch(Exception e) {
-				log("Error finding out starting point for search results", e);
+		int i=0;
+		// if we have a starting point, let's start there.
+		try {
+			String startingS=request.getParameter("startfrom");
+			if(startingS!=null) {
+				int starting=Integer.parseInt(startingS);
+				results.set(starting);
 			}
-
-			middle.append("<search_result_row>\n");
-
-			for(i=0; i<results.getMaxRet(); i++) {
-				PhotoSearchResult r=(PhotoSearchResult)results.next();
-				if(r!=null) {
-					// No, this really doesn't belong here.
-					if( (i>0) && ((i) % 2) == 0) {
-						middle.append("</search_result_row>");
-						middle.append("<search_result_row>\n");
-					}
-					middle.append("<search_result>\n");
-					middle.append(r.showXML(self_uri));
-					middle.append("</search_result>\n");
-				}
-			}
-
-			middle.append("</search_result_row>\n");
+		} catch(Exception e) {
+			log("Error finding out starting point for search results", e);
 		}
+
+		middle.append("<search_result_row>\n");
+
+		for(i=0; i<results.getMaxRet(); i++) {
+			PhotoSearchResult r=(PhotoSearchResult)results.next();
+			if(r!=null) {
+				// No, this really doesn't belong here.
+				if( (i>0) && ((i) % 2) == 0) {
+					middle.append("</search_result_row>");
+					middle.append("<search_result_row>\n");
+				}
+				middle.append("<search_result>\n");
+				middle.append(r.showXML(self_uri));
+				middle.append("</search_result>\n");
+			}
+		}
+
+		middle.append("</search_result_row>\n");
 
 		StringBuffer meta=new StringBuffer();
 		meta.append("<meta_stuff>\n");
