@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.24 1998/08/11 05:07:40 dustin Exp $
+# $Id: Photo.pm,v 1.25 1998/08/15 04:39:49 dustin Exp $
 
 package Photo;
 
@@ -474,7 +474,7 @@ sub addImage
         my($premime, $i, $tmp);
         $query="insert into image_map(name) values('$fn');\n";
         $self->doQuery($query);
-        $s=$self->doQuery("select last_value from image_store_seq;\n");
+        $s=$self->doQuery("select currval('image_store_seq');\n");
         $r=$s->fetch;
         $n=$r->[0];
 
