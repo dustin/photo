@@ -7,6 +7,6 @@ All Images and other data within these pages are property of their owners,
 and may not be used without permission.
 <br>
 <a href="%SELF_URI%?func=credform">Authenticated as:
-%REMOTE_USER% (%REMOTE_UID%)</a><br>
+%REMOTE_USER% (%REMOTE_UID%)</a> %ADMIN_FLAG%<br>
 Last modified %LAST_MODIFIED%<br>
 </font>
