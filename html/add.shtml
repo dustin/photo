@@ -12,7 +12,7 @@ action="/cgi-bin/dustin/photo/addimg.cgi">
        <td>Category:</td>
        <td>
 	   <select name="category" size="5">
-	       <!--#exec cgi="/cgi-bin/dustin/photo/listcats.cgi"-->
+	       <!--#exec cgi="/perl/dustin/photo/listcats.cgi"-->
 	   </select>
        </td>
    </tr>

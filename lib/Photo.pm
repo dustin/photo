@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.2 1998/04/25 09:15:02 dustin Exp $
+# $Id: Photo.pm,v 1.3 1998/04/25 23:27:18 dustin Exp $
 
 package Photo;
 
@@ -12,7 +12,7 @@ use strict;
 use vars qw($cgidir $imagedir $uriroot $Itop $includes $adminc);
 
 # Global stuffs
-$Photo::cgidir="/cgi-bin/dustin/photo";
+$Photo::cgidir="/perl/dustin/photo";
 $Photo::imagedir="/~dustin/images/";
 $Photo::uriroot="/~dustin/photo";
 $Photo::Itop="$Photo::uriroot/album";
@@ -42,10 +42,10 @@ sub doQuery
     $self->openDB unless($self->{'dbh'});
 
     $s=$self->{'dbh'}->prepare($query)
-	  || die("Database Error:  $DBI::err\n<!--\n$query\n-->\n");
+	  || die("Database Error:  $DBI::errstr\n<!--\n$query\n-->\n");
 
     $s->execute
-	  || die("Database Error:  $DBI::err\n<!--\n$query\n-->\n");
+	  || die("Database Error:  $DBI::errstr\n<!--\n$query\n-->\n");
 
     return($s);
 }

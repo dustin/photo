@@ -6,11 +6,11 @@
 <h2>Photo Album Admin Utilities</h2>
 
 <ul>
-    <li><a href="/cgi-bin/dustin/photo/admin/listrecent.cgi">List
+    <li><a href="/perl/dustin/photo/admin/admin.cgi?func=listrecent">List
         additions</a></li>
-    <li><a href="/cgi-bin/dustin/photo/admin/listcats.cgi">List
+    <li><a href="/perl/dustin/photo/admin/admin.cgi?func=listcats">List
         Categories</a></li>
-    <li><a href="/cgi-bin/dustin/photo/admin/listusers.cgi">List
+    <li><a href="/perl/dustin/photo/admin/admin.cgi?func=listusers">List
         Users</a></li>
 </ul>
 
