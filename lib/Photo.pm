@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.38 1998/10/05 05:26:00 dustin Exp $
+# $Id: Photo.pm,v 1.39 1998/10/05 05:45:24 dustin Exp $
 
 package Photo;
 
@@ -48,7 +48,7 @@ sub doQuery
 {
     my $self=shift;
     my($query)=@_;
-    my($s,$dbh);
+    my($s);
 
     $self->openDB unless($self->{'dbh'});
 
@@ -59,6 +59,16 @@ sub doQuery
 	  || die("Database Error:  $DBI::errstr\n<!--\n$query\n-->\n");
 
     return($s);
+}
+
+sub setAuto
+{
+    my $self=shift;
+	my($value)=@_;
+
+    $self->openDB unless($self->{'dbh'});
+
+    $self->{'dbh'}->{AutoCommit}=$value;
 }
 
 sub buildQuery
@@ -183,18 +193,17 @@ sub saveSearch
 sub cacheImage
 {
     my($self, $key, $img, $type)=@_;
-    my($query, $r, $s, $c, $out, $dbh, $done);
+    my($query, $r, $s, $c, $out, $done);
 
     $c=DCache->new;
 
-    $dbh=$self->{dbh};
-    $dbh->{AutoCommit}=0;
+    $self->setAuto(0);
 
     $out="";
     $query ="declare c cursor for select * from image_store where id=\n";
     $query.="(select id from image_map where name='$img')\n";
     $query.="    order by line\n";
-    $s=$self->doQuery($query);
+	$self->doQuery($query);
 
 	$done=0;
     while($done==0) {
@@ -208,7 +217,7 @@ sub cacheImage
     $s->finish;
     $c->cache($key, $type, $out);
 	undef($out);
-    $dbh->{AutoCommit}=1;
+    $self->setAuto(1);
 }
 
 sub makeThumbnail
@@ -488,7 +497,7 @@ sub addImage
 
     $dbh=$self->{dbh};
 
-    $dbh->{AutoCommit}=0;
+	$self->setAuto(0);
     eval {
         my($premime, $i, $tmp);
         $query="insert into image_map(name) values('$fn');\n";
@@ -521,7 +530,7 @@ sub addImage
 
     print "<!-- Image was $n -->\n";
 
-    $dbh->{AutoCommit}=1;
+	$self->setAuto(1);
 
     $query ="insert into album\n";
     $query.="    (fn, keywords, descr, cat, size, taken, addedby)\n";
