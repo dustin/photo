@@ -2,7 +2,7 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: display.cgi,v 1.5 1998/01/19 10:27:56 dustin Exp $
+# $Id: display.cgi,v 1.6 1998/02/12 05:30:53 dustin Exp $
 
 use CGI::Carp;
 use Postgres;
@@ -18,7 +18,7 @@ $s=doQuery($query);
 
 @r=$s->fetchrow();
 @mapme=qw(OID IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM);
-map { $p{$mapme[$_]}=$r[$_]} (0..$#r);
+map { $p{$mapme[$_]}=$r[$_] } (0..$#r);
 
 $query ="select count(*) from wwwacl where username='$ENV{REMOTE_USER}'\n";
 $query.="    and cat=$p{CATNUM}\n";
