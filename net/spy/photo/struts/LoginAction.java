@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginAction.java,v 1.5 2002/05/28 06:37:25 dustin Exp $
+// $Id: LoginAction.java,v 1.6 2002/06/04 07:04:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -47,7 +47,6 @@ public class LoginAction extends PhotoAction {
 
 		if(user.checkPassword(lf.getPassword())) {
 			sessionData.setUser(user);
-			sessionData.unSetAdmin();
 
 			PhotoLogEntry ple=new PhotoLogEntry(user.getId(), "Login",request);
 			Persistent.logger.log(ple);

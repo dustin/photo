@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.5 2002/05/28 06:37:25 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.6 2002/06/04 07:04:41 dustin Exp $
 
 package net.spy.photo;
 
@@ -69,9 +69,12 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 
 	/**
 	 * Set the user who owns this session.
+	 *
+	 * Also, drop any administrative privs.
 	 */
 	public void setUser(PhotoUser user) {
 		this.user=user;
+		unSetAdmin();
 	}
 
 	/**
