@@ -20,7 +20,7 @@ import exceptions
 
 # Global config
 config={}
-tp=threadpool.ThreadPool(num=10)
+tp=None
 
 class UsageError(exceptions.Exception):
     """Exception thrown for invalid usage"""
@@ -313,6 +313,7 @@ def go():
     makeIndex(idx, years)
     makeStylesheet()
     
+    threadpool.ThreadPool(num=10)
     for y in years:
         makeYearPage(idx, y)
 
@@ -357,11 +358,12 @@ if __name__ == '__main__':
 
     try:
         # Parse the arguments
+        parseArgs()
         try:
-            parseArgs()
             go()
         finally:
-            tp.shutdown()
+            if tp is not None:
+                tp.shutdown()
     except UsageError, e:
         print e
         usage()
