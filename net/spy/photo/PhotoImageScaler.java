@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageScaler.java,v 1.5 2002/07/10 03:38:08 dustin Exp $
+// $Id: PhotoImageScaler.java,v 1.6 2002/07/10 04:00:17 dustin Exp $
 
 package net.spy.photo;
 
@@ -79,7 +79,7 @@ public class PhotoImageScaler extends Object {
 	 */
 	public static void main(String args[]) throws Exception {
 
-		int image_id=Integer.parseInt(args[0]);
+		int imageId=Integer.parseInt(args[0]);
 		PhotoDimensions dim=new PhotoDimensionsImpl(args[1]);
 
 		PhotoConfig conf=new PhotoConfig();
@@ -89,7 +89,7 @@ public class PhotoImageScaler extends Object {
 		server = (RemoteImageServer)Naming.lookup(conf.get("imageserver"));
 
 		System.out.println("Getting image.");
-		PhotoImage pi=server.getImage(image_id, null);
+		PhotoImage pi=server.getImage(imageId, null);
 		PhotoImageScaler pis=new PhotoImageScaler(pi);
 
 		System.out.println("Getting scaled image.");
@@ -100,7 +100,7 @@ public class PhotoImageScaler extends Object {
 		System.out.println("New image size:  "
 			+ tmp.getWidth() + "x" + tmp.getHeight());
 
-		FileOutputStream fos=new FileOutputStream(image_id + ".jpg");
+		FileOutputStream fos=new FileOutputStream(imageId + ".jpg");
 		fos.write(tmp.getData());
 		fos.close();
 

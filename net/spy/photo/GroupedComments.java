@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GroupedComments.java,v 1.4 2002/07/10 03:38:08 dustin Exp $
+// $Id: GroupedComments.java,v 1.5 2002/07/10 04:00:17 dustin Exp $
 
 package net.spy.photo;
 
@@ -22,9 +22,9 @@ public class GroupedComments extends ArrayList implements Serializable {
 	/**
 	 * Get an instance of GroupedComments.
 	 */
-	public GroupedComments(int image_id) {
+	public GroupedComments(int imageId) {
 		super();
-		this.imageId=image_id;
+		this.imageId=imageId;
 	}
 
 	/**

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.14 2002/07/10 03:38:08 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.15 2002/07/10 04:00:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -31,7 +31,7 @@ public class PhotoUtil extends Object {
 	 * Get a quoted string for doing DB stuff where PreparedStatements
 	 * won't fit.
 	 */
-	public static String dbquote_str(String thing) {
+	public static String dbquoteStr(String thing) {
 		return(SpyDB.dbquote_str(thing));
 	}
 

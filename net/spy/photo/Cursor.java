@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Cursor.java,v 1.8 2002/07/10 03:38:08 dustin Exp $
+ * $Id: Cursor.java,v 1.9 2002/07/10 04:00:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
  */
 public class Cursor extends ArrayList implements Serializable, Enumeration {
 
-	private int _current=0;
+	private int current=0;
 	private int maxret=10;
 
 	/**
@@ -51,9 +51,9 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	 */
 	public void set(int to) {
 		if(to>size()) {
-			_current=size();
+			current=size();
 		} else {
-			_current=to;
+			current=to;
 		}
 	}
 
@@ -85,7 +85,7 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 		StringBuffer sb=new StringBuffer();
 
 		sb.append("{Cursor:  pos=");
-		sb.append(_current);
+		sb.append(current);
 		sb.append(", n=");
 		sb.append(size());
 		sb.append(", maxret=");
@@ -99,7 +99,7 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	 * Get the current entry.
 	 */
 	public Object get() {
-		return(get(_current));
+		return(get(current));
 	}
 
 	/**
@@ -108,9 +108,9 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	public Object next() {
 		Object r=null;
 
-		if(_current<size()) {
-			r=get(_current);
-			_current++;
+		if(current<size()) {
+			r=get(current);
+			current++;
 		}
 		return(r);
 	}
@@ -139,9 +139,9 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	public Object prev() {
 		Object r=null;
 
-		if(_current>0) {
-			_current--;
-			r=get(_current);
+		if(current>0) {
+			current--;
+			r=get(current);
 		}
 		return(r);
 	}
@@ -150,14 +150,14 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	 * Find out how many results are remaining.
 	 */
 	public int nRemaining() {
-		return(size()-_current);
+		return(size()-current);
 	}
 
 	/**
 	 * Find out which one we're on.
 	 */
 	public int current() {
-		return(_current);
+		return(current);
 	}
 
 	// Inner class to iterate a cursor

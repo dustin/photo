@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.14 2002/07/10 03:38:09 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.15 2002/07/10 04:00:18 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -79,22 +79,22 @@ public class AlbumBackupEntry extends BackupEntry {
 			System.out.println("ID is " + id);
 
 			// OK, now store the image.
-			long start_ts=System.currentTimeMillis();
-			Element image_data=
+			long startTs=System.currentTimeMillis();
+			Element imageData=
 				(Element)myData.getElementsByTagName("image_data").item(0);
 
 			PreparedStatement ipst=conn.prepareStatement(
 				"insert into image_store values(?, ?, ?)"
 				);
 
-			NodeList data_nodes=image_data.getElementsByTagName("image_row");
-			for(int line=0; line<data_nodes.getLength(); line++) {
+			NodeList dataNodes=imageData.getElementsByTagName("image_row");
+			for(int line=0; line<dataNodes.getLength(); line++) {
 
 				ipst.setInt(1, id);
 				ipst.setInt(2, line);
 
 				// Find the info
-				Element el=(Element)data_nodes.item(line);
+				Element el=(Element)dataNodes.item(line);
 				Text tdata=(Text)el.getFirstChild();
 				String data=cleanData(tdata.getData());
 				ipst.setString(3, data);
@@ -114,7 +114,7 @@ public class AlbumBackupEntry extends BackupEntry {
 			pst2.setString(3, "127.0.0.1");
 			pst2.setString(4, "PhotoRestore");
 			pst2.setTimestamp(5,
-				new java.sql.Timestamp(start_ts));
+				new java.sql.Timestamp(startTs));
 			pst2.executeUpdate();
 
 			conn.commit();
@@ -230,14 +230,14 @@ public class AlbumBackupEntry extends BackupEntry {
 		rs=pst2.executeQuery();
 
 		// Add the image data.
-		Element image_data=doc.createElement("image_data");
+		Element imageData=doc.createElement("image_data");
 		while(rs.next()) {
 			Element el=doc.createElement("image_row");
 			el.appendChild( doc.createTextNode(rs.getString("data")) );
-			image_data.appendChild(el);
+			imageData.appendChild(el);
 		}
 
-		root.appendChild(image_data);
+		root.appendChild(imageData);
 		doc.appendChild(root);
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogEntry.java,v 1.5 2002/07/10 03:38:08 dustin Exp $
+ * $Id: PhotoLogEntry.java,v 1.6 2002/07/10 04:00:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -15,12 +15,12 @@ import net.spy.log.SpyLogEntry;
  */
 public class PhotoLogEntry extends SpyLogEntry {
 
-	private Integer photo_id=null;
-	private int wwwuser_id=-1;
+	private Integer photoId=null;
+	private int wwwuserId=-1;
 	private long timestamp=-1;
-	private String remote_addr=null;
-	private String user_agent=null;
-	private String extra_info=null;
+	private String remoteAddr=null;
+	private String userAgent=null;
+	private String extraInfo=null;
 	private String type=null;
 
 	/**
@@ -48,10 +48,10 @@ public class PhotoLogEntry extends SpyLogEntry {
 		String userAgent) {
 		super();
 
-		this.wwwuser_id=u;
+		this.wwwuserId=u;
 		this.type=type;
-		this.remote_addr=remoteAddr;
-		this.user_agent=userAgent;
+		this.remoteAddr=remoteAddr;
+		this.userAgent=userAgent;
 		this.timestamp = System.currentTimeMillis();
 	}
 
@@ -59,21 +59,21 @@ public class PhotoLogEntry extends SpyLogEntry {
 	 * Set the extra info for this log entry.
 	 */
 	protected void setExtraInfo(String to) {
-		this.extra_info=to;
+		this.extraInfo=to;
 	}
 
 	/**
 	 * Set the Photo ID.
 	 */
 	protected void setPhotoId(int to) {
-		this.photo_id=new Integer(to);
+		this.photoId=new Integer(to);
 	}
 
 	/**
 	 * Set the Photo ID.
 	 */
 	protected void setPhotoId(Integer to) {
-		this.photo_id=to;
+		this.photoId=to;
 	}
 
 	/**
@@ -90,29 +90,29 @@ public class PhotoLogEntry extends SpyLogEntry {
 		sb.append(type);
 		sb.append("'), ");
 
-		if(photo_id==null) {
+		if(photoId==null) {
 			sb.append("null, ");
 		} else {
-			sb.append(photo_id);
+			sb.append(photoId);
 			sb.append(", ");
 		}
 
-		sb.append(wwwuser_id);
+		sb.append(wwwuserId);
 		sb.append(", ");
 
 		sb.append("'");
-		sb.append(remote_addr);
+		sb.append(remoteAddr);
 		sb.append("', ");
 
 		sb.append("get_agent('");
-		sb.append(PhotoUtil.dbquote_str(user_agent));
+		sb.append(PhotoUtil.dbquoteStr(userAgent));
 		sb.append("'), ");
 
-		if(extra_info==null) {
+		if(extraInfo==null) {
 			sb.append("null, ");
 		} else {
 			sb.append("'");
-			sb.append(PhotoUtil.dbquote_str(extra_info));
+			sb.append(PhotoUtil.dbquoteStr(extraInfo));
 			sb.append("', ");
 		}
 

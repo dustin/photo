@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageServerImpl.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.3 2002/07/10 04:00:17 dustin Exp $
 
 package net.spy.photo.rmi;
 
@@ -31,7 +31,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public PhotoImage getImage(int image_id, PhotoDimensions dim)
+	public PhotoImage getImage(int imageId, PhotoDimensions dim)
 		throws PhotoException {
 
 		PhotoImage rv=null;
@@ -39,7 +39,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 		ensureConnected();
 
 		try {
-			rv=server.getImage(image_id, dim);
+			rv=server.getImage(imageId, dim);
 		} catch(RemoteException e) {
 			throw new PhotoException("Error saving image.", e);
 		}
@@ -50,27 +50,27 @@ public class ImageServerImpl extends Object implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public PhotoImage getThumbnail(int image_id) throws PhotoException {
+	public PhotoImage getThumbnail(int imageId) throws PhotoException {
 		PhotoConfig conf=new PhotoConfig();
 		PhotoDimensions pdim=
 			new PhotoDimensionsImpl(conf.get("thumbnail_size"));
-		return(getImage(image_id, pdim));
+		return(getImage(imageId, pdim));
 	}
 
 	/**
 	 * @see ImageServer
 	 */
-	public void storeImage(int image_id, PhotoImage image)
+	public void storeImage(int imageId, PhotoImage image)
 		throws PhotoException {
 
 		ensureConnected();
-		log("Storing image " + image_id);
+		log("Storing image " + imageId);
 		try {
-			server.storeImage(image_id, image);
+			server.storeImage(imageId, image);
 		} catch(RemoteException e) {
 			throw new PhotoException("Error saving image", e);
 		}
-		log("Stored image " + image_id);
+		log("Stored image " + imageId);
 	}
 
 	// Make sure the connection to the remote server is maintained.

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaver.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
+// $Id: PhotoSaver.java,v 1.7 2002/07/10 04:00:17 dustin Exp $
 
 package net.spy.photo;
 
@@ -194,8 +194,8 @@ public class PhotoSaver extends Object {
 			pst.executeUpdate();
 
 			// Cache the image data
-			PhotoImageHelper photo_helper=new PhotoImageHelper(getId());
-			photo_helper.storeImage(getPhotoImage());
+			PhotoImageHelper photoHelper=new PhotoImageHelper(getId());
+			photoHelper.storeImage(getPhotoImage());
 
 			// Image is stored, commit.
 			conn.commit();

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePhoto.java,v 1.8 2002/07/10 03:38:09 dustin Exp $
+ * $Id: CachePhoto.java,v 1.9 2002/07/10 04:00:17 dustin Exp $
  */
 
 package net.spy.photo.tools;
@@ -140,21 +140,21 @@ public class CachePhoto extends Object {
 		while(rs.next()) {
 			int id = rs.getInt(1);
 			PhotoImage data=null;
-			String dbdata_s=null;
+			String dbdataStr=null;
 			byte dbdata[]=null;
 			stats.click();
 			stats.start();
 			try {
 				// false == full image
 				data=server.getImage(id, false);
-				dbdata_s=getImageFromDB(id);
-				dbdata=base64.decode(dbdata_s);
+				dbdataStr=getImageFromDB(id);
+				dbdata=base64.decode(dbdataStr);
 				compare(dbdata, data.getData(), id);
 				// true == thumbnail
 				data=server.getImage(id, true);
 			} catch(ImageDataException ide) {
 				System.err.println("Data difference on " + id + ":  " + ide);
-				saveImage(id, dbdata_s, dbdata, data.getData());
+				saveImage(id, dbdataStr, dbdata, data.getData());
 				errors.add(ide);
 			} catch(Exception e) {
 				System.err.println("Error on image " + id);

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Vote.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
+// $Id: Vote.java,v 1.7 2002/07/10 04:00:17 dustin Exp $
 
 package net.spy.photo;
 
@@ -54,7 +54,7 @@ public class Vote extends Object implements java.io.Serializable {
 	 * Get a Collection of Vote objects for all of the comments on a
 	 * given image.
 	 */
-	public static Collection getVotesForPhoto(int image_id)
+	public static Collection getVotesForPhoto(int imageId)
 		throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
@@ -62,7 +62,7 @@ public class Vote extends Object implements java.io.Serializable {
 		SpyDB db=new SpyDB(new PhotoConfig());
 		PreparedStatement pst=db.prepareStatement(
 			"select * from votes where photo_id=? order by ts desc");
-		pst.setInt(1, image_id);
+		pst.setInt(1, imageId);
 		ResultSet rs=pst.executeQuery();
 
 		while(rs.next()) {

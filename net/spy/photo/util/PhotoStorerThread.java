@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.17 2002/07/10 03:38:09 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.18 2002/07/10 04:00:18 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -41,14 +41,14 @@ public class PhotoStorerThread extends Thread {
 		this.setDaemon(true);
 	}
 
-	// Takes an image_id, pulls in the image from cache, and goes about
+	// Takes an imageId, pulls in the image from cache, and goes about
 	// encoding it to put it into the database in a transaction.  The last
 	// query in the transaction records the image having been stored.
-	private void storeImage(int image_id) throws Exception {
-		PhotoImageHelper p = new PhotoImageHelper(image_id);
+	private void storeImage(int imageId) throws Exception {
+		PhotoImageHelper p = new PhotoImageHelper(imageId);
 		SpyDB pdb = new SpyDB(new PhotoConfig());
 		PhotoImage pi = p.getImage();
-		System.err.println("Storer: Got image for " + image_id + " " 
+		System.err.println("Storer: Got image for " + imageId + " " 
 			+ pi.size() + " bytes of data to store.");
 		// This is an awkward way of doing this.
 		ArrayList al=new ArrayList();
@@ -84,7 +84,7 @@ public class PhotoStorerThread extends Thread {
 			Base64 base64=new Base64();
 			StringBuffer sdata = new StringBuffer();
 
-			pst.setInt(1, image_id);
+			pst.setInt(1, imageId);
 
 			// Get the encoded data
 			for(Iterator it=al.iterator(); it.hasNext(); ) {
@@ -109,21 +109,21 @@ public class PhotoStorerThread extends Thread {
 				pst.executeUpdate();
 			}
 			System.err.println("Storer:  Stored " + n + " lines of data for "
-				+ image_id + ".");
+				+ imageId + ".");
 			pst.close();
 			pst=null;
 			PreparedStatement pst2=db.prepareStatement(
 				"update photo_logs set extra_info=text(now())\n"
 					+ "  where photo_id = ?\n"
 					+ "  and log_type = get_log_type('Upload')");
-			pst2.setInt(1, image_id);
+			pst2.setInt(1, imageId);
 			int rows=pst2.executeUpdate();
 			// We should update exactly one row.  We can live with 0, but
 			// more than one could be bad.
 			switch(rows) {
 				case 0:
 					System.err.println("WARNING:  No upload log entry was "
-						+ "found for " + image_id);
+						+ "found for " + imageId);
 					break;
 				case 1:
 					// Expected

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.27 2002/07/10 03:38:08 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.28 2002/07/10 04:00:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -215,13 +215,13 @@ public class PhotoSecurity extends PhotoHelper {
 	/**
 	 * The preferred way to check a user's access to an image.
 	 */
-	public static void checkAccess(PhotoUser user, int image_id) throws
+	public static void checkAccess(PhotoUser user, int imageId) throws
 		Exception {
 
 		boolean ok=false;
 
 		try {
-			PhotoImageData pid=PhotoImageData.getData(image_id);
+			PhotoImageData pid=PhotoImageData.getData(imageId);
 			ok=user.canView(pid.getCatId());
 			
 			if(!ok) {
@@ -234,7 +234,7 @@ public class PhotoSecurity extends PhotoHelper {
 		}
 
 		if(!ok) {
-			throw new Exception("Access to image " + image_id
+			throw new Exception("Access to image " + imageId
 				+ " is not allowed by user " + user);
 		}
 	}
@@ -244,11 +244,11 @@ public class PhotoSecurity extends PhotoHelper {
 	 *
 	 * <b>Note</b>:  This is not generally the right way to do this.
 	 */
-	public static void checkAccess(int uid, int image_id) throws Exception {
+	public static void checkAccess(int uid, int imageId) throws Exception {
 		PhotoSecurity sec=new PhotoSecurity();
 		PhotoUser u=sec.getUser(uid);
 
-		checkAccess(u, image_id);
+		checkAccess(u, imageId);
 	}
 
 	// Load the user info from a result set

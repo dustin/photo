@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.19 2002/07/10 03:38:08 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.20 2002/07/10 04:00:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -13,15 +13,15 @@ import net.spy.cache.SpyCache;
  */
 public class PhotoImageHelper extends PhotoHelper { 
 
-	private int image_id=-1;
-	private PhotoImage image_data=null;
+	private int imageId=-1;
+	private PhotoImage imageData=null;
 
 	/**
 	 * Get a PhotoHelper for the given image on behalf.
 	 */
 	public PhotoImageHelper(int which) throws Exception {
 		super();
-		this.image_id = which;
+		this.imageId = which;
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class PhotoImageHelper extends PhotoHelper {
 	public PhotoImage getImage(PhotoUser user, PhotoDimensions dim)
 		throws Exception {
 
-		PhotoSecurity.checkAccess(user, image_id);
+		PhotoSecurity.checkAccess(user, imageId);
 		return(getImage(dim));
 	}
 
@@ -52,7 +52,7 @@ public class PhotoImageHelper extends PhotoHelper {
 
 		StringBuffer keyb=new StringBuffer();
 		keyb.append("img_");
-		keyb.append(image_id);
+		keyb.append(imageId);
 		if(dim!=null) {
 			keyb.append("_");
 			keyb.append(dim.getWidth());
@@ -69,7 +69,7 @@ public class PhotoImageHelper extends PhotoHelper {
 			// Grab it from the server
 			log("Grabbing " + key + " from image server");
 			ImageServer server=ImageServerFactory.getImageServer();
-			rv=server.getImage(image_id, dim);
+			rv=server.getImage(imageId, dim);
 
 			// If it's small enough, cache it.
 			if(rv.size() < 32768) {
@@ -84,7 +84,7 @@ public class PhotoImageHelper extends PhotoHelper {
 	 * Get the thumbnail for an image on behalf of a user.
 	 */
 	public PhotoImage getThumbnail(int uid) throws Exception {
-		PhotoSecurity.checkAccess(uid, image_id);
+		PhotoSecurity.checkAccess(uid, imageId);
 		return(getThumbnail());
 	}
 
@@ -100,10 +100,10 @@ public class PhotoImageHelper extends PhotoHelper {
 	/**
 	 * Store an image.
 	 */
-	public void storeImage(PhotoImage image_data) throws Exception {
-		log("Storing image " + image_id);
+	public void storeImage(PhotoImage imageData) throws Exception {
+		log("Storing image " + imageId);
 		ImageServer server=ImageServerFactory.getImageServer();
-		server.storeImage(image_id, image_data);
-		log("Stored image " + image_id);
+		server.storeImage(imageId, imageData);
+		log("Stored image " + imageId);
 	}
 }

@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.7 2002/07/10 04:00:17 dustin Exp $
 
 package net.spy.photo;
 
@@ -34,15 +34,15 @@ public class ImageServerImpl extends Object implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public PhotoImage getImage(int image_id, PhotoDimensions dim)
+	public PhotoImage getImage(int imageId, PhotoDimensions dim)
 		throws PhotoException {
-		PhotoImage image_data=null;
+		PhotoImage imageData=null;
 		try {
 
 			if(dim==null) {
-				image_data=fetchImage(image_id);
+				imageData=fetchImage(imageId);
 			} else {
-				image_data=fetchScaledImage(image_id, dim);
+				imageData=fetchScaledImage(imageId, dim);
 			}
 		} catch(Exception e) {
 			log("Error fetching image:  " + e);
@@ -50,15 +50,15 @@ public class ImageServerImpl extends Object implements ImageServer {
 			throw new PhotoException("Error fetching image", e);
 		}
 		// Calculate the width
-		image_data.getWidth();
-		return(image_data);
+		imageData.getWidth();
+		return(imageData);
 	}
 
-	private PhotoImage fetchScaledImage(int image_id, PhotoDimensions dim)
+	private PhotoImage fetchScaledImage(int imageId, PhotoDimensions dim)
 		throws Exception {
 
 		PhotoImage pi=null;
-		String key = "photo_" + image_id + "_"
+		String key = "photo_" + imageId + "_"
 			+ dim.getWidth() + "x" + dim.getHeight();
 
 		// Try cache first
@@ -66,10 +66,10 @@ public class ImageServerImpl extends Object implements ImageServer {
 		pi=cache.getImage(key);
 		if(pi==null) {
 			// Not in cache, get it
-			pi=fetchImage(image_id);
+			pi=fetchImage(imageId);
 
 			if(pi.equals(dim) || pi.smallerThan(dim)) {
-				log("Requested scaled size for " + image_id
+				log("Requested scaled size for " + imageId
 					+ "(" + dim + ") is equal to or "
 					+ "greater than its full size, ignoring.");
 			} else {
@@ -77,7 +77,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 				pi=scaleImage(pi, dim);
 				// Store it
 				cache.putImage(key, pi);
-				log("Stored " + image_id + " with key " + key);
+				log("Stored " + imageId + " with key " + key);
 			}
 		}
 
@@ -87,22 +87,22 @@ public class ImageServerImpl extends Object implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public PhotoImage getThumbnail(int image_id) throws PhotoException {
+	public PhotoImage getThumbnail(int imageId) throws PhotoException {
 		PhotoDimensions dim=new PhotoDimensionsImpl(conf.get("thumbnail_size"));
-		return(getImage(image_id, dim));
+		return(getImage(imageId, dim));
 	}
 
 	/**
 	 * @see ImageServer
 	 */
-	public void storeImage(int image_id, PhotoImage image)
+	public void storeImage(int imageId, PhotoImage image)
 		throws PhotoException {
 
 		// Make sure we've calculated the width and height
 		image.getWidth();
 		try {
 			getCache();
-			cache.putImage("photo_" + image_id, image);
+			cache.putImage("photo_" + imageId, image);
 		} catch(Exception e) {
 			log("Error caching image:  " + e);
 			e.printStackTrace();
@@ -139,11 +139,11 @@ public class ImageServerImpl extends Object implements ImageServer {
 	}
 
 	// Fetch an image
-	private PhotoImage fetchImage(int image_id) throws Exception {
+	private PhotoImage fetchImage(int imageId) throws Exception {
 		String key=null;
 		PhotoImage pi=null;
 
-		key = "photo_" + image_id;
+		key = "photo_" + imageId;
 
 		getCache();
 		pi=cache.getImage(key);
@@ -156,7 +156,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 				String query="select * from image_store where id = ?\n"
 					+ " order by line";
 				PreparedStatement st = db.prepareStatement(query);
-				st.setInt(1, image_id);
+				st.setInt(1, imageId);
 				ResultSet rs = st.executeQuery();
 
 				while(rs.next()) {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.29 2002/07/10 03:38:08 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.30 2002/07/10 04:00:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -208,14 +208,14 @@ public class PhotoSearch extends PhotoHelper {
 				results.setMaxRet(rv);
 			}
 
-			int result_id=0;
+			int resultId=0;
 
 			while(rs.next()) {
-				int photo_id=rs.getInt(7);
+				int photoId=rs.getInt(7);
 
-				if(result_id<results.getMaxRet()) {
+				if(resultId<results.getMaxRet()) {
 					// Fully populate the first few search results.
-					PhotoImageData r=PhotoImageData.getData(photo_id);
+					PhotoImageData r=PhotoImageData.getData(photoId);
 					// Add it to our search result set.
 					results.add(r);
 				} else {
@@ -224,7 +224,7 @@ public class PhotoSearch extends PhotoHelper {
 					results.add(i);
 				}
 				// Counting results...
-				result_id++;
+				resultId++;
 			}
 			photo.close();
 		} catch(Exception e) {
@@ -235,7 +235,7 @@ public class PhotoSearch extends PhotoHelper {
 	}
 
 	// Build the bigass complex search query from a SearchForm
-	private String buildQuery(SearchForm form, int remote_uid)
+	private String buildQuery(SearchForm form, int remoteUid)
 		throws ServletException {
 		String query="", sub="", stmp="", order="",
 			odirection="", fieldjoin="", join="";
@@ -250,7 +250,7 @@ public class PhotoSearch extends PhotoHelper {
 			+ "       and a.addedby=c.id\n"
 			+ "       and a.cat = acl.cat\n"
 			+ "       and acl.canview=true\n"
-			+ "       and ( acl.userid=" + remote_uid + "\n"
+			+ "       and ( acl.userid=" + remoteUid + "\n"
 			+ "             or acl.userid= " + PhotoUtil.getDefaultId() + ")\n";
 
 		// Find out what the fieldjoin is real quick...
@@ -258,7 +258,7 @@ public class PhotoSearch extends PhotoHelper {
 		if(stmp == null) {
 			fieldjoin="and";
 		} else {
-			fieldjoin=PhotoUtil.dbquote_str(stmp);
+			fieldjoin=PhotoUtil.dbquoteStr(stmp);
 		}
 
 		// Start with categories.
@@ -304,13 +304,13 @@ public class PhotoSearch extends PhotoHelper {
 
 			atmp = PhotoUtil.split(" ", stmp);
 
-			join = PhotoUtil.dbquote_str(form.getKeyjoin());
+			join = PhotoUtil.dbquoteStr(form.getKeyjoin());
 			// Default
 			if(join == null) {
 				join = "or";
 			}
 
-			field = PhotoUtil.dbquote_str(form.getField());
+			field = PhotoUtil.dbquoteStr(form.getField());
 			// Default
 			if(field == null) {
 				throw new ServletException("No field");
@@ -325,21 +325,21 @@ public class PhotoSearch extends PhotoHelper {
 						needjoin=true;
 					}
 					sub += "\n\t" + field + " ~* '"
-						+ PhotoUtil.dbquote_str(atmp[i]) + "' ";
+						+ PhotoUtil.dbquoteStr(atmp[i]) + "' ";
 				}
 				sub += "\n     )";
 			} else {
 				sub += "\n    " + field + " ~* '"
-					+ PhotoUtil.dbquote_str(stmp) + "' ";
+					+ PhotoUtil.dbquoteStr(stmp) + "' ";
 			}
 		}
 
 		// Starts and ends
 
-		stmp=PhotoUtil.dbquote_str(form.getTstart());
+		stmp=PhotoUtil.dbquoteStr(form.getTstart());
 		if(stmp != null && stmp.length()>0) {
 			if(needao) {
-				join=PhotoUtil.dbquote_str(form.getTstartjoin());
+				join=PhotoUtil.dbquoteStr(form.getTstartjoin());
 				if(join==null) {
 					join="and";
 				}
@@ -349,10 +349,10 @@ public class PhotoSearch extends PhotoHelper {
 			sub += "\n    a.taken>='" + stmp + "'";
 		}
 
-		stmp=PhotoUtil.dbquote_str(form.getTend());
+		stmp=PhotoUtil.dbquoteStr(form.getTend());
 		if(stmp != null && stmp.length()>0) {
 			if(needao) {
-				join=PhotoUtil.dbquote_str(form.getTendjoin());
+				join=PhotoUtil.dbquoteStr(form.getTendjoin());
 				if(join==null) {
 					join="and";
 				}
@@ -362,10 +362,10 @@ public class PhotoSearch extends PhotoHelper {
 			sub += "\n    a.taken<='" + stmp + "'";
 		}
 
-		stmp=PhotoUtil.dbquote_str(form.getStart());
+		stmp=PhotoUtil.dbquoteStr(form.getStart());
 		if(stmp != null && stmp.length()>0) {
 			if(needao) {
-				join=PhotoUtil.dbquote_str(form.getStartjoin());
+				join=PhotoUtil.dbquoteStr(form.getStartjoin());
 				if(join==null) {
 					join="and";
 				}
@@ -375,10 +375,10 @@ public class PhotoSearch extends PhotoHelper {
 			sub += "\n    a.ts>='" + stmp + "'";
 		}
 
-		stmp=PhotoUtil.dbquote_str(form.getEnd());
+		stmp=PhotoUtil.dbquoteStr(form.getEnd());
 		if(stmp != null && stmp.length()>0) {
 			if(needao) {
-				join=PhotoUtil.dbquote_str(form.getEndjoin());
+				join=PhotoUtil.dbquoteStr(form.getEndjoin());
 				if(join==null) {
 					join="and";
 				}
@@ -394,7 +394,7 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		// Figure out the direction...
-		stmp=PhotoUtil.dbquote_str(form.getSdirection());
+		stmp=PhotoUtil.dbquoteStr(form.getSdirection());
 		if(stmp != null) {
 			odirection=stmp;
 		} else {
@@ -402,7 +402,7 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		// Stick the order under the subquery.
-		stmp=PhotoUtil.dbquote_str(form.getOrder());
+		stmp=PhotoUtil.dbquoteStr(form.getOrder());
 		if(stmp != null) {
 			if(stmp.equals("a.taken")) {
 				order="a.taken " + odirection + ", a.ts " + odirection;

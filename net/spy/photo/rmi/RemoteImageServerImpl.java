@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: RemoteImageServerImpl.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
+// $Id: RemoteImageServerImpl.java,v 1.7 2002/07/10 04:00:17 dustin Exp $
 
 package net.spy.photo.rmi;
 
@@ -38,14 +38,14 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 	/**
 	 * @see RemoteImageServer
 	 */
-	public PhotoImage getImage(int image_id, PhotoDimensions dim)
+	public PhotoImage getImage(int imageId, PhotoDimensions dim)
 		throws RemoteException {
 
 		PhotoImage rv=null;
 
 		try {
 			ImageServer isi=getImageServer();
-			rv=isi.getImage(image_id, dim);
+			rv=isi.getImage(imageId, dim);
 		} catch(PhotoException e) {
 			throw new RemoteException("Error getting image", e);
 		}
@@ -57,7 +57,7 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 	/**
 	 * @see RemoteImageServer
 	 */
-	public PhotoImage getImage(int image_id, boolean thumbnail)
+	public PhotoImage getImage(int imageId, boolean thumbnail)
 		throws RemoteException {
 
 		PhotoImage rv=null;
@@ -65,9 +65,9 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		try {
 			ImageServer isi=getImageServer();
 			if(thumbnail) {
-				rv=isi.getThumbnail(image_id);
+				rv=isi.getThumbnail(imageId);
 			} else {
-				rv=isi.getImage(image_id, null);
+				rv=isi.getImage(imageId, null);
 			}
 		} catch(PhotoException e) {
 			throw new RemoteException("Error getting image", e);
@@ -79,13 +79,13 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 	/**
 	 * @see RemoteImageServer
 	 */
-	public void storeImage(int image_id, PhotoImage image)
+	public void storeImage(int imageId, PhotoImage image)
 		throws RemoteException {
 		// Make sure we've calculated the width and height
 		image.getWidth();
 		try {
 			ImageServer isi=getImageServer();
-			isi.storeImage(image_id, image);
+			isi.storeImage(imageId, image);
 		} catch(PhotoException e) {
 			log("Error caching image:  " + e);
 			e.printStackTrace();

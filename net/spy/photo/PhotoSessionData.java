@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.13 2002/07/10 03:38:08 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.14 2002/07/10 04:00:17 dustin Exp $
 
 package net.spy.photo;
 
@@ -26,7 +26,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 
 	private Map cursors=null;
 
-	private int admin_type=NOADMIN;
+	private int adminType=NOADMIN;
 
 	// Keep track of how many images have been served up to this user.
 	private int imagesSeen=0;
@@ -164,14 +164,14 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 * @return true if the flag is set.
 	 */
 	public boolean checkAdminFlag(int flag) {
-		return( (admin_type & flag) == flag);
+		return( (adminType & flag) == flag);
 	}
 
 	/**
 	 * Get all the admin bits.
 	 */
 	public int getAdmin() {
-		return(admin_type);
+		return(adminType);
 	}
 
 	/**
@@ -213,14 +213,14 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 				break;
 			case NOADMIN:
 				// Anyone can revoke admin privs
-				admin_type=NOADMIN;
+				adminType=NOADMIN;
 				break;
 			default:
 				throw new PhotoException("Invalid admin type.");
 		}
 
 		// If we made it this far, adminify
-		admin_type=to;
+		adminType=to;
 	}
 
 	/**
@@ -238,7 +238,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 * Safely revoke administrative privs.
 	 */
 	public void unSetAdmin() {
-		admin_type=NOADMIN;
+		adminType=NOADMIN;
 	}
 
 	/**
