@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.16 2002/02/12 05:16:29 dustin Exp $
+-- $Id: photo.sql,v 1.17 2002/02/12 05:43:17 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -276,12 +276,16 @@ grant all on user_profile_log to nobody;
 -- Show the profile users along with the profiles that created them
 create view user_byprofiles as
 	select	wwwusers.id as user_id, wwwusers.username, wwwusers.realname,
-			user_profiles.description as profile, date(ts) as created
+			user_profiles.profile_id as profile,
+			user_profiles.description as profile_desc,
+			date(ts) as created
 		from
 			wwwusers, user_profiles, user_profile_log
 		where
 			wwwusers.id=user_profile_log.wwwuser_id
 			and user_profiles.profile_id=user_profile_log.profile_id
+		order by
+			user_id
 ;
 grant select on user_byprofiles to nobody;
 
