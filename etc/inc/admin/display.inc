@@ -7,7 +7,7 @@
 <img src="%SELF_URI%?func=getimage&photo_id=%IMAGE%"><br>
 </center>
 <form method="POST" action="%SELF_URI%">
-<input type="hidden" name="func" value="edittext">
+<input type="hidden" name="func" value="admedittext">
 <input type="hidden" name="id" value="%IMAGE%">
 
 Size:  %SIZE%<br>
