@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.18 1998/07/19 20:26:12 dustin Exp $
+# $Id: Photo.pm,v 1.19 1998/07/19 20:34:57 dustin Exp $
 
 package Photo;
 
@@ -65,7 +65,7 @@ sub buildQuery
 
 
     $query ="select a.oid,a.keywords,a.descr,b.name,\n";
-    $query.="    a.size,a.taken,a.ts,a.fn,a.cat,b.id\n";
+    $query.="    a.size,a.taken,a.ts,a.fn,a.cat,a.addedby,b.id\n";
     $query.="    from album a, cat b\n    where a.cat=b.id\n";
     $query.="        and a.cat in (select cat from wwwacl\n";
     $query.="                       where username='$ENV{REMOTE_USER}')";
@@ -332,7 +332,7 @@ sub doFind
     while($r=$s->fetch)
     {
         ($p{OID}, $p{KEYWORDS}, $p{DESCR}, $p{CAT}, $p{SIZE}, $p{TAKEN},
-            $p{TS}, $p{IMAGE})=@{$r};
+            $p{TS}, $p{IMAGE}, $p{CATNUM}, $p{ADDEDBY})=@{$r};
         next if($i++<$start);
 
         last if( $max>0 && $i-$start>$max);
