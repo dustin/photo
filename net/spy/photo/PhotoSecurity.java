@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.19 2002/03/05 04:32:23 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.20 2002/05/01 07:43:13 dustin Exp $
  */
 
 package net.spy.photo;
@@ -83,6 +83,10 @@ public class PhotoSecurity extends PhotoHelper {
 	 */
 	private PhotoUser getUserByUsername(String username) {
 		PhotoUser ret=null;
+
+		// Lowercase the username before the lookup (since it's lowercased
+		// on insert)
+		username=username.toLowerCase();
 
 		// Grab the cache
 		SpyCache cache=new SpyCache();

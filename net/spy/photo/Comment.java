@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.4 2002/02/24 07:36:55 dustin Exp $
+// $Id: Comment.java,v 1.5 2002/05/01 07:43:13 dustin Exp $
 
 package net.spy.photo;
 
@@ -297,6 +297,22 @@ public class Comment extends Object
 		}
 	}
 
+	private static class SerializableXMLAble
+		extends Object
+		implements XMLAble, java.io.Serializable {
+
+		private String content=null;
+
+		public SerializableXMLAble(String content) {
+			super();
+			this.content=content;
+		}
+
+		public String toXML() {
+			return this.content;
+		}
+	}
+
 	private static class GroupedComments extends
 		Object implements XMLAble, java.io.Serializable {
 
@@ -320,11 +336,8 @@ public class Comment extends Object
 			if(comments.size()<5) {
 				comments.addElement(comment);
 			} else if(comments.size()==5) {
-				comments.addElement(new XMLAble() {
-					public String toXML() {
-						return("<more_comments/>\n");
-					}
-					});
+				comments.addElement(
+					new SerializableXMLAble("<more_comments/>\n"));
 			}
 		}
 
