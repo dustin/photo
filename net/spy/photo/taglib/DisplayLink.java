@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.20 2003/08/08 05:52:56 dustin Exp $
+// $Id: DisplayLink.java,v 1.21 2003/08/11 05:49:54 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -190,11 +190,12 @@ public class DisplayLink extends PhotoTag {
 			// Encode the photo display page
 			href.append(res.encodeURL(tmpurl.toString()));
 
+			String tmpAlt=altText;
 			if(altText==null) {
-				altText="image " + id;
+				tmpAlt="image " + id;
 			}
 			href.append(" alt=\"");
-			href.append(altText);
+			href.append(tmpAlt);
 			href.append("\"");
 
 			String w=null;

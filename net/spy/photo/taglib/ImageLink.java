@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.12 2003/08/08 05:52:56 dustin Exp $
+// $Id: ImageLink.java,v 1.13 2003/08/11 05:49:54 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -116,11 +116,12 @@ public class ImageLink extends PhotoTag {
 		// Finish the src attribute.
 		href.append("\"");
 
+		String tmpAlt=altText;
 		if(altText==null) {
-			altText="image " + id;
+			tmpAlt="image " + id;
 		}
 		href.append(" alt=\"");
-		href.append(altText);
+		href.append(tmpAlt);
 		href.append("\"");
 
 		// if no width or height was provided, figure out out

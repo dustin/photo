@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImgSrcTag.java,v 1.3 2003/08/08 05:52:56 dustin Exp $
+// $Id: ImgSrcTag.java,v 1.4 2003/08/11 05:49:54 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -94,11 +94,12 @@ public class ImgSrcTag extends PhotoTag {
 			sb.append("\""); 
 		}
 
+		String tmpAlt=alt;
 		if(alt==null) {
-			alt="";
+			tmpAlt="";
 		}
 		sb.append(" alt=\"");
-		sb.append(alt);
+		sb.append(tmpAlt);
 		sb.append("\""); 
 
 		sb.append("/>");
