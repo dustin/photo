@@ -19,7 +19,7 @@
     <form-bean name="changePWForm" type="net.spy.photo.struts.ChangePWForm"/>
     <form-bean name="forgotPWForm" type="net.spy.photo.struts.ForgotPWForm"/>
     <form-bean name="commentForm" type="net.spy.photo.struts.CommentForm"/>
-    <form-bean name="addToGalleryform"
+    <form-bean name="addToGalleryForm"
 			type="net.spy.photo.struts.AddToGalleryForm"/>
     <form-bean name="saveGalleryForm"
 			type="net.spy.photo.struts.SaveGalleryForm"/>
@@ -149,7 +149,6 @@
 	<!-- Add a new image to a gallery -->
 	<action path="/addToGallery"
 		type="net.spy.photo.struts.AddToGalleryAction"
-		input="/display.jsp"
 		name="addToGalleryForm">
 		<forward name="success" path="/display.jsp" />
 	</action>
