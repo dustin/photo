@@ -58,6 +58,11 @@ public class PhotoLogEntry extends AbstractSavable {
 		this.remoteAddr=remoteAddr;
 		this.userAgent=userAgent;
 		this.timestamp = System.currentTimeMillis();
+
+		if(this.userAgent == null) {
+			getLogger().warn("Got a null user agent from " + remoteAddr);
+			this.userAgent = "-unknown-";
+		}
 	}
 
 	/**
