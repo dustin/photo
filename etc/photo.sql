@@ -9,8 +9,10 @@ begin transaction;
 
 -- add support for PL/pgsql
 
-CREATE FUNCTION plpgsql_call_handler () RETURNS OPAQUE AS
-	'/usr/local/pgsql/lib/plpgsql.so' LANGUAGE 'C';
+-- Older versions return OPAQUE, and my need you to specify an absolute path to
+-- plpgsql.so
+CREATE FUNCTION plpgsql_call_handler () RETURNS LANGUAGE_HANDLER AS
+	'plpgsql.so' LANGUAGE 'C';
 
 CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'
 	HANDLER plpgsql_call_handler
