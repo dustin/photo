@@ -27,8 +27,6 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	public static final int ADMIN=1;
 	public static final int SUBADMIN=2;
 
-	private boolean xmlraw=false;
-	private String stylesheet=null;
 	private PhotoUser user=null;
 
 	private String encodedSearch=null;
@@ -58,34 +56,6 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public String toString() {
 		return("{PhotoSessionData for " + user + "}");
-	}
-
-	/**
-	 * True if this user wants raw XML to be processed on the client.
-	 */
-	public boolean isXmlraw() {
-		return(xmlraw);
-	}
-
-	/**
-	 * Set to true if the user wants raw XML to be processed on the client.
-	 */
-	public void setXmlraw(boolean xmlraw) {
-		this.xmlraw=xmlraw;
-	}
-
-	/**
-	 * Get the stylesheet this session is using.
-	 */
-	public String getStylesheet() {
-		return(stylesheet);
-	}
-
-	/**
-	 * Set the stylesheet this session is using.
-	 */
-	public void setStylesheet(String stylesheet) {
-		this.stylesheet=stylesheet;
 	}
 
 	/**
@@ -179,24 +149,6 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	public int getAdmin() {
 		return(adminType);
 	}
-
-	/**
-	 * Test for the ADMIN bit.
-	 */
-	/*
-	public boolean isAdmin() {
-		return(checkAdminFlag(ADMIN));
-	}
-	*/
-
-	/**
-	 * Set the ADMIN bit.
-	 */
-	/*
-	public void setIsadmin(boolean isadmin) {
-		setAdmin(ADMIN);
-	}
-	*/
 
 	/**
 	 * Set all the admin bits.
