@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.57 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoSession.java,v 1.58 2001/07/16 02:24:10 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1317,10 +1317,10 @@ public class PhotoSession extends Object
 
 			if(thumbnail) {
 				log("Requesting thumbnail");
-				image=p.getThumbnail();
+				image=p.getThumbnail(remote_uid.intValue());
 			} else {
 				log("Requesting full image");
-				image=p.getImage();
+				image=p.getImage(remote_uid.intValue());
 			}
 			logger.log(new PhotoLogImageEntry(remote_uid.intValue(),
 				which, true, request));

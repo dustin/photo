@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.6 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.7 2001/07/16 02:24:10 dustin Exp $
  */
 
 package net.spy.photo;
@@ -12,33 +12,85 @@ import java.util.*;
 import java.rmi.Naming;
 
 import net.spy.*;
+import net.spy.db.*;
 import net.spy.cache.*;
 import net.spy.rmi.*;
 
-// The class
+/**
+ * Get images from the image server.
+ */
 public class PhotoImageHelper extends PhotoHelper
 { 
-	protected static ImageServer server = null;
-	protected int image_id=-1;
-	PhotoImage image_data=null;
+	private static ImageServer server = null;
+	private int image_id=-1;
+	private PhotoImage image_data=null;
 
+	/**
+	 * Get a PhotoHelper for the given image on behalf.
+	 */
 	public PhotoImageHelper(int which) throws Exception {
 		super();
-		image_id = which;
+		this.image_id = which;
 	}
 
-	public void finalize() throws Throwable {
-		super.finalize();
+	// Verify the current logged-in user has access to this image.
+	private void checkAccess(int uid) throws Exception {
+		boolean ok=false;
+
+		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+		PreparedStatement pst=db.prepareStatement(
+			"select 1 from album a, wwwacl w\n"
+			+ " where id=?\n"
+			+ " and a.cat=w.cat\n"
+			+ " and (w.userid=? or w.userid=?)\n", 900);
+		pst.setInt(1, image_id);
+		pst.setInt(2, uid);
+		pst.setInt(3, PhotoUtil.getDefaultId());
+		ResultSet rs=pst.executeQuery();
+
+		// If there's a result, access is granted.
+		if(rs.next()) {
+			ok=true;
+		}
+
+		rs.close();
+		pst.close();
+		db.close();
+
+		if(!ok) {
+			throw new Exception("Access to this image is not allowed by user "
+				+ uid);
+		}
 	}
 
-	// Get an Image
+	/**
+	 * Get the full image on behalf of a user.
+	 */
+	public PhotoImage getImage(int uid) throws Exception {
+		checkAccess(uid);
+		return(getImage());
+	}
+
+	/**
+	 * Get the full image.
+	 */
 	public PhotoImage getImage() throws Exception {
 		ensureConnected();
 		log("Getting image " + image_id + " from ImageServer");
 		return(server.getImage(image_id, false));
 	}
 
-	// Get a thumbnail
+	/**
+	 * Get the thumbnail for an image on behalf of a user.
+	 */
+	public PhotoImage getThumbnail(int uid) throws Exception {
+		checkAccess(uid);
+		return(getThumbnail());
+	}
+
+	/**
+	 * Get the thumbnail for an image.
+	 */
 	public PhotoImage getThumbnail() throws Exception {
 		// Thumbnails are cachable.
 		SpyCache cache=new SpyCache();
@@ -58,7 +110,9 @@ public class PhotoImageHelper extends PhotoHelper
 		return(pi);
 	}
 
-	// Store an image
+	/**
+	 * Store an image.
+	 */
 	public void storeImage(PhotoImage image_data) throws Exception {
 		ensureConnected();
 		log("Storing image " + image_id);
@@ -67,7 +121,7 @@ public class PhotoImageHelper extends PhotoHelper
 	}
 
 	// Make sure we're connected to an image server
-	protected synchronized void ensureConnected() throws Exception {
+	private synchronized void ensureConnected() throws Exception {
 		boolean needconn=true;
 
 		try {
