@@ -22,11 +22,6 @@ public class JavaImageServerScaler extends ImageServerScaler {
 	public PhotoImage scaleImage(PhotoImage in, PhotoDimensions dim)
 		throws Exception {
 
-		if(in.getFormat()!=PhotoImage.FORMAT_JPEG) {
-			throw new Exception("JavaImageServerScaler does not yet handle "
-				+ in.getFormatString() + " images.");
-		}
-
 		PhotoImageScaler pis=new PhotoImageScaler(in);
 		return(pis.getScaledImage(dim, 70));
 	}

@@ -47,12 +47,6 @@ public class PhotoImageScaler extends Object {
 	public PhotoImage getScaledImage(PhotoDimensions dim, int quality)
 		throws Exception {
 
-		// This is stupid, but I'll fix it at some point.
-		if(pi.getFormat()!=PhotoImage.FORMAT_JPEG) {
-			throw new Exception("PhotoImageScaler does not handle "
-				+ pi.getFormatString() + " yet");
-		}
-
 		// Get the original image.
 		Image image=Toolkit.getDefaultToolkit().createImage(pi.getData());
 
