@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.11 2002/06/25 00:18:01 dustin Exp $
+// $Id: PhotoImage.java,v 1.12 2002/06/25 01:11:23 dustin Exp $
 
 package net.spy.photo;
 
@@ -163,6 +163,9 @@ public class PhotoImage extends Object
 
 	// Figure out the format of this binary stream.
 	private void determineFormat() throws PhotoException {
+        if(image_data==null || image_data.length==0) {
+            throw new PhotoException("image_data is empty");
+        }
 		if(isJpeg()) {
 			format=FORMAT_JPEG;
 		} else if(isPng()) {
@@ -170,7 +173,8 @@ public class PhotoImage extends Object
 		} else if(isGif()) {
 			format=FORMAT_GIF;
 		} else {
-			throw new PhotoException("Cannot determine format.");
+			throw new PhotoException("Cannot determine format ("
+                + "imageData is " + image_data.length + " bytes)");
 		}
 	}
 
