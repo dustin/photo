@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.34 2000/07/24 05:04:12 knitterb Exp $
+ * $Id: PhotoSession.java,v 1.35 2000/07/24 08:47:35 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1044,8 +1044,9 @@ public class PhotoSession extends Object
 	}
 
 	protected void debug (String msg) {
-		if (debug)
-			System.out.println("PhotoSession: " + msg);
+		if (debug) {
+			log("PhotoSession debug: " + msg);
+		}
 	}
 
 

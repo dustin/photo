@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.4 2000/07/24 05:05:27 knitterb Exp $
+ * $Id: PhotoAdmin.java,v 1.5 2000/07/24 08:47:35 dustin Exp $
  */
 
 package net.spy.photo;
@@ -447,8 +447,9 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	protected void debug(String msg) {
-		if (debug)
-			System.out.println ("PhotoAdmin: " + msg);
+		if (debug) {
+			log ("PhotoAdmin debug: " + msg);
+		}
 	}
 
 	// Shortcut to tokenize()
