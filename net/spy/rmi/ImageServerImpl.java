@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.5 2000/07/20 21:29:26 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.6 2000/07/20 22:16:45 dustin Exp $
 
 package net.spy.rmi;
 
@@ -83,6 +83,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 			out=new String(b);
 		} catch(Exception e) {
 			log("Error dumping InputStream:  " + e);
+			e.printStackTrace();
 		}
 		return(out);
 	}
@@ -106,6 +107,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 
 			String command=conf.get("convert.cmd")
 				+ " " + tmpfilename + " " + thumbfilename;
+			log("Running " + command);
 			Runtime run = Runtime.getRuntime();
 			Process p = run.exec(command);
 			stderr=p.getErrorStream();
