@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.19 2002/11/03 07:33:35 dustin Exp $
+// $Id: PhotoImage.java,v 1.20 2003/07/23 19:58:46 dustin Exp $
 
 package net.spy.photo;
 
@@ -11,6 +11,9 @@ import java.io.Serializable;
  */
 public class PhotoImage extends Object
 	implements Serializable, PhotoDimensions {
+
+	// Serialization info
+	private static final long serialVersionUID = -581283675761191893l;
 
 	// Image data
 	private byte imageData[]=null;
