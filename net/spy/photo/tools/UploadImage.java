@@ -1,15 +1,24 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadImage.java,v 1.1 2002/06/25 05:21:35 dustin Exp $
+// $Id: UploadImage.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.tools;
 
-import java.util.*;
-import java.net.*;
-import java.io.*;
-import java.text.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
-import org.apache.xmlrpc.*;
+import java.net.URL;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcException;
 
 /**
  * Upload an image.

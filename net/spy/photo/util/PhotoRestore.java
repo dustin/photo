@@ -1,15 +1,20 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoRestore.java,v 1.7 2002/07/09 21:33:20 dustin Exp $
+// $Id: PhotoRestore.java,v 1.8 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.util;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+import java.util.zip.GZIPInputStream;
+
 import org.apache.xerces.parsers.DOMParser;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import java.util.*;
-import java.io.*;
-import java.util.zip.*;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import org.xml.sax.InputSource;
 
 /**
  * Restore image backups.

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoDimensions.java,v 1.2 2002/02/21 10:41:32 dustin Exp $
+// $Id: PhotoDimensions.java,v 1.3 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
@@ -25,3 +25,5 @@ public interface PhotoDimensions {
 	boolean smallerThan(PhotoDimensions pdim);
 
 }
+
+

@@ -1,21 +1,31 @@
 /*
  * Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePhoto.java,v 1.7 2002/07/09 21:33:20 dustin Exp $
+ * $Id: CachePhoto.java,v 1.8 2002/07/10 03:38:09 dustin Exp $
  */
 
 package net.spy.photo.tools;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.text.*;
+import java.io.File;
+import java.io.FileOutputStream;
+
 import java.rmi.Naming;
 
-import net.spy.*;
-import net.spy.util.*;
-import net.spy.photo.*;
-import net.spy.photo.rmi.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import net.spy.SpyConfig;
+import net.spy.SpyDB;
+
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImage;
+
+import net.spy.photo.rmi.RemoteImageServer;
+
+import net.spy.util.Base64;
 
 /**
  * Cache all of the images and verify they look the same in the DB as they

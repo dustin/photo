@@ -1,18 +1,12 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumRestorable.java,v 1.1 2002/06/28 23:13:09 dustin Exp $
+ * $Id: AlbumRestorable.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
  */
 
 package net.spy.photo.util;
 
-import java.util.*;
-import java.io.*;
-
-import org.xml.sax.*;
-
-import net.spy.*;
-import net.spy.photo.*;
+import java.io.Serializable;
 
 /**
  * Superclass of all backup entries.

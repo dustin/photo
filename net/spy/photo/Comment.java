@@ -1,14 +1,20 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.9 2002/07/04 04:41:13 dustin Exp $
+// $Id: Comment.java,v 1.10 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 
-import net.spy.*;
-import net.spy.photo.sp.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import net.spy.SpyDB;
+
+import net.spy.photo.sp.FindImagesByComments;
 
 /**
  * Comments on photos.
@@ -30,7 +36,7 @@ public class Comment extends Object implements java.io.Serializable {
 	 */
 	public Comment() {
 		super();
-		timestamp=new java.sql.Timestamp(System.currentTimeMillis());
+		timestamp=new Timestamp(System.currentTimeMillis());
 		timestampString=timestamp.toString();
 	}
 

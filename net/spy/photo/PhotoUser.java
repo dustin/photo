@@ -1,17 +1,26 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.20 2002/07/04 04:47:44 dustin Exp $
+// $Id: PhotoUser.java,v 1.21 2002/07/10 03:38:08 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
 package net.spy.photo;
 
-import java.sql.*;
-import java.util.*;
 import java.io.Serializable;
 
-import net.spy.*;
-import net.spy.db.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import net.spy.SpyDB;
 
 /**
  * Represents a user in the photo system.

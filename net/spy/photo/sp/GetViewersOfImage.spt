@@ -10,7 +10,8 @@ Get all of the viewers of a given image.
 
 @sql
 select log.log_id as id, wwwusers.username,
-		text(log.remote_addr) as remote_addr, user_agent.user_agent,
+		text(log.remote_addr) as remote_addr,
+		user_agent.user_agent,
 		log.extra_info as img_size, log.ts
 	from wwwusers, photo_logs log, user_agent
 	where log.wwwuser_id = wwwusers.id

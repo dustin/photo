@@ -1,12 +1,14 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: RPCMethod.java,v 1.1 2002/06/25 00:18:01 dustin Exp $
+// $Id: RPCMethod.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo.rpc;
 
 import java.util.Hashtable;
 
-import net.spy.photo.*;
+import net.spy.photo.Persistent;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoUser;
 
 /**
  * Superclass for all RPC handlers.

@@ -1,21 +1,26 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.26 2002/07/09 21:33:20 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.27 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import java.security.*;
-import java.util.*;
-import java.sql.*;
+import java.security.MessageDigest;
 
-import net.spy.*;
-import net.spy.db.*;
-import net.spy.cache.*;
-import net.spy.util.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import net.spy.photo.sp.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.spy.SpyDB;
+
+import net.spy.cache.SpyCache;
+
+import net.spy.photo.sp.ListUsers;
+
+import net.spy.util.Base64;
 
 /**
  * Security dispatch type stuff happens here.

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoDimScaler.java,v 1.3 2002/02/21 07:51:44 dustin Exp $
+// $Id: PhotoDimScaler.java,v 1.4 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
@@ -74,3 +74,5 @@ public class PhotoDimScaler extends Object {
 	}
 
 }
+
+

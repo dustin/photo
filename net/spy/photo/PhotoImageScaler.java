@@ -1,17 +1,20 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageScaler.java,v 1.4 2002/06/16 07:17:38 dustin Exp $
+// $Id: PhotoImageScaler.java,v 1.5 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.awt.Image;
+import java.awt.Toolkit;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 import java.rmi.Naming;
 
-import net.spy.photo.rmi.*;
+import net.spy.photo.rmi.RemoteImageServer;
 
 /**
  * Scales images.

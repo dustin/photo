@@ -1,12 +1,10 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageServerScaler.java,v 1.1 2002/06/17 02:13:21 dustin Exp $
+// $Id: ImageServerScaler.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import net.spy.*;
-
-import net.spy.photo.*;
+import net.spy.SpyConfig;
 
 /**
  * Interface for scaling images.
@@ -14,7 +12,7 @@ import net.spy.photo.*;
 public abstract class ImageServerScaler extends Object {
 
 	private boolean debug=false;
-	protected SpyConfig conf=null;
+	private SpyConfig conf=null;
 
 	/**
 	 * Scale the image.
@@ -27,6 +25,15 @@ public abstract class ImageServerScaler extends Object {
 	 */
 	public void setConfig(SpyConfig conf) {
 		this.conf=conf;
+	}
+
+	/**
+	 * Get the config.
+	 *
+	 * @return the SpyConfig for this instance
+	 */
+	protected SpyConfig getConf() {
+		return(conf);
 	}
 
 	/**

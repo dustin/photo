@@ -1,14 +1,23 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.5 2002/07/04 03:27:22 dustin Exp $
+// $Id: Category.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-import net.spy.*;
-import net.spy.db.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+
+import net.spy.SpyDB;
+
+import net.spy.db.SpyCacheDB;
 
 /**
  * Category representation.

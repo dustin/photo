@@ -1,14 +1,17 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.8 2002/07/04 07:14:58 dustin Exp $
+// $Id: PhotoImageData.java,v 1.9 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.sql.*;
-import java.io.*;
+import java.io.Serializable;
 
-import net.spy.*;
-import net.spy.cache.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import net.spy.SpyDB;
+
+import net.spy.cache.SpyCache;
 
 /**
  * This class represents, and retreives all useful data for a given image.

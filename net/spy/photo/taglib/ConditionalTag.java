@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ConditionalTag.java,v 1.1 2002/05/23 06:54:51 dustin Exp $
+// $Id: ConditionalTag.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -70,3 +70,5 @@ public class ConditionalTag extends PhotoTag {
 	}
 
 }
+
+

@@ -1,12 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LocalImageCacheImpl.java,v 1.3 2002/06/26 21:12:49 dustin Exp $
+// $Id: LocalImageCacheImpl.java,v 1.4 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.io.*;
+import java.io.IOException;
 
-import net.spy.cache.*;
+import net.spy.cache.DiskCache;
 
 /**
  * ImageCache that uses local files.

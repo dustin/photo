@@ -1,11 +1,15 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaver.java,v 1.5 2002/06/27 02:11:53 dustin Exp $
+// $Id: PhotoSaver.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.sql.*;
-import java.text.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+
+import java.text.SimpleDateFormat;
 
 import net.spy.SpyDB;
 

@@ -1,18 +1,14 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoCleanup.java,v 1.4 2002/06/23 07:34:27 dustin Exp $
+ * $Id: PhotoCleanup.java,v 1.5 2002/07/10 03:38:09 dustin Exp $
  */
 
 package net.spy.photo.util;
 
-import java.sql.*;
-import java.lang.*;
-import java.util.*;
-import java.io.*;
+import net.spy.SpyDB;
 
-import net.spy.*;
-import net.spy.photo.*;
+import net.spy.photo.PhotoConfig;
 
 /**
  * Run cleanup queries.

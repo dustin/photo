@@ -1,20 +1,26 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadAction.java,v 1.5 2002/06/14 18:27:24 dustin Exp $
+// $Id: UploadAction.java,v 1.6 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
 import java.io.IOException;
-import java.sql.*;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
 
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import net.spy.*;
+import net.spy.photo.Persistent;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoLogUploadEntry;
+import net.spy.photo.PhotoSaver;
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoUser;
 
-import net.spy.photo.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * The action performed when an image is uploaded.

@@ -1,11 +1,9 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.16 2002/07/09 21:33:19 dustin Exp $
+// $Id: PhotoImage.java,v 1.17 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.lang.*;
-import java.util.*;
 import java.io.Serializable;
 
 /**

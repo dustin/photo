@@ -1,18 +1,26 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectUserAction.java,v 1.6 2002/07/04 03:27:22 dustin Exp $
+// $Id: AdminSelectUserAction.java,v 1.7 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-import org.apache.struts.action.*;
+import javax.servlet.ServletException;
 
-import net.spy.photo.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.spy.photo.PhotoACLEntry;
+import net.spy.photo.PhotoSecurity;
+import net.spy.photo.PhotoUser;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Action used to begin editing a new user.

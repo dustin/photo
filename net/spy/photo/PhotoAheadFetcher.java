@@ -1,14 +1,12 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.18 2002/07/04 06:57:59 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.19 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import java.util.*;
-
-import net.spy.util.*;
+import net.spy.util.ThreadPool;
 
 /**
  * This object fetches ahead in resultsets as to speed up the appearance of

@@ -1,18 +1,25 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoBackup.java,v 1.10 2002/07/09 21:33:20 dustin Exp $
+ * $Id: PhotoBackup.java,v 1.11 2002/07/10 03:38:09 dustin Exp $
  */
 
 package net.spy.photo.util;
 
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import java.util.zip.*;
+import java.io.File;
+import java.io.FileOutputStream;
 
-import net.spy.*;
-import net.spy.photo.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import java.util.zip.GZIPOutputStream;
+
+import net.spy.SpyDB;
+
+import net.spy.photo.PhotoConfig;
 
 /**
  * Utility to backup images.

@@ -1,17 +1,22 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveUserAction.java,v 1.4 2002/06/25 00:18:01 dustin Exp $
+// $Id: AdminSaveUserAction.java,v 1.5 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
-import java.io.*;
+import java.io.IOException;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
 
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.*;
+import net.spy.photo.PhotoSecurity;
+import net.spy.photo.PhotoUser;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Action used to save a new user

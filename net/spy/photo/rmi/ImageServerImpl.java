@@ -1,13 +1,18 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageServerImpl.java,v 1.1 2002/06/16 08:09:14 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo.rmi;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 
-import net.spy.photo.*;
+import net.spy.photo.ImageServer;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoDimensionsImpl;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoImage;
 
 /**
  * Implementation of ImageServer as an RMI client.

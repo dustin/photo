@@ -1,19 +1,24 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.15 2002/04/01 08:18:32 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.16 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import java.sql.*;
-import java.lang.*;
-import java.util.*;
-import java.io.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-import net.spy.*;
-import net.spy.log.*;
-import net.spy.util.*;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import net.spy.SpyDB;
+
+import net.spy.log.SpyLogEntry;
+import net.spy.log.SpyLogFlusher;
+
+import net.spy.util.Debug;
 
 /**
  * Flush logs.

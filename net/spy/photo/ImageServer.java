@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageServer.java,v 1.1 2002/06/16 08:09:13 dustin Exp $
+// $Id: ImageServer.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
@@ -33,3 +33,5 @@ public interface ImageServer {
 	void storeImage(int image_id, PhotoImage image) throws PhotoException;
 
 }
+
+

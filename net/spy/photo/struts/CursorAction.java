@@ -1,16 +1,22 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CursorAction.java,v 1.4 2002/05/27 07:29:18 dustin Exp $
+// $Id: CursorAction.java,v 1.5 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
 import java.io.IOException;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
-import org.apache.struts.action.*;
+import javax.servlet.ServletException;
 
-import net.spy.photo.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.spy.photo.Cursor;
+import net.spy.photo.PhotoSessionData;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Action to adjust a cursor before sending it to a result page.

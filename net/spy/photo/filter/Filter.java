@@ -1,10 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Filter.java,v 1.1 2002/06/29 07:13:56 dustin Exp $
+// $Id: Filter.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo.filter;
 
-import net.spy.photo.*;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoSearchResults;
 
 /**
  * Superclass for search filters.

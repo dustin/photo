@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoACLEntry.java,v 1.2 2002/06/23 01:17:01 dustin Exp $
+// $Id: PhotoACLEntry.java,v 1.3 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
@@ -81,3 +81,5 @@ public class PhotoACLEntry extends Object implements java.io.Serializable {
 	}
 
 }
+
+

@@ -1,13 +1,18 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Vote.java,v 1.5 2002/07/04 04:41:13 dustin Exp $
+// $Id: Vote.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 
-import net.spy.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+import net.spy.SpyDB;
 
 /**
  * Votes on photos.
@@ -29,7 +34,7 @@ public class Vote extends Object implements java.io.Serializable {
 	 */
 	public Vote() {
 		super();
-		timestamp=new java.sql.Timestamp(System.currentTimeMillis());
+		timestamp=new Timestamp(System.currentTimeMillis());
 		timestampString=timestamp.toString();
 	}
 

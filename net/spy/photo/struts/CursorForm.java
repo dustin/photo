@@ -1,11 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CursorForm.java,v 1.5 2002/05/27 04:56:31 dustin Exp $
+// $Id: CursorForm.java,v 1.6 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;

@@ -1,12 +1,10 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddCheck.java,v 1.1 2002/05/23 16:17:18 dustin Exp $
+// $Id: AddCheck.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
-import javax.servlet.*;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.JspException;
 
 /**
  * Conditional based on a user's canAdd flag.

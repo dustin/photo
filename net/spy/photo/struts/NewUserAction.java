@@ -1,21 +1,31 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NewUserAction.java,v 1.3 2002/07/04 04:32:29 dustin Exp $
+// $Id: NewUserAction.java,v 1.4 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
-import java.io.*; 
-import java.util.*;
-import java.sql.*;
+import java.io.IOException;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.sql.PreparedStatement;
 
-import org.apache.struts.action.*;
+import java.util.Iterator;
+
+import javax.servlet.ServletException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.spy.SpyDB;
 
-import net.spy.photo.*;
+import net.spy.photo.Persistent;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoUser;
+import net.spy.photo.Profile;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Create a user from a profile.

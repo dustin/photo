@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.13 2002/07/04 04:21:53 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.14 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import java.lang.*;
-import java.util.*;
-import java.text.*;
-import java.io.File;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.*;
+import net.spy.SpyDB;
+import net.spy.SpyUtil;
 
 /**
  * Utilities.

@@ -1,16 +1,17 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CategoryTag.java,v 1.2 2002/05/15 08:28:06 dustin Exp $
+// $Id: CategoryTag.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
-import java.util.*;
+import java.util.Collection;
 
-import javax.servlet.*;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 
-import net.spy.photo.*;
+import net.spy.photo.Category;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoSessionData;
 
 /**
  * Present category lists.

@@ -2,8 +2,6 @@
 
 package net.spy.photo.migration;
 
-import net.spy.photo.*;
-
 public class PhotoMigration05 extends PhotoMigration {
 
 	public void migrate() throws Exception {
@@ -22,3 +20,4 @@ public class PhotoMigration05 extends PhotoMigration {
 		mig.migrate();
 	}
 }
+

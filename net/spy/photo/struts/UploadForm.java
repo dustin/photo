@@ -1,16 +1,20 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadForm.java,v 1.6 2002/06/24 21:51:44 dustin Exp $
+// $Id: UploadForm.java,v 1.7 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoUtil;
+
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
 
 import org.apache.struts.upload.FormFile;
-import org.apache.struts.action.*;
-
-import net.spy.photo.*;
 
 /**
  * Form to receive image uploads.

@@ -1,22 +1,29 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ParseBackup.java,v 1.2 2002/07/04 04:41:13 dustin Exp $
+// $Id: ParseBackup.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.util;
 
-import java.util.*;
-import java.io.*;
-import java.util.zip.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 
+import java.util.Iterator;
+import java.util.Stack;
+
+import java.util.zip.GZIPInputStream;
+
+import net.spy.photo.PhotoException;
+
+import net.spy.util.Base64;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.InputSource;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.XMLReaderFactory;
-import org.xml.sax.helpers.DefaultHandler;
 
-import net.spy.util.*;
-import net.spy.photo.*;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * Restore image backups.

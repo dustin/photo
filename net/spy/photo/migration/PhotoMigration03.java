@@ -2,10 +2,6 @@
 
 package net.spy.photo.migration;
 
-import java.sql.*;
-import net.spy.*;
-import net.spy.photo.*;
-
 public class PhotoMigration03 extends PhotoMigration {
 
 	public void migrate() throws Exception {
@@ -24,3 +20,4 @@ public class PhotoMigration03 extends PhotoMigration {
 		mig.migrate();
 	}
 }
+

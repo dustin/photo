@@ -1,10 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveGalleryForm.java,v 1.2 2002/07/02 07:03:41 dustin Exp $
+// $Id: SaveGalleryForm.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;

@@ -1,16 +1,10 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoHelper.java,v 1.11 2002/06/23 07:01:03 dustin Exp $
+ * $Id: PhotoHelper.java,v 1.12 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
-
-import java.sql.*;
-import java.util.*;
-
-import net.spy.*;
-import net.spy.log.*;
 
 /**
  * Superclass for general supplemental classes.
@@ -41,3 +35,4 @@ public class PhotoHelper extends Object {
 		System.err.println(getClass().getName() + ": " + message);
 	}
 }
+

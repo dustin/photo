@@ -1,18 +1,28 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: Profile.java,v 1.5 2002/07/04 04:32:29 dustin Exp $
+// $Id: Profile.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
 package net.spy.photo;
 
-import java.sql.*;
-import java.util.*;
-import java.util.Date;
 import java.io.Serializable;
 
-import net.spy.*;
-import net.spy.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import net.spy.SpyDB;
+
+import net.spy.util.PwGen;
 
 /**
  * Represents a user in the photo system.
@@ -33,7 +43,7 @@ public class Profile extends Object implements Serializable {
 		acl=new HashSet();
 		name=PwGen.getPass(16);
 		// Expires in thirty days.
-		expires=new Date(System.currentTimeMillis() + (86400l*30l*1000l));
+		expires=new Date(System.currentTimeMillis() + (86400L*30L*1000L));
 	}
 
 	/**

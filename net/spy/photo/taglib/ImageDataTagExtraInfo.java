@@ -1,13 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageDataTagExtraInfo.java,v 1.2 2002/05/21 07:45:09 dustin Exp $
+// $Id: ImageDataTagExtraInfo.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.tagext.TagData;
+import javax.servlet.jsp.tagext.TagExtraInfo;
+import javax.servlet.jsp.tagext.VariableInfo;
 
 /**
  * Describes the data stored by the image tag.

@@ -1,13 +1,14 @@
 /*
  * Copyright (C) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoConfig.java,v 1.14 2002/07/09 21:33:19 dustin Exp $
+ * $Id: PhotoConfig.java,v 1.15 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import net.spy.*;
-import java.io.*;
+import java.io.File;
+
+import net.spy.SpyConfig;
 
 /**
  * Configuration for PhotoServlet.

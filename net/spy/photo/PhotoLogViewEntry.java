@@ -1,14 +1,17 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoLogViewEntry.java,v 1.2 2002/07/04 03:27:22 dustin Exp $
+// $Id: PhotoLogViewEntry.java,v 1.3 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.util.*;
-import java.sql.*;
-import java.util.Date;
+import java.sql.ResultSet;
 
-import net.spy.photo.sp.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+
+import net.spy.photo.sp.GetViewersOfImage;
 
 /**
  * An entry from a PhotoLogView.

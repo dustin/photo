@@ -10,7 +10,8 @@ Get a list of images based on when comments were posted for them.
 
 @sql
 select
-	c.comment_id, c.photo_id, c.note, c.ts, c.remote_addr, c.wwwuser_id,
+	c.comment_id, c.photo_id, c.note, c.ts,
+	c.remote_addr, c.wwwuser_id,
 	latestcomment(c.photo_id) as cts
 from
 	album a, commentary c, wwwacl acl

@@ -1,21 +1,24 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetGalleryAction.java,v 1.1 2002/07/02 00:01:21 dustin Exp $
+// $Id: GetGalleryAction.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
-import java.io.*;
-import java.util.*;
-import java.sql.*;
+import java.io.IOException;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
 
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import net.spy.SpyDB;
+import net.spy.photo.Cursor;
+import net.spy.photo.Gallery;
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoUser;
 
-import net.spy.photo.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Fetch a cursor for a gallery.

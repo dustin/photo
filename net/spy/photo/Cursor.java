@@ -1,15 +1,18 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Cursor.java,v 1.7 2002/07/04 06:57:59 dustin Exp $
+ * $Id: Cursor.java,v 1.8 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import java.util.*;
 import java.io.Serializable;
 
-import net.spy.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * An object that will be cursor through other objects.
@@ -160,7 +163,7 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	// Inner class to iterate a cursor
 	private class CursorIterator extends Object implements Iterator {
 
-		Cursor myCursor=null;
+		private Cursor myCursor=null;
 	
 		// Get a cursor iterator in a given cursor
 		private CursorIterator(Cursor c) {

@@ -2,9 +2,9 @@
 
 package net.spy.photo.migration;
 
-import java.sql.*;
-import net.spy.*;
-import net.spy.photo.*;
+import net.spy.SpyDB;
+
+import net.spy.photo.PhotoConfig;
 
 public class PhotoMigration02 extends PhotoMigration {
 

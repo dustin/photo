@@ -1,15 +1,10 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.18 2002/07/04 06:57:59 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.19 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
-
-import java.util.*;
-import java.io.Serializable;
-
-import net.spy.*;
 
 /**
  * Represents results from a search.
@@ -88,3 +83,4 @@ public class PhotoSearchResults extends Cursor {
 	}
 
 }
+

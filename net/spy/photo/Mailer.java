@@ -1,12 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Mailer.java,v 1.1 2002/02/15 09:10:27 dustin Exp $
+// $Id: Mailer.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.io.*;
+import java.io.PrintStream;
 
-import com.oreilly.servlet.*;
+import com.oreilly.servlet.MailMessage;
 
 /**
  * Simple mail sender.

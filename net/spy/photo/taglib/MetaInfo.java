@@ -1,20 +1,20 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MetaInfo.java,v 1.1 2002/05/16 04:30:15 dustin Exp $
+// $Id: MetaInfo.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
-import java.text.*;
-import java.sql.*;
+import java.sql.ResultSet;
 
-import javax.servlet.*;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import java.text.NumberFormat;
 
-import net.spy.*;
-import net.spy.cache.*;
+import javax.servlet.jsp.JspException;
 
-import net.spy.photo.*;
+import net.spy.SpyDB;
+
+import net.spy.cache.SpyCache;
+
+import net.spy.photo.PhotoConfig;
 
 /**
  * Meta information about the site.

@@ -1,10 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginForm.java,v 1.5 2002/06/22 23:15:06 dustin Exp $
+// $Id: LoginForm.java,v 1.6 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -78,10 +79,12 @@ public class LoginForm extends ActionForm {
 		HttpServletRequest request) {
 
 		ActionErrors errors = new ActionErrors();
-		if ((username == null) || (username.length() < 1))
+		if ((username == null) || (username.length() < 1)) {
 			errors.add("username", new ActionError("error.login.username"));
-		if ((password == null) || (password.length() < 1))
+		}
+		if ((password == null) || (password.length() < 1)) {
 			errors.add("password", new ActionError("error.login.password"));
+		}
 
 		return(errors);
 	}

@@ -9,9 +9,13 @@ net.spy.photo.sp
 List all users.
 
 @sql
-select id, username, password, email, realname, canadd
-	from wwwusers
-	order by lower(username)
+select
+		id, username, password, email,
+		realname, canadd
+	from
+		wwwusers
+	order by
+		lower(username)
 
 @results
 id INTEGER User id

@@ -1,15 +1,21 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: InitSessionData.java,v 1.3 2002/06/14 18:27:24 dustin Exp $
+// $Id: InitSessionData.java,v 1.4 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-import net.spy.photo.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
+
+import net.spy.photo.Persistent;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoDimensionsImpl;
+import net.spy.photo.PhotoSessionData;
 
 /**
  * Taglib that makes sure the session data is initialized appropriately.

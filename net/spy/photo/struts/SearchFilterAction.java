@@ -1,18 +1,26 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchFilterAction.java,v 1.2 2002/06/29 07:40:07 dustin Exp $
+// $Id: SearchFilterAction.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.*;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.PhotoSessionData;
 
-import net.spy.photo.*;
-import net.spy.photo.filter.*;
+import net.spy.photo.filter.Filter;
+import net.spy.photo.filter.OnceAMonthFilter;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Filter search results.

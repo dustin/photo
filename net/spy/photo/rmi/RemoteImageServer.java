@@ -1,13 +1,13 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: RemoteImageServer.java,v 1.1 2002/06/16 07:14:13 dustin Exp $
+// $Id: RemoteImageServer.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo.rmi;
 
-import java.rmi.Remote; 
-import java.rmi.RemoteException; 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-import java.util.*;
-import net.spy.photo.*;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoImage;
 
 /**
  * Interface of the ImageServer.
@@ -19,7 +19,8 @@ public interface RemoteImageServer extends Remote {
 	 * @param image_id the image you want to get
 	 * @param thumbnail if true, returns the image as a thumbnail
 	 */
-	PhotoImage getImage(int image_id, boolean thumbnail) throws RemoteException;
+	PhotoImage getImage(int image_id, boolean thumbnail)
+		throws RemoteException;
 
 	/**
 	 * Get an image by ID at a specific size.
@@ -27,7 +28,8 @@ public interface RemoteImageServer extends Remote {
 	 * @param image_id the image you want to get
 	 * @param dim the dimensions representing the max dimensions of the image
 	 */
-	PhotoImage getImage(int image_id, PhotoDimensions dim) throws RemoteException;
+	PhotoImage getImage(int image_id, PhotoDimensions dim)
+		throws RemoteException;
 
 	/**
 	 * Store the image by ID.

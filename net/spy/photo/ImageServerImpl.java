@@ -1,20 +1,16 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.5 2002/07/09 21:33:19 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.rmi.Naming;
-import java.rmi.RemoteException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import java.util.*;
-import java.lang.*;
-import java.io.*;
-import java.sql.*;
+import net.spy.SpyDB;
 
-import net.spy.*;
-import net.spy.photo.*;
-import net.spy.photo.util.*;
-import net.spy.util.*;
+import net.spy.photo.util.PhotoStorerThread;
+
+import net.spy.util.Base64;
 
 /**
  * Implementation of the remote image server.
@@ -120,7 +116,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 		}
 	}
 
-	private synchronized static void checkStorerThread() {
+	private static synchronized void checkStorerThread() {
 		if(storer==null || !(storer.isAlive())) {
 			System.err.println("Starting storer thread.");
 			storer=new PhotoStorerThread();

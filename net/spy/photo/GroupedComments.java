@@ -1,11 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GroupedComments.java,v 1.3 2002/07/04 03:27:22 dustin Exp $
+// $Id: GroupedComments.java,v 1.4 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.util.ArrayList;
 import java.io.Serializable;
+
+import java.util.ArrayList;
 
 /**
  * Represents a group of comments for an individual image.

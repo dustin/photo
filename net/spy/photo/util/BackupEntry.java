@@ -1,23 +1,22 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: BackupEntry.java,v 1.7 2002/06/23 07:34:27 dustin Exp $
+ * $Id: BackupEntry.java,v 1.8 2002/07/10 03:38:09 dustin Exp $
  */
 
 package net.spy.photo.util;
 
-import java.sql.*;
-import java.util.*;
-import java.io.*;
+import java.io.OutputStream;
+import java.io.Serializable;
 
-import org.w3c.dom.*;
-import org.xml.sax.*;
-
-import org.apache.xml.serialize.*;
 import org.apache.xerces.dom.DocumentImpl;
 
-import net.spy.*;
-import net.spy.photo.*;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Superclass of all backup entries.

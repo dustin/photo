@@ -1,15 +1,14 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogEntry.java,v 1.4 2002/06/25 03:40:16 dustin Exp $
+ * $Id: PhotoLogEntry.java,v 1.5 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
 
-import net.spy.log.*;
+import net.spy.log.SpyLogEntry;
 
 /**
  * Log entries for image requests.

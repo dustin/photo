@@ -1,19 +1,24 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: XMLRPCServlet.java,v 1.1 2002/06/25 00:18:01 dustin Exp $
+ * $Id: XMLRPCServlet.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 
-import org.apache.xmlrpc.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.rpc.*;
+import net.spy.photo.rpc.AddImage;
+
+import org.apache.xmlrpc.XmlRpcServer;
 
 /**
  * Serve up images.
@@ -47,7 +52,7 @@ public class XMLRPCServlet extends HttpServlet {
 	 */
 	public String getServletInfo() {
 		return("Copyright (c) 2000	Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.1 $");
+			+ " - $Revision: 1.2 $");
 	}
 
 	/**

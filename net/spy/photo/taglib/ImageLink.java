@@ -1,13 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.6 2002/07/01 18:03:19 dustin Exp $
+// $Id: ImageLink.java,v 1.7 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.http.HttpServletResponse;
+
+import javax.servlet.jsp.JspException;
 
 /**
  * Taglib to link to an image.

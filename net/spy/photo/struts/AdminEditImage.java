@@ -1,19 +1,23 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminEditImage.java,v 1.1 2002/06/23 06:15:16 dustin Exp $
+// $Id: AdminEditImage.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
-import java.sql.*;
-import java.io.*;
+import java.io.IOException;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
 
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.*;
-import net.spy.photo.sp.*;
+import net.spy.photo.PhotoConfig;
+
+import net.spy.photo.sp.EditImage;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Edit images.

@@ -1,24 +1,18 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.18 2002/06/23 07:50:32 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.19 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import java.io.*;
-import java.util.*;
-import java.rmi.Naming;
-
-import net.spy.*;
-import net.spy.cache.*;
-import net.spy.photo.rmi.*;
+import net.spy.cache.SpyCache;
 
 /**
  * Get images from the image server.
  */
-public class PhotoImageHelper extends PhotoHelper
-{ 
+public class PhotoImageHelper extends PhotoHelper { 
+
 	private int image_id=-1;
 	private PhotoImage image_data=null;
 

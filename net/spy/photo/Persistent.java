@@ -1,14 +1,15 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Persistent.java,v 1.5 2002/06/30 07:51:31 dustin Exp $
+// $Id: Persistent.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 
-import net.spy.*;
-import net.spy.log.*;
+import javax.servlet.http.HttpServlet;
+
+import net.spy.log.SpyLog;
 
 /**
  * All persistent objects will be available through this class.
@@ -18,7 +19,7 @@ public class Persistent extends HttpServlet {
 	private static PhotoSecurity security = null;
 	private static PhotoAheadFetcher aheadfetcher=null;
 	private static SpyLog logger = null;
-	public static PhotoSaverThread photoSaverThread=null;
+	private static PhotoSaverThread photoSaverThread=null;
 	private PhotoLogFlusher logflusher=null;
 
 	/**

@@ -1,11 +1,14 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageObserver.java,v 1.1 2002/02/21 07:51:44 dustin Exp $
+// $Id: PhotoImageObserver.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.Image;
+import java.awt.Toolkit;
+
+import java.awt.image.ImageObserver;
+
 import java.net.URL;
 
 /**

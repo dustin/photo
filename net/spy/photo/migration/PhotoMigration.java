@@ -2,11 +2,22 @@
 
 package net.spy.photo.migration;
 
-import java.sql.*;
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+
 import java.net.URL;
-import net.spy.*;
-import net.spy.photo.*;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import net.spy.SpyDB;
+
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageHelper;
 
 /**
  * This is the base class for migration utilities.

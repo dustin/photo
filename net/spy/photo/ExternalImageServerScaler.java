@@ -1,13 +1,14 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ExternalImageServerScaler.java,v 1.2 2002/06/17 04:43:13 dustin Exp $
+// $Id: ExternalImageServerScaler.java,v 1.3 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.util.*;
-import java.io.*;
-import java.sql.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
-import net.spy.photo.*;
+import java.util.Random;
 
 /**
  * Get an image scaler that scales via an external program.
@@ -64,7 +65,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 			String tmp=null;
 
 			// Make sure we have a defined convert command.
-			tmp=conf.get("scaler.convert.cmd");
+			tmp=getConf().get("scaler.convert.cmd");
 			if(tmp==null) {
 				throw new Exception("No convert command has been defined!");
 			}

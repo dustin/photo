@@ -1,12 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.12 2002/07/04 04:32:29 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.13 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Session data goes here.

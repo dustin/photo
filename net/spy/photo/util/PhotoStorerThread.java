@@ -1,18 +1,25 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.16 2002/07/09 21:33:20 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.17 2002/07/10 03:38:09 dustin Exp $
  */
 
 package net.spy.photo.util;
 
-import java.sql.*;
-import java.util.*;
-import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import net.spy.*;
-import net.spy.photo.*;
-import net.spy.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import net.spy.SpyDB;
+
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageHelper;
+
+import net.spy.util.Base64;
 
 /**
  * Store images in the DB.	Uploaded images go directly into the cache and
@@ -24,7 +31,7 @@ import net.spy.util.*;
 public class PhotoStorerThread extends Thread {
 
 	// chunks should be divisible by 57
-	private final static int CHUNK_SIZE=2052;
+	private static final int CHUNK_SIZE=2052;
 
 	/**
 	 * Get a PhotoStorerThread.

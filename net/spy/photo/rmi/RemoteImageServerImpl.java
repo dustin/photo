@@ -1,22 +1,17 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: RemoteImageServerImpl.java,v 1.5 2002/06/26 21:12:49 dustin Exp $
+// $Id: RemoteImageServerImpl.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo.rmi;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.RMISecurityManager;
+
 import java.rmi.server.UnicastRemoteObject;
 
-import java.util.*;
-import java.lang.*;
-import java.io.*;
-import java.sql.*;
-
-import net.spy.*;
-import net.spy.photo.*;
-import net.spy.photo.util.*;
-import net.spy.util.*;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.ImageServer;
 
 /**
  * Implementation of the remote image server.

@@ -1,17 +1,21 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.24 2002/07/01 18:03:19 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.25 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import java.io.*;
+import java.io.IOException;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 
-import net.spy.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Serve up images.
@@ -38,7 +42,7 @@ public class PhotoServlet extends HttpServlet {
 	 */
 	public String getServletInfo() {
 		return("Copyright (c) 2000  Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.24 $");
+			+ " - $Revision: 1.25 $");
 	}
 
 	/**

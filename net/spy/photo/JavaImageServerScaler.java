@@ -1,10 +1,8 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: JavaImageServerScaler.java,v 1.1 2002/06/17 02:13:21 dustin Exp $
+// $Id: JavaImageServerScaler.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
-
-import net.spy.photo.*;
 
 /**
  * Scale the image in 100% Java.
@@ -34,3 +32,4 @@ public class JavaImageServerScaler extends ImageServerScaler {
 	}
 
 }
+

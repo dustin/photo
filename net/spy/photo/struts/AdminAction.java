@@ -1,15 +1,14 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminAction.java,v 1.1 2002/06/22 23:27:45 dustin Exp $
+// $Id: AdminAction.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo.struts;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
 
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
 
-import net.spy.photo.*;
+import net.spy.photo.PhotoSessionData;
 
 /**
  * Administrative actions fall under this class.

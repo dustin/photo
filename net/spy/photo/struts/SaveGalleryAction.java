@@ -1,21 +1,22 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveGalleryAction.java,v 1.4 2002/07/09 21:33:20 dustin Exp $
+// $Id: SaveGalleryAction.java,v 1.5 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.struts;
 
-import java.io.*;
-import java.util.*;
-import java.sql.*;
+import java.io.IOException;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
 
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import net.spy.SpyDB;
+import net.spy.photo.Gallery;
 
-import net.spy.photo.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Action to save a gallery.

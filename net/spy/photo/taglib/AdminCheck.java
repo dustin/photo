@@ -1,14 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //  
-// $Id: AdminCheck.java,v 1.3 2002/06/22 05:58:12 dustin Exp $
+// $Id: AdminCheck.java,v 1.4 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
-import javax.servlet.*;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.JspException;
 
-import net.spy.photo.*;
+import net.spy.photo.PhotoSessionData;
 
 /**
  * Conditional taglib based on user's administrative flag.

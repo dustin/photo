@@ -1,17 +1,27 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.13 2002/06/24 21:50:30 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.14 2002/07/10 03:38:09 dustin Exp $
  */
 
 package net.spy.photo.util;
 
-import java.sql.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import net.spy.*;
-import net.spy.db.*;
-import net.spy.photo.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+
+import net.spy.SpyDB;
+import net.spy.SpyUtil;
+
+import net.spy.db.SpyCacheDB;
+
+import net.spy.photo.PhotoConfig;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * Backup entry that represents an entry in the album table (a photo).

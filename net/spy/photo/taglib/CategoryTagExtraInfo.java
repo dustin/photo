@@ -1,13 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CategoryTagExtraInfo.java,v 1.1 2002/05/11 09:24:34 dustin Exp $
+// $Id: CategoryTagExtraInfo.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
 
 package net.spy.photo.taglib;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.tagext.TagData;
+import javax.servlet.jsp.tagext.TagExtraInfo;
+import javax.servlet.jsp.tagext.VariableInfo;
 
 /**
  * Variables that get set to hold a category list.

@@ -1,14 +1,17 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.10 2002/07/09 21:33:20 dustin Exp $
+// $Id: SessionWatcher.java,v 1.11 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 
-import javax.servlet.http.*;
-
-import net.spy.photo.*;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
 /**
  * Watch session creation and destruction and manage sessionData.

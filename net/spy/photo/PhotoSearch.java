@@ -1,25 +1,24 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.28 2002/07/09 21:33:19 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.29 2002/07/10 03:38:08 dustin Exp $
  */
 
 package net.spy.photo;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.net.*;
+import java.net.URLEncoder;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import net.spy.*;
-import net.spy.db.*;
-import net.spy.util.*;
+import javax.servlet.ServletException;
 
-import net.spy.photo.struts.SearchForm;
+import net.spy.SpyDB;
+
 import net.spy.photo.struts.SaveSearchForm;
+import net.spy.photo.struts.SearchForm;
+
+import net.spy.util.Base64;
 
 /**
  * Perform searches.

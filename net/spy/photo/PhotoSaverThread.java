@@ -1,11 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaverThread.java,v 1.6 2002/06/15 06:25:21 dustin Exp $
+// $Id: PhotoSaverThread.java,v 1.7 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo;
 
-import java.util.Stack;
 import java.util.EmptyStackException;
+import java.util.Stack;
 
 /**
  * Store images in the background.
@@ -15,8 +15,8 @@ public class PhotoSaverThread extends Thread {
 	private Stack jobQueue=null;
 	private boolean going=true;
 
-	private final static int SUCCESS=1;
-	private final static int FAILURE=2;
+	private static final int SUCCESS=1;
+	private static final int FAILURE=2;
 
 	private boolean processing=false;
 

@@ -1,13 +1,19 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddImage.java,v 1.3 2002/06/25 23:00:08 dustin Exp $
+// $Id: AddImage.java,v 1.4 2002/07/10 03:38:08 dustin Exp $
 
 package net.spy.photo.rpc;
 
-import java.util.Hashtable;
 import java.util.Date;
+import java.util.Hashtable;
 
-import net.spy.photo.*;
+import net.spy.photo.Category;
+import net.spy.photo.Persistent;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoLogUploadEntry;
+import net.spy.photo.PhotoSaver;
+import net.spy.photo.PhotoUser;
 
 /**
  * RPC method to add an image. 

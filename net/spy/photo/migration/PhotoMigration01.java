@@ -2,12 +2,17 @@
 
 package net.spy.photo.migration;
 
-import java.sql.*;
-import java.util.Collection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import java.util.ArrayList;
 import java.util.Iterator;
-import net.spy.*;
-import net.spy.photo.*;
+
+import net.spy.SpyDB;
+
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageHelper;
 
 public class PhotoMigration01 extends PhotoMigration {
 
