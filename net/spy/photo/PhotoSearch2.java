@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch2.java,v 1.1 2002/05/13 07:22:48 dustin Exp $
+ * $Id: PhotoSearch2.java,v 1.2 2002/05/18 07:52:07 dustin Exp $
  */
 
 package net.spy.photo;
@@ -34,21 +34,112 @@ public class PhotoSearch2 extends PhotoHelper {
 	}
 
 	// Encode the search from the form stuff.
-	public String encodeSearch(HttpServletRequest request) {
-		String out = "";
-		for(Enumeration e=request.getParameterNames(); e.hasMoreElements();) {
-			String param=(String)e.nextElement();
-			String values[] = request.getParameterValues(param);
+	public String encodeSearch(SearchForm form) {
+		StringBuffer sb = new StringBuffer();
 
-			for(int i = 0; i < values.length; i++) {
-				if(values[i].length()>0) {
-					out+=URLEncoder.encode(param)+"="
-						+ URLEncoder.encode(values[i]) +"&";
-				}
+		if(form.getFieldjoin() != null) {
+			sb.append("fieldjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getFieldjoin()));
+			sb.append('&');
+		}
+		if(form.getField() != null) {
+			sb.append("field");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getField()));
+			sb.append('&');
+		}
+		if(form.getKeyjoin() != null) {
+			sb.append("keyjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getKeyjoin()));
+			sb.append('&');
+		}
+		if(form.getWhat() != null) {
+			sb.append("what");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getWhat()));
+			sb.append('&');
+		}
+		if(form.getTstartjoin() != null) {
+			sb.append("tstartjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getTstartjoin()));
+			sb.append('&');
+		}
+		if(form.getTstart() != null) {
+			sb.append("tstart");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getTstart()));
+			sb.append('&');
+		}
+		if(form.getTendjoin() != null) {
+			sb.append("tendjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getTendjoin()));
+			sb.append('&');
+		}
+		if(form.getTend() != null) {
+			sb.append("tend");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getTend()));
+			sb.append('&');
+		}
+		if(form.getStartjoin() != null) {
+			sb.append("startjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getStartjoin()));
+			sb.append('&');
+		}
+		if(form.getStart() != null) {
+			sb.append("start");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getStart()));
+			sb.append('&');
+		}
+		if(form.getEndjoin() != null) {
+			sb.append("endjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getEndjoin()));
+			sb.append('&');
+		}
+		if(form.getEnd() != null) {
+			sb.append("end");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getEnd()));
+			sb.append('&');
+		}
+		if(form.getOrder() != null) {
+			sb.append("order");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getOrder()));
+			sb.append('&');
+		}
+		if(form.getSdirection() != null) {
+			sb.append("sdirection");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getSdirection()));
+			sb.append('&');
+		}
+		if(form.getMaxret() != null) {
+			sb.append("maxret");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getMaxret()));
+			sb.append('&');
+		}
+
+		if(form.getCat() != null) {
+			String cats[]=form.getCat();
+			for(int i=0; i<cats.length; i++) {
+				sb.append("cat");
+				sb.append('=');
+				sb.append(URLEncoder.encode(cats[i]));
+				sb.append('&');
 			}
 		}
+
 		Base64 base64=new Base64();
-		out=base64.encode(out.getBytes());
+		String out=base64.encode(sb.toString().getBytes());
 		return(out);
 	}
 
