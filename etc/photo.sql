@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.18 2002/02/15 09:38:02 dustin Exp $
+-- $Id: photo.sql,v 1.19 2002/02/16 10:34:30 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -10,11 +10,12 @@ begin transaction;
 -- add support for PL/pgsql
 
 CREATE FUNCTION plpgsql_call_handler () RETURNS OPAQUE AS
-        '/usr/local/pgsql/lib/plpgsql.so' LANGUAGE 'C';
-        
+	'/usr/local/pgsql/lib/plpgsql.so' LANGUAGE 'C';
+
 CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'
-        HANDLER plpgsql_call_handler
-        LANCOMPILER 'PL/pgSQL';
+	HANDLER plpgsql_call_handler
+	LANCOMPILER 'PL/pgSQL';
+
 
 -- The categories
 create table cat(
@@ -77,18 +78,6 @@ create index album_bycat on album(cat);
 grant all on album to nobody;
 -- implicit sequence
 grant all on album_id_seq to nobody;
-
--- Get rid of all image_store data when an album entry is deleted:
-
-create function tg_album_delete() returns opaque as
-	'begin
-		delete from image_store where id = OLD.id;
-		return OLD;
-	 end;'
-	language 'plpgsql';
-
-create trigger album_cleanup_tg before delete on album
-	for each row execute procedure tg_album_delete();
 
 -- The passwd file for the Web server's ACL crap.
 
@@ -163,7 +152,7 @@ create table image_store (
 	id   integer not null,
 	line integer not null,
 	data text not null,
-	foreign key(id) references album(id)
+	foreign key(id) references album(id) on delete cascade
 );
 
 grant all on image_store to nobody;
@@ -185,6 +174,7 @@ create table user_agent (
 );
 
 grant all on user_agent to nobody;
+grant all on user_agent_user_agent_id_seq to nobody;
 
 create unique index user_agent_text on user_agent(user_agent);
 
@@ -225,12 +215,14 @@ create index photo_log_remote_addr on photo_log(remote_addr);
 
 -- Log of uploaded images.
 
+-- This table allows null photo IDs so's that photos may be deleted, but
+-- their essense may remain
 create table upload_log (
-	photo_id integer not null,
+	photo_id integer,
 	wwwuser_id integer not null,
 	stored datetime,
 	ts datetime not null,
-	foreign key(photo_id) references album(id),
+	foreign key(photo_id) references album(id) on delete set null,
 	foreign key(wwwuser_id) references wwwusers(id)
 );
 
