@@ -87,7 +87,7 @@ public class Search2XML extends SpyObject {
 		for(Iterator i=c.iterator(); i.hasNext();) {
 			Keyword k=(Keyword)i.next();
 			Element kwel=doc.createElement("keyword");
-			kwel.setAttribute("kwid", String.valueOf(k.getId()));
+			kwel.setAttribute("id", String.valueOf(k.getId()));
 			el.appendChild(kwel);
 		}
 		return(el);

@@ -28,7 +28,7 @@ urlopener=openerFactory(cookieProcessor)
 class Photo(object):
     """Object representing an individual photo entry from the xml dump"""
 
-    def __init__(self, d):
+    def __init__(self, d, kwmap):
         for col in ['id', 'size', 'width', 'height', 'tnwidth', 'tnheight']:
             try:
                 self.__dict__[col]=int(d[col])
@@ -38,8 +38,7 @@ class Photo(object):
         for col in ['addedby', 'taken', 'ts', 'keywords', 'descr', 'extension']:
             self.__dict__[col]=d[col]
 
-    def mapKeywords(self, d):
-        self.keywordStrings=[d[k] for k in self.keywords]
+        self.keywordStrings=[kwmap[k] for k in self.keywords]
 
     def dims(self):
         return "%dx%d" % (self.width, self.height)
@@ -49,10 +48,15 @@ class Photo(object):
         return [int(x) for x in self.taken.split('-')]
 
     def __repr__(self):
-        return "<Photo id=%d, dims=%s>" % (self.id, self.dims())
+        return "<Photo id=%d, dims=%s, kws=%s>" \
+            % (self.id, self.dims(), repr(self.keywordStrings))
 
 class StaticIndexHandler(xml.sax.handler.ContentHandler):
     """Sax handler for pulling out photo entries and putting them in a dict"""
+
+    SEC_NONE=0
+    SEC_KEYWORDS=1
+    SEC_ALBUM=2
 
     def __init__(self):
         xml.sax.handler.ContentHandler.__init__(self)
@@ -60,17 +64,25 @@ class StaticIndexHandler(xml.sax.handler.ContentHandler):
         self.lastwasspace = False
         self.el = None
         self.keywords={}
+        self.section=StaticIndexHandler.SEC_NONE
 
     def startElement(self, name, attrs):
-        if name == 'photo':
+        if name == 'photoexport':
+            self.section=StaticIndexHandler.SEC_NONE
+        elif name == 'album':
+            self.section=StaticIndexHandler.SEC_ALBUM
+        if name == 'keywordmap':
+            self.section=StaticIndexHandler.SEC_KEYWORDS
+        elif name == 'photo':
             self.current = {}
         elif name == 'keywords':
             self.current['keywords']=[]
         elif name == 'keyword':
-            if attrs.has_key("id"):
-                self.keywords[int(attrs['id'])] = attrs['word']
+            id=int(attrs['id'])
+            if self.section == StaticIndexHandler.SEC_KEYWORDS:
+                self.keywords[id] = attrs['word']
             else:
-                self.current['keywords'].append(int(attrs['kwid']))
+                self.current['keywords'].append(id)
         else:
             self.el=str(name)
         if self.current is not None and self.el is not None:
@@ -79,13 +91,16 @@ class StaticIndexHandler(xml.sax.handler.ContentHandler):
     def endElement(self, name):
         if name == 'photo':
             # Finished a photo, store it
-            photo=Photo(self.current)
-            photo.mapKeywords(self.keywords)
+            photo=Photo(self.current, self.keywords)
             self.gotPhoto(photo)
 
             # Reset the current entry
             self.current = None
             self.el = None
+        elif name == 'album':
+            self.section = StaticIndexHandler.SEC_NONE
+        elif name == 'keywordmap':
+            self.section = StaticIndexHandler.SEC_NONE
 
     def characters(self, content):
         if content[-1] == ' ':
