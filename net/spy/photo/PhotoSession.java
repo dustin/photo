@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.31 2000/07/16 08:38:48 dustin Exp $
+ * $Id: PhotoSession.java,v 1.32 2000/07/16 20:00:02 dustin Exp $
  */
 
 package net.spy.photo;
@@ -85,18 +85,20 @@ public class PhotoSession extends Object
 		} else {
 			func=multi.getParameter("func");
 		}
-		if(func!=null) {
-			// Lowercase it so that we don't have to keep doing case ignores
-			func=func.toLowerCase();
-			log("func is " + func);
+
+		// If there's no function, set the function to index.
+		if(func==null) {
+			func="index";
 		}
+
+		// Lowercase it so that we don't have to keep doing case ignores
+		func=func.toLowerCase();
+		log(remote_user + " requested " + func);
 
 		String out=null;
 
 		// OK, see what they're doing.
-		if(func == null) {
-			out=doIndex();
-		} else if(func.equals("search")) {
+		if(func.equals("search")) {
 			out=doFind();
 		} else if(func.equals("nextresults")) {
 			out=displaySearchResults();
@@ -171,6 +173,7 @@ public class PhotoSession extends Object
 			output=tokenize("addsearch_success.inc", new Hashtable());
 		} catch(Exception e) {
 			Hashtable h = new Hashtable();
+			log("Search save failed:  " + e);
 			h.put("MESSAGE", e.getMessage());
 			output=tokenize("addsearch_fail.inc", h);
 		}
@@ -276,6 +279,7 @@ public class PhotoSession extends Object
 
 		// Make sure the user can add.
 		if(!canadd()) {
+			log("User " + remote_user + " has no permission to add.");
 			return(tokenize("add_denied.inc", h));
 		}
 
@@ -325,8 +329,8 @@ public class PhotoSession extends Object
 			photo=getDBConn();
 			photo.setAutoCommit(false);
 			query = "insert into album(keywords, descr, cat, taken, size, "
-				+ " addedby, ts, width, height)\n"
-				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ " addedby, ts, width, height, tn_width, tn_height)\n"
+				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)";
 			PreparedStatement st=photo.prepareStatement(query);
 			// Toss in the parameters
 			st.setString(1, multi.getParameter("keywords"));
@@ -957,7 +961,7 @@ public class PhotoSession extends Object
 			out.write(image.getData());
 
 		} catch(Exception e) {
-			throw new ServletException("IOException:  " + e.getMessage());
+			throw new ServletException("Error displaying image:  " + e);
 		}
 		// We handle our own response here, because this is an image.
 		return(null);
@@ -970,7 +974,7 @@ public class PhotoSession extends Object
 		try {
 			logview=new PhotoLogView(this);
 		} catch(Exception e) {
-			throw new ServletException(e.getMessage());
+			throw new ServletException("Error displaying logs:  " + e);
 		}
 
 		view=request.getParameter("view");
@@ -987,7 +991,7 @@ public class PhotoSession extends Object
 			try {
 				out=logview.getViewersOf(Integer.valueOf(which));
 			} catch(Exception e) {
-				throw new ServletException(e.getMessage());
+				throw new ServletException("Error displaying viewers:  " + e);
 			}
 		}
 		return(out);
