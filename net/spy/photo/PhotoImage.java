@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.10 2002/02/22 01:07:01 dustin Exp $
+// $Id: PhotoImage.java,v 1.11 2002/06/25 00:18:01 dustin Exp $
 
 package net.spy.photo;
 
@@ -39,7 +39,7 @@ public class PhotoImage extends Object
 	 *
 	 * @see setData
 	 */
-	public PhotoImage(byte data[]) throws Exception {
+	public PhotoImage(byte data[]) throws PhotoException {
 		super();
 		setData(data);
 	}
@@ -49,7 +49,7 @@ public class PhotoImage extends Object
 	 *
 	 * @exception Exception if the data format is corrupt or invalid
 	 */
-	public void setData(byte data[]) throws Exception {
+	public void setData(byte data[]) throws PhotoException {
 		image_data=data;
 		calcDim();
 	}
@@ -162,7 +162,7 @@ public class PhotoImage extends Object
 	}
 
 	// Figure out the format of this binary stream.
-	private void determineFormat() throws Exception {
+	private void determineFormat() throws PhotoException {
 		if(isJpeg()) {
 			format=FORMAT_JPEG;
 		} else if(isPng()) {
@@ -170,12 +170,12 @@ public class PhotoImage extends Object
 		} else if(isGif()) {
 			format=FORMAT_GIF;
 		} else {
-			throw new Exception("Cannot determine format.");
+			throw new PhotoException("Cannot determine format.");
 		}
 	}
 
 	// Calculate the width and height of the image.
-	private void calcDim() throws Exception {
+	private void calcDim() throws PhotoException {
 		determineFormat();
 
 		switch(format) {
@@ -189,7 +189,7 @@ public class PhotoImage extends Object
 				calcDimGif();
 				break;
 			default:
-				throw new Exception("Format " + format + " not handled.");
+				throw new PhotoException("Format " + format + " not handled.");
 		}
 	}
 
@@ -205,12 +205,12 @@ public class PhotoImage extends Object
 				&& ((image_data[i++]&0xff)=='F'));
 	}
 
-	private void calcDimGif() throws Exception {
+	private void calcDimGif() throws PhotoException {
 		int ch=-1, i=0;
 		int length=0;
 
 		if(!isGif()) {
-			throw new Exception("This isn't a GIF.");
+			throw new PhotoException("This isn't a GIF.");
 		}
 
 		// Skip the header.
@@ -242,12 +242,12 @@ public class PhotoImage extends Object
 				&& ((image_data[i++]&0xff)==0x0a));
 	}
 
-	private void calcDimPng() throws Exception {
+	private void calcDimPng() throws PhotoException {
 		int ch=-1, i=0;
 		int length=0;
 
 		if(!isPng()) {
-			throw new Exception("This isn't a PNG.");
+			throw new PhotoException("This isn't a PNG.");
 		}
 
 		// Skip the header.
@@ -276,7 +276,7 @@ public class PhotoImage extends Object
 				| ((image_data[i++]&0xff) << 8)
 				| ((image_data[i++]&0xff));
 		} else {
-			throw new Exception(
+			throw new PhotoException(
 				"IHDR Should be the first chunk type in a PNG, not " + ctype);
 		}
 
@@ -294,12 +294,12 @@ public class PhotoImage extends Object
 	}
 
 	// Calculate the dimensions of a jpeg.
-	private void calcDimJpeg() throws Exception {
+	private void calcDimJpeg() throws PhotoException {
 		int ch=-1, i=0;
 		boolean done=false;
 
 		if(!isJpeg()) {
-			throw new Exception("This isn't a JPEG");
+			throw new PhotoException("This isn't a JPEG");
 		}
 
 		// Move forward two.

@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.17 2002/06/23 01:17:01 dustin Exp $
+// $Id: PhotoUser.java,v 1.18 2002/06/25 00:18:01 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -345,17 +345,21 @@ public class PhotoUser extends Object implements Serializable {
 	/**
 	 * Set the user's password.
 	 */
-	public void setPassword(String pass) throws Exception {
+	public void setPassword(String pass) throws PhotoException {
 		// Make sure the password is hashed
 		if(pass.length()<13) {
 			PhotoSecurity security=new PhotoSecurity();
-			pass=security.getDigest(pass);
+			try {
+				pass=security.getDigest(pass);
+			} catch(Exception e) {
+				throw new PhotoException("Error digesting password", e);
+			}
 		}
 		this.password=pass;
 	}
 
 	/**
-	 * Get the user's hashed password.  Useful for administration forms and
+	 * Get the user's hashed password.	Useful for administration forms and
 	 * stuff.
 	 */
 	public String getPassword() {
@@ -372,7 +376,7 @@ public class PhotoUser extends Object implements Serializable {
 			String tpw=security.getDigest(pass);
 			ret=tpw.equals(password);
 		} catch(Exception e) {
-			// Ignore, leave it false.
+			// Let it return false.
 		}
 		return(ret);
 	}

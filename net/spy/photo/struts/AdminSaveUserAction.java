@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveUserAction.java,v 1.3 2002/06/22 23:27:45 dustin Exp $
+// $Id: AdminSaveUserAction.java,v 1.4 2002/06/25 00:18:01 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -41,12 +41,7 @@ public class AdminSaveUserAction extends AdminAction {
 
 		// Get the security to get the user to populate to the fields to
 		// save the world.
-		PhotoSecurity security=null;
-		try {
-			security=new PhotoSecurity();
-		} catch(Exception e) {
-			throw new ServletException("Couldn't get security.", e);
-		}
+		PhotoSecurity security=new PhotoSecurity();
 
 		// Get the user, or a new one if this a new user.
 		PhotoUser user=security.getUser(Integer.parseInt(auf.getUserId()));

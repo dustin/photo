@@ -1,10 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaver.java,v 1.2 2002/06/03 07:39:19 dustin Exp $
+// $Id: PhotoSaver.java,v 1.3 2002/06/25 00:18:01 dustin Exp $
 
 package net.spy.photo;
 
 import java.sql.*;
+import java.text.*;
 
 import net.spy.SpyDB;
 
@@ -63,6 +64,11 @@ public class PhotoSaver extends Object {
 
 	public void setTaken(String taken) {
 		this.taken=taken;
+	}
+
+	public void setTaken(java.util.Date taken) {
+		SimpleDateFormat sdf=new SimpleDateFormat("MM/DD/yyyy");
+		this.taken=sdf.format(taken);
 	}
 
 	public String getTaken() {

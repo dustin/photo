@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.23 2002/06/23 07:01:03 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.24 2002/06/25 00:18:01 dustin Exp $
  */
 
 package net.spy.photo;
@@ -25,7 +25,7 @@ public class PhotoSecurity extends PhotoHelper {
 	/**
 	 * Get a PhotoSecurity object.
 	 */
-	public PhotoSecurity() throws Exception {
+	public PhotoSecurity() {
 		super();
 	}
 

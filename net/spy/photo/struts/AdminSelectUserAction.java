@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectUserAction.java,v 1.4 2002/06/22 23:27:45 dustin Exp $
+// $Id: AdminSelectUserAction.java,v 1.5 2002/06/25 00:18:01 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -55,12 +55,7 @@ public class AdminSelectUserAction extends AdminAction {
 			auf.setCatAclView(new String[0]);
 		} else {
 			// Look up the user
-			PhotoSecurity sec=null;
-			try {
-				sec=new PhotoSecurity();
-			} catch(Exception e) {
-				throw new ServletException("Couldn't get security", e);
-			}
+			PhotoSecurity sec=new PhotoSecurity();
 			PhotoUser user=sec.getUser(userid);
 
 			if(user==null) {

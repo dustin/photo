@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.3 2002/06/23 01:17:01 dustin Exp $
+// $Id: Category.java,v 1.4 2002/06/25 00:18:01 dustin Exp $
 
 package net.spy.photo;
 
@@ -48,8 +48,9 @@ public class Category extends Object {
 	public static Category lookupCategory(int catId) throws Exception {
 		Category rv=null;
 
-		SpyDB db=new SpyDB(new PhotoConfig());
-		ResultSet rs=db.executeQuery("select * from cat where id=" + catId);
+		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+		ResultSet rs=db.executeQuery("select * from cat where id="
+			+ catId, 3600);
 		if(!rs.next()) {
 			throw new Exception("No such category:  " + catId);
 		}
@@ -57,6 +58,29 @@ public class Category extends Object {
 		rs.close();
 		db.close();
 
+		return(rv);
+	}
+
+	/**
+	 * Look up a category by name.
+	 */
+	public static Category lookupCategory(String catName) throws Exception {
+		Category rv=null;
+
+		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+		PreparedStatement pst=db.prepareStatement(
+			"select * from cat where name=?", 3600);
+		pst.setString(1, catName);
+		ResultSet rs=pst.executeQuery();
+		if(!rs.next()) {
+			throw new Exception("No such category:  " + catName);
+		}
+		rv=new Category(rs);
+		if(rs.next()) {
+			throw new Exception("Too many matches for category " + catName);
+		}
+		rs.close();
+		db.close();
 		return(rv);
 	}
 
