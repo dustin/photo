@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.9 2002/07/10 03:38:08 dustin Exp $
+// $Id: PhotoImageData.java,v 1.10 2002/08/08 23:04:57 dustin Exp $
 
 package net.spy.photo;
 
@@ -151,7 +151,7 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 	public static PhotoImageData getData(int id, PhotoDimensions maxDims)
 		throws Exception {
 
-		SpyCache sc=new SpyCache();
+		SpyCache sc=SpyCache.getInstance();
 
 		String key="photo_idata_" + id;
 		PhotoImageData rv=(PhotoImageData)sc.get(key);

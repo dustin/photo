@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.15 2002/07/10 04:00:17 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.16 2002/08/08 23:04:57 dustin Exp $
  */
 
 package net.spy.photo;
@@ -32,7 +32,7 @@ public class PhotoUtil extends Object {
 	 * won't fit.
 	 */
 	public static String dbquoteStr(String thing) {
-		return(SpyDB.dbquote_str(thing));
+		return(SpyDB.dbquoteStr(thing));
 	}
 
 	/**

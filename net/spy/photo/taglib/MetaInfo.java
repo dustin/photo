@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MetaInfo.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: MetaInfo.java,v 1.3 2002/08/08 23:04:57 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -31,7 +31,7 @@ public class MetaInfo extends PhotoTag {
 	private int getCount(String query) throws Exception {
 		String key="photo.metainfo." + query;
 
-		SpyCache cache=new SpyCache();
+		SpyCache cache=SpyCache.getInstance();
 
 		int rv=-1;
 
