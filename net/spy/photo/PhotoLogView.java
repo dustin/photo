@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogView.java,v 1.2 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoLogView.java,v 1.3 2002/01/10 10:44:41 dustin Exp $
  */
 
 package net.spy.photo;
@@ -22,7 +22,7 @@ public class PhotoLogView extends PhotoHelper
 		photosession=p;
 	}
 
-	public String getViewersOf(Integer photo_id) throws Exception {
+	public String getViewersOf(int photo_id) throws Exception {
 		Connection db;
 		Statement st;
 		String query, out="";
@@ -46,7 +46,7 @@ public class PhotoLogView extends PhotoHelper
 			ResultSet rs = st.executeQuery(query);
 
 			Hashtable htmp = new Hashtable();
-			htmp.put("PHOTO_ID", photo_id.toString());
+			htmp.put("PHOTO_ID", "" + photo_id);
 			out=PhotoUtil.tokenize(photosession, "log/viewers_top.inc", htmp);
 
 			while(rs.next()) {
@@ -61,7 +61,7 @@ public class PhotoLogView extends PhotoHelper
 						"log/viewers_match.inc", h);
 				} catch(Exception e) {
 					log("Error reporting log entry for " +
-						photo_id.toString() + " from " + rs.getString(5));
+						photo_id + " from " + rs.getString(5));
 				}
 			}
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.76 2002/01/10 10:22:35 dustin Exp $
+ * $Id: PhotoSession.java,v 1.77 2002/01/10 10:44:41 dustin Exp $
  */
 
 package net.spy.photo;
@@ -135,7 +135,7 @@ public class PhotoSession extends Object
 				ServletException se=(ServletException)e;
 				msg+=" -- " + se.getRootCause();
 			}
-			log("Error:  " + msg + "\nStack:  " + SpyUtil.getStack(e, 1));
+			log("PhotoServlet Error", e);
 			out=createError(e);
 			try {
 				sendXML(out);
@@ -1381,13 +1381,25 @@ public class PhotoSession extends Object
 		}
 
 		if(view.equalsIgnoreCase("viewers")) {
-			String which;
-			which=request.getParameter("which");
-			if(which==null) {
+			String which_s=request.getParameter("which");
+			if(which_s==null) {
 				throw new ServletException("LogView/viewers without which");
 			}
+			int which=Integer.parseInt(which_s);
+
+			// Verify access
 			try {
-				out=logview.getViewersOf(Integer.valueOf(which));
+				PhotoSecurity.checkAccess(sessionData.getUser().getId(),
+					which);
+			} catch(Exception e) {
+				// Log it separately so the user doesn't see the security
+				// details.
+				log("Access denied viewing logs", e);
+				throw new ServletException("Access denied.");
+			}
+
+			try {
+				out=logview.getViewersOf(which);
 			} catch(Exception e) {
 				throw new ServletException("Error displaying viewers", e);
 			}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.13 2001/12/28 12:39:37 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.14 2002/01/10 10:44:41 dustin Exp $
  */
 
 package net.spy.photo;
@@ -11,6 +11,7 @@ import java.util.*;
 import java.sql.*;
 
 import net.spy.*;
+import net.spy.db.*;
 import net.spy.cache.*;
 import net.spy.util.*;
 
@@ -162,6 +163,40 @@ public class PhotoSecurity extends PhotoHelper {
 		}
 
 		return(ret);
+	}
+
+	/**
+	 * Check to see if the given uid has access to the given image ID.
+	 */
+	public static void checkAccess(int uid, int image_id) throws Exception {
+		boolean ok=false;
+
+		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+		// Verify specific access to viewability.
+		PreparedStatement pst=db.prepareStatement(
+			"select 1 from album a, wwwacl w\n"
+				+ " where id=?\n"
+				+ " and a.cat=w.cat\n"
+				+ " and canview=true\n"
+				+  " and (w.userid=? or w.userid=?)\n", 900);
+		pst.setInt(1, image_id);
+		pst.setInt(2, uid);
+		pst.setInt(3, PhotoUtil.getDefaultId());
+		ResultSet rs=pst.executeQuery();
+
+		// If there's a result, access is granted
+		if(rs.next()) {
+			ok=true;
+		}
+
+		rs.close();
+		pst.close();
+		db.close();
+
+		if(!ok) {
+			throw new Exception("Access to image " + image_id
+				+ " is not allowed by user " + uid);
+		}
 	}
 
 	// Load the user info from a result set

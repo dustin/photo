@@ -1,18 +1,16 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.9 2002/01/10 10:22:35 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.10 2002/01/10 10:44:40 dustin Exp $
  */
 
 package net.spy.photo;
 
 import java.io.*;
-import java.sql.*;
 import java.util.*;
 import java.rmi.Naming;
 
 import net.spy.*;
-import net.spy.db.*;
 import net.spy.cache.*;
 import net.spy.rmi.*;
 
@@ -33,43 +31,11 @@ public class PhotoImageHelper extends PhotoHelper
 		this.image_id = which;
 	}
 
-	// Verify the current logged-in user has access to this image.
-	private void checkAccess(int uid) throws Exception {
-		boolean ok=false;
-
-		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
-		// Verify specific access to viewability.
-		PreparedStatement pst=db.prepareStatement(
-			"select 1 from album a, wwwacl w\n"
-			+ " where id=?\n"
-			+ " and a.cat=w.cat\n"
-			+ " and canview=true\n"
-			+ " and (w.userid=? or w.userid=?)\n", 900);
-		pst.setInt(1, image_id);
-		pst.setInt(2, uid);
-		pst.setInt(3, PhotoUtil.getDefaultId());
-		ResultSet rs=pst.executeQuery();
-
-		// If there's a result, access is granted.
-		if(rs.next()) {
-			ok=true;
-		}
-
-		rs.close();
-		pst.close();
-		db.close();
-
-		if(!ok) {
-			throw new Exception("Access to this image is not allowed by user "
-				+ uid);
-		}
-	}
-
 	/**
 	 * Get the full image on behalf of a user.
 	 */
 	public PhotoImage getImage(int uid) throws Exception {
-		checkAccess(uid);
+		PhotoSecurity.checkAccess(uid, image_id);
 		return(getImage());
 	}
 
@@ -86,7 +52,7 @@ public class PhotoImageHelper extends PhotoHelper
 	 * Get the thumbnail for an image on behalf of a user.
 	 */
 	public PhotoImage getThumbnail(int uid) throws Exception {
-		checkAccess(uid);
+		PhotoSecurity.checkAccess(uid, image_id);
 		return(getThumbnail());
 	}
 
