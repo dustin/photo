@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.9 2002/03/01 10:22:37 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.10 2002/03/01 20:57:57 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -174,6 +174,9 @@ public class PhotoStorerThread extends Thread {
 		return(rv);
 	}
 
+	/**
+	 * Sit around and flush.
+	 */
 	public void run() {
 		// Do a flush at the beginning, just in case stuff has been
 		// building up.
@@ -185,9 +188,14 @@ public class PhotoStorerThread extends Thread {
 		for(;;) {
 			try {
 				PhotoConfig p = new PhotoConfig();
-				int m=Integer.valueOf(p.get("storer_sleep")).intValue();
-				// Check every x minutes
-				sleep(m * 60 * 1000);
+
+				// Wait up to 1 day to perform a scan.
+				synchronized(this) {
+					wait(86400*1000);
+				}
+				// After a wait finishes, sleep another five seconds, just
+				// to be nice.
+				sleep(5000);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -201,7 +209,8 @@ public class PhotoStorerThread extends Thread {
 
 	// In case it's run as its own little thingy.
 	public static void main(String args[]) {
-		PhotoStorerThread storer=new PhotoStorerThread();
-		storer.start();
+		System.err.println(
+			"net.spy.photo.util.PhotoStorerThread's main invocation is "
+			+ "deprecated");
 	}
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoCleanup.java,v 1.2 2002/02/21 09:26:03 dustin Exp $
+ * $Id: PhotoCleanup.java,v 1.3 2002/03/01 20:57:57 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -66,7 +66,5 @@ public class PhotoCleanup extends Thread {
 	public static void main(String args[]) {
 		PhotoCleanup cleaner=new PhotoCleanup();
 		cleaner.start();
-		PhotoStorerThread storer=new PhotoStorerThread();
-		storer.start();
 	}
 }

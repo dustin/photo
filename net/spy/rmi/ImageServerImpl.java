@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.15 2002/02/21 10:41:32 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.16 2002/03/01 20:57:57 dustin Exp $
 
 package net.spy.rmi;
 
@@ -15,6 +15,7 @@ import java.sql.*;
 
 import net.spy.*;
 import net.spy.photo.*;
+import net.spy.photo.util.*;
 import net.spy.util.*;
 
 /**
@@ -27,6 +28,8 @@ public class ImageServerImpl extends UnicastRemoteObject
 	private SpyConfig conf = null;
 	private boolean debug=false;
 
+	private PhotoStorerThread storer=null;
+
 	/**
 	 * Get an ImageServerImpl using the given config.
 	 */
@@ -35,6 +38,9 @@ public class ImageServerImpl extends UnicastRemoteObject
 		conf=new SpyConfig(config);
 	}
 
+	/**
+	 * @see ImageServer
+	 */
 	public PhotoImage getImage(int image_id, PhotoDimensions dim)
 		throws RemoteException {
 		PhotoImage image_data=null;
@@ -88,6 +94,9 @@ public class ImageServerImpl extends UnicastRemoteObject
 		return(pi);
 	}
 
+	/**
+	 * @see ImageServer
+	 */
 	public PhotoImage getImage(int image_id, boolean thumbnail)
 		throws RemoteException {
 		PhotoDimensions dim=null;
@@ -98,6 +107,9 @@ public class ImageServerImpl extends UnicastRemoteObject
 		return(getImage(image_id, dim));
 	}
 
+	/**
+	 * @see ImageServer
+	 */
 	public void storeImage(int image_id, PhotoImage image)
 		throws RemoteException {
 		// Make sure we've calculated the width and height
@@ -109,6 +121,20 @@ public class ImageServerImpl extends UnicastRemoteObject
 			log("Error caching image:  " + e);
 			e.printStackTrace();
 			throw new RemoteException("Error storing image", e);
+		}
+
+		// Let the storer thread know to wake up and start storing images.
+		checkStorerThread();
+		synchronized(storer) {
+			storer.notify();
+		}
+	}
+
+	private void checkStorerThread() {
+		if(storer==null || !(storer.isAlive())) {
+			System.err.println("Starting storer thread.");
+			storer=new PhotoStorerThread();
+			storer.start();
 		}
 	}
 
@@ -178,6 +204,9 @@ public class ImageServerImpl extends UnicastRemoteObject
 		return(pi);
 	}
 
+	/**
+	 * @see ImageServer
+	 */
 	public boolean ping() throws RemoteException {
 		return(true);
 	}
@@ -196,6 +225,9 @@ public class ImageServerImpl extends UnicastRemoteObject
 		}
 	}
 
+	/**
+	 * Run it.
+	 */
 	public static void main(String args[]) throws Exception {
 		if(args.length < 1) {
 			System.err.println("imageserver.conf path not given.");
