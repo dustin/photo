@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.111 2002/03/01 21:59:08 dustin Exp $
+ * $Id: PhotoSession.java,v 1.112 2002/03/04 09:03:19 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1557,8 +1557,11 @@ public class PhotoSession extends Object
 			// Allow all images to be cached for a bit.
 			long l=System.currentTimeMillis();
 			// This is ten minutes in milliseconds.
-			l+=600000;
-			response.setDateHeader("Expires", l);
+
+			// I'm disabling this for a bit...thanks to resin, it bypasses
+			// ACLS.
+			// l+=600000;
+			// response.setDateHeader("Expires", l);
 
 			PhotoDimensions pdim=null;
 			if(size!=null) {
