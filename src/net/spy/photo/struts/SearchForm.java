@@ -176,6 +176,7 @@ public class SearchForm extends PhotoForm {
 			field=null;
 			what=null;
 			tstart=null;
+			tend=null;
 			start=null;
 			end=null;
 			order=null;
