@@ -10,7 +10,7 @@ import java.lang.ref.SoftReference;
 import net.spy.SpyObject;
 
 /**
- * ImageCache implementation that keeps soft references to images.
+ * ImageCache implementation that keeps soft references to images in memory.
  */
 public class SoftImageCache extends SpyObject implements ImageCache {
 
@@ -34,6 +34,7 @@ public class SoftImageCache extends SpyObject implements ImageCache {
 	}
 
 	public void putImage(String key, PhotoImage image) throws PhotoException {
+		getLogger().info("Caching " + key);
 		store.put(key, new SoftReference(image));
 	}
 
