@@ -35,6 +35,11 @@
 		<servlet-class>net.spy.photo.PhotoServlet</servlet-class>
 	</servlet>
 
+	<!-- Watch the sessions -->
+	<listener>
+		<listener-class>net.spy.photo.SessionWatcher</listener-class>
+	</listener>
+
 	<servlet-mapping>
 		<servlet-name>PhotoServlet</servlet-name>
 		<url-pattern>/PhotoServlet</url-pattern>
