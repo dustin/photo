@@ -8,5 +8,6 @@
 	<th>Rating</th>
 	<th>Image</th>
 	<th>Keywords</th>
+	<th>Category</th>
 	<th>Views</th>
 </tr>
