@@ -57,6 +57,12 @@ and running.
 
 Step 5.  Update configuration
 
+The most thorough way to do this is to look at the configurations provided,
+and see if there's anything in there that you don't have.  Things *should*
+figure out how to work properly when left unconfigured, but you never know
+what you're missing.
+
+
 If you're upgrading from a PhotoServlet older than 2000/12/25, you will
 need to update your config files for a slightly different type of cleanup.
 Basically, you do the following in your spyrunner.conf:
@@ -109,6 +115,12 @@ to do the following things:
 
 MIGRATION
 
+If you are upgrading to a release before 2002/02/20, you will need to run
+the third migration kit.
+
+NOTE:  A few things changed about the image format, so you'll need to clear
+	   your cache again before trying to use it.
+
 If you are upgrading to a release before 2001/12/27, you will need to run
 the second migration kit.
 
@@ -130,6 +142,7 @@ migration:
 
 	java net.spy.photo.migration.PhotoMigration01
 	java net.spy.photo.migration.PhotoMigration02
+	java net.spy.photo.migration.PhotoMigration03
 
 Make sure to run this with the same class path you used to start the
 application server.
@@ -334,14 +347,12 @@ ERRATA
 
 photo=> insert into wwwgroup values(3, 'admin');
 
-4. Saving searches is currently not supported.  (spb, 12/25/2000)
-
-5. When creating a new category, the category number shows up as -1.  This is
+4. When creating a new category, the category number shows up as -1.  This is
     not very useful from a display point of view.  Once it's in XSLT, it'll
     say something more useful.
 
-6. If you add the following to your zone.properties, you can refer to the 
-    servlet under Apache solely as Photo, rather than 
+5. If you add the following to your zone.properties (jserv), you can refer to
+	the servlet under Apache solely as Photo, rather than 
     net.spy.photo.PhotoServlet:
 
     servlet.Photo.code=net.spy.photo.PhotoServlet
@@ -352,5 +363,5 @@ photo=> insert into wwwgroup values(3, 'admin');
     ApJServMount /s /root
 
 ----------------------------------------------------------------------
-$Id: HOWTO,v 1.12 2001/12/28 12:39:36 dustin Exp $
+$Id: HOWTO,v 1.13 2002/02/21 09:47:03 dustin Exp $
 
