@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ForgotPWAction.java,v 1.6 2003/07/14 06:21:28 dustin Exp $
+// $Id: ForgotPWAction.java,v 1.7 2003/07/23 04:29:26 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -40,7 +40,7 @@ public class ForgotPWAction extends PhotoAction {
 	/**
 	 * Process the forgotten password request.
 	 */
-	public ActionForward execute(ActionMapping mapping,
+	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws IOException, ServletException {
@@ -71,7 +71,7 @@ public class ForgotPWAction extends PhotoAction {
 				+ " is " + newPass + "\n\n");
 			m.send();
 
-			log("Emailed new password to " + user.getUsername());
+			getLogger().info("Emailed new password to " + user.getUsername());
 
 		} catch(Exception e) {
 			throw new ServletException("Error setting new password", e);

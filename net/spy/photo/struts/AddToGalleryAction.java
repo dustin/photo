@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddToGalleryAction.java,v 1.8 2003/07/14 06:21:28 dustin Exp $
+// $Id: AddToGalleryAction.java,v 1.9 2003/07/23 04:29:26 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -39,7 +39,7 @@ public class AddToGalleryAction extends PhotoAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward execute(ActionMapping mapping,
+	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
@@ -53,7 +53,7 @@ public class AddToGalleryAction extends PhotoAction {
 
 		Gallery g=(Gallery)session.getAttribute("newGallery");
 		if(g==null) {
-			log("Creating new gallery.");
+			getLogger().info("Creating new gallery.");
 			// If we don't have a gallery yet, get a new one.
 			g=new Gallery(user);
 			// Add it to the session.

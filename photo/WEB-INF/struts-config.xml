@@ -118,7 +118,7 @@
 
 	<!-- Logout -->
 	<action    path="/logout"
-		type="net.spy.photo.struts.LogoutAction">
+		type="net.spy.jwebkit.struts.LogoutAction">
 		<forward name="next" path="/index.jsp" />
 	</action>
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.18 2002/11/04 03:11:24 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.19 2003/07/23 04:29:26 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.spy.SpyDB;
 import net.spy.SpyUtil;
+import net.spy.jwebkit.RequestUtil;
 
 /**
  * Utilities.
@@ -76,15 +77,6 @@ public class PhotoUtil extends Object {
 	 * @param uri A uri (beginning with /) within the webapp.
 	 */
 	public static String getRelativeUri(HttpServletRequest req, String uri) {
-		StringBuffer sb=new StringBuffer(64);
-		sb.append(req.getContextPath());
-
-		if(!uri.startsWith("/")) {
-			throw new IllegalArgumentException(
-				"uri parameter must begin with a slash.");
-		}
-		sb.append(uri);
-
-		return(sb.toString());
+		return(RequestUtil.getRelativeUri(req, uri));
 	}
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CommentAction.java,v 1.6 2003/07/14 06:21:28 dustin Exp $
+// $Id: CommentAction.java,v 1.7 2003/07/23 04:29:26 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -39,7 +39,7 @@ public class CommentAction extends PhotoAction {
 	/**
 	 * Process the comment thing.
 	 */
-	public ActionForward execute(
+	public ActionForward spyExecute(
 		ActionMapping mapping, ActionForm form,
 		HttpServletRequest request, HttpServletResponse response) 
 		throws Exception {

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginAction.java,v 1.14 2003/07/14 06:21:28 dustin Exp $
+// $Id: LoginAction.java,v 1.15 2003/07/23 04:29:26 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -37,7 +37,7 @@ public class LoginAction extends PhotoAction {
 	/**
 	 * Process the request.
 	 */
-	public ActionForward execute(ActionMapping mapping,
+	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {

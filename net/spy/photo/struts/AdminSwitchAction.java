@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSwitchAction.java,v 1.2 2003/05/25 08:17:41 dustin Exp $
+// $Id: AdminSwitchAction.java,v 1.3 2003/07/23 04:29:26 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -34,7 +34,7 @@ public class AdminSwitchAction extends AdminAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward execute(ActionMapping mapping,
+	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {

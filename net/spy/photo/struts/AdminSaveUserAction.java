@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveUserAction.java,v 1.12 2003/07/14 06:21:28 dustin Exp $
+// $Id: AdminSaveUserAction.java,v 1.13 2003/07/23 04:29:26 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -39,7 +39,7 @@ public class AdminSaveUserAction extends AdminAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward execute(ActionMapping mapping,
+	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SetDisplayRefresh.java,v 1.3 2003/07/14 06:21:28 dustin Exp $
+// $Id: SetDisplayRefresh.java,v 1.4 2003/07/23 04:29:26 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -35,7 +35,7 @@ public class SetDisplayRefresh extends PhotoAction {
 	/**
 	 * Set the optimal viewing size.
 	 */
-	public ActionForward execute(ActionMapping mapping,
+	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
@@ -54,7 +54,7 @@ public class SetDisplayRefresh extends PhotoAction {
 			if( (sid+1) < results.size()) {
 				String loc="/refreshDisplay.do?search_id=" + (sid+1);
 				String aLoc=PhotoUtil.getRelativeUri(request, loc);
-				log("Refreshing to:  " + aLoc);
+				getLogger().info("Refreshing to:  " + aLoc);
 				response.addHeader("Refresh", "5; URL=" + aLoc);
 			}
 		}

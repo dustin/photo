@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetImageDataAction.java,v 1.1 2003/06/23 07:03:55 dustin Exp $
+// $Id: GetImageDataAction.java,v 1.2 2003/07/23 04:29:26 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -62,7 +62,7 @@ public class GetImageDataAction extends PhotoAction {
 	/** 
 	 * Process the execute.
 	 */
-	public ActionForward execute(ActionMapping mapping,
+	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {

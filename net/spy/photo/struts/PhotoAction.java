@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoAction.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
+// $Id: PhotoAction.java,v 1.4 2003/07/23 04:29:26 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -9,14 +9,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import net.spy.photo.PhotoSessionData;
+import net.spy.jwebkit.struts.JWebAction;
 
-import org.apache.struts.action.Action;
+import net.spy.photo.PhotoSessionData;
 
 /**
  * Superclass for all PhotoAction classes.
  */
-public abstract class PhotoAction extends Action {
+public abstract class PhotoAction extends JWebAction {
 
 	/**
 	 * Get an instance of PhotoAction.
@@ -40,13 +40,6 @@ public abstract class PhotoAction extends Action {
 		}
 
 		return(sessionData);
-	}
-
-	/**
-	 * Log a message.
-	 */
-	protected void log(String msg) {
-		System.err.println(getClass().getName() + " - " + msg);
 	}
 
 }
