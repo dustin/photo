@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.58 1998/11/13 07:46:51 dustin Exp $
+# $Id: Photo.pm,v 1.59 1998/11/15 09:42:30 dustin Exp $
 
 package Photo;
 
@@ -218,6 +218,47 @@ sub buildQuery
 	$query.="\n	order by $order $h{sdirection};\n";
 
 	return($query);
+}
+
+sub setStyle
+{
+	my($self, $q)=@_;
+	my($style, $cookie, %in, %p);
+
+	%in=map { $_, $q->param($_) } $q->param;
+
+	if(!defined($in{'font'}) || !defined($in{'h_transform'})) {
+		print $q->header;
+		print "Damnit, use the form.\n";
+		exit;
+	}
+
+	# The style for the cookie.
+	$style=<<EOF;
+body,td {font-family: $in{'font'}, Arial; background-color:
+$in{'bgcolor'};}
+EOF
+
+	# Apply the blockquote transform if we've got one.
+	if($in{'d_transform'} ne "none") {
+    	$style.="blockquote {text-transform: $in{'d_transform'};};";
+	};
+
+	# apply the header transform if we've got one.
+	if($in{'h_transform'} ne "none") {
+    	$style.="h1,h2,h3,h4,h5 {text-transform: $in{'h_transform'};}";
+	};
+
+	$cookie=$q->cookie(-name=>'photo_style',
+		-path=>$Photo::cgidir,
+		-value=>$style,
+		-expires=>'+30d');
+	print $q->header(-cookie => $cookie);
+	$self->start_html($q, 'Set Style');
+
+	%p=();
+	$p{'STYLE'}=$style;
+    $self->showTemplate("$Photo::includes/setstyle.inc", %p);
 }
 
 sub saveSearch
