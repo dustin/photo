@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.22 2002/05/21 07:45:08 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.23 2002/05/23 06:54:51 dustin Exp $
  */
 
 package net.spy.photo;
@@ -19,6 +19,7 @@ import net.spy.db.*;
 import net.spy.util.*;
 
 import net.spy.photo.struts.SearchForm;
+import net.spy.photo.struts.SaveSearchForm;
 
 /**
  * Perform searches.
@@ -48,34 +49,47 @@ public class PhotoSearch extends PhotoHelper {
 	 */
 	public void saveSearch(HttpServletRequest request, PhotoUser user)
 		throws Exception {
-		if(user==null || request==null) {
+
+		// Check the parameters.
+		String name=request.getParameter("name").trim();
+		if(name.length() == 0) {
+			throw new Exception("Invalid ``name'' parameter");
+		}
+		String search=request.getParameter("search").trim();
+		if(search.length() == 0) {
+			throw new Exception("Invalid ``search'' parameter");
+		}
+
+		SaveSearchForm form=new SaveSearchForm();
+		form.setName(request.getParameter("name"));
+		form.setSearch(request.getParameter("search"));
+
+		saveSearch(form, user);
+	}
+
+	/**
+	 * Save a search.
+	 */
+	public void saveSearch(SaveSearchForm form, PhotoUser user)
+		throws Exception {
+		if(user==null || form==null) {
 			throw new Exception("Weird, invalid stuff.");
 		}
 
-		if( ! user.canAdd() ) {
+		if(!user.canAdd() ) {
 			throw new Exception("No permission to save searches.");
 		}
 
 		try {
-			String stmp=null, name=null, search=null;
-
-			name=request.getParameter("name").trim();
-			if(name.length() == 0) {
-				throw new Exception("Invalid ``name'' parameter");
-			}
-
-			search=request.getParameter("search").trim();
-			if(search.length() == 0) {
-				throw new Exception("Invalid ``search'' parameter");
-			}
+			String stmp=null;
 
 			String query = "insert into searches (name, addedby, search, ts)\n"
 				+ "  values(?, ?, ?, ?)";
 			SpyDB photo=new SpyDB(new PhotoConfig());
 			PreparedStatement st=photo.prepareStatement(query);
-			st.setString(1, name);
+			st.setString(1, form.getName());
 			st.setInt(2, user.getId());
-			st.setString(3, search);
+			st.setString(3, form.getSearch());
 			st.setDate(4, new java.sql.Date(System.currentTimeMillis()));
 
 			st.executeUpdate();
