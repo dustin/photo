@@ -44,5 +44,17 @@
 		<taglib-uri>/tlds/struts-template.tld</taglib-uri>
 		<taglib-location>/WEB-INF/tlds/struts-template.tld</taglib-location>
 	</taglib>
+	<taglib>
+		<taglib-uri>/tlds/struts-html.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/struts-html.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/tlds/struts-form.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/struts-form.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/tlds/struts-logic.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/struts-logic.tld</taglib-location>
+	</taglib>
 
 </web-app>
