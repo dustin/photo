@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: addimg.cgi,v 1.1 1997/11/02 10:50:45 dustin Exp $
+# $Id: addimg.cgi,v 1.2 1997/11/02 12:14:24 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -31,6 +31,8 @@ $keywords=~s/\'/\\\'/g;
 $info=$q->param('info');
 $info=~s/\'/\\\'/g;
 
+$cat=$q->param('category');
+
 if($img=~/jpg$/i)
 {
     $ext="jpg";
@@ -47,7 +49,8 @@ else
 
 $fn=time()."$$.$ext";
 
-$query ="insert into album values('$fn',\n\t'$keywords',\n\t'$info');";
+$query ="insert into album (fn, keywords, descr, cat)\n";
+$query.="    values('$fn',\n\t'$keywords',\n\t'$info',\n$cat);";
 
 if(!($dbh->execute($query)))
 {
