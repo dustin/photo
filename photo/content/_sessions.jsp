@@ -9,7 +9,11 @@
 <table width="100%" border="1">
 
 <tr>
-	<th>User</th><th>Login Time</th><th>Idle(s)</th>
+	<th>User</th>
+	<th>Login Time</th>
+	<th>Idle(s)</th>
+	<th>Images Served</th>
+	<th>Most Recent</th>
 </tr>
 
 <logic:iterate id="i" collection="<%= SessionWatcher.listSessions() %>">
@@ -23,6 +27,16 @@
 		<td><%= new java.util.Date(ses.getCreationTime()) %></td>
 		<td><%= (double)(System.currentTimeMillis()
 			- ses.getLastAccessedTime())/1000.0 %></td>
+		<td><%= sessionData.getImagesSeen() %></td>
+		<td>
+			<% if(sessionData.getLastImageSeen() != 0) { %>
+				<photo:imgLink id="<%= sessionData.getLastImageSeen() %>"
+					alt="<%= "Image " + sessionData.getLastImageSeen() %>"
+					showThumbnail='true'/>
+			<% } else { %>
+				n/a
+			<% } %>
+		</td>
 	</tr>
 
 </logic:iterate>
