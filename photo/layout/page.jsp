@@ -6,6 +6,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib uri="/tlds/struts-tiles.tld" prefix="tiles" %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
+<%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
@@ -54,10 +55,10 @@
 				<tiles:insert page='/templates/quicksearch.jsp' />
 				<photo:link url="/index.do" message="page.links.home"/>
 				| <photo:link url="/sizeForm.do" message="page.links.size"/>
-				<photo:guest negate="true">
+				<logic:notPresent role="guest">
 					| <photo:link url="/sessions.do" message="page.links.sessions"/>
 					| <photo:link url="/logout.do" message="page.links.logout"/>
-				</photo:guest>
+				</logic:notPresent>
 		</div> <!-- /rightstuff -->
 	</div> <!-- /Footer -->
 

@@ -110,7 +110,7 @@ Size Image</a>]
 
 	Submit a comment:<br/>
 
-	<photo:guest negate="true">
+	<logic:notPresent role="guest">
 		<html:form action="/addcomment">
 			<html:errors/>
 			<html:hidden property="imageId" value="<%= "" + image.getId() %>"/>
@@ -118,4 +118,4 @@ Size Image</a>]
 			<br/>
 			<html:submit>Add Comment</html:submit>
 		</html:form>
-	</photo:guest>
+	</logic:notPresent>

@@ -4,6 +4,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+<%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <table style="width: 100%">
@@ -11,10 +12,10 @@
 		<td style="width: 50%">
 			<div class="sectionheader">Options</div>
 			<ul>
-				<photo:guest>
+				<logic:present role="guest">
 					<li><photo:link url="/credform.do"
 						message="index.links.login"/></li>
-				</photo:guest>
+				</logic:present>
 				<li><photo:link url="/searchForm.do"
 					message="index.links.advsearch"/></li>
 				<li><photo:link url="/listcomments.do"
@@ -25,14 +26,14 @@
 					message="index.links.catview"/></li>
 				<li><photo:link url="/newUserForm.do"
 					message="index.links.newuser"/></li>
-				<photo:guest negate="true">
+				<logic:notPresent role="guest">
 					<li><photo:link url="/addform.do"
 						message="index.links.addform"/></li>
 					<li><photo:link url="/saveGalleryForm.do"
 						message="index.links.savegallery"/></li>
 					<li><photo:link url="/logout.do"
 						message="index.links.logout"/></li>
-				</photo:guest>
+				</logic:notPresent>
 			</ul>
 		</td>
 		<td style="width: 50%">

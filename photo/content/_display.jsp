@@ -64,14 +64,14 @@
 
 	</div>
 
-<photo:guest negate="true">
+<logic:notPresent role="guest">
 	[<photo:link url="/logView.do" id="<%= String.valueOf(image.getId()) %>">
 			Who's seen this?
 	</photo:link>] | 
 	[<photo:link url="/addToGallery.do" id="<%= String.valueOf(image.getId()) %>">
 		Add to Gallery
 	</photo:link>] | 
-</photo:guest>
+</logic:notPresent>
 [<photo:imgLink id='<%= String.valueOf(image.getId()) %>'>
 	Linkable image
 </photo:imgLink>] |
@@ -104,7 +104,7 @@
 
 <div>
 
-	<photo:guest negate="true">
+	<logic:notPresent role="guest">
 		<fmt:message key="display.comment"/><br/>
 		<html:errors/>
 
@@ -116,5 +116,5 @@
 			<br/>
 			<html:submit>Add Comment</html:submit>
 		</html:form>
-	</photo:guest>
+	</logic:notPresent>
 </div>
