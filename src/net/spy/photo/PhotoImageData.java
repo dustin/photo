@@ -6,10 +6,12 @@ package net.spy.photo;
 import java.util.Collection;
 import java.util.Date;
 
+import net.spy.factory.Instance;
+
 /**
  * PhotoImageData interface.
  */
-public interface PhotoImageData {
+public interface PhotoImageData extends Instance {
 
 	/** 
 	 * Get the keywords for this image (space separated).
@@ -60,11 +62,6 @@ public interface PhotoImageData {
 	 * Get the timestamp of this image.
 	 */
 	Date getTimestamp();
-
-	/** 
-	 * Get the ID of this image.
-	 */
-	int getId();
 
 	/** 
 	 * Get the format of this image.

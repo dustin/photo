@@ -193,7 +193,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		}
 		// Clear the photo image cache
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-		pidf.clearCache();
+		pidf.recache();
 	}
 
 	/**

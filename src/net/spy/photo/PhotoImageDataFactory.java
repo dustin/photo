@@ -8,8 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import net.spy.SpyObject;
-import net.spy.cache.SpyCache;
+import net.spy.factory.GenFactory;
 
 import net.spy.photo.impl.DBImageDataSource;
 import net.spy.photo.search.SearchIndex;
@@ -17,7 +16,7 @@ import net.spy.photo.search.SearchIndex;
 /**
  * ImageData factory.
  */
-public class PhotoImageDataFactory extends SpyObject {
+public class PhotoImageDataFactory extends GenFactory {
 
 	private static final String CACHE_KEY="image_data";
 	private static final long CACHE_TIME=86400000;
@@ -30,7 +29,7 @@ public class PhotoImageDataFactory extends SpyObject {
 	 * Get an instance of PhotoImageDataFactory.
 	 */
 	private PhotoImageDataFactory() {
-		super();
+		super(CACHE_KEY, CACHE_TIME);
 		source=new DBImageDataSource();
 	}
 
@@ -44,45 +43,26 @@ public class PhotoImageDataFactory extends SpyObject {
 		return(instance);
 	}
 
-	private Map getCache() throws Exception {
-		SpyCache sc=SpyCache.getInstance();
-		Map rv=(Map)sc.get(CACHE_KEY);
-		if(rv == null) {
-			// Get the source images
-			getLogger().info("Fetching images.");
-			Collection images=source.getImages();
-			getLogger().info("Loaded " + images.size() + " images from "
-				+ source.getClass().getName());
-			// Map all of the images
-			rv=new HashMap();
-			for(Iterator i=images.iterator(); i.hasNext(); ) {
-				PhotoImageData pid=(PhotoImageData)i.next();
-				rv.put(new Integer(pid.getId()), pid);
-			}
-			// Update the index cache
-			SearchIndex si=SearchIndex.getInstance();
-			si.update(images);
-			// Cache it
-			sc.store(CACHE_KEY, rv, CACHE_TIME);
-		}
-		return(rv);
+	/** 
+	 * Get the instances of PhotoImageData.
+	 */
+	protected Collection getInstances() {
+		// Get the source images
+		getLogger().info("Fetching images.");
+		Collection images=source.getImages();
+		getLogger().info("Loaded " + images.size() + " images from "
+			+ source.getClass().getName());
+		// Update the index cache
+		SearchIndex si=SearchIndex.getInstance();
+		si.update(images);
+		return(images);
 	}
 
 	/** 
-	 * Cache or recache the images.
+	 * Handle a missing image.
 	 */
-	public void recache() throws Exception {
-		SpyCache sc=SpyCache.getInstance();
-		sc.uncache(CACHE_KEY);
-		getCache();
-	}
-
-	/** 
-	 * Clear the image data cache.
-	 */
-	public void clearCache() {
-		SpyCache sc=SpyCache.getInstance();
-		sc.uncache(CACHE_KEY);
+	protected Object handleNullLookup(int id) {
+		throw new RuntimeException("No such PhotoImage:  " + id);
 	}
 
 	/** 
@@ -93,12 +73,7 @@ public class PhotoImageDataFactory extends SpyObject {
 	 * @throws Exception if we cannot load the data
 	 */
 	public PhotoImageData getData(int id) throws Exception {
-		Map m=getCache();
-		PhotoImageData rv=(PhotoImageData)m.get(new Integer(id));
-		if(rv == null) {
-			throw new Exception("No such image:  " + id);
-		}
-		return(rv);
+		return((PhotoImageData)getObject(id));
 	}
 
 }

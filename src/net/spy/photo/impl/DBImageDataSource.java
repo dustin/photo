@@ -36,7 +36,17 @@ public class DBImageDataSource extends SpyObject
 	/** 
 	 * Get the images.
 	 */
-	public Collection getImages() throws Exception {
+	public Collection getImages() {
+		Collection rv=null;
+		try {
+			rv=getFromDB();
+		} catch(Exception e) {
+			throw new RuntimeException("Can't load images from DB", e);
+		}
+		return(rv);
+	}
+
+	private Collection getFromDB() throws Exception {
 		HashMap rv=new HashMap();
 
 		// Load the images
