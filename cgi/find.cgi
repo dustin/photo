@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: find.cgi,v 1.3 1997/11/04 08:01:43 dustin Exp $
+# $Id: find.cgi,v 1.4 1997/11/04 08:57:26 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -128,12 +128,27 @@ if(!($s=$dbh->execute($query)))
 }
 
 $n=$s->ntuples;
+$i=0;
+
+$start=$q->param('qstart');  # Find the desired starting point
+$start+=0;                   # make it a number
+$q->delete('qstart');        # Delete it so we can add it later
+
+$max=$q->param('maxret');    # Find the desired max return
+$max+=0;                     # make it a number
 
 print "<h2>Found $n matches:</h2><br><ul>\n";
 
 while(($oid, $keywords, $descr, $cat, $size, $taken, $ts, $image)
     =$s->fetchrow())
 {
+    next if($i++<$start);
+
+    if($max>0)
+    {
+        last if($i-$start>$max);
+    }
+
     print "    <li>\n<table>\n<tr>\n<td valign=\"top\">\n";
     print "\nKeywords: $keywords<br>\n";
     print "Category:  $cat<br>\n";
@@ -147,5 +162,22 @@ while(($oid, $keywords, $descr, $cat, $size, $taken, $ts, $image)
 }
 
 print "</ul>\n";
+
+# Add a link to the next matches.
+if( ($start+$max) < $n)
+{
+    if(($n-($start+$max))<$max)
+    {
+	$nn=($n-($start+$max));
+    }
+    else
+    {
+	$nn=$max;
+    }
+
+    $s=$q->self_url;
+    $sum=$start+$max;
+    print "<a href=\"$s&qstart=$sum\">Next $nn matches</a>\n";
+}
 
 print $q->end_html;
