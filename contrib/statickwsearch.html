@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+  Copyright (c) 2004  Dustin Sallings <dustin+html@spy.net>
+  -->
+<html>
+	<head>
+		<title>Testing</title>
+	</head>
+
+	<body>
+		<script language="JavaScript" src="test.js"></script>
+		<script language="JavaScript">
+		var kws = new Array();
+
+		function arrayContains(a, ai) {
+			var rv = false;
+			for(var i=0; rv == false && i<a.length; i++) {
+				if(a[i] == ai) {
+					rv = true;
+				}
+			}
+			return rv;
+		}
+
+		function arrayUnion(a1, a2) {
+			var rv = new Array();
+			if(a1.length > a2.length) {
+				var b=a1
+				a1=a2
+				a2=b
+			}
+			for(var i=0; i<a1.length; i++) {
+				if(arrayContains(a2, a1[i])) {
+					rv.push(a1[i]);
+				}
+			}
+			return rv;
+		}
+
+		// This should perform some kind of and logic across selections
+		function getImageIds() {
+			var rv = new Array();
+			if(kws.length > 0) {
+				rv = imgs[kws[0]];
+			}
+			for(var i=1; i<kws.length; i++) {
+				rv = arrayUnion(rv, imgs[kws[i]]);
+			}
+			return rv
+		}
+		function showResults() {
+			var div=document.getElementById("found");
+			var h="";
+			// Maximum number of images to show
+			var total = 50
+			var tmpimgs=getImageIds();
+			// h = tmpimgs.join(" ") + "<br>\n";
+			for(var i=0; i<tmpimgs.length; i++) {
+				var img=tmpimgs[i]
+				if(total > 0) {
+					h += '<a href="pages/' + photloc[img] + "/" + img + '.html">';
+					h += '<img src="pages/' + photloc[img] + '/' + img + '_tn.jpg"/> ';
+					h += '</a>';
+				} else if(total == 0) {
+					h += " ... ";
+				}
+				total -= 1
+			}
+			div.innerHTML = h;
+		}
+		function checkedKwBox(c, kwi) {
+			// First, remove it from the kws
+			var tmp = new Array()
+			for(var i=0; i<kws.length; i++) {
+				if(kws[i] != kwi) {
+					tmp.push(kws[i]);
+				}
+			}
+			kws=tmp;
+			if(c.checked) {
+				kws.push(kwi);
+			}
+			showResults();
+		}
+		function initForm(f) {
+			var h ="";
+			var div = document.getElementById("keywordlist");
+			for(var i=0; i<keywords.length; i++) {
+				var k=keywords[i];
+				h += '<input type="checkbox" name="keyword" value="' + k 
+					+ ' " onclick="checkedKwBox(this, ' + i + ')" />' + k + "("
+					+ imgs[i].length + ")  ";
+			}
+			div.innerHTML=h
+
+		}
+		onload = function() {
+			initForm(document.bigform);
+		}
+		</script>
+
+		Form:<br/>
+		<form name="bigform" method="POST" action="">
+			<div style="font-size: x-small" id="keywordlist"><span/></div>
+			<input type="submit" value="Search"/>
+		</form>
+		Found:
+		<div id="found"><span/></div>
+	</body>
+</html>
