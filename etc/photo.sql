@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.26 2002/02/24 23:49:26 dustin Exp $
+-- $Id: photo.sql,v 1.27 2002/02/25 02:46:41 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -244,6 +244,7 @@ insert into log_types(log_type) values('Login');
 insert into log_types(log_type) values('ImgView');
 insert into log_types(log_type) values('Upload');
 insert into log_types(log_type) values('AuthFail');
+insert into log_types(log_type) values('Request');
 
 -- A function for looking up log types
 create function get_log_type(TEXT) returns INTEGER as

@@ -24,6 +24,8 @@ insert into log_types(log_type) values('Upload')
 ;
 insert into log_types(log_type) values('AuthFail')
 ;
+insert into log_types(log_type) values('Request')
+;
 
 -- A function for looking up log types
 create function get_log_type(TEXT) returns INTEGER as

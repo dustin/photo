@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogImageEntry.java,v 1.7 2002/02/25 02:38:42 dustin Exp $
+ * $Id: PhotoLogImageEntry.java,v 1.8 2002/02/25 02:46:41 dustin Exp $
  */
 
 package net.spy.photo;
@@ -26,9 +26,12 @@ public class PhotoLogImageEntry extends PhotoLogEntry {
 	 */
 	public PhotoLogImageEntry(int u, int p, PhotoDimensions size,
 		HttpServletRequest request) {
-		super(u, p, "ImgView", request);
+		super(u, "ImgView", request);
 
-		setExtraInfo(size.getWidth() + "x" + size.getHeight());
+		setPhotoId(p);
+		if(size!=null) {
+			setExtraInfo(size.getWidth() + "x" + size.getHeight());
+		}
 	}
 
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogEntry.java,v 1.1 2002/02/25 02:38:42 dustin Exp $
+ * $Id: PhotoLogEntry.java,v 1.2 2002/02/25 02:46:41 dustin Exp $
  */
 
 package net.spy.photo;
@@ -16,7 +16,7 @@ import net.spy.log.*;
  */
 public class PhotoLogEntry extends SpyLogEntry {
 
-	private int photo_id=-1;
+	private Integer photo_id=null;
 	private int wwwuser_id=-1;
 	private long timestamp=-1;
 	private String remote_addr=null;
@@ -32,10 +32,9 @@ public class PhotoLogEntry extends SpyLogEntry {
 	 * @param type The log type (by string name)
 	 * @param request The HTTP request (to get remote addr and user agent).
 	 */
-	public PhotoLogEntry(int u, int p, String type,
+	public PhotoLogEntry(int u, String type,
 		HttpServletRequest request) {
 		super();
-		this.photo_id=p;
 		this.wwwuser_id=u;
 		this.type=type;
 		this.remote_addr=request.getRemoteAddr();
@@ -48,6 +47,20 @@ public class PhotoLogEntry extends SpyLogEntry {
 	 */
 	protected void setExtraInfo(String to) {
 		this.extra_info=to;
+	}
+
+	/**
+	 * Set the Photo ID.
+	 */
+	protected void setPhotoId(int to) {
+		this.photo_id=new Integer(to);
+	}
+
+	/**
+	 * Set the Photo ID.
+	 */
+	protected void setPhotoId(Integer to) {
+		this.photo_id=to;
 	}
 
 	/**
@@ -64,8 +77,12 @@ public class PhotoLogEntry extends SpyLogEntry {
 		sb.append(type);
 		sb.append("'), ");
 
-		sb.append(photo_id);
-		sb.append(", ");
+		if(photo_id==null) {
+			sb.append("null, ");
+		} else {
+			sb.append(photo_id);
+			sb.append(", ");
+		}
 
 		sb.append(wwwuser_id);
 		sb.append(", ");

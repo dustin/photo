@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.103 2002/02/25 02:23:37 dustin Exp $
+ * $Id: PhotoSession.java,v 1.104 2002/02/25 02:46:41 dustin Exp $
  */
 
 package net.spy.photo;
@@ -226,6 +226,9 @@ public class PhotoSession extends Object
 		// Lowercase it so that we don't have to keep doing case ignores
 		func=func.toLowerCase();
 		log(sessionData.getUser() + " requested " + func);
+		logger.log(new PhotoLogFuncEntry(sessionData.getUser().getId(),
+			func, request));
+
 		String out=null;
 
 		// OK, see what they're doing.
