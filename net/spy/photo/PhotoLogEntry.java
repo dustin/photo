@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogEntry.java,v 1.2 2002/02/25 02:46:41 dustin Exp $
+ * $Id: PhotoLogEntry.java,v 1.3 2002/02/25 03:08:25 dustin Exp $
  */
 
 package net.spy.photo;
@@ -99,7 +99,7 @@ public class PhotoLogEntry extends SpyLogEntry {
 			sb.append("null, ");
 		} else {
 			sb.append("'");
-			sb.append(PhotoUtil.dbquote_str(user_agent));
+			sb.append(PhotoUtil.dbquote_str(extra_info));
 			sb.append("', ");
 		}
 
