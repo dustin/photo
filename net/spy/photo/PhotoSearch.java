@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.13 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.14 2001/12/28 04:45:29 dustin Exp $
  */
 
 package net.spy.photo;
@@ -89,16 +89,19 @@ public class PhotoSearch extends PhotoHelper {
 
 	// Actually perform the search
 	public PhotoSearchResults performSearch(
-		HttpServletRequest request, PhotoUser user) throws ServletException {
+		HttpServletRequest request, PhotoSessionData sessionData)
+		throws ServletException {
+
 		PhotoSearchResults results=
 			new PhotoSearchResults(request.getRequestURI());
+		results.setMaxSize(sessionData.getOptimalDimensions());
 
 		Connection photo=null;
 
 		try {
 
 			// Go get a query
-			String query=buildQuery(request, user.getId());
+			String query=buildQuery(request, sessionData.getUser().getId());
 
 			photo=getDBConn();
 			Statement st=photo.createStatement();

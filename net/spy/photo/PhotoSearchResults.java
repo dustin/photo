@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.9 2001/12/28 03:29:42 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.10 2001/12/28 04:45:30 dustin Exp $
  */
 
 package net.spy.photo;
@@ -119,6 +119,8 @@ public class PhotoSearchResults extends Object implements Serializable {
 			try {
 				Integer i=(Integer)o;
 				ret=new PhotoSearchResult(i.intValue(), which);
+				// Add the max dimensions so it'll scale.
+				ret.setMaxSize(maxSize);
 			} catch(Exception e2) {
 				System.err.println("Error getting result "
 					+ which + ":  " + e2);

@@ -1,13 +1,14 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoDimensionsImpl.java,v 1.1 2001/12/28 01:54:13 dustin Exp $
+// $Id: PhotoDimensionsImpl.java,v 1.2 2001/12/28 04:45:29 dustin Exp $
 
 package net.spy.photo;
 
 /**
  * A class that contains only a width and height.
  */
-public class PhotoDimensionsImpl implements PhotoDimensions {
+public class PhotoDimensionsImpl
+	implements PhotoDimensions, java.io.Serializable {
 
 	private int width=0;
 	private int height=0;

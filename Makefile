@@ -68,6 +68,9 @@ photo.jar: $(CLASSES)
 test: $(CLASSES)
 	env CLASSPATH=/tmp $(SERVLETRUNNER) $(PWD)/etc/resin.conf
 
+srtest: $(CLASSES)
+	env CLASSPATH=$(CLASSPATH) $(JAVA) net.spy.SpyRunner etc/spyrunner.conf
+
 setpw: net/spy/photo/SetPW.class
 	env CLASSPATH=$(CLASSPATH) $(JAVA) net.spy.photo.SetPW
 

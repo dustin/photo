@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.15 2001/12/28 03:29:42 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.16 2001/12/28 04:45:29 dustin Exp $
  */
 
 package net.spy.photo;
@@ -68,12 +68,12 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	 */
 	public String showXML(String self_uri) {
 		if(xml==null) {
-			// Calculate the scaled size.
-			calculateScaled();
 			// Initialize the xml thingy.
 			xml="";
 			// Make sure we have the data.
 			addToHash(null);
+			// Calculate the scaled size.
+			calculateScaled();
 			for(Enumeration e=mydata.keys(); e.hasMoreElements(); ) {
 				String key=(String)e.nextElement();
 				String data=(String)mydata.get(key);
@@ -255,8 +255,13 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		PhotoDimensions scaled=null;
 		if(maxSize!=null) {
 			scaled=pds.scaleTo(maxSize);
+			/*
+			System.err.println("Scaled " + width + "x" + height
+				+ " to " + scaled);
+			*/
 		} else {
 			scaled=new PhotoDimensionsImpl(width, height);
+			// System.err.println("!!! DID NOT SCALE !!!");
 		}
 		mydata.put("SCALED_WIDTH", "" + scaled.getWidth());
 		mydata.put("SCALED_HEIGHT", "" + scaled.getHeight());

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.64 2001/12/28 03:29:42 dustin Exp $
+ * $Id: PhotoSession.java,v 1.65 2001/12/28 04:45:30 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1102,8 +1102,10 @@ public class PhotoSession extends Object
 		throws Exception {
 
 		PhotoSearchResults results=sessionData.getResults();
-		int which=sessionData.getSearchId();
+		int which=Integer.parseInt(request.getParameter("search_id"));
 		PhotoSearchResult r = results.get(which);
+
+		log("Displaying by search id:  " + which);
 
 		// Add the PREV and NEXT button stuff, if applicable.
 		if(results.nResults() > which+1) {
@@ -1121,6 +1123,8 @@ public class PhotoSession extends Object
 		// Get the image_id.  We know it exists, because you can't get to
 		// this function without one...of course, it may not parse.
 		int image_id=Integer.parseInt(request.getParameter("id"));
+
+		log("Displaying by id:  " + image_id);
 
 		// Get the data
 		PhotoSearchResult r=new PhotoSearchResult();
@@ -1249,7 +1253,7 @@ public class PhotoSession extends Object
 			PhotoSearch ps = new PhotoSearch();
 			PhotoSearchResults results=null;
 			// Get the results and put them in the mofo session
-			results=ps.performSearch(request, sessionData.getUser());
+			results=ps.performSearch(request, sessionData);
 			sessionData.setResults(results);
 			sessionData.setEncodedSearch(ps.encodeSearch(request));
 		} catch(Exception e) {
