@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoReporting.java,v 1.5 2002/02/21 09:26:03 dustin Exp $
+ * $Id: PhotoReporting.java,v 1.6 2002/02/25 03:08:43 dustin Exp $
  */
 
 package net.spy.photo;
@@ -52,8 +52,11 @@ public class PhotoReporting extends PhotoHelper {
 						rowcount++;
 						h.put("ROWNUMBER", "" + rowcount);
 						for(int i=1; i<=cols; i++) {
-							h.put(md.getColumnName(i).toUpperCase(),
-								rs.getString(i));
+							String val=rs.getString(i);
+							if(val==null) {
+								val="<i>n/a</i>";
+							}
+							h.put(md.getColumnName(i).toUpperCase(), val);
 						}
 						out+=tokenize(tmp, h);
 					}
