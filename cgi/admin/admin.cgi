@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.9 1998/11/08 01:05:40 dustin Exp $
+# $Id: admin.cgi,v 1.10 1998/11/08 01:17:26 dustin Exp $
 
 use CGI;
 use Photo;
@@ -284,7 +284,7 @@ sub listCats
 <table border="3">
 <tr>
     <th>ID</th>
-    <th>OEM</th>
+    <th>Name</th>
 </tr>
 EOF
 
