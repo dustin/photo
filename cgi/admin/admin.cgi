@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.12 1998/11/13 07:32:16 dustin Exp $
+# $Id: admin.cgi,v 1.13 1998/11/13 07:36:37 dustin Exp $
 
 use CGI;
 use Photo;
@@ -229,7 +229,7 @@ sub editUser
 
     $p->showTemplate("$Photo::includes/admin/userform.inc", %p);
 
-	$id=getuid($user);
+	$id=$p->getuid($user);
     $query="select cat from wwwacl where userid=$id";
 
     $s=$p->doQuery($query);
