@@ -71,12 +71,11 @@
 		</javadoc>
 	</target>
 
-	<target name="validateconfigs">
-		<!--
+	<!-- to skip validation, use ``ant -Dnovalidate=true ...'' -->
+	<target name="validateconfigs" unless="novalidate">
 		<xmlvalidate failonerror="yes">
 			<fileset dir="photo/WEB-INF" includes="**/*.xml"/>
 		</xmlvalidate>
-		-->
 	</target>
 
 	<!-- This is specific to my development at home. -->
