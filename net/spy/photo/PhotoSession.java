@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.66 2001/12/28 12:39:37 dustin Exp $
+ * $Id: PhotoSession.java,v 1.67 2001/12/28 13:13:41 dustin Exp $
  */
 
 package net.spy.photo;
@@ -859,8 +859,7 @@ public class PhotoSession extends Object
 			String query = "select name,id,catsum(id) as cs from cat\n"
 			  	+ "where id in\n"
 			  	+ "  (select cat from wwwacl where\n"
-			  	+ "   userid=? or userid=?)\n"
-				+ "  and canview=true\n"
+			  	+ "   (userid=? or userid=?) and canview=true)\n"
 			  	+ " order by cs desc";
 			PreparedStatement st = photo.prepareStatement(query);
 			st.setInt(1, sessionData.getUser().getId());
