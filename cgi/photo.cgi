@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: photo.cgi,v 1.7 1998/04/26 06:15:16 dustin Exp $
+# $Id: photo.cgi,v 1.8 1998/04/26 06:19:18 dustin Exp $
 
 use CGI;
 use Photo;
@@ -133,7 +133,7 @@ sub doFind
     $max=$q->param('maxret');    # Find the desired max return
     $max+=0;                     # make it a number
 
-    print "<h2>Found $n matches:</h2><br><ul>\n";
+    print "<h2>Found $n match".(($n==1)?"":"es").":</h2><br><ul>\n";
 
     while($r=$s->fetch)
     {
