@@ -43,6 +43,10 @@ Category:
     <option value="descr">Info (slow)
 </select>
 contains
+<select name="keyjoin">
+    <option value="or">one of
+    <option value="and">all of
+</select>
 <input name="what"><br>
 
 <table>
