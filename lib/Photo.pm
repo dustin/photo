@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.23 1998/08/11 05:01:40 dustin Exp $
+# $Id: Photo.pm,v 1.24 1998/08/11 05:07:40 dustin Exp $
 
 package Photo;
 
@@ -57,8 +57,7 @@ sub buildQuery
     my(%h, $query, $needao, $sub, @tmp, $tmp, $snao, $ln, $order);
     my(@a);
 
-    for($q->param)
-    {
+    for($q->param) {
         $h{$_}=$q->param($_);
         $h{$_}=~s/\'/\\\'/g;
     }
@@ -70,85 +69,80 @@ sub buildQuery
     $query.="        and a.cat in (select cat from wwwacl\n";
     $query.="                       where username='$ENV{REMOTE_USER}')";
 
-    if($h{searchtype} eq "simple") {
-        $query.="\n    and $h{field} ~* '$h{what}' order by a.ts desc;";
-    } else {
-        $needao=0;
-        $sub="";
+    $needao=0;
+    $sub="";
 
-        @tmp=$q->param('cat');
+    @tmp=$q->param('cat');
 
-        if(@tmp) {
-            $sub.=" and" if($needao++>0);
-            $tmp="";
+    if(@tmp) {
+        $sub.=" and" if($needao++>0);
+        $tmp="";
 
-	    map {
-                $tmp.=" or" if($snao++>0);
-                $tmp.="\n          a.cat=$_";
-	    } @tmp;
+        map {
+            $tmp.=" or" if($snao++>0);
+            $tmp.="\n          a.cat=$_";
+        } @tmp;
 
-            if(@tmp>1) {
-                $sub.="\n      ($tmp\n      )";
-            } else {
-                $sub.="\n    $tmp";
-            }
-        }
-
-        if($h{what} ne "") {
-            my($a, $b, $c);
-            $c=0;
-
-            $sub.=" $h{fieldjoin}" if($needao++>0);
-
-            @a=split(/\s+/, $h{what});
-	    $b=($h{keyjoin} eq "and")?"and":"or";
-
-            if(@a>1) {
-                $sub.="\n      (";
-                map {
-                    $sub.=" $b" if($c++>0);
-                    $sub.="\n\t$h{field} ~* '$_'";
-                } @a;
-                $sub.="\n      )";
-            } else {
-                $sub.="\n      $h{field} ~* '$h{what}'";
-            }
-        }
-
-        if($h{tstart}) {
-            $sub.=" $h{tstartjoin}" if($needao++>0);
-            $sub.="\n      a.taken>='$h{tstart}'";
-        }
-
-        if($h{tend}) {
-            $sub.=" $h{tendjoin}" if($needao++>0);
-            $sub.="\n      a.taken<='$h{tend}'";
-        }
-
-        if($h{start}) {
-            $sub.=" $h{startjoin}" if($needao++>0);
-            $sub.="\n      a.ts>='$h{start}'";
-        }
-
-        if($h{end}) {
-            $sub.=" $h{endjoin}" if($needao++>0);
-            $sub.="\n      a.ts<='$h{end}'";
-        }
-
-        if(length($sub)>0) {
-            $query.=" and\n    ($sub\n    )";
-        }
-
-        if(defined($h{order}) && $h{order}=~/[A-z0-9]/) {
-            $order=$h{order};
+        if(@tmp>1) {
+            $sub.="\n      ($tmp\n      )";
         } else {
-            $order="a.taken";
+            $sub.="\n    $tmp";
         }
-
-        $h{sdirection}|="";
-        $query.="\n    order by $order $h{sdirection};\n";
     }
 
+    if($h{what} ne "") {
+        my($a, $b, $c);
+        $c=0;
+
+        $sub.=" $h{fieldjoin}" if($needao++>0);
+
+        @a=split(/\s+/, $h{what});
+        $b=($h{keyjoin} eq "and")?"and":"or";
+
+        if(@a>1) {
+            $sub.="\n      (";
+            map {
+                $sub.=" $b" if($c++>0);
+                $sub.="\n\t$h{field} ~* '$_'";
+            } @a;
+            $sub.="\n      )";
+        } else {
+            $sub.="\n      $h{field} ~* '$h{what}'";
+        }
+    }
+
+    if($h{tstart}) {
+        $sub.=" $h{tstartjoin}" if($needao++>0);
+        $sub.="\n      a.taken>='$h{tstart}'";
+    }
+
+    if($h{tend}) {
+        $sub.=" $h{tendjoin}" if($needao++>0);
+        $sub.="\n      a.taken<='$h{tend}'";
+    }
+
+    if($h{start}) {
+        $sub.=" $h{startjoin}" if($needao++>0);
+        $sub.="\n      a.ts>='$h{start}'";
+    }
+
+    if($h{end}) {
+        $sub.=" $h{endjoin}" if($needao++>0);
+        $sub.="\n      a.ts<='$h{end}'";
+    }
+
+    if(length($sub)>0) {
+        $query.=" and\n    ($sub\n    )";
+    }
+
+    if(defined($h{order}) && $h{order}=~/[A-z0-9]/) {
+        $order=$h{order};
+    } else {
+        $order="a.taken";
+    }
+
+    $h{sdirection}|="";
+    $query.="\n    order by $order $h{sdirection};\n";
 
     return($query);
 }
