@@ -70,7 +70,8 @@
 		<b>Taken</b>:  <html:text property="taken" value="<%= image.getTaken() %>"/>
 			<b>Added</b>:
 			<%= image.getTimestamp() %>
-		by <%= image.getAddedBy() %><br>
+		by <%= image.getAddedBy().getRealname() %>
+			(<%= image.getAddedBy().getUsername() %>)<br>
 		<b>Info</b>:
 		<html:textarea cols="60" rows="5" property="info"
 			value="<%= image.getDescr() %>"/>

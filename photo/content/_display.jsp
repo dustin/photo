@@ -51,7 +51,7 @@
 			(<%= image.getSize() %> bytes)<br>
 		<b>Taken</b>:  <%= image.getTaken() %>&nbsp; <b>Added</b>:
 			<%= image.getTimestamp() %>
-		by <%= image.getAddedBy() %><br>
+		by <%= image.getAddedBy().getRealname() %><br>
 		<b>Info</b>:
 		<blockquote><%= image.getDescr()%></blockquote>
 

@@ -58,7 +58,8 @@
 		Category:  <%= image.getCatName() %><br/>
 		Size:  <%= image.getDimensions() %><br/>
 		Taken:  <%= image.getTaken() %><br/>
-		Added:  <%= image.getTimestamp() %> by <%= image.getAddedBy() %>
+		Added:  <%= image.getTimestamp() %>
+						by <%= image.getAddedBy().getUsername() %>
 	</td>
 </tr>
 <tr>
