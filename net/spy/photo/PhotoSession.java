@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.79 2002/02/12 05:02:45 dustin Exp $
+ * $Id: PhotoSession.java,v 1.80 2002/02/15 00:33:57 dustin Exp $
  */
 
 package net.spy.photo;
@@ -313,7 +313,12 @@ public class PhotoSession extends Object
 		}
 	}
 
-	public void setCreds() throws ServletException, IOException {
+	private void forgotPassword() throws ServletException, IOException {
+		String username=request.getParameter("username");
+		// XXX finish
+	}
+
+	private void setCreds() throws ServletException, IOException {
 		String username=request.getParameter("username");
 		String pass=request.getParameter("password");
 

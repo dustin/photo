@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.8 2001/12/28 12:39:37 dustin Exp $
+// $Id: PhotoUser.java,v 1.9 2002/02/15 00:33:57 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -217,7 +217,7 @@ public class PhotoUser extends Object implements Serializable {
 	 * Set the username of this user.
 	 */
 	public void setUsername(String username) {
-		this.username=username;
+		this.username=username.toLowerCase();
 	}
 
 	/**
@@ -231,7 +231,7 @@ public class PhotoUser extends Object implements Serializable {
 	 * Set the E-mail address of this  user.
 	 */
 	public void setEmail(String email) {
-		this.email=email;
+		this.email=email.toLowerCase();
 	}
 
 	/**
