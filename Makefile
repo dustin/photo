@@ -23,7 +23,11 @@ RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \
 	net/spy/rmi/ExternalImageServerScaler.class \
 	net/spy/rmi/ImageServer.class
 
-CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
+CLASSES=\
+	net/spy/photo/sp/FindImagesByComments.java \
+	net/spy/photo/sp/FindImagesByComments.class \
+	net/spy/photo/PhotoServlet.class \
+	net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoUtil.class \
 	net/spy/photo/PhotoDimensions.class \
 	net/spy/photo/PhotoDimensionsImpl.class \
@@ -47,6 +51,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/JpegEncoder.class \
 	net/spy/photo/PhotoImageScaler.class \
 	net/spy/photo/PhotoSession.class \
+	net/spy/photo/Cursor.class \
 	net/spy/photo/PhotoSearchResult.class \
 	net/spy/photo/PhotoSearchResults.class \
 	net/spy/photo/PhotoReporting.class \
@@ -71,7 +76,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/migration/PhotoMigration03.class \
 	$(RCLASSES)
 
-.SUFFIXES: .java .class .jar
+.SUFFIXES: .spt .java .class .jar
 
 .PHONY: test
 
@@ -115,3 +120,6 @@ net/spy/rmi/ImageServerImpl_Skel.class: net/spy/rmi/ImageServer.class \
 
 .java.class:
 	env CLASSPATH=$(CLASSPATH) $(JAVAC) -deprecation $<
+
+.spt.java: $<
+	env CLASSPATH=$(CLASSPATH) $(JAVA) net.spy.util.SPGen $<

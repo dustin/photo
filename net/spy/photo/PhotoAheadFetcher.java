@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.12 2002/02/21 20:44:27 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.13 2002/02/23 23:14:01 dustin Exp $
  */
 
 package net.spy.photo;
@@ -73,7 +73,7 @@ public class PhotoAheadFetcher extends Object {
 			// Loop on the result set using our own counter.
 			for(int i=0; i<r.getMaxRet() && (current+i)<r.nResults(); i++) {
 				PhotoSearchResult res=null;
-				res=r.get(current+i);
+				res=(PhotoSearchResult)r.get(current+i);
 				if(res!=null) {
 				 	Hashtable h=new Hashtable();
 				 	// Populate the data thingies.

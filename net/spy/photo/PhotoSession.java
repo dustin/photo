@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.96 2002/02/23 10:58:51 dustin Exp $
+ * $Id: PhotoSession.java,v 1.97 2002/02/23 23:14:01 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1264,7 +1264,7 @@ public class PhotoSession extends Object
 			throw new ServletException("No results in session.");
 		}
 		int which=Integer.parseInt(request.getParameter("search_id"));
-		PhotoSearchResult r = results.get(which);
+		PhotoSearchResult r = (PhotoSearchResult)results.get(which);
 		if(r==null) {
 			throw new ServletException("No result in session.");
 		}
@@ -1361,7 +1361,7 @@ public class PhotoSession extends Object
 			middle.append("<search_result_row>\n");
 
 			for(i=0; i<results.getMaxRet(); i++) {
-				PhotoSearchResult r=results.next();
+				PhotoSearchResult r=(PhotoSearchResult)results.next();
 				if(r!=null) {
 					// No, this really doesn't belong here.
 					if( (i>0) && ((i) % 2) == 0) {
