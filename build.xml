@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.18 2002/07/09 22:06:20 dustin Exp $
+	$Id: build.xml,v 1.19 2002/07/09 22:12:51 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -129,6 +129,7 @@
 			format="html">
 			<fileset dir=".">
 				<include name="net/spy/photo/**/*.java"/>
+				<exclude name="net/spy/photo/JpegEncoder.java"/>
 			</fileset>
     </pmd>
 			<pmd reportFile="pmd-basic-report.html"
@@ -136,6 +137,7 @@
 			format="html">
 			<fileset dir=".">
 				<include name="net/spy/photo/**/*.java"/>
+				<exclude name="net/spy/photo/JpegEncoder.java"/>
 			</fileset>
     </pmd>
 			<pmd reportFile="pmd-design-report.html"
@@ -143,6 +145,7 @@
 			format="html">
 			<fileset dir=".">
 				<include name="net/spy/photo/**/*.java"/>
+				<exclude name="net/spy/photo/JpegEncoder.java"/>
 			</fileset>
 		</pmd>
 	</target>
@@ -170,6 +173,7 @@
 
 			<fileset dir=".">
 				<include name="net/spy/photo/**/*.java"/>
+				<exclude name="net/spy/photo/JpegEncoder.java"/>
 			</fileset>
 			<formatter type="plain" toFile="checkstyle.txt"/>
 		</checkstyle>
