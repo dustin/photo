@@ -1,0 +1,23 @@
+# $Id: .htaccess,v 1.1 1998/11/15 09:12:01 dustin Exp $
+ErrorDocument 401 /~dustin/errors/photo.noauth.shtml
+
+AuthName "Photo user"
+AuthType Basic
+PerlAuthzHandler Apache::AuthzDBI
+
+PerlSetVar Auth_DBI_data_source dbi:Pg:dbname=photo;host=bleu
+PerlSetVar Auth_DBI_username nobody
+PerlSetVar Auth_DBI_pwd_table wwwusers
+PerlSetVar Auth_DBI_grp_table show_group
+
+PerlSetVar Auth_DBI_uid_field username
+PerlSetVar Auth_DBI_pwd_field password
+PerlSetVar Auth_DBI_grp_field groupname
+PerlSetVar Auth_DBI_cache_time 360
+
+# Allow guest
+PerlSetVar Auth_DBI_nopasswd on
+
+<Limit GET POST>
+require group admin
+</Limit>
