@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: simple.xsl,v 1.6 2001/01/07 07:51:35 dustin Exp $
+ $Id: simple.xsl,v 1.7 2001/01/07 20:19:04 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -108,7 +108,8 @@
 <!-- Handling Search Results -->
 
 <xsl:template match="search_results_page">
-	<xsl:apply-templates select="sections"/>
+	<h1>Found <xsl:value-of select="meta_stuff/total"/> Pictures</h1>
+	<xsl:apply-templates select="search_results"/>
 	<xsl:variable name="r" select="meta_stuff/linktomore/remaining"/>
 	<xsl:if test="$r>0">
 		<xsl:value-of select="$r"/> results remaining.<p/>
