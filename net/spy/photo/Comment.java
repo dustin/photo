@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.5 2002/05/01 07:43:13 dustin Exp $
+// $Id: Comment.java,v 1.6 2002/05/17 06:20:56 dustin Exp $
 
 package net.spy.photo;
 
@@ -74,9 +74,11 @@ public class Comment extends Object
 	}
 
 	/**
-	 * Get an Enumeration of XMLAble objects that represent the comments
-	 * this user can see.  Each object may represent multiple comments, but
-	 * they will all refer to a single image.
+	 * Get an Enumeration of GroupedComments objects that represent the
+	 * comments this user can see.  Each object may represent multiple
+	 * comments, but they will all refer to a single image.
+	 *
+	 * @see GroupedComments
 	 */
 	public static Enumeration getAllComments(PhotoUser user) throws Exception {
 
@@ -294,69 +296,6 @@ public class Comment extends Object
 				System.out.println(c.toXML());
 				System.out.println("--");
 			}
-		}
-	}
-
-	private static class SerializableXMLAble
-		extends Object
-		implements XMLAble, java.io.Serializable {
-
-		private String content=null;
-
-		public SerializableXMLAble(String content) {
-			super();
-			this.content=content;
-		}
-
-		public String toXML() {
-			return this.content;
-		}
-	}
-
-	private static class GroupedComments extends
-		Object implements XMLAble, java.io.Serializable {
-
-		private Vector comments=null;
-		private int image_id=0;
-
-		public GroupedComments(int id) {
-			super();
-			this.image_id=id;
-			comments=new Vector();
-		}
-
-		public int getPhotoId() {
-			return(image_id);
-		}
-
-		public void addComment(Comment comment) {
-			if(image_id!=comment.getPhotoId()) {
-				throw new Error(comment.getPhotoId() + " != " + image_id);
-			}
-			if(comments.size()<5) {
-				comments.addElement(comment);
-			} else if(comments.size()==5) {
-				comments.addElement(
-					new SerializableXMLAble("<more_comments/>\n"));
-			}
-		}
-
-		public String toXML() {
-			StringBuffer xml=new StringBuffer();
-
-			xml.append("<photo_comments>\n");
-			xml.append("<photo_id>");
-			xml.append(image_id);
-			xml.append("</photo_id>\n");
-
-			for(Enumeration e=comments.elements(); e.hasMoreElements();) {
-				XMLAble c=(XMLAble)e.nextElement();
-				xml.append(c.toXML());
-			}
-
-			xml.append("</photo_comments>\n");
-
-			return(xml.toString());
 		}
 	}
 

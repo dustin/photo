@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ResultsAction.java,v 1.2 2002/05/16 18:35:24 dustin Exp $
+// $Id: CursorAction.java,v 1.1 2002/05/17 06:20:56 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -15,12 +15,12 @@ import net.spy.photo.*;
 /**
  * Action to adjust a cursor before sending it to a result page.
  */
-public class ResultsAction extends PhotoAction {
+public class CursorAction extends PhotoAction {
 
 	/**
-	 * Get an instance of ResultsAction.
+	 * Get an instance of CursorAction.
 	 */
-	public ResultsAction() {
+	public CursorAction() {
 		super();
 	}
 
@@ -35,7 +35,7 @@ public class ResultsAction extends PhotoAction {
         CursorForm cf=(CursorForm)form;
 
         // Verify there's something to do.
-        if(cf.getStartOffset()!=null && cf.getWhichCursor()!=null) {
+        if(cf!=null && cf.getStartOffset()!=null && cf.getWhichCursor()!=null) {
             // Get the session data
             PhotoSessionData sessionData=getSessionData(request);
             // Get the cursoor

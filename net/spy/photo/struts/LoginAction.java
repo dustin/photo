@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginAction.java,v 1.3 2002/05/13 07:22:48 dustin Exp $
+// $Id: LoginAction.java,v 1.4 2002/05/17 06:20:56 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -38,8 +38,6 @@ public class LoginAction extends PhotoAction {
 		LoginForm lf=(LoginForm)form;
 
 		PhotoSessionData sessionData=getSessionData(request);
-		
-		System.out.println("Attempting a login as " + lf.getUsername());
 
 		PhotoUser user=Persistent.security.getUser(lf.getUsername());
 		if(user==null) {
@@ -53,7 +51,6 @@ public class LoginAction extends PhotoAction {
 
 			PhotoLogEntry ple=new PhotoLogEntry(user.getId(), "Login",request);
 			Persistent.logger.log(ple);
-			System.err.println("Logged in as " + user);
 		} else {
 			PhotoLogEntry ple=new PhotoLogEntry(
 				user.getId(), "AuthFail", request);

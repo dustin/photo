@@ -56,6 +56,7 @@ CLASSES=\
 	net/spy/photo/PhotoSearch.class \
 	net/spy/photo/PhotoSearch2.class \
 	net/spy/photo/Comment.class \
+	net/spy/photo/GroupedComments.class \
 	net/spy/photo/Vote.class \
 	net/spy/photo/Category.class \
 	net/spy/photo/PhotoSessionData.class \
@@ -92,7 +93,8 @@ CLASSES=\
 	net/spy/photo/struts/SearchForm.class \
 	net/spy/photo/struts/SearchAction.class \
 	net/spy/photo/struts/CursorForm.class \
-	net/spy/photo/struts/ResultsAction.class \
+	net/spy/photo/struts/CursorAction.class \
+	net/spy/photo/struts/ListCommentsAction.class \
 	net/spy/photo/util/BackupEntry.class \
 	net/spy/photo/util/AlbumBackupEntry.class \
 	net/spy/photo/util/PhotoBackup.class \
