@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.12 2001/07/03 07:48:52 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.13 2001/07/03 08:08:01 dustin Exp $
  */
 
 package net.spy.photo;
@@ -9,7 +9,6 @@ package net.spy.photo;
 import java.security.*;
 import java.util.*;
 import java.sql.*;
-import sun.misc.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;

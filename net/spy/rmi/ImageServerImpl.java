@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.8 2000/11/10 07:17:18 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.9 2001/07/03 08:08:01 dustin Exp $
 
 package net.spy.rmi;
 
@@ -13,10 +13,9 @@ import java.lang.*;
 import java.io.*;
 import java.sql.*;
 
-import sun.misc.*;
-
 import net.spy.*;
 import net.spy.photo.*;
+import net.spy.util.*;
 
 public class ImageServerImpl extends UnicastRemoteObject
 	implements ImageServer {
@@ -24,7 +23,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 	protected RHash rhash=null;
 	protected SpyConfig conf = null;
 
-	public ImageServerImpl(String config) throws RemoteException {
+	public ImageServerImpl(File config) throws RemoteException {
 		super();
 		conf=new SpyConfig(config);
 	}
@@ -243,8 +242,8 @@ public class ImageServerImpl extends UnicastRemoteObject
 			}
 
 			// If we got an exception, throw it
-			BASE64Decoder base64 = new BASE64Decoder();
-			byte data[]=base64.decodeBuffer(sdata);
+			Base64 base64 = new Base64();
+			byte data[]=base64.decode(sdata);
 			pi=new PhotoImage(data);
 			rhash.put(key, pi);
 		}
@@ -290,7 +289,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 			System.err.println("imageserver.conf path not given.");
 			throw new Exception("imageserver.conf path not given.");
 		}
-		ImageServerImpl i=new ImageServerImpl(args[0]);
+		ImageServerImpl i=new ImageServerImpl(new File(args[0]));
 		Naming.rebind("ImageServer", i);
 		System.err.println("ImageServer bound in registry");
 	}

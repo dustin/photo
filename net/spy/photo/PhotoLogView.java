@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogView.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
+ * $Id: PhotoLogView.java,v 1.2 2001/07/03 08:08:01 dustin Exp $
  */
 
 package net.spy.photo;
@@ -9,7 +9,6 @@ package net.spy.photo;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
-import sun.misc.*;
 
 import net.spy.*;
 

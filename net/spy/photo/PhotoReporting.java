@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoReporting.java,v 1.1 2000/06/28 05:53:40 dustin Exp $
+ * $Id: PhotoReporting.java,v 1.2 2001/07/03 08:08:01 dustin Exp $
  */
 
 package net.spy.photo;
@@ -9,7 +9,6 @@ package net.spy.photo;
 import java.security.*;
 import java.util.*;
 import java.sql.*;
-import sun.misc.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;

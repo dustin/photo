@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.12 2001/07/03 07:48:52 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.13 2001/07/03 08:08:01 dustin Exp $
  */
 
 package net.spy.photo;
@@ -10,12 +10,12 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.net.*;
-import sun.misc.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import net.spy.*;
+import net.spy.util.*;
 
 public class PhotoSearch extends PhotoHelper {
 
@@ -37,8 +37,8 @@ public class PhotoSearch extends PhotoHelper {
 				}
 			}
 		}
-		BASE64Encoder base64=new BASE64Encoder();
-		out=base64.encodeBuffer(out.getBytes());
+		Base64 base64=new Base64();
+		out=base64.encode(out.getBytes());
 		return(out);
 	}
 

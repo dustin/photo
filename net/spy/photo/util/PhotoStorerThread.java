@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.1 2000/12/26 04:16:11 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.2 2001/07/03 08:08:01 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -10,10 +10,10 @@ import java.sql.*;
 import java.lang.*;
 import java.util.*;
 import java.io.*;
-import sun.misc.*;
 
 import net.spy.*;
 import net.spy.photo.*;
+import net.spy.util.*;
 
 public class PhotoStorerThread extends Thread {
 
@@ -74,11 +74,11 @@ public class PhotoStorerThread extends Thread {
 			db = pdb.getConn();
 			db.setAutoCommit(false);
 			st = db.createStatement();
-			BASE64Encoder base64=new BASE64Encoder();
+			Base64 base64=new Base64();
 			String sdata = "";
 
 			for(; i<v.size(); i++) {
-				String tmp = base64.encodeBuffer((byte[])v.elementAt(i));
+				String tmp = base64.encode((byte[])v.elementAt(i));
 				tmp=tmp.trim();
 
 				if(sdata.length() < 2048) {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.7 2001/01/16 21:14:51 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.8 2001/07/03 08:08:01 dustin Exp $
  */
 
 package net.spy.photo;
@@ -9,12 +9,12 @@ package net.spy.photo;
 import java.lang.*;
 import java.util.*;
 import java.text.*;
+import java.io.File;
 
 import net.spy.*;
 
 // The class
-public class PhotoUtil
-{ 
+public class PhotoUtil extends Object { 
 	// Split that shit
 	public static String[] split(String on, String input) {
 		return(SpyUtil.split(on, input));
@@ -39,7 +39,7 @@ public class PhotoUtil
 		vars.put("STYLESHEET", "<link rel=\"stylesheet\"href=\""
 			+ p.self_uri + "?func=getstylesheet\">");
 		
-		ret = t.tokenize(conf.get("includes") + "/" + file, vars);
+		ret = t.tokenize(new File(conf.get("includes") + "/" + file), vars);
 		return(ret);
 	}
 
@@ -50,7 +50,7 @@ public class PhotoUtil
 
 		PhotoConfig conf = new PhotoConfig();
 		vars.put("LAST_MODIFIED", "recently");
-		ret = t.tokenize(conf.get("includes") + "/" + file, vars);
+		ret = t.tokenize(new File(conf.get("includes") + "/" + file), vars);
 		return(ret);
 	}
 

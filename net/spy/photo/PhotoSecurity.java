@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.10 2001/04/29 08:18:11 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.11 2001/07/03 08:08:01 dustin Exp $
  */
 
 package net.spy.photo;
@@ -9,10 +9,10 @@ package net.spy.photo;
 import java.security.*;
 import java.util.*;
 import java.sql.*;
-import sun.misc.*;
 
 import net.spy.*;
 import net.spy.cache.*;
+import net.spy.util.*;
 
 public class PhotoSecurity extends PhotoHelper {
 
@@ -32,8 +32,8 @@ public class PhotoSecurity extends PhotoHelper {
 		byte dataB[]=input.trim().getBytes();
 		MessageDigest md = MessageDigest.getInstance(conf.get("cryptohash"));
 		md.update(dataB);
-		BASE64Encoder base64=new BASE64Encoder();
-		String out = base64.encodeBuffer(md.digest());
+		Base64 base64=new Base64();
+		String out = base64.encode(md.digest());
 		out = out.replace('+', '/');
 		out=out.trim();
 		// Get rid of = signs.

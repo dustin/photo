@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.56 2001/07/03 07:48:52 dustin Exp $
+ * $Id: PhotoSession.java,v 1.57 2001/07/03 08:08:01 dustin Exp $
  */
 
 package net.spy.photo;
@@ -11,7 +11,6 @@ import java.sql.*;
 import java.util.*;
 import java.net.*;
 import java.text.*;
-import sun.misc.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -21,6 +20,7 @@ import com.oreilly.servlet.*;
 import net.spy.*;
 import net.spy.cache.*;
 import net.spy.log.*;
+import net.spy.util.*;
 
 // The class
 public class PhotoSession extends Object
@@ -323,14 +323,14 @@ public class PhotoSession extends Object
 			try {
 				out="";
 				photo=getDBConn();
-				BASE64Decoder base64 = new BASE64Decoder();
+				Base64 base64 = new Base64();
 				Statement st=photo.createStatement();
 
 				String query = "select * from searches order by name\n";
 				ResultSet rs = st.executeQuery(query);
 				while(rs.next()) {
 					byte data[];
-					data=base64.decodeBuffer(rs.getString(4));
+					data=base64.decode(rs.getString(4));
 					String tmp = new String(data);
 					out += "    <item link=\"" + self_uri + "?"
 						+ PhotoXSLT.normalize(tmp, true) + "\">"
