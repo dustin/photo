@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.4 2000/07/01 00:39:57 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.5 2000/07/05 21:45:55 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,12 +14,9 @@ import sun.misc.*;
 import net.spy.*;
 
 public class PhotoSecurity extends PhotoHelper {
-	// Secret string to verify authentication with
-	protected Hashtable userdb=null;
 
 	public PhotoSecurity() throws Exception {
 		super();
-		userdb=new Hashtable();
 	}
 
 	// Verify a password against what is stored in the database.
@@ -67,11 +64,15 @@ public class PhotoSecurity extends PhotoHelper {
 	protected PhotoUser getUser(String username) {
 		PhotoUser ret=null;
 
+		// Grab the cache
+		PhotoCache cache=new PhotoCache();
+		String key="sec_u_" + username;
+
 		// Get the data from cache
-		ret = (PhotoUser)userdb.get(username);
+		ret = (PhotoUser)cache.get(key);
 
 		// If it's not cached, grab it from the DB.
-		if(ret==null || isTooOld(ret)) {
+		if(ret==null) {
 			Connection photo=null;
 			try {
 				photo=getDBConn();
@@ -88,7 +89,8 @@ public class PhotoSecurity extends PhotoHelper {
 					u.email=rs.getString("email");
 					u.realname=rs.getString("realname");
 					u.canadd=rs.getBoolean("canadd");
-					userdb.put(u.username, u);
+					// User cache is valid for 30 minutes
+					cache.store(u.username, u, 30*60*1000);
 					ret=u;
 				}
 			} catch(Exception e) {
@@ -97,21 +99,6 @@ public class PhotoSecurity extends PhotoHelper {
 				if(photo!=null) {
 					freeDBConn(photo);
 				}
-			}
-		}
-
-		return(ret);
-	}
-
-	protected boolean isTooOld(PhotoUser p) {
-		boolean ret=false;
-		long time=System.currentTimeMillis();
-
-		// Hard code a 15m validity with a special case for guest
-		if(!p.username.equals("guest")) {
-			time-=(15*60*1000);
-			if(p.cachetime<time) {
-				ret=true;
 			}
 		}
 
