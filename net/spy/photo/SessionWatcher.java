@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.1 2002/06/07 19:51:03 dustin Exp $
+// $Id: SessionWatcher.java,v 1.2 2002/06/10 03:43:33 dustin Exp $
 
 package net.spy.photo;
 
@@ -13,35 +13,82 @@ import javax.servlet.http.*;
  */
 public class SessionWatcher extends Object implements HttpSessionListener {
 
-	private Vector allSessions=null;
+	private static Vector allSessions=new Vector();
 
 	/**
 	 * Get an instance of SessionWatcher.
 	 */
 	public SessionWatcher() {
 		super();
-		allSessions=new Vector();
 	}
 
 	/**
 	 * Called when a session is created.
 	 */
 	public void sessionCreated(HttpSessionEvent se) {
-		allSessions.addElement(se);
+		synchronized(allSessions) {
+			allSessions.addElement(se.getSession());
+		}
 	}
 
 	/**
 	 * Called when a session is destroyed.
 	 */
 	public void sessionDestroyed(HttpSessionEvent se) {
-		allSessions.removeElement(se);
+		synchronized(allSessions) {
+			allSessions.removeElement(se.getSession());
+		}
 	}
 
 	/**
 	 * Get the total number of sessions currently in this engine.
 	 */
-	public int totalSessions() {
-		return(allSessions.size());
+	public static int totalSessions() {
+		int rv=0;
+		synchronized(allSessions) {
+			rv=allSessions.size();
+		}
+		return(rv);
+	}
+
+	/**
+	 * Get the SessionData from each session that represents the given
+	 * user.
+	 */
+	public static Enumeration getSessionDataByUser(String username) {
+		Vector v=new Vector();
+
+		synchronized(allSessions) {
+			for(Enumeration e=allSessions.elements(); e.hasMoreElements(); ) {
+				HttpSession session=(HttpSession)e.nextElement();
+
+				if(session.getAttribute("photoSession") != null) {
+					PhotoSessionData sessionData=
+						(PhotoSessionData)session.getAttribute("photoSession");
+
+					// XXX:  I guess it's theoretically possible for some of
+					// this stuff to be null.
+					if(sessionData.getUser().getUsername().equals(username)) {
+						v.addElement(sessionData);
+					} // Correct username
+				} // Contains photo session data
+			} // Flipping through the sessions
+		} // allSession lock
+
+		return(v.elements());
+	}
+
+	/**
+	 * Return the number of sessions containing the given user.
+	 */
+	public static int getSessionCountByUser(String username) {
+		int rv=0;
+
+		for(Enumeration e=getSessionDataByUser(username);e.hasMoreElements();){
+			e.nextElement();
+		}
+
+		return(rv);
 	}
 
 }
