@@ -42,48 +42,48 @@ public class Persistent extends HttpServlet {
 			conf=PhotoConfig.getInstance();
 		}
 
+		try {
+			initStuff();
+		} catch(Exception e) {
+			throw new ServletException("Problem initting stuff", e);
+		}
+	}
+
+	private void initStuff() throws Exception {
 		// initialize the category list early on, because it's simple DB
 		// access and will look for no further data.
-		try {
-			log("Initializing categories.");
-			Category.getAdminCatList();
-		} catch(Exception e) {
-			throw new ServletException("Can't initialize categories.", e);
-		}
+		log("Initializing categories.");
+		Category.getAdminCatList();
 
 		// Security stuff
-		try {
-			log("Initing security");
-			security = new PhotoSecurity();
-			// Make sure we have initialized the guest user (and the
-			// database and all that)
-			log("Looking up guest.");
-			security.getUser("guest");
-			log("Finished security");
-		} catch(Exception e) {
-			throw new ServletException("Can't create security stuff", e);
-		}
+		log("Initing security");
+		security = new PhotoSecurity();
+		// Make sure we have initialized the guest user (and the
+		// database and all that)
+		log("Looking up guest.");
+		security.getUser("guest");
+		log("Finished security");
 
 		log("Initializing TransactionPipeline");
 		pipeline=new TransactionPipeline();
 		log("got TransactionPipeline");
 
 		log("Initializing image cache");
-		try {
-			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-			pidf.recache();
-		} catch(Exception e) {
-			throw new ServletException("Can't initialize image cache", e);
-		}
+		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+		pidf.recache();
 		log("Image cache initialization complete");
 
 		log("Initializing image server");
-		try {
-			ImageServerFactory.getImageServer();
-		} catch(PhotoException e) {
-			throw new ServletException("Can't initialize image server", e);
-		}
+		ImageServerFactory.getImageServer();
 		log("Image server initialization complete");
+
+		log("Initializing searches cache");
+		SavedSearch.getSearches();
+		log("Saved searches initialization complete");
+
+		log("Initializing properties cache");
+		PhotoProperties photoProps=new PhotoProperties();
+		log("Properties initialization complete");
 
 		log("Initialization complete");
 	}
