@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.4 2000/07/16 08:31:00 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.5 2000/07/20 21:29:26 dustin Exp $
 
 package net.spy.rmi;
 
@@ -74,6 +74,19 @@ public class ImageServerImpl extends UnicastRemoteObject
 		}
 	}
 
+	protected String dumpIS(InputStream s) {
+		String out="";
+		try {
+			byte b[]=new byte[s.available()];
+
+			s.read(b);
+			out=new String(b);
+		} catch(Exception e) {
+			log("Error dumping InputStream:  " + e);
+		}
+		return(out);
+	}
+
 	protected byte[] makeThumbnail(PhotoImage in, int image_id)
 		throws Exception {
 		Random r = new Random();
@@ -85,6 +98,8 @@ public class ImageServerImpl extends UnicastRemoteObject
 		try {
 			log("Creating " + tmpfilename);
 			FileOutputStream f = new FileOutputStream(tmpfilename);
+			InputStream stderr=null;
+			InputStream stdout=null;
 			f.write(in.getData());
 			f.flush();
 			f.close();
@@ -93,7 +108,14 @@ public class ImageServerImpl extends UnicastRemoteObject
 				+ " " + tmpfilename + " " + thumbfilename;
 			Runtime run = Runtime.getRuntime();
 			Process p = run.exec(command);
+			stderr=p.getErrorStream();
+			stdout=p.getInputStream();
 			p.waitFor();
+			log("Exit value was " + p.exitValue());
+			log("Stderr was as follows:\n" + dumpIS(stderr));
+			log("------");
+			log("Stdout was as follows:\n" + dumpIS(stdout));
+			log("------");
 
 			File file=new File(thumbfilename);
 			b=new byte[(int)file.length()];
