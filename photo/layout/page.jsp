@@ -1,12 +1,10 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib uri="/tlds/struts-tiles.tld" prefix="tiles" %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
 
-<%-- The following tags must be kept as-is --%>
-<photo:initSessionData/>
-<%-- <photo:logRequest/> --%>
 <html><head><title><tiles:insert attribute='title'/></title>
 <photo:stylesheet url="/style.css"/>
 </head>
@@ -22,7 +20,7 @@
 			<div>
 				Logged in as
 				<photo:link url="/credform.do">
-					<%= sessionData.getUser().getRealname() %>
+					<c:out value="${photoSession.user.realname}"/>
 				</photo:link>
 				<photo:admin>
 					<photo:link url="/adminify.do?action=unsetadmin">(admin)</photo:link>

@@ -44,13 +44,6 @@
 		</attribute>
 	</tag>
 
-	<!-- Ensure the PhotoSessionData object is initialized. -->
-	<tag>
-		<name>initSessionData</name>
-		<tagclass>net.spy.photo.taglib.InitSessionData</tagclass>
-		<teiclass>net.spy.photo.taglib.InitSessionDataExtraInfo</teiclass>
-	</tag>
-
 	<!-- Meta info displayer. -->
 	<tag>
 		<name>showMetaInfo</name>
