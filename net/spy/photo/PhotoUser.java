@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.16 2002/06/22 22:07:33 dustin Exp $
+// $Id: PhotoUser.java,v 1.17 2002/06/23 01:17:01 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -118,8 +118,10 @@ public class PhotoUser extends Object implements Serializable {
 	 * Remove an ACL entry.
 	 */
 	public void removeACLEntry(int cat) {
-		Integer c=new Integer(cat);
-		acl.remove(c);
+		PhotoACLEntry entry=getACLEntryForCat(cat);
+		if(entry!=null) {
+			acl.remove(entry);
+		}
 	}
 
 	/**

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.2 2002/06/20 05:01:18 dustin Exp $
+// $Id: Category.java,v 1.3 2002/06/23 01:17:01 dustin Exp $
 
 package net.spy.photo;
 
@@ -27,16 +27,219 @@ public class Category extends Object {
 	private int id=-1;
 	private String name=null;
 
+	private Vector acl=null;
+
 	/**
 	 * Get an instance of Category.
 	 */
 	public Category() {
 		super();
+		acl=new Vector();
 	}
 
 	private Category(ResultSet rs) throws SQLException {
 		id=rs.getInt("id");
 		name=rs.getString("name");
+	}
+
+	/**
+	 * Lookup a category by integer ID.
+	 */
+	public static Category lookupCategory(int catId) throws Exception {
+		Category rv=null;
+
+		SpyDB db=new SpyDB(new PhotoConfig());
+		ResultSet rs=db.executeQuery("select * from cat where id=" + catId);
+		if(!rs.next()) {
+			throw new Exception("No such category:  " + catId);
+		}
+		rv=new Category(rs);
+		rs.close();
+		db.close();
+
+		return(rv);
+	}
+
+	/**
+	 * Load the ACLs for this Category instance.
+	 */
+	public void loadACLs() throws Exception {
+		
+		SpyDB db=new SpyDB(new PhotoConfig());
+		PreparedStatement pst=db.prepareStatement(
+			"select distinct userid, canview, canadd\n"
+				+ " from wwwacl where cat=?");
+		pst.setInt(1, id);
+		ResultSet rs=pst.executeQuery();
+
+		// Add the ACL entries
+		acl=new Vector();
+		while(rs.next()) {
+			int uid=rs.getInt("userid");
+			if(rs.getBoolean("canview")) {
+				addViewACLEntry(uid);
+			}
+			if(rs.getBoolean("canadd")) {
+				addAddACLEntry(uid);
+			}
+		}
+		rs.close();
+		pst.close();
+		db.close();
+	}
+
+	/**
+	 * Save this category and ACL entries.
+	 */
+	public void save() throws Exception {
+		SpyDB db=new SpyDB(new PhotoConfig());
+		Connection conn=null;
+		try {
+			conn=db.getConn();
+			conn.setAutoCommit(false);
+			PreparedStatement pst=null;
+
+			// What to do here depends on whether it's a new category or a
+			// modification of an existing category.
+			if(id>=0) {
+				// Existing user
+				pst=conn.prepareStatement("update cat set name=? where id=?");
+				pst.setInt(2, id);
+			} else {
+				pst=conn.prepareStatement("insert into cat(name) values(?)");
+			}
+
+			// Set the common fields
+			pst.setString(1, name);
+			// Save the category proper
+			pst.executeUpdate();
+			pst.close();
+
+			// If'n it's a new category, let's look up the ACL we just saved.
+			if(id==-1) {
+				Statement st=conn.createStatement();
+				ResultSet rs=st.executeQuery(
+					"select currval('cat_id_seq')");
+				if(!rs.next()) {
+					throw new PhotoException(
+						"No results returned while looking up new cat id");
+				}
+				id=rs.getInt(1);
+				rs.close();
+				st.close();
+				System.err.println("New category:  " + id);
+			}
+
+			// OK, now deal with the ACLs
+
+			// Out with the old
+			pst=conn.prepareStatement("delete from wwwacl where cat=?");
+			pst.setInt(1, id);
+			pst.executeUpdate();
+			pst.close();
+
+			// In with the new
+
+			pst=conn.prepareStatement(
+				"insert into wwwacl(userid, cat, canview, canadd) "
+					+ "values(?,?,?,?)");
+
+			for(Enumeration e=getACLEntries(); e.hasMoreElements(); ) {
+				PhotoACLEntry aclEntry=(PhotoACLEntry)e.nextElement();
+
+				pst.setInt(1, aclEntry.getUid());
+				pst.setInt(2, id);
+				pst.setBoolean(3, aclEntry.canView());
+				pst.setBoolean(4, aclEntry.canAdd());
+				pst.executeUpdate();
+			}
+			pst.close();
+			conn.commit();
+		} catch(Exception e) {
+			if(conn!=null) {
+				conn.rollback();
+			}
+			throw e;
+		} finally {
+			if(conn!=null) {
+				conn.setAutoCommit(true);
+			}
+			// Tell it we're done
+			db.close();
+		}
+	}
+
+	/**
+	 * Get the ACL entries for this category.
+	 */
+	public Enumeration getACLEntries() {
+		return(acl.elements());
+	}
+
+	/**
+	 * Get an ACL entry for the given user.
+	 *
+	 * @param userid the numeric user ID of the user to look up
+	 *
+	 * @return the entry, or null if there's no entry for the given user
+	 */
+	public PhotoACLEntry getACLEntryForUser(int userid) {
+		PhotoACLEntry rv=null;
+
+		for(Enumeration e=getACLEntries(); rv==null && e.hasMoreElements();) {
+			PhotoACLEntry acl=(PhotoACLEntry)e.nextElement();
+
+			if(acl.getUid() == userid) {
+				rv=acl;
+			}
+		}
+
+		return(rv);
+	}
+
+	// Same as above, but create a new entry if there isn't one.
+	private PhotoACLEntry getACLEntryForUser2(int userid) {
+		PhotoACLEntry rv=getACLEntryForUser(userid);
+		if(rv==null) {
+			rv=new PhotoACLEntry(userid, getId());
+			acl.addElement(rv);
+		}
+		return(rv);
+	}
+
+	/**
+	 * Add an ACL entry permitting the given user ID to view this
+	 * category.
+	 */
+	public void addViewACLEntry(int userid) {
+		PhotoACLEntry aclEntry=getACLEntryForUser2(userid);
+		aclEntry.setCanView(true);
+	}
+
+	/**
+	 * Add an ACL entry permitting the given user ID to add to this
+	 * category.
+	 */
+	public void addAddACLEntry(int userid) {
+		PhotoACLEntry aclEntry=getACLEntryForUser2(userid);
+		aclEntry.setCanAdd(true);
+	}
+
+	/**
+	 * Remove an entry for a given user.
+	 */
+	public void removeACLEntry(int userid) {
+		PhotoACLEntry entry=getACLEntryForUser(userid);
+		if(entry!=null) {
+			acl.remove(entry);
+		}
+	}
+
+	/**
+	 * Remove all ACL entries.
+	 */
+	public void removeAllACLEntries() {
+		acl.clear();
 	}
 
 	/**
@@ -125,6 +328,13 @@ public class Category extends Object {
 	 */
 	public String getName() {
 		return(name);
+	}
+
+	/**
+	 * Set the name of this category.
+	 */
+	public void setName(String to) {
+		this.name=to;
 	}
 
 	/**

@@ -13,16 +13,16 @@
 	<template:put name='title' content='Category Administration' direct='true'/>
 </template:insert>
 
-<form method="POST" action="/photo/PhotoServlet">
-	<input type=hidden name=func value=admcatedit>
-	<select name=cat>
-		<option value="-1">New Category</option>
+<html:form action="/admcatedit">
+	<html:select property="catId">
+		<html:option value="-1">New Category</html:option>
 		<logic:iterate id="i" collection="<%= Category.getAdminCatList() %>">
 			<% Category cat=(Category)i; %>
 
-			<option value="<%= cat.getId() %>"><%= cat.getName() %>
+			<html:option value="<%= "" + cat.getId() %>"><%= cat.getName() %>
+			</html:option>
 		</logic:iterate>
-	</select>
+	</html:select>
 
-	<input type="submit" value="Edit">
-</form>
+	<html:submit>Edit</html:submit>
+</html:form>

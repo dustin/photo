@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoACLEntry.java,v 1.1 2001/12/28 12:39:37 dustin Exp $
+// $Id: PhotoACLEntry.java,v 1.2 2002/06/23 01:17:01 dustin Exp $
 
 package net.spy.photo;
 
@@ -21,6 +21,21 @@ public class PhotoACLEntry extends Object implements java.io.Serializable {
 		super();
 		this.uid=uid;
 		this.cat=cat;
+	}
+
+	/**
+	 * True for PhotoACLEntry instances that reference the same user and
+	 * category, regardless of flags.
+	 */
+	public boolean equals(Object o) {
+		boolean rv=false;
+
+		if(o instanceof PhotoACLEntry) {
+			PhotoACLEntry entry=(PhotoACLEntry)o;
+			rv = (uid==entry.uid && cat==entry.cat);
+		}
+
+		return(rv);
 	}
 
 	/**
