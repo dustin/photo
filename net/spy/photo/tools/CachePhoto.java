@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePhoto.java,v 1.9 2002/07/10 04:00:17 dustin Exp $
+ * $Id: CachePhoto.java,v 1.10 2002/11/03 08:56:01 dustin Exp $
  */
 
 package net.spy.photo.tools;
@@ -234,10 +234,16 @@ public class CachePhoto extends Object {
 			return("" + lt + "s");
 		}
 
+		public double getCurrentAverage() {
+			double avgProcessTime=((double)totalTime/(double)done)/1000.0;
+
+			return (avgProcessTime);
+		}
+
 		public String getStats() {
 			String rv=null;
 			try {
-				double avgProcessTime=((double)totalTime/(double)done)/1000.0;
+				double avgProcessTime=getCurrentAverage();
 				double estimate=avgProcessTime*(double)left;
 
 				java.text.NumberFormat nf=java.text.NumberFormat.getInstance();
