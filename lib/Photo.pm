@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.60 1998/11/25 09:47:25 dustin Exp $
+# $Id: Photo.pm,v 1.61 1998/11/25 09:53:55 dustin Exp $
 
 package Photo;
 
@@ -266,9 +266,8 @@ sub saveSearch
 	my($self, $q)=@_;
 	my($query, $name, %p);
 
-	# Don't allow guest, we'll probably have a better way to do this in the
-	# future.
-	if($ENV{'REMOTE_USER'} eq "guest") {
+	# don't allow anyone who doesn't have the canadd flag set.
+	if($self->canadd($ENV{'REMOTE_USER'})!=1) {
 		$self->showTemplate("$Photo::includes/savesearch_deny.inc", ());
 		return;
 	}
@@ -567,6 +566,20 @@ sub myquote
 	return($self->{'dbh'}->quote($str));
 }
 
+sub canadd {
+	my($self, $user)=@_;
+	my($r, $s, $query, $ret);
+
+	$user=$self->myquote($user);
+
+	$query="select canadd from wwwusers where username=$user\n";
+	$s=$self->doQuery($query);
+	$r=$s->fetch;
+	$s->finish;
+	$ret=$r?$r->[0]:0;
+	return($ret);
+}
+
 sub addImage
 {
 	my($self, $q)=@_;
@@ -580,15 +593,10 @@ sub addImage
 
 	$self->start_html($q, 'Adding image');
 
-	$query="select canadd from wwwusers\n".
-		   "where username='$ENV{'REMOTE_USER'}'\n";
-	$s=$self->doQuery($query);
-	$r=$s->fetch;
-	if($r->[0]!=1) {
+	if($self->canadd($ENV{'REMOTE_USER'})!=1) {
 		$self->showTemplate("$Photo::includes/add_denied.inc", ());
 		return;
 	}
-	$s->finish;
 
 	if($in{'picture'}=~/jpg.$/i) {
 		$ext="jpg";
