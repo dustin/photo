@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.87 2002/02/20 09:11:13 dustin Exp $
+ * $Id: PhotoSession.java,v 1.88 2002/02/20 11:32:12 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1433,7 +1433,7 @@ public class PhotoSession extends Object
 	private String showImage() throws ServletException {
 
 		int which=-1;
-		boolean thumbnail=false;
+		String size=null;
 		ServletOutputStream out=null;
 
 		verifyField("photo_id", 1);
@@ -1442,7 +1442,12 @@ public class PhotoSession extends Object
 
 		s=request.getParameter("thumbnail");
 		if(s!=null) {
-			thumbnail=true;
+			PhotoConfig conf=new PhotoConfig();
+			size=conf.get("thumbnail_size", "220x146");;
+		}
+		s=request.getParameter("scale");
+		if(s!=null) {
+			size=s;
 		}
 
 		try {
@@ -1455,21 +1460,18 @@ public class PhotoSession extends Object
 			// Image data
 			PhotoImage image=null;
 
-			if(thumbnail) {
-				// log("Requesting thumbnail");
+			// Allow all images to be cached for a bit.
+			long l=System.currentTimeMillis();
+			// This is ten minutes in milliseconds.
+			l+=600000;
+			// response.setDateHeader("Expires", l);
 
-				// We're going to go ahead and allow the thumbnails to be
-				// cached for an hour.
-				long l=System.currentTimeMillis();
-				// This is an hour in milliseconds.
-				l+=3600000;
-				response.setDateHeader("Expires", l);
-
-				image=p.getThumbnail(sessionData.getUser().getId());
-			} else {
-				// log("Requesting full image");
-				image=p.getImage(sessionData.getUser().getId());
+			PhotoDimensions pdim=null;
+			if(size!=null) {
+				pdim=new PhotoDimensionsImpl(size);
 			}
+			log("Fetching " + which + " scaled to " + pdim);
+			image=p.getImage(sessionData.getUser().getId(), pdim);
 
 			logger.log(new PhotoLogImageEntry(sessionData.getUser().getId(),
 				which, true, request));

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.4 2002/01/17 10:09:29 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.5 2002/02/20 11:32:12 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -46,7 +46,7 @@ public class PhotoStorerThread extends Thread {
 		SpyDB pdb = getDB();
 		Connection db = null;
 		Statement st = null;
-		PhotoImage pi = p.getImage();
+		PhotoImage pi = p.getImage(null);
 		System.err.println("Storer: Got image for " + image_id + " " 
 			+ pi.size() + " bytes of data to store.");
 		// This is an awkward way of doing this.

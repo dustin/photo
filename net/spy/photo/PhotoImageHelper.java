@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.10 2002/01/10 10:44:40 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.11 2002/02/20 11:32:12 dustin Exp $
  */
 
 package net.spy.photo;
@@ -34,18 +34,19 @@ public class PhotoImageHelper extends PhotoHelper
 	/**
 	 * Get the full image on behalf of a user.
 	 */
-	public PhotoImage getImage(int uid) throws Exception {
+	public PhotoImage getImage(int uid, PhotoDimensions dim) throws Exception {
 		PhotoSecurity.checkAccess(uid, image_id);
-		return(getImage());
+		return(getImage(dim));
 	}
 
 	/**
 	 * Get the full image.
 	 */
-	public PhotoImage getImage() throws Exception {
+	public PhotoImage getImage(PhotoDimensions dim)
+		throws Exception {
 		ensureConnected();
 		// log("Getting image " + image_id + " from ImageServer");
-		return(server.getImage(image_id, false));
+		return(server.getImage(image_id, dim));
 	}
 
 	/**

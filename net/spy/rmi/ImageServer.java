@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServer.java,v 1.2 2001/04/29 08:18:11 dustin Exp $
+// $Id: ImageServer.java,v 1.3 2002/02/20 11:32:12 dustin Exp $
 
 package net.spy.rmi;
 
@@ -20,10 +20,20 @@ public interface ImageServer extends Remote {
 	 * @param thumbnail if true, returns the image as a thumbnail
 	 */
 	PhotoImage getImage(int image_id, boolean thumbnail) throws RemoteException;
+
+	/**
+	 * Get an image by ID at a specific size.
+	 *
+	 * @param image_id the image you want to get
+	 * @param dim the dimensions representing the max dimensions of the image
+	 */
+	PhotoImage getImage(int image_id, PhotoDimensions dim) throws RemoteException;
+
 	/**
 	 * Store the image by ID.
 	 */
 	void storeImage(int image_id, PhotoImage image) throws RemoteException;
+
 	/**
 	 * Determine if the remote end is still listening.
 	 */

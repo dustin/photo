@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.11 2001/12/28 01:54:13 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.12 2002/02/20 11:32:12 dustin Exp $
 
 package net.spy.rmi;
 
@@ -17,28 +17,34 @@ import net.spy.*;
 import net.spy.photo.*;
 import net.spy.util.*;
 
+/**
+ * Implementation of the image server.
+ */
 public class ImageServerImpl extends UnicastRemoteObject
 	implements ImageServer {
 
-	protected RHash rhash=null;
-	protected SpyConfig conf = null;
+	private RHash rhash=null;
+	private SpyConfig conf = null;
+	private boolean debug=false;
 
+	/**
+	 * Get an ImageServerImpl using the given config.
+	 */
 	public ImageServerImpl(File config) throws RemoteException {
 		super();
 		conf=new SpyConfig(config);
 	}
 
-	public PhotoImage getImage(int image_id, boolean thumbnail)
+	public PhotoImage getImage(int image_id, PhotoDimensions dim)
 		throws RemoteException {
 		PhotoImage image_data=null;
-		if(rhash==null) {
-			getRhash();
-		}
+		debug("Requested image " + image_id + " at scale " + dim);
 		try {
-			if(thumbnail) {
-				image_data=fetchThumbnail(image_id);
-			} else {
+
+			if(dim==null) {
 				image_data=fetchImage(image_id);
+			} else {
+				image_data=fetchScaledImage(image_id, dim);
 			}
 		} catch(Exception e) {
 			log("Error fetching image:  " + e);
@@ -50,17 +56,46 @@ public class ImageServerImpl extends UnicastRemoteObject
 		return(image_data);
 	}
 
+	private PhotoImage fetchScaledImage(int image_id, PhotoDimensions dim)
+		throws Exception {
+
+		PhotoImage pi=null;
+		String key = "photo_" + image_id + "_"
+			+ dim.getWidth() + "x" + dim.getHeight();
+
+		// Try cache first
+		getRhash();
+		pi=(PhotoImage)rhash.get(key);
+		if(pi==null) {
+			// Not in cache, get it
+			pi=fetchImage(image_id);
+			// Scale it
+			pi=scaleImage(pi, image_id, dim);
+			// Store it
+			rhash.put(key, pi);
+			log("Stored " + image_id + " with key " + key);
+		} else {
+			debug("Found " + key + "(" + key.hashCode() + ") in cache.");
+		}
+
+		return(pi);
+	}
+
+	public PhotoImage getImage(int image_id, boolean thumbnail)
+		throws RemoteException {
+		PhotoDimensions dim=null;
+		PhotoConfig sconf=new PhotoConfig();
+		if(thumbnail) {
+			dim=new PhotoDimensionsImpl(sconf.get("thumbnail_size", "220x146"));
+		}
+		return(getImage(image_id, dim));
+	}
+
 	public void storeImage(int image_id, PhotoImage image)
 		throws RemoteException {
 		// Make sure we've calculated the width and height
 		image.getWidth();
-		if(rhash==null) {
-			getRhash();
-			if(rhash==null) {
-				log("Can't get an RHash connection");
-				throw new RemoteException("Can't get an RHash connection");
-			}
-		}
+		getRhash();
 		try {
 			rhash.put("photo_" + image_id, image);
 		} catch(Exception e) {
@@ -70,7 +105,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 		}
 	}
 
-	protected String dumpIS(InputStream s) {
+	private String dumpIS(InputStream s) {
 		String out="";
 		try {
 			byte b[]=new byte[s.available()];
@@ -88,13 +123,19 @@ public class ImageServerImpl extends UnicastRemoteObject
 		return(out);
 	}
 
-	protected byte[] makeThumbnail(PhotoImage in, int image_id)
-		throws Exception {
+	private PhotoImage scaleImage(
+		PhotoImage in, int id, PhotoDimensions dim) throws Exception {
 		Random r = new Random();
-		String part = "/tmp/image." + r.nextInt() + "." + image_id;
+		String part = "/tmp/image." + id + "." + Math.abs(r.nextInt());
 		String thumbfilename = part + ".tn.jpg";
 		String tmpfilename=part + ".jpg";
 		byte b[]=null;
+
+		// OK, got our filenames, now let's calculate the new size:
+		PhotoDimensions imageSize=new PhotoDimensionsImpl(in.getWidth(),
+			in.getHeight());
+		PhotoDimScaler pds=new PhotoDimScaler(imageSize);
+		PhotoDimensions newSize=pds.scaleTo(dim);
 
 		try {
 			// Need these for the process.
@@ -114,7 +155,9 @@ public class ImageServerImpl extends UnicastRemoteObject
 			f.flush();
 			f.close();
 
-			String command=tmp + " " + tmpfilename + " " + thumbfilename;
+			String command=tmp + " -geometry "
+				+ newSize.getWidth() + "x" + newSize.getHeight()
+				+ " " + tmpfilename + " " + thumbfilename;
 			log("Running " + command);
 			Runtime run = Runtime.getRuntime();
 			Process p = run.exec(command);
@@ -145,9 +188,8 @@ public class ImageServerImpl extends UnicastRemoteObject
 			fin.read(b);
 
 		} catch(Exception e) {
-			log("Error making thumbnail:  " + e);
-			e.printStackTrace();
-			throw new Exception("Error making thumbnail:  " + e);
+			log("Error scaling image:  " + e);
+			throw e;
 		} finally {
 			try {
 				File f = new File(tmpfilename);
@@ -158,118 +200,63 @@ public class ImageServerImpl extends UnicastRemoteObject
 				// No need to do anything, that's just cleanup.
 			}
 		}
-		return(b);
+		return(new PhotoImage(b));
 	}
 
-	// Fetch a thumbnail of an image 
-	protected PhotoImage fetchThumbnail(int image_id) throws Exception {
-		String key="photo_tn_" + image_id;
-		PhotoImage pi=null;
-
-		if(rhash!=null) {
-			pi=(PhotoImage)rhash.get(key);
-		}
-
-		if(pi==null) {
-			// Make a thumbnail out of the fullsize image
-			byte data[]=makeThumbnail(fetchImage(image_id), image_id);
-			pi=new PhotoImage(data);
-			if(rhash!=null) {
-				rhash.put(key, pi);
-			} else {
-				log("The rhash is null, unable to cache images.");
-			}
-
-			// See if we can record this...
-			Connection conn=null;
-			try {
-				conn=getDBConn();
-				PreparedStatement st=conn.prepareStatement(
-					"update album set tn_width=?, tn_height=?\n"
-						+ " where id=?\n"
-					);
-				st.setInt(1, pi.getWidth());
-				st.setInt(2, pi.getHeight());
-				st.setInt(3, image_id);
-				st.executeUpdate();
-			} catch(Exception e) {
-				log("Error updating thumbnail info:  " + e);
-				e.printStackTrace();
-			} finally {
-				freeDBConn(conn);
-			}
-		}
-
-		return(pi);
-	}
-
-	protected void log(String what) {
+	private void log(String what) {
 		System.err.println(what);
 	}
 
+	private void debug(String what) {
+		if(debug) {
+			System.err.println(what);
+		}
+	}
+
 	// Fetch an image
-	protected PhotoImage fetchImage(int image_id) throws Exception {
+	private PhotoImage fetchImage(int image_id) throws Exception {
 		String key=null;
 		PhotoImage pi=null;
 
 		key = "photo_" + image_id;
 
-		if(rhash!=null) {
-			pi=(PhotoImage)rhash.get(key);
-		}
+		getRhash();
+		pi=(PhotoImage)rhash.get(key);
 
 		if(pi==null) {
 			Connection photo=null;
-			String sdata="";
+			StringBuffer sdata=new StringBuffer();
 
 			try {
-				photo=getDBConn();
+				SpyDB db=new SpyDB(new PhotoConfig());
 				String query="select * from image_store where id = ?\n"
 					+ " order by line";
-				PreparedStatement st = photo.prepareStatement(query);
+				PreparedStatement st = db.prepareStatement(query);
 				st.setInt(1, image_id);
 				ResultSet rs = st.executeQuery();
 
 				while(rs.next()) {
-					sdata+=rs.getString(3);
+					sdata.append(rs.getString("data"));
 				}
+				rs.close();
+				db.close();
 
 			} catch(Exception e) {
 				log("Problem getting image:  " + e);
 				e.printStackTrace();
 				throw new Exception("Problem getting image: " + e);
-			} finally {
-				freeDBConn(photo);
 			}
 
 			// If we got an exception, throw it
 			Base64 base64 = new Base64();
-			byte data[]=base64.decode(sdata);
+			byte data[]=base64.decode(sdata.toString());
 			pi=new PhotoImage(data);
 			rhash.put(key, pi);
+		} else {
+			debug("Found " + key + " in cache.");
 		}
 
 		return(pi);
-	}
-
-	protected Connection getDBConn() throws Exception {
-		Connection photo;
-		String source;
-
-		Class.forName(conf.get("db.driver"));
-		source=conf.get("db.url");
-		photo = DriverManager.getConnection(source,
-			conf.get("db.user"), conf.get("db.pass"));
-		return(photo);
-	}
-
-	protected void freeDBConn(Connection conn) {
-		try {
-			conn.close();
-		} catch(Exception e) {
-			log("Error closing database:  " + e);
-			e.printStackTrace();
-		}
 	}
 
 	public boolean ping() throws RemoteException {
@@ -277,13 +264,16 @@ public class ImageServerImpl extends UnicastRemoteObject
 	}
 
 	// Get a cache object server
-	protected void getRhash() {
+	private void getRhash() throws RemoteException {
 		try {
-			rhash = new RHash(conf.get("rhash.url"));
+			if(rhash==null) {
+				rhash = new RHash(conf.get("rhash.url"));
+			}
 		} catch(Exception e) {
 			log("Error getting RHash");
 			e.printStackTrace();
 			rhash=null;
+			throw new RemoteException("Error getting RHash", e);
 		}
 	}
 

@@ -50,7 +50,7 @@ public class PhotoMigration01 extends PhotoMigration {
 				int id=rs.getInt(1);
 				System.out.println("Doing image #" + id);
 				PhotoImageHelper helper=new PhotoImageHelper(id);
-				PhotoImage image=helper.getImage();
+				PhotoImage image=helper.getImage(null);
 
 				System.out.println("Image " + id + " is "
 					+ image.getWidth() + "x" + image.getHeight());
