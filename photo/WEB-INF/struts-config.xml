@@ -89,7 +89,7 @@
 		type="net.spy.photo.struts.SearchAction"
 		input="/search.jsp"
 		name="searchForm">
-		<forward name="success" path="/nextresults.do" />
+		<forward name="success" path="/filterSearch.do" />
 	</action>
 
 	<!-- Search result cursor movement -->
@@ -110,6 +110,13 @@
 		type="net.spy.photo.struts.CursorAction"
 		name="cursorForm">
 		<forward name="success" path="/comments.jsp" />
+	</action>
+
+	<!-- Search result filtering -->
+	<action path="/filterSearch"
+		type="net.spy.photo.struts.SearchFilterAction"
+		name="searchForm">
+		<forward name="success" path="/nextresults.do"/>
 	</action>
 
 	<!-- Image uploads -->

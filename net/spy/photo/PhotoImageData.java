@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.5 2002/06/23 02:10:40 dustin Exp $
+// $Id: PhotoImageData.java,v 1.6 2002/06/29 07:13:56 dustin Exp $
 
 package net.spy.photo;
 
@@ -49,16 +49,6 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 	 */
 	public String toString() {
 		return("{PhotoImageData id=" + id + " - " + dimensions + "}");
-	}
-
-	private void xMLement(StringBuffer sb, String name, String value) {
-		sb.append("<");
-		sb.append(name);
-		sb.append(">");
-		sb.append(value);
-		sb.append("</");
-		sb.append(name);
-		sb.append(">\n");
 	}
 
 	private void initFromResultSet(ResultSet rs) throws Exception {

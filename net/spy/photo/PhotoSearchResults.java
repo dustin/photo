@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.15 2002/05/21 07:45:09 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.16 2002/06/29 07:13:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -15,16 +15,14 @@ import net.spy.*;
  * Represents results from a search.
  */
 public class PhotoSearchResults extends Cursor {
-	private String self_uri=null;
 
 	private PhotoDimensions maxSize=null;
 
 	/**
-	 * Get a search results object for the given URI.
+	 * Get a search results object.
 	 */
-	public PhotoSearchResults(String self_uri) {
+	public PhotoSearchResults() {
 		super();
-		this.self_uri=self_uri;
 	}
 
 	/**
@@ -47,17 +45,17 @@ public class PhotoSearchResults extends Cursor {
 	}
 
 	/**
+	 * Get the maximum image size to be represented.
+	 */
+	public PhotoDimensions getMaxSize() {
+		return(maxSize);
+	}
+
+	/**
 	 * Add a photo ID to the result list.
 	 */
 	public void add(Integer what) {
 		addElement(what);
-	}
-
-	/**
-	 * Get the URI this result was built from.
-	 */
-	public String getURI() {
-		return(self_uri);
 	}
 
 	/**

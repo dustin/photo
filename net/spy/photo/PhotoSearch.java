@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.25 2002/06/23 07:01:03 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.26 2002/06/29 07:13:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -232,6 +232,12 @@ public class PhotoSearch extends PhotoHelper {
 			sb.append(URLEncoder.encode(form.getMaxret()));
 			sb.append('&');
 		}
+		if(form.getFilter() != null) {
+			sb.append("filter");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getFilter()));
+			sb.append('&');
+		}
 
 		if(form.getCat() != null) {
 			String cats[]=form.getCat();
@@ -255,7 +261,7 @@ public class PhotoSearch extends PhotoHelper {
 		SearchForm form, PhotoSessionData sessionData)
 		throws ServletException {
 
-		PhotoSearchResults results=new PhotoSearchResults("PhotoServlet");
+		PhotoSearchResults results=new PhotoSearchResults();
 		results.setMaxSize(sessionData.getOptimalDimensions());
 
 		try {

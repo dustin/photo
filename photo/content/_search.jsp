@@ -179,6 +179,18 @@
 
 		<br/>
 
+		<bean:message key="forms.search.adv.filter"/>
+		<html:select property="filter">
+			<html:option value="">
+				<bean:message key="forms.search.adv.filter.none"/>
+			</html:option>
+			<html:option value="onceamonth">
+				<bean:message key="forms.search.adv.filter.onceamonth"/>
+			</html:option>
+		</html:select>
+
+		<br/>
+
 		<html:submit><bean:message key="forms.search.adv.submit"/></html:submit>
 		<html:reset><bean:message key="forms.search.adv.reset"/></html:reset>
 	</p>

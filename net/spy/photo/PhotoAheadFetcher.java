@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.16 2002/05/21 07:45:08 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.17 2002/06/29 07:13:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -66,7 +66,6 @@ public class PhotoAheadFetcher extends Object {
 		// We got a notify, fetch ahead.
 		private void fetchAhead() throws Exception {
 			PhotoSearchResults r=results;
-			String self_uri=r.getURI();
 
 			// OK, we're not going to use the normal next() method on the
 			// resultset because we don't want to modify the result set.
