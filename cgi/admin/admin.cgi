@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.3 1998/05/02 21:10:22 thanatos Exp $
+# $Id: admin.cgi,v 1.4 1998/05/21 06:20:03 dustin Exp $
 
 use CGI;
 use Photo;
@@ -88,14 +88,17 @@ sub editCat
 sub listRecent
 {
     my($q, $p)=@_;
-    my($query, $s, $r, %p);
+    my($query, $s, $r, %p, $start, $i, $maxret);
 
     print $q->start_html(-title=>'Image Administration',
 		         -bgcolor=>'#fFfFfF');
 
     $query ="select a.id,a.name,b.oid,b.cat,b.keywords,b.taken,b.ts,b.fn\n";
-    $query.="    from cat a, album b where a.id=b.cat ";
-    $query.="    order by a.name, b.ts;";
+    $query.="    from cat a, album b where a.id=b.cat\n";
+    $query.="\tand b.cat=$i\n" if(defined($i=$q->param('cat')));
+    $query.="    order by a.name, b.ts desc;";
+
+    print "<!-- $query -->\n";
 
     $s=$p->doQuery($query);
 
@@ -103,14 +106,44 @@ sub listRecent
 
     $p->showTemplate("$Photo::includes/admin/recent.inc", %p);
 
+    $i=0;
+    if(defined($start=$q->param('qstart'))) {
+	while($i<$start) {$s->fetch; $i++}
+    }
+    if(!defined($maxret=$q->param('maxret'))) {
+	$maxret=20;
+    }
+    $i=$maxret;
+
     while($r=$s->fetch)
     {
         ($p{'AID'},$p{'CAT'},$p{'OID'},$p{'BCAT'},$p{'KEYWORDS'},
 	 $p{'TAKEN'},$p{'TS'},$p{'IMAGE'})=@{$r};
          $p->showTemplate("$Photo::includes/admin/recent_row.inc", %p);
+
+	 last if(--$i==0);
     }
 
     print "</table>\n";
+
+    map { $q->delete($_) } qw(qstart);
+
+    if( (($start+$maxret) < $s->rows) && $maxret>0) {
+        print $q->startform(-method=>'POST',-action=>$q->url);
+        print $q->hidden(-name=>'qstart', '-value'=>($start+$maxret));
+        print $q->hidden(-name=>'func');
+        print $q->hidden(-name=>'cat');
+	print $q->hidden(-name=>'maxret', '-value'=>$maxret);
+
+	if(($s->rows-($start+$maxret))<$maxret) {
+	    $i=($s->rows-($start+$maxret));
+	    $i=($i==1)?"match":"$i matches";
+	} else {
+	    $i="$maxret matches";
+	}
+        print $q->submit(-value=>"Next $i");
+        print $q->endform;
+    }
 }
 
 sub listUsers
