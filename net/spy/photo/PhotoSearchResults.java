@@ -1,19 +1,20 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.6 2000/12/26 03:30:59 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.7 2001/01/31 18:50:02 dustin Exp $
  */
 
 package net.spy.photo;
 
 import java.util.*;
+import java.io.Serializable;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import net.spy.*;
 
-public class PhotoSearchResults extends Object {
+public class PhotoSearchResults extends Object implements Serializable {
 	protected Vector _results=null;
 	protected int _current=0;
 	protected String self_uri=null;

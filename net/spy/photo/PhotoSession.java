@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.53 2001/01/16 21:01:19 dustin Exp $
+ * $Id: PhotoSession.java,v 1.54 2001/01/31 18:50:02 dustin Exp $
  */
 
 package net.spy.photo;
@@ -816,14 +816,6 @@ public class PhotoSession extends Object
 				catstuff += " <cat_n>" + rs.getString(2) + "</cat_n>\n";
 				catstuff += " <count>" + rs.getString(3) + "</count>\n";
 				catstuff += " <qualifier>" + t + "</qualifier>\n";
-				catstuff += " <link>"
-					+ PhotoXSLT.normalize(
-						self_uri
-						+ "?func=search&searchtype=advanced&cat="
-						+ rs.getString(2) + "&maxret=5",
-						true
-					)
-					+ "</link>\n";
 				catstuff += "</cat_view_item>\n\n";
 			}
 		} catch(Exception e) {
@@ -860,6 +852,7 @@ public class PhotoSession extends Object
 			ret=nf.format(rs.getInt(1));
 			// Recalculate every hour
 			cache.store(key, ret, 60*60*1000);
+			db.close();
 		}
 
 		return(ret);
@@ -880,6 +873,7 @@ public class PhotoSession extends Object
 			ret=nf.format(rs.getInt(1));
 			// Recalculate once a day
 			cache.store(key, ret, 86400*1000);
+			db.close();
 		}
 		return(ret);
 	}
@@ -968,16 +962,13 @@ public class PhotoSession extends Object
 			response.setContentType("text/html");
 		}
 
-		PrintWriter out=response.getWriter();
-
 		// If they want raw XML, get it that way.
 		if(xmlraw) {
-			out.print(xml);
+			response.getWriter().print(xml);
+			response.getWriter().close();
 		} else {
-			PhotoXSLT.sendXML(xml, xslt_stylesheet, out);
+			PhotoXSLT.sendXML(xml, xslt_stylesheet, response);
 		}
-
-		out.close();
 	}
 
 	// Get the UID
@@ -996,6 +987,8 @@ public class PhotoSession extends Object
 			PhotoUser p=security.getUser(remote_user);
 			remote_uid = new Integer(p.getId());
 		} catch(Exception e) {
+			log("Error getting user:  " + e);
+			e.printStackTrace();
 			throw new ServletException("Unknown user: " + remote_user);
 		}
 	}

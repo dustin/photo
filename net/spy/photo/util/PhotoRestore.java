@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoRestore.java,v 1.3 2000/11/29 10:00:27 dustin Exp $
+// $Id: PhotoRestore.java,v 1.4 2001/01/31 18:50:02 dustin Exp $
 
 package net.spy.photo.util;
 
@@ -26,6 +26,7 @@ public class PhotoRestore extends Object {
 
 		// Get the parser
 		DOMParser dp=new DOMParser();
+		dp.setFeature("http://xml.org/sax/features/validation", true);
 
 		// Parse the stream
 		dp.parse(is);

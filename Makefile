@@ -7,7 +7,7 @@ JAVA=$(JAVAHOME)/bin/java
 RMIC=$(JAVAHOME)/bin/rmic
 MYLIB=/home/dustin/lib/java
 C1=$(MYLIB)/jsdk.jar:$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
-C2=$(MYLIB)/xalan.jar:$(MYLIB)/xerces.jar
+C2=$(MYLIB)/xalan.jar:$(MYLIB)/xerces.jar:$(MYLIB)/resin-xsl.jar
 CLASSPATH=$(C1):$(C2):.
 SERVLETRUNNER=/home/dustin/lib/java/JSDK2.0/bin/servletrunner
 
@@ -36,6 +36,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoXSLT.class \
 	net/spy/photo/PhotoXML.class \
 	net/spy/photo/SetPW.class \
+	net/spy/photo/StopWatch.class \
 	net/spy/photo/util/BackupEntry.class \
 	net/spy/photo/util/AlbumBackupEntry.class \
 	net/spy/photo/util/PhotoBackup.class \

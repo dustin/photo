@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.12 2001/01/06 07:19:08 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.13 2001/01/31 18:50:02 dustin Exp $
  */
 
 package net.spy.photo;
@@ -9,6 +9,7 @@ package net.spy.photo;
 import java.sql.*;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.io.Serializable;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -16,7 +17,7 @@ import javax.servlet.http.*;
 import net.spy.*;
 import net.spy.cache.*;
 
-public class PhotoSearchResult extends PhotoHelper {
+public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	protected Hashtable mydata=null;
 	protected int id=-1;
 	protected int search_id=-1;
