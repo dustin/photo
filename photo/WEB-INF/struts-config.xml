@@ -32,9 +32,22 @@
 
 	<!-- Search result cursor movement -->
 	<action    path="/nextresults"
-		type="net.spy.photo.struts.ResultsAction"
+		type="net.spy.photo.struts.CursorAction"
 		name="cursorForm">
 		<forward name="success" path="/results.jsp" />
+	</action>
+
+	<!-- Search result cursor movement -->
+	<action    path="/listcomments"
+		type="net.spy.photo.struts.ListCommentsAction">
+		<forward name="success" path="/comments.jsp" />
+	</action>
+
+	<!-- Search result cursor movement -->
+	<action    path="/nextcomments"
+		type="net.spy.photo.struts.CursorAction"
+		name="cursorForm">
+		<forward name="success" path="/comments.jsp" />
 	</action>
 
   </action-mappings>

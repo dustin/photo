@@ -18,7 +18,7 @@
 					</photo:guest>
 					<li><a href="search.jsp">Advanced Search</a></li>
 					<li><a href="PhotoServlet?func=catview">Category View</a></li>
-					<li><a href="PhotoServlet?func=listcomments&start=true">Show Recent Comments</a></li>
+					<li><a href="listcomments.do">Show Recent Comments</a></li>
 					<li><a href="PhotoServlet?func=newuserform">Create an Account</a></li>
 				</ul>
 			</p>
@@ -34,7 +34,7 @@
 					<logic:iterate id="i"
 						collection="<%= SavedSearch.getSearches() %>">
 						<% SavedSearch s=(SavedSearch)i; %>
-						<li><a href="PhotoServlet?<%= s.getSearch() %>"><%=
+						<li><a href="search.do?<%= s.getSearch() %>"><%=
 							s.getName() %></a></li>
 					</logic:iterate>
 				</ul>
