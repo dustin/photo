@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.14 2002/03/12 09:48:24 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.15 2002/04/01 08:18:32 dustin Exp $
  */
 
 package net.spy.photo;
@@ -27,7 +27,7 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 	 */
 	public PhotoLogFlusher() {
 		super("PhotoLog");
-		setPriority(NORM_PRIORITY-1);
+		setPriority(NORM_PRIORITY-2);
 	}
 
 	/**
@@ -101,6 +101,6 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 				flushing=false;
 			}
 			debug.debug("Flush complete.");
-		}
-	}
+		} // Stuff to do
+	} // Flush method
 }

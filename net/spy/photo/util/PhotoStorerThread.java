@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.11 2002/03/01 22:24:09 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.12 2002/04/01 08:18:32 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -205,9 +205,8 @@ public class PhotoStorerThread extends Thread {
 				synchronized(this) {
 					wait(86400*1000);
 				}
-				// After a wait finishes, sleep another five seconds, just
-				// to be nice.
-				sleep(5000);
+				// After a wait finishes, sleep another five minutes, just
+				sleep(300000);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
