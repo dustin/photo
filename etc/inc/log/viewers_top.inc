@@ -4,14 +4,19 @@
 
 <body bgcolor="#fFfFfF">
 
-<h2>Viewers of %PHOTO_ID%</h2>
+<h2>Recent Viewers of %PHOTO_ID%</h2>
+
+Displaying %DISPLAYED_VIEWS% of %TOTAL_VIEWS% log entries.
+
+<p>
 
 <table border="1">
 <tr>
 	<th>Username</th>
 	<th>IP Address</th>
 	<th>User Agent</th>
-	<th>Cached?</th>
+	<th>Size</th>
 	<th>When</th>
 </tr>
 
+</p>
