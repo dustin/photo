@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.12 1998/07/07 05:36:40 dustin Exp $
+# $Id: Photo.pm,v 1.13 1998/07/07 05:55:15 dustin Exp $
 
 package Photo;
 
@@ -437,7 +437,7 @@ sub myquote
 sub addImage
 {
     my($self, $q)=@_;
-    my(@elements, %in, %tmp, $query, $ext, $fn, $f, @stat, $s, $r, $dbh);
+    my(@elements, %in, %tmp, $query, $ext, $fn, $f, $s, $r, $dbh, $size, $n);
 
     @elements=qw(category keywords picture info taken);
     %tmp=map{$_,1}@elements;
@@ -469,24 +469,26 @@ sub addImage
     $fn=time()."$$.$ext";
     $f=$q->param('picture');
 
-    $dbh=$self->dbh;
+    $dbh=$self->{dbh};
 
     $dbh->{AutoCommit}=0;
     eval {
-        my($premime, $i, $n);
+        my($premime, $i, $tmp);
         $query="insert into image_map(name) values('$fn');\n";
-        doQuery($query);
-        $s=doQuery("select last_value from image_store_seq;\n");
+        $self->doQuery($query);
+        $s=$self->doQuery("select last_value from image_store_seq;\n");
         $r=$s->fetch;
         $n=$r->[0];
 
         $premime="";
         $i=0;
-        while ( read($f, $premime, 60*57)) {
+	$size=0;
+        while ( $tmp=read($f, $premime, 60*57)) {
+	    $size+=$tmp;
             map {
                 $query="insert into image_store values($n, $i, '$_');\n";
-                print $query;
-                doQuery($query);
+                # print "$query<br>\n";
+                $self->doQuery($query);
                 $i++;
             } split(/\n/, encode_base64($premime));
         }
@@ -499,15 +501,21 @@ sub addImage
 	$dbh->commit;
     }
 
+    print "<!-- Image was $n -->\n";
+
     $dbh->{AutoCommit}=1;
 
     $query ="insert into album (fn, keywords, descr, cat, size, taken)\n";
     $query.="    values('$fn',\n\t$in{'keywords'},\n\t$in{'info'},\n";
-    $query.="\t$in{'category'},\n\t$stat[7],\n\t$in{'taken'});";
+    $query.="\t$in{'category'},\n\t$size,\n\t$in{'taken'});";
 
     eval { $s=$self->doQuery($query); };
 
     if($@) {
+	# Try to clean up:
+	eval { $self->doQuery("delete from image_map where id=$n;\n"); };
+	eval { $self->doQuery("delete from image_store where id=$n;\n"); };
+
 	%tmp=('QUERY', $query, 'ERRSTR', $DBI::errstr);
 	$self->showTemplate("$Photo::includes/add_dbfailure.inc", %tmp);
     } else {
