@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.2 2000/11/17 10:13:06 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.3 2000/11/17 10:30:57 dustin Exp $
  */
 
 package net.spy.photo.util;
 
 import java.sql.*;
-import java.io.Serializable;
 import net.spy.*;
 import net.spy.photo.*;
 
