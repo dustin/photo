@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.9 2001/07/19 10:07:09 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.10 2002/03/05 04:32:23 dustin Exp $
  */
 
 package net.spy.photo;
@@ -75,15 +75,23 @@ public class PhotoUtil extends Object {
 		int ret=-1;
 
 		try {
-			PhotoSecurity s=new PhotoSecurity();
-			PhotoConfig conf = new PhotoConfig();
-			String user=conf.get("default_user", "guest");
-			PhotoUser u=s.getUser(user);
+			PhotoUser u=getDefaultUser();
 			ret=u.getId();
 		} catch(Exception e) {
 			ret=-1;
 		}
 
 		return(ret);
+	}
+
+	/**
+	 * Get the default user.
+	 */
+	public static PhotoUser getDefaultUser() throws Exception {
+		PhotoSecurity s=new PhotoSecurity();
+		PhotoConfig conf = new PhotoConfig();
+		String user=conf.get("default_user", "guest");
+		PhotoUser u=s.getUser(user);
+		return(u);
 	}
 }

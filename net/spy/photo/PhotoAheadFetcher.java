@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.14 2002/02/24 07:36:55 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.15 2002/03/05 04:32:23 dustin Exp $
  */
 
 package net.spy.photo;
@@ -55,6 +55,8 @@ public class PhotoAheadFetcher extends Object {
 	 	 */
 		public void run() {
 			try {
+				// Give it a second to finish the page.
+				Thread.sleep(5000);
 				fetchAhead();
 			} catch(Exception e) {
 				e.printStackTrace();

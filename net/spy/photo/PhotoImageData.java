@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.1 2002/03/05 00:52:40 dustin Exp $
+// $Id: PhotoImageData.java,v 1.2 2002/03/05 04:32:23 dustin Exp $
 
 package net.spy.photo;
 
@@ -72,8 +72,9 @@ public class PhotoImageData extends Object {
 	private static PhotoImageData getDataFromDB(int id) throws Exception {
 		PhotoImageData rv=new PhotoImageData();
 
-		String query="select a.descr, a.cat as catid, a.taken, a.size, "
-			+ "a.addedby, a.width, a.height, a.ts, a.id, c.name as catname\n"
+		String query="select a.descr, a.keywords, a.cat as catid, a.taken, "
+			+ "a.size, a.addedby, a.width, a.height, a.ts, a.id, "
+			+ "c.name as catname\n"
 			+ "from album a, cat c\n"
 			+ "where a.cat=c.id and a.id=?";
 

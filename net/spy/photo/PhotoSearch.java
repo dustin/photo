@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.19 2002/03/05 00:52:40 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.20 2002/03/05 04:32:23 dustin Exp $
  */
 
 package net.spy.photo;
@@ -100,8 +100,8 @@ public class PhotoSearch extends PhotoHelper {
 
 			// Cache this query for fifteen minutes.  It's unique to the
 			// user, but the user is often guest.
-			SpyCacheDB photo=new SpyCacheDB(new PhotoConfig());
-			ResultSet rs = photo.executeQuery(query, 900000);
+			SpyDB photo=new SpyDB(new PhotoConfig());
+			ResultSet rs = photo.executeQuery(query);
 
 			// Figure out how many they want to display.
 			String tmp=request.getParameter("maxret");
