@@ -59,6 +59,7 @@ release: all release.tgz
 release.tgz:
 	mkdir release
 	cp photo.jar release
+	cp $(HOME)/lib/java/spy.jar release
 	cp -r etc doc release
 	find release -name CVS -type d | xargs rm -rf
 	tar cvf - release | gzip -9vc > release.tgz
@@ -73,7 +74,8 @@ clean:
 # How to do RMI stuff.
 net/spy/rmi/ImageServerImpl_Stub.class: net/spy/rmi/ImageServerImpl_Skel.class
 
-net/spy/rmi/ImageServerImpl_Skel.class: net/spy/rmi/ImageServer.class
+net/spy/rmi/ImageServerImpl_Skel.class: net/spy/rmi/ImageServer.class \
+		net/spy/rmi/ImageServerImpl.class
 	env CLASSPATH=$(CLASSPATH) $(RMIC) -d . net.spy.rmi.ImageServerImpl
 
 
