@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.9 2000/06/28 05:53:40 dustin Exp $
+ * $Id: PhotoSession.java,v 1.10 2000/06/28 06:41:50 dustin Exp $
  */
 
 package net.spy.photo;
@@ -80,11 +80,17 @@ public class PhotoSession extends Object
 
 		// Figure out what they want, default to index.
 		if(multi==null) {
-			func=request.getParameter("func").toLowerCase();
+			func=request.getParameter("func");
 		} else {
-			func=multi.getParameter("func").toLowerCase();
+			func=multi.getParameter("func");
 		}
-		log("func is " + func);
+		if(func!=null) {
+			// Lowercase it so that we don't have to keep doing case ignores
+			func=func.toLowerCase();
+			log("func is " + func);
+		}
+
+		// OK, see what they're doing.
 		if(func == null) {
 			doIndex();
 		} else if(func.equals("search")) {
