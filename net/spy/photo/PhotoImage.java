@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.7 2002/02/21 07:51:44 dustin Exp $
+// $Id: PhotoImage.java,v 1.8 2002/02/21 10:41:32 dustin Exp $
 
 package net.spy.photo;
 
@@ -41,6 +41,42 @@ public class PhotoImage extends Object
 
 	public int size() {
 		return(image_data.length);
+	}
+
+	/**
+	 * String me.
+	 */
+	public String toString() {
+		return("PhotoImage@" + getWidth() + "x" + getHeight());
+	}
+
+	/**
+	 * Deal with comparisons in different ways (currently, only
+	 * PhotoDimensions and default compares work).
+	 */
+	public boolean equals(Object o) {
+		boolean rv=false;
+
+		if(o instanceof PhotoImage) {
+			rv=super.equals(o);
+		} else if(o instanceof PhotoDimensions) {
+			PhotoDimensions odim=(PhotoDimensions)o;
+
+			rv=( (odim.getWidth() == getWidth())
+				&& (odim.getHeight() == getHeight()));
+		}
+
+		return(rv);
+	}
+
+	/**
+	 * @see PhotoDimensions
+	 */
+	public boolean smallerThan(PhotoDimensions pdim) {
+		int thisone=getWidth() * getHeight();
+		int thatone=pdim.getWidth()*pdim.getHeight();
+
+		return(thisone < thatone);
 	}
 
 	public int getWidth() {

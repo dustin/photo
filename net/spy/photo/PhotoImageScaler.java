@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageScaler.java,v 1.1 2002/02/21 07:51:44 dustin Exp $
+// $Id: PhotoImageScaler.java,v 1.2 2002/02/21 10:41:32 dustin Exp $
 
 package net.spy.photo;
 
@@ -44,9 +44,7 @@ public class PhotoImageScaler extends Object {
 		Image image=Toolkit.getDefaultToolkit().createImage(pi.getData());
 
 		// Make the dimensions have the proper aspect ratio
-		PhotoDimensions pd=new PhotoDimensionsImpl(
-			pi.getWidth(), pi.getHeight());
-		PhotoDimScaler pds=new PhotoDimScaler(pd);
+		PhotoDimScaler pds=new PhotoDimScaler(pi);
 		PhotoDimensions sdim=pds.scaleTo(dim);
 
 		// Scale it

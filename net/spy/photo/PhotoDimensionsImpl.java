@@ -1,5 +1,5 @@
 //
-// $Id: PhotoDimensionsImpl.java,v 1.3 2001/12/29 06:30:07 dustin Exp $
+// $Id: PhotoDimensionsImpl.java,v 1.4 2002/02/21 10:41:32 dustin Exp $
 
 package net.spy.photo;
 
@@ -38,6 +38,44 @@ public class PhotoDimensionsImpl
 
 		width=Integer.parseInt(st.nextToken());
 		height=Integer.parseInt(st.nextToken());
+	}
+
+	/**
+	 * True if the given object is a PhotoDimensions object representing
+	 * the same width and height.
+	 */
+	public boolean equals(Object o) {
+		boolean rv=false;
+
+		if(o instanceof PhotoDimensions) {
+			PhotoDimensions odim=(PhotoDimensions)o;
+
+			rv=( (odim.getWidth() == getWidth())
+				&& (odim.getHeight() == getHeight()));
+		}
+
+		return(rv);
+	}
+
+	/**
+	 * @see PhotoDimensions
+	 */
+	public boolean smallerThan(PhotoDimensions pdim) {
+		int thisone=getWidth() * getHeight();
+		int thatone=pdim.getWidth()*pdim.getHeight();
+
+		return(thisone < thatone);
+	}
+
+	/**
+	 * Get the hash code.
+	 */
+	public int hashCode() {
+
+		int rv=width << 16;
+		rv|=height;
+
+		return(rv);
 	}
 
 	/**

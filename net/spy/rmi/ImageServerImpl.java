@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.14 2002/02/21 09:36:17 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.15 2002/02/21 10:41:32 dustin Exp $
 
 package net.spy.rmi;
 
@@ -69,11 +69,18 @@ public class ImageServerImpl extends UnicastRemoteObject
 		if(pi==null) {
 			// Not in cache, get it
 			pi=fetchImage(image_id);
-			// Scale it
-			pi=scaleImage(pi, dim);
-			// Store it
-			rhash.put(key, pi);
-			log("Stored " + image_id + " with key " + key);
+
+			if(pi.equals(dim) || pi.smallerThan(dim)) {
+				log("Requested scaled size for " + image_id
+					+ "(" + dim + ") is equal to or "
+					+ " greater than its full size, ignoring.");
+			} else {
+				// Scale it
+				pi=scaleImage(pi, dim);
+				// Store it
+				rhash.put(key, pi);
+				log("Stored " + image_id + " with key " + key);
+			}
 		} else {
 			debug("Found " + key + "(" + key.hashCode() + ") in cache.");
 		}
