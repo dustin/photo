@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.14 2003/07/31 08:03:42 dustin Exp $
+// $Id: SessionWatcher.java,v 1.15 2003/09/10 07:05:37 dustin Exp $
 
 package net.spy.photo;
 
@@ -16,9 +16,7 @@ import javax.servlet.http.HttpSessionListener;
 /**
  * Watch session creation and destruction and manage sessionData.
  */
-public class SessionWatcher extends Object implements HttpSessionListener {
-
-	private static HashMap allSessions=new HashMap();
+public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 
 	/**
 	 * Get an instance of SessionWatcher.
@@ -37,7 +35,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
         PhotoSessionData sessionData=new PhotoSessionData();
         // Set the user
 		try {
-        	sessionData.setUser(PhotoUser.getPhotoUser("guest"));
+			sessionData.setUser(PhotoUser.getPhotoUser("guest"));
 		} catch(PhotoUserException e) {
 			e.printStackTrace();
 		}
@@ -46,30 +44,14 @@ public class SessionWatcher extends Object implements HttpSessionListener {
         // Now, add it to the session.
         session.setAttribute(PhotoSessionData.SES_ATTR, sessionData);
 
-        // OK, now add that to our list.
-		synchronized(allSessions) {
-			allSessions.put(session.getId(), session);
-		}
-	}
-
-	/**
-	 * Called when a session is destroyed.
-	 */
-	public void sessionDestroyed(HttpSessionEvent se) {
-		synchronized(allSessions) {
-			allSessions.remove(se.getSession().getId());
-		}
+		super.sessionCreated(se);
 	}
 
 	/**
 	 * Get the total number of sessions currently in this engine.
 	 */
 	public static int totalSessions() {
-		int rv=0;
-		synchronized(allSessions) {
-			rv=allSessions.size();
-		}
-		return(rv);
+		return(getSessions().size());
 	}
 
 	/**
@@ -79,25 +61,23 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	public static Collection getSessionDataByUser(String username) {
 		ArrayList al=new ArrayList();
 
-		synchronized(allSessions) {
-			for(Iterator i=allSessions.values().iterator(); i.hasNext(); ) {
-				HttpSession session=(HttpSession)i.next();
+		for(Iterator i=getSessions().iterator(); i.hasNext(); ) {
+			HttpSession session=(HttpSession)i.next();
 
-				if(session.getAttribute(PhotoSessionData.SES_ATTR) != null) {
-					PhotoSessionData sessionData=(PhotoSessionData)
-						session.getAttribute(PhotoSessionData.SES_ATTR);
+			if(session.getAttribute(PhotoSessionData.SES_ATTR) != null) {
+				PhotoSessionData sessionData=(PhotoSessionData)
+					session.getAttribute(PhotoSessionData.SES_ATTR);
 
-					// XXX:  I guess it's theoretically possible for some of
-					// this stuff to be null.
-					if(sessionData.getUser().getUsername().equals(username)) {
-						al.add(sessionData);
-					} // Found a match
-				} else {
-					System.err.println(
-						"Warning:  Found a session without a photoSession");
-				}
-			} // Flipping through the sessions
-		} // allSession lock
+				// XXX:  I guess it's theoretically possible for some of
+				// this stuff to be null.
+				if(sessionData.getUser().getUsername().equals(username)) {
+					al.add(sessionData);
+				} // Found a match
+			} else {
+				System.err.println(
+					"Warning:  Found a session without a photoSession");
+			}
+		} // Flipping through the sessions
 
 		return(al);
 	}
@@ -123,20 +103,18 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	public static Collection listSessions() {
 		ArrayList al=new ArrayList();
 
-		synchronized(allSessions) {
-			for(Iterator i=allSessions.values().iterator(); i.hasNext();) {
-				HttpSession session=(HttpSession)i.next();
+		for(Iterator i=getSessions().iterator(); i.hasNext();) {
+			HttpSession session=(HttpSession)i.next();
 
-				PhotoSessionData sessionData=(PhotoSessionData)
-					session.getAttribute(PhotoSessionData.SES_ATTR);
+			PhotoSessionData sessionData=(PhotoSessionData)
+				session.getAttribute(PhotoSessionData.SES_ATTR);
 
-				if(sessionData!=null) {
-					// Add the session to the result List
-					al.add(session);
-				} else {
-					System.err.println(
-						"Warning:  Found a session without a photoSession");
-				}
+			if(sessionData!=null) {
+				// Add the session to the result List
+				al.add(session);
+			} else {
+				System.err.println(
+					"Warning:  Found a session without a photoSession");
 			}
 		}
 
@@ -150,12 +128,10 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	public static PhotoSessionData getSessionData(String id) {
 		PhotoSessionData rv=null;
 
-		synchronized(allSessions) {
-			HttpSession session=(HttpSession)allSessions.get(id);
-			if(session != null) {
-				rv=(PhotoSessionData)
-					session.getAttribute(PhotoSessionData.SES_ATTR);
-			}
+		HttpSession session=getSession(id);
+		if(session != null) {
+			rv=(PhotoSessionData)
+				session.getAttribute(PhotoSessionData.SES_ATTR);
 		}
 
 		return(rv);
