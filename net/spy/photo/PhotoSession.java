@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.41 2000/12/25 23:39:06 dustin Exp $
+ * $Id: PhotoSession.java,v 1.42 2000/12/26 00:43:57 dustin Exp $
  */
 
 package net.spy.photo;
@@ -835,11 +835,13 @@ public class PhotoSession extends Object
 
 	// Get the global meta data
 	protected String getGlobalMeta() {
-		String gm="";
+		StringBuffer sb=new StringBuffer();
 
-		gm="<meta_stuff>\n";
-		gm+="  <self_uri>" + self_uri + "</self_uri>\n";
-		gm+="  <username>" + remote_user + "</username>\n";
+		sb.append("<meta_stuff>\n");
+		sb.append("  <self_uri>" + self_uri + "</self_uri>\n");
+		PhotoUser user = security.getUser(remote_user);
+		sb.append(user.toXML());
+		// gm+="  <username>" + remote_user + "</username>\n";
 
 		String tmp="";
 		// Add some statistics on the index
@@ -848,16 +850,16 @@ public class PhotoSession extends Object
 		} catch(Exception e) {
 			log("Error gathering global meta data:  " + e);
 		}
-		gm+="<total_images_shown>" + tmp + "</total_images_shown>\n";
+		sb.append("<total_images_shown>" + tmp + "</total_images_shown>\n");
 		try {
 			tmp=getTotalImages();
 		} catch(Exception e) {
 			log("Error gathering global meta data:  " + e);
 		}
-		gm+="<total_images>" + tmp + "</total_images>\n";
-		gm+="</meta_stuff>\n";
+		sb.append("<total_images>" + tmp + "</total_images>\n");
+		sb.append("</meta_stuff>\n");
 
-		return(gm);
+		return(sb.toString());
 	}
 
 	// Send raw XML

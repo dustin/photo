@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.6 2000/12/26 00:18:04 dustin Exp $
+ $Id: default.xsl,v 1.7 2000/12/26 00:43:57 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -41,7 +41,8 @@
 						<hr/>
 						Logged in as
 						<a href="{meta_stuff/self_uri}?func=credform">
-						<xsl:value-of select="meta_stuff/username"/></a>.
+						<xsl:value-of
+							select="meta_stuff/photo_user/username"/></a>.
 						<br/>
 						Switch to
 						<a href="{meta_stuff/self_uri}?func=setstylesheet&amp;stylesheet=simple">simple</a>
@@ -113,11 +114,15 @@
 
 <xsl:template match="search_results_page">
 
-	<form method="POST" action="{/page/meta_stuff/self_uri}">
-		<input type="hidden" name="func" value="savesearch"/>
-		<input type="hidden" name="search" value="{meta_stuff/search_query}"/>
-		Save search as:  <input name="name"/><input type="submit" value="Save"/>
-	</form>
+	<xsl:if test="/page/meta_stuff/photo_user/canadd">
+		<form method="POST" action="{/page/meta_stuff/self_uri}">
+			<input type="hidden" name="func" value="savesearch"/>
+			<input type="hidden" name="search"
+				value="{meta_stuff/search_query}"/>
+			Save search as:  <input name="name"/>
+			<input type="submit" value="Save"/>
+		</form>
+	</xsl:if>
 
 	<xsl:apply-templates select="sections"/>
 

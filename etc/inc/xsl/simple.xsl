@@ -9,7 +9,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: simple.xsl,v 1.2 2000/11/10 07:17:18 dustin Exp $
+ $Id: simple.xsl,v 1.3 2000/12/26 00:43:57 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -34,7 +34,7 @@
 				<hr/>
 				Logged in as
 				<a href="{meta_stuff/self_uri}?func=credform">
-				<xsl:value-of select="meta_stuff/username"/></a>.
+				<xsl:value-of select="meta_stuff/photo_user/username"/></a>.
 				<br/>
 				Switch to
 				<a href="{meta_stuff/self_uri}?func=setstylesheet&amp;stylesheet=default">default</a>
