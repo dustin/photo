@@ -99,7 +99,8 @@ CLASSES=\
 
 photo.jar: $(CLASSES)
 	$(JAR) cvf $@ `find net/spy -name "*.class"` \
-		`find net/spy -name "*.sql"`
+		`find net/spy -name "*.sql"` \
+		`find net/spy -name "*.properties"`
 
 all: $(CLASSES)
 
