@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoDimScaler.java,v 1.2 2001/12/28 02:02:37 dustin Exp $
+// $Id: PhotoDimScaler.java,v 1.3 2002/02/21 07:51:44 dustin Exp $
 
 package net.spy.photo;
 
@@ -13,7 +13,7 @@ public class PhotoDimScaler extends Object {
 	private PhotoDimensions dim=null;
 
 	/**
-	 * Get an instance of PhotoDimScaler.
+	 * Get an instance of PhotoDimScaler with a reference dimension set.
 	 */
 	public PhotoDimScaler(PhotoDimensions dim) {
 		super();

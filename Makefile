@@ -7,7 +7,8 @@ JAVAC=jikes +P
 JAVA=$(JAVAHOME)/bin/java
 RMIC=$(JAVAHOME)/bin/rmic
 MYLIB=$(HOME)/lib/java
-S=/System/Library/Frameworks/JavaVM.framework/Classes/classes.jar
+SD=/System/Library/Frameworks/JavaVM.framework/Classes
+S=$(SD)/classes.jar:$(SD)/ui.jar
 C1=$(MYLIB)/jsdk.jar:$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
 C2=$(MYLIB)/resin.jar:$(MYLIB)/sax.jar:$(MYLIB)/dom.jar
 C3=$(MYLIB)/xerces.jar:$(MYLIB)/xalan.jar:$S
@@ -17,6 +18,9 @@ SERVLETRUNNER=$(MYLIB)/resin/bin/start_resin
 RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \
 	net/spy/rmi/ImageServerImpl_Stub.class \
 	net/spy/rmi/ImageServerImpl.class \
+	net/spy/rmi/ImageServerScaler.class \
+	net/spy/rmi/JavaImageServerScaler.class \
+	net/spy/rmi/ExternalImageServerScaler.class \
 	net/spy/rmi/ImageServer.class
 
 CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
@@ -37,6 +41,9 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoSearch.class \
 	net/spy/photo/PhotoSessionData.class \
 	net/spy/photo/Mailer.class \
+	net/spy/photo/PhotoImageObserver.class \
+	net/spy/photo/JpegEncoder.class \
+	net/spy/photo/PhotoImageScaler.class \
 	net/spy/photo/PhotoSession.class \
 	net/spy/photo/PhotoSearchResult.class \
 	net/spy/photo/PhotoSearchResults.class \

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.89 2002/02/20 11:33:31 dustin Exp $
+ * $Id: PhotoSession.java,v 1.90 2002/02/21 07:51:44 dustin Exp $
  */
 
 package net.spy.photo;
@@ -569,8 +569,8 @@ public class PhotoSession extends Object
 			photo.setAutoCommit(false);
 
 			query = "insert into album(keywords, descr, cat, taken, size, "
-				+ " addedby, ts, width, height, tn_width, tn_height)\n"
-				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)";
+				+ " addedby, ts, width, height)\n"
+				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement st=photo.prepareStatement(query);
 			// Toss in the parameters
 			if (multi.getParameter("keywords") == null) {
@@ -1443,7 +1443,7 @@ public class PhotoSession extends Object
 		s=request.getParameter("thumbnail");
 		if(s!=null) {
 			PhotoConfig conf=new PhotoConfig();
-			size=conf.get("thumbnail_size", "220x146");;
+			size=conf.get("thumbnail_size", "220x146");
 		}
 		s=request.getParameter("scale");
 		if(s!=null) {

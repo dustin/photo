@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.19 2002/02/16 10:34:30 dustin Exp $
+-- $Id: photo.sql,v 1.20 2002/02/21 07:51:43 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -65,8 +65,6 @@ create table album(
 	addedby    integer not null,
 	width      integer default 0,
 	height     integer default 0,
-	tn_width   integer default 0,
-	tn_height  integer default 0,
 	ts         datetime not null,
 	id         serial,
 	primary key(id),

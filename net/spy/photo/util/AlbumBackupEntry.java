@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.8 2000/12/24 07:27:19 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.9 2002/02/21 07:51:44 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -35,8 +35,8 @@ public class AlbumBackupEntry extends BackupEntry {
 			conn.setAutoCommit(false);
 
 			String query = "insert into album(keywords, descr, cat, taken,\n"
-				+ " size, addedby, ts, width, height, tn_width, tn_height)\n"
-				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)";
+				+ " size, addedby, ts, width, height)\n"
+				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement pst=conn.prepareStatement(query);
 			int i=1;
 			pst.setString(i++, getData("keywords"));
@@ -177,7 +177,7 @@ public class AlbumBackupEntry extends BackupEntry {
 		PreparedStatement pst=db.prepareStatement(
 			"select keywords, descr, cat.name as cat, taken, size,\n"
 				+ " wwwusers.username as addedby,\n"
-				+ " ts, album.id, width, height, tn_width, tn_height\n"
+				+ " ts, album.id, width, height\n"
 				+ " from album, cat, wwwusers\n"
 				+ " where album.id = ?\n"
 				+ " and wwwusers.id=album.addedby "

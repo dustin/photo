@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.17 2002/02/15 08:28:07 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.18 2002/02/21 07:51:44 dustin Exp $
  */
 
 package net.spy.photo;
@@ -144,7 +144,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		try {
 			String query= "select a.id,a.keywords,a.descr,\n"
             	+ "   a.size,a.taken,a.ts,b.name,a.cat,c.username,b.id,\n"
-				+ "   a.width, a.height, a.tn_width, a.tn_height\n"
+				+ "   a.width, a.height\n"
             	+ "   from album a, cat b, wwwusers c\n"
             	+ "   where a.cat=b.id and a.id=?\n"
             	+ "   and a.addedby=c.id\n"
@@ -179,7 +179,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		try {
 			String query= "select a.id,a.keywords,a.descr,\n"
             	+ "   a.size,a.taken,a.ts,b.name,a.cat,c.username,b.id,\n"
-				+ "   a.width, a.height, a.tn_width, a.tn_height\n"
+				+ "   a.width, a.height\n"
             	+ "   from album a, cat b, wwwusers c\n"
             	+ "   where a.cat=b.id and a.id=?\n"
             	+ "   and a.addedby=c.id\n";
@@ -227,14 +227,27 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		mydata.put("WIDTH", rs.getString(i++));
 		mydata.put("HEIGHT", rs.getString(i++));
 
-		// Get the thumbnail size
-		mydata.put("TN_WIDTH", rs.getString(i++));
-		mydata.put("TN_HEIGHT", rs.getString(i++));
+		calculateThumbnailSize();
 
 		// If there's another result error
 		if(rs.next()) {
 			throw new Exception("Too many results received for " + id);
 		}
+	}
+
+	void calculateThumbnailSize() {
+		int width=Integer.parseInt((String)mydata.get("WIDTH"));
+		int height=Integer.parseInt((String)mydata.get("HEIGHT"));
+
+		PhotoConfig conf=new PhotoConfig();
+		PhotoDimensions pdim=new PhotoDimensionsImpl(width, height);
+		PhotoDimensions tdim=new PhotoDimensionsImpl(
+			conf.get("thumbnail_size", "220x146"));
+		PhotoDimScaler pds=new PhotoDimScaler(pdim);
+		PhotoDimensions stn=pds.scaleTo(tdim);
+
+		setTnWidth("" + stn.getWidth());
+		setTnHeight("" + stn.getHeight());
 	}
 
 	private void calculateScaled() {
@@ -246,10 +259,6 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		PhotoDimensions scaled=null;
 		if(maxSize!=null) {
 			scaled=pds.scaleTo(maxSize);
-			/*
-			System.err.println("Scaled " + width + "x" + height
-				+ " to " + scaled);
-			*/
 		} else {
 			scaled=new PhotoDimensionsImpl(width, height);
 			// System.err.println("!!! DID NOT SCALE !!!");

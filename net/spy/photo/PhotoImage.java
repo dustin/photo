@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.6 2001/12/28 01:54:13 dustin Exp $
+// $Id: PhotoImage.java,v 1.7 2002/02/21 07:51:44 dustin Exp $
 
 package net.spy.photo;
 
@@ -14,14 +14,11 @@ import java.io.Serializable;
 public class PhotoImage extends Object
 	implements Serializable, PhotoDimensions {
 
-	// Meta stuff
-	protected int format_version=2;
-
 	// Image data
-	protected byte image_data[]=null;
+	private byte image_data[]=null;
 
-	int _width=-1;
-	int _height=-1;
+	private int _width=-1;
+	private int _height=-1;
 
 	// empty constructor
 	public PhotoImage() {
@@ -69,15 +66,12 @@ public class PhotoImage extends Object
 	}
 
 	// This sucks, but byte comes back signed.
-	protected int getIntValue(int which) {
-		int i=(int)image_data[which];
-		if(i<0) {
-			i+=256;
-		}
+	private int getIntValue(int which) {
+		int i=(int)(image_data[which]&0xff);
 		return(i);
 	}
 
-	protected void calcDim() throws Exception {
+	private void calcDim() throws Exception {
 		int ch=-1, i=0;
 		boolean done=false;
 

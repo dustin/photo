@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.16 2002/02/15 08:28:07 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.17 2002/02/21 07:51:44 dustin Exp $
  */
 
 package net.spy.photo;
@@ -126,8 +126,7 @@ public class PhotoSearch extends PhotoHelper {
 					r.setAddedBy( rs.getString(9));
 					r.setWidth( rs.getString(11));
 					r.setHeight( rs.getString(12));
-					r.setTnWidth( rs.getString(13));
-					r.setTnHeight( rs.getString(14));
+					r.calculateThumbnailSize();
 					// Add it to our search result set.
 					results.add(r);
 				} else {
@@ -155,7 +154,7 @@ public class PhotoSearch extends PhotoHelper {
 
 		query = "select a.keywords,a.descr,b.name,\n"
 			+ " a.size,a.taken,a.ts,a.id,a.cat,c.username,b.id,\n"
-			+ " a.width,a.height,a.tn_width,a.tn_height\n"
+			+ " a.width,a.height\n"
 			+ "   from album a, cat b, wwwusers c\n   where a.cat=b.id\n"
 			+ "       and a.addedby=c.id\n"
 			+ "       and a.cat in (select cat from wwwacl\n"
