@@ -5,6 +5,8 @@
 package net.spy.photo;
 
 import java.io.Serializable;
+import java.io.ObjectStreamException;
+import java.io.InvalidObjectException;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -253,6 +255,33 @@ public class PhotoImageDataImpl extends SpyObject
 	 */
 	public int getId() {
 		return(id);
+	}
+
+	// Serialization voodoo
+	private Object writeReplace() throws ObjectStreamException {
+		return(new SerializedForm(id));
+	}
+
+	private static class SerializedForm implements Serializable {
+		private int imgId=0;
+
+		public SerializedForm(int i) {
+			super();
+			this.imgId=i;
+		}
+
+		private Object readResolve() throws ObjectStreamException {
+			PhotoImageData rv=null;
+			try {
+				rv=PhotoImageDataImpl.getData(imgId);
+			} catch(Exception e) {
+				InvalidObjectException t=new InvalidObjectException(
+					"Problem resolving ImageData");
+				t.initCause(e);
+				throw t;
+			}
+			return(rv);
+		}
 	}
 
 }
