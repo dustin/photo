@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.19 2002/07/04 03:27:22 dustin Exp $
+// $Id: PhotoUser.java,v 1.20 2002/07/04 04:47:44 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -25,7 +25,7 @@ public class PhotoUser extends Object implements Serializable {
 	private boolean canadd=false;
 
 	private ArrayList acl=null;
-	private HashMap groups=null;
+	private Set groups=null;
 
 	/**
 	 * Get a new, empty user.
@@ -139,7 +139,7 @@ public class PhotoUser extends Object implements Serializable {
 		if(groups==null) {
 			initGroups();
 		}
-		return(Collections.unmodifiableSet(groups.keySet()));
+		return(Collections.unmodifiableSet(groups));
 	}
 
 	/**
@@ -149,26 +149,26 @@ public class PhotoUser extends Object implements Serializable {
 		if(groups==null) {
 			initGroups();
 		}
-		return(groups.containsKey(groupName));
+		return(groups.contains(groupName));
 	}
 
 	// Initialize the groups
 	private synchronized void initGroups() {
 		if(groups==null) {
 			try {
-				HashMap h=new HashMap();
+				HashSet s=new HashSet();
 				SpyDB db=new SpyDB(new PhotoConfig());
 				PreparedStatement st=db.prepareStatement(
 					"select * from show_group where username = ?");
 				st.setString(1, getUsername());
 				ResultSet rs=st.executeQuery();
 				while(rs.next()) {
-					h.put(rs.getString("groupname"), "1");
+					s.add(rs.getString("groupname"));
 				}
 				rs.close();
 				st.close();
 				db.close();
-				groups=h;
+				groups=s;
 			} catch(Exception e) {
 				// Spill your guts.
 				e.printStackTrace();
