@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Persistent.java,v 1.3 2002/06/14 18:27:23 dustin Exp $
+// $Id: Persistent.java,v 1.4 2002/06/14 18:34:55 dustin Exp $
 
 package net.spy.photo;
 
@@ -99,6 +99,7 @@ public class Persistent extends HttpServlet {
 	 * Get the PhotoSecurity object for this instance.
 	 */
 	public static PhotoSecurity getSecurity() {
+		verifyInitialized();
 		return(security);
 	}
 
@@ -106,6 +107,7 @@ public class Persistent extends HttpServlet {
 	 * Get the PhotoAheadFetcher for this instance.
 	 */
 	public static PhotoAheadFetcher getAheadFetcher() {
+		verifyInitialized();
 		return(aheadfetcher);
 	}
 
@@ -113,6 +115,7 @@ public class Persistent extends HttpServlet {
 	 * Get the SpyLog object for this instance.
 	 */
 	public static SpyLog getLogger() {
+		verifyInitialized();
 		return(logger);
 	}
 
@@ -120,7 +123,31 @@ public class Persistent extends HttpServlet {
 	 * Get the PhotoSaverThread for this instance.
 	 */
 	public static PhotoSaverThread getPhotoSaverThread() {
+		verifyInitialized();
 		return(photoSaverThread);
 	}
+
+	private static void verifyInitialized() {
+		if(security==null || aheadfetcher==null
+			|| logger==null || photoSaverThread==null) {
+
+			throw new NotInitializedException();
+		}
+	}
+
+	/**
+	 * This exception is thrown whenever methods are called from the
+	 * Persistent servlet when it has not been initialized.
+	 */
+	public static class NotInitializedException extends RuntimeException {
+
+		/**
+		 * Get a new NotInitializedException with the default message.
+		 */
+		public NotInitializedException() {
+			super("Persistent servlet was not properly initialized.  "
+				+ "Container configuration problem?");
+		}
+	} // inner class for reporting initialization failures.
 
 }
