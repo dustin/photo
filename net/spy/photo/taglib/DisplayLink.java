@@ -1,10 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.8 2002/06/23 02:14:23 dustin Exp $
+// $Id: DisplayLink.java,v 1.9 2002/06/30 05:09:10 dustin Exp $
 
 package net.spy.photo.taglib;
 
 import javax.servlet.*;
+import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
@@ -116,12 +117,15 @@ public class DisplayLink extends PhotoTag {
         // If this is true at the bottom, process the link.
         boolean process=true;
 
-		StringBuffer sb=new StringBuffer();
+		// This variable is the full HREF that will be rendered
+		StringBuffer href=new StringBuffer();
+		// This is just the URL inside the HREF.
+		StringBuffer url=new StringBuffer("display.jsp?");
 
-		sb.append("<a href=\"display.jsp?");
+		href.append("<a href=\"");
 		// Figure out whether to link to the search ID or the real ID.
 		if(searchId>=0) {
-			sb.append("search_id=");
+			url.append("search_id=");
 
 			PhotoSessionData sessionData=getSessionData();
 			PhotoSearchResults results=sessionData.getResults();
@@ -152,7 +156,7 @@ public class DisplayLink extends PhotoTag {
 				throw new JspException("Invalid relative type:  " + relative);
 			}
 
-			sb.append(searchId);
+			url.append(searchId);
 
 		} else {
 			// This is meant to be a relative link, but didn't get a search ID.
@@ -160,35 +164,48 @@ public class DisplayLink extends PhotoTag {
 				process=false;
 			}
 			// real ID.
-			sb.append("id=");
-			sb.append(id);
+			url.append("id=");
+			url.append(id);
 		}
-		sb.append("\">");
+
+		// Need the response to rewrite the URL
+		HttpServletResponse res=(HttpServletResponse)pageContext.getResponse();
+		href.append(res.encodeURL(url.toString()));
+
+		href.append("\">");
 		if(showThumbnail) {
-			sb.append("<img src=\"PhotoServlet?photo_id=");
-			sb.append(id);
-			sb.append("&thumbnail=1\" border=\"0\"");
+			href.append("<img src=\"");
+
+			StringBuffer tmpurl=new StringBuffer();
+			tmpurl.append("PhotoServlet?photo_id=");
+			tmpurl.append(id);
+			tmpurl.append("&thumbnail=1");
+
+			// Encode the photo display page
+			href.append(res.encodeURL(tmpurl.toString()));
+
+			href.append("\" border=\"0\"");
 			if(altText!=null) {
-				sb.append(" alt=\"");
-				sb.append(altText);
-				sb.append("\"");
+				href.append(" alt=\"");
+				href.append(altText);
+				href.append("\"");
 			}
 			if(width!=null) {
-				sb.append(" width=\"");
-				sb.append(width);
-				sb.append("\"");
+				href.append(" width=\"");
+				href.append(width);
+				href.append("\"");
 			}
 			if(height!=null) {
-				sb.append(" height=\"");
-				sb.append(height);
-				sb.append("\"");
+				href.append(" height=\"");
+				href.append(height);
+				href.append("\"");
 			}
-			sb.append("></img>");
+			href.append("></img>");
 		}
 
 		try {
 			if(process) {
-				pageContext.getOut().write(sb.toString());
+				pageContext.getOut().write(href.toString());
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

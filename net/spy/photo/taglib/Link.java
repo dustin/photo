@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Link.java,v 1.3 2002/06/28 03:57:22 dustin Exp $
+// $Id: Link.java,v 1.4 2002/06/30 05:09:10 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -67,8 +67,14 @@ public class Link extends PhotoTag {
 		StringBuffer sb=new StringBuffer();
 		sb.append("<a href=\"");
 
+		// Get the request and response
 		HttpServletRequest req=(HttpServletRequest)pageContext.getRequest();
-		sb.append(PhotoUtil.getRelativeUri(req, url));
+		HttpServletResponse res=(HttpServletResponse)pageContext.getResponse();
+
+		// Get the URL
+		String relurl=PhotoUtil.getRelativeUri(req, url);
+		// Add it (rewritten).
+		sb.append(res.encodeURL(relurl));
 		sb.append("\">");
 
 		String content=null;

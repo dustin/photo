@@ -1,10 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.4 2002/06/23 02:14:23 dustin Exp $
+// $Id: ImageLink.java,v 1.5 2002/06/30 05:09:10 dustin Exp $
 
 package net.spy.photo.taglib;
 
 import javax.servlet.*;
+import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
@@ -84,45 +85,53 @@ public class ImageLink extends PhotoTag {
 	 */
 	public int doStartTag() throws JspException {
 
-		StringBuffer sb=new StringBuffer();
-		sb.append("<img src=\"PhotoServlet?photo_id=");
-		sb.append(id);
+		StringBuffer href=new StringBuffer();
+		StringBuffer url=new StringBuffer();
+
+		href.append("<img src=\"");
+		
+		url.append("PhotoServlet?photo_id=");
+		url.append(id);
 		if(scale && (width!=null) && (height!=null)) {
-			sb.append("&scale=");
-			sb.append(width);
-			sb.append("x");
-			sb.append(height);
+			url.append("&scale=");
+			url.append(width);
+			url.append("x");
+			url.append(height);
 		}
 
 		if(showThumbnail) {
-			sb.append("&thumbnail=1");
+			url.append("&thumbnail=1");
 		}
 
-		// Finish the src attribute.
-		sb.append("\"");
+		// Get the response for rewriting
+		HttpServletResponse res=(HttpServletResponse)pageContext.getResponse();
+		href.append(res.encodeURL(url.toString()));
 
-		sb.append(" border=\"0\"");
+		// Finish the src attribute.
+		href.append("\"");
+
+		href.append(" border=\"0\"");
 		if(altText!=null) {
-			sb.append(" alt=\"");
-			sb.append(altText);
-			sb.append("\"");
+			href.append(" alt=\"");
+			href.append(altText);
+			href.append("\"");
 		}
 
 		if(width!=null) {
-			sb.append(" width=\"");
-			sb.append(width);
-			sb.append("\"");
+			href.append(" width=\"");
+			href.append(width);
+			href.append("\"");
 		}
 		if(height!=null) {
-			sb.append(" height=\"");
-			sb.append(height);
-			sb.append("\"");
+			href.append(" height=\"");
+			href.append(height);
+			href.append("\"");
 		}
 
-		sb.append("/>");
+		href.append("/>");
 
 		try {
-			pageContext.getOut().write(sb.toString());
+			pageContext.getOut().write(href.toString());
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new JspException("Error sending output:  " + e);
