@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.28 2000/07/09 08:34:27 dustin Exp $
+ * $Id: PhotoSession.java,v 1.29 2000/07/10 01:58:32 dustin Exp $
  */
 
 package net.spy.photo;
@@ -407,11 +407,12 @@ public class PhotoSession extends Object
 
 				String query = "select * from cat where id in\n"
 			  		+ "(select cat from wwwacl where\n"
-			  		+ "    userid=?)\n"
+			  		+ "    userid=? or userid=?)\n"
 			  		+ "order by name\n";
 
 				PreparedStatement st = photo.prepareStatement(query);
 				st.setInt(1, remote_uid.intValue());
+				st.setInt(2, PhotoUtil.getDefaultId());
 				ResultSet rs = st.executeQuery();
 
 				while(rs.next()) {
@@ -582,10 +583,11 @@ public class PhotoSession extends Object
 			String query = "select name,id,catsum(id) as cs from cat\n"
 			  	+ "where id in\n"
 			  	+ "  (select cat from wwwacl where\n"
-			  	+ "   userid=?)\n"
+			  	+ "   userid=? or userid=?)\n"
 			  	+ " order by cs desc";
 			PreparedStatement st = photo.prepareStatement(query);
 			st.setInt(1, remote_uid.intValue());
+			st.setInt(2, PhotoUtil.getDefaultId());
 			ResultSet rs = st.executeQuery();
 
 			while(rs.next()) {

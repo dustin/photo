@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.4 2000/07/05 07:36:49 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.5 2000/07/10 01:58:32 dustin Exp $
  */
 
 package net.spy.photo;
@@ -154,7 +154,8 @@ public class PhotoSearch extends PhotoHelper {
 			+ "   from album a, cat b, wwwusers c\n   where a.cat=b.id\n"
 			+ "       and a.addedby=c.id\n"
 			+ "       and a.cat in (select cat from wwwacl\n"
-			+ "              where userid=" + remote_uid + ")";
+			+ "              where userid=" + remote_uid + " or userid="
+			+ PhotoUtil.getDefaultId() + ")";
 
 		// Find out what the fieldjoin is real quick...
 		stmp=request.getParameter("fieldjoin");

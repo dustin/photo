@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.3 2000/07/09 08:05:44 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.4 2000/07/10 01:58:32 dustin Exp $
  */
 
 package net.spy.photo;
@@ -61,5 +61,23 @@ public class PhotoUtil
 		Date ts=new Date();
 		SimpleDateFormat f=new SimpleDateFormat("MM/dd/yyyy");
 		return(f.format(ts));
+	}
+
+	// Get the id of the ``default'' user.  The default default user is
+	// guest, but it can be assigned to any arbitrary user.
+	public static int getDefaultId() {
+		int ret=-1;
+
+		try {
+			PhotoSecurity s=new PhotoSecurity();
+			PhotoConfig conf = new PhotoConfig();
+			String user=conf.get("default_user", "guest");
+			PhotoUser u=s.getUser(user);
+			ret=u.id.intValue();
+		} catch(Exception e) {
+			ret=-1;
+		}
+
+		return(ret);
 	}
 }

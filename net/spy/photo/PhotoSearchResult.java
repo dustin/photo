@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.7 2000/07/05 07:36:49 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.8 2000/07/10 01:58:32 dustin Exp $
  */
 
 package net.spy.photo;
@@ -127,11 +127,12 @@ public class PhotoSearchResult extends PhotoHelper {
             	+ "   where a.cat=b.id and a.id=?\n"
             	+ "   and a.addedby=c.id\n"
             	+ "   and a.cat in (select cat from wwwacl where "
-            	+ "userid=?)\n";
+            	+ "userid=? or userid=?)\n";
 			photo=getDBConn();
 			PreparedStatement st=photo.prepareStatement(query);
 			st.setInt(1, id);
 			st.setInt(2, uid);
+			st.setInt(3, PhotoUtil.getDefaultId());
 			ResultSet rs=st.executeQuery();
 
 			// Store it.
