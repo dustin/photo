@@ -1,0 +1,35 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #cfcfff;
+}
+
+h1,h2,h3,h4,h5,th {
+	text-transform: capitalize;
+	font-weight: bolder;
+}
+
+a:hover {
+	background-color: #cccccc;
+}
+
+h1 { font-size: x-large; }
+
+h2 { font-size: large; }
+
+.pagetitle {
+	font-size: xx-large;
+	font-weight: bold;
+}
+
+.sectionheader {
+	font-size: large;
+	font-weight: bold;
+}
+
+.footer {
+	font-size: x-small;
+}
+
+.footerfineprint {
+	font-size: smaller;
+}
