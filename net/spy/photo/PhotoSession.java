@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.46 2000/12/31 06:28:08 dustin Exp $
+ * $Id: PhotoSession.java,v 1.47 2000/12/31 06:59:29 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1415,7 +1415,13 @@ public class PhotoSession extends Object
 
 
 	// Tokenize a template file and return the tokenized stuff.
-	protected String tokenize(String file, Hashtable vars) {
-		return(PhotoUtil.tokenize(this, file, vars));
+	protected String tokenize(String file, Hashtable vars)
+		throws ServletException {
+		String rv=PhotoUtil.tokenize(this, file, vars);
+		if(rv==null) {
+			throw new ServletException("Tokenizer returned null, perhaps the "
+				+ " template " + file + " could not be found?");
+		}
+		return(rv);
 	}
 }
