@@ -1,6 +1,6 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoProperties.java,v 1.3 2002/09/16 01:51:03 dustin Exp $
+// $Id: PhotoProperties.java,v 1.4 2003/01/15 09:20:37 dustin Exp $
 
 package net.spy.photo;
 
@@ -17,7 +17,7 @@ import java.util.Collection;
 
 import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
-import net.spy.db.Savable;
+import net.spy.db.SavableNode;
 
 import net.spy.cache.SpyCache;
 
@@ -28,8 +28,7 @@ import net.spy.photo.sp.InsertProperty;
 /**
  * Persistent configuration stuff that can be changed dynamically.
  */
-public class PhotoProperties extends Properties implements Savable
-{
+public class PhotoProperties extends Properties implements SavableNode {
 
 	private boolean isNew=false;
 	private boolean isModified=false;
@@ -96,7 +95,13 @@ public class PhotoProperties extends Properties implements Savable
 		return(isNew);
 	}
 	public Collection getSavables(SaveContext context) {
-		return(new ArrayList());
+		return(null);
+	}
+	public Collection getPreSavables(SaveContext context) {
+		return(null);
+	}
+	public Collection getPostSavables(SaveContext context) {
+		return(null);
 	}
 	public void save(Connection conn, SaveContext context)
 		throws SaveException, SQLException {

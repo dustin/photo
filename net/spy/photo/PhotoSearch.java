@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.32 2002/11/10 09:41:59 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.33 2003/01/15 09:20:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 
 import net.spy.SpyDB;
 import net.spy.util.Base64;
+import net.spy.util.NestedRuntimeException;
 
 import net.spy.photo.struts.SaveSearchForm;
 import net.spy.photo.struts.SearchForm;
@@ -25,6 +26,8 @@ import net.spy.photo.sp.InsertSearch;
  * Perform searches.
  */
 public class PhotoSearch extends PhotoHelper {
+
+	private static final String CHARSET="UTF-8";
 
 	/**
 	 * Get a PhotoSearch instance.
@@ -61,6 +64,17 @@ public class PhotoSearch extends PhotoHelper {
 		}
 	}
 
+	// URLEncode using CHARSET
+	private String urlEncode(String msg) {
+		String rv=null;
+		try {
+			rv=URLEncoder.encode(msg, CHARSET);
+		} catch(java.io.UnsupportedEncodingException e) {
+			throw new NestedRuntimeException(CHARSET + " is not supported.", e);
+		}
+		return(rv);
+	}
+
 	/**
 	 * Encode the search from a SearchForm.
 	 */
@@ -70,97 +84,97 @@ public class PhotoSearch extends PhotoHelper {
 		if(form.getFieldjoin() != null) {
 			sb.append("fieldjoin");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getFieldjoin()));
+			sb.append(urlEncode(form.getFieldjoin()));
 			sb.append('&');
 		}
 		if(form.getField() != null) {
 			sb.append("field");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getField()));
+			sb.append(urlEncode(form.getField()));
 			sb.append('&');
 		}
 		if(form.getKeyjoin() != null) {
 			sb.append("keyjoin");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getKeyjoin()));
+			sb.append(urlEncode(form.getKeyjoin()));
 			sb.append('&');
 		}
 		if(form.getWhat() != null) {
 			sb.append("what");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getWhat()));
+			sb.append(urlEncode(form.getWhat()));
 			sb.append('&');
 		}
 		if(form.getTstartjoin() != null) {
 			sb.append("tstartjoin");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getTstartjoin()));
+			sb.append(urlEncode(form.getTstartjoin()));
 			sb.append('&');
 		}
 		if(form.getTstart() != null) {
 			sb.append("tstart");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getTstart()));
+			sb.append(urlEncode(form.getTstart()));
 			sb.append('&');
 		}
 		if(form.getTendjoin() != null) {
 			sb.append("tendjoin");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getTendjoin()));
+			sb.append(urlEncode(form.getTendjoin()));
 			sb.append('&');
 		}
 		if(form.getTend() != null) {
 			sb.append("tend");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getTend()));
+			sb.append(urlEncode(form.getTend()));
 			sb.append('&');
 		}
 		if(form.getStartjoin() != null) {
 			sb.append("startjoin");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getStartjoin()));
+			sb.append(urlEncode(form.getStartjoin()));
 			sb.append('&');
 		}
 		if(form.getStart() != null) {
 			sb.append("start");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getStart()));
+			sb.append(urlEncode(form.getStart()));
 			sb.append('&');
 		}
 		if(form.getEndjoin() != null) {
 			sb.append("endjoin");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getEndjoin()));
+			sb.append(urlEncode(form.getEndjoin()));
 			sb.append('&');
 		}
 		if(form.getEnd() != null) {
 			sb.append("end");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getEnd()));
+			sb.append(urlEncode(form.getEnd()));
 			sb.append('&');
 		}
 		if(form.getOrder() != null) {
 			sb.append("order");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getOrder()));
+			sb.append(urlEncode(form.getOrder()));
 			sb.append('&');
 		}
 		if(form.getSdirection() != null) {
 			sb.append("sdirection");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getSdirection()));
+			sb.append(urlEncode(form.getSdirection()));
 			sb.append('&');
 		}
 		if(form.getMaxret() != null) {
 			sb.append("maxret");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getMaxret()));
+			sb.append(urlEncode(form.getMaxret()));
 			sb.append('&');
 		}
 		if(form.getFilter() != null) {
 			sb.append("filter");
 			sb.append('=');
-			sb.append(URLEncoder.encode(form.getFilter()));
+			sb.append(urlEncode(form.getFilter()));
 			sb.append('&');
 		}
 
@@ -169,7 +183,7 @@ public class PhotoSearch extends PhotoHelper {
 			for(int i=0; i<cats.length; i++) {
 				sb.append("cat");
 				sb.append('=');
-				sb.append(URLEncoder.encode(cats[i]));
+				sb.append(urlEncode(cats[i]));
 				sb.append('&');
 			}
 		}
