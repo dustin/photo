@@ -54,7 +54,7 @@
 	<!-- How to handle displays -->
 	<action path="/display" type="net.spy.photo.struts.AdminSwitchAction">
 		<forward name="subadmin" path="/admin/display.jsp"/>
-		<forward name="noadmin" path="/refreshDisplay.do"/>
+		<forward name="noadmin" path="/display.jsp"/>
 	</action>
 
 	<action path="/refreshDisplay" type="net.spy.photo.struts.SetDisplayRefresh">
