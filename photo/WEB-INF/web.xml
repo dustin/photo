@@ -35,6 +35,12 @@
 		<servlet-class>net.spy.photo.PhotoServlet</servlet-class>
 	</servlet>
 
+	<!-- The XMLRPC interface -->
+	<servlet>
+		<servlet-name>XMLRPCServlet</servlet-name>
+		<servlet-class>net.spy.photo.XMLRPCServlet</servlet-class>
+	</servlet>
+
 	<!-- Watch the sessions -->
 	<listener>
 		<listener-class>net.spy.photo.SessionWatcher</listener-class>
@@ -50,6 +56,12 @@
 	<servlet-mapping>
 		<servlet-name>PhotoServlet</servlet-name>
 		<url-pattern>/PhotoServlet/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- XMLRPC servlet mapping -->
+	<servlet-mapping>
+		<servlet-name>XMLRPCServlet</servlet-name>
+		<url-pattern>/RPC2</url-pattern>
 	</servlet-mapping>
 
 	<!-- The action servlet -->
