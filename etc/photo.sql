@@ -463,6 +463,20 @@ create view auth_log_view as
 grant select on auth_log_view to nobody
 ;
 
+-- List all of the images available by users
+create view viewable_by_user as
+	select
+		i.id as image_id, i.keywords,
+		c.name as cat_name,
+		u.id as userid, u.username
+	from
+		album i, cat c, wwwusers u, wwwacl a
+	where
+		i.cat = c.id
+		and a.cat = i.cat
+		and ( a.userid = u.id
+			or a.userid = (select id from wwwusers where username='guest'))
+;
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
