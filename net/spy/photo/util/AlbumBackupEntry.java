@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.5 2000/11/29 07:02:19 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.6 2000/11/29 07:43:27 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -35,7 +35,13 @@ public class AlbumBackupEntry extends BackupEntry {
 		// Get the data
 		SpyDB db=new SpyDB(new PhotoConfig());
 		PreparedStatement pst=db.prepareStatement(
-			"select * from album where id = ?"
+			"select keywords, descr, cat.name as cat, taken, size,\n"
+				+ " wwwusers.username as addedby,\n"
+				+ " ts, album.id, width, height, tn_width, tn_height\n"
+				+ " from album, cat, wwwusers\n"
+				+ " where album.id = ?\n"
+				+ " and wwwusers.id=album.addedby "
+				+ " and cat.id=album.cat"
 			);
 		pst.setInt(1, id);
 		ResultSet rs=pst.executeQuery();
