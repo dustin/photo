@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Link.java,v 1.5 2002/07/01 18:03:19 dustin Exp $
+// $Id: Link.java,v 1.6 2002/07/01 18:11:07 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -61,7 +61,7 @@ public class Link extends PhotoTag {
 	/**
 	 * Set the image ID to include in this link.
 	 */
-	public void setId String(id) {
+	public void setId(String id) {
 		this.id=id;
 	}
 
@@ -89,9 +89,9 @@ public class Link extends PhotoTag {
 		StringBuffer tmpUrl=new StringBuffer(url);
 		if(id!=null) {
 			if(url.indexOf("?")>=0) {
-				url.append("&");
+				tmpUrl.append("&");
 			} else {
-				url.append("?");
+				tmpUrl.append("?");
 			}
 			tmpUrl.append("id=");
 			tmpUrl.append(id);
