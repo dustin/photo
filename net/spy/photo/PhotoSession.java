@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.13 2000/06/30 01:02:09 dustin Exp $
+ * $Id: PhotoSession.java,v 1.14 2000/06/30 04:11:19 dustin Exp $
  */
 
 package net.spy.photo;
@@ -18,7 +18,6 @@ import javax.servlet.http.*;
 import com.oreilly.servlet.*;
 
 import net.spy.*;
-import net.spy.util.*;
 
 // The class
 public class PhotoSession extends Object
@@ -273,23 +272,20 @@ public class PhotoSession extends Object
 
 	// Add an image
 	protected String doAddPhoto() throws ServletException {
-		String category="", keywords="", picture="", info="", taken="";
-		String query="", out="", stmp, type;
-		int id;
+		String out="", type=null;
+		int id=-1;
 		Hashtable h = new Hashtable();
 		Connection photo=null;
-		Statement st=null;
-
-		// We need a short lifetime for whatever page this produces
-        long l=new java.util.Date().getTime();
-        l+=10000L;
-        response.setDateHeader("Expires", l);
-
 
 		// Make sure the user can add.
 		if(!canadd()) {
 			return(tokenize("add_denied.inc", h));
 		}
+
+		// We need a short lifetime for whatever page this produces
+        long l=new java.util.Date().getTime();
+        l+=10000L;
+        response.setDateHeader("Expires", l);
 
 		File f;
 		f = multi.getFile("picture");
@@ -304,84 +300,65 @@ public class PhotoSession extends Object
 			try {
 				f.delete();
 			} catch(Exception e) {
-				log(e.getMessage());
+				log("Error deleting file " + f + ": "  + e);
 			}
 			return(out);
 		}
 
-		stmp=multi.getParameter("category");
-		if(stmp!=null) {
-			category=PhotoUtil.dbquote_str(stmp);
-		}
-
-		stmp=multi.getParameter("keywords");
-		if(stmp!=null) {
-			keywords=PhotoUtil.dbquote_str(stmp);
-		}
-
-		stmp=multi.getParameter("info");
-		if(stmp!=null) {
-			info=PhotoUtil.dbquote_str(stmp);
-		}
-
-		stmp=multi.getParameter("taken");
-		if(stmp!=null) {
-			taken=PhotoUtil.dbquote_str(stmp);
-		}
-
+		// OK, things look good, let's try to store our data.
 		try {
-			FileInputStream in;
+			FileInputStream in=null;
 			Vector v = new Vector();
-			int bufsize=1024;
-			byte data[] = new byte[bufsize];
+			String query=null;
+
+			// Get the size from the file.
+			int size=(int)f.length();
 
 			photo=getDBConn();
-			st=photo.createStatement();
 			photo.setAutoCommit(false);
-			query = "insert into album(keywords,descr,cat,taken,addedby)\n"
-				  + "    values('" + keywords + "',\n\t'" + info + "',\n"
-				  + "    \t'" + category + "',\n\t'" + taken + "',\n"
-				  + "    '" + remote_uid + "')\n";
-			st.executeUpdate(query);
+			query = "insert into album(keywords, descr, cat, taken, size, "
+				+ " addedby)\n"
+				+ "   values(?, ?, ?, ?, ?, ?)";
+			log("Running SQL:  " + query);
+			PreparedStatement st=photo.prepareStatement(query);
+			// Toss in the parameters
+			st.setString(1, multi.getParameter("keywords"));
+			st.setString(2, multi.getParameter("info"));
+			st.setInt(3, Integer.parseInt(multi.getParameter("category")));
+			st.setString(4, multi.getParameter("taken"));
+			st.setInt(5, size);
+			st.setInt(6, remote_uid.intValue());
+			System.out.println("Statment:  " + st);
+			st.executeUpdate();
+
 			query = "select currval('album_id_seq')\n";
+			log("Running SQL:  " + query);
 			ResultSet rs = st.executeQuery(query);
 			rs.next();
 			id=rs.getInt(1);
 
 			// Encode the shit;
-			int size=0, length=0;
+			int length=0;
 			in = new FileInputStream(f);
+			byte data[] = new byte[size];
 
-			while( (length=in.read(data)) >=0 ) {
-				String tmp;
+			// Read in the data
+			length=in.read(data);
 
-				size+=length;
-				if(length == bufsize) {
-					byte tb[] = new byte[length];
-					int j;
-
-					for(j=0; j<length; j++) {
-						tb[j] = data[j];
-					}
-					v.addElement(tb);
-				} else {
-					byte tb[] = new byte[length];
-					int j;
-
-					for(j=0; j<length; j++) {
-						tb[j] = data[j];
-					}
-					v.addElement(tb);
-				}
+			// If we didn't read enough data, give up.
+			if(length!=size) {
+				throw new Exception("Error reading enough data!");
 			}
-			query ="update album set size=" + size + "where id=" + id;
-			st.executeUpdate(query);
 
-			PhotoImage photo_image=new PhotoImage(id);
-			photo_image.storeImage(new ImageData(v));
+			// Get a helper to store the data.
+			PhotoImageHelper photo_image=new PhotoImageHelper(id);
+			photo_image.storeImage(new PhotoImage(data));
 
+			// Log that the data was stored in the cache, so that, perhaps,
+			// it can be permanently stored later on.
 			query = "insert into upload_log values(\n"
 				  + "\t" + id + ", " + remote_uid + ")";
+			log("Running SQL:  " + query);
 			st.executeUpdate(query);
 
 			h.put("ID", ""+id);
@@ -389,10 +366,9 @@ public class PhotoSession extends Object
 			photo.commit();
 			out += tokenize("add_success.inc", h);
 		} catch(Exception e) {
-			log(e.getMessage());
+			log("SQL Error:  " + e);
 			try {
 				photo.rollback();
-				h.put("QUERY", query);
 				h.put("ERRSTR", e.getMessage());
 				out += tokenize("add_dbfailure.inc", h);
 			} catch(Exception e2) {
@@ -914,10 +890,9 @@ public class PhotoSession extends Object
 	// Show an image
 	protected String showImage() throws ServletException {
 
-		Vector v;
-		int i, which;
+		int which=-1;
 		boolean thumbnail=false;
-		ServletOutputStream out;
+		ServletOutputStream out=null;
 
 		response.setContentType("image/jpeg");
 		java.util.Date d=new java.util.Date();
@@ -940,23 +915,24 @@ public class PhotoSession extends Object
 
 		try {
 			// The new swank image extraction object.
-			PhotoImage p = new PhotoImage(which, rhash);
+			PhotoImageHelper p = new PhotoImageHelper(which, rhash);
 
 			// Need a binary output thingy.
 			out = response.getOutputStream();
 
+			// Image data
+			PhotoImage image=null;
+
 			if(thumbnail) {
 				log("Requesting thumbnail");
-				v=p.getThumbnail();
+				image=p.getThumbnail();
 			} else {
 				log("Requesting full image");
-				v=p.getImage();
+				image=p.getImage();
 			}
 			logger.log(new PhotoLogImageEntry(remote_uid.intValue(),
 				which, true, request));
-			for(i = 0; i<v.size(); i++) {
-				out.write( (byte[])v.elementAt(i));
-			}
+			out.write(image.getData());
 
 		} catch(Exception e) {
 			throw new ServletException("IOException:  " + e.getMessage());

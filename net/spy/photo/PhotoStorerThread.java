@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.2 2000/06/30 04:11:19 dustin Exp $
  */
 
 package net.spy.photo;
@@ -38,37 +38,60 @@ public class PhotoStorerThread extends Thread {
 	// encoding it to put it into the database in a transaction.  The last
 	// query in the transaction records the image having been stored.
 	protected void storeImage(int image_id) throws Exception {
-		PhotoImage p = new PhotoImage(image_id);
+		PhotoImageHelper p = new PhotoImageHelper(image_id);
 		SpyDB pdb = getDB();
 		Connection db = null;
 		Statement st = null;
-		Vector v = p.getImage();
+		PhotoImage pi = p.getImage();
 		System.err.println("Storer: Got image for " + image_id + " " 
-			+ v.size() + " lines of data to store.");
+			+ pi.size() + " bytes of data to store.");
+		// This is an awkward way of doing this.
+		Vector v=new Vector();
+		byte data[]=pi.getData();
+
+		// i will be incremented inside the loop
+		for(int i=0; i<data.length; ) {
+			// How much we have left
+			int max=data.length-i;
+			
+			// Make sure we don't get more than 2k at a time.
+			if(max>2048) {
+				max=2048;
+			}
+
+			// Get the thing to store.
+			byte b[]=new byte[max];
+			for(int j=0; j<max; j++) {
+				b[j]=data[i++];
+			}
+
+			v.addElement(b);
+		}
+
 		try {
 			int i=0, n=0;
 			db = pdb.getConn();
 			db.setAutoCommit(false);
 			st = db.createStatement();
 			BASE64Encoder base64=new BASE64Encoder();
-			String data = "";
+			String sdata = "";
 
 			for(; i<v.size(); i++) {
 				String tmp = base64.encodeBuffer((byte[])v.elementAt(i));
 				tmp=tmp.trim();
 
-				if(data.length() < 2048) {
-					data+=tmp+"\n";
+				if(sdata.length() < 2048) {
+					sdata+=tmp+"\n";
 				} else {
-					storeQuery(image_id, n, st, data);
-					data=tmp;
+					storeQuery(image_id, n, st, sdata);
+					sdata=tmp;
 					n++;
 				}
 			}
 			// OK, this is sick, but another one right now for the spare.
-			if(data.length() > 0) {
+			if(sdata.length() > 0) {
 				System.err.println("Storer:  Storing spare.");
-				storeQuery(image_id, n, st, data);
+				storeQuery(image_id, n, st, sdata);
 				n++;
 			}
 			System.err.println("Storer:  Stored " + n + " lines of data for "

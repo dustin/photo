@@ -1,95 +1,40 @@
-/*
- * Copyright (c) 1999 Dustin Sallings
- *
- * $Id: PhotoImage.java,v 1.1 2000/06/24 23:30:57 dustin Exp $
- */
+// Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
+//
+// $Id: PhotoImage.java,v 1.2 2000/06/30 04:11:19 dustin Exp $
 
 package net.spy.photo;
 
-import java.io.*;
-import java.sql.*;
+import java.lang.*;
 import java.util.*;
-import java.rmi.Naming;
-import sun.misc.*;
+import java.io.Serializable;
 
-import net.spy.*;
-import net.spy.rmi.*;
-import net.spy.util.*;
+public class PhotoImage extends Object implements Serializable {
+	// Meta stuff
+	protected int format_version=1;
 
-// The class
-public class PhotoImage extends PhotoHelper
-{ 
-	static ImageServer server = null;
-	int image_id=-1;
+	// Image data
+	protected byte image_data[]=null;
 
-	public PhotoImage(int which) throws Exception {
+	// empty constructor
+	public PhotoImage() {
 		super();
-		image_id = which;
 	}
 
-	public PhotoImage(int which, RHash r) throws Exception {
+	// Constructor mit data
+	public PhotoImage(byte data[]) {
 		super();
-		image_id = which;
+		image_data = data;
 	}
 
-	public void finalize() throws Throwable {
-		super.finalize();
+	public void setData(byte data[]) {
+		image_data=data;
 	}
 
-	// Get an Image
-	public Vector getImage() throws Exception {
-		ImageData data=null;
-		ensureConnected();
-		log("Getting image " + image_id + " from ImageServer");
-		data=server.getImage(image_id, false);
-		if(data==null) {
-			throw new Exception("Data was null!");
-		}
-		if(data.image_data == null) {
-			throw new Exception("Contents were null!");
-		}
-		log("Returning image data (" + data.image_data.size() + " lines)");
-		return(data.image_data);
+	public byte[] getData() {
+		return(image_data);
 	}
 
-	// Store an image
-	public void storeImage(ImageData image_data) throws Exception {
-		ensureConnected();
-		log("Storing image " + image_id);
-		server.storeImage(image_id, image_data);
-		log("Stored image " + image_id);
-	}
-
-	// Get a thumbnail
-	public Vector getThumbnail() throws Exception {
-		ImageData data=null;
-		ensureConnected();
-		log("Getting image " + image_id + " (as thumbnail) from ImageServer");
-		data=server.getImage(image_id, true);
-		return(data.image_data);
-	}
-
-	// Make sure we're connected to an image server
-	protected void ensureConnected() throws Exception {
-		boolean needconn=true;
-
-		try {
-			// If ping works, we don't need a new connection
-			if(server.ping()) {
-				needconn=false;
-			}
-		} catch(Exception e) {
-			// nevermind
-		}
-
-		if(needconn) {
-			log("Connecting to ImageServer");
-			String serverpath=conf.get("imageserver");
-			log("Locating " + serverpath);
-			server=(ImageServer)Naming.lookup(serverpath);
-			if(server==null) {
-				throw new Exception("Can't get a server object");
-			}
-		}
+	public int size() {
+		return(image_data.length);
 	}
 }
