@@ -1,3 +1,6 @@
+<html><head><title>Upload Problem</title>
+%STYLESHEET%
+</head>
 <h2>Upload Problem</h2>
 
 Sorry, but your file, %FILENAME% didn't seem to make it.  Any number of

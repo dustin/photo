@@ -1,3 +1,7 @@
+<html><head><title>Killed %ID%</title>
+%STYLESHEET%
+</head>
+<body bgcolor="#fFfFfF">
 <h2>Killed %ID%</h2>
 
 Keywords:<br>
@@ -7,4 +11,4 @@ Keywords:<br>
 Info:<br>
 %DESCR%
 
-<hr>
+</body>

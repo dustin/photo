@@ -1,4 +1,6 @@
-<html><head><title>Photo Admin - Editing %USER%</title></head>
+<html><head><title>Photo Admin - Editing %USER%</title>
+%STYLESHEET%
+</head>
 
 <body bgcolor="#fFfFfF">
 

@@ -1,4 +1,6 @@
-<html><head><title>Photo Admin - Edit Category</title></head>
+<html><head><title>Photo Admin - Edit Category</title>
+%STYLESHEET%
+</head>
 
 <body bgcolor="#fFfFfF">
 

@@ -1,3 +1,6 @@
+<html><head><title>Success!</title>
+%STYLESHEET%
+</head>
 <h2>WooHoo!  Your file made it!</h2>
 
 Your file has made it to the database!  It's ID is %ID% for future

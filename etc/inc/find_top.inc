@@ -1,5 +1,7 @@
 <html>
-<head><title>Find Results</title></head>
+<head><title>Find Results</title>
+%STYLESHEET%
+</head>
 
 
 <body bgcolor="#fFfFfF">

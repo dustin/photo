@@ -1,4 +1,5 @@
 <html><head><title>Editing %IMAGE%</title>
+%STYLESHEET%
 </head>
 
 <body bgcolor="#fFfFfF">

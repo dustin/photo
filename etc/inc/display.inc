@@ -1,4 +1,5 @@
 <html><head><title>Info for %IMAGE%</title>
+%STYLESHEET%
 
 <script language="javascript">
 

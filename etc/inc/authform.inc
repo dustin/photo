@@ -1,4 +1,5 @@
 <html><head><title>Authenticate</title>
+%STYLESHEET%
 </head>
 
 <body bgcolor="#fFfFfF">

@@ -1,6 +1,6 @@
-<html><head><title>View Images by Category</title></head>
-
+<html><head><title>View Images by Category</title>
 %STYLESHEET%
+</head>
 
 <body bgcolor="#fFfFfF">
 
