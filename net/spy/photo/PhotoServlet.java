@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.5 2000/07/05 01:03:41 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.6 2000/07/05 06:08:33 dustin Exp $
  */
 
 package net.spy.photo;
@@ -24,6 +24,7 @@ public class PhotoServlet extends HttpServlet
 	public String self_uri=null;
 	public RHash rhash=null;
 	public PhotoSecurity security = null;
+	public PhotoAheadFetcher aheadfetcher=null;
 
 	public SpyLog logger = null;
 
@@ -57,6 +58,7 @@ public class PhotoServlet extends HttpServlet
 			rhash = null;
 		}
 
+		// The photo cache storer
 		try {
 			log("Initing PhotoCache");
 			photoCache=new PhotoCache();
@@ -64,6 +66,16 @@ public class PhotoServlet extends HttpServlet
 		} catch(Exception e) {
 			log("Could not get photoCache:  " + e);
 			photoCache=null;
+		}
+
+		// The photo ahead fetcher
+		try {
+			log("Initing PhotoAheadFetcher");
+			aheadfetcher=new PhotoAheadFetcher();
+			log("Got the PhotoAheadFetcher");
+		} catch(Exception e) {
+			log("Could not get PhotoAheadFetcher:  " + e);
+			aheadfetcher=null;
 		}
 
 		log("Initing logger");

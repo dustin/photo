@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.21 2000/07/01 00:39:57 dustin Exp $
+ * $Id: PhotoSession.java,v 1.22 2000/07/05 06:08:33 dustin Exp $
  */
 
 package net.spy.photo;
@@ -29,12 +29,11 @@ public class PhotoSession extends Object
 	protected MultipartRequest multi=null;
 	protected SpyLog logger=null;
 	protected PhotoSecurity security = null;
-
 	protected PhotoStorerThread storer_thread = null;
-
 	protected PhotoServlet photo_servlet = null;
-
 	protected Hashtable groups=null;
+
+	protected PhotoAheadFetcher aheadfetcher=null;
 
 	// These are public because they may be used by PhotoHelpers
 	public HttpServletRequest request=null;
@@ -49,6 +48,9 @@ public class PhotoSession extends Object
 		this.request=request;
 		this.response=response;
 		this.session=request.getSession(false);
+
+		// The aheadfetcher
+		this.aheadfetcher=p.aheadfetcher;
 
 		logger=p.logger;
 
@@ -687,7 +689,7 @@ public class PhotoSession extends Object
 
 		if(isAdmin()) {
 			// Admin needs CATS
-			int defcat=Integer.parseInt(r.catnum);
+			int defcat=r.getCatNum();
 			h.put("CATS", getCatList(defcat));
 			out=tokenize("admin/display.inc", h);
 		} else {
@@ -809,6 +811,11 @@ public class PhotoSession extends Object
 		output += middle;
 		h.put("LINKTOMORE", linkToMore(results)); 
 		output += tokenize("find_bottom.inc", h);
+
+		// Ask the aheadfetcher to prefetch the next five entries.
+		aheadfetcher.next(results);
+
+		send_response(output);
 		return(output);
 	}
 

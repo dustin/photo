@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoCacheItem.java,v 1.1 2000/07/05 01:03:41 dustin Exp $
+ * $Id: PhotoCacheItem.java,v 1.2 2000/07/05 06:08:33 dustin Exp $
  */
 
 package net.spy.photo;
@@ -20,6 +20,15 @@ public class PhotoCacheItem extends Object {
 		this.value=value;
 		long t=System.currentTimeMillis();
 		exptime=t+cache_time;
+	}
+
+	public String toString() {
+		String out="Cached item:  " + key;
+		if(exptime>0) {
+			out+="\nExpires:  " + new java.util.Date(exptime);
+		}
+		out+="\n";
+		return(out);
 	}
 
 	public Object getObject() {

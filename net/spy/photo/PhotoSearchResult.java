@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.4 2000/07/04 22:48:31 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.5 2000/07/05 06:08:33 dustin Exp $
  */
 
 package net.spy.photo;
 
 import java.sql.*;
 import java.util.Hashtable;
+import java.util.Enumeration;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -15,33 +16,25 @@ import javax.servlet.http.*;
 import net.spy.*;
 
 public class PhotoSearchResult extends PhotoHelper {
-	protected String keywords=null;
-	protected String descr=null;
-	protected String cat=null;
-	protected String size=null;
-	protected String taken=null;
-	protected String ts=null;
-	protected String image=null;
-	protected String catnum=null;
-	protected String addedby=null;
-
+	protected Hashtable mydata=null;
 	protected int id=-1;
-
-	protected int user_id=-1;
+	protected int search_id=-1;
 
 	/**
 	 * Get an uninitialized search result.
 	 */
 	public PhotoSearchResult() throws Exception {
 		super();
+		mydata=new Hashtable();
 	};
 
 	/**
 	 * Get an uninitialized search result pointing at a given id.
 	 */
-	public PhotoSearchResult(int id) throws Exception {
+	public PhotoSearchResult(int id, int search_id) throws Exception {
 		super();
 		this.id=id;
+		this.search_id=search_id;
 	};
 
 	/**
@@ -67,34 +60,27 @@ public class PhotoSearchResult extends PhotoHelper {
 		// Make sure we have data
 		initialize();
 
-		h.put("KEYWORDS", keywords);
-		h.put("DESCR",    descr);
-		h.put("CAT",      cat);
-		h.put("SIZE",     size);
-		h.put("TAKEN",    taken);
-		h.put("TS",       ts);
-		h.put("IMAGE",    image);
-		h.put("CATNUM",   catnum);
-		h.put("ADDEDBY",  addedby);
-		h.put("ID",       "" + id);
+		for(Enumeration e=mydata.keys(); e.hasMoreElements(); ) {
+			Object k=e.nextElement();
+			h.put(k, mydata.get(k));
+		}
+
+		h.put("ID",       "" + search_id);
+
 		return(h);
 	}
 
 	protected void initialize() {
 		// If we are uninitialized, but have an ID, initialize.
-		if(id>=0
-			&& keywords==null
-			&& descr==null
-			&& cat==null
-			&& size==null
-			&& taken==null
-			&& ts==null
-			&& image==null
-			&& catnum==null
-			&& addedby==null) {
-			
+		if(id>=0 && mydata==null) {
 			try {
-				find(id);
+				PhotoCache pc=new PhotoCache();
+				mydata=(Hashtable)pc.get("s_result_" + id);
+				if(mydata==null) {
+					find(id);
+					// Store it for fifteen minutes.
+					pc.store("s_result_" + id, mydata, 600*1000);
+				}
 			} catch(Exception e) {
 				log("Error getting data for result " + id);
 			}
@@ -179,22 +165,28 @@ public class PhotoSearchResult extends PhotoHelper {
 	}
 
 	protected void storeResult(ResultSet rs) throws Exception {
-
 		// If there's not a result, error
 		if(!rs.next()) {
 			throw new Exception("No result received for " + id);
 		}
-		int i=1;
+
+		// If we don't already have a result hash, build one.
+		if(mydata==null) {
+			mydata=new Hashtable();
+		}
+
 		// Grab the components
-		image=rs.getString(i++);
-		keywords=rs.getString(i++);
-		descr=rs.getString(i++);
-		size=rs.getString(i++);
-		taken=rs.getString(i++);
-		ts=rs.getString(i++);
-		cat=rs.getString(i++);
-		catnum=rs.getString(i++);
-		addedby=rs.getString(i++);
+		int i=1;
+		mydata.put("IMAGE",    rs.getString(i++));
+		mydata.put("KEYWORDS", rs.getString(i++));
+		mydata.put("DESCR",    rs.getString(i++));
+		mydata.put("SIZE",     rs.getString(i++));
+		mydata.put("TAKEN",    rs.getString(i++));
+		mydata.put("TS",       rs.getString(i++));
+		mydata.put("CAT",      rs.getString(i++));
+		mydata.put("CATNUM",   rs.getString(i++));
+		mydata.put("ADDEDBY",  rs.getString(i++));
+
 		// If there's another result error
 		if(rs.next()) {
 			throw new Exception("Too many results received for " + id);
@@ -202,42 +194,48 @@ public class PhotoSearchResult extends PhotoHelper {
 	}
 
 	public void setKeywords(String to) {
-		keywords=to;
+		mydata.put("KEYWORDS", to);
 	}
 
 	public void setDescr(String to) {
-		descr=to;
+		mydata.put("DESCR", to);
 	}
 
 	public void setCat(String to) {
-		cat=to;
+		mydata.put("CAT", to);
 	}
 
 	public void setSize(String to) {
-		size=to;
+		mydata.put("SIZE", to);
 	}
 
 	public void setTaken(String to) {
-		taken=to;
+		mydata.put("TAKEN", to);
 	}
 
 	public void setTs(String to) {
-		ts=to;
+		mydata.put("TS", to);
 	}
 
 	public void setImage(String to) {
-		image=to;
+		mydata.put("IMAGE", to);
 	}
 
 	public void setCatNum(String to) {
-		catnum=to;
+		mydata.put("CATNUM", to);
 	}
 
 	public void setAddedBy(String to) {
-		addedby=to;
+		mydata.put("ADDEDBY", to);
 	}
 
 	public void setId(int id) {
-		this.id=id;
+		this.search_id=id;
+	}
+
+	public int getCatNum() {
+		initialize();
+		int ret=Integer.parseInt((String)mydata.get("CATNUM"));
+		return(ret);
 	}
 }

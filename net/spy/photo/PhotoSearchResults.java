@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.3 2000/07/04 22:48:31 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.4 2000/07/05 06:08:33 dustin Exp $
  */
 
 package net.spy.photo;
@@ -65,7 +65,7 @@ public class PhotoSearchResults extends Object {
 		} catch(ClassCastException e) {
 			try {
 				Integer i=(Integer)o;
-				ret=new PhotoSearchResult(i.intValue());
+				ret=new PhotoSearchResult(i.intValue(), which);
 			} catch(Exception e2) {
 				System.err.println("Error getting result "
 					+ which + ":  " + e2);
