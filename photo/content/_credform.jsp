@@ -1,25 +1,27 @@
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
+<%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <p>
-<h1>Login</h1>
-<form method="POST" action="login.do">
-	<input type="hidden" name="func" value="setcred"/>
-
+<h1><bean:message key="forms.login.header"/></h1>
+<html:form action="/login" focus="username">
+	<html:errors/>
 	<table>
 		<tr>
-			<td>Username:</td><td><input name="username"
-				maxlength="16" size="8"/></td>
+			<td><bean:message key="forms.login.username"/>:</td>
+			<td>
+				<html:text property="username" maxlength="16" size="8"/>
+			</td>
 		</tr>
 		<tr>
-			<td>Password:</td>
-			<td><input name="password" type="password" size="8"/></td>
+			<td><bean:message key="forms.login.password"/>:</td>
+			<td><html:password property="password" size="8"/></td>
 		</tr>
 	</table>
-	<input type="submit" value="Authenticate"/>
-	<input type="reset" value="Clear"/>
-</form>
+	<html:submit><bean:message key="forms.login.authbutton"/></html:submit>
+	<html:reset><bean:message key="forms.login.rstbutton"/></html:reset>
+</html:form>
 
 </p>
 

@@ -1,6 +1,8 @@
 <%@ page import="net.spy.photo.Category" %>
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
+<%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
+<%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <p>
@@ -9,22 +11,25 @@
 	<template:put name='title' content='Simple Search' direct='true'/>
 </template:insert>
 
-<form method="POST" action="search.do">
-	<input type="hidden" name="func" value="search">
-	<input type="hidden" name="maxret" value="6">
-	<input type="hidden" name="fieldjoin" value="and">
-	<input type="hidden" name="keyjoin" value="and">
-	<input type="hidden" name="order" value="a.ts">
-	<input type="hidden" name="sdirection" value="desc">
-	Find all images whose
-	<select name="field">
-		<option value="keywords">Keywords</option>
-		<option value="descr">Info (slow)</option>
-	</select>
-	contains
-	<input name="what"/><br/>
-	<input type="submit" value="Find"/>
-</form>
+<html:form action="/search.do">
+	<html:errors/>
+	<html:hidden property="func" value="search"/>
+	<html:hidden property="maxret" value="6"/>
+	<html:hidden property="fieldjoin" value="and"/>
+	<html:hidden property="keyjoin" value="and"/>
+	<html:hidden property="order" value="a.ts"/>
+	<html:hidden property="sdirection" value="desc"/>
+	<bean:message key="forms.search.simple.findimages"/>
+	<html:select property="field">
+		<html:option value="keywords">
+			<bean:message key="forms.search.simple.field.kw"/></html:option>
+		<html:option value="descr">
+			<bean:message key="forms.search.simple.field.info"/></html:option>
+	</html:select>
+	<bean:message key="forms.search.simple.contains"/>
+	<html:text property="what"/><br/>
+	<html:submit><bean:message key="forms.search.simple.submit"/></html:submit>
+</html:form>
 
 </p>
 
@@ -34,7 +39,7 @@
 	<template:put name='title' content='Find image by ID' direct='true'/>
 </template:insert>
 
-<form method="GET" action="search.do">
+<form method="GET" action="PhotoServlet">
 	<input type="hidden" name="func" value="display"/>
 	ID:  <input name="id" size="6">
 	<input type="submit" value="Lookup">
@@ -48,113 +53,141 @@
 	<template:put name='title' content='Advanced Search' direct='true'/>
 </template:insert>
 
-Only fields that are filled out will be used.  Default search will return
-all images.
+<bean:message key="forms.search.adv.pre"/>
 
-<form method="POST" action="search.do">
+<html:form action="/search.do">
 
-	<input type="hidden" name="func" value="search"/>
+	<html:hidden property="func" value="search"/>
 
 	<p>
-		Category:<br/>
-		<select name="cat" size="5" multiple="">
+		<bean:message key="forms.search.adv.cat"/>:<br/>
+		<html:select property="cat" size="5" multiple="true">
 			<photo:getCatList showViewable="true">
 				<logic:iterate id="i" name="catList">
-					<% Category cat=(Category)i; %>
-					<option value="<%= cat.getId() %>">
-						<%= cat.getName() %></option>
+					<% Category category=(Category)i; %>
+					<html:option value="<%= "" + category.getId() %>">
+						<%= category.getName() %></html:option>
 				</logic:iterate>
 			</photo:getCatList>
-		</select>
+		</html:select>
 	</p>
 	<p>
-		<select name="fieldjoin">
-			<option value="and">and</option>
-			<option value="or">or</option>
-		</select>
-		<select name="field">
-			<option value="keywords">Keyword</option>
-			<option value="descr">Info</option>
-		</select>
+		<html:select property="fieldjoin">
+			<html:option value="and">
+				<bean:message key="forms.search.adv.and"/>
+			</html:option>
+			<html:option value="or">
+				<bean:message key="forms.search.adv.or"/>
+			</html:option>
+		</html:select>
+		<html:select property="field">
+			<html:option value="keywords">
+				<bean:message key="forms.search.adv.keywords"/>
+			</html:option>
+			<html:option value="descr">
+				<bean:message key="forms.search.adv.info"/>
+			</html:option>
+		</html:select>
 
-		contains
+		<bean:message key="forms.search.adv.contains"/>
 
-		<select name="keyjoin">
-			<option value="or">one of</option>
-			<option value="and">all of</option>
-		</select>
+		<html:select property="keyjoin">
+			<html:option value="or">
+				<bean:message key="forms.search.adv.oneof"/>
+			</html:option>
+			<html:option value="and">
+				<bean:message key="forms.search.adv.allof"/>
+			</html:option>
+		</html:select>
 
-		<input name="what"/><br/>
+		<html:text property="what"/><br/>
 
 		<table>
 			<tr>
 				<td>
-					<select name="tstartjoin">
-						<option value="and">and</option>
-						<option value="or">or</option>
-					</select>
-					was taken since (date)
-					<input name="tstart"/>
+					<html:select property="tstartjoin">
+						<html:option value="and">
+							<bean:message key="forms.search.adv.and"/>
+						</html:option>
+						<html:option value="or">
+							<bean:message key="forms.search.adv.or"/>
+						</html:option>
+					</html:select>
+					<bean:message key="forms.search.adv.takensince"/>
+					<html:text property="tstart"/>
 				</td>
 				
 				<td>
-					<select name="tendjoin">
-						<option value="and">and</option>
-						<option value="or">or</option>
-					</select>
-					was taken before (date)
-					<input name="tend"/>
+					<html:select property="tendjoin">
+						<html:option value="and">
+							<bean:message key="forms.search.adv.and"/>
+						</html:option>
+						<html:option value="or">
+							<bean:message key="forms.search.adv.or"/>
+						</html:option>
+					</html:select>
+					<bean:message key="forms.search.adv.takenbefore"/>
+					<html:text property="tend"/>
 				</td>
 			</tr>
 
 			<tr>
 				<td>
-					<select name="startjoin">
-						<option value="and">and</option>
-						<option value="or">or</option>
-					</select>
-					was added since (date)
-					<input name="start"/>
+					<html:select property="startjoin">
+						<html:option value="and">
+							<bean:message key="forms.search.adv.and"/>
+						</html:option>
+						<html:option value="or">
+							<bean:message key="forms.search.adv.or"/>
+						</html:option>
+					</html:select>
+					<bean:message key="forms.search.adv.addedsince"/>
+					<html:text property="start"/>
 				</td>
 
 				<td>
-					<select name="endjoin">
-						<option value="and">and</option>
-						<option value="or">or</option>
-					</select>
-					was added before (date)
-					<input name="end"/>
+					<html:select property="endjoin">
+						<html:option value="and">
+							<bean:message key="forms.search.adv.and"/>
+						</html:option>
+						<html:option value="or">
+							<bean:message key="forms.search.adv.or"/>
+						</html:option>
+					</html:select>
+					<bean:message key="forms.search.adv.addedbefore"/>
+					<html:text property="end"/>
 				</td>
 			</tr>
 		</table>
 
-		Sort by when the picture was
-		<select name="order">
-			<option value="a.taken">taken</option>
-			<option value="a.ts">added</option>
-		</select>
-		and show
-		<select name="sdirection">
-			<option value="">oldest</option>
-			<option value="desc">newest</option>
-		</select>
-		images first.
+		<bean:message key="forms.search.adv.sortby"/>
+		<html:select property="order">
+			<html:option value="a.taken">taken</html:option>
+			<html:option value="a.ts">added</html:option>
+		</html:select>
+		<bean:message key="forms.search.adv.andshow"/>
+		<html:select property="sdirection">
+			<html:option value="">oldest</html:option>
+			<html:option value="desc">newest</html:option>
+			<html:option value="hack">hack direction</html:option>
+		</html:select>
+		<bean:message key="forms.search.adv.imagesfirst"/>
 
 		<br/>
 
-		Show
-		<select name="maxret">
-			<option value="6">6</option>
-			<option value="10">10</option>
-		</select>
-		images per page.
+		<bean:message key="forms.search.adv.show"/>
+		<html:select property="maxret">
+			<html:option value="6">6</html:option>
+			<html:option value="10">10</html:option>
+		</html:select>
+		<bean:message key="forms.search.adv.imagespp"/>
 
 		<br/>
 
-		<input type="submit" value="Find"/>
-		<input type="reset" value="Clear Form"/>
+		<html:submit><bean:message key="forms.search.adv.submit"/></html:submit>
+		<html:reset><bean:message key="forms.search.adv.reset"/></html:reset>
 	</p>
 
-</form>
+</html:form>
 
 </p>
