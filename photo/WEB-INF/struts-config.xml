@@ -180,9 +180,9 @@
 	<!-- Modify an image's data -->
 	<action path="/admeditimage"
 		name="uploadForm"
-		input="/displayAdmin.jsp"
+		input="/display.jsp"
 		type="net.spy.photo.struts.AdminEditImage">
-		<forward name="success" path="/displayAdmin.jsp"/>
+		<forward name="success" path="/display.jsp"/>
 	</action>
 
   </action-mappings>

@@ -1,0 +1,24 @@
+#
+# $Id
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Edit an image
+
+@sql
+update album
+	set keywords=?,
+		descr=?,
+		cat=?,
+		taken=?
+	where id=?
+
+@params
+keywords required VARCHAR Keywords for an image
+descr required VARCHAR Description of an image
+cat required INTEGER Category containing the image
+taken required VARCHAR Date the image was taken
+id required INTEGER ID of the image

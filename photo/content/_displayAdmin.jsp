@@ -4,6 +4,7 @@
 <%@ page import="net.spy.photo.PhotoSearchResults" %>
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
+<%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <%
@@ -50,11 +51,13 @@
 
 	<p>
 		<b>Category</b>:
-		<html:select property="cat" size="5">
+		<html:select property="category"
+			value="<%= "" + image.getCatId() %>" size="5">
+
 			<photo:getCatList showAddable="true">
 				<logic:iterate id="i" name="catList"> 
 					<% Category category=(Category)i; %>
-					<html:option value="<%= category.getId() %>">
+					<html:option value="<%= "" + category.getId() %>">
 						<%= category.getName() %></html:option>
 				</logic:iterate>
 			</photo:getCatList>
@@ -65,13 +68,13 @@
 			<html:text property="keywords" value="<%= image.getKeywords() %>"/><br>
 		<b>Size</b>:  <%= image.getDimensions() %>
 			(<%= image.getSize() %> bytes)<br>
-		<b>Taken</b>:  <html:text name="taken" value="<%= image.getTaken() %>"/>
+		<b>Taken</b>:  <html:text property="taken" value="<%= image.getTaken() %>"/>
 			<b>Added</b>:
 			<%= image.getTimestamp() %>
 		by <%= image.getAddedBy() %><br>
 		<b>Info</b>:
-		<html:textarea cols="60" rows="5" name="info"><%=
-			image.getDescr() %></html:textarea>
+		<html:textarea cols="60" rows="5" property="info"
+			value="<%= image.getDescr() %>"/>
 
 	</p>
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadForm.java,v 1.4 2002/06/23 05:26:06 dustin Exp $
+// $Id: UploadForm.java,v 1.5 2002/06/23 06:15:16 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -74,6 +74,14 @@ public class UploadForm extends ActionForm {
 		return(info);
 	}
 
+	public String getId() {
+		return(id);
+	}
+
+	public void setId(String id) {
+		this.id=id;
+	}
+
 	/**
 	 * Get the PhotoImage that got uploaded.
 	 */
@@ -124,17 +132,9 @@ public class UploadForm extends ActionForm {
 
 		// Get and verify the picture if this is an upload
 		if(mapping.getType().equals(UploadAction.class.getName())) {
-			// Make sure the ID is provided.
-			if(id==null || id.length() < 1) {
-				errors.add("id", new ActionError("error.upload.id"));
-			} else {
-				try {
-					Integer.parseInt(id);
-				} catch(NumberFormatException e) {
-					errors.add("id", new ActionError("error.upload.id.nfe"));
-				}
-			}
-		} else {
+
+			// It's an upload, verify the picture
+
 			if( (picture==null) || (picture.getFileSize() == 0) ) {
 				errors.add("picture", new ActionError("error.upload.picture"));
 			} else {
@@ -142,13 +142,11 @@ public class UploadForm extends ActionForm {
 				byte data[]=new byte[picture.getFileSize()];
 				try {
 					int length=picture.getInputStream().read(data);
-
 					// verify we read enough data
 					if(length != picture.getFileSize()) {
 						errors.add("picture",
 							new ActionError("error.upload.picture.notread"));
 					}
-
 					// Create a PhotoImage out of it.
 					photoImage=new PhotoImage(data);
 					System.out.println("Mime type is "
@@ -160,9 +158,31 @@ public class UploadForm extends ActionForm {
 						new ActionError("error.upload.picture.notread"));
 				}
 			}
+
+		} else {
+
+			// It's not an upload, so we need to verify the ID
+			if(id==null || id.length() < 1) {
+				errors.add("id", new ActionError("error.upload.id"));
+			} else {
+				try {
+					Integer.parseInt(id);
+				} catch(NumberFormatException e) {
+					e.printStackTrace();
+					errors.add("id", new ActionError("error.upload.id.nfe"));
+				}
+			}
+
 		}
 
 		return(errors);
+	}
+
+	/**
+	 * Null the file on reset as to keep the form serializable.
+	 */
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		picture=null;
 	}
 
 }
