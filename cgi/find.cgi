@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: find.cgi,v 1.4 1997/11/04 08:57:26 dustin Exp $
+# $Id: find.cgi,v 1.5 1997/11/04 09:14:22 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -169,15 +169,32 @@ if( ($start+$max) < $n)
     if(($n-($start+$max))<$max)
     {
 	$nn=($n-($start+$max));
+
+	if($nn==1)
+	{
+	    $nn="match";
+	}
+	else
+	{
+	    $nn="$nn matches";
+	}
     }
     else
     {
-	$nn=$max;
+	$nn="$max matches";
     }
 
-    $s=$q->self_url;
-    $sum=$start+$max;
-    print "<a href=\"$s&qstart=$sum\">Next $nn matches</a>\n";
+    print $q->startform(-method=>'POST');
+    print $q->hidden(-name=>'qstart', -value=>$start+$max);
+
+    for($q->param)
+    {
+	print $q->hidden(-name=>$_, -value=>$q->param($_)) . "\n";;
+    }
+
+    print $q->submit(-value=>"Next $nn");
+
+    print $q->endform;
 }
 
 print $q->end_html;
