@@ -21,7 +21,7 @@
 		<logic:iterate id="i" collection="<%= PhotoSecurity.getAllUsers() %>">
 			<% PhotoUser user=(PhotoUser)i; %>
 
-			<html:option value="<%= user.getId() %>"><%= user.getUsername() %>
+			<html:option value="<%= "" + user.getId() %>"><%= user.getUsername() %>
 			</html:option>
 		</logic:iterate>
 	</html:select>

@@ -1,5 +1,5 @@
 <%@ page import="net.spy.photo.PhotoUser" %>
-<%@ page import="net.spy.photo.PhotoSecurity" %>
+<%@ page import="net.spy.photo.Category" %>
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
@@ -23,6 +23,10 @@
 			<td><html:text property="username"/></td>
 		</tr>
 		<tr>
+			<td>Password</td>
+			<td><html:password property="password"/></td>
+		</tr>
+		<tr>
 			<td>Realname</td>
 			<td><html:text property="realname"/></td>
 		</tr>
@@ -32,21 +36,31 @@
 		</tr>
 		<tr>
 			<td>Can add</td>
-			<td><html:checkbox property="email"/></td>
+			<td><html:checkbox property="canadd"/></td>
 		</tr>
 	</table>
 
-	<%--
-	<html:select property=userId>
-		<html:option value="-1">New User</html:option>
-		<logic:iterate id="i" collection="<%= PhotoSecurity.getAllUsers() %>">
-			<% PhotoUser user=(PhotoUser)i; %>
+	<table border="1">
+		<tr>
+			<th>Category</th>
+			<th>Can View</th>
+			<th>Can Add</th>
+		</tr>
 
-			<html:option value="<%= user.getId() %>"><%= user.getUsername() %>
-			</html:option>
+		<logic:iterate id="i" collection="<%= Category.getAdminCatList() %>">
+			<% Category cat=(Category)i; %>
+
+			<tr>
+				<td><%= cat.getName() %></td>
+				<td>
+					<html:multibox property="catAclView" value="<%= "" + cat.getId() %>"/>
+				</td>
+				<td>
+					<html:multibox property="catAclAdd" value="<%= "" + cat.getId() %>"/>
+				</td>
+			</tr>
 		</logic:iterate>
-	</html:select>
-	--%>
+	</table>
 
 	<html:submit>Save</html:submit>
 </html:form>
