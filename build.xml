@@ -17,6 +17,8 @@
 	<property name="TLDDIR" value="${BUILDTOP}/tmp/tlds"/>
 	<property name="BUILDTMP" value="${BUILDTOP}/tmp/"/>
 	<property name="DOCDIR" value="${BUILDTOP}/docs/"/>
+	<property name="WARDIR" value="${BUILDTOP}/wars/"/>
+	<property name="WARDEST" value="/afs/.spy.net/misc/web/resin/wars"/>
 
 	<!-- Set up the class path -->
 	<path id="photo.classpath">
@@ -42,6 +44,7 @@
 		<mkdir dir="${GENDIR}"/>
 		<mkdir dir="${TLDDIR}"/>
 		<mkdir dir="${LIBDIR}"/>
+		<mkdir dir="${WARDIR}"/>
 	</target>
 
 	<target name="clean" description="Clean up all generated files.">
@@ -74,64 +77,85 @@
 	<!-- to skip validation, use ``ant -Dnovalidate=true ...'' -->
 	<target name="validateconfigs" unless="novalidate">
 		<xmlvalidate failonerror="yes">
-			<fileset dir="photo/WEB-INF" includes="**/*.xml"/>
+			<fileset dir="photo/WEB-INF"
+				includes="**/*.xml" excludes="**/resin-web.xml"/>
 		</xmlvalidate>
 	</target>
 
 	<!-- This is specific to my development at home. -->
 	<target name="install"
 		description="Install a new build in my environment (not for most people)"
-		depends="install-web-app"/>
+		depends="install-wars"/>
 
-	<target name="install-web-app-var">
-		<echo message="Installing to ${location}"/>
-		<copy todir="/afs/.spy.net/misc/web/root/${location}/">
-			<fileset dir="photo">
-				<include name="**/*.html"/>
-				<include name="**/*.jsp"/>
-				<include name="**/*.css"/>
-				<include name="images/*"/>
-				<include name="WEB-INF/lib/*.jar"/>
-				<include name="WEB-INF/struts-config.xml"/>
-				<include name="WEB-INF/web.xml"/>
-				<include name="WEB-INF/scripts/**"/>
-				<include name="WEB-INF/validator-rules.xml"/>
-				<include name="WEB-INF/validation.xml"/>
-				<include name="WEB-INF/tiles-defs.xml"/>
-				<include name="WEB-INF/tlds/*.tld"/>
-				<!-- Avoid overwriting spy.jar in case I've done specific upgrades. -->
-				<exclude name="WEB-INF/lib/spy.jar"/>
-			</fileset>
-		</copy>
-		<copy file="${BUILDTOP}/photo.jar"
-			tofile="/afs/.spy.net/misc/web/root/${location}/WEB-INF/lib/photo.jar"/>
+	<target name="install-war-var">
+		<echo message="Installing ${which}.war"/>
+		<copy file="${WARDIR}/${which}.war" tofile="${WARDEST}/${which}.war"/>
 	</target>
 
-	<target name="install-web-app" depends="photo.jar,install-demo">
-		<antcall target="install-web-app-var">
-			<param name="location" value="photo"/>
+	<target name="install-wars" description="Install all wars" depends="wars">
+		<antcall target="install-war-var">
+			<param name="which" value="photo"/>
 		</antcall>
-		<antcall target="install-web-app-var">
-			<param name="location" value="beckerphoto"/>
+		<antcall target="install-war-var">
+			<param name="which" value="beckerphoto"/>
 		</antcall>
-		<antcall target="install-web-app-var">
-			<param name="location" value="wisephoto"/>
+		<antcall target="install-war-var">
+			<param name="which" value="wisephoto"/>
 		</antcall>
-		<antcall target="install-web-app-var">
-			<param name="location" value="jasonphoto"/>
+		<antcall target="install-war-var">
+			<param name="which" value="jasonphoto"/>
+		</antcall>
+		<antcall target="install-war-var">
+			<param name="which" value="photodemo"/>
 		</antcall>
 	</target>
 
-	<target name="install-demo-content"
-		description="Install the web app content without making a new jar">
-		<antcall target="install-web-app-var">
-			<param name="location" value="photodemo"/>
-		</antcall>
+	<target name="photo.war" depends="photo.jar">
+		<jar jarfile="${BUILDTOP}/photo.war" basedir="." excludes="**">
+			<zipfileset dir="photo" prefix="">
+				<patternset refid="arch-stuff"/>
+			</zipfileset>
+			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF/lib" includes="photo.jar"/>
+			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF" includes="photo.conf">
+				<patternset refid="arch-stuff"/>
+			</zipfileset>
+		</jar>
 	</target>
 
-	<target name="install-demo"
-			description="Update the demo installation"
-			depends="photo.jar,install-demo-content"/>
+	<target name="war-var" depends="photo.jar">
+		<echo message="Building ${which}.war"/>
+		<copy file="/afs/@cell/misc/web/photoconfs/${which}.conf"
+			tofile="${BUILDTOP}/photo.conf"/>
+		<jar jarfile="${WARDIR}/${which}.war" basedir="." excludes="**">
+			<zipfileset dir="photo" prefix="">
+				<patternset refid="arch-stuff"/>
+			</zipfileset>
+			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF/lib" includes="photo.jar"/>
+			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF" includes="photo.conf">
+				<patternset refid="arch-stuff"/>
+			</zipfileset>
+			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF" includes="photo.conf"/>
+		</jar>
+		<delete file="${BUILDTOP}/photo.conf"/>
+	</target>
+
+	<target name="wars" depends="photo.jar,validateconfigs">
+		<antcall target="war-var">
+			<param name="which" value="photo"/>
+		</antcall>
+		<antcall target="war-var">
+			<param name="which" value="beckerphoto"/>
+		</antcall>
+		<antcall target="war-var">
+			<param name="which" value="wisephoto"/>
+		</antcall>
+		<antcall target="war-var">
+			<param name="which" value="jasonphoto"/>
+		</antcall>
+		<antcall target="war-var">
+			<param name="which" value="photodemo"/>
+		</antcall>
+	</target>
 
 	<target name="install-docs"
 		description="Install the documentation"
@@ -147,7 +171,7 @@
 
 	<target name="photo.jar"
 		description="Create photo.jar"
-		depends="all,photoresources.properties,validateconfigs">
+		depends="all,photoresources.properties">
 		<jar jarfile="${BUILDTOP}/photo.jar" basedir="${BUILDDIR}">
 			<include name="**/*.class"/>
 			<include name="net/**/*.properties"/>
@@ -163,22 +187,6 @@
 			<zipfileset dir="photo" prefix="" includes="**/*.png"/>
 			<zipfileset dir="photo" prefix="" includes="**/*.tld"/>
 		</zip>
-	</target>
-
-	<target name="photo.conf">
-		<copy file="etc/photo.conf" tofile="${BUILDTOP}/photo.conf"/>
-	</target>
-
-	<target name="photo.war" depends="photo.jar,photo.conf">
-		<jar jarfile="${BUILDTOP}/photo.war" basedir="." excludes="**">
-			<zipfileset dir="photo" prefix="">
-				<patternset refid="arch-stuff"/>
-			</zipfileset>
-			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF/lib" includes="photo.jar"/>
-			<zipfileset dir="${BUILDTOP}" prefix="WEB-INF" includes="photo.conf">
-				<patternset refid="arch-stuff"/>
-			</zipfileset>
-		</jar>
 	</target>
 
 	<target name="photo.zip" depends="photo.war,docs">

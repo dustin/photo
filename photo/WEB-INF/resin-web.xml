@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<!-- Copyright (c) 2004  Dustin Sallings (dustin@spy.net) -->
+
+<web-app>
+	<!-- This will cause all jsps to compile when the webapp inits. -->
+	<listener>
+		<listener-class>com.caucho.jsp.JspPrecompileListener</listener-class>
+		<init>
+			<extension>jsp</extension>
+		</init>
+	</listener>
+	<session-config>
+		<file-store>WEB-INF/tmp/sessions</file-store>
+		<always-save-session/>
+	</session-config>
+</web-app>
