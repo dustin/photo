@@ -268,7 +268,7 @@
 				</select>
 				and show
 				<select name="sdirection">
-					<option>oldest</option>
+					<option value="">oldest</option>
 					<option value="desc">newest</option>
 				</select>
 				images first.
