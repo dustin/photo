@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogView.java,v 1.3 2002/01/10 10:44:41 dustin Exp $
+ * $Id: PhotoLogView.java,v 1.4 2002/02/15 08:28:07 dustin Exp $
  */
 
 package net.spy.photo;
@@ -23,16 +23,8 @@ public class PhotoLogView extends PhotoHelper
 	}
 
 	public String getViewersOf(int photo_id) throws Exception {
-		Connection db;
 		Statement st;
 		String query, out="";
-
-		try {
-			db=getDBConn();
-		} catch(Exception e) {
-			throw new Exception("Can't get database connection: "
-				+ e.getMessage());
-		}
 
 		query = "select wwwusers.username, log.remote_addr,\n"
 			  + "   user_agent.user_agent, log.cached, log.ts\n"
@@ -42,8 +34,8 @@ public class PhotoLogView extends PhotoHelper
 			  + "    user_agent.user_agent_id = log.user_agent\n"
 			  + "  order by log.ts\n";
 		try {
-			st = db.createStatement();
-			ResultSet rs = st.executeQuery(query);
+			SpyDB db=new SpyDB(new PhotoConfig());
+			ResultSet rs = db.executeQuery(query);
 
 			Hashtable htmp = new Hashtable();
 			htmp.put("PHOTO_ID", "" + photo_id);
@@ -68,10 +60,9 @@ public class PhotoLogView extends PhotoHelper
 			out+=PhotoUtil.tokenize(photosession, "log/viewers_bottom.inc",
 				new Hashtable());
 
+			db.close();
 		} catch(Exception e) {
 			throw new Exception(e.getMessage());
-		} finally {
-			freeDBConn(db);
 		}
 
 		return(out);

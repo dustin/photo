@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.15 2002/02/14 22:00:31 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.16 2002/02/15 08:28:07 dustin Exp $
  */
 
 package net.spy.photo;
@@ -42,7 +42,7 @@ public class PhotoSecurity extends PhotoHelper {
 	}
 
 	// All the common stuff for loading a user happens here.
-	private PhotoUser getUser(Connection conn, PreparedStatement st)
+	private PhotoUser getUser(SpyDB conn, PreparedStatement st)
 		throws Exception {
 
 			ResultSet rs=st.executeQuery();
@@ -75,9 +75,9 @@ public class PhotoSecurity extends PhotoHelper {
 	}
 
 	/**
-	 * Get a user by username
+	 * Get a user by username.
 	 */
-	public PhotoUser getUser(String username) {
+	private PhotoUser getUserByUsername(String username) {
 		PhotoUser ret=null;
 
 		// Grab the cache
@@ -91,25 +91,74 @@ public class PhotoSecurity extends PhotoHelper {
 		if(ret==null) {
 			Connection photo=null;
 			try {
-				photo=getDBConn();
-				PreparedStatement st=photo.prepareStatement(
+				SpyDB db=new SpyDB(new PhotoConfig());
+				PreparedStatement st=db.prepareStatement(
 					"select * from wwwusers where username=?"
 					);
 				st.setString(1, username);
-				PhotoUser u=getUser(photo, st);
+				PhotoUser u=getUser(db, st);
 
 				// User cache is valid for 30 minutes
 				cache.store(key, u, 30*60*1000);
 				ret=u;
-
+				db.close();
 			} catch(Exception e) {
 				log("Error lookup up user " + username);
 				e.printStackTrace();
-			} finally {
-				if(photo!=null) {
-					freeDBConn(photo);
-				}
 			}
+		}
+
+		return(ret);
+	}
+	
+	/**
+	 * Get a user by recorded Email address.
+	 */
+	private PhotoUser getUserByEmail(String email) {
+		PhotoUser ret=null;
+
+		// Grab the cache
+		SpyCache cache=new SpyCache();
+		String key="sec_e_" + email;
+
+		// Get the data from cache
+		ret = (PhotoUser)cache.get(key);
+
+		// If it's not cached, grab it from the DB.
+		if(ret==null) {
+			Connection photo=null;
+			try {
+				SpyDB db=new SpyDB(new PhotoConfig());
+				PreparedStatement st=db.prepareStatement(
+					"select * from wwwusers where email=?"
+					);
+				st.setString(1, email);
+				PhotoUser u=getUser(db, st);
+
+				// User cache is valid for 30 minutes
+				cache.store(key, u, 30*60*1000);
+				ret=u;
+				db.close();
+			} catch(Exception e) {
+				log("Error lookup up user " + email);
+				e.printStackTrace();
+			}
+		}
+
+		return(ret);
+	}
+
+	/**
+	 * Get a user.  If the argument contains an @, it looks up by the
+	 * E-mail address instead of the username.
+	 */
+	public PhotoUser getUser(String spec) {
+		PhotoUser ret=null;
+
+		if(spec.indexOf("@") > 0) {
+			ret=getUserByEmail(spec);
+		} else {
+			ret=getUserByUsername(spec);
 		}
 
 		return(ret);
@@ -130,25 +179,21 @@ public class PhotoSecurity extends PhotoHelper {
 
 		// If it's not cached, grab it from the DB.
 		if(ret==null) {
-			Connection photo=null;
 			try {
-				photo=getDBConn();
-				PreparedStatement st=photo.prepareStatement(
+				SpyDB db=new SpyDB(new PhotoConfig());
+				PreparedStatement st=db.prepareStatement(
 					"select * from wwwusers where id=?"
 					);
 				st.setInt(1, id);
-				PhotoUser u=getUser(photo, st);
+				PhotoUser u=getUser(db, st);
 
 				// User cache is valid for 30 minutes
 				cache.store(key, u, 30*60*1000);
 				ret=u;
+				db.close();
 			} catch(Exception e) {
 				log("Error lookup up user " + id);
 				e.printStackTrace();
-			} finally {
-				if(photo!=null) {
-					freeDBConn(photo);
-				}
 			}
 		}
 

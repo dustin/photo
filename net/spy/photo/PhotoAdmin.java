@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.20 2002/01/13 11:08:32 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.21 2002/02/15 08:28:07 dustin Exp $
  */
 
 package net.spy.photo;
@@ -63,14 +63,12 @@ public class PhotoAdmin extends PhotoHelper {
 			throw new ServletException("Not admin");
 		}
 		String out="";
-		Connection photo=null;
 		try {
-			photo=getDBConn();
+			SpyDB photo=new SpyDB(new PhotoConfig());
 			String users="";
 			Hashtable h = new Hashtable();
 
-			Statement st=photo.createStatement();
-			ResultSet rs=st.executeQuery(
+			ResultSet rs=photo.executeQuery(
 				"select id, username from wwwusers\n"
 					+ " order by lower(username)"
 				);
@@ -81,10 +79,10 @@ public class PhotoAdmin extends PhotoHelper {
 			}
 			h.put("USERS", users);
 			out=tokenize("admin/admuser.inc", h);
+
+			photo.close();
 		} catch(Exception e) {
 			se=new ServletException("Error showing users", e);
-		} finally {
-			freeDBConn(photo);
 		}
 
 		if(se!=null) {
@@ -101,7 +99,6 @@ public class PhotoAdmin extends PhotoHelper {
 		if(!isAdmin()) {
 			throw new ServletException("Not admin");
 		}
-		Connection photo=null;
 		try {
 			String s_user_id=ps.request.getParameter("userid");
 			int userid=Integer.parseInt(s_user_id);
@@ -117,7 +114,7 @@ public class PhotoAdmin extends PhotoHelper {
 			h.put("CANADD", "");
 			h.put("CANNOTADD", "checked");
 
-			photo=getDBConn();
+			SpyDB photo=new SpyDB(new PhotoConfig());
 
 			// First DB query is to get the user info
 			PreparedStatement st=photo.prepareStatement(
@@ -209,10 +206,10 @@ public class PhotoAdmin extends PhotoHelper {
 			}
 			h.put("ACLTABLE", acltable);
 			output=tokenize("admin/userform.inc", h);
+
+			photo.close();
 		} catch(Exception e) {
 			se=new ServletException("Error displaying user:  " + e);
-		} finally {
-			freeDBConn(photo);
 		}
 		if(se!=null) {
 			throw(se);
@@ -361,14 +358,13 @@ public class PhotoAdmin extends PhotoHelper {
 		if(!isAdmin()) {
 			throw new ServletException("Not admin");
 		}
-		Connection photo=null;
 		try {
 			String s_cat_id=ps.request.getParameter("cat");
 			int cat_id=Integer.parseInt(s_cat_id);
 			Hashtable h=new Hashtable();
 			h.put("CATID", "-1");
 			h.put("CATNAME", "");
-			photo=getDBConn();
+			SpyDB photo=new SpyDB(new PhotoConfig());
 			PreparedStatement st=photo.prepareStatement(
 				"select name from cat where id=?"
 				);
@@ -379,10 +375,9 @@ public class PhotoAdmin extends PhotoHelper {
 				h.put("CATNAME", rs.getString("name"));
 			}
 			output=tokenize("admin/editcat.inc", h);
+			photo.close();
 		} catch(Exception e) {
 			se=new ServletException("Error displaying cat:  " + e);
-		} finally {
-			freeDBConn(photo);
 		}
 		if(se!=null) {
 			throw(se);
@@ -397,13 +392,12 @@ public class PhotoAdmin extends PhotoHelper {
 		}
 		Hashtable h = new Hashtable();
 		ServletException se=null;
-		Connection photo=null;
 		try {
 			String stmp=ps.request.getParameter("id");
 			int cat_id=Integer.parseInt(stmp);
 			String cat_name=ps.request.getParameter("name");
 
-			photo=getDBConn();
+			SpyDB photo=new SpyDB(new PhotoConfig());
 			if(cat_id>0) {
 				PreparedStatement st=photo.prepareStatement(
 					"update cat set name=? where id=?"
@@ -434,10 +428,9 @@ public class PhotoAdmin extends PhotoHelper {
 				// Get rid of anything that starts with catList_
 				cache.uncacheLike("catList_");
 			}
+			photo.close();
 		} catch(Exception e) {
 			se=new ServletException("Error in admEditCategoryForm", e);
-		} finally {
-			freeDBConn(photo);
 		}
 		if(se!=null) {
 			throw(se);
@@ -483,9 +476,8 @@ public class PhotoAdmin extends PhotoHelper {
 			info = "";
 		}
 
-		Connection photo=null;
 		try {
-			photo=getDBConn();
+			SpyDB photo=new SpyDB(new PhotoConfig());
 			PreparedStatement st=photo.prepareStatement(
 				"update album set cat=?, keywords=?, descr=?, taken=?\n"
 				+ " where id=?"
@@ -496,10 +488,9 @@ public class PhotoAdmin extends PhotoHelper {
 			st.setString(4, taken);
 			st.setInt(5, id);
 			st.executeUpdate();
+			photo.close();
 		} catch(Exception e) {
 			log("Error updating information:  " + e);
-		} finally {
-			freeDBConn(photo);
 		}
 	}
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.16 2001/12/28 04:45:29 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.17 2002/02/15 08:28:07 dustin Exp $
  */
 
 package net.spy.photo;
@@ -139,7 +139,6 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	public void find(int id, int uid) throws Exception {
 		this.id=id;
 
-		Connection photo=null;
 		Exception ex=null;
 
 		try {
@@ -151,7 +150,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
             	+ "   and a.addedby=c.id\n"
             	+ "   and a.cat in (select cat from wwwacl where "
             	+ "userid=? or userid=?)\n";
-			photo=getDBConn();
+			SpyDB photo=new SpyDB(new PhotoConfig());
 			PreparedStatement st=photo.prepareStatement(query);
 			st.setInt(1, id);
 			st.setInt(2, uid);
@@ -161,13 +160,10 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 			// Store it.
 			storeResult(rs);
 
+			photo.close();
 		} catch(Exception e) {
 			// We'll throw this a bit later.
 			ex=e;
-		} finally {
-			if(photo!=null) {
-				freeDBConn(photo);
-			}
 		}
 		// If we had an exception, get rid of it!
 		if(ex!=null) {
@@ -178,7 +174,6 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	protected void find(int id) throws Exception {
 		this.id=id;
 
-		Connection photo=null;
 		Exception ex=null;
 
 		try {
@@ -188,7 +183,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
             	+ "   from album a, cat b, wwwusers c\n"
             	+ "   where a.cat=b.id and a.id=?\n"
             	+ "   and a.addedby=c.id\n";
-			photo=getDBConn();
+			SpyDB photo=new SpyDB(new PhotoConfig());
 			PreparedStatement st=photo.prepareStatement(query);
 			st.setInt(1, id);
 			ResultSet rs=st.executeQuery();
@@ -197,10 +192,6 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		} catch(Exception e) {
 			// Save it to be thrown later.
 			ex=e;
-		} finally {
-			if(photo!=null) {
-				freeDBConn(photo);
-			}
 		}
 		// If we had an exception, toss it up
 		if(ex!=null) {

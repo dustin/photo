@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.15 2001/12/28 13:13:41 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.16 2002/02/15 08:28:07 dustin Exp $
  */
 
 package net.spy.photo;
@@ -53,8 +53,6 @@ public class PhotoSearch extends PhotoHelper {
 			throw new Exception("No permission to save searches.");
 		}
 
-		Connection photo=null;
-
 		try {
 			String stmp=null, name=null, search=null;
 
@@ -70,7 +68,7 @@ public class PhotoSearch extends PhotoHelper {
 
 			String query = "insert into searches (name, addedby, search, ts)\n"
 				+ "  values(?, ?, ?, ?)";
-			photo=getDBConn();
+			SpyDB photo=new SpyDB(new PhotoConfig());
 			PreparedStatement st=photo.prepareStatement(query);
 			st.setString(1, name);
 			st.setInt(2, user.getId());
@@ -78,12 +76,10 @@ public class PhotoSearch extends PhotoHelper {
 			st.setDate(4, new java.sql.Date(System.currentTimeMillis()));
 
 			st.executeUpdate();
+
+			photo.close();
 		} catch(Exception e) {
 			log("Error saving search:  " + e);
-		} finally {
-			if(photo!=null) {
-				freeDBConn(photo);
-			}
 		}
 	}
 
@@ -96,16 +92,13 @@ public class PhotoSearch extends PhotoHelper {
 			new PhotoSearchResults(request.getRequestURI());
 		results.setMaxSize(sessionData.getOptimalDimensions());
 
-		Connection photo=null;
-
 		try {
 
 			// Go get a query
 			String query=buildQuery(request, sessionData.getUser().getId());
 
-			photo=getDBConn();
-			Statement st=photo.createStatement();
-			ResultSet rs = st.executeQuery(query);
+			SpyDB photo=new SpyDB(new PhotoConfig());
+			ResultSet rs = photo.executeQuery(query);
 
 			// Figure out how many they want to display.
 			String tmp=request.getParameter("maxret");
@@ -145,13 +138,9 @@ public class PhotoSearch extends PhotoHelper {
 				// Counting results...
 				result_id++;
 			}
-
+			photo.close();
 		} catch(Exception e) {
 			throw new ServletException("Error performing search", e);
-		} finally {
-			if(photo!=null) {
-				freeDBConn(photo);
-			}
 		}
 		return(results);
 	}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.80 2002/02/15 00:33:57 dustin Exp $
+ * $Id: PhotoSession.java,v 1.81 2002/02/15 08:28:07 dustin Exp $
  */
 
 package net.spy.photo;
@@ -343,22 +343,9 @@ public class PhotoSession extends Object
 		}
 	}
 
-	// Grab a connection from the pool.
-	private Connection getDBConn() throws Exception {
-		SpyDB pdb=new SpyDB(new PhotoConfig(), false);
-		return(pdb.getConn());
-	}
-
-	// Gotta free the connection
-	private void freeDBConn(Connection conn) {
-		SpyDB pdb=new SpyDB(new PhotoConfig(), false);
-		pdb.freeDBConn(conn);
-	}
-
 	// Get the saved searches.
 	private String showSaved() {
 		String out="";
-		Connection photo=null;
 		SpyCache cache=new SpyCache();
 		out=(String)cache.get("saved_searches");
 		// If we don't have it cached, grab it and cache it.
@@ -366,12 +353,11 @@ public class PhotoSession extends Object
 			log("saved_searches was not cached, must fetch from the db");
 			try {
 				out="";
-				photo=getDBConn();
+				SpyDB photo=new SpyDB(new PhotoConfig());
 				Base64 base64 = new Base64();
-				Statement st=photo.createStatement();
 
 				String query = "select * from searches order by name\n";
-				ResultSet rs = st.executeQuery(query);
+				ResultSet rs = photo.executeQuery(query);
 				while(rs.next()) {
 					byte data[];
 					data=base64.decode(rs.getString(4));
@@ -382,12 +368,9 @@ public class PhotoSession extends Object
 				}
 				// Cache for fifteen minutes.
 				cache.store("saved_searches", out, 15*60*1000);
+				photo.close();
 			} catch(Exception e) {
 				log("Error getting search data, returning none", e);
-			} finally {
-				if(photo != null) {
-					freeDBConn(photo);
-				}
 			}
 		}
 
@@ -404,7 +387,6 @@ public class PhotoSession extends Object
 		String type=null;
 		String userAgent=null;
 		int id=-1;
-		Connection photo=null;
 
 		int cat=Integer.parseInt(multi.getParameter("category"));
 
@@ -466,6 +448,9 @@ public class PhotoSession extends Object
 				+ "Perhaps you selected a file that doesn't exist?");
 		}
 
+		SpyDB db=null;
+		Connection photo=null;
+
 		// OK, things look good, let's try to store our data.
 		try {
 			FileInputStream in=null;
@@ -486,8 +471,10 @@ public class PhotoSession extends Object
 			}
 			PhotoImage photo_image=new PhotoImage(data);
 
-			photo=getDBConn();
+			db=new SpyDB(new PhotoConfig());
+			photo=db.getConn();
 			photo.setAutoCommit(false);
+
 			query = "insert into album(keywords, descr, cat, taken, size, "
 				+ " addedby, ts, width, height, tn_width, tn_height)\n"
 				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)";
@@ -559,7 +546,7 @@ public class PhotoSession extends Object
 			if(photo != null) {
 				try {
 					photo.setAutoCommit(true);
-					freeDBConn(photo);
+					db.close();
 				} catch(Exception e) {
 					log("Error cleaning up database after adding an image", e);
 				}
@@ -574,7 +561,6 @@ public class PhotoSession extends Object
 	// Public because helpers use it
 	public String getCatList(int def) {
 		String out="";
-		Connection photo=null;
 		SpyCache cache=new SpyCache();
 
 		String key="catList_" + def;
@@ -584,7 +570,7 @@ public class PhotoSession extends Object
 		if(out==null) {
 			out="";
 			try {
-				photo=getDBConn();
+				SpyDB photo=new SpyDB(new PhotoConfig());
 
 				String query = "select * from cat where id in\n"
 			  		+ "(select cat from wwwacl where\n"
@@ -607,12 +593,9 @@ public class PhotoSession extends Object
 				}
 				// Cache it for five minutes
 				cache.store(key, out, 5*60*1000);
+				photo.close();
 			} catch(Exception e) {
 				log("Error getting category list, returning an empty one", e);
-			} finally {
-					if(photo != null) {
-						freeDBConn(photo);
-					}
 			}
 			// Cache this for five minutes.
 			cache.store(key, out, 5*60*1000);
@@ -903,10 +886,9 @@ public class PhotoSession extends Object
 	// View categories
 	private String doCatView() throws Exception {
 		String catstuff="";
-		Connection photo=null;
 
 		try {
-			photo = getDBConn();
+			SpyDB photo = new SpyDB(new PhotoConfig());
 
 			String query = "select name,id,catsum(id) as cs from cat\n"
 			  	+ "where id in\n"
@@ -934,10 +916,10 @@ public class PhotoSession extends Object
 				catstuff += " <qualifier>" + t + "</qualifier>\n";
 				catstuff += "</cat_view_item>\n\n";
 			}
+			photo.close();
 		} catch(Exception e) {
 			throw new ServletException("Error producing category view", e);
 		}
-		finally { freeDBConn(photo); }
 
 		PhotoXML xml=new PhotoXML();
 		xml.setTitle("View Images by Category");
