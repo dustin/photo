@@ -15,9 +15,12 @@
 	<servlet>
 		<servlet-name>PhotoServlet</servlet-name>
 		<servlet-class>net.spy.photo.PhotoServlet</servlet-class>
-		<!--
 		<load-on-startup>1</load-on-startup>
-		-->
+
+		<init-param>
+			<param-name>configFile</param-name>
+			<param-value>/WEB-INF/photo.conf</param-value>
+		</init-param>
 	</servlet>
 
 	<servlet-mapping>

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoConfig.java,v 1.10 2002/02/21 09:36:17 dustin Exp $
+ * $Id: PhotoConfig.java,v 1.11 2002/05/05 08:07:09 dustin Exp $
  */
 
 package net.spy.photo;
@@ -11,6 +11,9 @@ import java.io.*;
 
 public class PhotoConfig extends SpyConfig {
 
+	// If provided, this configuration will be used.
+	private static File staticConfigLocation=null;
+
 	// Places to look for config files.
 	private File configs[]={
 		new File("photo.conf"),
@@ -19,13 +22,32 @@ public class PhotoConfig extends SpyConfig {
 		new File("/afs/spy.net/misc/web/etc/photo.conf")
 	};
 
+	/**
+	 * Get a configuration.
+	 */
 	public PhotoConfig() {
 		super();
 
 		boolean gotit=false;
 
-		loadConfig(configs);
+		if(staticConfigLocation==null) {
+			loadConfig(configs);
+		} else {
+			loadConfig(staticConfigLocation);
+		}
 
+		loadDefaults();
+	}
+
+	/**
+	 * Set the configuration location for all future instances of
+	 * PhotoConfig.
+	 */
+	public void setStaticConfigLocation(String to) {
+		staticConfigLocation=new File(to);
+	}
+
+	private void loadDefaults() {
 		// Now add defaults
 		orput("dbDriverName", "org.postgresql.Driver");
 		orput("dbSource", "jdbc:postgresql://localhost/photo");

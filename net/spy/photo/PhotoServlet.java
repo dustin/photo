@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.20 2002/02/21 09:26:03 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.21 2002/05/05 08:07:09 dustin Exp $
  */
 
 package net.spy.photo;
@@ -36,6 +36,19 @@ public class PhotoServlet extends HttpServlet
 		super.init(config);
 
 		PhotoConfig conf = new PhotoConfig();
+
+		// See if we need to provide a new configuration location
+		String confpath=config.getInitParameter("configFile");
+		if(confpath!=null) {
+			// If it's in the WEB-INF, translate it to a filesystem path
+			if(confpath.startsWith("/WEB-INF")) {
+				confpath=config.getServletContext().getRealPath(confpath);
+			}
+			// Set the path
+			conf.setStaticConfigLocation(confpath);
+			// Get a new config for the changes to take effect
+			conf=new PhotoConfig();
+		}
 
 		// Security stuff
 		try {
@@ -92,7 +105,7 @@ public class PhotoServlet extends HttpServlet
 	// Servlet info
 	public String getServletInfo() {
 		return("Copyright (c) 2000  Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.20 $");
+			+ " - $Revision: 1.21 $");
 	}
 
 	// Do a GET request

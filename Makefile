@@ -102,6 +102,10 @@ srtest: $(CLASSES)
 setpw: net/spy/photo/SetPW.class
 	env CLASSPATH=$(CLASSPATH) $(JAVA) net.spy.photo.SetPW
 
+install: photo.jar
+	cp photo.jar /afs/.spy.net/misc/web/root/photo/WEB-INF/lib
+	cp etc/web.xml /afs/.spy.net/misc/web/root/photo/WEB-INF
+
 release: photo.jar release.tgz
 
 release.tgz:
