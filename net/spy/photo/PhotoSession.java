@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.20 2000/06/30 08:44:12 dustin Exp $
+ * $Id: PhotoSession.java,v 1.21 2000/07/01 00:39:57 dustin Exp $
  */
 
 package net.spy.photo;
@@ -523,6 +523,15 @@ public class PhotoSession extends Object
 			h.put("CAT_LIST", "");
 		}
 		h.put("TODAY", PhotoUtil.getToday());
+
+		// If the user cannot add, make it clear on the add page.
+		if(canadd()) {
+			// User can add, say nothing.
+			h.put("CANNOTADD", "");
+		} else {
+			// User cannot add, point this out.
+			h.put("CANNOTADD", "You do not have the ability to add images");
+		}
 		output += tokenize("addform.inc", h);
 		return(output);
 	}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoHelper.java,v 1.1 2000/06/24 23:30:57 dustin Exp $
+ * $Id: PhotoHelper.java,v 1.2 2000/07/01 00:39:57 dustin Exp $
  */
 
 package net.spy.photo;
@@ -33,7 +33,7 @@ public class PhotoHelper
 	}
 
 	// Grab a connection from the pool.
-	protected Connection getDBConn() throws Exception {
+	protected synchronized Connection getDBConn() throws Exception {
 		SpyDB pdb=new SpyDB(new PhotoConfig(), false);
 		return(pdb.getConn());
 	}

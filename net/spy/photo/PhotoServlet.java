@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.3 2000/06/28 18:53:34 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.4 2000/07/01 00:39:57 dustin Exp $
  */
 
 package net.spy.photo;
@@ -37,6 +37,9 @@ public class PhotoServlet extends HttpServlet
 		try {
 			log("Initing security");
 			security = new PhotoSecurity();
+			// Make sure we have initialized the guest user (and the
+			// database and all that)
+			security.getUser("guest");
 			log("Finished security");
 		} catch(Exception e) {
 			throw new ServletException("Can't create security stuff:  " + e);

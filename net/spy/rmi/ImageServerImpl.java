@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.2 2000/06/30 05:44:45 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.3 2000/07/01 00:39:57 dustin Exp $
 
 package net.spy.rmi;
 
@@ -150,7 +150,6 @@ public class ImageServerImpl extends UnicastRemoteObject
 	// Fetch an image
 	protected PhotoImage fetchImage(int image_id) throws Exception {
 		String key=null;
-		BASE64Decoder base64 = new BASE64Decoder();
 		PhotoImage pi=null;
 
 		key = "photo_" + image_id;
@@ -188,6 +187,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 			if(ex!=null) {
 				throw ex;
 			}
+			BASE64Decoder base64 = new BASE64Decoder();
 			byte data[]=base64.decodeBuffer(sdata);
 			pi=new PhotoImage(data);
 			rhash.put(key, pi);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.3 2000/06/26 06:42:31 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.4 2000/07/01 00:39:57 dustin Exp $
  */
 
 package net.spy.photo;
@@ -72,9 +72,10 @@ public class PhotoSecurity extends PhotoHelper {
 
 		// If it's not cached, grab it from the DB.
 		if(ret==null || isTooOld(ret)) {
+			Connection photo=null;
 			try {
-				SpyDB db=new SpyDB(new PhotoConfig());
-				PreparedStatement st=db.prepareStatement(
+				photo=getDBConn();
+				PreparedStatement st=photo.prepareStatement(
 					"select * from wwwusers where username=?"
 					);
 				st.setString(1, username);
@@ -92,6 +93,10 @@ public class PhotoSecurity extends PhotoHelper {
 				}
 			} catch(Exception e) {
 				log("Error lookup up user:  " + username);
+			} finally {
+				if(photo!=null) {
+					freeDBConn(photo);
+				}
 			}
 		}
 
