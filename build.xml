@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.29 2002/11/05 08:17:37 dustin Exp $
+	$Id: build.xml,v 1.30 2002/12/06 08:43:00 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -59,10 +59,10 @@
 	<!-- This is specific to my development at home. -->
 	<target name="install"
 		description="Install a new build in my environment (not for most people)"
-		depends="install-jar,install-jsp"/>
+		depends="install-jar,install-web-content"/>
 
-	<target name="install-jsp">
-		<copy todir="/afs/.spy.net/misc/web/root/photo/">
+	<target name="install-web-content-var">
+		<copy todir="/afs/.spy.net/misc/web/root/${location}/">
 			<fileset dir="photo">
 				<include name="**/*.jsp"/>
 				<include name="**/*.css"/>
@@ -70,9 +70,25 @@
 		</copy>
 	</target>
 
+	<target name="install-web-content">
+		<antcall target="install-web-content-var">
+			<param name="location" value="photo"/>
+		</antcall>
+		<antcall target="install-web-content-var">
+			<param name="location" value="photodemo"/>
+		</antcall>
+		<antcall target="install-web-content-var">
+			<param name="location" value="beckerphoto"/>
+		</antcall>
+	</target>
+
 	<target name="install-jar" depends="photo.jar">
 		<copy file="photo.jar"
 			tofile="/afs/.spy.net/misc/web/root/photo/WEB-INF/lib/photo.jar"/>
+		<copy file="photo.jar"
+			tofile="/afs/.spy.net/misc/web/root/photodemo/WEB-INF/lib/photo.jar"/>
+		<copy file="photo.jar"
+			tofile="/afs/.spy.net/misc/web/root/beckerphoto/WEB-INF/lib/photo.jar"/>
 	</target>
 
 	<target name="install-docs" depends="docs">
