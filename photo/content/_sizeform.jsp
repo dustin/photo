@@ -1,18 +1,25 @@
+<%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
+
 <p>
-<h1>Login</h1>
+<h1>Set the Optimal Viewing Size</h1>
+<html:form action="/setviewsize">
 <form method="POST" action="PhotoServlet">
-	<input type="hidden" name="func" value="setviewsize"/>
+
+<html:errors/>
 
 	Choose the optimal viewing size for your display.
-	<select name="dims">
-		<option>640x480
-		<option selected="1">800x600
-		<option>1024x768
-	</select>
+	<html:select property="dims">
+		<html:option value="640x480">640x480</html:option>
+		<html:option value="800x600">800x600</html:option>
+		<html:option value="1024x768">1024x768</html:option>
+		<html:option value="broken">broken</html:option>
+	</html:select>
 	<br/>
-	Remember:  <input type="checkbox" name="remember">
+	<%--
+	Remember:  <html:checkbox property="remember">
 	<br/>
-	<input type="submit" value="Set Size">
+	--%>
+	<html:submit>Set Size</html:submit>
 
-</form>
+</html:form>
 </p>

@@ -15,6 +15,7 @@
     <form-bean name="saveSearchForm"
 			type="net.spy.photo.struts.SaveSearchForm"/>
     <form-bean name="newUserForm" type="net.spy.photo.struts.NewUserForm"/>
+    <form-bean name="setSizeForm" type="net.spy.photo.struts.SetSizeForm"/>
   </form-beans>
 
   <action-mappings>
@@ -37,6 +38,14 @@
 	<action path="/adminify"
 		type="net.spy.photo.struts.AdminifyAction"
 		name="adminifyForm">
+		<forward name="success" path="/index.jsp"/>
+	</action>
+
+	<!-- Set the optimal image size. -->
+	<action path="/setviewsize"
+		type="net.spy.photo.struts.SetSizeAction"
+		input="/sizeform.jsp"
+		name="setSizeForm">
 		<forward name="success" path="/index.jsp"/>
 	</action>
 
