@@ -18,7 +18,7 @@
 	collection="<%= Gallery.getGalleries(sessionData.getUser()) %>">
 	<li>
 		<photo:link url="/showgallery.jsp" id="<%= "" + g.getId() %>">
-			[<%= g.getTimestamp() %>] <%= g.getOwner() %> - <%= g.getName() %> - <%= g.size() %> images.
+			[<%= g.getTimestamp() %>] <%= g.getOwner().getRealname() %> - <%= g.getName() %> - <%= g.size() %> images.
 		</photo:link>
 	</li>
 </logic:iterate>

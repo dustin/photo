@@ -41,7 +41,7 @@
 									<td align="left">
 										Logged in as
 										<photo:link url="/credform.jsp">
-											<%= sessionData.getUser() %>
+											<%= sessionData.getUser().getRealname() %>
 										</photo:link>
 										<photo:admin>
 											<photo:link url="/adminify.do?action=unsetadmin">(admin)
