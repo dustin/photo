@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.2 2000/06/30 07:53:53 dustin Exp $
  */
 
 package net.spy.photo;
@@ -26,9 +26,8 @@ public class PhotoSearchResults extends Object {
 	// Add a search result to the list.
 	public void add(PhotoSearchResult r) {
 		// Set the result id
-		r.id=_max;
+		r.setId(_max);
 		_results.addElement(r);
-
 		_max++;
 	}
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: SetPW.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
+ * $Id: SetPW.java,v 1.2 2000/06/30 07:53:53 dustin Exp $
  */
 
 package net.spy.photo;
@@ -10,6 +10,12 @@ import java.sql.*;
 import java.io.*;
 
 import net.spy.*;
+
+/**
+ * Standalone application to set a password for a user.  If a username and/or
+ * password is not given on the commandline, the user will be prompted for
+ * them.
+ */
 
 public class SetPW {
 	public static void main(String args[]) {
@@ -42,12 +48,13 @@ public class SetPW {
 			Connection db =
 			DriverManager.getConnection(config.get("dbSource"),
 				config.get("dbUser"), config.get("dbPass"));
-			String query="update wwwusers set password='" + newpw + "'\n"
-				+ "\twhere username='" + user + "'";
-			Statement st = db.createStatement();
-			st.executeUpdate(query);
+			String query="update wwwusers set password=? where username=?";
+			PreparedStatement st = db.prepareStatement(query);
+			st.setString(1, newpw);
+			st.setString(2, user);
+			st.executeUpdate();
 		} catch(Exception e) {
-			System.out.println(e);
+			System.out.println("Error setting password:  " + e);
 			e.printStackTrace();
 		}
 	}

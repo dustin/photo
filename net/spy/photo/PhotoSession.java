@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.14 2000/06/30 04:11:19 dustin Exp $
+ * $Id: PhotoSession.java,v 1.15 2000/06/30 07:53:53 dustin Exp $
  */
 
 package net.spy.photo;
@@ -57,6 +57,7 @@ public class PhotoSession extends Object
 		security=p.security;
 	}
 
+	// This gets us back into the servlet engine's log.
 	protected void log(String whu) {
 		photo_servlet.log(whu);
 	}
@@ -161,11 +162,11 @@ public class PhotoSession extends Object
 	}
 
 	protected String saveSearch() throws ServletException {
-		PhotoSearch ps = new PhotoSearch();
-		PhotoUser user = security.getUser(remote_user);
 		String output="";
 
 		try {
+			PhotoSearch ps = new PhotoSearch();
+			PhotoUser user = security.getUser(remote_user);
 			ps.saveSearch(request, user);
 			output=tokenize("addsearch_success.inc", new Hashtable());
 		} catch(Exception e) {
@@ -182,35 +183,24 @@ public class PhotoSession extends Object
 	}
 
 	public void setCreds () throws ServletException, IOException {
-		String username=null, pass=null;
-
-		username=request.getParameter("username");
-		pass=request.getParameter("password");
+		String username=request.getParameter("username");
+		String pass=request.getParameter("password");
 
 		// Make sure we drop administrative privs if any
 		unsetAdmin();
 
-		log("Verifying password for " + username);
+		// We don't do anything unless the password is correct.
 		if(security.checkPW(username, pass)) {
+			// Make sure there is a session.
 			if(session==null) {
 				session=request.getSession(true);
 			}
+			// Save the username.
 			session.putValue("username", username);
 			// Make it valid immediately
-			remote_user = "dustin";
+			remote_user = username;
+			// Set the UID variable.
 			getUid();
-		}
-	}
-
-
-	// We need to reinitialize if something bad happens and we can tell..
-	protected void reInitialize() {
-		log("Application would like to reinitialize.");
-		try {
-			SpyDB db=new SpyDB(new PhotoConfig(), false);
-			db.init();
-		} catch(Exception e) {
-			// Do nothing.
 		}
 	}
 
@@ -228,26 +218,25 @@ public class PhotoSession extends Object
 
 	// Get the saved searches.
 	protected String showSaved() {
-		String query, out="";
-		BASE64Decoder base64 = new BASE64Decoder();
+		String out="";
 		Connection photo=null;
 
 		try {
 			photo=getDBConn();
+			BASE64Decoder base64 = new BASE64Decoder();
 			Statement st=photo.createStatement();
 
-			query = "select * from searches order by name\n";
+			String query = "select * from searches order by name\n";
 			ResultSet rs = st.executeQuery(query);
 			while(rs.next()) {
 				byte data[];
-				String tmp;
 				data=base64.decodeBuffer(rs.getString(4));
-				tmp = new String(data);
+				String tmp = new String(data);
 				out += "    <li><a href=\"" + self_uri + "?"
 					+ tmp + "\">" + rs.getString(2) + "</a></li>\n";
 			}
 		} catch(Exception e) {
-			// Nothing
+			log("Error getting search data, returning none:  " + e);
 		} finally {
 			if(photo != null) {
 				freeDBConn(photo);
@@ -264,7 +253,7 @@ public class PhotoSession extends Object
 			PhotoUser p = security.getUser(remote_user);
 			r=p.canadd;
 		} catch(Exception e) {
-			log("Error getting canadd permissions:  " + e.getMessage());
+			log("Error getting canadd permissions:  " + e);
 		}
 
 		return(r);
@@ -308,7 +297,6 @@ public class PhotoSession extends Object
 		// OK, things look good, let's try to store our data.
 		try {
 			FileInputStream in=null;
-			Vector v = new Vector();
 			String query=null;
 
 			// Get the size from the file.
@@ -366,13 +354,13 @@ public class PhotoSession extends Object
 			photo.commit();
 			out += tokenize("add_success.inc", h);
 		} catch(Exception e) {
-			log("SQL Error:  " + e);
+			log("Error adding new image to database:  " + e);
 			try {
 				photo.rollback();
 				h.put("ERRSTR", e.getMessage());
 				out += tokenize("add_dbfailure.inc", h);
 			} catch(Exception e2) {
-				log("Error rolling back and/or reporting add faulre:  " + e2);
+				log("Error rolling back and/or reporting add falure:  " + e2);
 			}
 		} finally {
 			if(photo != null) {
@@ -380,13 +368,16 @@ public class PhotoSession extends Object
 					photo.setAutoCommit(true);
 					freeDBConn(photo);
 				} catch(Exception e) {
+					log("Error cleaning up database after adding an image: "
+						+ e);
 					log(e.getMessage());
 				}
 			}
 			try {
 				f.delete();
 			} catch(Exception e) {
-				log(e.getMessage());
+				log("Error removing temporary file after adding an image:  "
+					+ e);
 			}
 		}
 
@@ -396,18 +387,20 @@ public class PhotoSession extends Object
 	// Get a list of categories for a select list
 	// Public because helpers use it
 	public String getCatList(int def) {
-		String query, out="";
+		String out="";
 		Connection photo=null;
 		try {
 			photo=getDBConn();
-			Statement st=photo.createStatement();
 
-			query = "select * from cat where id in\n"
+			String query = "select * from cat where id in\n"
 			  	+ "(select cat from wwwacl where\n"
-			  	+ "    userid=" + remote_uid + ")\n"
+			  	+ "    userid=?)\n"
 			  	+ "order by name\n";
 
+			PreparedStatement st = photo.prepareStatement(query);
+			st.setInt(1, remote_uid.intValue());
 			ResultSet rs = st.executeQuery(query);
+
 			while(rs.next()) {
 				int id=rs.getInt("id");
 				String selected="";
@@ -418,7 +411,7 @@ public class PhotoSession extends Object
 					+ ">" + rs.getString("name") + "\n";
 			}
 		} catch(Exception e) {
-			// Nothing
+			log("Error getting category list:  " + e);
 		} finally {
 				if(photo != null) {
 					freeDBConn(photo);
@@ -439,11 +432,10 @@ public class PhotoSession extends Object
 
 	// Get the stylesheet from the cookie, or the default.
 	protected String doGetStylesheet () throws ServletException {
-		Cookie cookies[];
 		String output = null;
 		int i;
 
-		cookies = request.getCookies();
+		Cookie cookies[] = request.getCookies();
 
 		if(cookies!=null) {
 			for(i=0; i<cookies.length && output == null; i++) {
@@ -469,6 +461,7 @@ public class PhotoSession extends Object
 			out.print(output);
 			out.close();
 		} catch(Exception e) {
+			log("Error producing stylesheet output:  " + e);
 		}
 		// We handled our own response.
 		return(null);
@@ -476,7 +469,6 @@ public class PhotoSession extends Object
 
 	// Set the style cookie from the POST data.
 	protected String doSetStyle() throws ServletException {
-		Cookie c;
 		String stmp="", font="", bgcolor="", c_text="";
 		Hashtable h = new Hashtable();
 
@@ -504,7 +496,7 @@ public class PhotoSession extends Object
 		}
 
 		// Create the cookie
-		c = new Cookie("photo_style", URLEncoder.encode(c_text));
+		Cookie c = new Cookie("photo_style", URLEncoder.encode(c_text));
 		// 30 days of cookie
 		c.setMaxAge( (30 * 86400) );
 		// Describe why we're doing this.
@@ -525,7 +517,7 @@ public class PhotoSession extends Object
 
 	// Show the add an image form.
 	protected String doAddForm() throws ServletException {
-		String output = new String("");
+		String output = "";
 		Hashtable h = new Hashtable();
 
 		try {
@@ -540,7 +532,7 @@ public class PhotoSession extends Object
 
 	// Show the search form.
 	protected String doFindForm() throws ServletException {
-		String output = new String("");
+		String output = "";
 		Hashtable h = new Hashtable();
 
 		try {
@@ -554,27 +546,23 @@ public class PhotoSession extends Object
 
 	// View categories
 	protected String doCatView() throws ServletException {
-		String output = new String("");
-		String query, catstuff="";
+		String output = "";
+		String catstuff="";
 		Hashtable h = new Hashtable();
-		Connection photo;
+		Connection photo=null;
 
 		try {
 			photo = getDBConn();
-		} catch(Exception e) {
-			throw new ServletException("Can't get database connection:  "
-				+ e.getMessage());
-		}
 
-		query = "select name,id,catsum(id) as cs from cat\n"
-			  + "where id in\n"
-			  + "  (select cat from wwwacl where\n"
-			  + "   userid=" + remote_uid + ")\n"
-			  + " order by cs desc";
-
-		try {
-			Statement st = photo.createStatement();
+			String query = "select name,id,catsum(id) as cs from cat\n"
+			  	+ "where id in\n"
+			  	+ "  (select cat from wwwacl where\n"
+			  	+ "   userid=?)\n"
+			  	+ " order by cs desc";
+			PreparedStatement st = photo.prepareStatement(query);
+			st.setInt(1, remote_uid.intValue());
 			ResultSet rs = st.executeQuery(query);
+
 			while(rs.next()) {
 				String t;
 				if(rs.getInt(3)==1) {
@@ -589,6 +577,7 @@ public class PhotoSession extends Object
 				   	+ rs.getString(3) + t + "</a></li>\n";
 			}
 		} catch(Exception e) {
+			log("Error producing category view:  " + e);
 		}
 		finally { freeDBConn(photo); }
 
@@ -600,12 +589,13 @@ public class PhotoSession extends Object
 
 	// Display the index page.
 	protected String doIndex() throws ServletException {
-		String output = new String("");;
+		String output = "";;
 		Hashtable h = new Hashtable();
 
 		try {
 			h.put("SAVED", showSaved());
 		} catch(Exception e) {
+			log("Error getting saved search list:  " + e);
 			h.put("SAVED", "");
 		}
 		if(isAdmin()) {
@@ -618,8 +608,6 @@ public class PhotoSession extends Object
 
 	// Get the UID
 	protected void getUid() throws ServletException {
-		String query;
-
 		try {
 			if(session==null) {
 				remote_user="guest";
@@ -639,8 +627,6 @@ public class PhotoSession extends Object
 	}
 
 	protected void getGroups() throws Exception {
-		String query;
-
 		if(groups == null) {
 			groups = new Hashtable();
 			Connection photo=getDBConn();
@@ -687,18 +673,12 @@ public class PhotoSession extends Object
 				throw new ServletException("No search id, and no search_id");
 			}
 		} catch(Exception e) {
+			e.printStackTrace();
 			throw new ServletException("Error displaying image:  " + e);
 		}
 
-		h.put("IMAGE",     r.image);
-		h.put("KEYWORDS",  r.keywords);
-		h.put("INFO",      r.descr);
-		h.put("SIZE",      r.size);
-		h.put("TAKEN",     r.taken);
-		h.put("TIMESTAMP", r.ts);
-		h.put("CAT",       r.cat);
-		h.put("CATNUM",    r.catnum);
-		h.put("ADDEDBY",   r.addedby);
+		// Populate the hash with the image parts.
+		r.addToHash(h);
 
 		if(isAdmin()) {
 			// Admin needs CATS
@@ -720,7 +700,7 @@ public class PhotoSession extends Object
 		int which=Integer.parseInt(request.getParameter("search_id"));
 		PhotoSearchResult r = results.get(which);
 
-		// Add the PREV and NEXT button stuff
+		// Add the PREV and NEXT button stuff, if applicable.
 		if(results.nResults() > which+1) {
 			h.put("NEXT",
 				"<a href=\"" + self_uri + "?func=display&search_id="
@@ -740,9 +720,7 @@ public class PhotoSession extends Object
 	}
 
 	// Find and display images.
-	protected PhotoSearchResult doDisplayByID(Hashtable h)
-		throws Exception {
-
+	protected PhotoSearchResult doDisplayByID(Hashtable h) throws Exception {
 		// Get the image_id.  We know it exists, because you can't get to
 		// this function without one...of course, it may not parse.
 		int image_id=Integer.parseInt(request.getParameter("id"));
@@ -752,8 +730,8 @@ public class PhotoSession extends Object
 		r.find(image_id, remote_uid.intValue());
 
 		// These don't apply here, bu they need to be defined.
-		h.put("PREV",      "");
-		h.put("NEXT",      "");
+		h.put("PREV", "");
+		h.put("NEXT", "");
 
 		return(r);
 	}
@@ -765,7 +743,6 @@ public class PhotoSession extends Object
 		response.setContentType("text/html");
 		try {
 			PrintWriter out = response.getWriter();
-			out.print(text);
 			Hashtable ht=new Hashtable();
 			if(isAdmin()) {
 				ht.put("ADMIN_FLAG",
@@ -774,10 +751,11 @@ public class PhotoSession extends Object
 			} else {
 				ht.put("ADMIN_FLAG", "");
 			}
-			out.print(tokenize("tail.inc", ht));
+			// Print out the document and the tail together.
+			out.print(text + tokenize("tail.inc", ht));
 			out.close();
 		} catch(Exception e) {
-			// I really don't care at this point if this doesn't work...
+			log("Error sending response:  " + e);
 		}
 	}
 
@@ -794,7 +772,6 @@ public class PhotoSession extends Object
 		}
 
 		String middle="";
-		Hashtable h=null;
 		int i=0;
 		// if we have a starting point, let's start there.
 		try {
@@ -810,18 +787,10 @@ public class PhotoSession extends Object
 		for(i=0; i<5; i++) {
 			PhotoSearchResult r=results.next();
 			if(r!=null) {
-				h = new Hashtable();
-				h.put("KEYWORDS", r.keywords);
-				h.put("DESCR",    r.descr);
-				h.put("CAT",      r.cat);
-				h.put("SIZE",     r.size);
-				h.put("TAKEN",    r.taken);
-				h.put("TS",       r.ts);
-				h.put("IMAGE",    r.image);
-				h.put("CATNUM",   r.catnum);
-				h.put("ADDEDBY",  r.addedby);
-				h.put("ID",       "" + r.id);
+				Hashtable h = new Hashtable();
+				r.addToHash(h);
 
+				// No, this really doesn't belong here.
 				if( ((i) % 2) == 0) {
 					middle += "</tr>\n<tr>\n";
 				}
@@ -832,7 +801,7 @@ public class PhotoSession extends Object
 			}
 		}
 
-		h = new Hashtable();
+		Hashtable h = new Hashtable();
 		h.put("TOTAL", "" + results.nResults());
 		h.put("SEARCH", (String)session.getValue("encoded_search"));
 		String output = tokenize("find_top.inc", h);
@@ -845,21 +814,24 @@ public class PhotoSession extends Object
 	// Find images.
 	protected String doFind() throws ServletException {
 		String output = "", middle = "";
-		PhotoSearch ps = new PhotoSearch();
-		PhotoUser user = security.getUser(remote_user);
-
-		PhotoSearchResults results=null;
 
 		// Make sure there's a real session.
 		if(session==null) {
 			session=request.getSession(true);
 		}
 
-		// Get the results and put them in the mofo session
-		results=ps.performSearch(request, user);
-		session.putValue("search_results", results);
-		session.putValue("encoded_search",
-			ps.encodeSearch(request));
+		try {
+			PhotoSearch ps = new PhotoSearch();
+			PhotoUser user = security.getUser(remote_user);
+			PhotoSearchResults results=null;
+			// Get the results and put them in the mofo session
+			results=ps.performSearch(request, user);
+			session.putValue("search_results", results);
+			session.putValue("encoded_search",
+				ps.encodeSearch(request));
+		} catch(Exception e) {
+			log("Error performing search:  " + e);
+		}
 
 		return(displaySearchResults());
 	}

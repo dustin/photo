@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.2 2000/06/30 00:09:59 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.3 2000/06/30 07:53:53 dustin Exp $
  */
 
 package net.spy.photo;
 
 import java.sql.*;
+import java.util.Hashtable;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -14,21 +15,47 @@ import javax.servlet.http.*;
 import net.spy.*;
 
 public class PhotoSearchResult extends PhotoHelper {
-	public String keywords=null;
-	public String descr=null;
-	public String cat=null;
-	public String size=null;
-	public String taken=null;
-	public String ts=null;
-	public String image=null;
-	public String catnum=null;
-	public String addedby=null;
+	protected String keywords=null;
+	protected String descr=null;
+	protected String cat=null;
+	protected String size=null;
+	protected String taken=null;
+	protected String ts=null;
+	protected String image=null;
+	protected String catnum=null;
+	protected String addedby=null;
 
 	public int id=-1;
 
 	public PhotoSearchResult() throws Exception {
 		super();
 	};
+
+	/**
+	 * Place Strings describing yourself into this hash.
+	 *
+	 * @param h Hashtable to inject.  If the passed in hash is null, it
+	 * will create a new one.
+	 *
+	 * @return the Hashtable with all the stuff in it
+	 */
+	public Hashtable addToHash(Hashtable h) {
+		if(h==null) {
+			h=new Hashtable();
+		}
+
+		h.put("KEYWORDS", keywords);
+		h.put("DESCR",    descr);
+		h.put("CAT",      cat);
+		h.put("SIZE",     size);
+		h.put("TAKEN",    taken);
+		h.put("TS",       ts);
+		h.put("IMAGE",    image);
+		h.put("CATNUM",   catnum);
+		h.put("ADDEDBY",  addedby);
+		h.put("ID",       "" + id);
+		return(h);
+	}
 
 	/**
 	 * Populate myself via a database lookup.
@@ -92,5 +119,45 @@ public class PhotoSearchResult extends PhotoHelper {
 		if(ex!=null) {
 			throw ex;
 		}
+	}
+
+	public void setKeywords(String to) {
+		keywords=to;
+	}
+
+	public void setDescr(String to) {
+		descr=to;
+	}
+
+	public void setCat(String to) {
+		cat=to;
+	}
+
+	public void setSize(String to) {
+		size=to;
+	}
+
+	public void setTaken(String to) {
+		taken=to;
+	}
+
+	public void setTs(String to) {
+		ts=to;
+	}
+
+	public void setImage(String to) {
+		image=to;
+	}
+
+	public void setCatNum(String to) {
+		catnum=to;
+	}
+
+	public void setAddedBy(String to) {
+		addedby=to;
+	}
+
+	public void setId(int id) {
+		this.id=id;
 	}
 }

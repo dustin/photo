@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.2 2000/06/30 07:53:53 dustin Exp $
  */
 
 package net.spy.photo;
@@ -17,9 +17,11 @@ import javax.servlet.http.*;
 
 import net.spy.*;
 
-public class PhotoSearch extends Object {
+public class PhotoSearch extends PhotoHelper {
 
-	String encodedSearch=null;
+	public PhotoSearch() throws Exception {
+		super();
+	}
 
 	// Encode the search from the form stuff.
 	public String encodeSearch(HttpServletRequest request) {
@@ -36,7 +38,6 @@ public class PhotoSearch extends Object {
 			}
 		}
 		BASE64Encoder base64=new BASE64Encoder();
-		System.out.println("Pre-encoded search:  " + out);
 		out=base64.encodeBuffer(out.getBytes());
 		return(out);
 	}
@@ -52,34 +53,36 @@ public class PhotoSearch extends Object {
 			throw new Exception("No permission to save searches.");
 		}
 
-		SpyDB pdb=null;
+		Connection photo=null;
 
 		try {
-			pdb = new SpyDB(new PhotoConfig());
-			Connection c = pdb.getConn();
-			Statement st = c.createStatement();
 			String stmp=null, name=null, search=null;
 
-			stmp=request.getParameter("name");
-			if(stmp== null && stmp.length() == 0) {
-				throw new Exception("Invalid name parameter");
+			name=request.getParameter("name").trim();
+			if(name.length() == 0) {
+				throw new Exception("Invalid ``name'' parameter");
 			}
-			// Quote it and get rid of the whitespace on the ends.
-			name=PhotoUtil.dbquote_str(stmp.trim());
 
-			stmp=request.getParameter("search");
-			if(stmp== null && stmp.length() == 0) {
-				throw new Exception("Invalid search parameter");
+			search=request.getParameter("search").trim();
+			if(search.length() == 0) {
+				throw new Exception("Invalid ``search'' parameter");
 			}
-			search=PhotoUtil.dbquote_str(stmp.trim());
 
 			String query = "insert into searches (name, addedby, search)\n"
-				+ "\tvalues(\n\t'" + name + "', " + user.id
-				+ ", '" + search + "')";
+				+ "  values(?, ?, ?)";
+			photo=getDBConn();
+			PreparedStatement st=photo.prepareStatement(query);
+			st.setString(1, name);
+			st.setInt(2, user.id.intValue());
+			st.setString(3, search);
 
-			st.executeUpdate(query);
+			st.executeUpdate();
+		} catch(Exception e) {
+			log("Error saving search:  " + e);
 		} finally {
-			pdb.freeDBConn();
+			if(photo!=null) {
+				freeDBConn(photo);
+			}
 		}
 	}
 
@@ -87,28 +90,39 @@ public class PhotoSearch extends Object {
 	public PhotoSearchResults performSearch(
 		HttpServletRequest request, PhotoUser user) throws ServletException {
 		PhotoSearchResults results=new PhotoSearchResults();
-		String query=buildQuery(request, user.id);
+
+		Connection photo=null;
 
 		try {
-			SpyDB pdb = new SpyDB(new PhotoConfig());
-			ResultSet rs = pdb.executeQuery(query);
-			int i=0;
+
+			// Go get a query
+			String query=buildQuery(request, user.id);
+
+			photo=getDBConn();
+			Statement st=photo.createStatement();
+			ResultSet rs = st.executeQuery(query);
+
 			while(rs.next()) {
 				PhotoSearchResult r=new PhotoSearchResult();
-				r.keywords=rs.getString(1);
-				r.descr=rs.getString(2);
-				r.cat=rs.getString(3);
-				r.size=rs.getString(4);
-				r.taken=rs.getString(5);
-				r.ts=rs.getString(6);
-				r.image=rs.getString(7);
-				r.catnum=rs.getString(8);
-				r.addedby=rs.getString(9);
+				r.setKeywords(rs.getString(1));
+				r.setDescr(   rs.getString(2));
+				r.setCat(     rs.getString(3));
+				r.setSize(    rs.getString(4));
+				r.setTaken(   rs.getString(5));
+				r.setTs(      rs.getString(6));
+				r.setImage(   rs.getString(7));
+				r.setCatNum(  rs.getString(8));
+				r.setAddedBy( rs.getString(9));
+
+				// Add it to our search result set.
 				results.add(r);
 			}
 		} catch(Exception e) {
-			throw new ServletException("Can't get database connection:  "
-				+ e.getMessage());
+			throw new ServletException("Error performing search:  " + e);
+		} finally {
+			if(photo!=null) {
+				freeDBConn(photo);
+			}
 		}
 		return(results);
 	}
@@ -116,11 +130,10 @@ public class PhotoSearch extends Object {
 	// Build the bigass complex search query.
 	protected String buildQuery(HttpServletRequest request, Integer remote_uid)
 		throws ServletException {
-		String query, sub, stmp, order, odirection, fieldjoin, join;
-		boolean needao;
+		String query="", sub="", stmp="", order="",
+			odirection="", fieldjoin="", join="";
+		boolean needao=false;
 		String atmp[];
-
-		sub = "";
 
 		query = "select a.keywords,a.descr,b.name,\n"
 			+ "   a.size,a.taken,a.ts,a.id,a.cat,c.username,b.id\n"
@@ -128,8 +141,6 @@ public class PhotoSearch extends Object {
 			+ "       and a.addedby=c.id\n"
 			+ "       and a.cat in (select cat from wwwacl\n"
 			+ "              where userid=" + remote_uid + ")";
-
-		needao=false;
 
 		// Find out what the fieldjoin is real quick...
 		stmp=request.getParameter("fieldjoin");
@@ -145,7 +156,6 @@ public class PhotoSearch extends Object {
 		if(atmp != null) {
 			stmp="";
 			boolean snao=false;
-			int i;
 
 			// Do we need and or or?
 			if(needao) {
@@ -153,7 +163,7 @@ public class PhotoSearch extends Object {
 			}
 			needao=true;
 
-			for(i=0; i<atmp.length; i++) {
+			for(int i=0; i<atmp.length; i++) {
 				if(snao) {
 					stmp += " or";
 				} else {
@@ -172,9 +182,8 @@ public class PhotoSearch extends Object {
 		// OK, lets look for search strings now...
 		stmp = request.getParameter("what");
 		if(stmp != null && stmp.length() > 0) {
-			String a, b, field;
+			String a="", b="", field=null;
 			boolean needjoin=false;
-			a=b="";
 
 			// If we need an and or an or, stick it in here.
 			if(needao) {
@@ -197,9 +206,8 @@ public class PhotoSearch extends Object {
 			}
 
 			if(atmp.length > 1) {
-				int i;
 				sub += "\n     (";
-				for(i=0; i<atmp.length; i++) {
+				for(int i=0; i<atmp.length; i++) {
 					if(needjoin) {
 						sub += join;
 					} else {
@@ -294,5 +302,4 @@ public class PhotoSearch extends Object {
 
 		return(query);
 	}
-
 }
