@@ -52,6 +52,7 @@
 
 				<div align="center">
 					<photo:imgLink id='3469'
+						width="194" height="146"
 						alt="Image of the [Unit of Time]"
 						showThumbnail='true'/>
 				</div>
