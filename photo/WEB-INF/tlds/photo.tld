@@ -24,6 +24,10 @@
 			<name>negate</name>
 			<required>false</required>
 		</attribute>
+		<attribute>
+			<name>explodeOnImpact</name>
+			<required>false</required>
+		</attribute>
 	</tag>
 
 	<!-- A conditional blocked based on whether the can add. -->

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //  
-// $Id: AdminCheck.java,v 1.1 2002/05/24 00:53:11 dustin Exp $
+// $Id: AdminCheck.java,v 1.2 2002/06/22 05:49:32 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -18,11 +18,30 @@ import net.spy.photo.*;
  */
 public class AdminCheck extends ConditionalTag {
 
+	private boolean explodeOnImpact=false;
+
 	/**
 	 * Get an instance of AdminTag.
 	 */
 	public AdminCheck() {
 		super();
+	}
+
+	/**
+	 * If true, explode on doStartTag() instead of returning false.  This
+	 * prevents admin pages from being served up to unworty beings.
+	 */
+	public void setExplodeOnImpact(boolean explodeOnImpact) {
+		this.explodeOnImpact=explodeOnImpact;
+	}
+
+	/**
+	 * If true, explode on doStartTag() instead of returning false.  This
+	 * prevents admin pages from being served up to unworty beings.
+	 */
+	public void setExplodeOnImpact(String explodeOnImpact) {
+		Boolean b=new Boolean(negate);
+		this.explodeOnImpact=b.booleanValue();
 	}
 
 	/**
@@ -33,6 +52,10 @@ public class AdminCheck extends ConditionalTag {
 		boolean b=getSessionData().checkAdminFlag(PhotoSessionData.ADMIN);
 		// Get the return value
 		int rv=getReturnValue(b);
+
+		if(b == false && explodeOnImpact == true) {
+			throw new NotAdminException("User is not admin.");
+		}
 
 		return(rv);
 	}
