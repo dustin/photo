@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.7 1998/09/06 21:46:04 dustin Exp $
+# $Id: admin.cgi,v 1.8 1998/09/06 21:50:00 dustin Exp $
 
 use CGI;
 use Photo;
@@ -87,7 +87,7 @@ sub editCat
 sub search
 {
     my($q, $p)=@_;
-    $p->doFind($q, 1);
+    $p->doFind($q);
 }
 
 sub listRecent
