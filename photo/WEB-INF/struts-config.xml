@@ -199,10 +199,9 @@
 	<!-- Searches -->
 	<!-- This action causes the form to reset -->
 	<action path="/search"
-		type="org.apache.struts.actions.ForwardAction"
 		input="top.search"
 		name="searchForm"
-		parameter="/int/search.do">
+		forward="/int/search.do">
 	</action>
 
 	<!-- This actually performs the search, but does not reset the form -->
@@ -474,58 +473,24 @@
 		<forward name="next" path="index"/>
 	</action>
 
-	<action path="/addform"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.addImage"/>
-	<action path="/catview"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.catView"/>
-	<action path="/changePwForm"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.changePw"/>
-	<action path="/credform"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.credform"/>
-	<action path="/galleryList"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.galleryList"/>
-	<action path="/logView"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.logView"/>
-	<action path="/newUserForm"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.newUserForm"/>
-	<action path="/saveGalleryForm"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.saveGallery"/>
-	<action path="/searchForm"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.searchForm"/>
-	<action path="/sessions"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.sessions"/>
-	<action path="/showGallery"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.showGallery"/>
-	<action path="/sizeForm"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="top.sizeForm"/>
+	<action path="/addform" forward="top.addImage"/>
+	<action path="/catview" forward="top.catView"/>
+	<action path="/changePwForm" forward="top.changePw"/>
+	<action path="/credform" forward="top.credform"/>
+	<action path="/galleryList" forward="top.galleryList"/>
+	<action path="/logView" forward="top.logView"/>
+	<action path="/newUserForm" forward="top.newUserForm"/>
+	<action path="/saveGalleryForm" forward="top.saveGallery"/>
+	<action path="/searchForm" forward="top.searchForm"/>
+	<action path="/sessions" forward="top.sessions"/>
+	<action path="/showGallery" forward="top.showGallery"/>
+	<action path="/sizeForm" forward="top.sizeForm"/>
 	<!-- Admin stuff -->
-	<action path="/admin/catList"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="admin.catlist"/>
-	<action path="/admin/userList"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="admin.userlist"/>
-	<action path="/admin/reporting"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="admin.reporting"/>
-	<action path="/admin/properties"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="admin.properties"/>
-	<action path="/admin/newprofile"
-		type="org.apache.struts.actions.ForwardAction"
-		parameter="admin.newprofile"/>
+	<action path="/admin/catList" forward="admin.catlist"/>
+	<action path="/admin/userList" forward="admin.userlist"/>
+	<action path="/admin/reporting" forward="admin.reporting"/>
+	<action path="/admin/properties" forward="admin.properties"/>
+	<action path="/admin/newprofile" forward="admin.newprofile"/>
 
   </action-mappings>
 
