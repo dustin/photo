@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.15 2000/06/30 07:53:53 dustin Exp $
+ * $Id: PhotoSession.java,v 1.16 2000/06/30 07:59:31 dustin Exp $
  */
 
 package net.spy.photo;
@@ -370,7 +370,6 @@ public class PhotoSession extends Object
 				} catch(Exception e) {
 					log("Error cleaning up database after adding an image: "
 						+ e);
-					log(e.getMessage());
 				}
 			}
 			try {
