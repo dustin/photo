@@ -81,15 +81,15 @@ public class AdminSelectUserAction extends PhotoAction {
 			// Populate the ACL stuff
 			ArrayList viewable=new ArrayList();
 			ArrayList addable=new ArrayList();
-			for(Iterator i=user.getACLEntries().iterator(); i.hasNext();) {
+			for(Iterator i=user.getACL().iterator(); i.hasNext();) {
 				PhotoACLEntry acl=(PhotoACLEntry)i.next();
 
-				int id=acl.getCat();
+				int id=acl.getWhat();
 				if(acl.canAdd()) {
-					addable.add("" + id);
+					addable.add(String.valueOf(id));
 				}
 				if(acl.canView()) {
-					viewable.add("" + id);
+					viewable.add(String.valueOf(id));
 				}
 			}
 

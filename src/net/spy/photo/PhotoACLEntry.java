@@ -9,18 +9,17 @@ package net.spy.photo;
  */
 public class PhotoACLEntry extends Object implements java.io.Serializable {
 
-	private int uid=0;
-	private int cat=0;
+	private int what=0;
 	private boolean canview=false;
 	private boolean canadd=false;
 
 	/**
 	 * Get an instance of PhotoACLEntry.
+	 * @param id the user id or category or to whatever this ACL is relevant
 	 */
-	public PhotoACLEntry(int uid, int cat) {
+	public PhotoACLEntry(int id) {
 		super();
-		this.uid=uid;
-		this.cat=cat;
+		this.what=what;
 	}
 
 	/** 
@@ -29,8 +28,8 @@ public class PhotoACLEntry extends Object implements java.io.Serializable {
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);
 
-		sb.append("{PhotoACLEntry cat=");
-		sb.append(cat);
+		sb.append("{PhotoACLEntry what=");
+		sb.append(what);
 		sb.append(", canview=");
 		sb.append(canview);
 		sb.append(", canadd=");
@@ -41,15 +40,15 @@ public class PhotoACLEntry extends Object implements java.io.Serializable {
 	}
 
 	/**
-	 * True for PhotoACLEntry instances that reference the same user and
-	 * category, regardless of flags.
+	 * True for PhotoACLEntry instances that reference the same ``what''
+	 * regardless of flags.
 	 */
 	public boolean equals(Object o) {
 		boolean rv=false;
 
 		if(o instanceof PhotoACLEntry) {
 			PhotoACLEntry entry=(PhotoACLEntry)o;
-			rv = (uid==entry.uid && cat==entry.cat);
+			rv = (what==entry.what);
 		}
 
 		return(rv);
@@ -59,21 +58,14 @@ public class PhotoACLEntry extends Object implements java.io.Serializable {
 	 * Get the hash code of this object.
 	 */
 	public int hashCode() {
-		return (uid ^ cat);
+		return (what);
 	}
 
 	/**
-	 * Get the UID this ACL entry represents.
+	 * Get the id of the thing to which this category points.
 	 */
-	public int getUid() {
-		return(uid);
-	}
-
-	/**
-	 * Get the Category ID this ACL entry represents.
-	 */
-	public int getCat() {
-		return(cat);
+	public int getWhat() {
+		return(what);
 	}
 
 	/**
@@ -105,5 +97,3 @@ public class PhotoACLEntry extends Object implements java.io.Serializable {
 	}
 
 }
-
-

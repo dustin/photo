@@ -58,7 +58,7 @@ public class PhotoUser extends AbstractSavable
 	private boolean canadd=false;
 	private String persess=null;
 
-	private ArrayList acl=null;
+	private PhotoACL acl=null;
 	private Set roles=null;
 
 	private static final String CACHE_KEY="n.s.p.PhotoUserMap";
@@ -69,7 +69,7 @@ public class PhotoUser extends AbstractSavable
 	 */
 	public PhotoUser() {
 		super();
-		acl=new ArrayList();
+		acl=new PhotoACL();
 		roles=new HashSet();
 		setNew(true);
 		setModified(false);
@@ -105,10 +105,10 @@ public class PhotoUser extends AbstractSavable
 				}
 				int cat=rs.getInt("cat");
 				if(rs.getBoolean("canview")) {
-					pu.addViewACLEntry(cat);
+					pu.acl.addViewEntry(cat);
 				}
 				if(rs.getBoolean("canadd")) {
-					pu.addAddACLEntry(cat);
+					pu.acl.addAddEntry(cat);
 				}
 			}
 			rs.close();
@@ -120,14 +120,14 @@ public class PhotoUser extends AbstractSavable
 		for(Iterator i=userMap.values().iterator(); i.hasNext(); ) {
 			PhotoUser u=(PhotoUser)i.next();
 
-			for(Iterator i2=u.getACLEntries().iterator(); i2.hasNext(); ) {
+			for(Iterator i2=u.getACL().iterator(); i2.hasNext(); ) {
 				PhotoACLEntry acl=(PhotoACLEntry)i2.next();
 
 				if(acl.canView()) {
-					u.addViewACLEntry(acl.getCat());
+					u.acl.addViewEntry(acl.getWhat());
 				}
 				if(acl.canAdd()) {
-					u.addAddACLEntry(acl.getCat());
+					u.acl.addAddEntry(acl.getWhat());
 				}
 			}
 		}
@@ -382,80 +382,8 @@ public class PhotoUser extends AbstractSavable
 	/**
 	 * Get the ACL list.
 	 */
-	public Collection getACLEntries() {
-		return(Collections.unmodifiableCollection(acl));
-	}
-
-	/**
-	 * Get an ACL entry for the given category.
-	 *
-	 * @param cat the category ID for which you want the entry
-	 *
-	 * @return the entry, or null if there is no entry for the given cat.
-	 */
-	public PhotoACLEntry getACLEntryForCat(int cat) {
-		PhotoACLEntry rv=null;
-
-		for(Iterator i=getACLEntries().iterator(); rv==null && i.hasNext();) {
-			PhotoACLEntry acl=(PhotoACLEntry)i.next();
-
-			if(acl.getCat() == cat) {
-				rv=acl;
-			}
-		}
-
-		return(rv);
-	}
-
-	/**
-	 * Same as above, but create a new (empty) one if it doesn't exist
-	 */
-	private PhotoACLEntry getACLEntryForCat2(int cat) {
-		PhotoACLEntry rv=getACLEntryForCat(cat);
-
-		if(rv==null) {
-			rv=new PhotoACLEntry(getId(), cat);
-			acl.add(rv);
-		}
-
-		return(rv);
-	}
-
-	/**
-	 * Add an ACL entry permitting view access to a given category.
-	 */
-	public void addViewACLEntry(int cat) {
-		PhotoACLEntry aclEntry=getACLEntryForCat2(cat);
-		aclEntry.setCanView(true);
-		setModified(true);
-	}
-
-	/**
-	 * Add an ACL entry permitting add access to a given category.
-	 */
-	public void addAddACLEntry(int cat) {
-		PhotoACLEntry aclEntry=getACLEntryForCat2(cat);
-		aclEntry.setCanAdd(true);
-		setModified(true);
-	}
-
-	/**
-	 * Remove an ACL entry.
-	 */
-	public void removeACLEntry(int cat) {
-		PhotoACLEntry entry=getACLEntryForCat(cat);
-		if(entry!=null) {
-			acl.remove(entry);
-		}
-		setModified(true);
-	}
-
-	/**
-	 * Remove all ACL entries.
-	 */
-	public void removeAllACLEntries() {
-		acl.clear();
-		setModified(true);
+	public PhotoACL getACL() {
+		return(acl);
 	}
 
 	void addRole(String role) {
@@ -487,24 +415,14 @@ public class PhotoUser extends AbstractSavable
 	 * True if the user can add to the specific category.
 	 */
 	public boolean canAdd(int cat) {
-		boolean rv=false;
-		PhotoACLEntry acl=getACLEntryForCat(cat);
-		if(acl!=null && acl.canAdd()) {
-			rv=true;
-		}
-		return(rv);
+		return(acl.canAdd(cat));
 	}
 
 	/**
 	 * True if the user can view images in the specific category.
 	 */
 	public boolean canView(int cat) {
-		boolean rv=false;
-		PhotoACLEntry acl=getACLEntryForCat(cat);
-		if(acl!=null && acl.canView()) {
-			rv=true;
-		}
-		return(rv);
+		return(acl.canView(cat));
 	}
 
 	/**
@@ -601,27 +519,30 @@ public class PhotoUser extends AbstractSavable
 			gkey.close();
 		}
 
-		// OK, now let's save the ACL.
+		// OK, now let's save the ACL if it's changed.
 
-		// First, out with the old.
-		DeleteACLForUser dacl=new DeleteACLForUser(conn);
-		dacl.setUserId(getId());
-		dacl.executeUpdate();
-		dacl.close();
+		if(acl.isModified()) {
 
-		// Then in with the new.
-		InsertACLEntry ins=new InsertACLEntry(conn);
-		ins.setUserId(getId());
+			// First, out with the old.
+			DeleteACLForUser dacl=new DeleteACLForUser(conn);
+			dacl.setUserId(getId());
+			dacl.executeUpdate();
+			dacl.close();
 
-		for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
-			PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
+			// Then in with the new.
+			InsertACLEntry ins=new InsertACLEntry(conn);
+			ins.setUserId(getId());
 
-			ins.setCatId(aclEntry.getCat());
-			ins.setCanView(aclEntry.canView());
-			ins.setCanAdd(aclEntry.canAdd());
-			ins.executeUpdate();
+			for(Iterator i=acl.iterator(); i.hasNext(); ) {
+				PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
+
+				ins.setCatId(aclEntry.getWhat());
+				ins.setCanView(aclEntry.canView());
+				ins.setCanAdd(aclEntry.canAdd());
+				ins.executeUpdate();
+			}
+			ins.close();
 		}
-		ins.close();
 
 		setSaved();
 	}

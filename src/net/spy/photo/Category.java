@@ -58,14 +58,14 @@ public class Category extends AbstractSavable implements Comparable {
 	private int id=-1;
 	private String name=null;
 
-	private List acl=null;
+	private PhotoACL acl=null;
 
 	/**
 	 * Get an instance of Category.
 	 */
 	public Category() {
 		super();
-		acl=new ArrayList();
+		acl=new PhotoACL();
 	}
 
 	private Category(ResultSet rs) throws SQLException {
@@ -183,7 +183,7 @@ public class Category extends AbstractSavable implements Comparable {
 	}
 
 	// Overwrite the ACL entry
-	private void setAcl(List to) {
+	private void setAcl(PhotoACL to) {
 		acl=to;
 		setModified(true);
 	}
@@ -202,15 +202,15 @@ public class Category extends AbstractSavable implements Comparable {
 			ResultSet rs=db.executeQuery();
 
 			// (re)set the ACL set for this category
-			cat.setAcl(new ArrayList());
+			cat.setAcl(new PhotoACL());
 
 			while(rs.next()) {
 				int uid=rs.getInt("userid");
 				if(rs.getBoolean("canview")) {
-					cat.addViewACLEntry(uid);
+					cat.acl.addViewEntry(uid);
 				}
 				if(rs.getBoolean("canadd")) {
-					cat.addAddACLEntry(uid);
+					cat.acl.addAddEntry(uid);
 				}
 			}
 			rs.close();
@@ -271,12 +271,12 @@ public class Category extends AbstractSavable implements Comparable {
 		// In with the new
 
 		InsertACLEntry iacl=new InsertACLEntry(conn);
+		iacl.setCatId(id);
 
-		for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
+		for(Iterator i=acl.iterator(); i.hasNext(); ) {
 			PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
 
-			iacl.setUserId(aclEntry.getUid());
-			iacl.setCatId(id);
+			iacl.setUserId(aclEntry.getWhat());
 			iacl.setCanView(aclEntry.canView());
 			iacl.setCanAdd(aclEntry.canAdd());
 			iacl.executeUpdate();
@@ -292,74 +292,8 @@ public class Category extends AbstractSavable implements Comparable {
 	/**
 	 * Get the ACL entries for this category.
 	 */
-	public Collection getACLEntries() {
-		return(Collections.unmodifiableCollection(acl));
-	}
-
-	/**
-	 * Get an ACL entry for the given user.
-	 *
-	 * @param userid the numeric user ID of the user to look up
-	 *
-	 * @return the entry, or null if there's no entry for the given user
-	 */
-	public PhotoACLEntry getACLEntryForUser(int userid) {
-		PhotoACLEntry rv=null;
-
-		for(Iterator i=getACLEntries().iterator(); rv==null && i.hasNext();) {
-			PhotoACLEntry acl=(PhotoACLEntry)i.next();
-
-			if(acl.getUid() == userid) {
-				rv=acl;
-			}
-		}
-
-		return(rv);
-	}
-
-	// Same as above, but create a new entry if there isn't one.
-	private PhotoACLEntry getACLEntryForUser2(int userid) {
-		PhotoACLEntry rv=getACLEntryForUser(userid);
-		if(rv==null) {
-			rv=new PhotoACLEntry(userid, getId());
-			acl.add(rv);
-		}
-		return(rv);
-	}
-
-	/**
-	 * Add an ACL entry permitting the given user ID to view this
-	 * category.
-	 */
-	public void addViewACLEntry(int userid) {
-		PhotoACLEntry aclEntry=getACLEntryForUser2(userid);
-		aclEntry.setCanView(true);
-	}
-
-	/**
-	 * Add an ACL entry permitting the given user ID to add to this
-	 * category.
-	 */
-	public void addAddACLEntry(int userid) {
-		PhotoACLEntry aclEntry=getACLEntryForUser2(userid);
-		aclEntry.setCanAdd(true);
-	}
-
-	/**
-	 * Remove an entry for a given user.
-	 */
-	public void removeACLEntry(int userid) {
-		PhotoACLEntry entry=getACLEntryForUser(userid);
-		if(entry!=null) {
-			acl.remove(entry);
-		}
-	}
-
-	/**
-	 * Remove all ACL entries.
-	 */
-	public void removeAllACLEntries() {
-		acl.clear();
+	public PhotoACL getACL() {
+		return(acl);
 	}
 
 	private static SortedSet getInternalCatList(int uid, int access)
@@ -378,7 +312,7 @@ public class Category extends AbstractSavable implements Comparable {
 		for(Iterator i=rv.iterator(); i.hasNext();) {
 			Category cat=(Category)i.next();
 
-			PhotoACLEntry aclE=cat.getACLEntryForUser(uid);
+			PhotoACLEntry aclE=cat.acl.getEntry(uid);
 
 			boolean keep=false;
 			// If we got an entry, see if it works for us.

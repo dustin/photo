@@ -61,19 +61,19 @@ public class AdminSaveCatAction extends PhotoAction {
 		// Set the ACLs
 
 		// Get rid of the old.
-		cat.removeAllACLEntries();
+		cat.getACL().removeAllEntries();
 
 		// Add the view entries
 		String acls[]=acf.getCatAclView();
 		for(int i=0; i<acls.length; i++) {
 			int uid=Integer.parseInt(acls[i]);
-			cat.addViewACLEntry(uid);
+			cat.getACL().addViewEntry(uid);
 		}
 		// Add the add entries
 		acls=acf.getCatAclAdd();
 		for(int i=0; i<acls.length; i++) {
 			int uid=Integer.parseInt(acls[i]);
-			cat.addAddACLEntry(uid);
+			cat.getACL().addAddEntry(uid);
 		}
 
 		Saver saver=new Saver(PhotoConfig.getInstance());

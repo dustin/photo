@@ -78,7 +78,7 @@ public class NewUserAction extends PhotoAction {
 		// Populate the ACL entries.
 		for(Iterator it=p.getACLEntries().iterator(); it.hasNext();) {
 			Integer i=(Integer)it.next();
-			pu.addViewACLEntry(i.intValue());
+			pu.getACL().addViewEntry(i.intValue());
 		}
 
 		// Save the new user
