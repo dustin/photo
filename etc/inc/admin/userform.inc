@@ -1,11 +1,19 @@
-<h2>Editing user %USER%</h2>
-<form method="POST" action="%CGIDIR%/admin/admin.cgi">
+<html><head><title>Photo Admin - Editing %USER%</title></head>
 
-<input type="hidden" name="func" value="saveuser">
+<body bgcolor="#fFfFfF">
+
+<h2>Editing user %USER%</h2>
+<form method="POST" action="%SELF_URI%">
+
+<input type="hidden" name="func" value="admsaveuser">
+<input type="hidden" name="userid" value="%USERID%">
 
 <table border="3">
 
-%USERPART%
+<tr>
+    <td>Username:</td>
+    <td><input name="username" value="%USER%"></td>
+</tr>
 
 <tr>
     <td>Real Name:</td>
@@ -19,7 +27,7 @@
 
 <tr>
     <td>Password:</td>
-    <td><input name="password" value="%PASS%"></td>
+    <td><input name="password" type="password" value="%PASS%"></td>
 </tr>
 
 <tr>
@@ -39,3 +47,14 @@
     <th>Category</th>
     <th>Visible</th>
 </tr>
+%ACLTABLE%
+</table>
+
+<p>
+
+<input type=submit value="Save User">
+
+</form>
+
+</body>
+</html>
