@@ -11,7 +11,6 @@ Get all of the info required to display photo information.
 @sql
 select
 		a.descr,
-		a.keywords,
 		a.cat as catid,
 		a.taken,
 		a.size,
@@ -27,7 +26,6 @@ select
 
 @results
 descr VARCHAR Description of this image
-keywords VARCHAR Keywords for this image
 catid INTEGER ID of the category in which this image is
 taken DATE Date this image was taken
 size INTEGER Size (in bytes) of this image

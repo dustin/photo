@@ -89,7 +89,6 @@ insert into format values(3, 'gif', 'image/gif');
 -- Where the picture info is stored.
 
 create table album(
-	keywords   varchar(50) not null,
 	descr      text not null,
 	cat        integer not null,
 	taken      date not null,
@@ -451,16 +450,6 @@ create view log_user_ip_agent as
 ;
 
 grant select on log_user_ip_agent to nobody
-;
-
-create view log_user_ip_keywords as
-	select a.id as photo_id, u.username, l.remote_addr, a.keywords, l.ts
-		from wwwusers u, photo_logs l, album a
-	  where u.id = l.wwwuser_id and
-	    a.id = l.photo_id
-;
-
-grant select on log_user_ip_keywords to nobody
 ;
 
 -- For viewing auth logs
