@@ -27,6 +27,7 @@ CLASSES=\
 	net/spy/photo/sp/FindImagesByComments.java \
 	net/spy/photo/sp/FindImagesByComments.class \
 	net/spy/photo/XMLAble.class \
+	net/spy/photo/Persistent.class \
 	net/spy/photo/PhotoServlet.class \
 	net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoUtil.class \

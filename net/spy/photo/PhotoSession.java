@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.115 2002/04/26 21:15:04 knitterb Exp $
+ * $Id: PhotoSession.java,v 1.116 2002/05/05 08:46:20 dustin Exp $
  */
 
 package net.spy.photo;
@@ -56,10 +56,10 @@ public class PhotoSession extends Object
 		this.conf=new PhotoConfig();
 
 		// The aheadfetcher
-		this.aheadfetcher=p.aheadfetcher;
+		this.aheadfetcher=Persistent.aheadfetcher;
 
-		logger=p.logger;
-		security=p.security;
+		logger=Persistent.logger;
+		security=Persistent.security;
 
 		initSessionData(request);
 		xmlraw=sessionData.isXmlraw();

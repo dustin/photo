@@ -11,16 +11,21 @@
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
-	<!-- The main image servlet -->
+	<!-- Persistent objects -->
 	<servlet>
-		<servlet-name>PhotoServlet</servlet-name>
-		<servlet-class>net.spy.photo.PhotoServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-
+		<servlet-name>Persistent</servlet-name>
+		<servlet-class>net.spy.photo.Persistent</servlet-class>
 		<init-param>
 			<param-name>configFile</param-name>
 			<param-value>/WEB-INF/photo.conf</param-value>
 		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- The main image servlet -->
+	<servlet>
+		<servlet-name>PhotoServlet</servlet-name>
+		<servlet-class>net.spy.photo.PhotoServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
