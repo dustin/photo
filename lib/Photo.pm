@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.22 1998/08/11 04:59:26 dustin Exp $
+# $Id: Photo.pm,v 1.23 1998/08/11 05:01:40 dustin Exp $
 
 package Photo;
 
@@ -144,10 +144,11 @@ sub buildQuery
         } else {
             $order="a.taken";
         }
+
+        $h{sdirection}|="";
+        $query.="\n    order by $order $h{sdirection};\n";
     }
 
-    $h{sdirection}|="";
-    $query.="\n    order by $order $h{sdirection};\n";
 
     return($query);
 }
