@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.35 1998/09/06 21:37:27 dustin Exp $
+# $Id: Photo.pm,v 1.36 1998/09/06 21:48:06 dustin Exp $
 
 package Photo;
 
@@ -295,7 +295,7 @@ sub showSaved
 
 sub doFind
 {
-    my($self, $q, $admin)=@_;
+    my($self, $q)=@_;
     my($query, $s, $i, $start, $max, %p, $n, $nn, $r);
 
     print $q->start_html(
@@ -342,11 +342,7 @@ sub doFind
 	print "</tr>\n<tr>\n" if(($i+1)%2==0);
 
         print "<td>\n";
-        if($admin) {
-	    $self->showTemplate("$Photo::includes/admin/findmatch.inc", %p);
-	} else {
-	    $self->showTemplate("$Photo::includes/findmatch.inc", %p);
-	}
+	$self->showTemplate("$Photo::includes/findmatch.inc", %p);
         print "</td>\n";
     }
     $s->finish;
