@@ -34,6 +34,19 @@ test: all
 setpw: net/spy/photo/SetPW.class
 	env CLASSPATH=$(CLASSPATH) $(JAVA) net.spy.photo.SetPW
 
+release: all release.tgz
+
+release.tgz:
+	mkdir release
+	cp photo.jar release
+	cp -r etc doc release
+	find release -name CVS -type d | xargs rm -rf
+	tar cvf - release | gzip -9vc > release.tgz
+	rm -rf release
+
+dist: release
+	mv release.tgz photoservlet-`date +%Y%m%d`.tgz
+
 clean:
 	rm -f $(CLASSES) photo.jar
 
