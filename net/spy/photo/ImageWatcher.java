@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageWatcher.java,v 1.3 2003/07/26 08:38:27 dustin Exp $
+// $Id: ImageWatcher.java,v 1.4 2003/08/01 06:58:23 dustin Exp $
 
 package net.spy.photo;
 
@@ -40,14 +40,12 @@ public class ImageWatcher extends Object implements ImageObserver {
 	/**
 	 * Do this when image bits update.
 	 */
-	public boolean imageUpdate(Image img, int infoflags,
+	public synchronized boolean imageUpdate(Image img, int infoflags,
 		int x, int y, int width, int height) {
 
 		if( (infoflags&ALLBITS) != 0) {
 			isLoaded=true;
-			synchronized(this) {
-				notifyAll();
-			}
+			notifyAll();
 		}
 
 		return(!isLoaded);

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.16 2003/07/31 08:03:42 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.17 2003/08/01 06:58:23 dustin Exp $
 
 package net.spy.photo;
 
@@ -286,21 +286,21 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	/**
 	 * Get the ID of the last image this session served up.
 	 */
-	public int getLastImageSeen() {
+	public synchronized int getLastImageSeen() {
 		return(lastImageSeen);
 	}
 
 	/**
 	 * How many images has this user seen?
 	 */
-	public int getImagesSeen() {
+	public synchronized int getImagesSeen() {
 		return(imagesSeen);
 	}
 
 	/** 
 	 * Get a Collection of the images this user session has seen.
 	 */
-	public Collection getImageSeenCollection() {
+	public synchronized Collection getImageSeenCollection() {
 		return(imagesSeenBuf);
 	}
 

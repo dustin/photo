@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageObserver.java,v 1.3 2003/07/26 08:38:27 dustin Exp $
+// $Id: PhotoImageObserver.java,v 1.4 2003/08/01 06:58:23 dustin Exp $
 
 package net.spy.photo;
 
@@ -28,7 +28,7 @@ public class PhotoImageObserver extends Object implements ImageObserver {
 	/**
 	 * Are all the bits ready?
 	 */
-	public boolean allBitsP() {
+	public synchronized boolean allBitsP() {
 		return(allbits);
 	}
 

@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.20 2003/07/23 19:58:46 dustin Exp $
+// $Id: PhotoImage.java,v 1.21 2003/08/01 06:58:23 dustin Exp $
 
 package net.spy.photo;
 
@@ -128,6 +128,17 @@ public class PhotoImage extends Object
 		}
 
 		return(rv);
+	}
+
+	/** 
+	 * Get the hash code of this object.
+	 *
+	 * This method is overridden to be consistent with overridding equals.
+	 * 
+	 * @return the system identity hash code
+	 */
+	public int hashCode() {
+		return(System.identityHashCode(this));
 	}
 
 	/**
