@@ -57,16 +57,9 @@
 		<td style="width: 50%">
 			<div class="sectionheader">Photo of the [Unit of Time]</div>
 
-			<c:set var="pou"><%= props.getProperty("photo_of_uot", "1") %></c:set>
-			<c:set var="pourl">
-				<c:url value="/PhotoServlet/${pou}.jpg">
-					<c:param name="id" value="${pou}"/>
-					<c:param name="thumbnail" value="1"/>
-				</c:url>
-			</c:set>
 			<div class="centered">
-				<c:out escapeXml="false"
-					value='<img src="${pourl}" alt="Image of the [Unit of Time]"/>'/>
+				<photo:imgLink id='<%= props.getProperty("photo_of_uot", "1") %>'
+					alt="Image of the [Unit of Time]" showThumbnail='true'/>
 			</div>
 		</td>
 		<td style="width: 50%">
