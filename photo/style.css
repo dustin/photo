@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
  *
- * $Id: style.css,v 1.4 2002/05/15 08:26:26 dustin Exp $
+ * $Id: style.css,v 1.5 2002/05/17 00:05:37 dustin Exp $
  */
 body {
 	font-family: Arial, Helvetica, sans-serif;
@@ -50,3 +50,29 @@ h2 { font-size: large; }
 	font-size: x-small;
 	text-align: center;
 }
+
+.comments {
+	background-color: #ccccff;
+}
+
+.comment_image {
+	background-color: #ccccff;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.comment_more {
+	font-size: x-small;
+	font-style: italic;
+}
+
+.comment_header {
+	font-size: x-small;
+	background-color: #999999;
+}
+
+/*
+.comment_body {
+	background-color: #ccccff;
+}
+*/
