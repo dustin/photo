@@ -145,6 +145,10 @@ public class PhotoImageDataImpl extends SpyObject
 		Map rv=(Map)sc.get(CACHE_KEY);
 		if(rv == null) {
 			rv=initFromDB();
+			// Update the index cache
+			SearchIndex si=SearchIndex.getInstance();
+			si.update(rv.values());
+			// Cache it
 			sc.store(CACHE_KEY, rv, CACHE_TIME);
 		}
 		return(rv);

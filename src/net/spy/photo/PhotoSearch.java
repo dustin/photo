@@ -6,6 +6,10 @@
 
 package net.spy.photo;
 
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -201,10 +205,91 @@ public class PhotoSearch extends PhotoHelper {
 		return(out);
 	}
 
+	public PhotoSearchResults performSearch(
+		SearchForm form, PhotoSessionData sessionData)
+		throws Exception {
+
+		// Get the search index
+		SearchIndex index=SearchIndex.getInstance();
+
+		// This is the result set of images we want to display.
+		Set rset=new HashSet();
+
+		// Flip through all of the categories and get them as Integers
+		Collection validCats=new ArrayList(16);
+		for(Iterator i=Category.getCatList(
+			sessionData.getUser().getId(), Category.ACCESS_READ).iterator();
+			i.hasNext();) {
+			Category cat=(Category)i.next();
+			validCats.add(new Integer(cat.getId()));
+		}
+
+		// Start with all the potentially accessible images
+		rset.addAll(index.getForCats(validCats, SearchIndex.OP_OR));
+
+		// Check to see if there's a field entry
+		if("keywords".equals(form.getField())) {
+			// Lookup the keywords
+			ArrayList keywords=new ArrayList();
+			String stmp = form.getWhat();
+			if(stmp == null) {
+				stmp="";
+			}
+			StringTokenizer st=new StringTokenizer(stmp);
+			while(st.hasMoreTokens()) {
+				Keyword kw=Keyword.getKeyword(st.nextToken());
+				if(kw != null) {
+					keywords.add(kw);
+				}
+			}
+			int joinop=SearchIndex.OP_AND;
+			if("or".equals(form.getFieldjoin())) {
+				joinop=SearchIndex.OP_OR;
+			}
+			// Remove everything that doesn't match our keywords (unless we
+			// don't have any)
+			if(keywords.size() > 0) {
+				getLogger().info("Retaining images with keywords " + keywords);
+				rset.retainAll(index.getForKeywords(keywords, joinop));
+			}
+		} else if("descr".equals(form.getField())) {
+			throw new Exception("Not handling descr currently");
+		} else {
+			String stmp = form.getWhat();
+			if(stmp != null && stmp.length() > 0) {
+				throw new ServletException("Invalid field:  "
+					+ form.getField());
+			}
+		}
+
+		// Handle any category limitation
+		String atmp[]=form.getCat();
+		if(atmp != null && atmp.length > 0) {
+			ArrayList al=new ArrayList(atmp.length);
+			for(int i=0; i<atmp.length; i++) {
+				al.add(new Integer(atmp[i]));
+			}
+			getLogger().info("Retaining images with cats " + al);
+			rset.retainAll(index.getForCats(al, SearchIndex.OP_OR));
+		}
+
+		// Populate the results
+		PhotoSearchResults results=new PhotoSearchResults();
+		results.setMaxSize(sessionData.getOptimalDimensions());
+		int resultId=0;
+		for(Iterator i=rset.iterator(); i.hasNext(); ) {
+			PhotoImageData r=(PhotoImageData)i.next();
+			results.add(new PhotoSearchResult(r, resultId));
+			resultId++; 
+		}
+
+		return(results);
+	}
+
 	/**
 	 * Perform a search from a SearchForm.
 	 */
-	public PhotoSearchResults performSearch(
+	public PhotoSearchResults oldPerformSearch(
 		SearchForm form, PhotoSessionData sessionData)
 		throws ServletException {
 
