@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.12 2002/02/23 07:51:29 dustin Exp $
+// $Id: PhotoUser.java,v 1.13 2002/02/26 01:42:37 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -172,29 +172,27 @@ public class PhotoUser extends Object implements Serializable {
 	 */
 	public boolean canAdd(int cat) {
 		boolean rv=false;
-		if(groups==null) {
-			try {
-				Hashtable h=new Hashtable();
-				SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
-				PreparedStatement st=db.prepareStatement(
-					"select 1 from wwwacl\n"
-					+ " where userid = ?"
-					+ "  and canadd=true\n"
-					+ "  and cat=?", 900);
-				st.setInt(1, getId());
-				st.setInt(2, cat);
-				ResultSet rs=st.executeQuery();
-				// If there's a result, access is granted.
-				if(rs.next()) {
-					rv=true;
-				}
-				rs.close();
-				st.close();
-				db.close();
-			} catch(Exception e) {
-				// Spill your guts.
-				e.printStackTrace();
+		try {
+			Hashtable h=new Hashtable();
+			SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+			PreparedStatement st=db.prepareStatement(
+				"select 1 from wwwacl\n"
+				+ " where userid = ?"
+				+ "  and canadd=true\n"
+				+ "  and cat=?", 900);
+			st.setInt(1, getId());
+			st.setInt(2, cat);
+			ResultSet rs=st.executeQuery();
+			// If there's a result, access is granted.
+			if(rs.next()) {
+				rv=true;
 			}
+			rs.close();
+			st.close();
+			db.close();
+		} catch(Exception e) {
+			// Spill your guts.
+			e.printStackTrace();
 		}
 		return(rv);
 	}
