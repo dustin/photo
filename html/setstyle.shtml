@@ -23,6 +23,7 @@ action="/cgi-bin/dustin/photo/setstyle.cgi">
 	   </select>
        </td>
    </tr>
+
    <tr>
        <td>Header Transform:</td>
 	   <td>
@@ -34,6 +35,19 @@ action="/cgi-bin/dustin/photo/setstyle.cgi">
 	   </select>
 	   </td>
    </tr>
+
+   <tr>
+       <td>Description Transform:</td>
+	   <td>
+	   <select name="d_transform">
+	   <option>none
+	   <option>capitalize
+	   <option>uppercase
+	   <option>lowercase
+	   </select>
+	   </td>
+   </tr>
+
    <tr>
    		<td>Background Color:</td>
 		<td>
