@@ -109,6 +109,11 @@
 			<form-property name="id" type="java.lang.String"/>
 		</form-bean>
 
+		<form-bean name="setuidForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="user" type="java.lang.String"/>
+		</form-bean>
+
 		<!-- Admin beans -->
 		<form-bean name="adminUserForm" type="net.spy.photo.struts.AdminUserForm"/>
 		<form-bean name="adminCatForm"
@@ -323,6 +328,13 @@
 	<!-- ***************************************************************** -->
 	<!-- Admin stuff -->
 	<!-- ***************************************************************** -->
+
+	<action    path="/setuid"
+		type="net.spy.photo.struts.SetUidAction"
+		scope="request"
+		name="setuidForm">
+		<forward name="next" path="/index.do" redirect="true" />
+	</action>
 
 	<!-- Managing users -->
 	<action path="/admuseredit"
