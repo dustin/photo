@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.27 2002/08/26 06:21:14 dustin Exp $
+	$Id: build.xml,v 1.28 2002/10/08 18:10:06 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -57,7 +57,18 @@
 	</target>
 
 	<!-- This is specific to my development at home. -->
-	<target name="install" depends="photo.jar">
+	<target name="install" depends="install-jar,install-jsp"/>
+
+	<target name="install-jsp">
+		<copy todir="/afs/.spy.net/misc/web/root/photo/">
+			<fileset dir="photo">
+				<include name="**/*.jsp"/>
+				<include name="**/*.css"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="install-jar" depends="photo.jar">
 		<copy file="photo.jar"
 			tofile="/afs/.spy.net/misc/web/root/photo/WEB-INF/lib/photo.jar"/>
 	</target>
