@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.7 2002/06/30 07:51:31 dustin Exp $
+// $Id: PhotoImageData.java,v 1.8 2002/07/04 07:14:58 dustin Exp $
 
 package net.spy.photo;
 
@@ -231,22 +231,6 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 	 */
 	public int getSize() {
 		return(size);
-	}
-
-	/**
-	 * Get the width of this photo.
-	 * @deprecated use getDimensions instead
-	 */
-	public int getWidth() {
-		return(dimensions.getWidth());
-	}
-
-	/**
-	 * Get the height of this photo.
-	 * @deprecated use getDimensions instead
-	 */
-	public int getHeight() {
-		return(dimensions.getHeight());
 	}
 
 	/**
