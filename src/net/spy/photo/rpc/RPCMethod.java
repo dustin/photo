@@ -44,7 +44,7 @@ public abstract class RPCMethod extends Remote {
 		// Get the user
 		PhotoSecurity sec=Persistent.getSecurity();
 		User tmp=sec.getUser(username);
-		if(tmp!=null && sec.checkPassword(tmp.getPassword(), password)) {
+		if(tmp!=null && sec.checkPassword(password, tmp.getPassword())) {
 			user=tmp;
 		} else {
 			throw new PhotoException("Invalid username or password.");
