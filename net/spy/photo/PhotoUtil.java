@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.2 2000/07/05 07:36:49 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.3 2000/07/09 08:05:44 dustin Exp $
  */
 
 package net.spy.photo;
@@ -40,7 +40,7 @@ public class PhotoUtil
 		vars.put("STYLESHEET", "<link rel=\"stylesheet\"href=\""
 			+ p.self_uri + "?func=getstylesheet\">");
 		
-		ret = t.tokenize(conf.get("includes") + file, vars);
+		ret = t.tokenize(conf.get("includes") + "/" + file, vars);
 		return(ret);
 	}
 
@@ -52,7 +52,7 @@ public class PhotoUtil
 		PhotoConfig conf = new PhotoConfig();
 		vars.put("HTML_URI", conf.get("html_uriroot"));
 		vars.put("LAST_MODIFIED", "recently");
-		ret = t.tokenize(conf.get("includes") + file, vars);
+		ret = t.tokenize(conf.get("includes") + "/" + file, vars);
 		return(ret);
 	}
 
