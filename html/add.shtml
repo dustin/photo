@@ -17,6 +17,9 @@ action="/cgi-bin/dustin/photo/addimg.cgi">
        </td>
    </tr>
    <tr>
+       <td>Date Taken:</td><td><input name="taken"></td>
+   </tr>
+   <tr>
        <td>Keywords:</td><td><input name="keywords"></td>
    </tr>
    <tr>

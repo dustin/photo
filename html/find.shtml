@@ -45,22 +45,52 @@ Category:
 contains
 <input name="what"><br>
 
+<table>
+
+<tr>
+<td>
+<select name="tstartjoin">
+    <option>and
+    <option>or
+</select>
+was taken since (date)
+<input name="tstart"><br>
+</td>
+
+<td>
+<select name="tendjoin">
+    <option>and
+    <option>or
+</select>
+was taken before (date)
+<input name="tend"><br>
+</td>
+</tr>
+
+<tr>
+<td>
 <select name="startjoin">
     <option>and
     <option>or
 </select>
 was added since (date)
 <input name="start"><br>
+</td>
 
+<td>
 <select name="endjoin">
     <option>and
     <option>or
 </select>
 was added before (date)
 <input name="end"><br>
+</td>
+</tr>
+</table>
 
 <br>
 <input type="submit" value="Find">
+<input type="reset" value="Clear Form">
 
 </form>
 
