@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveUserAction.java,v 1.9 2003/01/07 09:38:52 dustin Exp $
+// $Id: AdminSaveUserAction.java,v 1.10 2003/01/09 07:42:55 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -100,6 +100,13 @@ public class AdminSaveUserAction extends AdminAction {
 			saver.save(user);
 		} catch(Exception e) {
 			throw new ServletException("Error saving user", e);
+		}
+
+		// Recache the users.
+		try {
+			PhotoUser.recache();
+		} catch(PhotoUserException e) {
+			throw new ServletException("Error recaching users.", e);
 		}
 
 		// Update the groups...yeah, I guess I'm just going to do it right

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NewUserAction.java,v 1.6 2003/01/07 09:38:53 dustin Exp $
+// $Id: NewUserAction.java,v 1.7 2003/01/09 07:42:55 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -97,6 +97,16 @@ public class NewUserAction extends PhotoAction {
 			saver.save(pu);
 		} catch(Exception e) {
 			throw new ServletException("Error saving user", e);
+		}
+
+		// Recache the photo stuff and get the cached version.
+		try {
+			PhotoUser.recache();
+			// Get the user from the cache
+			pu=PhotoUser.getPhotoUser(nuf.getUsername());
+
+		} catch(PhotoUserException e) {
+			throw new ServletException("Error refreshing user cache", e);
 		}
 
 		// Get the session data and assign the new credentials

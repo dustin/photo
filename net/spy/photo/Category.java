@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.12 2003/01/07 09:38:49 dustin Exp $
+// $Id: Category.java,v 1.13 2003/01/09 07:42:54 dustin Exp $
 
 package net.spy.photo;
 
@@ -133,6 +133,17 @@ public class Category extends AbstractSavable implements Comparable {
 		}
 
 		return(rv);
+	}
+
+	/** 
+	 * Recache the categories.
+	 */
+	public static void recache() throws Exception {
+		// Uncache the current map
+		SpyCache sc=SpyCache.getInstance();
+		sc.uncache(CACHE_KEY);
+		// This will cause a recache
+		getCategoryMap();
 	}
 
 	/** 

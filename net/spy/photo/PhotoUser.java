@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.27 2003/01/07 09:38:51 dustin Exp $
+// $Id: PhotoUser.java,v 1.28 2003/01/09 07:42:54 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 package net.spy.photo;
@@ -221,6 +221,17 @@ public class PhotoUser extends AbstractSavable implements Serializable {
 		}
 
 		return(rv);
+	}
+
+	/** 
+	 * Uncache and recache the users.
+	 */
+	public static void recache() throws PhotoUserException {
+		//  Uncache
+		SpyCache sc=SpyCache.getInstance();
+		sc.uncache(CACHE_KEY);
+		// This will cause a recache.
+		getUserMap();
 	}
 
 	/**

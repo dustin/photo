@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveCatAction.java,v 1.5 2002/12/15 09:02:25 dustin Exp $
+// $Id: AdminSaveCatAction.java,v 1.6 2003/01/09 07:42:55 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -84,6 +84,12 @@ public class AdminSaveCatAction extends AdminAction {
 			saver.save(cat);
 		} catch(Exception e) {
 			throw new ServletException("Error saving category", e);
+		}
+
+		try {
+			Category.recache();
+		} catch(Exception e) {
+			throw new ServletException("Error recaching categories.", e);
 		}
 
 		return(mapping.findForward("success"));
