@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.26 2000/07/07 06:05:37 dustin Exp $
+ * $Id: PhotoSession.java,v 1.27 2000/07/08 05:50:48 dustin Exp $
  */
 
 package net.spy.photo;
@@ -25,7 +25,6 @@ public class PhotoSession extends Object
 	// This kinda stuff is only persistent for a single connection.
 	protected Integer remote_uid=null;
 	protected String remote_user=null, self_uri=null;
-	protected RHash rhash=null;
 	protected MultipartRequest multi=null;
 	protected SpyLog logger=null;
 	protected PhotoSecurity security = null;
@@ -54,7 +53,6 @@ public class PhotoSession extends Object
 
 		logger=p.logger;
 
-		rhash=p.rhash;
 		security=p.security;
 	}
 
@@ -929,13 +927,9 @@ public class PhotoSession extends Object
 			thumbnail=true;
 		}
 
-		if(rhash==null || !rhash.connected()) {
-			throw new ServletException("Me hath no working rhash");
-		}
-
 		try {
 			// The new swank image extraction object.
-			PhotoImageHelper p = new PhotoImageHelper(which, rhash);
+			PhotoImageHelper p = new PhotoImageHelper(which);
 
 			// Need a binary output thingy.
 			out = response.getOutputStream();

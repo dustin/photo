@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.7 2000/07/05 07:36:49 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.8 2000/07/08 05:50:48 dustin Exp $
  */
 
 package net.spy.photo;
@@ -21,7 +21,6 @@ import net.spy.*;
 public class PhotoServlet extends HttpServlet
 { 
 	// Only *really* persistent data can go here.
-	public RHash rhash=null;
 	public PhotoSecurity security = null;
 	public PhotoAheadFetcher aheadfetcher=null;
 
@@ -45,16 +44,6 @@ public class PhotoServlet extends HttpServlet
 			log("Finished security");
 		} catch(Exception e) {
 			throw new ServletException("Can't create security stuff:  " + e);
-		}
-
-		// Get an rhash to cache images and shite.
-		try {
-			log("Initing rhash");
-			rhash = new RHash(conf.get("objectserver"));
-			log("got rhash");
-		} catch(Exception e) {
-			log("Could not get rhash connection:  " + e);
-			rhash = null;
 		}
 
 		// The photo cache storer
@@ -83,30 +72,11 @@ public class PhotoServlet extends HttpServlet
 		log("Initialization complete");
 	}
 
-	// Verify we have a valid rhash, if not, reopen it.
-	protected void verify_rhash() {
-		boolean needy=false;
-		if(rhash==null || (!rhash.connected()) ) {
-			log("Need a new rhash");
-			try {
-				// Try to reopen it
-				PhotoConfig conf = new PhotoConfig();
-				log("Getting rhash from " + conf.get("objectserver"));
-				rhash = new RHash(conf.get("objectserver"));
-				log("Got a new rhash");
-			} catch(Exception e) {
-				rhash=null;
-				log("Error getting rhash:  " + e);
-			}
-		}
-	}
-
 	// Do a GET request
 	public void doGet (
 		HttpServletRequest request, HttpServletResponse response
 	) throws ServletException, IOException {
 
-		verify_rhash();
 		PhotoSession ps = new PhotoSession(this, request, response);
 		ps.process();
 	}
@@ -116,7 +86,6 @@ public class PhotoServlet extends HttpServlet
 		HttpServletRequest request, HttpServletResponse response
 	) throws ServletException, IOException {
 
-		verify_rhash();
 		PhotoSession ps = new PhotoSession(this, request, response);
 		ps.process();
 	}

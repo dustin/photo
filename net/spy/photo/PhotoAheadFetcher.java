@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.5 2000/07/05 08:15:42 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.6 2000/07/08 05:50:48 dustin Exp $
  */
 
 package net.spy.photo;
@@ -88,7 +88,7 @@ public class PhotoAheadFetcher extends Thread {
 				 	// This will cache the thumbnails
 				 	int image_id=Integer.parseInt((String)h.get("IMAGE"));
 				 	PhotoImageHelper p =
-						new PhotoImageHelper(image_id, null);
+						new PhotoImageHelper(image_id);
 				 	p.getThumbnail();
 				}
 			} // end one resultset

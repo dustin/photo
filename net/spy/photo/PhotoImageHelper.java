@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.2 2000/07/05 07:09:50 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.3 2000/07/08 05:50:48 dustin Exp $
  */
 
 package net.spy.photo;
@@ -23,11 +23,6 @@ public class PhotoImageHelper extends PhotoHelper
 	PhotoImage image_data=null;
 
 	public PhotoImageHelper(int which) throws Exception {
-		super();
-		image_id = which;
-	}
-
-	public PhotoImageHelper(int which, RHash r) throws Exception {
 		super();
 		image_id = which;
 	}
