@@ -2,18 +2,19 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: listrecent.cgi,v 1.2 1997/11/03 09:31:49 dustin Exp $
+# $Id: listrecent.cgi,v 1.3 1998/04/24 07:41:08 dustin Exp $
 
 use Postgres;
 
-$Itop="/~dustin/photo/album";
+require 'photolib.pl';
 
 sub displayrow
 {
-    my($aid, $cat, $oid, $bcat, $keywords, $taken, $ts)=@_;
+    my($aid, $cat, $oid, $bcat, $keywords, $taken, $ts, $image)=@_;
 
     print <<EOF;
     <tr>
+	<td><img src="$Itop/tn/$image"></tr>
 	<td><a href="/cgi-bin/dustin/photo/admin/deleteimg.cgi?$oid">
 	     $oid</a></td>
 	<td>$cat</td>
@@ -41,7 +42,7 @@ EOF
 
 $dbh=db_connect('photo');
 
-$query ="select a.id,a.name,b.oid,b.cat,b.keywords,b.taken,b.ts\n";
+$query ="select a.id,a.name,b.oid,b.cat,b.keywords,b.taken,b.ts,b.fn\n";
 $query.="    from cat a, album b where a.id=b.cat ";
 $query.="    order by a.name, b.ts;";
 
@@ -58,7 +59,7 @@ if( !($s=$dbh->execute($query)) )
 print <<EOF;
 <table border="1">
 <tr>
-    <th>OID</th><th>Category</th><th>Keywords</th><th>Taken</th>
+    <th>Image</th><th>OID</th><th>Category</th><th>Keywords</th><th>Taken</th>
     <th>Timestamp</th>
 </tr>
 EOF
