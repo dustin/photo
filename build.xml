@@ -1,0 +1,61 @@
+<!--
+	Build file for photoservlet.
+
+	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
+
+	$Id: build.xml,v 1.1 2002/05/22 00:09:05 dustin Exp $
+-->
+
+<project name="PhotoServlet" default="photo.jar" basedir=".">
+
+	<!-- Set up the class path -->
+	<path id="photo.classpath">
+		<fileset dir="photo/WEB-INF/lib">
+			<include name="*.jar"/>
+		</fileset>
+		<fileset dir="${user.home}/lib/java">
+			<include name="jsdk.jar"/>
+			<include name="resin.jar"/>
+			<include name="dom.jar"/>
+			<include name="sax.jar"/>
+			<include name="xerces.jar"/>
+		</fileset>
+	</path>
+
+	<target name="clean">
+		<delete>
+			<fileset dir="net">
+				<include name="**/*.class"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="photo.jar" depends="all">
+		<jar jarfile="photo.jar" basedir=".">
+			<include name="**/*.class"/>
+			<include name="net/**/*.properties"/>
+		</jar>
+	</target>
+
+	<target name="all" depends="rmic">
+		<javac srcdir="." destdir="." deprecation="on" depend="on" verbose="false">
+			<classpath refid="photo.classpath"/>
+			<exclude name="**/Apache*.java"/>
+			<include name="**/*.java"/>
+		</javac>
+	</target>
+
+	<target name="rmic" depends="pre-rmic">
+		<rmic base="." classname="net.spy.rmi.ImageServerImpl">
+			<classpath refid="photo.classpath"/>
+		</rmic>
+	</target>
+
+	<target name="pre-rmic">
+		<javac srcdir="." destdir="." deprecation="on" depend="on" verbose="false">
+			<classpath refid="photo.classpath"/>
+			<include name="net/spy/rmi/net.spy.rmi.ImageServerImpl.class"/>
+		</javac>
+	</target>
+
+</project>
