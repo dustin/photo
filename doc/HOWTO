@@ -1,6 +1,8 @@
 This is a quick install guide.  I have to assume you know what you're doing
 with databases and servlets.
 
+----------------------------------------------------------------------
+
 BEFORE YOU BEGIN!!!
 
 Make sure you read the project home page and have all of the components listed
@@ -11,27 +13,62 @@ UPGRADING FROM A PREVIOUS VERSION OF THE PHOTOSERVLET
 
 Step 1. Getting the updated files.
 
-If you have the latest version of this tarball, you're almost set. Grab the latest 
-release of the spy.jar (set of classes required to run the servlet) This can be obtained 
-from: http://bleu.west.spy.net/~dustin/spyjar/
+If you have the latest version of this tarball, you're almost set.
+Grab the latest release of the spy.jar (set of classes required to
+run the servlet)  This can be obtained from the following location:
+http://bleu.west.spy.net/~dustin/spyjar/
+
 Got that yet ? Good. On to the next step....
 
 Step 2. Put the jars in in your CLASSPATH 
 
-The jars need to be added to the directory(ies) that you keep all your java classes
-in. Once you copy these into place (keep backups of your old copies, it's a good thing)
-you're ready to move ahead again.
+The jars need to be added to the directory(ies) that you keep all
+your java classes in. Once you copy these into place (keep backups
+of your old copies, it's a good thing) you're ready to move ahead
+again.
 
 Step 3. Copy your the new includes
 
-The next step involves more interaction, copy your old includes to a backup. Then
-proceed to copy all the new includes over the top of the old. remember here, you
-have to use cp -R to bring the directories (subdirectories) with.
+The next step involves more interaction, copy your old includes to
+a backup. Then proceed to copy all the new includes over the top
+of the old. remember here, you have to use cp -R to bring the
+directories (subdirectories) with.
 
 Step 4. Restart the Servlet Engine (Jserv) and the PhotoServlet
 
-This step is already in detail. Just restart the serlvet engine and the PhotoServlet
-itself, and you should be off and running.
+This step is already in detail. Just restart the serlvet engine
+and the PhotoServlet itself, and you should be off and running.
+
+Set 5.  Update configuration
+
+If you're upgrading from a PhotoServlet older than 2000/06/30, you will
+need to update your config files, specifically, spyrunner.conf.  DoBindings
+will no longer work.  If possible, grab the new config out of the etc
+directory and modify it for your needs.
+
+If you would prefer to to just update your existing config, then you'll need
+to do the following things:
+ 
+ 5.a
+
+   remove ``spyservices'' from the ``apps'' line of the spyrunner.conf and
+       replace it with two entries, one for ``rcache'' and one for
+	   ``imageserver''
+
+ 5.b
+
+    Add the following entries:
+
+	   rhash.class          net.spy.rmi.RObjectImpl
+	   rhash.args           /path/to/cache/store
+
+	   imageserver.class    net.spy.rmi.ImageServerImpl
+	   imageserver.args     /path/to/imageserver.conf
+
+----------------------------------------------------------------------
+
+INSTALLING FROM SCRATCH
+
 
 
 DATABASE SETUP
@@ -76,6 +113,7 @@ all the necessary helper applications and let you know how each went.  If
 any fail, it's probably not going to work.
 
 
+
 SERVLET SETUP
 
 With your servlet engine having all of the necessary classes in its path
@@ -91,7 +129,8 @@ a good idea to run a couple of test servlets just to make sure you've got
 your servlet engine running correctly before you start.
 
 
-NOW WHAT
+
+NOW WHAT?
 
 When you're first setting up your photoservlet, you'll probably
 want to create categories and users and stuff.
@@ -115,4 +154,4 @@ images showing up as ``admin'' do you?  :)
 
 Let me know if you have any problems.
 
-$Id: HOWTO,v 1.3 2000/06/27 06:27:20 nbinder Exp $
+$Id: HOWTO,v 1.4 2000/06/30 05:57:19 dustin Exp $
