@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaver.java,v 1.1 2002/06/03 06:49:21 dustin Exp $
+// $Id: PhotoSaver.java,v 1.2 2002/06/03 07:39:19 dustin Exp $
 
 package net.spy.photo;
 
@@ -28,6 +28,13 @@ public class PhotoSaver extends Object {
 	public PhotoSaver() {
 		super();
 		timestamp=new Timestamp(System.currentTimeMillis());
+	}
+
+	/**
+	 * String me.
+	 */
+	public String toString() {
+		return("{PhotoSaver id=" + id + "}");
 	}
 
 	public void setKeywords(String keywords) {

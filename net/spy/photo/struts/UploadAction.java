@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadAction.java,v 1.3 2002/06/03 06:49:22 dustin Exp $
+// $Id: UploadAction.java,v 1.4 2002/06/03 07:39:19 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -60,7 +60,8 @@ public class UploadAction extends PhotoAction {
 			saver.setPhotoImage(uf.getPhotoImage());
 			saver.setId(id);
 
-			saver.saveImage();
+			// Tell the saver to save this image when it gets around to it.
+			Persistent.photoSaverThread.saveImage(saver);
 
 			Persistent.logger.log(new PhotoLogUploadEntry(
 				user.getId(), id, request));
