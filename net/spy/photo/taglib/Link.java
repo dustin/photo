@@ -1,8 +1,10 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Link.java,v 1.1 2002/06/10 18:35:10 dustin Exp $
+// $Id: Link.java,v 1.2 2002/06/28 03:45:47 dustin Exp $
 
 package net.spy.photo.taglib;
+
+import java.util.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -12,14 +14,15 @@ import javax.servlet.jsp.tagext.*;
 import net.spy.photo.PhotoUtil;
 
 /**
- * Taglib to link to an image.
+ * Taglib to provide relative links within the webapp.
  */
 public class Link extends PhotoTag {
 
 	private String url=null;
+	private String message=null;
 
 	/**
-	 * Get an instance of ImageLink.
+	 * Get an instance of Link.
 	 */
 	public Link() {
 		super();
@@ -41,9 +44,25 @@ public class Link extends PhotoTag {
 	}
 
 	/**
+	 * Get the message to display.
+	 */
+	public String getMessage() {
+		return(message);
+	}
+
+	/**
+	 * Set the message to display.
+	 */
+	public void setMessage(String message) {
+		this.message=message;
+	}
+
+	/**
 	 * Start link.
 	 */
 	public int doStartTag() throws JspException {
+
+		boolean usedMessage=false;
 
 		StringBuffer sb=new StringBuffer();
 		sb.append("<a href=\"");
@@ -52,11 +71,37 @@ public class Link extends PhotoTag {
 		sb.append(PhotoUtil.getRelativeUri(req, url));
 		sb.append("\">");
 
+		String content=null;
+
+		if(message!=null) {
+			try {
+				ResourceBundle rb=getResourceBundle();
+				content=rb.getString(message);
+			} catch(MissingResourceException mre) {
+				content="[missing resource:  " + message + "]";
+			}
+			usedMessage=true;
+		}
+
 		try {
-			pageContext.getOut().write(sb.toString());
+			JspWriter out=pageContext.getOut();
+
+			out.write(sb.toString());
+
+			// If we used an internal message, we can close the a tag.
+			if(usedMessage) {
+				out.write(content);
+				out.write("</a>");
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new JspException("Error sending output:  " + e);
+		}
+
+		int rv=EVAL_BODY_INCLUDE;
+		// If we used an internal message, skip the body.
+		if(usedMessage) {
+			rv=SKIP_BODY;
 		}
 
 		return(EVAL_BODY_INCLUDE);

@@ -1,4 +1,5 @@
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
+<%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <%-- The following tags must be kept as-is --%>
@@ -56,11 +57,14 @@
 								<tr>
 									<td></td>
 									<td align="right">
-										<photo:link url="/">[Home]</photo:link>
-										| <photo:link url="/sizeform.jsp">[Size]</photo:link>
+										<photo:link url="/" message="page.links.home"/>
+										| <photo:link url="/sizeform.jsp"
+											message="page.links.size"/>
 										<photo:guest negate="true">
-											| <photo:link url="/sessions.jsp">[Who's On]</photo:link>
-											| <photo:link url="/logout.do">[Logout]</photo:link>
+											| <photo:link url="/sessions.jsp"
+													message="page.links.sessions"/>
+											| <photo:link url="/logout.do"
+													message="page.links.logout"/>
 										</photo:guest>
 									</td>
 								</tr>
@@ -69,12 +73,7 @@
 							<br/>
 
 							<div class="footerfineprint">
-								Copyright (&copy;) 1997-2002 Dustin Sallings of
-								<a href="http://www.spy.net/">SPY Internetworking</a>.
-								<br/>
-								All images and other data within these pages
-								are property of their owners, and may not be
-								used without permission.  
+								<bean:message key="page.content.footer"/>
 							</div>
 						</div>
 

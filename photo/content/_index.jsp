@@ -1,6 +1,7 @@
 <%@ page import="net.spy.photo.SavedSearch" %>
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
+<%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 <table width="100%">
 	<tr valign="top">
@@ -11,16 +12,23 @@
 				</template:insert>
 				<ul>
 					<photo:guest>
-						<li><a href="credform.jsp">Login</a></li>
+						<li><photo:link url="/credform.jsp"
+							message="index.links.login"/></li>
 					</photo:guest>
 					<photo:guest negate="true">
-						<li><a href="logout.do">Logout</a></li>
-						<li><a href="addform.jsp">Add a New Image</a></li>
+						<li><photo:link url="/logout.do"
+							message="index.links.logout"/></li>
+						<li><photo:link url="/addform.jsp"
+							message="index.links.addform"/></li>
 					</photo:guest>
-					<li><a href="search.jsp">Advanced Search</a></li>
-					<li><a href="catview.jsp">Category View</a></li>
-					<li><a href="listcomments.do">Show Recent Comments</a></li>
-					<li><a href="newuserform.jsp">Create an Account</a></li>
+					<li><photo:link url="/search.jsp"
+						message="index.links.advsearch"/></li>
+					<li><photo:link url="/catview.jsp"
+						message="index.links.catview"/></li>
+					<li><photo:link url="/listcomments.do"
+						message="index.links.comments"/></li>
+					<li><photo:link url="/newuserform.jsp"
+						message="index.links.newuser"/></li>
 				</ul>
 			</p>
 		</td>
@@ -66,9 +74,8 @@
 						content='Credits' direct='true'/>
 				</template:insert>
 
-				All pages herein were created using vi.  For more
-				information on the vi web page publishing system, type
-				<i>man vi</i> at your prompt.
+				<bean:message key="index.content.credits"/>
+
 			</p>
 		</td>
 	</tr>
@@ -83,20 +90,20 @@
 
 					<ul>
 						<li>
-							<photo:link url="/admin/users.jsp">User Admin</photo:link>
+							<photo:link url="/admin/users.jsp"
+								message="index.links.admin.user"/>
 						</li>
 						<li>
-							<photo:link url="/admin/categories.jsp">
-								Category Admin
-							</photo:link>
+							<photo:link url="/admin/categories.jsp"
+								message="index.links.admin.cat"/>
 						</li>
 						<li>
-							<photo:link url="/admin/newprofile.jsp">New Profile</photo:link>
+							<photo:link url="/admin/newprofile.jsp"
+								message="index.links.admin.newprofile"/>
 						</li>
 						<li>
-							<photo:link url="/adminify.do?action=unsetadmin">
-								Drop Privileges
-							</photo:link>
+							<photo:link url="/adminify.do?action=unsetadmin"
+								message="index.links.admin.droppriv"/>
 						</li>
 					</ul>
 

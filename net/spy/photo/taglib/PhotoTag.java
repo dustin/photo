@@ -1,8 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoTag.java,v 1.2 2002/06/11 00:35:01 dustin Exp $
+// $Id: PhotoTag.java,v 1.3 2002/06/28 03:45:47 dustin Exp $
 
 package net.spy.photo.taglib;
+
+import java.util.*;
+import java.text.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -39,6 +42,16 @@ public abstract class PhotoTag extends TagSupport {
 		}
 
 		return(sessionData);
+	}
+
+	/**
+	 * Get the application resource bundle.
+	 */
+	protected ResourceBundle getResourceBundle() {
+		Locale l=pageContext.getRequest().getLocale();
+		ResourceBundle rb=ResourceBundle.getBundle(
+			"net.spy.photo.photoresources.properties", l);
+		return(rb);
 	}
 
 }

@@ -155,6 +155,11 @@
 			<name>url</name>
 			<required>true</required>
 		</attribute>
+		<attribute>
+			<!-- Message resource to display as the text of the link -->
+			<name>message</name>
+			<required>false</required>
+		</attribute>
 	</tag>
 
 	<!-- Create a relative stylesheet link -->
