@@ -5,7 +5,7 @@
 <photo:initSessionData/>
 <%-- <photo:logRequest/> --%>
 <html><head><title><template:get name='title'/></title>
-<link rel="stylesheet" href="style.css"/>
+<photo:stylesheet url="/style.css"/>
 </head>
 <body background='/~dustin/images/holiday.gif'>
 
