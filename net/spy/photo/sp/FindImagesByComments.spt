@@ -30,7 +30,7 @@ user_id required INTEGER The user who wants to know.
 comment_id INTEGER The unique ID of this comment entry.
 photo_id INTEGER The ID of the photo.
 note VARCHAR The actual note itself.
-ts DATETIME The timestamp of the comment entry.
+ts TIMESTAMP The timestamp of the comment entry.
 remote_addr VARCHAR The remote IP address of the submitter.
 wwwuser_id INTEGER The ID of submitter of the comment.
 cts INTEGER The timestamp of the most recent comment on a given image.

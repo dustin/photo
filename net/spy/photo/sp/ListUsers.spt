@@ -23,4 +23,4 @@ username VARCHAR username
 password VARCHAR Hashed password
 email VARCHAR Email address
 realname VARCHAR Real name of the user
-canadd BOOLEAN Whether the user has general add access or not
+canadd BIT Whether the user has general add access or not
