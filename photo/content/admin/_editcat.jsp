@@ -1,6 +1,5 @@
 <%@ page import="net.spy.photo.PhotoUser" %>
 <%@ page import="net.spy.photo.PhotoSecurity" %>
-<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
@@ -10,9 +9,7 @@
 
 <p>
 
-<template:insert template='/templates/section_header.jsp'>
-	<template:put name='title' content='Category Administration' direct='true'/>
-</template:insert>
+<div class="sectionheader">Category Administration</div>
 
 <html:form action="/admcatsave">
 	<html:errors/>

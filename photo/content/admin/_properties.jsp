@@ -1,6 +1,5 @@
 <jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
 
-<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
@@ -8,9 +7,7 @@
 
 <p>
 
-<template:insert template='/templates/section_header.jsp'>
-	<template:put name='title' direct='true' content='Property Editor'/>
-</template:insert>
+<div class="sectionheader">Property Editor</div>
 
 <html:form action="/admin/saveProperties.do">
 	<html:errors/>

@@ -64,7 +64,7 @@
 	</p>
 
 <photo:guest negate="true">
-	[<photo:link url="/logview.jsp" id="<%= String.valueOf(image.getId()) %>">
+	[<photo:link url="/logView.do" id="<%= String.valueOf(image.getId()) %>">
 			Who's seen this?
 	</photo:link>] | 
 	[<photo:link url="/addToGallery.do" id="<%= String.valueOf(image.getId()) %>">

@@ -109,17 +109,17 @@
 	<!-- Login -->
 	<action    path="/login"
 		type="net.spy.photo.struts.LoginAction"
-		input="/credform.jsp"
+		input="top.credform"
 		scope="request"
 		name="loginForm">
-		<forward name="next" path="/index.do" />
+		<forward name="next" path="index" />
 		<forward name="setadmin" path="/adminify.do?action=setadmin" />
 	</action>
 
 	<!-- Logout -->
 	<action    path="/logout"
 		type="net.spy.jwebkit.struts.LogoutAction">
-		<forward name="next" path="/index.do" />
+		<forward name="next" path="index" />
 	</action>
 
 	<!-- How to handle displays -->
@@ -132,8 +132,8 @@
 	</action>
 
 	<action path="/displaySwitch" type="net.spy.photo.struts.AdminSwitchAction">
-		<forward name="subadmin" path="/admin/display.jsp"/>
-		<forward name="noadmin" path="/displayTile.do"/>
+		<forward name="subadmin" path="admin.display"/>
+		<forward name="noadmin" path="top.display"/>
 	</action>
 
 	<action path="/refreshDisplay" type="net.spy.photo.struts.SetDisplayRefresh">
@@ -143,25 +143,25 @@
 	<!-- Change password -->
 	<action    path="/changepw"
 		type="net.spy.photo.struts.ChangePWAction"
-		input="/changepw.jsp"
+		input="top.changepw"
 		scope="request"
 		name="changePWForm">
-		<forward name="next" path="/index.do" />
+		<forward name="next" path="index" />
 	</action>
 
 	<!-- Forgot password -->
 	<action    path="/forgotpw"
 		type="net.spy.photo.struts.ForgotPWAction"
-		input="/credform.jsp"
+		input="top.credform"
 		scope="request"
 		name="forgotPWForm">
-		<forward name="next" path="/forgotpw_out.jsp" />
+		<forward name="next" path="top.forgotPwOut" />
 	</action>
 
   <!-- Add a new comment -->
   <action path="/addcomment"
     type="net.spy.photo.struts.CommentAction"
-    input="/commentinput.jsp"
+    input="top.commentInput"
     name="commentForm">
 		<forward name="next" path="/display.do" />
   </action>
@@ -171,22 +171,22 @@
 		type="net.spy.photo.struts.AdminifyAction"
 		scope="request"
 		name="adminifyForm">
-		<forward name="next" path="/index.do"/>
+		<forward name="next" path="index"/>
 	</action>
 
 	<!-- Set the optimal image size. -->
 	<action path="/setviewsize"
 		type="net.spy.photo.struts.SetSizeAction"
-		input="/sizeform.jsp"
+		input="top.sizeform"
 		scope="request"
 		name="setSizeForm">
-		<forward name="next" path="/index.do"/>
+		<forward name="next" path="index"/>
 	</action>
 
 	<!-- Searches -->
 	<action    path="/search"
 		type="net.spy.photo.struts.SearchAction"
-		input="/search.jsp"
+		input="top.search"
 		name="searchForm">
 		<forward name="next" path="/filterSearch.do" />
 		<forward name="showResults" path="/filterSearch.do" />
@@ -197,7 +197,7 @@
 		type="net.spy.photo.struts.CursorAction"
 		scope="request"
 		name="cursorForm">
-		<forward name="next" path="/results.jsp" />
+		<forward name="next" path="top.searchResults" />
 	</action>
 
 	<!-- Search result cursor movement -->
@@ -211,7 +211,7 @@
 		type="net.spy.photo.struts.CursorAction"
 		scope="request"
 		name="cursorForm">
-		<forward name="next" path="/comments.jsp" />
+		<forward name="next" path="top.comments" />
 	</action>
 
 	<!-- Search result filtering -->
@@ -225,9 +225,9 @@
 	<!-- Image uploads -->
 	<action path="/upload"
 		type="net.spy.photo.struts.UploadAction"
-		input="/addform.jsp"
+		input="top.addImage"
 		name="uploadForm">
-		<forward name="next" path="/addform.jsp" />
+		<forward name="next" path="top.addImage" />
 	</action>
 
 	<!-- Saving a search. -->
@@ -235,16 +235,16 @@
 		type="net.spy.photo.struts.SaveSearchAction"
 		scope="request"
 		name="saveSearchForm">
-		<forward name="next" path="/savedsearch.jsp"/>
+		<forward name="next" path="top.savedSearch"/>
 	</action>
 
 	<!-- New user self-creation -->
 	<action    path="/newuser"
 		type="net.spy.photo.struts.NewUserAction"
-		input="/newuserform.jsp"
+		input="top.newUserForm"
 		scope="request"
 		name="newUserForm">
-		<forward name="next" path="/index.do" />
+		<forward name="next" path="index" />
 	</action>
 
 	<!-- Add a new image to a gallery -->
@@ -258,10 +258,10 @@
 	<!-- Save a gallery -->
 	<action path="/saveGallery"
 		type="net.spy.photo.struts.SaveGalleryAction"
-		input="/savegallery.jsp"
+		input="top.saveGallery"
 		scope="request"
 		name="saveGalleryForm">
-		<forward name="next" path="/index.do" />
+		<forward name="next" path="index" />
 	</action>
 
 	<!-- ***************************************************************** -->
@@ -271,39 +271,39 @@
 	<!-- Managing users -->
 	<action path="/admuseredit"
 		name="adminUserForm"
-		input="/admin/users.jsp"
+		input="admin.userlist"
 		type="net.spy.photo.struts.AdminSelectUserAction">
-		<forward name="next" path="/admin/edituser.jsp" />
+		<forward name="next" path="admin.edituser" />
 	</action>
 
 	<action path="/admusersave"
 		name="adminUserForm"
-		input="/admin/edituser.jsp"
+		input="admin.edituser"
 		type="net.spy.photo.struts.AdminSaveUserAction">
-		<forward name="next" path="/admin/users.jsp" />
+		<forward name="next" path="admin.userlist" />
 	</action>
 
 	<!-- Managing categories -->
 	<action path="/admcatedit"
 		name="adminCatForm"
-		input="/admin/categories.jsp"
+		input="admin.catlist"
 		type="net.spy.photo.struts.AdminSelectCatAction">
-		<forward name="next" path="/admin/editcat.jsp" />
+		<forward name="next" path="admin.editcat" />
 	</action>
 
 	<action path="/admcatsave"
 		name="adminCatForm"
-		input="/admin/editcat.jsp"
+		input="admin.editcat"
 		type="net.spy.photo.struts.AdminSaveCatAction">
-		<forward name="next" path="/admin/categories.jsp" />
+		<forward name="next" path="admin.catlist" />
 	</action>
 
 	<!-- Creating a profile -->
 	<action path="/admnewprofile"
 		name="adminNewProfileForm"
-		input="/admin/newprofile.jsp"
+		input="admin.newprofile"
 		type="net.spy.photo.struts.AdminSaveProfile">
-		<forward name="next" path="/admin/newprofile.jsp" />
+		<forward name="next" path="admin.newprofile" />
 	</action>
 
 	<!-- Modify an image's data -->
@@ -316,9 +316,9 @@
 
 	<action path="/admin/saveProperties"
 		name="emptyForm"
-		input="/admin/properties.jsp"
+		input="admin.properties"
 		type="net.spy.photo.struts.AdminSaveProperties">
-		<forward name="next" path="/index.do"/>
+		<forward name="next" path="index"/>
 	</action>
 
 	<!-- REPORTING -->
@@ -331,7 +331,7 @@
 		<set-property property="spt"
 			value="net.spy.photo.sp.reporting.GetUserCat"/>
 
-		<forward name="next" path="/admin/reportDisplay.jsp"/>
+		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
 	<action path="/report/userCatXd"
@@ -342,7 +342,7 @@
 		<set-property property="spt"
 			value="net.spy.photo.sp.reporting.GetUserCatXd"/>
 
-		<forward name="next" path="/admin/reportDisplay.jsp"/>
+		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
 	<action path="/report/userImgs"
@@ -353,7 +353,7 @@
 		<set-property property="spt"
 			value="net.spy.photo.sp.reporting.GetImagesSeenByUser"/>
 
-		<forward name="next" path="/admin/reportDisplay.jsp"/>
+		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
 	<action path="/report/topImages"
@@ -364,7 +364,7 @@
 		<set-property property="spt"
 			value="net.spy.photo.sp.reporting.MostViewedImages"/>
 
-		<forward name="next" path="/admin/reportDisplay.jsp"/>
+		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
 	<action path="/report/topImagesXd"
@@ -375,7 +375,7 @@
 		<set-property property="spt"
 			value="net.spy.photo.sp.reporting.MostViewedImagesXd"/>
 
-		<forward name="next" path="/admin/reportDisplay.jsp"/>
+		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
 	<action path="/report/mostActiveUsers"
@@ -386,7 +386,7 @@
 		<set-property property="spt"
 			value="net.spy.photo.sp.reporting.MostActiveUsers"/>
 
-		<forward name="next" path="/admin/reportDisplay.jsp"/>
+		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
 	<action path="/report/mostActiveUsersXd"
@@ -397,7 +397,7 @@
 		<set-property property="spt"
 			value="net.spy.photo.sp.reporting.MostActiveUsersXd"/>
 
-		<forward name="next" path="/admin/reportDisplay.jsp"/>
+		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
 	<!-- End of reporting -->
@@ -406,9 +406,58 @@
 	<action path="/index"
 		type="org.apache.struts.actions.ForwardAction"
 		parameter="index"/>
-	<action path="/displayTile"
+	<action path="/addform"
 		type="org.apache.struts.actions.ForwardAction"
-		parameter="display"/>
+		parameter="top.addImage"/>
+	<action path="/catview"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.catView"/>
+	<action path="/changePwForm"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.changePw"/>
+	<action path="/credform"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.credform"/>
+	<action path="/galleryList"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.galleryList"/>
+	<action path="/logView"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.logView"/>
+	<action path="/newUserForm"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.newUserForm"/>
+	<action path="/saveGalleryForm"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.saveGallery"/>
+	<action path="/searchForm"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.searchForm"/>
+	<action path="/sessions"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.sessions"/>
+	<action path="/showGallery"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.showGallery"/>
+	<action path="/sizeForm"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="top.sizeForm"/>
+	<!-- Admin stuff -->
+	<action path="/admin/catList"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="admin.catlist"/>
+	<action path="/admin/userList"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="admin.userlist"/>
+	<action path="/admin/reporting"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="admin.reporting"/>
+	<action path="/admin/properties"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="admin.properties"/>
+	<action path="/admin/newprofile"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="admin.newprofile"/>
 
   </action-mappings>
 

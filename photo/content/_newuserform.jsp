@@ -1,4 +1,3 @@
-<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <html:form action="/newuser" focus="profile">
 

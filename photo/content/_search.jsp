@@ -1,5 +1,4 @@
 <%@ page import="net.spy.photo.Category" %>
-<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
@@ -7,9 +6,7 @@
 
 <p>
 
-<template:insert template='/templates/section_header.jsp'>
-	<template:put name='title' content='Simple Search' direct='true'/>
-</template:insert>
+<div class="sectionheader">Simple Search</div>
 
 <html:form action="/search.do">
 	<html:errors/>
@@ -34,9 +31,7 @@
 
 <p>
 
-<template:insert template='/templates/section_header.jsp'>
-	<template:put name='title' content='Find image by ID' direct='true'/>
-</template:insert>
+<div class="sectionheader">Find image by ID</div>
 
 <form method="GET" action="display.do">
 	ID:  <input name="id" size="6">
@@ -47,9 +42,7 @@
 
 <p>
 
-<template:insert template='/templates/section_header.jsp'>
-	<template:put name='title' content='Advanced Search' direct='true'/>
-</template:insert>
+<div class="sectionheader">Advanced Search</div>
 
 <bean:message key="forms.search.adv.pre"/>
 

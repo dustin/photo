@@ -1,4 +1,3 @@
-<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
@@ -49,4 +48,4 @@
 
 <a href="adminify.do?action=setadmin">Request Administrative Privileges</a>
 <br/>
-<photo:link url="/changepw.jsp">Change Password</photo:link>
+<photo:link url="/changePwForm.do">Change Password</photo:link>

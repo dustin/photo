@@ -1,5 +1,4 @@
 <%@ page import="net.spy.photo.*" %>
-<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
@@ -14,9 +13,7 @@
 	Gallery g=Gallery.getGallery(user, galleryId);
 %>
 
-<template:insert template='/templates/section_header.jsp'>
-	<template:put name='title' content='<%= g.getName() %>' direct='true'/>
-</template:insert>
+<div class="sectionheader"><%= g.getName() %></div>
 
 <logic:iterate id="pid" type="net.spy.photo.PhotoImageData"
 	collection="<%= g.getImages() %>">

@@ -1,7 +1,6 @@
 <%@ page import="net.spy.photo.Comment" %>
 <%@ page import="net.spy.photo.PhotoImageData" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
-<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
@@ -83,7 +82,7 @@
 
 	</html:form>
 
-[<a href="logview.jsp?id=<%= "" + image.getId() %>"> Who's seen this?</a>] |
+[<a href="logView.do?id=<%= "" + image.getId() %>"> Who's seen this?</a>] |
 [<photo:imgLink id='<%= "" + image.getId() %>'>Linkable image</photo:imgLink>] |
 [<a href="PhotoServlet?photo_id=<%= "" + image.getId() %>">Full
 Size Image</a>]

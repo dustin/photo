@@ -9,15 +9,13 @@
 		(PhotoSessionData)session.getAttribute("photoSession");
 %>
 
-<template:insert template='/templates/section_header.jsp'>
-	<template:put name='title' content='Gallery List' direct='true'/>
-</template:insert>
+<div class="sectionheader">Gallery List</div>
 
 <ul>
 <logic:iterate id="g" type="net.spy.photo.Gallery"
 	collection="<%= Gallery.getGalleries(sessionData.getUser()) %>">
 	<li>
-		<photo:link url="/showgallery.jsp" id="<%= "" + g.getId() %>">
+		<photo:link url="/showgallery.do" id="<%= "" + g.getId() %>">
 			[<%= g.getTimestamp() %>] <%= g.getOwner().getRealname() %> - <%= g.getName() %> - <%= g.size() %> images.
 		</photo:link>
 	</li>

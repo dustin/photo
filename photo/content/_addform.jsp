@@ -1,6 +1,5 @@
 <%@ page import="net.spy.photo.Category" %>
 <%@ page import="net.spy.photo.PhotoUtil" %>
-<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
@@ -25,9 +24,7 @@
 
 <p>
 
-<template:insert template='/templates/section_header.jsp'>
-	<template:put name='title' content='Add a Photo' direct='true'/>
-</template:insert>
+<div class="sectionheader">Add a Photo</div>
 
 <html:form action="upload.do" enctype="multipart/form-data">
 
