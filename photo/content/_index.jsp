@@ -1,5 +1,3 @@
-<%@ page import="net.spy.photo.SavedSearch" %>
-
 <jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
