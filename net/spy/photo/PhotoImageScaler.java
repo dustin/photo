@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageScaler.java,v 1.2 2002/02/21 10:41:32 dustin Exp $
+// $Id: PhotoImageScaler.java,v 1.3 2002/02/22 00:50:34 dustin Exp $
 
 package net.spy.photo;
 
@@ -31,7 +31,9 @@ public class PhotoImageScaler extends Object {
 	/**
 	 * Get a scaled image as a stream.
 	 */
-	public InputStream getJpegStream(PhotoDimensions dim, int quality) {
+	public InputStream getJpegStream(PhotoDimensions dim, int quality)
+		throws Exception {
+
 		PhotoImage tmp=getScaledImage(dim, quality);
 		return(new ByteArrayInputStream(tmp.getData()));
 	}
@@ -39,7 +41,15 @@ public class PhotoImageScaler extends Object {
 	/**
 	 * Get a scaled jpeg as a byte array input stream.
 	 */
-	public PhotoImage getScaledImage(PhotoDimensions dim, int quality) {
+	public PhotoImage getScaledImage(PhotoDimensions dim, int quality)
+		throws Exception {
+
+		// This is stupid, but I'll fix it at some point.
+		if(pi.getFormat()!=PhotoImage.FORMAT_JPEG) {
+			throw new Exception("PhotoImageScaler does not handle "
+				+ pi.getFormatString() + " yet");
+		}
+
 		// Get the original image.
 		Image image=Toolkit.getDefaultToolkit().createImage(pi.getData());
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: JavaImageServerScaler.java,v 1.1 2002/02/21 07:25:58 dustin Exp $
+// $Id: JavaImageServerScaler.java,v 1.2 2002/02/22 00:50:34 dustin Exp $
 
 package net.spy.rmi;
 
@@ -23,6 +23,11 @@ public class JavaImageServerScaler extends ImageServerScaler {
 	 */
 	public PhotoImage scaleImage(PhotoImage in, PhotoDimensions dim)
 		throws Exception {
+
+		if(in.getFormat()!=PhotoImage.FORMAT_JPEG) {
+			throw new Exception("JavaImageServerScaler does not yet handle "
+				+ in.getFormatString() + " images.");
+		}
 
 		PhotoImageScaler pis=new PhotoImageScaler(in);
 		return(pis.getScaledImage(dim, 70));

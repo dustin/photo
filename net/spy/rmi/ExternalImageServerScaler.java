@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ExternalImageServerScaler.java,v 1.1 2002/02/21 07:25:58 dustin Exp $
+// $Id: ExternalImageServerScaler.java,v 1.2 2002/02/22 00:50:34 dustin Exp $
 
 package net.spy.rmi;
 
@@ -47,8 +47,8 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 
 		Random r = new Random();
 		String part = "/tmp/image." + Math.abs(r.nextInt());
-		String thumbfilename = part + ".tn.jpg";
-		String tmpfilename=part + ".jpg";
+		String thumbfilename = part + ".tn." + in.getFormatString();
+		String tmpfilename=part + in.getFormatString();
 		byte b[]=null;
 
 		// OK, got our filenames, now let's calculate the new size:

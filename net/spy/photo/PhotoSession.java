@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.91 2002/02/21 09:36:17 dustin Exp $
+ * $Id: PhotoSession.java,v 1.92 2002/02/22 00:50:34 dustin Exp $
  */
 
 package net.spy.photo;
@@ -476,7 +476,7 @@ public class PhotoSession extends Object
 	}
 
 	// Add an image
-	private String doAddPhoto() throws ServletException {
+	private String doAddPhoto() throws Exception {
 		String type=null;
 		String userAgent=null;
 		int id=-1;
@@ -502,37 +502,6 @@ public class PhotoSession extends Object
 		type = multi.getContentType("picture");
 		userAgent=this.request.getHeader("User-Agent").toLowerCase();;
 
-		// Make sure it has a type.
-		log("Type is " + type);
-		if( type == null) {
-			f.delete();
-			// Throw an exception declaring the type to be bad.
-			throw new ServletException(
-				multi.getFilesystemName("picture")
-				+ " NULL is a bad type, only image/jpeg or " +
-					"image/pjpeg is accepted");
-		}
-
-		// Make sure the type is acceptable
-		if ( 
-				// netscape
-				(type.startsWith("image/jpeg"))
-				||
-				// explorer
-				(type.startsWith("image/pjpeg") && userAgent.indexOf("msie")>=0)   
-			)  {
-			// it will upload it then
-
-		} else {
-			f.delete();
-			// Throw an exception declaring the type to be bad.
-			throw new ServletException(
-				multi.getFilesystemName("picture") + " ("
-				+ type + ") is a bad type, only image/jpeg and "
-				+ "image/pjpeg is accepted.  Your browser was "
-				+ userAgent + ".");
-		}
-
 		// Verify the file has a length
 		if(f.length()==0) {
 			f.delete();
@@ -541,28 +510,38 @@ public class PhotoSession extends Object
 				+ "Perhaps you selected a file that doesn't exist?");
 		}
 
+		// OK, start by loading the image into a PhotoImage object.
+
+		// Get the size from the file.
+		int size=(int)f.length();
+		// Encode the shit;
+		int length=0;
+		FileInputStream in = new FileInputStream(f);
+		byte data[] = new byte[size];
+		// Read in the data
+		length=in.read(data);
+		// If we didn't read enough data, give up.
+		if(length!=size) {
+			throw new Exception("Error reading enough data!");
+		}
+		PhotoImage photo_image=null;
+		
+		try {
+			photo_image=new PhotoImage(data);
+		} finally {
+			f.delete();
+		}
+
+		// Make sure it has a type.
+		log("Mime type is " + type + " format is "
+			+ photo_image.getFormatString());
+
 		SpyDB db=null;
 		Connection photo=null;
 
 		// OK, things look good, let's try to store our data.
 		try {
-			FileInputStream in=null;
 			String query=null;
-
-			// Get the size from the file.
-			int size=(int)f.length();
-
-			// Encode the shit;
-			int length=0;
-			in = new FileInputStream(f);
-			byte data[] = new byte[size];
-			// Read in the data
-			length=in.read(data);
-			// If we didn't read enough data, give up.
-			if(length!=size) {
-				throw new Exception("Error reading enough data!");
-			}
-			PhotoImage photo_image=new PhotoImage(data);
 
 			db=new SpyDB(new PhotoConfig());
 			photo=db.getConn();
@@ -1476,8 +1455,8 @@ public class PhotoSession extends Object
 			logger.log(new PhotoLogImageEntry(sessionData.getUser().getId(),
 				which, true, request));
 
-			// OK, let the other side know this is going to be a jpeg.
-			response.setContentType("image/jpeg");
+			// OK, let the other side know what to expect
+			response.setContentType("image/" + image.getFormatString());
 
 			out.write(image.getData());
 

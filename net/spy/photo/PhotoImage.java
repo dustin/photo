@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.8 2002/02/21 10:41:32 dustin Exp $
+// $Id: PhotoImage.java,v 1.9 2002/02/22 00:50:34 dustin Exp $
 
 package net.spy.photo;
 
@@ -20,34 +20,96 @@ public class PhotoImage extends Object
 	private int _width=-1;
 	private int _height=-1;
 
-	// empty constructor
+	public static final int FORMAT_UNKNOWN=0;
+	public static final int FORMAT_JPEG=1;
+	public static final int FORMAT_PNG=2;
+	public static final int FORMAT_GIF=3;
+
+	private int format=FORMAT_UNKNOWN;
+
+	/**
+	 * Get an empty PhotoImage object.
+	 */
 	public PhotoImage() {
 		super();
 	}
 
-	// Constructor mit data
-	public PhotoImage(byte data[]) {
+	/**
+	 * Get a PhotoImage object with binary data representing the image.
+	 *
+	 * @see setData
+	 */
+	public PhotoImage(byte data[]) throws Exception {
 		super();
-		image_data = data;
+		setData(data);
 	}
 
-	public void setData(byte data[]) {
+	/**
+	 * Set the binary data that represents this image.
+	 *
+	 * @exception Exception if the data format is corrupt or invalid
+	 */
+	public void setData(byte data[]) throws Exception {
 		image_data=data;
+		calcDim();
 	}
 
+	/**
+	 * Get the binary data that represents this image.
+	 */
 	public byte[] getData() {
 		return(image_data);
 	}
 
+	/**
+	 * Get the size (in bytes) of this image.
+	 */
 	public int size() {
 		return(image_data.length);
+	}
+
+	/**
+	 * Get the format of this image.
+	 */
+	public int getFormat() {
+		return(format);
+	}
+
+	/**
+	 * Get the name of the format of this image.
+	 */
+	public String getFormatString() {
+		String rv="unknown";
+
+		switch(format) {
+			case FORMAT_JPEG:
+				rv="jpeg";
+				break;
+			case FORMAT_PNG:
+				rv="png";
+				break;
+			case FORMAT_GIF:
+				rv="gif";
+				break;
+		}
+
+		return(rv);
 	}
 
 	/**
 	 * String me.
 	 */
 	public String toString() {
-		return("PhotoImage@" + getWidth() + "x" + getHeight());
+		StringBuffer sb=new StringBuffer();
+
+		sb.append("PhotoImage (");
+		sb.append(getFormatString());
+		sb.append(") ");
+		sb.append(getWidth());
+		sb.append("x");
+		sb.append(getHeight());
+
+		return(sb.toString());
 	}
 
 	/**
@@ -79,25 +141,17 @@ public class PhotoImage extends Object
 		return(thisone < thatone);
 	}
 
+	/**
+	 * @see PhotoDimensions
+	 */
 	public int getWidth() {
-		if(_width<0) {
-			try {
-				calcDim();
-			} catch(Exception e) {
-				System.err.println("Error getting dimensions:  " + e);
-			}
-		}
 		return(_width);
 	}
 
+	/**
+	 * @see PhotoDimensions
+	 */
 	public int getHeight() {
-		if(_height<0) {
-			try {
-				calcDim();
-			} catch(Exception e) {
-				System.err.println("Error getting dimensions:  " + e);
-			}
-		}
 		return(_height);
 	}
 
@@ -107,16 +161,143 @@ public class PhotoImage extends Object
 		return(i);
 	}
 
+	// Figure out the format of this binary stream.
+	private void determineFormat() throws Exception {
+		if(isJpeg()) {
+			format=FORMAT_JPEG;
+		} else if(isPng()) {
+			format=FORMAT_PNG;
+		} else {
+			throw new Exception("Cannot determine format.");
+		}
+	}
+
+	// Calculate the width and height of the image.
 	private void calcDim() throws Exception {
+		determineFormat();
+
+		switch(format) {
+			case FORMAT_JPEG:
+				calcDimJpeg();
+				break;
+			case FORMAT_PNG:
+				calcDimPng();
+				break;
+			case FORMAT_GIF:
+				calcDimGif();
+				break;
+			default:
+				throw new Exception("Format " + format + " not handled.");
+		}
+	}
+
+	// GIF SUPPORT
+
+	/**
+	 * True if this is a GIF.
+	 */
+	private boolean isGif() {
+		int i=0;
+		return(	   ((image_data[i++]&0xff)=='G')
+				&& ((image_data[i++]&0xff)=='I')
+				&& ((image_data[i++]&0xff)=='F'));
+	}
+
+	private void calcDimGif() throws Exception {
+		int ch=-1, i=0;
+		int length=0;
+
+		if(!isGif()) {
+			throw new Exception("This isn't a GIF.");
+		}
+
+		// Skip the header.
+		i+=6;
+
+		_width=(image_data[i++]&0xff)
+			| ((image_data[i++]&0xff)<<8);
+
+		_height=(image_data[i++]&0xff)
+			| ((image_data[i++]&0xff)<<8);
+	}
+
+	// END GIF SUPPORT
+
+	// PNG SUPPORT
+
+	/**
+	 * True if this is a PNG.
+	 */
+	private boolean isPng() {
+		int i=0;
+		return(	   ((image_data[i++]&0xff)==0x89)
+				&& ((image_data[i++]&0xff)=='P')
+				&& ((image_data[i++]&0xff)=='N')
+				&& ((image_data[i++]&0xff)=='G')
+				&& ((image_data[i++]&0xff)=='\r')
+				&& ((image_data[i++]&0xff)=='\n')
+				&& ((image_data[i++]&0xff)==0x1a)
+				&& ((image_data[i++]&0xff)==0x0a));
+	}
+
+	private void calcDimPng() throws Exception {
+		int ch=-1, i=0;
+		int length=0;
+
+		if(!isPng()) {
+			throw new Exception("This isn't a PNG.");
+		}
+
+		// Skip the header.
+		i+=8;
+
+		// Get the length of the header
+		length=((image_data[i++]&0xff) << 24)
+				| ((image_data[i++]&0xff) << 16)
+				| ((image_data[i++]&0xff) << 8)
+				| ((image_data[i++]&0xff));
+
+		String ctype=""
+			+ (char)image_data[i++] + (char)image_data[i++]
+			+ (char)image_data[i++] + (char)image_data[i++];
+
+		// The first chunk should be an IHDR, check it anyway.
+		if(ctype.equals("IHDR")) {
+
+			_width=((image_data[i++]&0xff) << 24)
+				| ((image_data[i++]&0xff) << 16)
+				| ((image_data[i++]&0xff) << 8)
+				| ((image_data[i++]&0xff));
+
+			_height=((image_data[i++]&0xff) << 24)
+				| ((image_data[i++]&0xff) << 16)
+				| ((image_data[i++]&0xff) << 8)
+				| ((image_data[i++]&0xff));
+		} else {
+			throw new Exception(
+				"IHDR Should be the first chunk type in a PNG, not " + ctype);
+		}
+
+	}
+
+	// END PNG SUPPORT
+
+	// JPEG SUPPORT
+
+	// Return true if the given data is a jpeg.
+	private boolean isJpeg() {
+		return( (getIntValue(0)==0xff)
+				&& ( getIntValue(1) == 0xd8 )
+				&& ( getIntValue(2) == 0xff ));
+	}
+
+	// Calculate the dimensions of a jpeg.
+	private void calcDimJpeg() throws Exception {
 		int ch=-1, i=0;
 		boolean done=false;
 
-		// Short circuit if it's not a JPEG
-		if( ( getIntValue(0) != 0xFF)
-			|| ( getIntValue(1) != 0xD8 )
-			|| ( getIntValue(2) != 0xFF )
-			) {
-			throw new Exception("That's not a JPEG");
+		if(!isJpeg()) {
+			throw new Exception("This isn't a JPEG");
 		}
 
 		// Move forward two.
@@ -145,4 +326,7 @@ public class PhotoImage extends Object
 			}
 		} // while loop
 	}
+
+	// END JPEG SUPPORT
+
 }
