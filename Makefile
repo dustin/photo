@@ -39,6 +39,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/util/BackupEntry.class \
 	net/spy/photo/util/AlbumBackupEntry.class \
 	net/spy/photo/util/PhotoBackup.class \
+	net/spy/photo/util/PhotoRestore.class \
 	net/spy/photo/migration/PhotoMigration.class \
 	net/spy/photo/migration/PhotoMigration01.class \
 	$(RCLASSES)

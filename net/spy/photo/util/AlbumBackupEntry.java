@@ -1,12 +1,14 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.3 2000/11/17 10:30:57 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.4 2000/11/28 09:52:11 dustin Exp $
  */
 
 package net.spy.photo.util;
 
 import java.sql.*;
+import org.w3c.dom.*;
+import org.xml.sax.*;
 import net.spy.*;
 import net.spy.photo.*;
 
@@ -18,6 +20,12 @@ public class AlbumBackupEntry extends BackupEntry {
 		super();
 		this.id=id;
 		init();
+		nodeType="photo_album_object";
+	}
+
+	public AlbumBackupEntry(Node n) throws Exception {
+		super(n);
+		nodeType="photo_album_object";
 	}
 
 	protected void init() throws Exception {

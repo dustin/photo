@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoBackup.java,v 1.2 2000/11/17 10:13:06 dustin Exp $
+ * $Id: PhotoBackup.java,v 1.3 2000/11/28 09:52:11 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -39,29 +39,95 @@ public class PhotoBackup extends Object {
 			ids.addElement(new Integer(rs.getInt("id")));
 		}
 
+		// Statistics.
+		BackupStats bs=new BackupStats(ids.size());
+
 		// Flip through the IDs and back 'em up.
 		for(Enumeration e=ids.elements(); e.hasMoreElements(); ) {
 			Integer i=(Integer)e.nextElement();
 
+			// Count one.
+			bs.click();
+
 			// Get the filename.
 			String filename=basedir+i;
-			// Get the file
-			FileOutputStream ostream = new FileOutputStream(filename);
-			GZIPOutputStream gzo=new GZIPOutputStream(ostream);
+			File outfile=new File(basedir+i);
+			if(outfile.exists()) {
+				System.out.println("Not backing up " + i + ", already exists.");
+			} else {
 
-			System.out.println("Going to write out " + i);
+				// Startwatch
+				bs.start();
 
-			// Get the object
-			AlbumBackupEntry abe=new AlbumBackupEntry(i.intValue());
-			abe.writeTo(gzo);
+				// Get the file
+				FileOutputStream ostream = new FileOutputStream(outfile);
+				GZIPOutputStream gzo=new GZIPOutputStream(ostream);
 
-			// Write it out
-			gzo.close();
+				System.out.println("Going to write out " + i);
+
+				// Get the object
+				AlbumBackupEntry abe=new AlbumBackupEntry(i.intValue());
+				abe.writeTo(gzo);
+
+				// Write it out
+				gzo.close();
+
+				// Stopwatch
+				bs.stop();
+				System.out.println("Wrote in " + bs.getLastTime() + " - " + bs.getStats());
+			}
 		}
 	}
 
 	public static void main(String args[]) throws Exception {
 		PhotoBackup pb=new PhotoBackup();
 		pb.backupTo(args[0]);
+	}
+
+	private class BackupStats extends Object {
+		protected int done=0;
+		protected int left=0;
+		protected long startTime=0;
+		protected long totalTime=0;
+
+		protected long lastTime=0;
+		protected long lastProcessTime=0;
+
+		public BackupStats(int size) {
+			super();
+
+			this.startTime=System.currentTimeMillis();
+			this.left=size;
+		}
+
+		public void click() {
+			left--;
+		}
+
+		public void start() {
+			lastTime=System.currentTimeMillis();
+		}
+
+		public void stop() {
+			long thistime=System.currentTimeMillis();
+			lastProcessTime=thistime-lastTime;
+			done++;
+			totalTime+=lastProcessTime;
+		}
+
+		public String getLastTime() {
+			long lt=lastProcessTime/1000;
+			return("" + lt + "s");
+		}
+
+		public String getStats() {
+			long avgProcessTime=(totalTime/done)/1000;
+			long estimate=avgProcessTime*left;
+
+			return("Avg=" + avgProcessTime
+				+ "s, Estimate=" + estimate + "s"
+				+ " (" + new java.util.Date(System.currentTimeMillis()+(1000*estimate))
+				+ ")");
+		}
 	}
 }
