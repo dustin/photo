@@ -156,7 +156,7 @@
 	</target>
 
 	<target name="content.zip" description="Build a content zip file">
-		<zip zipfile="content.zip" basedir="." excludes="**">
+		<zip zipfile="${BUILDTOP}/content.zip" basedir="." excludes="**">
 			<zipfileset dir="photo" prefix="" includes="**/*.jsp"/>
 			<zipfileset dir="photo" prefix="" includes="**/*.xml"/>
 			<zipfileset dir="photo" prefix="" includes="**/*.css"/>
