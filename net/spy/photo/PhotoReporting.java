@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoReporting.java,v 1.2 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoReporting.java,v 1.3 2001/12/29 08:50:05 dustin Exp $
  */
 
 package net.spy.photo;
@@ -38,10 +38,11 @@ public class PhotoReporting extends PhotoHelper {
 				tmp=conf.get("report." + func + ".row");
 
 				Connection photo=null;
+				String query=null;
 
 				try {
 					photo=getDBConn();
-					String query=conf.get("report." + func + ".sql");
+					query=conf.get("report." + func + ".sql");
 					Statement st=photo.createStatement();
 					ResultSet rs=st.executeQuery(query);
 					ResultSetMetaData md=rs.getMetaData();
@@ -63,6 +64,8 @@ public class PhotoReporting extends PhotoHelper {
 					out+=tokenize(tmp, new Hashtable());
 
 				} catch(Exception e) {
+					log("Error processing query:\n" + query);
+					e.printStackTrace();
 				} finally {
 					if(photo!=null) {
 						freeDBConn(photo);
