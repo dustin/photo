@@ -47,7 +47,7 @@
 			</div>
 			<div class="footerfineprint">
 				<fmt:message key="page.content.footer"/><br/>
-				Build <fmt:message key="build.number"/> from
+				Build 
 				<fmt:message key="build.dtstamp"/> (<fmt:message key="tree.version"/>)
 			</div> <!-- footerfineprint -->
 		</div><div class="rightstuff">

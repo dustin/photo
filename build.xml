@@ -67,8 +67,8 @@
 			sourcepath="${SRCDIR}"
 			packagenames="net.spy.*"
 			classpathref="photo.classpath"
-			windowtitle="PhotoServlet API Documentation - build ${build.number} from ${build.date}"
-			doctitle="PhotoServlet API Documentation - build ${build.number} from ${build.date}">
+			windowtitle="PhotoServlet API Documentation - built ${build.date}"
+			doctitle="PhotoServlet API Documentation - built ${build.date}">
 
 			<link href="http://java.sun.com/products/servlet/2.3/javadoc/"/>
 			<link href="http://java.sun.com/products/servlet/2.2/javadoc/"/>
@@ -206,7 +206,6 @@
 	</target>
 
 	<target name="photoresources.properties" unless="properties.upToDate">
-		<buildnumber file="etc/build.number"/>
 		<tstamp/>
 		<exec executable="./etc/tree-version" outputproperty="tree.version"/>
 		<copy file="${SRCDIR}/net/spy/photo/photoresources.properties.in"
@@ -216,7 +215,6 @@
 			<entry key="build.dstamp" value="${DSTAMP}"/>
 			<entry key="build.tstamp" value="${TSTAMP}"/>
 			<entry key="build.dtstamp" value="${DSTAMP}${TSTAMP}"/>
-			<entry key="build.number" value="${build.number}"/>
 			<entry key="tree.version" value="${tree.version}"/>
 		</propertyfile>
 		<property file="${BUILDDIR}/net/spy/photo/photoresources.properties"/>
