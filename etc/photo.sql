@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.20 2002/02/21 07:51:43 dustin Exp $
+-- $Id: photo.sql,v 1.21 2002/02/23 01:00:26 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -77,7 +77,40 @@ grant all on album to nobody;
 -- implicit sequence
 grant all on album_id_seq to nobody;
 
--- The passwd file for the Web server's ACL crap.
+-- Notes
+create table commentary (
+	comment_id serial,
+	wwwuser_id integer not null,
+	photo_id integer not null,
+	note text not null,
+	remote_addr inet not null,
+	ts timestamp default now(),
+	primary key(comment_id),
+	foreign key(wwwuser_id) references wwwusers(id),
+	foreign key(photo_id) references album(id)
+);
+create index commentary_byphoto on commentary(photo_id);
+create index commentary_byuser on commentary(wwwuser_id);
+grant all on commentary to nobody;
+grant all on commentary_comment_id_seq to nobody;
+
+-- Votes
+create table votes (
+	vote_id serial,
+	wwwuser_id integer not null,
+	photo_id integer not null,
+	vote smallint not null,
+	remote_addr inet not null,
+	ts timestamp default now(),
+	primary key(vote_id),
+	foreign key(wwwuser_id) references wwwusers(id),
+	foreign key(photo_id) references album(id)
+);
+create unique index votes_byui on votes(wwwuser_id, photo_id);
+create index votes_byphoto on votes(photo_id);
+create index votes_byuser on votes(wwwuser_id);
+grant all on votes to nobody;
+grant all on votes_vote_id_seq to nobody;
 
 -- The ACLs for the categories
 
