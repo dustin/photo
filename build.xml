@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.38 2003/06/02 00:40:32 dustin Exp $
+	$Id: build.xml,v 1.39 2003/06/14 04:04:24 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -64,10 +64,16 @@
 		</javadoc>
 	</target>
 
+	<target name="validateconfigs">
+		<xmlvalidate failonerror="yes">
+			<fileset dir="photo/WEB-INF" includes="**/*.xml"/>
+		</xmlvalidate>
+	</target>
+
 	<!-- This is specific to my development at home. -->
 	<target name="install"
 		description="Install a new build in my environment (not for most people)"
-		depends="install-web-app"/>
+		depends="validateconfigs,install-web-app"/>
 
 	<target name="install-web-app-var">
 		<echo message="Installing to ${location}"/>
