@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.121 2002/05/21 07:45:09 dustin Exp $
+ * $Id: PhotoSession.java,v 1.122 2002/05/28 06:37:25 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1626,23 +1626,16 @@ public class PhotoSession extends Object
 	// Set administrative privys
 	private void setAdmin() throws ServletException {
 		try {
-			if(sessionData.getUser().isInGroup("admin")) {
-				log(sessionData.getUser()
-					+ " is in the admin group, setting admin");
-				sessionData.setAdmin(PhotoSessionData.ADMIN);
-			} else if(sessionData.getUser().isInGroup("subadmin")) {
-				log(sessionData.getUser()
-					+ " is in the subadmin group, setting subadmin");
-				sessionData.setAdmin(PhotoSessionData.SUBADMIN);
-			}
-		} catch(Exception e) {
+			// Set the default administration type for this user.
+			sessionData.setAdmin();
+		} catch(PhotoException e) {
 			throw new ServletException("Error setting admin privs", e);
 		}
 	}
 
 	// Revoke administrative privys
-	private void unsetAdmin() throws ServletException  {
-		sessionData.setAdmin(PhotoSessionData.NOADMIN);
+	private void unsetAdmin() {
+		sessionData.unSetAdmin();
 	}
 
 	/**

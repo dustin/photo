@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.4 2002/02/25 08:41:47 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.5 2002/05/28 06:37:25 dustin Exp $
 
 package net.spy.photo;
 
@@ -151,8 +151,50 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	/**
 	 * Set all the admin bits.
 	 */
-	public void setAdmin(int to) {
+	public void setAdmin(int to) throws PhotoException {
+		// Check access
+
+		switch(to) {
+			case ADMIN:
+				if(!getUser().isInGroup("admin")) {
+					throw new PhotoException(
+						"Requested admin for non-admin user.");
+				}
+				break;
+			case SUBADMIN:
+				if(!getUser().isInGroup("subadmin")) {
+					throw new PhotoException(
+						"Requested subadmin for non-admin user.");
+				}
+				break;
+			case NOADMIN:
+				// Anyone can revoke admin privs
+				admin_type=NOADMIN;
+				break;
+			default:
+				throw new PhotoException("Invalid admin type.");
+		}
+
+		// If we made it this far, adminify
 		admin_type=to;
+	}
+
+	/**
+	 * Set the default administrative privilege for this user.
+	 */
+	public void setAdmin() throws PhotoException {
+		if(getUser().isInGroup("admin")) {
+			setAdmin(ADMIN);
+		} else if(getUser().isInGroup("subadmin")) {
+			setAdmin(SUBADMIN);
+		}
+	}
+
+	/**
+	 * Safely revoke administrative privs.
+	 */
+	public void unSetAdmin() {
+		admin_type=NOADMIN;
 	}
 
 	/**
