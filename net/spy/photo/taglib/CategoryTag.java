@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CategoryTag.java,v 1.4 2002/11/04 03:11:24 dustin Exp $
+// $Id: CategoryTag.java,v 1.5 2003/07/26 09:05:41 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -68,7 +68,7 @@ public class CategoryTag extends PhotoTag {
 
 		// Get the session data
 		PhotoSessionData sessionData=(PhotoSessionData)
-			pageContext.getAttribute("sessionData", PageContext.REQUEST_SCOPE);
+			pageContext.getAttribute("photoSession", pageContext.SESSION_SCOPE);
 
 		Collection cats=null;
 		try {
