@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveGalleryForm.java,v 1.1 2002/07/01 23:50:43 dustin Exp $
+// $Id: SaveGalleryForm.java,v 1.2 2002/07/02 07:03:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -16,6 +16,7 @@ import org.apache.struts.action.ActionMapping;
 public class SaveGalleryForm extends ActionForm {
 
 	private String name=null;
+	private boolean isPublic=false;
 
 	/**
 	 * Get an instance of SaveGalleryForm.
@@ -36,6 +37,20 @@ public class SaveGalleryForm extends ActionForm {
 	 */
 	public String getName() {
 		return(name);
+	}
+
+	/**
+	 * True if the gallery is to be public.
+	 */
+	public boolean getIsPublic() {
+		return(isPublic);
+	}
+
+	/**
+	 * Set to true if the gallery is to be public.
+	 */
+	public void setIsPublic(boolean isPublic) {
+		this.isPublic=isPublic;
 	}
 
 	/**

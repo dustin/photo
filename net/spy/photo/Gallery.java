@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.3 2002/07/01 07:07:53 dustin Exp $
+// $Id: Gallery.java,v 1.4 2002/07/02 07:03:41 dustin Exp $
 
 package net.spy.photo;
 
@@ -16,7 +16,7 @@ import net.spy.photo.sp.LookupGallery;
 /**
  * A named collection of images.
  */
-public class Gallery extends Object {
+public class Gallery extends Object implements java.io.Serializable {
 
 	private int id=-1;
 	private String name=null;
@@ -58,6 +58,38 @@ public class Gallery extends Object {
 			throw new PhotoException("User " + rs.getInt("wwwuser_id")
 				+ "not found");
 		}
+	}
+
+	/**
+	 * Get a list of all galleries visible by the user.
+	 */
+	public static Cursor getGalleries(PhotoUser user)
+		throws PhotoException {
+
+		Cursor rv=null;
+
+		try {
+			SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+			PreparedStatement pst=db.prepareStatement(
+				"select * from galleries\n"
+				+ "  where wwwuser_id=? or ispublic = true\n"
+				+ "  order by ts", 3600);
+			pst.setInt(1, user.getId());
+			ResultSet rs=pst.executeQuery();
+			rv=new Cursor();
+			while(rs.next()) {
+				Gallery g=new Gallery(rs);
+				g.loadMap(user);
+				rv.addElement(g);
+			}
+			rs.close();
+			pst.close();
+			db.close();
+		} catch(Exception e) {
+			throw new PhotoException("Error getting gallery list", e);
+		}
+
+		return(rv);
 	}
 
 	private void loadMap(PhotoUser user) throws Exception {
@@ -316,21 +348,28 @@ public class Gallery extends Object {
 	public static void main(String args[]) throws Exception {
 
 		PhotoSecurity sec=new PhotoSecurity();
-		Gallery g=null;
 		if(args.length == 0) {
 			PhotoUser user=sec.getUser("dustin");
-			g=new Gallery(user, "Test Gallery");
+			Gallery g=new Gallery(user, "Test Gallery");
 
 			g.addImage(3985);
 			g.addImage(3929);
 			g.addImage(4009);
 
 			g.save();
+
+			System.out.println(g);
+		} else if(args.length == 1) {
+			PhotoUser user=sec.getUser(args[0]);
+			for(Cursor c=getGalleries(user); c.hasMoreElements(); ) {
+				Gallery g=(Gallery)c.nextElement();
+				System.out.println(g);
+			}
 		} else {
 			PhotoUser user=sec.getUser(args[0]);
-			g=getGallery(user, Integer.parseInt(args[1]));
+			Gallery g=getGallery(user, Integer.parseInt(args[1]));
+			System.out.println(g);
 		}
-		System.out.println(g);
 	}
 
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveGalleryAction.java,v 1.1 2002/07/01 23:50:43 dustin Exp $
+// $Id: SaveGalleryAction.java,v 1.2 2002/07/02 07:03:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -51,6 +51,7 @@ public class SaveGalleryAction extends PhotoAction {
 		}
 
 		g.setName(sgf.getName());
+		g.setPublic(sgf.getIsPublic());
 
 		// Add the new image
 		try {
@@ -58,6 +59,9 @@ public class SaveGalleryAction extends PhotoAction {
 		} catch(Exception e) {
 			throw new ServletException("Error saving gallery", e);
 		}
+
+		// Throw it away, freeing us up to create a new gallery.
+		session.removeAttribute("newGallery");
 
 		return(mapping.findForward("success"));
 	}
