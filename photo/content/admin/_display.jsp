@@ -85,27 +85,23 @@
 [<a href="PhotoServlet?photo_id=<%= "" + image.getId() %>">Full
 Size Image</a>]
 
-
 <p class="comments">
 
 	<h1>Comments</h1>
 
-	<logic:iterate id="comment" type="net.spy.photo.Comment"
+	<logic:iterate id="comment"
+		type="net.spy.photo.Comment"
 		collection="<%= Comment.getCommentsForPhoto(image.getId()) %>">
 
-		<table class="comments" width="100%">
-			<tr class="comment_header">
-				<td>At <%= comment.getTimestamp() %>,
-					<%= comment.getUser().getRealname() %> said the
-					following:
-				</td>
-			</tr>
-			<tr class="comment_body">
-				<td>
-					<%= comment.getNote() %>
-				</td>
-			</tr>
-		</table>
+		<div class="comments">
+			<div class="commentheader">
+				At <%= comment.getTimestamp() %>,
+					<%= comment.getUser().getRealname() %> said the following:
+			</div>
+			<div class="commentbody">
+				<%= comment.getNote() %>
+			</div>
+		</div>
 	</logic:iterate>
 
 </p>
