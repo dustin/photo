@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.34 2003/01/09 07:06:00 dustin Exp $
+-- $Id: photo.sql,v 1.35 2003/01/09 08:07:00 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -26,6 +26,10 @@ create table cat(
 grant all on cat to nobody;
 -- implicit sequence
 grant all on cat_id_seq to nobody;
+
+-- Create some base categories
+insert into cat(name) values('Public');
+insert into cat(name) values('Private');
 
 -- Users go here
 create table wwwusers(
@@ -154,6 +158,22 @@ create table wwwacl(
 create index acl_byid on wwwacl(userid);
 create index acl_bycat on wwwacl(cat);
 grant all on wwwacl to nobody;
+
+-- Bootstrap the ACL
+
+-- All categories are readable and writable by admin
+insert into wwwacl (userid, cat, canview, canadd)
+	select wwwusers.id, cat.id, true, true
+		from wwwusers, cat
+			where wwwusers.username='admin'
+;
+-- Public is readable by guest
+insert into wwwacl (userid, cat, canview, canadd)
+	select wwwusers.id, cat.id, true, false
+		from wwwusers, cat
+			where wwwusers.username='guest'
+				and cat.name='Public'
+;
 
 -- view for showing acls by name
 
