@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminUserForm.java,v 1.4 2002/07/10 03:38:09 dustin Exp $
+// $Id: AdminUserForm.java,v 1.5 2002/07/14 06:33:05 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -24,6 +24,7 @@ public class AdminUserForm extends ActionForm {
 	private boolean canadd=false;
 	private String catAclAdd[]=null;
 	private String catAclView[]=null;
+	private String adminStatus=null;
 
 	/**
 	 * Get an instance of AdminUserForm.
@@ -103,6 +104,20 @@ public class AdminUserForm extends ActionForm {
 	}
 
 	/**
+	 * Get the admin type of this user.
+	 */
+	public String getAdminStatus() {
+		return(adminStatus);
+	}
+
+	/**
+	 * Set the admin type of this user.
+	 */
+	public void setAdminStatus(String adminStatus) {
+		this.adminStatus=adminStatus;
+	}
+
+	/**
 	 * Validate the properties.
 	 */
 	public ActionErrors validate(ActionMapping mapping,
@@ -153,6 +168,22 @@ public class AdminUserForm extends ActionForm {
 			if(catAclAdd == null) {
 				errors.add("catAclAdd",
 					new ActionError("error.adminuserform.catAclAdd"));
+			}
+			if(adminStatus == null) {
+				errors.add("adminStatus",
+					new ActionError("error.adminuserform.adminStatus"));
+			} else {
+				// Check the actual values.
+				if(adminStatus.equals("none")) {
+					// OK
+				} else if(adminStatus.equals("admin")) {
+					// OK
+				} else if(adminStatus.equals("subadmin")) {
+					// OK
+				} else {
+					errors.add("adminStatus",
+						new ActionError("error.adminuserform.adminStatus.inv"));
+				}
 			}
 		}
 

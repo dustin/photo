@@ -38,6 +38,16 @@
 			<td>Can add</td>
 			<td><html:checkbox property="canadd"/></td>
 		</tr>
+		<tr>
+			<td>Administrative Status</td>
+			<td>
+				<html:select property="adminStatus">
+					<option value="none">None</option>
+					<option value="admin">Admin</option>
+					<option value="subadmin">Subadmin</option>
+				</html:select>
+			</td>
+		</tr>
 	</table>
 
 	<table border="1">
