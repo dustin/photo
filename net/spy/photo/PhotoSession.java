@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.49 2001/01/06 07:19:08 dustin Exp $
+ * $Id: PhotoSession.java,v 1.50 2001/01/07 04:32:50 dustin Exp $
  */
 
 package net.spy.photo;
@@ -669,27 +669,25 @@ public class PhotoSession extends Object
 	}
 
 	// Show the add an image form.
-	protected String doAddForm() throws ServletException {
+	protected String doAddForm() throws Exception {
 		String output = "";
 		Hashtable h = new Hashtable();
 
-		try {
-			h.put("CAT_LIST", getCatList(-1));
-		} catch(Exception e) {
-			h.put("CAT_LIST", "");
-		}
-		h.put("TODAY", PhotoUtil.getToday());
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("Add a Photo");
+		xml.addBodyPart(getGlobalMeta());
+		xml.addBodyPart("<add_form>\n"
+			+ "\t<cat_list>\n"
+			+ getCatList(-1)
+			+ "\t</cat_list>\n"
+			+ "\t<today>\n"
+			+ PhotoUtil.getToday()
+			+ "\t</today>\n"
+			+ "</add_form>"
+			);
+		sendXML(xml.toString());
 
-		// If the user cannot add, make it clear on the add page.
-		if(canadd()) {
-			// User can add, say nothing.
-			h.put("CANNOTADD", "");
-		} else {
-			// User cannot add, point this out.
-			h.put("CANNOTADD", "You do not have the ability to add images");
-		}
-		output += tokenize("addform.inc", h);
-		return(output);
+		return(null);
 	}
 
 	// Show the search form.
@@ -1241,7 +1239,6 @@ public class PhotoSession extends Object
 		h.put("SEARCH", (String)session.getValue("encoded_search"));
 		h.put("RESULTS", middle.toString());
 		h.put("LINKTOMORE", linkToMore(results)); 
-		// String output = tokenize("xml/results.xinc", h);
 
 		// Ask the aheadfetcher to prefetch the next five entries.
 		aheadfetcher.next(results);

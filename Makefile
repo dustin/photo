@@ -51,7 +51,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 all: $(CLASSES)
 
 photo.jar: $(CLASSES)
-	$(JAR) cv0f $@ $(CLASSES)
+	$(JAR) cv0f $@ `find net/spy/photo -name "*.class"`
 
 test: $(CLASSES)
 	env CLASSPATH=$(CLASSPATH) $(SERVLETRUNNER) -d $(PWD)
@@ -74,7 +74,7 @@ dist: release
 	mv release.tgz photoservlet-`date +%Y%m%d`.tgz
 
 clean:
-	rm -f $(CLASSES) photo.jar
+	rm -f photo.jar `find net/spy/photo -name "*.class"`
 
 # How to do RMI stuff.
 net/spy/rmi/ImageServerImpl_Stub.class: net/spy/rmi/ImageServerImpl_Skel.class

@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.17 2001/01/06 20:50:32 dustin Exp $
+ $Id: default.xsl,v 1.18 2001/01/07 04:32:50 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -383,13 +383,16 @@
 
 </xsl:template>
 
+<!-- Display the results of the password change. -->
 <xsl:template match="changed_password">
-	<xsl:if test="error">
-		Error saving password:  <xsl:value-of select="error"/>
-	</xsl:if>
-	<xsl:if test="ok">
-		Password save complete.
-	</xsl:if>
+	<xsl:choose>
+		<xsl:when test="error">
+			Error saving password:  <xsl:value-of select="error"/>
+		</xsl:when>
+		<xsl:when test="ok">
+			Password save complete.
+		</xsl:when>
+	</xsl:choose>
 </xsl:template>
 
 <!-- Authenticate form -->
@@ -427,6 +430,89 @@
 <xsl:template match="save_search_success">
 	Your search has been saved, press the ``back'' button on your browser
 	to continue with your search.
+</xsl:template>
+
+<!-- This is the form for adding new images. -->
+<xsl:template match="add_form">
+	<p>
+		<xsl:call-template name="section_header">
+			<xsl:with-param name="title">
+				Add a Photo
+			</xsl:with-param>
+		</xsl:call-template>
+
+		<xsl:choose>
+			<xsl:when test="/page/meta_stuff/photo_user/canadd">
+			</xsl:when>
+			<xsl:otherwise>
+				<center>
+					<blink>
+						<font size="+3"
+							color="red">You have no permission to add images.</font>
+					</blink>
+				</center>
+			</xsl:otherwise>
+		</xsl:choose>
+
+		<form method="POST" enctype="multipart/form-data"
+			action="{/page/meta_stuff/self_uri}">
+			<input type="hidden" name="func" value="addimage"/>
+			<table border="0" width="100%">
+
+				<tr>
+					<td align="left" width="50%">
+						<table border="0">
+						<tr>
+							<td>Category:</td>
+							<td>
+								<select name="category" size="5">
+									<xsl:apply-templates select="cat_list"/>
+								</select>
+							</td>
+						</tr>
+						</table>
+					</td>
+					<td align="right" width="50%">
+						<table border="0">
+
+						<tr>
+							<td>Date Taken:</td>
+							<td><input name="taken" value="{today}"/></td>
+						</tr>
+
+						<tr>
+							<td>Keywords:</td>
+							<td><input name="keywords"/></td>
+						</tr>
+
+						<tr>
+							<td>Picture:</td>
+							<td><input type="file" name="picture"/></td>
+						</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+
+			<center>
+				<table border="0">
+					<tr>
+						<td>
+							Short Description:<br/>
+							<textarea name="info" cols="60" rows="5" wrap="hard"></textarea>
+						</td>
+						<td>
+						</td>
+					</tr>
+				</table>
+
+				<input type="submit" value="Add Image"/>
+				<input type="reset" value="Clear"/>
+			</center>
+
+		</form>
+	</p>
 </xsl:template>
 
 </xsl:stylesheet>
