@@ -52,7 +52,7 @@
 				</template:insert>
 
 				<div align="center">
-					<photo:imgLink id='3636'
+					<photo:imgLink id='3916'
 						width="194" height="146"
 						alt="Image of the [Unit of Time]"
 						showThumbnail='true'/>

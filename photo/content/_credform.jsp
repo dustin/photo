@@ -44,4 +44,4 @@
 
 <a href="adminify.do?action=setadmin">Request Administrative Privileges</a>
 <br/>
-<a href="PhotoServlet?func=changepwform">Change Password</a>
+<photo:link url="/changepw.jsp">Change Password</photo:link>
