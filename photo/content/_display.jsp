@@ -89,7 +89,7 @@ Size Image</a>]
 
 	Submit a comment:<br/>
 
-	<photo:guest negate="1">
+	<photo:guest negate="true">
 		<form method="POST" action="PhotoServlet">
 			<input type="hidden" name="func" value="comment"/>
 			<input type="hidden" name="image_id"

@@ -16,6 +16,16 @@
 		</attribute>
 	</tag>
 
+	<!-- A conditional blocked based on whether the can add. -->
+	<tag>
+		<name>canAdd</name>
+		<tagclass>net.spy.photo.taglib.AddCheck</tagclass>
+		<attribute>
+			<name>negate</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+
 	<!-- Ensure the PhotoSessionData object is initialized. -->
 	<tag>
 		<name>initSessionData</name>

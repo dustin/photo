@@ -13,7 +13,7 @@
 					<photo:guest>
 						<li><a href="credform.jsp">Login</a></li>
 					</photo:guest>
-					<photo:guest negate="1">
+					<photo:guest negate="true">
 						<li><a href="addform.jsp">Add a New Image</a></li>
 					</photo:guest>
 					<li><a href="search.jsp">Advanced Search</a></li>
