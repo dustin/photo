@@ -88,6 +88,12 @@ was added before (date)
 </tr>
 </table>
 
+Sort by when the picture was:
+<select name="order">
+    <option value="a.ts">added
+    <option selected value="a.taken">taken
+</select>
+
 <br>
 <input type="submit" value="Find">
 <input type="reset" value="Clear Form">
