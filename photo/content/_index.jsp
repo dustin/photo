@@ -15,24 +15,24 @@
 						<li><photo:link url="/credform.do"
 							message="index.links.login"/></li>
 					</photo:guest>
+					<li><photo:link url="/searchForm.do"
+						message="index.links.advsearch"/></li>
+					<li><photo:link url="/listcomments.do"
+						message="index.links.comments"/></li>
+					<li><photo:link url="/galleryList.do"
+						message="index.links.listgalleries"/></li>
+					<li><photo:link url="/catview.do"
+						message="index.links.catview"/></li>
+					<li><photo:link url="/newUserForm.do"
+						message="index.links.newuser"/></li>
 					<photo:guest negate="true">
-						<li><photo:link url="/logout.do"
-							message="index.links.logout"/></li>
 						<li><photo:link url="/addform.do"
 							message="index.links.addform"/></li>
 						<li><photo:link url="/saveGalleryForm.do"
 							message="index.links.savegallery"/></li>
+						<li><photo:link url="/logout.do"
+							message="index.links.logout"/></li>
 					</photo:guest>
-					<li><photo:link url="/galleryList.do"
-						message="index.links.listgalleries"/></li>
-					<li><photo:link url="/searchForm.do"
-						message="index.links.advsearch"/></li>
-					<li><photo:link url="/catview.do"
-						message="index.links.catview"/></li>
-					<li><photo:link url="/listcomments.do"
-						message="index.links.comments"/></li>
-					<li><photo:link url="/newUserForm.do"
-						message="index.links.newuser"/></li>
 				</ul>
 			</p>
 		</td>
