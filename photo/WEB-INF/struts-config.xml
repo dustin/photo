@@ -313,6 +313,7 @@
 	<action path="/viewSession"
 		type="net.spy.photo.struts.ViewSessionAction"
 		input="top.sessions"
+		roles="admin,subadmin"
 		scope="request"
 		name="sessionForm">
 
@@ -387,6 +388,7 @@
 
 	<action path="/report/userCat"
 		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="User Category Report"/>
@@ -398,6 +400,7 @@
 
 	<action path="/report/userCatXd"
 		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="User Category Report"/>
@@ -409,6 +412,7 @@
 
 	<action path="/report/userImgs"
 		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="User Image View Report"/>
@@ -420,6 +424,7 @@
 
 	<action path="/report/userRecent"
 		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="Recent Images for User"/>
@@ -431,6 +436,7 @@
 
 	<action path="/report/topImages"
 		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="Top Images"/>
@@ -442,6 +448,7 @@
 
 	<action path="/report/topImagesXd"
 		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="Top Images"/>
@@ -453,6 +460,7 @@
 
 	<action path="/report/mostActiveUsers"
 		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="Most Active Users"/>
@@ -464,6 +472,7 @@
 
 	<action path="/report/mostActiveUsersXd"
 		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="Most Active Users"/>
