@@ -3,7 +3,7 @@
 </head>
 <body bgcolor="fFfFfF">
 
-<h2>Dustin's Photo Album</h2>
+<h1>Dustin's Photo Album</h1>
 
 <ul>
     <li><a href="%SELF_URI%?func=addform">Add an image</a></li>
@@ -14,7 +14,7 @@
 
 </ul>
 
-<h2>Canned Searches</h2>
+<h1>Canned Searches</h1>
 
 <ul>
   %SAVED%
@@ -32,8 +32,12 @@ Quick Search:  <input name="what">
 <input type="submit" value="Find">
 </form>
 
-<p>
-<h2>Credits:</h2>
+<h1>Stats</h1>
+
+There are currently about %TOTAL_IMAGES% images in the database, and there
+have been at least %TOTAL_IMAGES_SHOWN% images served.
+
+<h1>Credits:</h1>
 All pages herein were created using vi.  For more information on the vi
 web page publishing system, type <i>man vi</i> at your prompt.
 
