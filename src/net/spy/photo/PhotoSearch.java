@@ -201,6 +201,8 @@ public class PhotoSearch extends PhotoHelper {
 		// Get the search index
 		SearchIndex index=SearchIndex.getInstance();
 
+		getLogger().debug("Performing search.");
+
 		// Figure out how the thing should be sorted.
 		Comparator comp=null;
 		if("a.ts".equals(form.getOrder())) {
@@ -225,11 +227,18 @@ public class PhotoSearch extends PhotoHelper {
 			}
 			// Get rid of anything that's not valid for the current user
 			al.retainAll(getValidCats(sessionData.getUser()));
-			getLogger().info("Retaining images with cats " + al);
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Retaining images with cats " + al);
+			}
 			rset.addAll(index.getForCats(al));
 		} else {
-			getLogger().info("Getting images for all categories");
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Getting images for all categories");
+			}
 			rset.addAll(index.getForCats(getValidCats(sessionData.getUser())));
+		}
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Starting with " + rset.size() + " images");
 		}
 
 		// Check to see if there's a field entry
@@ -244,13 +253,16 @@ public class PhotoSearch extends PhotoHelper {
 					+ form.getField());
 			}
 		}
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("After keywords:  " + rset.size() + " images");
+		}
 
 		// Check for any of the date entries
 		processDates(rset, form.getStart(), form.getEnd(),
 			form.getTstart(), form.getTend());
-
-		// Limit the results to the valid categories for the given user
-		rset.retainAll(index.getForCats(getValidCats(sessionData.getUser())));
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("After dates:  " + rset.size() + " images");
+		}
 
 		// Populate the results
 		PhotoSearchResults results=new PhotoSearchResults();
@@ -272,10 +284,23 @@ public class PhotoSearch extends PhotoHelper {
 		Collection aset=processRange(BY_TS, astart, aend);
 		Collection tset=processRange(BY_TAKEN, tstart, tend);
 
-		Set combined=new HashSet(aset);
-		combined.addAll(tset);
+		// Only process dates if one of them was not null
+		if(aset != null || tset != null) {
+			Set combined=new HashSet();
+			if(aset != null) {
+				getLogger().debug("Got set by added date:  " + aset.size());
+				combined.addAll(aset);
+			}
+			if(tset != null) {
+				getLogger().debug("Got set by taken date:  " + tset.size());
+				combined.addAll(tset);
+			}
 
-		rset.retainAll(combined);
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Total images by date:  " + combined.size());
+			}
+			rset.retainAll(combined);
+		}
 	}
 
 	private void processKeywords(Set rset, String kw, String keyjoin)
@@ -300,19 +325,21 @@ public class PhotoSearch extends PhotoHelper {
 			if(k != null) {
 				keywords.add(k);
 			} else {
-				getLogger().info("Unknown keyword:  " + kwstring);
+				getLogger().debug("Unknown keyword:  " + kwstring);
 				missingKw=true;
 			}
 		}
 		if(joinop == SearchIndex.OP_AND && missingKw) {
 			// If the joinop is AND and an invalid keyword was requested, just
 			// clear the set, we're done
-			getLogger().info("ANDing an unknown keyword");
+			getLogger().debug("ANDing an unknown keyword");
 			rset.clear();
 		} else if(keywords.size() > 0) {
 			// Remove everything that doesn't match our keywords (unless we
 			// don't have any)
-			getLogger().info("Got images with keywords " + keywords);
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Got images with keywords " + keywords);
+			}
 			SearchIndex index=SearchIndex.getInstance();
 			Set keyset=index.getForKeywords(keywords, joinop);
 			rset.retainAll(keyset);
@@ -326,7 +353,7 @@ public class PhotoSearch extends PhotoHelper {
 		Date s=PhotoUtil.parseDate(start);
 		Date e=PhotoUtil.parseDate(end);
 
-		Collection matches=Collections.EMPTY_LIST;
+		Collection matches=null;
 
 		if(s != null || e != null) {
 			switch(which) {

@@ -45,6 +45,7 @@ public class PhotoImageDataFactory extends SpyObject {
 		Map rv=(Map)sc.get(CACHE_KEY);
 		if(rv == null) {
 			// Get the source images
+			getLogger().info("Fetching images.");
 			Collection images=source.getImages();
 			getLogger().info("Loaded " + images.size() + " images from "
 				+ source.getClass().getName());
