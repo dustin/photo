@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.2 2000/07/05 06:32:17 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.3 2000/07/05 07:09:50 dustin Exp $
  */
 
 package net.spy.photo;
@@ -52,7 +52,7 @@ public class PhotoAheadFetcher extends Thread {
 	}
 
 	// We got a notify, fetch ahead.
-	protected void fetchAhead() {
+	protected void fetchAhead() throws Exception {
 		Vector tofetch=new Vector();
 
 		// In a lock, copy the current queue into a temporary one, and
@@ -73,7 +73,14 @@ public class PhotoAheadFetcher extends Thread {
 			for(int i=0; i<5; i++) {
 				PhotoSearchResult res=r.next();
 				if(res!=null) {
-					 res.addToHash(null);
+					 Hashtable h=new Hashtable();
+					 // Populate the data thingies.
+					 res.addToHash(h);
+
+					 // This will cache the thumbnails
+					 int image_id=Integer.parseInt((String)h.get("IMAGE"));
+					 PhotoImageHelper p = new PhotoImageHelper(image_id, null);
+					 p.getThumbnail();
 				}
 			} // end one resultset
 		} // end resultsets

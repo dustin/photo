@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.1 2000/06/30 04:11:19 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.2 2000/07/05 07:09:50 dustin Exp $
  */
 
 package net.spy.photo;
@@ -45,9 +45,22 @@ public class PhotoImageHelper extends PhotoHelper
 
 	// Get a thumbnail
 	public PhotoImage getThumbnail() throws Exception {
-		ensureConnected();
-		log("Getting image " + image_id + " (as thumbnail) from ImageServer");
-		return(server.getImage(image_id, true));
+		// Thumbnails are cachable.
+		PhotoCache cache=new PhotoCache();
+		String key="img_t_" + image_id;
+		PhotoImage pi=(PhotoImage)cache.get(key);
+
+		// If we didn't get it from our cache, get it from the image server's
+		if(pi==null) {
+			ensureConnected();
+			log("Getting image "
+				+ image_id + " (as thumbnail) from ImageServer");
+			// Grab it from the image server.
+			pi=server.getImage(image_id, true);
+			// Cache the image for ten minutes.
+			cache.store(key, pi, 10*60*1000);
+		}
+		return(pi);
 	}
 
 	// Store an image
