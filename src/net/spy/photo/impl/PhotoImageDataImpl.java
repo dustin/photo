@@ -1,7 +1,7 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 // arch-tag: 12030EE8-5D6D-11D9-A9A6-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.impl;
 
 import java.io.Serializable;
 import java.io.ObjectStreamException;
@@ -14,6 +14,15 @@ import java.util.HashMap;
 import java.util.Date;
 
 import net.spy.SpyObject;
+
+import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoUser;
+import net.spy.photo.Format;
+import net.spy.photo.Keyword;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoDimScaler;
+import net.spy.photo.PhotoImageDataFactory;
 
 /**
  * This class represents, and retreives all useful data for a given image.

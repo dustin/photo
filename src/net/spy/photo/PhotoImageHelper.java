@@ -8,6 +8,8 @@ import java.lang.ref.SoftReference;
 import net.spy.SpyObject;
 import net.spy.cache.SpyCache;
 
+import net.spy.photo.impl.PhotoDimensionsImpl;
+
 /**
  * Get images from the image server.
  */

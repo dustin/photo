@@ -9,9 +9,9 @@ import java.rmi.RemoteException;
 import net.spy.photo.ImageServer;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoDimensionsImpl;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.impl.PhotoDimensionsImpl;
 
 /**
  * Implementation of ImageServer as an RMI client.

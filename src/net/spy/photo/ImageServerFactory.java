@@ -41,7 +41,7 @@ public class ImageServerFactory extends Object {
 
 		PhotoConfig conf=PhotoConfig.getInstance();
 		String className=conf.get("imageserverimpl",
-			"net.spy.photo.rmi.ImageServerImpl");
+			"net.spy.photo.impl.ImageServerImpl");
 		log.info("Initializing " + className);
 		Class c=Class.forName(className);
 		server=(ImageServer)c.newInstance();

@@ -1,7 +1,7 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
 // arch-tag: D17013F0-5D6C-11D9-B102-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +10,11 @@ import java.io.InputStream;
 import java.io.IOException;
 
 import java.util.Random;
+
+import net.spy.photo.ImageServerScaler;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoDimScaler;
 
 /**
  * Get an image scaler that scales via an external program.

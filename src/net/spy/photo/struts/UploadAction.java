@@ -18,7 +18,7 @@ import net.spy.photo.PhotoLogUploadEntry;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUser;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.SavablePhotoImageData;
+import net.spy.photo.impl.SavablePhotoImageData;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;

@@ -1,7 +1,7 @@
 // Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 // arch-tag: 4CEA2C48-5D6D-11D9-90EF-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.impl;
 
 import java.util.TreeSet;
 import java.util.Collection;
@@ -20,6 +20,17 @@ import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoUser;
+import net.spy.photo.Format;
+import net.spy.photo.Keyword;
+import net.spy.photo.PhotoException;
+import net.spy.photo.ImageServer;
+import net.spy.photo.ImageServerFactory;
+import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoUtil;
 import net.spy.photo.sp.InsertImage;
 import net.spy.photo.sp.InsertKeywordMap;
 import net.spy.photo.sp.DeleteKeywordMap;

@@ -19,6 +19,8 @@ import net.spy.photo.ImageServer;
 public class RemoteImageServerImpl extends UnicastRemoteObject
 	implements RemoteImageServer {
 
+	private ImageServer server=null;
+
 	private boolean debug=false;
 
 	/**
@@ -27,12 +29,11 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 	public RemoteImageServerImpl() throws RemoteException {
 		super();
         // Let it initialize
-        new net.spy.photo.ImageServerImpl();
-	}
-
-	private ImageServer getImageServer() {
-		// Get a reference to the base image server implementation
-		return(new net.spy.photo.ImageServerImpl());
+		try {
+        	server=new net.spy.photo.impl.ImageServerImpl();
+		} catch(Exception e) {
+			throw new RemoteException("Problem initializing server", e);
+		}
 	}
 
 	/**
@@ -44,8 +45,7 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		PhotoImage rv=null;
 
 		try {
-			ImageServer isi=getImageServer();
-			rv=isi.getImage(imageId, dim);
+			rv=server.getImage(imageId, dim);
 		} catch(PhotoException e) {
 			throw new RemoteException("Error getting image", e);
 		}
@@ -63,11 +63,10 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		PhotoImage rv=null;
 
 		try {
-			ImageServer isi=getImageServer();
 			if(thumbnail) {
-				rv=isi.getThumbnail(imageId);
+				rv=server.getThumbnail(imageId);
 			} else {
-				rv=isi.getImage(imageId, null);
+				rv=server.getImage(imageId, null);
 			}
 		} catch(PhotoException e) {
 			throw new RemoteException("Error getting image", e);
@@ -84,8 +83,7 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		// Make sure we've calculated the width and height
 		image.getWidth();
 		try {
-			ImageServer isi=getImageServer();
-			isi.storeImage(imageId, image);
+			server.storeImage(imageId, image);
 		} catch(PhotoException e) {
 			log("Error caching image:  " + e);
 			e.printStackTrace();

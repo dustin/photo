@@ -1,7 +1,12 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 // arch-tag: E1977522-5D6C-11D9-A68F-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.impl;
+
+import net.spy.photo.ImageServerScaler;
+import net.spy.photo.PhotoImageScaler;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoDimensions;
 
 /**
  * Scale the image in 100% Java.

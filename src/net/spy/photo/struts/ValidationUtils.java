@@ -12,7 +12,7 @@ import org.apache.struts.action.ActionErrors;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.photo.PhotoDimensionsImpl;
+import net.spy.photo.impl.PhotoDimensionsImpl;
 
 /**
  * Validators and stuff.

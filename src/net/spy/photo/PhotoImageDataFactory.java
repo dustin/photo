@@ -11,6 +11,7 @@ import java.util.Iterator;
 import net.spy.SpyObject;
 import net.spy.cache.SpyCache;
 
+import net.spy.photo.impl.DBImageDataSource;
 import net.spy.photo.search.SearchIndex;
 
 /**

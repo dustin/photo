@@ -21,7 +21,7 @@ import net.spy.util.ProgressStats;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.SavablePhotoImageData;
+import net.spy.photo.impl.SavablePhotoImageData;
 
 import net.spy.photo.sp.migration.GetAllImgIdsAndKws;
 

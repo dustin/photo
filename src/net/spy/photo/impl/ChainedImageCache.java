@@ -1,7 +1,7 @@
 // Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 // arch-tag: C5082508-5D6C-11D9-9F8D-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.impl;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -11,6 +11,11 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import net.spy.SpyObject;
+
+import net.spy.photo.ImageCache;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoConfig;
 
 /**
  * ImageCache implementation that wraps other ImageCache implementations to

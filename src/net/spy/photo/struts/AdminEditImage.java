@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.spy.db.Saver;
 
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImageDataImpl;
-import net.spy.photo.SavablePhotoImageData;
+import net.spy.photo.impl.SavablePhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 
 import org.apache.struts.action.ActionForm;

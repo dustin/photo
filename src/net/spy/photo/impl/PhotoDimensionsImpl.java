@@ -1,9 +1,11 @@
 // Copyright (c) 2005  Dustin Sallings <dustin@spy.net>
 // arch-tag: 04E78E56-5D6D-11D9-981E-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.impl;
 
 import java.util.StringTokenizer;
+
+import net.spy.photo.PhotoDimensions;
 
 /**
  * A class that contains only a width and height.

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import net.spy.util.RingBuffer;
 
+import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.search.SearchResults;
 
 /**

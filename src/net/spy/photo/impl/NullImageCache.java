@@ -1,9 +1,13 @@
 // Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 // arch-tag: EF659312-5D6C-11D9-8CBF-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.impl;
 
 import net.spy.SpyObject;
+
+import net.spy.photo.ImageCache;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoException;
 
 /**
  * ImageCache implementation that doesn't perform any caching.

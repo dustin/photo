@@ -3,6 +3,8 @@
 
 package net.spy.photo;
 
+import net.spy.photo.impl.PhotoDimensionsImpl;
+
 /**
  * Calculate a dimension for a set of dimensions to fit within a given box.
  * This will scale down, not up.

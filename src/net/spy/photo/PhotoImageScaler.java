@@ -15,7 +15,7 @@ import java.rmi.Naming;
 
 import net.spy.SpyObject;
 
-import net.spy.photo.rmi.RemoteImageServer;
+import net.spy.photo.impl.PhotoDimensionsImpl;
 
 /**
  * Scales images.
@@ -73,39 +73,6 @@ public class PhotoImageScaler extends SpyObject {
 		img.flush();
 
 		return(ri);
-	}
-
-	/**
-	 * Testing and what not.
-	 */
-	public static void main(String args[]) throws Exception {
-
-		int imageId=Integer.parseInt(args[0]);
-		PhotoDimensions dim=new PhotoDimensionsImpl(args[1]);
-
-		PhotoConfig conf=PhotoConfig.getInstance();
-
-		RemoteImageServer server=null;
-		System.out.println("Connecting to image server.");
-		server = (RemoteImageServer)Naming.lookup(conf.get("imageserver"));
-
-		System.out.println("Getting image.");
-		PhotoImage pi=server.getImage(imageId, null);
-		PhotoImageScaler pis=new PhotoImageScaler(pi);
-
-		System.out.println("Getting scaled image.");
-		PhotoImage tmp=pis.getScaledImage(dim, 70);
-
-		System.out.println("Done, calculating with and height.");
-
-		System.out.println("New image size:  "
-			+ tmp.getWidth() + "x" + tmp.getHeight());
-
-		FileOutputStream fos=new FileOutputStream(imageId + ".jpg");
-		fos.write(tmp.getData());
-		fos.close();
-
-		System.exit(0);
 	}
 
 }

@@ -10,7 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.PhotoDimensionsImpl;
+import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.PhotoSessionData;
 
 import org.apache.struts.action.ActionForm;

@@ -1,7 +1,7 @@
 // Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 // arch-tag: 5350C973-5D6D-11D9-9665-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.impl;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -9,6 +9,10 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 
 import net.spy.SpyObject;
+
+import net.spy.photo.ImageCache;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoException;
 
 /**
  * ImageCache implementation that keeps soft references to images in memory.

@@ -1,7 +1,7 @@
 // Copyright (c) 2005  Dustin Sallings <dustin@spy.net>
 // arch-tag: CE76E858-5D6C-11D9-98EB-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,6 +12,11 @@ import java.sql.ResultSet;
 
 import net.spy.SpyObject;
 
+import net.spy.photo.PhotoImageDataSource;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.Keyword;
+import net.spy.photo.Format;
+import net.spy.photo.Persistent;
 import net.spy.photo.sp.GetPhotoInfo;
 import net.spy.photo.sp.GetAlbumKeywords;
 
