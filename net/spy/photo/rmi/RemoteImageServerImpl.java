@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: RemoteImageServerImpl.java,v 1.3 2002/06/17 04:18:14 dustin Exp $
+// $Id: RemoteImageServerImpl.java,v 1.4 2002/06/17 04:43:13 dustin Exp $
 
 package net.spy.photo.rmi;
 
@@ -33,6 +33,11 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		super();
 	}
 
+	private ImageServer getImageServer() {
+		// Get a reference to the base image server implementation
+		return(new net.spy.photo.ImageServerImpl());
+	}
+
 	/**
 	 * @see RemoteImageServer
 	 */
@@ -42,7 +47,7 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		PhotoImage rv=null;
 
 		try {
-			ImageServerImpl isi=new ImageServerImpl();
+			ImageServer isi=getImageServer();
 			rv=isi.getImage(image_id, dim);
 		} catch(PhotoException e) {
 			throw new RemoteException("Error getting image", e);
@@ -61,7 +66,7 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		PhotoImage rv=null;
 
 		try {
-			ImageServerImpl isi=new ImageServerImpl();
+			ImageServer isi=getImageServer();
 			if(thumbnail) {
 				rv=isi.getThumbnail(image_id);
 			} else {
@@ -82,7 +87,7 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		// Make sure we've calculated the width and height
 		image.getWidth();
 		try {
-			ImageServerImpl isi=new ImageServerImpl();
+			ImageServer isi=getImageServer();
 			isi.storeImage(image_id, image);
 		} catch(PhotoException e) {
 			log("Error caching image:  " + e);

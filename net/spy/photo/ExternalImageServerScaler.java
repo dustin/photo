@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ExternalImageServerScaler.java,v 1.1 2002/06/17 02:13:21 dustin Exp $
+// $Id: ExternalImageServerScaler.java,v 1.2 2002/06/17 04:43:13 dustin Exp $
 
 package net.spy.photo;
 
@@ -64,7 +64,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 			String tmp=null;
 
 			// Make sure we have a defined convert command.
-			tmp=conf.get("convert.cmd");
+			tmp=conf.get("scaler.convert.cmd");
 			if(tmp==null) {
 				throw new Exception("No convert command has been defined!");
 			}
