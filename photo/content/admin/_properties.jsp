@@ -29,6 +29,7 @@
 				<td>
 					<html:text
 						property="<%= (String)i.getKey() %>"
+						size="30"
 						value="<%= (String)i.getValue() %>"/>
 				</td>
 			</tr>
