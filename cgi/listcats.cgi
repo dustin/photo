@@ -1,9 +1,8 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: listcats.cgi,v 1.4 1998/04/24 17:09:14 dustin Exp $
+# $Id: listcats.cgi,v 1.5 1998/04/24 17:46:56 dustin Exp $
 
-use Postgres;
 use DCache;
 
 require 'photolib.pl';
