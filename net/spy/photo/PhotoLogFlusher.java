@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.17 2002/11/03 07:33:35 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.18 2002/12/15 09:04:51 dustin Exp $
  */
 
 package net.spy.photo;
@@ -17,8 +17,6 @@ import net.spy.SpyDB;
 
 import net.spy.log.SpyLogEntry;
 import net.spy.log.SpyLogFlusher;
-
-import net.spy.util.Debug;
 
 /**
  * Flush logs.
@@ -59,17 +57,20 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 		// Only do all this crap if there's something to log.
 		if(v.size() > 0) {
 			flushing=true;
-			Debug debug=new Debug("net.spy.photo.flush.debug");
-			debug.debug("Flushing with " + v.size() + " items.");
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Flushing with " + v.size() + " items.");
+			}
 			SpyDB photodb=null;
 			try {
 				photodb = new SpyDB(new PhotoConfig());
 				Connection db=photodb.getConn();
 				Statement st=db.createStatement();
-				debug.debug("Beginning flush");
+				getLogger().debug("Beginning flush");
 				for(Enumeration e=v.elements(); e.hasMoreElements();) {
 					SpyLogEntry l=(SpyLogEntry)e.nextElement();
-					debug.debug(l.toString());
+					if(getLogger().isDebugEnabled()) {
+						getLogger().debug(l.toString());
+					}
 					boolean tryagain=true;
 					for(int i=0; i<3 && tryagain; i++) {
 						if(i>0) {
@@ -105,7 +106,7 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 				photodb.close();
 				flushing=false;
 			}
-			debug.debug("Flush complete.");
+			getLogger().debug("Flush complete.");
 		} // Stuff to do
 	} // Flush method
 }
