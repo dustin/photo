@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.12 2001/01/06 04:56:06 dustin Exp $
+ $Id: default.xsl,v 1.13 2001/01/06 05:14:50 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -362,6 +362,11 @@
 	Well, it looks like your image made it.
 	The ID is <xsl:value-of select="id"/>.  It can be seen by clicking
 	<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={id}">here</a>.
+</xsl:template>
+
+<xsl:template match="save_search_success">
+	Your search has been saved, press the ``back'' button on your browser
+	to continue with your search.
 </xsl:template>
 
 </xsl:stylesheet>
