@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: listcats.cgi,v 1.8 1998/08/30 03:55:00 dustin Exp $
+# $Id: listcats.cgi,v 1.9 1998/09/04 04:05:43 dustin Exp $
 
 use DCache;
 use Photo;
@@ -23,8 +23,8 @@ sub getlist
     while($r=$s->fetch) {
         $ret.="    <option value=\"$r->[0]\">$r->[1]\n";
     }
+    $s->finish;
 
-    $p->finished;
     return($ret);
 }
 
