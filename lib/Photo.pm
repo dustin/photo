@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.66 1999/01/17 22:57:21 dustin Exp $
+# $Id: Photo.pm,v 1.67 1999/01/30 22:20:36 dustin Exp $
 
 package Photo;
 
@@ -11,27 +11,62 @@ use DCache;
 use MIME::Base64();
 use strict;
 
-use vars qw($cgidir $uriroot $includes $adminc $ldir);
-
-# Global stuffs
-$Photo::cgidir="/perl/dustin/photo";
-$Photo::uriroot="/~dustin/photo";
-$Photo::includes="/usr/people/dustin/public_html/photo/inc";
-$Photo::adminc="/usr/people/dustin/public_html/photo/admin/inc";
-$Photo::ldir="/usr/people/dustin/public_html/photo/album";
-
 sub new
 {
 	my $self = {};
 	bless($self);
+	$self->configure;
 	return($self);
+}
+
+sub configure
+{
+	my($self)=@_;
+	my(%h, $tmp);
+	local(*_CONF);
+
+	# defaults
+	%h=(
+		'cgidir' => "/perl/dustin/photo",
+		'uriroot' => "/~dustin/photo",
+		'includes' => "/usr/people/dustin/public_html/photo/inc",
+		'dbname' => 'photo',
+		'dbhost' => 'bleu',
+		'dbuser' => 'nobody',
+		'dbpass' => '',
+	);
+
+	# may want to search through more photo.confs in the future
+	for( qw(/usr/local/etc/photo.conf) ) {
+		$tmp=open(_CONF, $_);
+		last if($tmp);
+	}
+
+	if($tmp) {
+		while(<_CONF>) {
+			my(@a);
+			chomp;
+			@a=split(/\s+=\s+/);
+			$h{$a[0]}=$a[1];
+		}
+		close(_CONF);
+	}
+
+	$self->{'config'}=\%h;
 }
 
 sub openDB
 {
 	my($self)=shift;
-	$self->{'dbh'}=DBI->connect("dbi:Pg:dbname=photo;host=bleu", 'nobody','')
-		 || die("Cannot connect to database\n");
+	my($dbname, $dbhost, $dbuser, $dbpass)=(
+		$self->{'config'}{'dbname'},
+		$self->{'config'}{'dbhost'},
+		$self->{'config'}{'dbuser'},
+		$self->{'config'}{'dbpass'}
+	);
+
+	$self->{'dbh'}=DBI->connect("dbi:Pg:dbname=$dbname;host=$dbhost",
+		$dbuser,$dbpass) || die("Cannot connect to database\n");
 }
 
 sub DESTROY
@@ -239,7 +274,7 @@ EOF
 	};
 
 	$cookie=$q->cookie(-name=>'photo_style',
-		-path=>$Photo::cgidir,
+		-path=>$self->{'config'}{'cgidir'},
 		-value=>$style,
 		-expires=>'+30d');
 	print $q->header(-cookie => $cookie);
@@ -247,7 +282,7 @@ EOF
 
 	%p=();
 	$p{'STYLE'}=$style;
-    $self->showTemplate("$Photo::includes/setstyle.inc", %p);
+    $self->showTemplate("setstyle.inc", %p);
 }
 
 sub saveSearch
@@ -257,7 +292,7 @@ sub saveSearch
 
 	# don't allow anyone who doesn't have the canadd flag set.
 	if($self->canadd($ENV{'REMOTE_USER'})!=1) {
-		$self->showTemplate("$Photo::includes/savesearch_deny.inc", ());
+		$self->showTemplate("savesearch_deny.inc", ());
 		return;
 	}
 
@@ -273,7 +308,7 @@ sub saveSearch
 	$self->doQuery($query);
 
 	%p=('QUERY', $query);
-	$self->showTemplate("$Photo::includes/savedsearch.inc", %p);
+	$self->showTemplate("savedsearch.inc", %p);
 }
 
 sub cacheImage
@@ -396,7 +431,7 @@ sub showSaved
 
 	# $r is id, name, addedby, search
 
-	$cgi =$Photo::cgidir;
+	$cgi =$self->{'config'}{'cgidir'};
 	$cgi.="/photo.cgi";
 
 	while($r=$s->fetch) {
@@ -433,7 +468,7 @@ sub doFind
 		$selfurl=MIME::Base64::encode($q->query_string);
 
 		%stuff=("SEARCH" => $selfurl);
-		$self->showTemplate("$Photo::includes/savesearch.inc", %stuff);
+		$self->showTemplate("savesearch.inc", %stuff);
 	}
 
 	$max=$q->param('maxret');	# Find the desired max return "
@@ -455,14 +490,15 @@ sub doFind
 			$p{'IMAGEDATA'}="data:image/jpeg;base64,".
 				$self->base64image("tn/$p{'IMAGE'}");
 		} else {
-			$p{'IMAGEDATA'}="$Photo::cgidir/img.cgi/tn/$p{'IMAGE'}";
+			$p{'IMAGEDATA'}=$self->{'config'}{'cgidir'}.
+				"/img.cgi/tn/$p{'IMAGE'}";
 		}
 
 		# Two columns.
 		print "</tr>\n<tr>\n" if(($i+1)%2==0);
 
 		print "<td>\n";
-		$self->showTemplate("$Photo::includes/findmatch.inc", %p);
+		$self->showTemplate("findmatch.inc", %p);
 		print "</td>\n";  # "
 	}
 	$s->finish;
@@ -520,9 +556,10 @@ sub doDisplay
 			$p{'IMAGEDATA'}="data:image/jpeg;base64,".
 				$self->base64image($p{'IMAGE'});
 		} else {
-			$p{'IMAGEDATA'}="$Photo::cgidir/img.cgi/$p{'IMAGE'}";
+			$p{'IMAGEDATA'}=$self->{'config'}{'cgidir'}
+				."/img.cgi/$p{'IMAGE'}";
 		}
-		$self->showTemplate("$Photo::includes/display.inc", %p);
+		$self->showTemplate("display.inc", %p);
 	}
 	$s->finish;
 }
@@ -553,7 +590,8 @@ sub doCatView
 
 		$t=($r->[2]==1?"image":"images");
 
-		print "<li>$r->[0]:  <a href=\"$Photo::cgidir/photo.cgi?func=search&".
+		print "<li>$r->[0]:  <a href=\"" . $self->{'config'}{'cgidir'}
+			."/photo.cgi?func=search&".
 		"searchtype=advanced&cat=$r->[1]&maxret=5\">$r->[2] $t</a></li>\n";
 	}
 	$s->finish;
@@ -596,7 +634,7 @@ sub addImage
 	$self->start_html($q, 'Adding image');
 
 	if($self->canadd($ENV{'REMOTE_USER'})!=1) {
-		$self->showTemplate("$Photo::includes/add_denied.inc", ());
+		$self->showTemplate("add_denied.inc", ());
 		return;
 	}
 
@@ -606,7 +644,7 @@ sub addImage
 		$ext="gif";
 	} else {
 		%tmp=('FILENAME',$in{'picture'});
-		$self->showTemplate("$Photo::includes/add_badfiletype.inc", %tmp);
+		$self->showTemplate("add_badfiletype.inc", %tmp);
 		return;
 	}
 
@@ -646,14 +684,14 @@ sub addImage
 
 	if($@) {
 		%tmp=('QUERY', $query, 'ERRSTR', $DBI::errstr);
-		$self->showTemplate("$Photo::includes/add_dbfailure.inc", %tmp);
+		$self->showTemplate("add_dbfailure.inc", %tmp);
 		$self->rollback;
 	} else {
 		%tmp=(
 			'ID' => $id,
 			'QUERY' => $query
 		);
-		$self->showTemplate("$Photo::includes/add_success.inc", %tmp);
+		$self->showTemplate("add_success.inc", %tmp);
 		$self->commit;
 	}
 	if($s) {
@@ -678,7 +716,7 @@ sub addTail
 
 	$p{'LAST_MODIFIED'}=localtime($p{FILE_MTIME});
 
-	$self->showTemplate("$includes/tail.inc", %p);
+	$self->showTemplate("tail.inc", %p);
 }
 
 sub myself
@@ -700,17 +738,17 @@ sub showTemplate
 	map { $p{uc($_)}=$q->param($_) unless(defined($p{uc($_)}))} $q->param;
 	map { $p{$_}=$ENV{$_} unless(defined($p{uc($_)})) } keys(%ENV);
 
-	$p{'URIROOT'}=$Photo::uriroot;
-	$p{'CGIDIR'}=$Photo::cgidir;
+	$p{'URIROOT'}=$self->{'config'}{'uriroot'};
+	$p{'CGIDIR'}=$self->{'config'}{'cgidir'};
 	$p{'SELF_URI'}=&myself;
 
 	$p{'ALL_VARS'}=join("\n", sort(keys(%p)));
-	$p{'STYLESHEET'}="<link rel=\"stylesheet\"".
-					 "href=\"$Photo::cgidir/style.cgi\">";
+	$p{'STYLESHEET'}="<link rel=\"stylesheet\"href=\"".
+		$self->{'config'}{'cgidir'} ."/style.cgi\">";
 
-	open(IN, $fn) || die("Can't open $fn:  $!\n");
-	while(<IN>)
-	{
+	open(IN, $self->{'config'}{'includes'} . $fn)
+		|| die("Can't open $fn:  $!\n");
+	while(<IN>) {
 		s/%([A-Z0-9_]+)%/$p{$1}/g;
 		print;
 	}
@@ -738,7 +776,7 @@ sub deleteImage
 		$self->doQuery($query);
 	};
 
-	$self->showTemplate("$Photo::includes/admin/killimage.inc", %p);
+	$self->showTemplate("admin/killimage.inc", %p);
 }
 
 sub start_html
@@ -746,7 +784,8 @@ sub start_html
 	my($self, $cgi, $title)=@_;
 
 	print "<html><head><title>$title</title>\n<head>\n".
-		  "<link rel=\"stylesheet\" href=\"$Photo::cgidir/style.cgi\">".
+		  "<link rel=\"stylesheet\" href=\"".
+		  	$self->{'config'}{'cgidir'} ."/style.cgi\">".
 		  "</head><body bgcolor=\"#fFfFfF\">";
 }
 

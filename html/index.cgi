@@ -13,5 +13,5 @@ print $q->header;
 
 $p{'SAVED'}=$p->showSaved($q);
 
-$p->showTemplate("$Photo::includes/index.inc", %p);
-$p->showTemplate("$Photo::includes/tail.inc", %p);
+$p->showTemplate("index.inc", %p);
+$p->showTemplate("tail.inc", %p);

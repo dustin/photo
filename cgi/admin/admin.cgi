@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.15 1999/01/17 23:28:28 dustin Exp $
+# $Id: admin.cgi,v 1.16 1999/01/30 22:20:31 dustin Exp $
 
 use CGI;
 use Photo;
@@ -58,7 +58,7 @@ sub doDisplay
     }
     $s->finish;
 
-    $p->showTemplate("$Photo::includes/admin/display.inc", %p);
+    $p->showTemplate("admin/display.inc", %p);
 }
 
 sub editCat
@@ -81,7 +81,7 @@ sub editCat
 
     %p=('CATID' => $r->[0], 'CATNAME' => $r->[1]);
 
-    $p->showTemplate("$Photo::includes/admin/editcat.inc", %p);
+    $p->showTemplate("admin/editcat.inc", %p);
 }
 
 sub search
@@ -109,7 +109,7 @@ sub listRecent
 
     %p=();
 
-    $p->showTemplate("$Photo::includes/admin/recent.inc", %p);
+    $p->showTemplate("admin/recent.inc", %p);
 
     $i=0;
     if(defined($start=$q->param('qstart'))) {
@@ -123,7 +123,7 @@ sub listRecent
     while($r=$s->fetch) {
         ($p{'AID'},$p{'CAT'},$p{'IMAGE'},$p{'BCAT'},$p{'KEYWORDS'},
 	 $p{'TAKEN'},$p{'TS'})=@{$r};
-         $p->showTemplate("$Photo::includes/admin/recent_row.inc", %p);
+         $p->showTemplate("admin/recent_row.inc", %p);
 
 	 last if(--$i==0);
     }
@@ -177,7 +177,8 @@ sub listUsers
 
 <br>
 <a
-href="$Photo::cgidir/admin/admin.cgi?func=edituser">Add a new user</a>
+href="$p->{'config'}{'cgidir'}/admin/admin.cgi?func=edituser">Add
+a new user</a>
 </body>
 </html>
 EOF
@@ -227,7 +228,7 @@ sub editUser
         "<input type=\"hidden\" name=\"newuser\" value=\"0\">\n";
     }
 
-    $p->showTemplate("$Photo::includes/admin/userform.inc", %p);
+    $p->showTemplate("admin/userform.inc", %p);
 
 	$id=$p->getuid($user);
     $query="select cat from wwwacl where userid=$id";
@@ -292,7 +293,7 @@ EOF
 
     while($r=$s->fetch) {
         print "<tr>";
-        print "<td><a href=\"$Photo::cgidir/admin/admin.cgi";
+        print "<td><a href=\"$p->{'config'}{'cgidir'}/admin/admin.cgi";
 	print "?func=editcat&cat=$r->[0]\">";
         print "$r->[0]</a></td>\n";
         print "<td>$r->[1]</td>\n";
@@ -305,7 +306,8 @@ EOF
 
 <br>
 <a
-href="$Photo::cgidir/admin/admin.cgi?func=editcat&cat=0">Add a new category</a>
+href="$p->{'config'}{'cgidir'}/admin/admin.cgi?func=editcat&cat=0">Add
+a new category</a>
 
 </body>
 </html>

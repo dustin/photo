@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: setstyle.cgi,v 1.3 1998/10/17 23:49:58 dustin Exp $
+# $Id: setstyle.cgi,v 1.4 1999/01/30 22:20:26 dustin Exp $
 
 use Photo;
 use CGI;
@@ -33,7 +33,7 @@ if($in{'h_transform'} ne "none") {
 };
 
 $cookie=$q->cookie(-name=>'photo_style',
-                   -path=>$Photo::cgidir,
+                   -path=>$p->{'config'}{'cgidir'},
 				   -value=>$style,
 				   -expires=>'+30d');
 
