@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.56 1998/11/09 07:10:12 dustin Exp $
+# $Id: Photo.pm,v 1.57 1998/11/13 07:30:30 dustin Exp $
 
 package Photo;
 
@@ -100,10 +100,31 @@ sub rollback
 	$self->{'dbh'}->rollback;
 }
 
+sub getuid
+{
+	my $self=shift;
+	my($name)=@_;
+	my($id, $r, $s);
+
+	if(!defined($name)) {
+		$name=$ENV{'REMOTE_USER'};
+	}
+
+	$s=$self->doQuery("select getwwwuser($name)");
+	$r=$s->fetch;
+	if($r) {
+		$id=$r->[0];
+	} else {
+		$id=-1; # -1 because this can easily be plugged into ACL code
+	}
+
+	return($id);
+}
+
 sub buildQuery
 {
 	my($self, $q)=@_;
-	my(%h, $query, $needao, $sub, @tmp, $tmp, $snao, $ln, $order);
+	my(%h, $query, $needao, $sub, @tmp, $tmp, $snao, $ln, $order, $id);
 	my(@a);
 
 	for($q->param) {
@@ -111,12 +132,13 @@ sub buildQuery
 		$h{$_}=~s/\'/\\\'/g;
 	}
 
+	$id=$self->getuid();
 
 	$query ="select a.keywords,a.descr,b.name,\n";
 	$query.="	a.size,a.taken,a.ts,a.id,a.cat,a.addedby,b.id\n";
 	$query.="	from album a, cat b\n	where a.cat=b.id\n";
 	$query.="		and a.cat in (select cat from wwwacl\n";
-	$query.="			   where userid=getwwwuser('$ENV{REMOTE_USER}'))";
+	$query.="			   where userid=$id)";
 
 	$needao=0;
 	$sub="";
@@ -426,15 +448,17 @@ sub doFind
 sub doDisplay
 {
 	my($self, $q)=@_;
-	my($query, $s, @r, @mapme, %p);
+	my($query, $s, @r, @mapme, %p, $id);
 	%p=();
+
+	$id=$self->getuid();
 
 	$query ="select a.id,a.keywords,a.descr,\n";
 	$query.="	a.size,a.taken,a.ts,b.name,a.cat,a.addedby,b.id\n";
 	$query.="	from album a, cat b\n";
 	$query.="	where a.cat=b.id and a.id=" . $q->param('id');
 	$query.="\n	and a.cat in (select cat from wwwacl where ";
-	$query.="userid=getwwwuser('$ENV{REMOTE_USER}') );\n";
+	$query.="userid=$id);\n";
 
 	print "<!-- Query:\n$query\n-->\n";
 
@@ -455,16 +479,18 @@ sub doDisplay
 sub doCatView
 {
 	my($self, $q)=@_;
-	my($r, $query, $s, $t);
+	my($r, $query, $s, $t, $id);
 
 	$self->start_html($q, 'View Images by Category');
+
+	$id=$self->getuid();
 
 	print "<h2>Category List</h2>\n";
 
 	$query ="select name,id,catsum(id) as cs from cat\n";
 	$query.="where id in\n";
 	$query.="  (select cat from wwwacl where\n";
-	$query.="   userid=getwwwuser('$ENV{REMOTE_USER}') )\n";
+	$query.="   userid=$id)\n";
 	$query.=" order by cs desc;";
 	print "<!--\n$query\n-->\n";
 	$s=$self->doQuery($query);
