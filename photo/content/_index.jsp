@@ -20,7 +20,11 @@
 							message="index.links.logout"/></li>
 						<li><photo:link url="/addform.jsp"
 							message="index.links.addform"/></li>
+						<li><photo:link url="/savegallery.jsp"
+							message="index.links.savegallery"/></li>
 					</photo:guest>
+					<li><photo:link url="/listgalleries.jsp"
+						message="index.links.listgalleries"/></li>
 					<li><photo:link url="/search.jsp"
 						message="index.links.advsearch"/></li>
 					<li><photo:link url="/catview.jsp"

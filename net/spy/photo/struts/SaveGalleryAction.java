@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveGalleryAction.java,v 1.2 2002/07/02 07:03:41 dustin Exp $
+// $Id: SaveGalleryAction.java,v 1.3 2002/07/03 06:27:14 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -48,6 +48,10 @@ public class SaveGalleryAction extends PhotoAction {
 		if(g==null) {
 			throw new ServletException(
 				"No gallery in session, nothing to save!");
+		}
+		if(g.size() == 0) {
+			throw new ServletException(
+				"Sorry, I won't save an empty gallery.");
 		}
 
 		g.setName(sgf.getName());

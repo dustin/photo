@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.4 2002/07/02 07:03:41 dustin Exp $
+// $Id: Gallery.java,v 1.5 2002/07/03 06:27:14 dustin Exp $
 
 package net.spy.photo;
 
@@ -73,7 +73,7 @@ public class Gallery extends Object implements java.io.Serializable {
 			PreparedStatement pst=db.prepareStatement(
 				"select * from galleries\n"
 				+ "  where wwwuser_id=? or ispublic = true\n"
-				+ "  order by ts", 3600);
+				+ "  order by ts desc", 3600);
 			pst.setInt(1, user.getId());
 			ResultSet rs=pst.executeQuery();
 			rv=new Cursor();
@@ -340,6 +340,13 @@ public class Gallery extends Object implements java.io.Serializable {
 	 */
 	public PhotoUser getOwner() {
 		return(owner);
+	}
+
+	/**
+	 * Return the number of images in this gallery.
+	 */
+	public int size() {
+		return(images.size());
 	}
 
 	/**
