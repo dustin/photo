@@ -6,6 +6,8 @@
 
 package net.spy.photo;
 
+import java.lang.ref.SoftReference;
+
 import net.spy.cache.SpyCache;
 
 /**
@@ -74,7 +76,7 @@ public class PhotoImageHelper extends PhotoHelper {
 
 			// If it's small enough, cache it.
 			if(rv.size() < 32768) {
-				cache.store(key, rv, 10*60*1000);
+				cache.store(key, new SoftReference(rv), 10*60*1000);
 			}
 		}
 
@@ -109,7 +111,7 @@ public class PhotoImageHelper extends PhotoHelper {
 		if(rv == null) {
 			PhotoImage pi=getThumbnail();
 			rv=new PhotoDimensionsImpl(pi.getWidth(), pi.getHeight());
-			cache.store(key, rv, 1800000);
+			cache.store(key, new SoftReference(rv), 1800000);
 		}
 
 		return(rv);
