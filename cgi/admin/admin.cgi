@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
-#
-# $Id: admin.cgi,v 1.2 1998/04/30 07:06:54 dustin Exp $
+# Approved by Jason Hudgins =)	
+# $Id: admin.cgi,v 1.3 1998/05/02 21:10:22 thanatos Exp $
 
 use CGI;
 use Photo;
