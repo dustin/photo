@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.13 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.14 2001/07/19 08:09:47 dustin Exp $
  */
 
 package net.spy.photo;
@@ -247,7 +247,7 @@ public class PhotoAdmin extends PhotoHelper {
 
 			// Delete all of the ACLs
 			st=photo.prepareStatement("delete from wwwacl where userid=?");
-			st.setInt(1, user_id);
+			st.setInt(1, user.getId());
 			st.executeUpdate();
 
 			// Add the new ACLs for the user
@@ -258,7 +258,7 @@ public class PhotoAdmin extends PhotoHelper {
 					st=photo.prepareStatement(
 						"insert into wwwacl(userid,cat) values(?,?)"
 						);
-					st.setInt(1, user_id);
+					st.setInt(1, user.getId());
 					st.setInt(2, cat_id);
 					st.executeUpdate();
 				}
