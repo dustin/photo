@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.21 2002/02/23 01:00:26 dustin Exp $
+-- $Id: photo.sql,v 1.22 2002/02/24 08:52:52 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -93,6 +93,11 @@ create index commentary_byphoto on commentary(photo_id);
 create index commentary_byuser on commentary(wwwuser_id);
 grant all on commentary to nobody;
 grant all on commentary_comment_id_seq to nobody;
+
+-- Get the latest date a comment was submitted for a given photo
+create function latestcomment(integer) returns timestamp as
+	'select max(ts) from commentary where photo_id = $1'
+	language 'sql';
 
 -- Votes
 create table votes (
