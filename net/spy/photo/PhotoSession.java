@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.86 2002/02/20 08:40:43 dustin Exp $
+ * $Id: PhotoSession.java,v 1.87 2002/02/20 09:11:13 dustin Exp $
  */
 
 package net.spy.photo;
@@ -76,9 +76,30 @@ public class PhotoSession extends Object
 			// Initialize the user
 			sessionData.setUser(security.getUser("guest"));
 			// Initialize the optimal dimensions
-			sessionData.setOptimalDimensions(
-				new PhotoDimensionsImpl(
-					conf.get("optimal_image_size", "800x600")));
+
+			// Start with cookies
+			Cookie cookies[] = request.getCookies();
+			String dimss=null;
+			if(cookies!=null) {
+				for(int ci=0; ci<cookies.length && dimss == null; ci++) {
+					String s = cookies[ci].getName();
+					if(s.equalsIgnoreCase("photo_dims")) {
+						dimss=cookies[ci].getValue();
+					}
+				}
+			}
+			// Figure out whether to get the dimensions from the cookie or
+			// the config
+			PhotoDimensions dim=null;
+			if(dimss==null) {
+				dim=new PhotoDimensionsImpl(
+					conf.get("optimal_image_size", "800x600"));
+			} else {
+				dim=new PhotoDimensionsImpl(dimss);
+				log("Loading dimensions from cookies:  " + dim);
+			}
+			// Stick it in the session.
+			sessionData.setOptimalDimensions(dim);
 
 			session.setAttribute("photoSession", sessionData);
 		}
@@ -285,6 +306,21 @@ public class PhotoSession extends Object
 		if(dimss!=null) {
 			PhotoDimensions dims=new PhotoDimensionsImpl(dimss);
 			sessionData.setOptimalDimensions(dims);
+
+			String remember=request.getParameter("remember");
+			if(remember!=null) {
+				// Make the cookie
+				Cookie c=new Cookie("photo_dims", dimss);
+				// Keep it for a year
+				c.setMaxAge(365*86400);
+				// Give it a comment.
+				c.setComment("PhotoServlet optimal dimensions.");
+				// Set the path
+				c.setPath(self_uri);
+				// Add it
+				response.addCookie(c);
+			}
+
 			out=doIndex();
 		} else {
 			PhotoXML xml=new PhotoXML();
