@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.22 2002/03/05 00:52:40 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.23 2002/05/15 08:26:15 dustin Exp $
  */
 
 package net.spy.photo;
@@ -29,7 +29,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	/**
 	 * Get an uninitialized search result.
 	 */
-	public PhotoSearchResult() throws Exception {
+	public PhotoSearchResult() {
 		super();
 		mydata=new Hashtable();
 	}
@@ -37,7 +37,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	/**
 	 * Get an uninitialized search result pointing at a given id.
 	 */
-	public PhotoSearchResult(int id, int search_id) throws Exception {
+	public PhotoSearchResult(int id, int search_id) {
 		super();
 		this.id=id;
 		this.search_id=search_id;
@@ -48,6 +48,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	 */
 	public void setMaxSize(PhotoDimensions maxSize) {
 		this.maxSize=maxSize;
+		calculateScaled();
 	}
 
 	/**
@@ -105,7 +106,6 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 			h.put(k, mydata.get(k));
 		}
 
-		mydata.put("ID",       "" + search_id);
 		h.put("ID",            "" + search_id);
 
 		return(h);
@@ -126,6 +126,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 				log("Error getting data for result " + id);
 			}
 		}
+		mydata.put("ID", "" + search_id);
 	}
 
 	/**
@@ -183,6 +184,9 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		setTnHeight("" + stn.getHeight());
 	}
 
+	/**
+	 * Make sure the scaled width and height are calculated."
+	 */
 	private void calculateScaled() {
 		int width=Integer.parseInt((String)mydata.get("WIDTH"));
 		int height=Integer.parseInt((String)mydata.get("HEIGHT"));
@@ -200,32 +204,68 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		mydata.put("SCALED_HEIGHT", "" + scaled.getHeight());
 	}
 
+	public String getScaledWidth() {
+		return((String)mydata.get("SCALED_WIDTH"));
+	}
+
+	public String getScaledHeight() {
+		return((String)mydata.get("SCALED_HEIGHT"));
+	}
+
 	public void setKeywords(String to) {
 		mydata.put("KEYWORDS", to);
+	}
+
+	public String getKeywords() {
+		return((String)mydata.get("KEYWORDS"));
 	}
 
 	public void setDescr(String to) {
 		mydata.put("DESCR", to);
 	}
 
+	public String getDescr() {
+		return((String)mydata.get("DESCR"));
+	}
+
 	public void setCat(String to) {
 		mydata.put("CAT", to);
+	}
+
+	public String getCat() {
+		return((String)mydata.get("CAT"));
 	}
 
 	public void setSize(String to) {
 		mydata.put("SIZE", to);
 	}
 
+	public String getSize() {
+		return((String)mydata.get("SIZE"));
+	}
+
 	public void setTaken(String to) {
 		mydata.put("TAKEN", to);
+	}
+
+	public String getTaken() {
+		return((String)mydata.get("TAKEN"));
 	}
 
 	public void setTs(String to) {
 		mydata.put("TS", to);
 	}
 
+	public String getTs() {
+		return((String)mydata.get("TS"));
+	}
+
 	public void setImage(String to) {
 		mydata.put("IMAGE", to);
+	}
+
+	public String getImage() {
+		return((String)mydata.get("IMAGE"));
 	}
 
 	public void setCatNum(String to) {
@@ -236,24 +276,52 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		mydata.put("ADDEDBY", to);
 	}
 
+	public String getAddedBy() {
+		return((String)mydata.get("ADDEDBY"));
+	}
+
 	public void setWidth(String to) {
 		mydata.put("WIDTH", to);
+	}
+
+	public String getWidth() {
+		return((String)mydata.get("WIDTH"));
 	}
 
 	public void setHeight(String to) {
 		mydata.put("HEIGHT", to);
 	}
 
+	public String getHeight() {
+		return((String)mydata.get("HEIGHT"));
+	}
+
 	public void setTnWidth(String to) {
 		mydata.put("TN_WIDTH", to);
+	}
+
+	public String getTnWidth() {
+		return((String)mydata.get("TN_WIDTH"));
 	}
 
 	public void setTnHeight(String to) {
 		mydata.put("TN_HEIGHT", to);
 	}
 
+	public String getTnHeight() {
+		return((String)mydata.get("TN_HEIGHT"));
+	}
+
+	public String getTnSize() {
+		return(getTnWidth() + "x" + getTnHeight());
+	}
+
 	public void setId(int id) {
 		this.search_id=id;
+	}
+
+	public String getId() {
+		return("" + id);
 	}
 
 	public int getCatNum() {

@@ -49,7 +49,7 @@
 								<tr>
 									<td></td>
 									<td align="right">
-										<a href="">[Home]</a> | 
+										<a href="index.jsp">[Home]</a> | 
 										<a href="sizeform.jsp">[Size]</a>
 									</td>
 								</tr>

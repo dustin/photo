@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.1 2002/05/15 04:27:53 dustin Exp $
+// $Id: ImageLink.java,v 1.2 2002/05/15 08:26:15 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -11,16 +11,21 @@ import javax.servlet.jsp.tagext.*;
 /**
  * Taglib to link to an image.
  */
-public class ImageLink extends TagSupport {
+public class ImageLink extends PhotoTag {
 
 	private int id=0;
 	private boolean showThumbnail=false;
+	private String width=null;
+	private String height=null;
+	private boolean scale=false;
+	private String altText=null;
 
 	/**
 	 * Get an instance of ImageLink.
 	 */
 	public ImageLink() {
 		super();
+		release();
 	}
 
 	/**
@@ -30,9 +35,53 @@ public class ImageLink extends TagSupport {
 		id=Integer.parseInt(to);
 	}
 
+	/**
+	 * Set the id of the image to which we want to link.
+	 */
+	public void setId(int to) {
+		id=to;
+	}
+
+	/**
+	 * If ``true'' show a thumbnail.
+	 */
 	public void setShowThumbnail(String to) {
 		Boolean b=new Boolean(to);
 		this.showThumbnail=b.booleanValue();
+		System.out.println("Set thumbnail to " + showThumbnail);
+	}
+
+	/**
+	 * If ``true'' scale the image to the given width and height.
+	 */
+	public void setScale(String to) {
+		Boolean b=new Boolean(to);
+		this.scale=b.booleanValue();
+		System.out.println("Set scale to " + scale);
+	}
+
+	/**
+	 * Set the image width.
+	 */
+	public void setWidth(String width) {
+		this.width=width;
+		System.out.println("Set width to " + width);
+	}
+
+	/**
+	 * Set the image height.
+	 */
+	public void setHeight(String height) {
+		this.height=height;
+		System.out.println("Set height to " + height);
+	}
+
+	/**
+	 * Set the alt text for the thumbnail (if provided).
+	 */
+	public void setAlt(String altText) {
+		this.altText=altText;
+		System.out.println("Set alt text to " + altText);
 	}
 
 	/**
@@ -40,15 +89,44 @@ public class ImageLink extends TagSupport {
 	 */
 	public int doStartTag() throws JspException {
 
+		System.out.println("Displaying image " + id);
+
 		StringBuffer sb=new StringBuffer();
-		sb.append("<a href=\"PhotoServlet?func=display&id=");
+		sb.append("<img src=\"PhotoServlet?func=getimage&photo_id=");
 		sb.append(id);
-		sb.append("\">");
-		if(showThumbnail) {
-			sb.append("<img src=\"PhotoServlet?func=getimage&photo_id=");
-			sb.append(id);
-			sb.append("&thumbnail=1\" border=\"0\"></img>");
+		if(scale && (width!=null) && (height!=null)) {
+			sb.append("&scale=");
+			sb.append(width);
+			sb.append("x");
+			sb.append(height);
 		}
+
+		if(showThumbnail) {
+			sb.append("&thumbnail=1");
+		}
+
+		// Finish the src attribute.
+		sb.append("\"");
+
+		sb.append(" border=\"0\"");
+		if(altText!=null) {
+			sb.append(" alt=\"");
+			sb.append(altText);
+			sb.append("\"");
+		}
+
+		if(width!=null) {
+			sb.append(" width=\"");
+			sb.append(width);
+			sb.append("\"");
+		}
+		if(height!=null) {
+			sb.append(" height=\"");
+			sb.append(height);
+			sb.append("\"");
+		}
+
+		sb.append("/>");
 
 		try {
 			pageContext.getOut().write(sb.toString());
@@ -61,17 +139,15 @@ public class ImageLink extends TagSupport {
 	}
 
 	/**
-	 * End link.
+	 * Reset all values.
 	 */
-	public int doEndTag() throws JspException {
-		try {
-			pageContext.getOut().write("</a>");
-		} catch(Exception e) {
-			e.printStackTrace();
-			throw new JspException("Error sending output:  " + e);
-		}
-
-		return(EVAL_PAGE);
+	public void release() {
+		id=0;
+		showThumbnail=false;
+		width=null;
+		height=null;
+		scale=false;
+		altText=null;
 	}
 
 }

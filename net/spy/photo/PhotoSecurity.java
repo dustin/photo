@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.20 2002/05/01 07:43:13 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.21 2002/05/15 08:26:15 dustin Exp $
  */
 
 package net.spy.photo;
@@ -208,6 +208,9 @@ public class PhotoSecurity extends PhotoHelper {
 		return(ret);
 	}
 
+	/**
+	 * The preferred way to check a user's access to an image.
+	 */
 	public static void checkAccess(PhotoUser user, int image_id) throws
 		Exception {
 
@@ -235,7 +238,7 @@ public class PhotoSecurity extends PhotoHelper {
 	/**
 	 * Check to see if the given uid has access to the given image ID.
 	 *
-	 * @deprecated Why not just use the photo user?
+	 * <b>Note</b>:  This is not generally the right way to do this.
 	 */
 	public static void checkAccess(int uid, int image_id) throws Exception {
 		PhotoSecurity sec=new PhotoSecurity();

@@ -50,14 +50,11 @@
 						content='Photo of the [Unit of Time]' direct='true'/>
 				</template:insert>
 
-				<center>
-					<!--
-					<a href="PhotoServlet?func=display&id=3469"><img
-						border="0"
-						src="PhotoServlet?func=getimage&photo_id=3469&thumbnail=1"></a>
-						-->
-					<photo:imgLink id='3469' showThumbnail='true'/>
-				</center>
+				<div align="center">
+					<photo:imgLink id='3469'
+						alt="Image of the [Unit of Time]"
+						showThumbnail='true'/>
+				</div>
 			</p>
 		</td>
 		<td width="50%">

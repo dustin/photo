@@ -76,12 +76,16 @@ CLASSES=\
 	net/spy/photo/PhotoXML.class \
 	net/spy/photo/SetPW.class \
 	net/spy/photo/StopWatch.class \
+	net/spy/photo/taglib/PhotoTag.class \
 	net/spy/photo/taglib/GuestCheck.class \
 	net/spy/photo/taglib/ImageLink.class \
+	net/spy/photo/taglib/DisplayLink.class \
 	net/spy/photo/taglib/InitSessionData.class \
 	net/spy/photo/taglib/InitSessionDataExtraInfo.class \
 	net/spy/photo/taglib/CategoryTag.class \
 	net/spy/photo/taglib/CategoryTagExtraInfo.class \
+	net/spy/photo/taglib/ImageDataTag.class \
+	net/spy/photo/taglib/ImageDataTagExtraInfo.class \
 	net/spy/photo/struts/PhotoAction.class \
 	net/spy/photo/struts/LoginForm.class \
 	net/spy/photo/struts/LoginAction.class \

@@ -41,6 +41,24 @@
 	<!-- Provide links to images. -->
 	<tag>
 		<name>imgLink</name>
+		<tagclass>net.spy.photo.taglib.DisplayLink</tagclass>
+		<attribute>
+			<name>id</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>showThumbnail</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>alt</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+
+	<!-- Provide links to images. -->
+	<tag>
+		<name>imgSrc</name>
 		<tagclass>net.spy.photo.taglib.ImageLink</tagclass>
 		<attribute>
 			<name>id</name>
@@ -48,6 +66,37 @@
 		</attribute>
 		<attribute>
 			<name>showThumbnail</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>alt</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>width</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>height</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>scale</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+
+	<!-- Provides image data for image pages. -->
+	<tag>
+		<name>getImage</name>
+		<tagclass>net.spy.photo.taglib.ImageDataTag</tagclass>
+		<teiclass>net.spy.photo.taglib.ImageDataTagExtraInfo</teiclass>
+		<attribute>
+			<name>imageId</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>searchId</name>
 			<required>false</required>
 		</attribute>
 	</tag>
