@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //  
-// $Id: AdminTag.java,v 1.1 2002/05/24 00:48:41 dustin Exp $
+// $Id: AdminCheck.java,v 1.1 2002/05/24 00:53:11 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -16,12 +16,12 @@ import net.spy.photo.*;
  * If used with no arguments, this tag will evaluate the body if the user's
  * admin flag is ADMIN.  More later.
  */
-public class AdminTag extends ConditionalTag {
+public class AdminCheck extends ConditionalTag {
 
 	/**
 	 * Get an instance of AdminTag.
 	 */
-	public AdminTag() {
+	public AdminCheck() {
 		super();
 	}
 
