@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.11 2002/02/25 08:41:47 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.12 2002/02/25 09:58:55 dustin Exp $
  */
 
 package net.spy.photo;
@@ -46,8 +46,32 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 				for(Enumeration e=v.elements(); e.hasMoreElements();) {
 					SpyLogEntry l=(SpyLogEntry)e.nextElement();
 					debug.debug(l.toString());
-					st.executeUpdate(l.toString());
-				}
+					boolean tryagain=true;
+					for(int i=0; i<3 && tryagain; i++) {
+						try {
+							st.executeUpdate(l.toString());
+							tryagain=false;
+						} catch(SQLException se) {
+							// This kinda sucks, but we need this for
+							// deadlock detection.
+							String msg=se.getMessage();
+							if(msg!=null
+								&& msg.indexOf("Deadlock detected")>=0) {
+								System.err.println(
+									"Got deadlock trying to flush.");
+								try {
+									sleep(5000);
+								} catch(InterruptedException ise) {
+									ise.printStackTrace();
+								}
+							} else {
+								// Not a deadlock error, dump it, move on
+								se.printStackTrace();
+								tryagain=false;
+							}
+						} // Past SQL exception
+					} // Retry loop on individual log entries.
+				} // LogEntry loop
 				st.close();
 			} finally {
 				photodb.close();
