@@ -141,6 +141,8 @@ drop table tmpagenttable
 -- Dropping old log tables
 
 --   Dropping photo_log
-drop table photo_log;
+drop table photo_log
+;
 --   Dropping upload_log
-drop table upload_log;
+drop table upload_log
+;
