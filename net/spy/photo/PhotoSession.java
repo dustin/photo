@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.99 2002/02/24 07:36:55 dustin Exp $
+ * $Id: PhotoSession.java,v 1.100 2002/02/24 21:43:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1541,7 +1541,7 @@ public class PhotoSession extends Object
 			image=p.getImage(sessionData.getUser().getId(), pdim);
 
 			logger.log(new PhotoLogImageEntry(sessionData.getUser().getId(),
-				which, true, request));
+				which, pdim, request));
 
 			// OK, let the other side know what to expect
 			response.setContentType("image/" + image.getFormatString());

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogImageEntry.java,v 1.4 2002/02/24 21:04:29 dustin Exp $
+ * $Id: PhotoLogImageEntry.java,v 1.5 2002/02/24 21:43:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -16,11 +16,14 @@ import javax.servlet.http.*;
 import net.spy.*;
 import net.spy.log.*;
 
+/**
+ * Log entries for image requests.
+ */
 public class PhotoLogImageEntry extends SpyLogEntry {
 
-	private int photo_id=null;
-	private int wwwuser_id=null;
-	private long timestamp;
+	private int photo_id=-1;
+	private int wwwuser_id=-1;
+	private long timestamp=-1;
 	private String remote_addr=null;
 	private String user_agent=null;
 	private PhotoDimensions size=null;
@@ -44,22 +47,49 @@ public class PhotoLogImageEntry extends SpyLogEntry {
 		this.size=size;
 	}
 
+	/**
+	 * String me.
+	 */
 	public String toString() {
-		String r;
 		SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-		PhotoConfig conf = new PhotoConfig();
 		java.sql.Timestamp ts=new java.sql.Timestamp(timestamp);
+		StringBuffer sb=new StringBuffer();
 
-		r="insert into photo_log(log_type, photo_id, wwwuser_id, remote_addr, "
-			+ "user_agent, extra_info, ts) values("
-			+ "get_log_type('ImgView'), "
-			+ photo_id + ", " + wwwuser_id + ", '" + remote_addr 
-			+ "', get_agent('" + PhotoUtil.dbquote_str(user_agent) + "'),"
-			+ "'" + size.getWidth() + "x" + size.getHeight() + "', "
-			+ "'" + f.format(timestamp) + " "
-			+ conf.get("timezone") + "', "
-			+ ")";
+		sb.append("insert into photo_log(log_type, photo_id, wwwuser_id,");
+		sb.append(" remote_addr, user_agent, extra_info, ts) values(");
 
-		return(r);
+		sb.append("get_log_type('ImgView'), ");
+
+		sb.append(photo_id);
+		sb.append(", ");
+
+		sb.append(wwwuser_id);
+		sb.append(", ");
+
+		sb.append("'");
+		sb.append(remote_addr);
+		sb.append("'");
+
+		sb.append("get_agent('");
+		sb.append(PhotoUtil.dbquote_str(user_agent));
+		sb.append("',");
+
+		if(size==null) {
+			sb.append("null, ");
+		} else {
+			sb.append("'");
+			sb.append(size.getWidth());
+			sb.append("x");
+			sb.append(size.getHeight());
+			sb.append("', ");
+		}
+
+		sb.append("'");
+		sb.append(ts);
+		sb.append("'");
+
+		sb.append(")");
+
+		return(sb.toString());
 	}
 }
