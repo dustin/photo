@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.6 2000/07/20 22:16:45 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.7 2000/07/21 17:19:23 dustin Exp $
 
 package net.spy.rmi;
 
@@ -37,10 +37,8 @@ public class ImageServerImpl extends UnicastRemoteObject
 		}
 		try {
 			if(thumbnail) {
-				log("fetching thumbnail");
 				image_data=fetchThumbnail(image_id);
 			} else {
-				log("fetching full image");
 				image_data=fetchImage(image_id);
 			}
 		} catch(Exception e) {
@@ -65,10 +63,9 @@ public class ImageServerImpl extends UnicastRemoteObject
 			}
 		}
 		try {
-			log("Caching an image.");
 			rhash.put("photo_" + image_id, image);
 		} catch(Exception e) {
-			log("Error storing image:  " + e);
+			log("Error caching image:  " + e);
 			e.printStackTrace();
 			throw new RemoteException("Error storing image", e);
 		}
@@ -85,6 +82,10 @@ public class ImageServerImpl extends UnicastRemoteObject
 			log("Error dumping InputStream:  " + e);
 			e.printStackTrace();
 		}
+		out=out.trim();
+		if(out.length() < 1) {
+			out=null;
+		}
 		return(out);
 	}
 
@@ -97,34 +98,50 @@ public class ImageServerImpl extends UnicastRemoteObject
 		byte b[]=null;
 
 		try {
-			log("Creating " + tmpfilename);
-			FileOutputStream f = new FileOutputStream(tmpfilename);
+			// Need these for the process.
 			InputStream stderr=null;
 			InputStream stdout=null;
+			String tmp=null;
+
+			// Make sure we have a defined convert command.
+			tmp=conf.get("convert.cmd");
+			if(tmp==null) {
+				throw new Exception("No convert command has been defined!");
+			}
+
+			// Write the image data to a temporary file.
+			FileOutputStream f = new FileOutputStream(tmpfilename);
 			f.write(in.getData());
 			f.flush();
 			f.close();
 
-			String command=conf.get("convert.cmd")
-				+ " " + tmpfilename + " " + thumbfilename;
+			String command=tmp + " " + tmpfilename + " " + thumbfilename;
 			log("Running " + command);
 			Runtime run = Runtime.getRuntime();
 			Process p = run.exec(command);
 			stderr=p.getErrorStream();
 			stdout=p.getInputStream();
 			p.waitFor();
-			log("Exit value was " + p.exitValue());
-			log("Stderr was as follows:\n" + dumpIS(stderr));
-			log("------");
-			log("Stdout was as follows:\n" + dumpIS(stdout));
-			log("------");
+
+			// Process status.
+			if(p.exitValue()!=0) {
+				log("Exit value was " + p.exitValue());
+			}
+			tmp=dumpIS(stderr);
+			if(tmp!=null) {
+				log("Stderr was as follows:\n" + tmp);
+				log("------");
+			}
+			tmp=dumpIS(stdout);
+			if(tmp!=null) {
+				log("Stdout was as follows:\n" + tmp);
+				log("------");
+			}
 
 			File file=new File(thumbfilename);
 			b=new byte[(int)file.length()];
 
 			FileInputStream fin = new FileInputStream(file);
-
-			log("Reading image back in.");
 
 			fin.read(b);
 
@@ -156,15 +173,12 @@ public class ImageServerImpl extends UnicastRemoteObject
 
 		if(pi==null) {
 			// Make a thumbnail out of the fullsize image
-			log("Making thumbnail (1)");
 			byte data[]=makeThumbnail(fetchImage(image_id), image_id);
 			pi=new PhotoImage(data);
 			if(rhash!=null) {
-				log("Storing thumbnail in rhash");
 				rhash.put(key, pi);
-				log("Done storing object.");
 			} else {
-				log("The rhash is null.");
+				log("The rhash is null, unable to cache images.");
 			}
 
 			// See if we can record this...
@@ -180,7 +194,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 				st.setInt(3, image_id);
 				st.executeUpdate();
 			} catch(Exception e) {
-				System.err.println("Error updating thumbnail info:  " + e);
+				log("Error updating thumbnail info:  " + e);
 			} finally {
 				freeDBConn(conn);
 			}
@@ -206,7 +220,6 @@ public class ImageServerImpl extends UnicastRemoteObject
 
 		if(pi==null) {
 			Connection photo=null;
-			Exception ex=null;
 			String sdata="";
 
 			try {
@@ -224,15 +237,12 @@ public class ImageServerImpl extends UnicastRemoteObject
 			} catch(Exception e) {
 				log("Problem getting image:  " + e);
 				e.printStackTrace();
-				ex=new Exception("Problem getting image: " + e);
+				throw new Exception("Problem getting image: " + e);
 			} finally {
 				freeDBConn(photo);
 			}
 
 			// If we got an exception, throw it
-			if(ex!=null) {
-				throw ex;
-			}
 			BASE64Decoder base64 = new BASE64Decoder();
 			byte data[]=base64.decodeBuffer(sdata);
 			pi=new PhotoImage(data);
@@ -257,7 +267,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 		try {
 			conn.close();
 		} catch(Exception e) {
-			System.err.println("Error closing database:  " + e);
+			log("Error closing database:  " + e);
 			e.printStackTrace();
 		}
 	}
