@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.7 2000/06/26 05:37:22 dustin Exp $
+ * $Id: PhotoSession.java,v 1.8 2000/06/26 06:42:31 dustin Exp $
  */
 
 package net.spy.photo;
@@ -337,8 +337,8 @@ public class PhotoSession extends Object
 			} else {
 				// New user
 				st=photo.prepareStatement(
-					"insert into wwwusers(username, password, email, "
-						+ "realname, canadd) values(?, ?, ?, ?, ?)"
+					"insert into wwwusers(username, realname, email, "
+						+ "password, canadd) values(?, ?, ?, ?, ?)"
 					);
 				st.setString(1, request.getParameter("username"));
 				st.setString(2, request.getParameter("realname"));
@@ -361,19 +361,22 @@ public class PhotoSession extends Object
 
 			// Add the new ACLs for the user
 			String acls[]=request.getParameterValues("catacl");
-			for(int i=0; i<acls.length; i++) {
-				int cat_id=Integer.parseInt(acls[i]);
-				st=photo.prepareStatement(
-					"insert into wwwacl(userid,cat) values(?,?)"
-					);
-				st.setInt(1, user_id);
-				st.setInt(2, cat_id);
-				st.executeUpdate();
+			if(acls!=null) {
+				for(int i=0; i<acls.length; i++) {
+					int cat_id=Integer.parseInt(acls[i]);
+					st=photo.prepareStatement(
+						"insert into wwwacl(userid,cat) values(?,?)"
+						);
+					st.setInt(1, user_id);
+					st.setInt(2, cat_id);
+					st.executeUpdate();
+				}
 			}
 
 			photo.commit();
 		} catch(Exception e) {
 			log("Error saving user:  " + e);
+			e.printStackTrace();
 			try {
 				if(photo!=null) {
 					photo.rollback();
@@ -496,6 +499,9 @@ public class PhotoSession extends Object
 
 		username=request.getParameter("username");
 		pass=request.getParameter("password");
+
+		// Make sure we drop administrative privs if any
+		unsetAdmin();
 
 		log("Verifying password for " + username);
 		if(security.checkPW(username, pass)) {
@@ -1396,7 +1402,9 @@ public class PhotoSession extends Object
 
 	// Revoke administrative privys
 	protected void unsetAdmin() throws ServletException  {
-		session.removeValue("is_admin");
+		if(session!=null) {
+			session.removeValue("is_admin");
+		}
 	}
 
 	// Returns true if the session is an admin session

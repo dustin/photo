@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.2 2000/06/25 09:08:30 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.3 2000/06/26 06:42:31 dustin Exp $
  */
 
 package net.spy.photo;
@@ -49,7 +49,8 @@ public class PhotoSecurity extends PhotoHelper {
 
 	// Get a digest for a string
 	public String getDigest(String input) throws Exception {
-		byte dataB[]=input.getBytes();
+		// We need the trim so we can ignore whitespace.
+		byte dataB[]=input.trim().getBytes();
 		MessageDigest md = MessageDigest.getInstance(conf.get("cryptohash"));
 		md.update(dataB);
 		BASE64Encoder base64=new BASE64Encoder();
