@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.2 2000/06/30 04:11:19 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.1 2000/12/26 04:16:11 dustin Exp $
  */
 
-package net.spy.photo;
+package net.spy.photo.util;
 
 import java.sql.*;
 import java.lang.*;
@@ -13,6 +13,7 @@ import java.io.*;
 import sun.misc.*;
 
 import net.spy.*;
+import net.spy.photo.*;
 
 public class PhotoStorerThread extends Thread {
 
@@ -191,6 +192,6 @@ public class PhotoStorerThread extends Thread {
 	// In case it's run as its own little thingy.
 	public static void main(String args[]) {
 		PhotoStorerThread storer=new PhotoStorerThread();
-		storer.run();
+		storer.start();
 	}
 }

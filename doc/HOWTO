@@ -57,6 +57,30 @@ and running.
 
 Step 5.  Update configuration
 
+If you're upgrading from a PhotoServlet older than 2000/12/25, you will
+need to update your config files for a slightly different type of cleanup.
+Basically, you do the following in your spyrunner.conf:
+	
+	Change the following line:
+	 
+	photo_cleanup.class   net.spy.photo.PhotoStorerThread
+
+	to
+
+	photo_cleanup.class   net.spy.photo.util.PhotoCleanup
+
+The new PhotoCleanup class still runs the same old storer thread, but also
+gives you the ability to run a set of arbitrary cleanup type queries on a
+fixed interval.
+
+For example, you could create a TrashCan category, and move pictures into it.
+If your interval is 1440 minutes (the default), once a day, you could delete
+all images in that category by adding the following to your photo.conf:
+
+  cleaner.query1 = delete from album where cat in \
+  	(select id from cat where name ='TrashCan')
+
+
 If you're upgrading from a PhotoServlet older than 2000/06/30, you will
 need to update your config files, specifically, spyrunner.conf.  DoBindings
 will no longer work.  If possible, grab the new config out of the etc
@@ -321,5 +345,5 @@ photo=> insert into wwwgroup (3, 'admin');
     ApJServMount /s /root
 
 ----------------------------------------------------------------------
-$Id: HOWTO,v 1.9 2000/12/25 22:48:43 dustin Exp $
+$Id: HOWTO,v 1.10 2000/12/26 04:16:11 dustin Exp $
 

@@ -27,7 +27,6 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoSecurity.class \
 	net/spy/photo/PhotoConfig.class \
 	net/spy/photo/PhotoSearch.class \
-	net/spy/photo/PhotoStorerThread.class \
 	net/spy/photo/PhotoSession.class \
 	net/spy/photo/PhotoSearchResult.class \
 	net/spy/photo/PhotoSearchResults.class \
@@ -40,6 +39,8 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/util/AlbumBackupEntry.class \
 	net/spy/photo/util/PhotoBackup.class \
 	net/spy/photo/util/PhotoRestore.class \
+	net/spy/photo/util/PhotoCleanup.class \
+	net/spy/photo/util/PhotoStorerThread.class \
 	net/spy/photo/migration/PhotoMigration.class \
 	net/spy/photo/migration/PhotoMigration01.class \
 	$(RCLASSES)
