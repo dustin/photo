@@ -1,6 +1,6 @@
 # Makefile for RHash, remote object server stuff.
 
-JAVAHOME=/usr
+JAVAHOME=/usr/java
 JAR=$(JAVAHOME)/bin/jar
 # JAVAC=$(JAVAHOME)/bin/javac
 JAVAC=jikes +P

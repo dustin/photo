@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.10 2002/02/15 09:10:27 dustin Exp $
+// $Id: PhotoUser.java,v 1.11 2002/02/15 21:52:37 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -362,21 +362,21 @@ public class PhotoUser extends Object implements Serializable {
 
 		sb.append("<photo_user>\n");
 
-		sb.append("\t<id>\n");
-		sb.append("\t\t" + id + "\n");
-		sb.append("\t</id>\n");
+		sb.append("\t<id>");
+		sb.append(id);
+		sb.append("</id>\n");
 
-		sb.append("\t<username>\n");
-		sb.append("\t\t" + username + "\n");
-		sb.append("\t</username>\n");
+		sb.append("\t<username>");
+		sb.append(username);
+		sb.append("</username>\n");
 
-		sb.append("\t<email>\n");
-		sb.append("\t\t" + email + "\n");
+		sb.append("\t<email>");
+		sb.append(email);
 		sb.append("\t</email>\n");
 
-		sb.append("\t<realname>\n");
-		sb.append("\t\t" + realname + "\n");
-		sb.append("\t</realname>\n");
+		sb.append("\t<realname>");
+		sb.append(realname);
+		sb.append("</realname>\n");
 
 		if(canadd) {
 			sb.append("\t<canadd/>\n");
