@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.122 2002/05/28 06:37:25 dustin Exp $
+ * $Id: PhotoSession.java,v 1.123 2002/06/11 22:08:13 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1576,6 +1576,9 @@ public class PhotoSession extends Object
 
 			// OK, let the other side know what to expect
 			response.setContentType("image/" + image.getFormatString());
+
+			// Tell the other side how many bytes will be sent.
+			response.setContentLength(image.size());
 
 			out.write(image.getData());
 

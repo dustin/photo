@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.5 2002/06/11 16:24:51 dustin Exp $
+// $Id: SessionWatcher.java,v 1.6 2002/06/11 22:08:13 dustin Exp $
 
 package net.spy.photo;
 
@@ -110,10 +110,10 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	}
 
 	/**
-	 * Get an Enumeration of PhotoUser objects representing all users
+	 * Get an Enumeration of HttpSession objects representing all users
 	 * currently in the system.
 	 */
-	public static Enumeration listUsers() {
+	public static Enumeration listSessions() {
 		Vector v=new Vector();
 
 		synchronized(allSessions) {
@@ -123,8 +123,8 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 					PhotoSessionData sessionData=
 						(PhotoSessionData)session.getAttribute("photoSession");
 
-					// Add the user to the result Vector
-					v.addElement(sessionData.getUser());
+					// Add the session to the result Vector
+					v.addElement(session);
 				} else {
 					System.err.println(
 						"Warning:  Found a session without a photoSession");
