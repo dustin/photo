@@ -1,9 +1,9 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: photo.cgi,v 1.2 1998/04/12 03:46:10 dustin Exp $
+# $Id: photo.cgi,v 1.3 1998/04/24 07:42:46 dustin Exp $
 
-use CGI::Fast;
+use CGI;
 use Postgres;
 
 require 'photolib.pl';
@@ -294,29 +294,23 @@ sub badFunc
     print "is not valid.\n";
     return;
 }
-
 my %funcs=(
     'search' => \&doFind,
     'display' => \&doDisplay,
     'catview' => \&doCatView,
 );
 
-while(1)
-{
-    my($func, $q);
-    $q=CGI::Fast->new;
+my($func, $q);
+$q=CGI->new;
 
-    last unless($q);
+print $q->header;
 
-    print $q->header;
+$func=$q->param('func');
 
-    $func=$q->param('func');
-
-    if(defined($funcs{$func})) {
-        &{ $funcs{$func} }($q);
-    } else {
-        badFunc($q, $q->param('func'));
-    }
-    &addTail;
-    print $q->end_html;
+if(defined($funcs{$func})) {
+    &{ $funcs{$func} }($q);
+} else {
+    badFunc($q, $q->param('func'));
 }
+&addTail;
+print $q->end_html;
