@@ -31,8 +31,8 @@
 			<th>Can Add</th>
 		</tr>
 
-		<logic:iterate id="i" collection="<%= PhotoSecurity.getAllUsers() %>">
-			<% PhotoUser user=(PhotoUser)i; %>
+		<logic:iterate id="user" type="net.spy.photo.PhotoUser"
+			collection="<%= PhotoSecurity.getAllUsers() %>">
 
 			<tr>
 				<td><%= user.getUsername() %> (<%= user.getRealname() %>)</td>

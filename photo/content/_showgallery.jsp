@@ -18,8 +18,8 @@
 	<template:put name='title' content='<%= g.getName() %>' direct='true'/>
 </template:insert>
 
-<logic:iterate id="i" collection="<%= g.getImages() %>">
-	<% PhotoImageData pid=(PhotoImageData)i; %>
+<logic:iterate id="pid" type="net.spy.photo.PhotoImageData"
+	collection="<%= g.getImages() %>">
 
 	<%--
 	<table align="left" cellpadding="0" width="300">

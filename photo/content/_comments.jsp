@@ -17,9 +17,9 @@
 
 <table width="100%">
 
-<logic:iterate id="i" collection="<%= allcomments %>"
+<logic:iterate id="comments" collection="<%= allcomments %>"
+	type="net.spy.photo.GroupedComments"
 	length="6">
-	<% GroupedComments comments=(GroupedComments)i; %>
 
 	<tr valign="top">
 		<td class="comment_image">
@@ -28,8 +28,9 @@
 		</td>
 		<td>
 			<table class="comments" width="100%">
-				<logic:iterate id="c" collection="<%= comments %>">
-					<% Comment comment=(Comment)c; %>
+				<logic:iterate id="comment"
+					type="net.spy.photo.Comment"
+					collection="<%= comments %>">
 					<tr valign="top" class="comment_header">
 						<td>At <%= comment.getTimestamp() %>
 							<%= comment.getUser().getRealname() %>

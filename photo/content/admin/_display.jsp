@@ -55,10 +55,9 @@
 			value="<%= "" + image.getCatId() %>" size="5">
 
 			<photo:getCatList showAddable="true">
-				<logic:iterate id="i" name="catList"> 
-					<% Category category=(Category)i; %>
-					<html:option value="<%= "" + category.getId() %>">
-						<%= category.getName() %></html:option>
+				<logic:iterate id="cat" type="net.spy.photo.Category" name="catList"> 
+					<html:option value="<%= "" + cat.getId() %>">
+						<%= cat.getName() %></html:option>
 				</logic:iterate>
 			</photo:getCatList>
 		</html:select>
@@ -93,10 +92,8 @@ Size Image</a>]
 
 	<h1>Comments</h1>
 
-	<logic:iterate id="i"
+	<logic:iterate id="comment" type="net.spy.photo.Comment"
 		collection="<%= Comment.getCommentsForPhoto(image.getId()) %>">
-
-		<% Comment comment=(Comment)i; %>
 
 		<table class="comments" width="100%">
 			<tr class="comment_header">

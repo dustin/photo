@@ -78,10 +78,9 @@
 
 	<h1>Comments</h1>
 
-	<logic:iterate id="i"
+	<logic:iterate id="comment"
+		type="net.spy.photo.Comment"
 		collection="<%= Comment.getCommentsForPhoto(image.getId()) %>">
-
-		<% Comment comment=(Comment)i; %>
 
 		<table class="comments" width="100%">
 			<tr class="comment_header">

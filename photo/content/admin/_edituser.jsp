@@ -57,8 +57,8 @@
 			<th>Can Add</th>
 		</tr>
 
-		<logic:iterate id="i" collection="<%= Category.getAdminCatList() %>">
-			<% Category cat=(Category)i; %>
+		<logic:iterate id="cat" type="net.spy.photo.Category"
+			collection="<%= Category.getAdminCatList() %>">
 
 			<tr>
 				<td><%= cat.getName() %></td>

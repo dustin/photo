@@ -40,9 +40,9 @@
 
 <table>
 
-<logic:iterate id="i" collection="<%= results %>"
+<logic:iterate id="image" collection="<%= results %>"
+	type="net.spy.photo.PhotoImageData"
 	length="<%= "" + results.getMaxRet() %>">
-	<% PhotoImageData image=(PhotoImageData)i; %>
 
 <tr>
 	<td width="25%" align="center">

@@ -59,10 +59,9 @@
 		<bean:message key="forms.search.adv.cat"/>:<br/>
 		<html:select property="cat" size="5" multiple="true">
 			<photo:getCatList showViewable="true">
-				<logic:iterate id="i" name="catList">
-					<% Category category=(Category)i; %>
-					<html:option value="<%= "" + category.getId() %>">
-						<%= category.getName() %></html:option>
+				<logic:iterate type="net.spy.photo.Category" id="i" name="catList">
+					<html:option value="<%= "" + i.getId() %>">
+						<%= i.getName() %></html:option>
 				</logic:iterate>
 			</photo:getCatList>
 		</html:select>

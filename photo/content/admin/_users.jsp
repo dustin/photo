@@ -18,8 +18,8 @@
 	<html:errors/>
 	<html:select property=userId>
 		<html:option value="-1">New User</html:option>
-		<logic:iterate id="i" collection="<%= PhotoSecurity.getAllUsers() %>">
-			<% PhotoUser user=(PhotoUser)i; %>
+		<logic:iterate id="user" type="net.spy.photo.PhotoUser"
+			collection="<%= PhotoSecurity.getAllUsers() %>">
 
 			<html:option value="<%= "" + user.getId() %>"><%= user.getUsername() %>
 			</html:option>

@@ -16,8 +16,8 @@
 <html:form action="/admcatedit">
 	<html:select property="catId">
 		<html:option value="-1">New Category</html:option>
-		<logic:iterate id="i" collection="<%= Category.getAdminCatList() %>">
-			<% Category cat=(Category)i; %>
+		<logic:iterate id="cat" type="net.spy.photo.Category"
+			collection="<%= Category.getAdminCatList() %>">
 
 			<html:option value="<%= "" + cat.getId() %>"><%= cat.getName() %>
 			</html:option>

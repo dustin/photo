@@ -14,9 +14,8 @@
 </template:insert>
 
 <ul>
-<logic:iterate id="i"
+<logic:iterate id="g" type="net.spy.photo.Gallery"
 	collection="<%= Gallery.getGalleries(sessionData.getUser()) %>">
-	<% Gallery g=(Gallery)i; %>
 	<li>
 		<photo:link url="/showgallery.jsp" id="<%= "" + g.getId() %>">
 			[<%= g.getTimestamp() %>] <%= g.getOwner() %> - <%= g.getName() %> - <%= g.size() %> images.

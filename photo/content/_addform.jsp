@@ -43,10 +43,9 @@
 				<td>
 					<html:select property="category" size="5">
 					<photo:getCatList showAddable="true">
-						<logic:iterate id="i" name="catList">
-							<% Category category=(Category)i; %>
-							<html:option value="<%= "" + category.getId() %>">
-								<%= category.getName() %></html:option>
+						<logic:iterate type="net.spy.photo.Category" id="i" name="catList">
+							<html:option value="<%= "" + i.getId() %>">
+								<%= i.getName() %></html:option>
 						</logic:iterate>
 					</photo:getCatList>
 					</html:select>
