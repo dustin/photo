@@ -7,7 +7,7 @@ PerlAuthzHandler Apache::AuthzDBI
 PerlSetVar Auth_DBI_data_source dbi:Pg:dbname=photo;host=bleu
 PerlSetVar Auth_DBI_username nobody
 PerlSetVar Auth_DBI_pwd_table wwwusers
-PerlSetVar Auth_DBI_grp_table wwwgroup
+PerlSetVar Auth_DBI_grp_table show_group
 
 PerlSetVar Auth_DBI_uid_field username
 PerlSetVar Auth_DBI_pwd_field password
