@@ -1,0 +1,46 @@
+// Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
+
+package net.spy.photo.migration;
+
+import java.sql.*;
+import net.spy.*;
+import net.spy.photo.*;
+
+public class PhotoMigration02 extends PhotoMigration {
+
+	protected void addColumns() throws Exception {
+		SpyDB db=new SpyDB(new PhotoConfig());
+		try {
+			db.executeUpdate("alter table wwwacl add column canview boolean");
+			db.executeUpdate("alter table wwwacl alter column canview "
+				+ "set default true");
+			db.executeUpdate("update wwwacl set canview=true");
+		} catch(Exception e) {
+			System.err.println("Error adding column:  " + e);
+		}
+		try {
+			db.executeUpdate("alter table wwwacl add column canadd boolean");
+			db.executeUpdate("alter table wwwacl alter column canadd "
+				+ "set default false");
+			db.executeUpdate("update wwwacl set canadd=false");
+		} catch(Exception e) {
+			System.err.println("Error adding column:  " + e);
+		}
+		db.close();
+	}
+
+	public void migrate() throws Exception {
+		if((hasColumn("wwwacl", "canadd")) && (hasColumn("wwwacl", "canview"))
+			) {
+			System.err.println("Looks like you've already run this kit.");
+		} else {
+			// Add the new columns.
+			addColumns();
+		}
+	}
+
+	public static void main(String args[]) throws Exception {
+		PhotoMigration02 mig=new PhotoMigration02();
+		mig.migrate();
+	}
+}

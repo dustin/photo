@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.8 2001/07/20 10:14:00 dustin Exp $
+-- $Id: photo.sql,v 1.9 2001/12/28 11:37:23 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -94,7 +94,9 @@ create function getwwwuser(text) returns integer as
 
 create table wwwacl(
 	userid   integer not null,
-	cat      integer not null
+	cat      integer not null,
+	canview  boolean default true,
+	canadd   boolean default false
 );
 
 create index acl_byid on wwwacl(userid);

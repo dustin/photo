@@ -17,6 +17,7 @@ public abstract class PhotoMigration extends Object {
 		SpyDB db=new SpyDB(new PhotoConfig());
 		ResultSet rs=db.executeQuery("select 1");
 		rs.next();
+		rs.close();
 
 		try {
 			rs=db.executeQuery(query);
@@ -26,12 +27,14 @@ public abstract class PhotoMigration extends Object {
 			// Ignore errors, we just want to know if that would have worked.
 		}
 
+		db.close();
+
 		return(ret);
 	}
 
 	// See if we have a needed column
 	public boolean hasColumn(String table, String column) throws Exception {
-		return(tryQuery("select " + column + " from" + table + " where 1=2"));
+		return(tryQuery("select " + column + " from " + table + " where 1=2"));
 	}
 
 	// Fetch all thumbnails.

@@ -54,6 +54,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/tools/CachePhoto.class \
 	net/spy/photo/migration/PhotoMigration.class \
 	net/spy/photo/migration/PhotoMigration01.class \
+	net/spy/photo/migration/PhotoMigration02.class \
 	$(RCLASSES)
 
 .SUFFIXES: .java .class .jar
