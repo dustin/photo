@@ -4,7 +4,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: common.xsl,v 1.8 2001/01/06 08:22:42 dustin Exp $
+ $Id: common.xsl,v 1.9 2001/12/30 22:15:52 dustin Exp $
  -->
 
 <!-- Default Section handling -->
@@ -177,7 +177,11 @@
 
 			<p/>
 
-			<tt><xsl:value-of select="text"/></tt>
+			<tt>
+				<font size="+2" color="red">
+					<b><xsl:value-of select="text"/></b>
+				</font>
+			</tt>
 
 			<p/>
 
