@@ -36,13 +36,13 @@
 			onsubmit="search(); return false;">
 			Keywords:
 			<input id="keywords" name="keywords" size="60" value=""
-				OnKeyUp="pressedKey(this.value);"/>
+				OnKeyUp="keyUp(this);"/>
 			<div style="font-size: x-small" id="keywordlist"><span/></div>
 			<div id="keywordmatches"><span/></div>
 			Newest images
 			<select id="sdir" name="sdir">
 				<option value="newfirst">first</option>
-				<option value="newlast" selected="selected">last</option>
+				<option value="newlast">last</option>
 			</select>
 			<br/>
 			Results Per Page:
@@ -54,7 +54,7 @@
 			<br/>
 			<input type="submit" value="Search"/>
 			<input type="reset" value="Clear"
-				onclick="pressedKey(''); setResults('');"/>
+				onclick="updateKwInfo(''); setResults('');"/>
 		</form>
 		<div id="found"><span/></div>
 	</body>

@@ -5,6 +5,7 @@ var imgsPerPage = 50;
 var pageNum = 0;
 var newestFirst = false;
 
+// Figure out if the given array contains the given key
 // This assumes sorted arrays in order to be O(log n)
 function arrayContains(a, key) {
 	var rv = false;
@@ -44,7 +45,8 @@ function arrayUnion(a) {
 	return rv;
 }
 
-// This should perform some kind of and logic across selections
+// Get a union of all of the IDs for all of the images with the given keyword
+// IDs
 function getImageIds(kwidlist) {
 	var tmpa=new Array();
 	// This gets them in the most efficient order for performing the union
@@ -56,11 +58,13 @@ function getImageIds(kwidlist) {
 	return arrayUnion(tmpa);
 }
 
+// Set the search results text
 function setResults(h) {
 	var div=document.getElementById("found");
 	div.innerHTML=h;
 }
 
+// Show the results based on the currently selected keywords
 function showResults() {
 	// Maximum number of images to show
 	var total = imgsPerPage;
@@ -94,6 +98,7 @@ function showResults() {
 	setResults(h);
 }
 
+// Perform a search
 function search() {
 
 	var ppagefield=document.getElementById("perpage");
@@ -117,6 +122,7 @@ function search() {
 	showResults();
 }
 
+// Find partial matches for the given keyword
 function findPartial(kw, minmatches) {
 	var matches=0;
 	var rv="";
@@ -134,7 +140,8 @@ function findPartial(kw, minmatches) {
 	return rv;
 }
 
-function pressedKey(inp) {
+// Update the keyword match info text
+function updateKwInfo(inp) {
 	var div = document.getElementById("keywordlist");
 	var h = "";
 	var partial = "";
@@ -172,8 +179,13 @@ function pressedKey(inp) {
 	}
 }
 
+// Update the keyword list on every key press
+function keyUp(inp) {
+	updateKwInfo(inp.value);
+}
+
 onload = function() {
-	// initForm(document.bigform);
+	// Build a map of the keywords to their IDs
 	for(var i=0; i<keywords.length; i++) {
 		kwmap[keywords[i]]=i;
 	}
