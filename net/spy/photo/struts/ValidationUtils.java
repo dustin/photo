@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ValidationUtils.java,v 1.2 2003/05/27 03:36:22 dustin Exp $
+// $Id: ValidationUtils.java,v 1.3 2003/05/27 23:25:16 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -67,12 +67,16 @@ public class ValidationUtils extends Object {
 		boolean rv=true;
 		String value =
 			ValidatorUtil.getValueAsString(bean, field.getProperty());
-		try {
-			new PhotoDimensionsImpl(value);
-		} catch(IllegalArgumentException e) {
-			rv=false;
-			errors.add(field.getKey(),
-				Resources.getActionError(request, va, field));
+
+		// Missing values are OK
+		if (!GenericValidator.isBlankOrNull(value)) {
+			try {
+				new PhotoDimensionsImpl(value);
+			} catch(IllegalArgumentException e) {
+				rv=false;
+				errors.add(field.getKey(),
+					Resources.getActionError(request, va, field));
+			}
 		}
 
 		return(rv);
