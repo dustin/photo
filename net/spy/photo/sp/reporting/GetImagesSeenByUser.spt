@@ -1,0 +1,44 @@
+#
+# $Id: GetImagesSeenByUser.spt,v 1.1 2003/05/12 05:04:01 dustin Exp $
+#
+
+@package
+net.spy.photo.sp.reporting
+
+@description
+Find images seen by a particular user.
+
+@sql
+select  
+		a.id as image_id,
+		a.keywords as keywords,
+		c.id as category_id,
+		c.name as category_name,
+		count(*) as count
+	from
+		album a,
+		cat c,
+		photo_logs l,
+		log_types t
+	where
+		a.cat = c.id
+		and a.id = l.photo_id
+		and l.log_type = t.log_type_id
+		and t.log_type = 'ImgView'
+		and l.wwwuser_id = ?
+	group by
+		image_id, keywords, category_name, category_id
+	order by
+		c.name,
+		count(*) desc
+
+
+@params
+user_id required INTEGER The user ID
+
+@results
+image_id INTEGER the image ID
+keywords VARCHAR Keywords for the image
+category_name VARCHAR The name of the category
+category_id INTEGER the ID of the category
+count INTEGER The number of times the user saw the image

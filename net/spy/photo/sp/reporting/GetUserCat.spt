@@ -1,0 +1,29 @@
+#
+# $Id: GetUserCat.spt,v 1.1 2003/05/12 05:04:01 dustin Exp $
+#
+
+@package
+net.spy.photo.sp.reporting
+
+@description
+User category report.
+
+@sql
+select u.username, c.name as cat, count(*)
+	from
+		wwwusers u,
+		cat c,
+		photo_logs l,
+		log_types t,
+		album a
+	where
+		u.id = l.wwwuser_id
+		and t.log_type = 'ImgView'
+		and t.log_type_id = l.log_type
+		and l.photo_id = a.id
+		and a.cat = c.id
+		and username != 'guest'
+	group by
+		u.username, c.name
+	order by
+		cat, count(*) desc

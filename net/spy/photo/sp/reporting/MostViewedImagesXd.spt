@@ -1,0 +1,40 @@
+#
+# $Id: MostViewedImagesXd.spt,v 1.1 2003/05/12 05:04:01 dustin Exp $
+#
+
+@package
+net.spy.photo.sp.reporting
+
+@description
+Get the top x images by how many times they have been vieweed.
+
+@sql
+select
+		a.id as image_id,
+		a.keywords,
+		c.name as category,
+		count(*) as views
+	from
+		album a,
+		cat c,
+		photo_logs l,
+		log_types t
+	where
+		a.id = l.photo_id
+		and a.cat = c.id
+		and t.log_type = 'ImgView'
+		and t.log_type_id = l.log_type
+		and l.ts > now() - (? || ' days')::interval
+	group by
+		image_id, keywords, category
+	order by
+		views desc
+	limit ?
+
+@params
+xdays required INTEGER How many days to go back
+limit required INTEGER How many images to show
+
+@defaults
+xdays 30
+limit 50

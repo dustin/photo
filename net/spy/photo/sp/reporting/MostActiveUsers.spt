@@ -1,0 +1,25 @@
+#
+# $Id: MostActiveUsers.spt,v 1.1 2003/05/12 05:04:01 dustin Exp $
+#
+
+@package
+net.spy.photo.sp.reporting
+
+@description
+Get the most active users.
+
+@sql
+select
+		u.username, u.realname, count(*) as count
+	from
+		wwwusers u,
+		photo_logs l,
+		log_types t
+	where
+		t.log_type = 'ImgView'
+		and l.log_type = t.log_type_id
+		and l.wwwuser_id = u.id
+	group by
+		username, realname
+	order by
+		count desc

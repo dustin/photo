@@ -1,7 +1,12 @@
-<%@ page import="java.sql.ResultSet" %>
-
+<%@ page import="java.util.Collection" %>
+<%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.sql.ResultSetMetaData" %>
+<%@ page import="java.sql.Types" %>
+<%@ page import="net.spy.db.DBSP" %>
+<%@ page import="net.spy.db.TypeNames" %>
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
@@ -22,6 +27,8 @@
 <tr>
 	<th>RowNum</th>
 <%
+	// This db thingy will be closed.
+	DBSP db=(DBSP)request.getAttribute("db");
 	ResultSet rs=(ResultSet)request.getAttribute("rs");
 	ResultSetMetaData rsmd=rs.getMetaData();
 
@@ -69,6 +76,66 @@
 <%
 	}
 	rs.close();
-%>
 
-</table>
+%> </table> <%
+
+
+	// See if there are any parameters
+	Collection params=db.getParameters();
+	if(params.size() > 0) {
+		Map vals=new HashMap();
+		for(Iterator i=db.getArguments().iterator(); i.hasNext(); ) {
+			DBSP.Argument a=(DBSP.Argument)i.next();
+			vals.put(a.getName(), String.valueOf(a.getValue()));
+		}
+		%>
+			<template:insert template='/templates/section_header.jsp'>
+				<template:put name='title'
+					content='Adjust Report Parameters' direct='true'/>
+			</template:insert>
+			<form method="POST"
+				action="<%= request.getAttribute("rurl").toString() %>">
+				<table border="1">
+					<tr>
+						<th>Field</th>
+						<th>Value</th>
+					</tr>
+
+					<%
+						for(Iterator i=params.iterator(); i.hasNext(); ) {
+							DBSP.Parameter p=(DBSP.Parameter)i.next();
+
+							String vstr=(String)vals.get(p.getName());
+
+							String pName="p.";
+							switch(p.getJavaType()) {
+								case Types.VARCHAR:
+									pName += "s.";
+									break;
+								case Types.INTEGER:
+									pName += "i.";
+									break;
+								case Types.FLOAT:
+									pName += "f.";
+									break;
+								default:
+									throw new ServletException("Can't deal with type "
+										+ TypeNames.getTypeName(p.getParamType()));
+							}
+							pName += p.getName();
+
+							%>
+								<tr>
+									<td><%= p.getName() %></td>
+									<td><input name="<%= pName %>" value="<%= vstr %>"></td>
+								</tr>
+							<%
+						}
+					%>
+
+				</table>
+				<input type="submit" value="Report">
+			</form>
+		<%
+	}
+%>

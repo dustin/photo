@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminReportAction.java,v 1.1 2003/05/11 09:24:21 dustin Exp $
+// $Id: AdminReportAction.java,v 1.2 2003/05/12 06:25:43 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -99,6 +99,10 @@ public class AdminReportAction extends AdminAction {
 		}
 
 		db.close();
+		// It's closed, but it still has useful information
+		request.setAttribute("db", db);
+		// Location of this URL
+		request.setAttribute("rurl", request.getRequestURI());
 
 		return(mapping.findForward("success"));
 	}
