@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.17 1998/07/19 20:20:59 dustin Exp $
+# $Id: Photo.pm,v 1.18 1998/07/19 20:26:12 dustin Exp $
 
 package Photo;
 
@@ -372,7 +372,7 @@ sub doDisplay
     %p=();
 
     $query ="select a.oid,a.fn,a.keywords,a.descr,\n";
-    $query.="    a.size,a.taken,a.ts,b.name,a.cat,b.id\n";
+    $query.="    a.size,a.taken,a.ts,b.name,a.cat,a.addedby,b.id\n";
     $query.="    from album a, cat b\n";
     $query.="    where a.cat=b.id and a.oid=" . $q->param('oid');
     $query.="\n    and a.cat in (select cat from wwwacl where ";
@@ -386,7 +386,8 @@ sub doDisplay
         print "ACL ERROR!!!  We don't want your type here.\n";
     } else {
         @r=@{$s->fetch};
-        @mapme=qw(OID IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM);
+        @mapme=qw(OID IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM
+		  ADDEDBY);
         map { $p{$mapme[$_]}=$r[$_] } (0..$#r);
         $self->showTemplate("$Photo::includes/display.inc", %p);
     }
