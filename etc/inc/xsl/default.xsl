@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.9 2000/12/31 06:28:08 dustin Exp $
+ $Id: default.xsl,v 1.10 2000/12/31 07:25:26 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -42,7 +42,10 @@
 						Logged in as
 						<a href="{meta_stuff/self_uri}?func=credform">
 						<xsl:value-of
-							select="meta_stuff/photo_user/username"/></a>.
+							select="meta_stuff/photo_user/username"/></a>
+							<xsl:if test="meta_stuff/isadmin">
+								<a href="{meta_stuff/self_uri}?func=unsetadmin">(admin mode)</a>
+							</xsl:if>
 						<br/>
 						Switch to
 						<a href="{meta_stuff/self_uri}?func=setstylesheet&amp;stylesheet=simple">simple</a>
