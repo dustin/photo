@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.3 2000/06/25 08:31:14 dustin Exp $
+ * $Id: PhotoSession.java,v 1.4 2000/06/25 09:08:30 dustin Exp $
  */
 
 package net.spy.photo;
@@ -41,9 +41,6 @@ public class PhotoSession extends Object
 	HttpServletRequest request=null;
 	HttpServletResponse response=null;
 
-	// Users
-	protected Hashtable userdb=null;
-
 	public PhotoSession(PhotoServlet p,
 		HttpServletRequest request,
 		HttpServletResponse response) {
@@ -58,7 +55,6 @@ public class PhotoSession extends Object
 		self_uri = p.self_uri;
 		rhash=p.rhash;
 		security=p.security;
-		userdb=p.userdb;
 	}
 
 	protected void log(String whu) {
@@ -140,7 +136,7 @@ public class PhotoSession extends Object
 
 	protected void saveSearch() throws ServletException {
 		PhotoSearch ps = new PhotoSearch();
-		PhotoUser user = (PhotoUser)userdb.get(remote_user);
+		PhotoUser user = security.getUser(remote_user);
 		String output="";
 
 		try {
@@ -244,7 +240,7 @@ public class PhotoSession extends Object
 		boolean r=false;
 
 		try{
-			PhotoUser p = (PhotoUser)userdb.get(remote_user);
+			PhotoUser p = security.getUser(remote_user);
 			r=p.canadd;
 		} catch(Exception e) {
 			log("Error getting canadd permissions:  " + e.getMessage());
@@ -678,7 +674,7 @@ public class PhotoSession extends Object
 					session.putValue("username", "guest");
 				}
 			}
-			PhotoUser p=(PhotoUser)userdb.get(remote_user);
+			PhotoUser p=security.getUser(remote_user);
 			remote_uid = p.id;
 		} catch(Exception e) {
 			throw new ServletException("Unknown user: " + remote_user);
@@ -931,7 +927,7 @@ public class PhotoSession extends Object
 	protected void doFind() throws ServletException {
 		String output = "", middle = "";
 		PhotoSearch ps = new PhotoSearch();
-		PhotoUser user = (PhotoUser)userdb.get(remote_user);
+		PhotoUser user = security.getUser(remote_user);
 
 		PhotoSearchResults results=null;
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.2 2000/06/25 09:08:30 dustin Exp $
  */
 
 package net.spy.photo;
@@ -27,32 +27,16 @@ public class PhotoServlet extends HttpServlet
 
 	public SpyLog logger = null;
 
-	// Users
-	public Hashtable userdb=null;
-
 	// The once only init thingy.
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 
 		PhotoConfig conf = new PhotoConfig();
 
-		// Populate the userdb hash
-		try {
-			userdb=new Hashtable();
-			log("Initing userdb");
-			init_userdb();
-			log("Finished userdb");
-		} catch(Exception e) {
-			log("Error getting user database:  " + e);
-			e.printStackTrace();
-			throw new ServletException("Couldn't get userdb:  " + e);
-		}
-
 		// Security stuff
 		try {
 			log("Initing security");
 			security = new PhotoSecurity();
-			security.setUserHash(userdb);
 			log("Finished security");
 		} catch(Exception e) {
 			throw new ServletException("Can't create security stuff:  " + e);
@@ -72,43 +56,6 @@ public class PhotoServlet extends HttpServlet
 		logger = new SpyLog(new PhotoLogFlusher());
 		log("got logger");
 		log("Initialization complete");
-	}
-
-	protected void init_userdb() throws Exception {
-		Connection photo=null;
-		boolean worked=false;
-		Exception why=null;
-		SpyDB pdb = new SpyDB(new PhotoConfig());
-
-		try {
-			photo=pdb.getConn();
-			Statement st = photo.createStatement();
-			ResultSet rs=st.executeQuery("select * from wwwusers");
-
-			while(rs.next()) {
-				PhotoUser u = new PhotoUser();
-
-				u.id=new Integer(rs.getInt("id"));
-				u.username=rs.getString("username");
-				u.password=rs.getString("password");
-				u.email=rs.getString("email");
-				u.realname=rs.getString("realname");
-				u.canadd=rs.getBoolean("canadd");
-
-				log("Adding user " + u.username);
-				userdb.put(u.username, u);
-			}
-			worked=true;
-		} catch(Exception e) {
-			worked=false;
-			why=e;
-		} finally {
-			pdb.freeDBConn(photo);
-		}
-
-		if(worked==false) {
-			throw new ServletException("Couldn't get list:  " + why);
-		}
 	}
 
 	// Verify we have a valid rhash, if not, reopen it.

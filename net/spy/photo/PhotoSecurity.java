@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.2 2000/06/25 09:08:30 dustin Exp $
  */
 
 package net.spy.photo;
@@ -19,10 +19,7 @@ public class PhotoSecurity extends PhotoHelper {
 
 	public PhotoSecurity() throws Exception {
 		super();
-	}
-
-	public void setUserHash(Hashtable h) {
-		userdb=h;
+		userdb=new Hashtable();
 	}
 
 	// Verify a password against what is stored in the database.
@@ -33,24 +30,9 @@ public class PhotoSecurity extends PhotoHelper {
 			String tpw=getDigest(pass);
 			String pw=null;
 
-			// We can use the precached user database if it's there.
-			if(userdb == null) {
-				log("No userdb hash, getting auth info from database");
-				String u=PhotoUtil.dbquote_str(user);
-				db=getDBConn();
-				Statement st=db.createStatement();
-				String query = "select password from wwwusers where username ="
-					+ " '" + u + "'";
-				ResultSet rs = st.executeQuery(query);
-				rs.next();
-				pw = rs.getString("password");
-			} else {
-				log("Getting auth info from userdb hash");
-				PhotoUser pu = (PhotoUser)userdb.get(user);
-				if(pu != null) {
-					pw = pu.password;
-				}
-			}
+			PhotoUser pu=getUser(user);
+			pw=pu.password;
+
 			log("Testing for " + tpw + " = " + pw);
 			ret=tpw.equals(pw);
 		} catch(Exception e) {
@@ -79,5 +61,54 @@ public class PhotoSecurity extends PhotoHelper {
 			out=out.substring(0,out.length()-1);
 		}
 		return(out.trim());
+	}
+
+	protected PhotoUser getUser(String username) {
+		PhotoUser ret=null;
+
+		// Get the data from cache
+		ret = (PhotoUser)userdb.get(username);
+
+		// If it's not cached, grab it from the DB.
+		if(ret==null || isTooOld(ret)) {
+			try {
+				SpyDB db=new SpyDB(new PhotoConfig());
+				PreparedStatement st=db.prepareStatement(
+					"select * from wwwusers where username=?"
+					);
+				st.setString(1, username);
+				ResultSet rs=st.executeQuery();
+				while(rs.next()) {
+					PhotoUser u = new PhotoUser();
+					u.id=new Integer(rs.getInt("id"));
+					u.username=rs.getString("username");
+					u.password=rs.getString("password");
+					u.email=rs.getString("email");
+					u.realname=rs.getString("realname");
+					u.canadd=rs.getBoolean("canadd");
+					userdb.put(u.username, u);
+					ret=u;
+				}
+			} catch(Exception e) {
+				log("Error lookup up user:  " + username);
+			}
+		}
+
+		return(ret);
+	}
+
+	protected boolean isTooOld(PhotoUser p) {
+		boolean ret=false;
+		long time=System.currentTimeMillis();
+
+		// Hard code a 15m validity with a special case for guest
+		if(!p.username.equals("guest")) {
+			time-=(15*60*1000);
+			if(p.cachetime<time) {
+				ret=true;
+			}
+		}
+
+		return(ret);
 	}
 }
