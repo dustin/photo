@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.5 2000/12/25 23:48:56 dustin Exp $
+ $Id: default.xsl,v 1.6 2000/12/26 00:18:04 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -112,6 +112,13 @@
 <!-- Handling Search Results -->
 
 <xsl:template match="search_results_page">
+
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<input type="hidden" name="func" value="savesearch"/>
+		<input type="hidden" name="search" value="{meta_stuff/search_query}"/>
+		Save search as:  <input name="name"/><input type="submit" value="Save"/>
+	</form>
+
 	<xsl:apply-templates select="sections"/>
 
 	<xsl:variable name="r" select="meta_stuff/linktomore/remaining"/>
