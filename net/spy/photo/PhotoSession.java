@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.85 2002/02/20 08:17:16 dustin Exp $
+ * $Id: PhotoSession.java,v 1.86 2002/02/20 08:40:43 dustin Exp $
  */
 
 package net.spy.photo;
@@ -263,8 +263,7 @@ public class PhotoSession extends Object
 			unsetAdmin();
 			out=doIndex();
 		} else if(func.equals("setviewsize")) {
-			setViewingSize();
-			out=doIndex();
+			out=setViewingSize();
 		} else if(func.startsWith("adm")) {
 			// Anything that starts with rep is probably reporting.
 			PhotoAdmin adm=new PhotoAdmin(this);
@@ -279,10 +278,23 @@ public class PhotoSession extends Object
 		return(out);
 	}
 
-	private void setViewingSize() throws ServletException {
-		PhotoDimensions dims=
-			new PhotoDimensionsImpl(request.getParameter("dims"));
-		sessionData.setOptimalDimensions(dims);
+	private String setViewingSize() throws Exception {
+		String dimss=request.getParameter("dims");
+		String out=null;
+
+		if(dimss!=null) {
+			PhotoDimensions dims=new PhotoDimensionsImpl(dimss);
+			sessionData.setOptimalDimensions(dims);
+			out=doIndex();
+		} else {
+			PhotoXML xml=new PhotoXML();
+			xml.setTitle("Set Viewing Size");
+			xml.addBodyPart(getGlobalMeta());
+			xml.addBodyPart("<viewing_size_form/>");
+			sendXML(xml.toString());
+		}
+
+		return(out);
 	}
 
 	private String saveSearch() throws ServletException {
