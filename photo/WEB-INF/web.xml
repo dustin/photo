@@ -11,6 +11,17 @@
 		<param-value>net.spy.photo.photoresources</param-value>
 	</context-param>
 
+	<!-- Auth filter -->
+	<filter>
+		<filter-name>persessCheck</filter-name>
+		<filter-class>net.spy.photo.AuthFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>persessCheck</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<!-- Watch the sessions -->
 	<listener>
 		<listener-class>net.spy.photo.SessionWatcher</listener-class>

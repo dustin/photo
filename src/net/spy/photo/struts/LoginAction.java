@@ -8,14 +8,20 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.spy.db.Saver;
+
+import net.spy.util.PwGen;
 
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoLogEntry;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUser;
 import net.spy.photo.PhotoUserException;
+import net.spy.photo.PhotoConfig;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -32,6 +38,29 @@ public class LoginAction extends PhotoAction {
 	 */
 	public LoginAction() {
 		super();
+	}
+
+	private void persist(PhotoUser user,
+		HttpServletRequest request,
+		HttpServletResponse response) throws Exception {
+
+		// Get a persistent session ID
+		String persess=PwGen.getPass(16);
+
+		// Add a cookie
+		Cookie c=new Cookie("persess", persess);
+		// Let's keep it for about two months.
+		c.setMaxAge(86400*30*2);
+		response.addCookie(c);
+
+		// Set the ID
+		user.setPersess(persess);
+		// Save the user
+		Saver saver=new Saver(new PhotoConfig());
+		saver.save(user);
+
+		// Recache the users
+		PhotoUser.recache();
 	}
 
 	/**
@@ -64,8 +93,14 @@ public class LoginAction extends PhotoAction {
 				"Your username or password is incorrect.");
 		}
 
+		// Find out if the user wants to persist the login
+		Boolean bol=(Boolean)lf.get("persist");
+		if(bol.booleanValue()) {
+			persist(user, request, response);
+		}
+
 		// Find out of the user wanted to upgrade to admin privs after 
-		Boolean bol=(Boolean)lf.get("admin");
+		bol=(Boolean)lf.get("admin");
 		if(bol.booleanValue()) {
 			getLogger().info(user + " logged in as admin");
 			rv=mapping.findForward("setadmin");

@@ -13,6 +13,7 @@
 			<form-property name="username" type="java.lang.String"/>
 			<form-property initial="" name="password" type="java.lang.String"/>
 			<form-property initial="false" name="admin" type="java.lang.Boolean"/>
+			<form-property initial="false" name="persist" type="java.lang.Boolean"/>
 		</form-bean>
 
 		<form-bean name="adminifyForm"

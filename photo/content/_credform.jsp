@@ -22,6 +22,10 @@
 			<td><html:password property="password" size="8"/></td>
 		</tr>
 		<tr>
+			<td><fmt:message key="forms.login.persist"/>:</td>
+			<td><html:checkbox property="persist"/></td>
+		</tr>
+		<tr>
 			<td><fmt:message key="forms.login.setadmin"/>:</td>
 			<td><html:checkbox property="admin"/></td>
 		</tr>

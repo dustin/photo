@@ -109,9 +109,9 @@ public class PhotoUser extends AbstractSavable
 		}
 	}
 
-	private static Map initUserMap() throws PhotoUserException {
+	private static CacheEntry initCacheEntry() throws PhotoUserException {
 		PhotoConfig conf=new PhotoConfig();
-		Map rv=new HashMap();
+		CacheEntry rv=new CacheEntry();
 		try {
 			List users=new ArrayList();
 
@@ -126,13 +126,13 @@ public class PhotoUser extends AbstractSavable
 				users.add(pu);
 
 				// Map the various thingies.
-				rv.put(new Integer(pu.getId()), pu);
-				rv.put(pu.getUsername().toLowerCase(), pu);
-				rv.put(pu.getEmail().toLowerCase(), pu);
+				rv.byId.put(new Integer(pu.getId()), pu);
+				rv.byUsername.put(pu.getUsername().toLowerCase(), pu);
+				rv.byEmail.put(pu.getEmail().toLowerCase(), pu);
 				// Map by persistent ID.
 				String psid=pu.getPersess();
 				if(psid != null) {
-					rv.put(psid, pu);
+					rv.byPersess.put(psid, pu);
 				}
 			}
 			rs.close();
@@ -140,7 +140,7 @@ public class PhotoUser extends AbstractSavable
 
 			// Find the default user so we can initialize the ACLs.
 			String defUsername=conf.get("default_user", "guest");
-			PhotoUser defaultUser=(PhotoUser)rv.get(defUsername);
+			PhotoUser defaultUser=(PhotoUser)rv.byUsername.get(defUsername);
 			if(defaultUser==null) {
 				throw new PhotoUserException("Default user not found.");
 			}
@@ -159,11 +159,11 @@ public class PhotoUser extends AbstractSavable
 		return(rv);
 	}
 
-	private static Map getUserMap() throws PhotoUserException {
+	private static CacheEntry getCacheEntry() throws PhotoUserException {
 		SpyCache sc=SpyCache.getInstance();
-		Map rv=(Map)sc.get(CACHE_KEY);
+		CacheEntry rv=(CacheEntry)sc.get(CACHE_KEY);
 		if(rv==null) {
-			rv=initUserMap();
+			rv=initCacheEntry();
 			sc.store(CACHE_KEY, rv, CACHE_TIME);
 		}
 
@@ -186,12 +186,30 @@ public class PhotoUser extends AbstractSavable
 			throw new NoSuchPhotoUserException("There is no null user.");
 		}
 
-		Map m=getUserMap();
-		PhotoUser rv=(PhotoUser)m.get(spec.toLowerCase());
+		CacheEntry m=getCacheEntry();
+		PhotoUser rv=(PhotoUser)m.byUsername.get(spec.toLowerCase());
 		if(rv==null) {
-			throw new NoSuchPhotoUserException("No such user:  " + spec);
+			// If that fails, try it by email address
+			rv=(PhotoUser)m.byEmail.get(spec.toLowerCase());
+			if(rv == null) {
+				throw new NoSuchPhotoUserException("No such user:  " + spec);
+			}
 		}
 
+		return(rv);
+	}
+
+	/** 
+	 * Get a user by persistent session ID.
+	 */
+	public static PhotoUser getPhotoUserByPersess(String persess)
+		throws PhotoUserException {
+
+		CacheEntry m=getCacheEntry();
+		PhotoUser rv=(PhotoUser)m.byPersess.get(persess);
+		if(rv==null) {
+			throw new NoSuchPhotoUserException("No such session:  " + persess);
+		}
 		return(rv);
 	}
 
@@ -207,8 +225,8 @@ public class PhotoUser extends AbstractSavable
 	public static PhotoUser getPhotoUser(int id)
 		throws PhotoUserException {
 
-		Map m=getUserMap();
-		PhotoUser rv=(PhotoUser)m.get(new Integer(id));
+		CacheEntry m=getCacheEntry();
+		PhotoUser rv=(PhotoUser)m.byId.get(new Integer(id));
 		if(rv==null) {
 			throw new NoSuchPhotoUserException("No such user (id):  " + id);
 		}
@@ -222,9 +240,9 @@ public class PhotoUser extends AbstractSavable
 	 * @throws PhotoUserException 
 	 */
 	public static SortedSet getAllPhotoUsers() throws PhotoUserException {
-		Map m=getUserMap();
+		CacheEntry m=getCacheEntry();
 		SortedSet rv=new TreeSet();
-		rv.addAll(m.values());
+		rv.addAll(m.byUsername.values());
 		return(Collections.unmodifiableSortedSet(rv));
 	}
 
@@ -236,7 +254,7 @@ public class PhotoUser extends AbstractSavable
 		SpyCache sc=SpyCache.getInstance();
 		sc.uncache(CACHE_KEY);
 		// This will cause a recache.
-		getUserMap();
+		getCacheEntry();
 	}
 
 	/**
@@ -664,5 +682,19 @@ public class PhotoUser extends AbstractSavable
 		sb.append("</photo_user>\n");
 
 		return(sb.toString());
+	}
+
+	private static class CacheEntry extends Object {
+		public Map byId=null;
+		public Map byUsername=null;
+		public Map byEmail=null;
+		public Map byPersess=null;
+
+		public CacheEntry() {
+			byId=new HashMap();
+			byUsername=new HashMap();
+			byEmail=new HashMap();
+			byPersess=new HashMap();
+		}
 	}
 }

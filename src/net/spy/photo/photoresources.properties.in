@@ -52,6 +52,7 @@ comment.form.error.comment=Comment
 forms.login.header=Login
 forms.login.username=Username
 forms.login.password=Password
+forms.login.persist=Don't ask for my password for 2 months
 forms.login.setadmin=Set admin after auth
 forms.login.authbutton=Authenticate
 forms.login.rstbutton=Reset Form
