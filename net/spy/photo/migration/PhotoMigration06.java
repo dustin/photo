@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoMigration06.java,v 1.2 2002/07/10 03:38:08 dustin Exp $
+// $Id: PhotoMigration06.java,v 1.3 2002/08/14 06:59:08 dustin Exp $
 
 package net.spy.photo.migration;
 
@@ -33,5 +33,3 @@ public class PhotoMigration06 extends PhotoMigration {
 	}
 
 }
-
-

@@ -166,6 +166,11 @@ public abstract class PhotoMigration extends Object {
 	}
 
 	/**
+	 * Perform the migration.
+	 */
+	public abstract void migrate() throws Exception;
+
+	/**
 	 * Fetch all thumbnails.  This is used to populate caches and stuff
 	 * like that.
 	 */

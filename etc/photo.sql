@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.29 2002/06/30 07:51:31 dustin Exp $
+-- $Id: photo.sql,v 1.30 2002/08/14 06:59:07 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -54,6 +54,16 @@ create function getwwwuser(text) returns integer as
 	'select id from wwwusers where username = $1'
 	language 'sql';
 
+-- Keywords
+create table keywords (
+	word_id serial,
+	word varchar(32) not null,
+	primary key(word_id)
+);
+create unique index keywords_byword on keywords(word);
+grant all on keywords to nobody;
+grant all on keywords_word_id_seq to nobody;
+
 -- Where the picture info is stored.
 
 create table album(
@@ -76,6 +86,19 @@ create index album_bycat on album(cat);
 grant all on album to nobody;
 -- implicit sequence
 grant all on album_id_seq to nobody;
+
+-- keywords <-> photo mappings
+create table album_keywords_map (
+	album_id integer not null,
+	word_id integer not null,
+	foreign key(album_id) references album(id),
+	foreign key(word_id) references keywords(word_id)
+);
+create unique index album_keywords_map_byu
+	on album_keywords_map(album_id, word_id);
+create index album_keywords_map_bya on album_keywords_map(album_id);
+create index album_keywords_map_byw on album_keywords_map(word_id);
+grant all on album_keywords_map to nobody;
 
 -- Notes
 create table commentary (
