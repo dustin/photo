@@ -30,6 +30,7 @@ RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \
 CLASSES=\
 	net/spy/photo/sp/FindImagesByComments.java \
 	net/spy/photo/sp/FindImagesByComments.class \
+	net/spy/photo/PhotoException.class \
 	net/spy/photo/XMLAble.class \
 	net/spy/photo/Persistent.class \
 	net/spy/photo/PhotoServlet.class \
@@ -55,6 +56,7 @@ CLASSES=\
 	net/spy/photo/PhotoSearch.class \
 	net/spy/photo/Comment.class \
 	net/spy/photo/Vote.class \
+	net/spy/photo/Category.class \
 	net/spy/photo/PhotoSessionData.class \
 	net/spy/photo/Mailer.class \
 	net/spy/photo/PhotoImageObserver.class \
@@ -76,8 +78,12 @@ CLASSES=\
 	net/spy/photo/taglib/GuestCheck.class \
 	net/spy/photo/taglib/InitSessionData.class \
 	net/spy/photo/taglib/InitSessionDataExtraInfo.class \
+	net/spy/photo/taglib/CategoryTag.class \
+	net/spy/photo/taglib/CategoryTagExtraInfo.class \
 	net/spy/photo/struts/LoginForm.class \
 	net/spy/photo/struts/LoginAction.class \
+	net/spy/photo/struts/SearchForm.class \
+	net/spy/photo/struts/SearchAction.class \
 	net/spy/photo/util/BackupEntry.class \
 	net/spy/photo/util/AlbumBackupEntry.class \
 	net/spy/photo/util/PhotoBackup.class \
