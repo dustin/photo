@@ -70,6 +70,9 @@ CLASSES=\
 	net/spy/photo/PhotoXML.class \
 	net/spy/photo/SetPW.class \
 	net/spy/photo/StopWatch.class \
+	net/spy/photo/taglib/GuestCheck.class \
+	net/spy/photo/taglib/InitSessionData.class \
+	net/spy/photo/taglib/InitSessionDataExtraInfo.class \
 	net/spy/photo/util/BackupEntry.class \
 	net/spy/photo/util/AlbumBackupEntry.class \
 	net/spy/photo/util/PhotoBackup.class \
@@ -106,7 +109,6 @@ setpw: net/spy/photo/SetPW.class
 
 install: photo.jar
 	cp photo.jar /afs/.spy.net/misc/web/root/photo/WEB-INF/lib
-	cp etc/web.xml /afs/.spy.net/misc/web/root/photo/WEB-INF
 
 release: photo.jar release.tgz
 
