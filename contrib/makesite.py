@@ -4,7 +4,7 @@ Build a set of HTML files for all of the images dropped by
 net.spy.photo.tools.MakeStaticSite.
 
 Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
-$Id: makesite.py,v 1.2 2003/12/02 04:18:53 dustin Exp $
+$Id: makesite.py,v 1.3 2003/12/02 04:55:36 dustin Exp $
 """
 
 import os
@@ -72,7 +72,6 @@ body,td,th {
 
 #imgView dl {
     text-align: left;
-    /* border: solid 1px; */
     width: 66%;
 }
 
@@ -81,13 +80,24 @@ body,td,th {
     width: 50%;
     font-size: smaller;
 }
+
+img {
+	border: none;
+}
 	""")
 	f.close()
 
+def header(title):
+	return """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head><title>""" + title + """</title>"""
+
+
 def makeIndex(years, dates):
 	f=file("index.html", "w")
-	f.write("""<html><head><title>Photos</title>
-		<link rel="stylesheet" href="style.css" />
+	f.write(header("Photos") + 
+		"""<link rel="stylesheet" href="style.css" />
 		</head>
 		<body>
 		<h1>Years</h1>
@@ -105,8 +115,8 @@ def makeIndex(years, dates):
 
 def makeYearPage(year, dates, months):
 	f=file("pages/" + year + ".html", "w")
-	f.write("""<html><head><title>Photos from """ + year + """</title>
-		<link rel="stylesheet" href="../style.css" />
+	f.write(header("Photos from " + year)
+		+ """<link rel="stylesheet" href="../style.css" />
 		</head>
 		<body>
 		<h1>Months: in """ + year + """</h1><ul>\n""")
@@ -128,19 +138,20 @@ def makeMonthPage(month, ids):
 	f=file("pages/" + month + ".html", "w")
 	y=month[0:4]
 	m=month[4:]
-	f.write("""<html><head><title>Photos from """ + m + " " + y + """</title>
-		<link rel="stylesheet" href="../style.css" />
+	f.write(header("Photos from " + m + " " + y)
+		+ """<link rel="stylesheet" href="../style.css" />
 		</head>
-		<body>\n""")
+		<body>
+		<div class="monthList">\n""")
 	for stuff in ids:
 		i=stuff[0]
 		e=stuff[1]
 		theido=i.rindex("/")
 		theid=i[theido+1:]
 		f.write("<a href=\"" + month + "/" + theid + ".html\">"
-			+ "<img border=\"0\" src=\"../images/"
-				+ i + "_t" + e + "\"" + "></a>\n")
-	f.write("</ul>")
+			+ "<img alt=\"" + theid + "\" src=\"../images/"
+				+ i + "_t" + e + "\"" + " /></a>\n")
+	f.write("</div>\n")
 	f.write('<div id="footer">')
 	f.write("<a href=\"../index.html\">[Index]</a>")
 	f.write(" / <a href=\"" + y + ".html\">[" + y + "]</a>")
@@ -153,21 +164,21 @@ def makePageForId(month, stuff):
 	theido=id.rindex("/")
 	theid=id[theido+1:]
 	f=file("pages/" + month + "/" + theid + ".html", "w")
-	f.write("""<html><head><title>Image """ + theid + """</title>
-		<link rel="stylesheet" href="../../style.css" />
+	f.write(header("Image " + theid)
+		+ """<link rel="stylesheet" href="../../style.css" />
 		</head>
-		<body>\n""")
+		<body>\n<div class="idPage">\n""")
 	f.write("""<div id="imgView">\n""")
 	f.write("<a href=\"http://bleu.west.spy.net/photo/display.do?id=")
 	f.write(theid + "\">")
-	f.write("<img border=\"0\" src=\"../../images/" + id + e + "\">")
+	f.write("<img alt=\"" + theid + "\" src=\"../../images/" + id + e + "\" />")
 	f.write("</a>\n")
 
 	takents=id[0:id.index("/")]
 	taken=takents[0:4] + "/" + takents[4:6] + "/" + takents[6:]
 
 	f.write("<dl>")
-	f.write("<dt>Taken</td><dd>" + taken + "</dd>\n")
+	f.write("<dt>Taken</dt><dd>" + taken + "</dd>\n")
 
 	f.write("<dt>Keywords</dt><dd>")
 	kf=file("images/" + id + "_k.txt")
@@ -181,7 +192,7 @@ def makePageForId(month, stuff):
 	for l in kf.readlines():
 		f.write(l)
 	kf.close()
-	f.write("<dd>\n")
+	f.write("</dd>\n")
 
 	f.write("<dt>Photo album link</dt><dd>")
 	f.write("<a href=\"http://bleu.west.spy.net/photo/display.do?id=")
@@ -190,7 +201,7 @@ def makePageForId(month, stuff):
 	f.write("</a></dd>")
 	f.write("</dl>")
 
-	f.write("""</div>\n""")
+	f.write("""</div>\n</div>\n""")
 
 	# Navigation
 	y=takents[0:4]
