@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: AddImage.java,v 1.4 2002/07/10 03:38:08 dustin Exp $
+// arch-tag: A484B354-5D6D-11D9-9EE7-000A957659CC
 
 package net.spy.photo.rpc;
 

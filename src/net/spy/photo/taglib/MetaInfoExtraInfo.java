@@ -1,6 +1,5 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
-//
-// $Id: MetaInfoExtraInfo.java,v 1.1 2003/08/09 07:25:18 dustin Exp $
+// arch-tag: 50F82D92-5D6E-11D9-889A-000A957659CC
 
 package net.spy.photo.taglib;
 

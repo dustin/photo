@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoLogViewEntry.java,v 1.4 2002/09/14 05:06:34 dustin Exp $
+// arch-tag: 2FA5E266-5D6D-11D9-A7D9-000A957659CC
 
 package net.spy.photo;
 

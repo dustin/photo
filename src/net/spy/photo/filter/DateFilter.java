@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: DateFilter.java,v 1.2 2003/05/04 08:19:29 dustin Exp $
+// arch-tag: 57D97AD6-5D6D-11D9-8AC6-000A957659CC
 
 package net.spy.photo.filter;
 

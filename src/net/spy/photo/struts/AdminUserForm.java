@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: AdminUserForm.java,v 1.6 2002/08/20 03:09:16 dustin Exp $
+// arch-tag: 16075CDE-5D6E-11D9-A352-000A957659CC
 
 package net.spy.photo.struts;
 

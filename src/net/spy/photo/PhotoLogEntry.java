@@ -1,8 +1,5 @@
-/*
- * Copyright (c) 1999 Dustin Sallings
- *
- * $Id: PhotoLogEntry.java,v 1.7 2002/11/03 07:33:35 dustin Exp $
- */
+// Copyright (c) 1999 Dustin Sallings
+// arch-tag: 220C0CFE-5D6D-11D9-85A5-000A957659CC
 
 package net.spy.photo;
 

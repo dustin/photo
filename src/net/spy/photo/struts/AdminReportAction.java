@@ -1,6 +1,5 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
-//
-// $Id: AdminReportAction.java,v 1.8 2003/12/02 03:34:58 dustin Exp $
+// arch-tag: 0C7D3359-5D6E-11D9-8A42-000A957659CC
 
 package net.spy.photo.struts;
 

@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: ConditionalTag.java,v 1.4 2003/07/26 08:49:26 dustin Exp $
+// arch-tag: 4AD9DD60-5D6E-11D9-8751-000A957659CC
 
 package net.spy.photo.taglib;
 

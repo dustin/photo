@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: EmptyForm.java,v 1.1 2002/09/16 01:51:03 dustin Exp $
+// arch-tag: 1CF95248-5D6E-11D9-AA1F-000A957659CC
 
 package net.spy.photo.struts;
 

@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: Gallery.java,v 1.13 2003/07/26 08:38:27 dustin Exp $
+// arch-tag: D4C3932B-5D6C-11D9-8FE5-000A957659CC
 
 package net.spy.photo;
 

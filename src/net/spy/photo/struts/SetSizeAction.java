@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: SetSizeAction.java,v 1.6 2003/07/23 04:29:26 dustin Exp $
+// arch-tag: 3CBE8084-5D6E-11D9-AD47-000A957659CC
 
 package net.spy.photo.struts;
 

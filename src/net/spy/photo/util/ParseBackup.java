@@ -1,6 +1,5 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
-//
-// $Id: ParseBackup.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
+// arch-tag: 813F73AE-5D6E-11D9-B722-000A957659CC
 
 package net.spy.photo.util;
 

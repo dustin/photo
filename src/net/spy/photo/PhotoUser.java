@@ -1,6 +1,5 @@
 // Copyright (c) 1999  Dustin Sallings
-//
-// $Id: PhotoUser.java,v 1.31 2003/05/10 08:44:39 dustin Exp $
+// arch-tag: 4423AD32-5D6D-11D9-BFE1-000A957659CC
 
 // This class stores an entry from the wwwusers table.
 package net.spy.photo;

@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoImageScaler.java,v 1.6 2002/07/10 04:00:17 dustin Exp $
+// arch-tag: 1E730BDC-5D6D-11D9-ABA3-000A957659CC
 
 package net.spy.photo;
 

@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: SessionInfo.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
+// arch-tag: 52F6EB3F-5D6E-11D9-8A08-000A957659CC
 
 package net.spy.photo.taglib;
 

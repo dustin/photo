@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoACLEntry.java,v 1.4 2002/11/04 03:11:24 dustin Exp $
+// arch-tag: F32D773D-5D6C-11D9-AACC-000A957659CC
 
 package net.spy.photo;
 

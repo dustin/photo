@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
-# $Id: threadpool.py,v 1.3 2002/03/28 20:08:27 dustin Exp $
+# arch-tag: D8D189E2-5D6E-11D9-9776-000A957659CC
 
 import threading
 import exceptions

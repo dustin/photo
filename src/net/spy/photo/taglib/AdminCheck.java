@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//  
-// $Id: AdminCheck.java,v 1.6 2003/07/26 08:49:26 dustin Exp $
+// arch-tag: 45FAC458-5D6E-11D9-A56E-000A957659CC
 
 package net.spy.photo.taglib;
 

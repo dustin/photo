@@ -1,8 +1,5 @@
-/*
- * Copyright (c) 1999 Dustin Sallings
- *
- * $Id: PhotoStorerThread.java,v 1.19 2003/07/26 08:38:27 dustin Exp $
- */
+// Copyright (c) 1999 Dustin Sallings
+// arch-tag: 8755C444-5D6E-11D9-A26E-000A957659CC
 
 package net.spy.photo.util;
 

@@ -1,6 +1,5 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoMigration12.java,v 1.1 2002/09/13 20:28:46 dustin Exp $
+// arch-tag: 77A28245-5D6D-11D9-8292-000A957659CC
 
 package net.spy.photo.migration;
 

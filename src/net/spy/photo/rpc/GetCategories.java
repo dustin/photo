@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: GetCategories.java,v 1.1 2002/09/17 23:40:47 dustin Exp $
+// arch-tag: A5CA3C86-5D6D-11D9-A49F-000A957659CC
 
 package net.spy.photo.rpc;
 

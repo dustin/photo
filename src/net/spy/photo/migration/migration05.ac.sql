@@ -1,3 +1,4 @@
+-- arch-tag: 81802194-5D6D-11D9-85F7-000A957659CC
 
 -- New views (for your convenience)
 -- log_user_ip_agent

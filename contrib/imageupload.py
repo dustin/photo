@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# $Id: imageupload.py,v 1.1 2002/06/26 17:24:59 dustin Exp $
+# arch-tag: C504C8CD-5D6E-11D9-9483-000A957659CC
 
 from sys import argv
 import xmlrpclib

@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoDimensions.java,v 1.3 2002/07/10 03:38:08 dustin Exp $
+// arch-tag: FBE3C4CA-5D6C-11D9-86A6-000A957659CC
 
 package net.spy.photo;
 

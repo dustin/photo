@@ -33,3 +33,4 @@
 		height="<%= "" + pid.getTnDims().getHeight() %>"
 		showThumbnail="true"/>
 </logic:iterate>
+<%-- arch-tag: B7BEEA69-5D6F-11D9-8EBD-000A957659CC --%>

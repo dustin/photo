@@ -1,8 +1,5 @@
-/*
- * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- *
- * $Id: PhotoBackup.java,v 1.12 2003/07/26 08:38:27 dustin Exp $
- */
+// Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
+// arch-tag: 7A5F6B07-5D6E-11D9-A489-000A957659CC
 
 package net.spy.photo.util;
 

@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: AddToGalleryAction.java,v 1.9 2003/07/23 04:29:26 dustin Exp $
+// arch-tag: 04B73C5B-5D6E-11D9-BA04-000A957659CC
 
 package net.spy.photo.struts;
 

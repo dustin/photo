@@ -129,3 +129,4 @@ Size Image</a>]
 			<html:submit>Add Comment</html:submit>
 		</html:form>
 	</logic:notPresent>
+	<%-- arch-tag: C76A26F5-5D6F-11D9-A349-000A957659CC --%>

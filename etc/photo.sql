@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.35 2003/01/09 08:07:00 dustin Exp $
+-- arch-tag: 1F2AF91E-5D6F-11D9-ABBC-000A957659CC
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.

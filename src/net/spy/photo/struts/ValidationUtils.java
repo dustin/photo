@@ -1,6 +1,5 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
-//
-// $Id: ValidationUtils.java,v 1.4 2003/09/06 06:21:41 dustin Exp $
+// arch-tag: 3FF1E695-5D6E-11D9-909B-000A957659CC
 
 package net.spy.photo.struts;
 

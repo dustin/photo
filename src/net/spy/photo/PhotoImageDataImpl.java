@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoImageData.java,v 1.13 2003/07/26 08:38:27 dustin Exp $
+// arch-tag: 12030EE8-5D6D-11D9-A9A6-000A957659CC
 
 package net.spy.photo;
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# arch-tag: CD8A1E32-5D6E-11D9-8F75-000A957659CC
 """
 Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 """

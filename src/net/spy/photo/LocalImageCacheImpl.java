@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: LocalImageCacheImpl.java,v 1.5 2002/09/13 20:28:46 dustin Exp $
+// arch-tag: EB36F1DE-5D6C-11D9-8010-000A957659CC
 
 package net.spy.photo;
 

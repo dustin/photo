@@ -1,8 +1,5 @@
-/*
- * Copyright (c) 1999 Dustin Sallings
- *
- * $Id: PhotoImageHelper.java,v 1.24 2003/07/26 08:38:27 dustin Exp $
- */
+// Copyright (c) 1999 Dustin Sallings
+// arch-tag: 196C8F31-5D6D-11D9-92C2-000A957659CC
 
 package net.spy.photo;
 

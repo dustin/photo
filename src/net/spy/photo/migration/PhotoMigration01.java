@@ -1,4 +1,5 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
+// arch-tag: 662E6ECE-5D6D-11D9-AC8E-000A957659CC
 
 package net.spy.photo.migration;
 

@@ -1,6 +1,5 @@
 // Copyright (c) 1999  Dustin Sallings
-//
-// $Id: Profile.java,v 1.10 2003/01/07 09:38:51 dustin Exp $
+// arch-tag: 4A62330C-5D6D-11D9-AC80-000A957659CC
 
 // This class stores an entry from the wwwusers table.
 

@@ -1,3 +1,5 @@
+-- arch-tag: 7B275AC2-5D6D-11D9-94FF-000A957659CC
+
 -- New user profiles table
 create table user_profiles (
 	profile_id serial,

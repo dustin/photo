@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# arch-tag: CC086970-5D6E-11D9-9F11-000A957659CC
 """
 Library of tools for handling the xml index from
 net.spy.photo.tools.MakeStaticSite.

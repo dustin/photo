@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: RHash.java,v 1.3 2003/08/05 09:01:02 dustin Exp $
+// arch-tag: 9A7C5C8C-5D6D-11D9-9A28-000A957659CC
 
 package net.spy.photo.rmi;
 

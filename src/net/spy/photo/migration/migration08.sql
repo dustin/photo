@@ -1,3 +1,4 @@
+-- arch-tag: 86FE8CF5-5D6D-11D9-9E9A-000A957659CC
 
 -- General properties (photo of the unit of time, etc...)
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
+# arch-tag: B7A32A36-54B0-11D9-A41D-000A957659CC
 """
 
 Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 """
-# arch-tag: B7A32A36-54B0-11D9-A41D-000A957659CC
 
 import sys
 import libphoto

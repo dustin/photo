@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: Keyword.java,v 1.2 2002/11/03 07:33:35 dustin Exp $
+// arch-tag: E9E478DD-5D6C-11D9-B8CA-000A957659CC
 
 package net.spy.photo;
 

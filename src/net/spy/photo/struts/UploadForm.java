@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: UploadForm.java,v 1.8 2002/11/21 07:37:47 dustin Exp $
+// arch-tag: 3EF534D8-5D6E-11D9-A9BE-000A957659CC
 
 package net.spy.photo.struts;
 

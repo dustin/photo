@@ -1,6 +1,5 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoRestore.java,v 1.9 2003/07/26 08:38:27 dustin Exp $
+// arch-tag: 8440246C-5D6E-11D9-AA05-000A957659CC
 
 package net.spy.photo.util;
 

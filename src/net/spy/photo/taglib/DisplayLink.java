@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: DisplayLink.java,v 1.21 2003/08/11 05:49:54 dustin Exp $
+// arch-tag: 4C0CDFD4-5D6E-11D9-9F18-000A957659CC
 
 package net.spy.photo.taglib;
 

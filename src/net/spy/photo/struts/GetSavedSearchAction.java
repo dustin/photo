@@ -1,6 +1,5 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
-//
-// $Id: GetSavedSearchAction.java,v 1.2 2003/08/09 20:48:19 dustin Exp $
+// arch-tag: 28161F5E-5D6E-11D9-ABA3-000A957659CC
 
 package net.spy.photo.struts;
 

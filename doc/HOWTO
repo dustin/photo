@@ -235,5 +235,4 @@ ERRATA
 photo=> insert into wwwgroup values(3, 'admin');
 
 ----------------------------------------------------------------------
-$Id: HOWTO,v 1.16 2002/06/23 03:11:12 dustin Exp $
-
+# arch-tag: EA4A91DB-5D6E-11D9-8974-000A957659CC

@@ -1,8 +1,5 @@
-/*
- * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
- *
- * $Id: PhotoSecurity.java,v 1.31 2003/01/07 09:38:50 dustin Exp $
- */
+// Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
+// arch-tag: 3DDF1592-5D6D-11D9-806B-000A957659CC
 
 package net.spy.photo;
 

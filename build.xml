@@ -1,9 +1,7 @@
 <!--
 	Build file for photoservlet.
-
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
-
-	$Id: build.xml,v 1.48 2003/12/01 23:55:04 dustin Exp $
+  arch-tag: B9C7AF67-5D6E-11D9-B8C2-000A957659CC
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">

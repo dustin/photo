@@ -1,8 +1,5 @@
-/*
- * Copyright (C) 1999  Dustin Sallings <dustin@spy.net>
- *
- * $Id: PhotoConfig.java,v 1.15 2002/07/10 03:38:08 dustin Exp $
- */
+// Copyright (C) 1999  Dustin Sallings <dustin@spy.net>
+// arch-tag: F8A9A5C9-5D6C-11D9-95F9-000A957659CC
 
 package net.spy.photo;
 

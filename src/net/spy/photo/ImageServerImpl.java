@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.9 2003/07/26 08:38:27 dustin Exp $
+// arch-tag: DD71DEF4-5D6C-11D9-B761-000A957659CC
 
 package net.spy.photo;
 

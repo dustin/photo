@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: ImageWatcher.java,v 1.4 2003/08/01 06:58:23 dustin Exp $
+// arch-tag: E064D5FC-5D6C-11D9-9ACF-000A957659CC
 
 package net.spy.photo;
 

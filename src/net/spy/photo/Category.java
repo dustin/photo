@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.13 2003/01/09 07:42:54 dustin Exp $
+// arch-tag: C2FF0E34-5D6C-11D9-9841-000A957659CC
 
 package net.spy.photo;
 

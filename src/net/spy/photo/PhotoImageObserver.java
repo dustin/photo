@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoImageObserver.java,v 1.4 2003/08/01 06:58:23 dustin Exp $
+// arch-tag: 1B46CA77-5D6D-11D9-8503-000A957659CC
 
 package net.spy.photo;
 

@@ -1,4 +1,5 @@
 // Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
+// arch-tag: 1F2AFEB3-5D6E-11D9-8F24-000A957659CC
 
 package net.spy.photo.struts;
 

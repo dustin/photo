@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoTag.java,v 1.6 2003/07/31 08:03:42 dustin Exp $
+// arch-tag: 51EBE124-5D6E-11D9-83A6-000A957659CC
 
 package net.spy.photo.taglib;
 

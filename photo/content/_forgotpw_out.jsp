@@ -10,3 +10,4 @@
 
 A new password has been created and mailed to <%= user.getEmail() %>.
 
+<%-- arch-tag: AD6F9B78-5D6F-11D9-B7EC-000A957659CC --%>

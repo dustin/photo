@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: ImageServerImpl.java,v 1.3 2002/07/10 04:00:17 dustin Exp $
+// arch-tag: 9937BB34-5D6D-11D9-AE67-000A957659CC
 
 package net.spy.photo.rmi;
 

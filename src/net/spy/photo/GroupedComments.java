@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: GroupedComments.java,v 1.5 2002/07/10 04:00:17 dustin Exp $
+// arch-tag: D62649EF-5D6C-11D9-9D14-000A957659CC
 
 package net.spy.photo;
 

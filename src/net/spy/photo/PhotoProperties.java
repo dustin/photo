@@ -1,6 +1,5 @@
 // Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoProperties.java,v 1.4 2003/01/15 09:20:37 dustin Exp $
+// arch-tag: 30CBF0EC-5D6D-11D9-B72B-000A957659CC
 
 package net.spy.photo;
 

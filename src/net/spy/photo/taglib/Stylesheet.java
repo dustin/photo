@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: Stylesheet.java,v 1.3 2003/08/08 05:52:56 dustin Exp $
+// arch-tag: 5410515C-5D6E-11D9-9E17-000A957659CC
 
 package net.spy.photo.taglib;
 

@@ -1,4 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
+// arch-tag: 46D26124-5D6E-11D9-B552-000A957659CC
 //
 // $Id: CategoryTag.java,v 1.7 2003/08/01 04:02:21 dustin Exp $
 

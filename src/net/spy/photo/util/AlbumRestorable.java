@@ -1,8 +1,5 @@
-/*
- * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- *
- * $Id: AlbumRestorable.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
- */
+// Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
+// arch-tag: 617B4070-5D6E-11D9-94D5-000A957659CC
 
 package net.spy.photo.util;
 

@@ -1,8 +1,5 @@
-/*
- * Copyright (c) 1999 Dustin Sallings
- *
- * $Id: PhotoUtil.java,v 1.19 2003/07/23 04:29:26 dustin Exp $
- */
+// Copyright (c) 1999 Dustin Sallings
+// arch-tag: 490DF968-5D6D-11D9-8C7B-000A957659CC
 
 package net.spy.photo;
 

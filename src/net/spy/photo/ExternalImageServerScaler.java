@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ExternalImageServerScaler.java,v 1.4 2003/07/26 08:38:27 dustin Exp $
+// arch-tag: D17013F0-5D6C-11D9-B102-000A957659CC
 
 package net.spy.photo;
 

@@ -1,6 +1,5 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
-//
-// $Id: OnceADayFilter.java,v 1.2 2003/05/04 08:19:29 dustin Exp $
+// arch-tag: 5A32B07E-5D6D-11D9-817F-000A957659CC
 
 package net.spy.photo.filter;
 

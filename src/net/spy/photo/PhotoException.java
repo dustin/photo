@@ -1,6 +1,5 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
-//
-// $Id: PhotoException.java,v 1.1 2002/05/11 09:24:34 dustin Exp $
+// arch-tag: 06370356-5D6D-11D9-9FD6-000A957659CC
 
 package net.spy.photo;
 
