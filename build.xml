@@ -275,13 +275,15 @@
 	</target>
 
 	<target name="staticsite"
-		description="Build a static site (define USERNAME)" depends="all">
+		description="Build a static site (define USERNAME and DESTDIR)"
+			depends="all">
 		<java classname="net.spy.photo.tools.MakeStaticSite" fork="yes">
 			<classpath refid="photo.classpath"/>
 			<classpath>
 				<pathelement path="."/>
 			</classpath>
 			<arg value="${USERNAME}"/>
+			<arg value="${DESTDIR}"/>
 		</java>
 	</target>
 
