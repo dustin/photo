@@ -244,8 +244,8 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		// Check for any of the date entries
-		processRange(rset, BY_TS, form.getStart(), form.getEnd());
-		processRange(rset, BY_TAKEN, form.getTstart(), form.getTend());
+		processDates(rset, form.getStart(), form.getEnd(),
+			form.getTstart(), form.getTend());
 
 		// Limit the results to the valid categories for the given user
 		rset.retainAll(index.getForCats(getValidCats(sessionData.getUser())));
@@ -261,6 +261,19 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		return(results);
+	}
+
+	// In the case of dates, we do an explicit OR between the two date range
+	// sets, and then AND the results back to current response set
+	private void processDates(Set rset, String astart, String aend,
+		String tstart, String tend) {
+		Collection aset=processRange(BY_TS, astart, aend);
+		Collection tset=processRange(BY_TAKEN, tstart, tend);
+
+		Set combined=new HashSet(aset);
+		combined.addAll(tset);
+
+		rset.retainAll(combined);
 	}
 
 	private void processKeywords(Set rset, String kw, String keyjoin)
@@ -304,15 +317,16 @@ public class PhotoSearch extends PhotoHelper {
 		}
 	}
 
-	private void processRange(Set rset, int which, String start, String end)
+	private Collection processRange(int which, String start, String end)
 		throws Exception {
 
 		SearchIndex index=SearchIndex.getInstance();
 		Date s=PhotoUtil.parseDate(start);
 		Date e=PhotoUtil.parseDate(end);
 
+		Collection matches=Collections.EMPTY_LIST;
+
 		if(s != null || e != null) {
-			Collection matches=null;
 			switch(which) {
 				case BY_TS:
 					matches=index.getForTimestamp(s, e);
@@ -324,9 +338,8 @@ public class PhotoSearch extends PhotoHelper {
 					throw new IllegalArgumentException("Invalid which:  "
 						+ which);
 			}
-
-			rset.retainAll(matches);
 		}
+		return(matches);
 	}
 
 	private Collection getValidCats(PhotoUser u) throws Exception {
