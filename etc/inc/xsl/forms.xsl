@@ -320,4 +320,29 @@
 	</p>
 </xsl:template>
 
+<xsl:template match="adm_new_profile_form">
+
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<input type="hidden" name="func" value="admnewprofile"/>
+		Profile Description:
+		<input name="name"/><br/>
+		Categories:
+		<table border="1">
+			<tr>
+				<th>Name</th>
+				<th>Can View</th>
+			</tr>
+			<xsl:for-each select="categories/category">
+				<tr>
+					<td><xsl:value-of select="@name"/></td>
+					<td><input type="checkbox" name="catacl_view"
+						value="{@id}"/></td>
+				</tr>
+			</xsl:for-each>
+		</table>
+		<br/>
+		<input type="submit" value="Create"/>
+	</form>
+</xsl:template>
+
 </xsl:stylesheet>

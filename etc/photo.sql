@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.11 2002/01/10 10:22:35 dustin Exp $
+-- $Id: photo.sql,v 1.12 2002/01/13 11:08:32 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -234,6 +234,19 @@ create table user_profiles (
 create unique index user_profilesbyname on user_profiles(name);
 grant all on user_profiles to nobody;
 grant all on user_profiles_profile_id_seq to nobody;
+
+-- View the profiles
+create view user_profile_view as
+	select p.name, p.description, p.expires,
+			c.name as cat_name
+		from
+			user_profiles p, cat c, user_profile_acls a
+		where
+			p.profile_id=a.profile_id
+			and c.id=a.cat_id
+		order by
+			p.expires
+;
 
 -- Profile ACLs
 create table user_profile_acls (

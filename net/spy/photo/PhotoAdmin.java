@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.19 2001/12/28 12:46:55 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.20 2002/01/13 11:08:32 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,13 +14,14 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import net.spy.*;
+import net.spy.db.*;
 import net.spy.cache.*;
 
 public class PhotoAdmin extends PhotoHelper {
 
 	protected boolean debug=true;
 
-	PhotoSession ps=null;
+	private PhotoSession ps=null;
 
 	public PhotoAdmin(PhotoSession ps) throws Exception {
 		super();
@@ -42,6 +43,10 @@ public class PhotoAdmin extends PhotoHelper {
 			out=admEditUserForm();
 		} else if(func.equals("admsaveuser")) {
 			out=admSaveUser();
+		} else if(func.equals("admnewprofileform")) {
+			out=admNewProfileForm();
+		} else if(func.equals("admnewprofile")) {
+			out=admNewProfile();
 		} else if(func.equals("admedittext")) {
 			saveImageInfo();
 			out=ps.doDisplay();
@@ -213,6 +218,66 @@ public class PhotoAdmin extends PhotoHelper {
 			throw(se);
 		}
 		return(output);
+	}
+
+	private String admNewProfileForm() throws Exception {
+
+		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+		PreparedStatement pst=db.prepareStatement(
+			"select id, name from cat order by name", 3600);
+		ResultSet rs=pst.executeQuery();
+
+		StringBuffer categories=new StringBuffer();
+		categories.append("<categories>\n");
+		while(rs.next()) {
+			categories.append("\t<category id=\"");
+			categories.append(rs.getInt("id"));
+			categories.append("\" name=\"");
+			categories.append(rs.getString("name"));
+			categories.append("\"/>\n");
+		}
+		categories.append("</categories>\n");
+
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("Create a New Profile");
+		xml.addBodyPart(ps.getGlobalMeta());
+		xml.addBodyPart("<adm_new_profile_form>"
+			+ categories.toString()
+			+ "</adm_new_profile_form>");
+		ps.sendXML(xml.toString());
+		return(null);
+	}
+
+	private String admNewProfile() throws Exception {
+
+		// Make the new Profile.
+		Profile profile=new Profile();
+		String name=ps.request.getParameter("name");
+		if(name==null || name.length()<1) {
+			throw new ServletException("name parameter not given.");
+		}
+		profile.setDescription(name);
+
+		// Add the new ACLs for the user
+		String acls[]=ps.request.getParameterValues("catacl_view");
+		if(acls!=null) {
+			for(int i=0; i<acls.length; i++) {
+				int cat_id=Integer.parseInt(acls[i]);
+				profile.addACLEntry(cat_id);
+			}
+		}
+
+		// Save it.
+		profile.save();
+
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("Saved New Profile");
+		xml.addBodyPart(ps.getGlobalMeta());
+		xml.addBodyPart("<adm_new_profile>"
+			+ profile.getName()
+			+ "</adm_new_profile>");
+		ps.sendXML(xml.toString());
+		return(null);
 	}
 
 	// Save a user

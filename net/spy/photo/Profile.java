@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: Profile.java,v 1.2 2001/07/20 10:14:00 dustin Exp $
+// $Id: Profile.java,v 1.3 2002/01/13 11:08:32 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -98,7 +98,7 @@ public class Profile extends Object implements Serializable {
 	}
 
 	/**
-	 * Get the username.
+	 * Get the profile name.
 	 */
 	public String getName() {
 		return(name);
@@ -253,13 +253,21 @@ public class Profile extends Object implements Serializable {
 			p=new Profile(args[0]);
 		} else {
 			p=new Profile();
-			p.addACLEntry(19);
-			p.addACLEntry(15);
-			p.addACLEntry(9);
-			p.addACLEntry(4);
+			// p.addACLEntry(19);
+			// p.addACLEntry(15);
+			// p.addACLEntry(9);
+			// p.addACLEntry(4);
+			// p.addACLEntry(8);
+			// p.addACLEntry(3);
+
 			p.addACLEntry(8);
+			p.addACLEntry(19);
+			p.addACLEntry(4);
+			p.addACLEntry(1);
 			p.addACLEntry(3);
-			p.setDescription("Any User");
+			p.addACLEntry(9);
+
+			p.setDescription("Noelani's Special Thing");
 
 			p.save();
 		}

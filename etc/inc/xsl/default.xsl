@@ -21,7 +21,42 @@
 				<xsl:value-of select="heading/title"/>
 			</title>
 			<link rel="stylesheet"
-			href="{meta_stuff/self_uri}?func=getstylesheet"/>
+				href="{meta_stuff/self_uri}?func=getstylesheet"/>
+			<link rel="top" href="{meta_stuff/self_uri}" title="PhotoServlet"/>
+			<link rel="author" href="http://bleu.west.spy.net/~dustin/"
+				title="Dustin Sallings"/>
+			<link rel="search" href="{meta_stuff/self_uri}?func=findform"
+				title="PhotoServlet Search"/>
+
+			<xsl:if test="show_image/meta_stuff/next">
+				<link rel="next"
+					href="{meta_stuff/self_uri}?func=display&amp;search_id={show_image/meta_stuff/next}"
+					title="Search Result {show_image/meta_stuff/next}"/>
+			</xsl:if>
+
+			<xsl:if test="show_image/meta_stuff/prev">
+				<link rel="prev"
+					href="{meta_stuff/self_uri}?func=display&amp;search_id={show_image/meta_stuff/prev}"
+					title="Search Result {show_image/meta_stuff/prev}"/>
+			</xsl:if>
+
+			<xsl:if test="show_image/meta_stuff/last">
+				<link rel="first"
+					href="{meta_stuff/self_uri}?func=display&amp;search_id=0"
+					title="First Search Result"/>
+				<link rel="last"
+					href="{meta_stuff/self_uri}?func=display&amp;search_id={show_image/meta_stuff/last}"
+					title="Last Search Result"/>
+
+
+				<!-- if there are more, link to them -->
+				<link rel="parent"
+					title="Search Results"
+					value="{meta_stuff/self_uri}?func=nextresults&amp;startfrom=0"/>
+
+			<!-- Has other results -->
+			</xsl:if>
+
 		</head>
 		<body background="http://bleu.west.spy.net/~dustin/images/holiday.gif" bgcolor="#cFcFfF">
 			<center>
@@ -204,6 +239,9 @@
 				</li>
 				<li><a
 					href="{/page/meta_stuff/self_uri}?func=admcat">Category Admin</a>
+				</li>
+				<li><a
+					href="{/page/meta_stuff/self_uri}?func=admnewprofileform">New Profile</a>
 				</li>
 				<li><a
 					href="{/page/meta_stuff/self_uri}?func=unsetadmin">Drop Privileges</a>
@@ -465,6 +503,10 @@
 		</table>
 		</center>
 	</form>
+</xsl:template>
+
+<xsl:template match="adm_new_profile">
+	New profile saved as <xsl:value-of select="."/>.
 </xsl:template>
 
 </xsl:stylesheet>

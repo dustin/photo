@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.77 2002/01/10 10:44:41 dustin Exp $
+ * $Id: PhotoSession.java,v 1.78 2002/01/13 11:08:32 dustin Exp $
  */
 
 package net.spy.photo;
@@ -286,10 +286,7 @@ public class PhotoSession extends Object
 			sendXML(xml.toString());
 
 		} catch(Exception e) {
-			Hashtable h = new Hashtable();
-			log("Search save failed", e);
-			throw new ServletException(
-				"Error saving search", e);
+			throw new ServletException("Error saving search", e);
 		}
 		return(null);
 	}
@@ -638,6 +635,17 @@ public class PhotoSession extends Object
 		return(null);
 	}
 
+	// Verify a field in the request.
+	private void verifyField(String field, int minlength)
+		throws ServletException {
+
+		String tmp=request.getParameter(field);
+		if(tmp==null || tmp.length() < minlength) {
+			throw new ServletException("Field ``" + field
+				+ "'' must be at least " + minlength + " characters long.");
+		}
+	}
+
 	// Add a user based on a given profile.
 	private String addUser() throws Exception {
 		String pass1=request.getParameter("password");
@@ -651,6 +659,13 @@ public class PhotoSession extends Object
 		if(!pass1.equals(pass2)) {
 			throw new Exception("Passwords don't match.");
 		}
+
+		// Check the password length
+		verifyField("password", 6);
+		verifyField("username", 3);
+		verifyField("realname", 3);
+		// I figure it won't get shorter than d@spy.net
+		verifyField("email", 9);
 
 		// Load the profile
 		Profile p=new Profile(request.getParameter("profile"));
@@ -828,10 +843,9 @@ public class PhotoSession extends Object
 		String newp1=request.getParameter("newpw1");
 		String newp2=request.getParameter("newpw2");
 
-		if(oldpw==null || newp1==null || newp2==null) {
-			throw new ServletException(
-				"Password change form not filled out correctly");
-		}
+		verifyField("oldpw", 6);
+		verifyField("newpw1", 6);
+		verifyField("newpw2", 6);
 
 		// Verify the old password
 		if(sessionData.getUser().checkPassword(oldpw)) {
@@ -998,7 +1012,7 @@ public class PhotoSession extends Object
 	}
 
 	// Get the global meta data
-	private String getGlobalMeta() {
+	String getGlobalMeta() {
 		StringBuffer sb=new StringBuffer();
 
 		sb.append("<meta_stuff>\n");
@@ -1035,7 +1049,7 @@ public class PhotoSession extends Object
 	}
 
 	// Send raw XML
-	private void sendXML(String xml) throws Exception  {
+	void sendXML(String xml) throws Exception  {
 
 		SpyCache cache=new SpyCache();
 
@@ -1101,6 +1115,11 @@ public class PhotoSession extends Object
 			if(h.get("NEXT")!=null) {
 				meta.append("\t<next>" + h.get("NEXT") + "</next>\n");
 			}
+			// Add the last search result ID, for navigation purposes.
+			PhotoSearchResults results=sessionData.getResults();
+			if(results!=null) {
+				meta.append("\t<last>" + (results.nResults()-1) + "</last>\n");
+			}
 			meta.append("</meta_stuff>\n");
 
 			PhotoXML xml=new PhotoXML();
@@ -1123,10 +1142,13 @@ public class PhotoSession extends Object
 		throws Exception {
 
 		PhotoSearchResults results=sessionData.getResults();
+		if(results==null) {
+			throw new ServletException("No results in session.");
+		}
 		int which=Integer.parseInt(request.getParameter("search_id"));
 		PhotoSearchResult r = results.get(which);
 		if(r==null) {
-			throw new ServletException("No results in session.");
+			throw new ServletException("No result in session.");
 		}
 
 		// Add the PREV and NEXT button stuff, if applicable.
@@ -1316,6 +1338,7 @@ public class PhotoSession extends Object
 		boolean thumbnail=false;
 		ServletOutputStream out=null;
 
+		verifyField("photo_id", 1);
 		String s = request.getParameter("photo_id");
 		which = Integer.valueOf(s).intValue();
 
@@ -1375,16 +1398,12 @@ public class PhotoSession extends Object
 			throw new ServletException("Error displaying logs", e);
 		}
 
+		verifyField("view", 1);
 		view=request.getParameter("view");
-		if(view==null) {
-			throw new ServletException("LogView without view");
-		}
 
 		if(view.equalsIgnoreCase("viewers")) {
+			verifyField("which", 1);
 			String which_s=request.getParameter("which");
-			if(which_s==null) {
-				throw new ServletException("LogView/viewers without which");
-			}
 			int which=Integer.parseInt(which_s);
 
 			// Verify access
