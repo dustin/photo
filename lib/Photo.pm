@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.54 1998/11/09 06:23:43 dustin Exp $
+# $Id: Photo.pm,v 1.55 1998/11/09 07:07:36 dustin Exp $
 
 package Photo;
 
@@ -504,8 +504,7 @@ sub addImage
 
 	$self->start_html($q, 'Adding image');
 
-	$query="select * from wwwusers where\n".
-	       "        userid=getwwwuser('$ENV{'REMOTE_USER'}')\n";
+	$query="select * from wwwusers where username='$ENV{'REMOTE_USER'}'\n";
 	$s=$self->doQuery($query);
 	$r=$s->fetch;
 	if($r->[4]!=1) {
