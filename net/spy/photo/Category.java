@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.7 2002/11/03 07:33:35 dustin Exp $
+// $Id: Category.java,v 1.8 2002/11/04 03:11:24 dustin Exp $
 
 package net.spy.photo;
 
@@ -10,19 +10,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
 import net.spy.SpyDB;
+import net.spy.cache.SpyCache;
 
-import net.spy.db.SpyCacheDB;
+import net.spy.photo.sp.GetAllCategories;
 
 /**
  * Category representation.
  */
-public class Category extends Object {
+public class Category extends Object implements Comparable {
 
 	/**
 	 * Flag to list categories that can be read by the user.
@@ -33,10 +40,13 @@ public class Category extends Object {
 	 */
 	public static final int ACCESS_WRITE=2;
 
+	private static final String CACHE_KEY="photo_cat_map";
+	private static final long CACHE_TIME=86400000;
+
 	private int id=-1;
 	private String name=null;
 
-	private ArrayList acl=null;
+	private List acl=null;
 
 	/**
 	 * Get an instance of Category.
@@ -51,21 +61,49 @@ public class Category extends Object {
 		name=rs.getString("name");
 	}
 
+	private static Map getCategoryMap() throws SQLException {
+		Map rv=null;
+		
+		SpyCache sc=SpyCache.getInstance();
+
+		rv=(Map)sc.get(CACHE_KEY);
+		if (rv==null) {
+			rv=new HashMap();
+
+			GetAllCategories db=new GetAllCategories(new PhotoConfig());
+
+			ResultSet rs=db.executeQuery();
+			while(rs.next()) {
+				Category cat=new Category(rs);
+
+				// Map it by name and id
+				rv.put(cat.getName(), cat);
+				rv.put(new Integer(cat.getId()), cat);
+			}
+
+			db.close();
+
+			// Now, flip through the categories and get their ACLs initified.
+			loadACLs(rv.values());
+
+			// remember it
+			sc.store(CACHE_KEY, rv, CACHE_TIME);
+		}
+
+		return (rv);
+	}
+
 	/**
 	 * Lookup a category by integer ID.
 	 */
 	public static Category lookupCategory(int catId) throws Exception {
-		Category rv=null;
+		Map catMap=getCategoryMap();
 
-		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
-		ResultSet rs=db.executeQuery("select * from cat where id="
-			+ catId, 3600);
-		if(!rs.next()) {
+		Category rv=(Category)catMap.get(new Integer(catId));
+
+		if(rv == null) {
 			throw new Exception("No such category:  " + catId);
 		}
-		rv=new Category(rs);
-		rs.close();
-		db.close();
 
 		return(rv);
 	}
@@ -74,49 +112,88 @@ public class Category extends Object {
 	 * Look up a category by name.
 	 */
 	public static Category lookupCategory(String catName) throws Exception {
-		Category rv=null;
+		Map catMap=getCategoryMap();
 
-		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
-		PreparedStatement pst=db.prepareStatement(
-			"select * from cat where name=?", 3600);
-		pst.setString(1, catName);
-		ResultSet rs=pst.executeQuery();
-		if(!rs.next()) {
+		Category rv=(Category)catMap.get(catName);
+
+		if(rv == null) {
 			throw new Exception("No such category:  " + catName);
 		}
-		rv=new Category(rs);
-		if(rs.next()) {
-			throw new Exception("Too many matches for category " + catName);
-		}
-		rs.close();
-		db.close();
+
 		return(rv);
+	}
+
+	/** 
+	 * Compare categories by name.
+	 */
+	public int compareTo(Object o) {
+		Category cat=(Category)o;
+
+		String thisName=getName().toLowerCase();
+		String thatName=cat.getName().toLowerCase();
+
+		return (thisName.compareTo(thatName));
+	}
+
+	/** 
+	 * True if the categories have the same name.
+	 */
+	public boolean equals(Object o) {
+		boolean rv=false;
+
+		try {
+			rv=compareTo(o) == 0;
+		} catch(ClassCastException cce) {
+			// Remain false
+		}
+
+		return (rv);
+	}
+
+	/** 
+	 * Get the hash code.
+	 * 
+	 * @return the ID of this category
+	 */
+	public int hashCode() {
+		return (getId());
+	}
+
+	// Overwrite the ACL entry
+	private void setAcl(List to) {
+		acl=to;
 	}
 
 	/**
 	 * Load the ACLs for this Category instance.
 	 */
-	public void loadACLs() throws Exception {
+	private static void loadACLs(Collection categories) throws SQLException {
 		
 		SpyDB db=new SpyDB(new PhotoConfig());
 		PreparedStatement pst=db.prepareStatement(
 			"select distinct userid, canview, canadd\n"
 				+ " from wwwacl where cat=?");
-		pst.setInt(1, id);
-		ResultSet rs=pst.executeQuery();
 
-		// Add the ACL entries
-		acl=new ArrayList();
-		while(rs.next()) {
-			int uid=rs.getInt("userid");
-			if(rs.getBoolean("canview")) {
-				addViewACLEntry(uid);
+		for (Iterator i=categories.iterator(); i.hasNext(); ) {
+			Category cat=(Category)i.next();
+
+			pst.setInt(1, cat.getId());
+			ResultSet rs=pst.executeQuery();
+
+			// (re)set the ACL set for this category
+			cat.setAcl(new ArrayList());
+
+			while(rs.next()) {
+				int uid=rs.getInt("userid");
+				if(rs.getBoolean("canview")) {
+					cat.addViewACLEntry(uid);
+				}
+				if(rs.getBoolean("canadd")) {
+					cat.addAddACLEntry(uid);
+				}
 			}
-			if(rs.getBoolean("canadd")) {
-				addAddACLEntry(uid);
-			}
+			rs.close();
 		}
-		rs.close();
 		pst.close();
 		db.close();
 	}
@@ -275,6 +352,43 @@ public class Category extends Object {
 		acl.clear();
 	}
 
+	private static SortedSet getInternalCatList(int uid, int access)
+		throws PhotoException {
+
+		boolean seeksRead=((access&ACCESS_READ)>0);
+		boolean seeksWrite=((access&ACCESS_WRITE)>0);
+
+		// Make sure some access method is given.
+		if(access==0) {
+			throw new PhotoException("No access method given.");
+		}
+
+		SortedSet rv=getAdminCatList();
+
+		for(Iterator i=rv.iterator(); i.hasNext();) {
+			Category cat=(Category)i.next();
+
+			PhotoACLEntry aclE=cat.getACLEntryForUser(uid);
+
+			boolean keep=false;
+			// If we got an entry, see if it works for us.
+			if(aclE != null) {
+				if(seeksRead && aclE.canView()) {
+					keep=true;
+				}
+				if(seeksWrite && aclE.canAdd()) {
+					keep=true;
+				}
+			}
+
+			if(!keep) {
+				i.remove();
+			}
+		}
+
+		return(rv);
+	}
+
 	/**
 	 * Get a category list.
 	 *
@@ -282,71 +396,35 @@ public class Category extends Object {
 	 * @param access A bitmask describing the access required for the
 	 * search (ord together).
 	 */
-	public static Collection getCatList(int uid, int access)
+	public static SortedSet getCatList(int uid, int access)
 		throws PhotoException {
 
-		ArrayList al=new ArrayList();
+		// The set for this user
+		SortedSet baseSet=getInternalCatList(uid, access);
+		// The set for the default user
+		SortedSet defSet=getInternalCatList(PhotoUtil.getDefaultId(), access);
 
-		if( ((access&ACCESS_READ)>0) && ((access&ACCESS_WRITE)>0) ) {
-			throw new PhotoException(
-				"Cannot combine read and write access yet.");
-		}
+		// Add all of the default set to the base set.
+		baseSet.addAll(defSet);
 
-		try {
-			String op=null;
-			if( (access&ACCESS_READ)>0) {
-				op="canview";
-			} else if((access&ACCESS_WRITE)>0) {
-				op="canadd";
-			} else {
-				throw new PhotoException("No access method given.");
-			}
-
-			SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
-
-			StringBuffer query=new StringBuffer(4096);
-			query.append("select * from cat where id in\n");
-			query.append("(select cat from wwwacl where\n");
-			query.append("    (userid=? or userid=?) ");
-			query.append("     and ");
-			query.append(op);
-			query.append("=true)\n");
-			query.append("order by name");
-
-			PreparedStatement pst=db.prepareStatement(query.toString(), 300);
-			pst.setInt(1, uid);
-			pst.setInt(2, PhotoUtil.getDefaultId());
-
-			ResultSet rs=pst.executeQuery();
-
-			while(rs.next()) {
-				al.add(new Category(rs));
-			}
-			rs.close();
-			pst.close();
-			db.close();
-		} catch(SQLException se) {
-			throw new PhotoException("Error getting category list", se);
-		}
-
-		return(al);
-	}
+		return(baseSet);
+	} // getCatList(int,int)
 
 	/**
 	 * Get a Collection of all categories (for administrative actions).
+	 * @return a new SortedSet of Categories.
+	 * @throws PhotoException if it can't find the categories
 	 */
-	public static Collection getAdminCatList() throws PhotoException {
-		ArrayList al=new ArrayList();
+	public static SortedSet getAdminCatList() throws PhotoException {
+		SortedSet rv=null;
 		try {
-			SpyDB db=new SpyDB(new PhotoConfig());
-			ResultSet rs=db.executeQuery("select * from cat order by name");
-			while(rs.next()) {
-				al.add(new Category(rs));
-			}
+			Map catMap=getCategoryMap();
+			rv=new TreeSet();
+			rv.addAll(catMap.values());
 		} catch(Exception e) {
 			throw new PhotoException("Error getting admin category list", e);
 		}
-		return(al);
+		return(rv);
 	}
 
 	/**
@@ -374,7 +452,15 @@ public class Category extends Object {
 	 * String me.
 	 */
 	public String toString() {
-		return(name + " (" + id + ")");
+		StringBuffer sb=new StringBuffer(64);
+
+		sb.append("{Category name=");
+		sb.append(name);
+		sb.append(", id=");
+		sb.append(id);
+		sb.append("}");
+
+		return (sb.toString());
 	}
 
 	/**

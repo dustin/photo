@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectCatAction.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
+// $Id: AdminSelectCatAction.java,v 1.4 2002/11/04 03:11:24 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -61,7 +61,6 @@ public class AdminSelectCatAction extends AdminAction {
 			Category cat=null;
 			try {
 				cat=Category.lookupCategory(Integer.parseInt(acf.getCatId()));
-				cat.loadACLs();
 			} catch(Exception e) {
 				throw new ServletException("Couldn't lookup category", e);
 			}

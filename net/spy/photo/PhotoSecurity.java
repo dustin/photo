@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.29 2002/08/08 23:04:57 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.30 2002/11/04 03:11:24 dustin Exp $
  */
 
 package net.spy.photo;
@@ -19,6 +19,7 @@ import net.spy.SpyDB;
 import net.spy.cache.SpyCache;
 
 import net.spy.photo.sp.ListUsers;
+import net.spy.photo.sp.GetACLForUser;
 
 import net.spy.util.Base64;
 
@@ -54,40 +55,81 @@ public class PhotoSecurity extends PhotoHelper {
 		return(out.trim());
 	}
 
-	// All the common stuff for loading a user happens here.
-	private PhotoUser getUser(SpyDB conn, PreparedStatement st)
-		throws Exception {
-
-			ResultSet rs=st.executeQuery();
-			if(!rs.next()) {
-				throw new Exception("No results while loading user.");
-			}
-
-			PhotoUser u = getUser(rs);
-
-			rs.close();
-			st.close();
-			st=conn.prepareStatement(
-				"select distinct cat, canview, canadd\n"
-					+ " from wwwacl where userid=?");
-			st.setInt(1, u.getId());
-			rs=st.executeQuery();
-			// Add the ACL entries.
-			while(rs.next()) {
-				int cat=rs.getInt("cat");
-				if(rs.getBoolean("canview")) {
-					u.addViewACLEntry(cat);
-				}
-				if(rs.getBoolean("canadd")) {
-					u.addAddACLEntry(cat);
-				}
-			}
-			rs.close();
-			st.close();
-
-			return(u);
+	private void initACLs(PhotoUser u) throws Exception {
+		initACLs(u, PhotoUtil.getDefaultUser().getId());
 	}
 
+	private void initACLs(PhotoUser u, int defaultId) throws Exception {
+		GetACLForUser db=new GetACLForUser(getConfig());
+
+		db.setUserId(u.getId());
+		db.setDefaultUserId(defaultId);
+
+		ResultSet rs=db.executeQuery();
+		while(rs.next()) {
+			int cat=rs.getInt("cat");
+			if(rs.getBoolean("canview")) {
+				u.addViewACLEntry(cat);
+			}
+			if(rs.getBoolean("canadd")) {
+				u.addAddACLEntry(cat);
+			}
+		}
+		rs.close();
+		db.close();
+	}
+
+	// Get the default user
+	PhotoUser getDefaultUser() {
+		PhotoUser ret=null;
+
+		// Get the username from the config
+		String username=getConfig().get("default_user", "guest");
+		// Lowercase the username before the lookup (since it's lowercased
+		// on insert)
+		username=username.toLowerCase();
+
+		// Grab the cache
+		SpyCache cache=SpyCache.getInstance();
+		String key="sec_u_" + username;
+
+		// Get the data from cache
+		ret = (PhotoUser)cache.get(key);
+
+		// If it's not cached, grab it from the DB.
+		if(ret==null) {
+			try {
+				SpyDB db=new SpyDB(getConfig());
+				PreparedStatement st=db.prepareStatement(
+					"select * from wwwusers where username=?"
+					);
+				st.setString(1, username);
+				ResultSet rs=st.executeQuery();
+				PhotoUser u=null;
+				if(rs.next()) {
+					u=getUser(rs);
+				} else {
+					throw new Exception("No result found for " + username);
+				}
+				if(rs.next()) {
+					throw new Exception("Too many results found for "
+						+ username);
+				}
+				db.close();
+				initACLs(u, u.getId());
+
+				// User cache is valid for 30 minutes
+				cache.store(key, u, 30*60*1000);
+				ret=u;
+			} catch(Exception e) {
+				log("Error lookup up user " + username);
+				e.printStackTrace();
+			}
+		}
+
+		return(ret);
+	}
+	
 	// Get a user by username.
 	private PhotoUser getUserByUsername(String username) {
 		PhotoUser ret=null;
@@ -111,12 +153,23 @@ public class PhotoSecurity extends PhotoHelper {
 					"select * from wwwusers where username=?"
 					);
 				st.setString(1, username);
-				PhotoUser u=getUser(db, st);
+				ResultSet rs=st.executeQuery();
+				PhotoUser u=null;
+				if(rs.next()) {
+					u=getUser(rs);
+				} else {
+					throw new Exception("No result found for " + username);
+				}
+				if(rs.next()) {
+					throw new Exception("Too many results found for "
+						+ username);
+				}
+				db.close();
+				initACLs(u);
 
 				// User cache is valid for 30 minutes
 				cache.store(key, u, 30*60*1000);
 				ret=u;
-				db.close();
 			} catch(Exception e) {
 				log("Error lookup up user " + username);
 				e.printStackTrace();
@@ -145,12 +198,23 @@ public class PhotoSecurity extends PhotoHelper {
 					"select * from wwwusers where email=?"
 					);
 				st.setString(1, email);
-				PhotoUser u=getUser(db, st);
+				ResultSet rs=st.executeQuery();
+				PhotoUser u=null;
+				if(rs.next()) {
+					u=getUser(rs);
+				} else {
+					throw new Exception("No result found for " + email);
+				}
+				if(rs.next()) {
+					throw new Exception("Too many results found for "
+						+ email);
+				}
+				db.close();
+				initACLs(u);
 
 				// User cache is valid for 30 minutes
 				cache.store(key, u, 30*60*1000);
 				ret=u;
-				db.close();
 			} catch(Exception e) {
 				log("Error lookup up user " + email);
 				e.printStackTrace();
@@ -197,12 +261,22 @@ public class PhotoSecurity extends PhotoHelper {
 					"select * from wwwusers where id=?"
 					);
 				st.setInt(1, id);
-				PhotoUser u=getUser(db, st);
+				ResultSet rs=st.executeQuery();
+				PhotoUser u=null;
+				if(rs.next()) {
+					u=getUser(rs);
+				} else {
+					throw new Exception("No result found for " + id);
+				}
+				if(rs.next()) {
+					throw new Exception("Too many results found for " + id);
+				}
+				db.close();
+				initACLs(u);
 
 				// User cache is valid for 30 minutes
 				cache.store(key, u, 30*60*1000);
 				ret=u;
-				db.close();
 			} catch(Exception e) {
 				log("Error lookup up user " + id);
 				e.printStackTrace();

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoACLEntry.java,v 1.3 2002/07/10 03:38:08 dustin Exp $
+// $Id: PhotoACLEntry.java,v 1.4 2002/11/04 03:11:24 dustin Exp $
 
 package net.spy.photo;
 
@@ -23,6 +23,23 @@ public class PhotoACLEntry extends Object implements java.io.Serializable {
 		this.cat=cat;
 	}
 
+	/** 
+	 * String me.
+	 */
+	public String toString() {
+		StringBuffer sb=new StringBuffer(64);
+
+		sb.append("{PhotoACLEntry cat=");
+		sb.append(cat);
+		sb.append(", canview=");
+		sb.append(canview);
+		sb.append(", canadd=");
+		sb.append(canadd);
+		sb.append("}");
+
+		return (sb.toString());
+	}
+
 	/**
 	 * True for PhotoACLEntry instances that reference the same user and
 	 * category, regardless of flags.
@@ -36,6 +53,13 @@ public class PhotoACLEntry extends Object implements java.io.Serializable {
 		}
 
 		return(rv);
+	}
+
+	/** 
+	 * Get the hash code of this object.
+	 */
+	public int hashCode() {
+		return (uid ^ cat);
 	}
 
 	/**

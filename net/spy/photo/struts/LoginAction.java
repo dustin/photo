@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginAction.java,v 1.9 2002/07/10 03:38:09 dustin Exp $
+// $Id: LoginAction.java,v 1.10 2002/11/04 03:11:24 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -67,6 +67,7 @@ public class LoginAction extends PhotoAction {
 
 		// Find out of the user wanted to upgrade to admin privs after 
 		if(lf.getAdmin()) {
+			System.err.println(user + " logged in as admin");
 			rv=mapping.findForward("setadmin");
 		} else {
 			rv=mapping.findForward("success");

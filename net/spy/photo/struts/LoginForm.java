@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginForm.java,v 1.6 2002/07/10 03:38:09 dustin Exp $
+// $Id: LoginForm.java,v 1.7 2002/11/04 03:11:24 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -87,6 +87,17 @@ public class LoginForm extends ActionForm {
 		}
 
 		return(errors);
+	}
+
+	/** 
+	 * Out with the old, in with the new.
+	 * 
+	 * @param mapping servlet mapping being used
+	 * @param request the request objectg
+	 */
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		admin=false;
+		password=null;
 	}
 
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveCatAction.java,v 1.3 2002/08/20 03:09:16 dustin Exp $
+// $Id: AdminSaveCatAction.java,v 1.4 2002/11/04 03:11:24 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -47,7 +47,6 @@ public class AdminSaveCatAction extends AdminAction {
 		Category cat=null;
 		try {
 			cat=Category.lookupCategory(Integer.parseInt(acf.getCatId()));
-			cat.loadACLs();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

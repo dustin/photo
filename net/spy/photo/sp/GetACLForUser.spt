@@ -1,0 +1,27 @@
+#
+# $Id: GetACLForUser.spt,v 1.1 2002/11/04 03:11:24 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get the ACL for the given user.
+
+@sql
+select distinct
+		cat, canview, canadd
+	from
+		wwwacl
+	where
+		userid = ?
+		or userid = ?
+
+@params
+user_id required INTEGER The ID of the user whose permissions you want
+default_user_id required INTEGER The ID of the default user
+
+@results
+cat INTEGER Category ID
+canview BOOLEAN True if the user can view this category
+canadd BOOLEAN True if the user can add to this category

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CategoryTag.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
+// $Id: CategoryTag.java,v 1.4 2002/11/04 03:11:24 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -76,6 +76,9 @@ public class CategoryTag extends PhotoTag {
 		} catch(PhotoException pe) {
 			pe.printStackTrace();
 			throw new JspException("Error getting category list.");
+		} catch(RuntimeException e) {
+			e.printStackTrace();
+			throw e;
 		}
 
 		pageContext.setAttribute("catList", cats);

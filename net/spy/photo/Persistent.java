@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Persistent.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
+// $Id: Persistent.java,v 1.7 2002/11/04 03:11:24 dustin Exp $
 
 package net.spy.photo;
 
@@ -43,6 +43,15 @@ public class Persistent extends HttpServlet {
 			conf.setStaticConfigLocation(confpath);
 			// Get a new config for the changes to take effect
 			conf=new PhotoConfig();
+		}
+
+		// initialize the category list early on, because it's simple DB
+		// access and will look for no further data.
+		try {
+			log("Initializing categories.");
+			Category.getAdminCatList();
+		} catch(Exception e) {
+			throw new ServletException("Can't initialize categories.", e);
 		}
 
 		// Security stuff
