@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaverThread.java,v 1.3 2002/06/03 17:03:12 dustin Exp $
+// $Id: PhotoSaverThread.java,v 1.4 2002/06/05 21:07:50 dustin Exp $
 
 package net.spy.photo;
 
@@ -18,6 +18,8 @@ public class PhotoSaverThread extends Thread {
 	private final static int SUCCESS=1;
 	private final static int FAILURE=2;
 
+	private boolean processing=false;
+
 	/**
 	 * Get an instance of PhotoSaverThread.
 	 */
@@ -25,6 +27,25 @@ public class PhotoSaverThread extends Thread {
 		super("PhotoSaverThread");
 		jobQueue=new Stack();
 		start();
+	}
+
+	/**
+	 * String me.
+	 */
+	public String toString() {
+		StringBuffer sb=new StringBuffer();
+		sb.append(super.toString());
+
+		sb.append(" - Queue size:  ");
+		sb.append(jobQueue.size());
+
+		sb.append(" ");
+		if(!processing) {
+			sb.append("NOT ");
+		}
+		sb.append("processing");
+
+		return(sb.toString());
 	}
 
 	/**
@@ -85,10 +106,14 @@ public class PhotoSaverThread extends Thread {
 	 */
 	public void run() {
 		while(going) {
+			// We're not currently processing
+			processing=false;
 			// Current job
 			PhotoSaver ps=null;
 			try {
 				ps=(PhotoSaver)jobQueue.pop();
+				// Since we've popped the stack, mark us as processing.
+				processing=true;
 				System.out.println("Saving " + ps);
 				ps.saveImage();
 				report(SUCCESS, ps, null);
