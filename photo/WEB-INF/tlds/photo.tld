@@ -153,6 +153,28 @@
 		</attribute>
 	</tag>
 
+	<!-- Create a relative image src to an image within this webapp -->
+	<tag>
+		<name>imgsrc</name>
+		<tagclass>net.spy.photo.taglib.ImgSrcTag</tagclass>
+		<attribute>
+			<name>url</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>alt</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>width</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>height</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+
 	<!-- Info about active sessions -->
 	<tag>
 		<name>sessionInfo</name>
