@@ -3,6 +3,8 @@
 </head>
 <body bgcolor="#fFfFfF">
 
+<h1>Most Popular Images</h1>
+
 <table border="1">
 <tr>
 	<th>Rating</th>

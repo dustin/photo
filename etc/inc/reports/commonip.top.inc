@@ -3,6 +3,8 @@
 </head>
 <body bgcolor="#fFfFfF">
 
+<h1>Most Common IP Addresses</h1>
+
 <table border="1">
 <tr>
 	<th>Rating</th>
