@@ -43,10 +43,10 @@
 
 	<tr>
 		<td>
-			<a href="search.do?maxret=6&cat=<%= id %>"><%= name %></a>
+			<a href="search.do?order=a.ts&sdirection=desc&maxret=6&cat=<%= id %>"><%= name %></a>
 		</td>
 		<td>
-			<a href="search.do?maxret=6&cat=<%= id %>"><%= number %> <%=
+			<a href="search.do?order=a.ts&sdirection=desc&maxret=6&cat=<%= id %>"><%= number %> <%=
 				t %></a>
 		</td>
 	</tr>
