@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoCache.java,v 1.1 2000/07/05 01:03:41 dustin Exp $
+ * $Id: PhotoCache.java,v 1.2 2000/07/09 08:52:40 dustin Exp $
  */
 
 package net.spy.photo;
@@ -18,14 +18,14 @@ public class PhotoCache extends Object {
 		init();
 	}
 
-	public void store(Object key, Object value, long cache_time) {
+	public void store(String key, Object value, long cache_time) {
 		PhotoCacheItem i=new PhotoCacheItem(key, value, cache_time);
 		synchronized(cacheStore) {
 			cacheStore.put(key, i);
 		}
 	}
 
-	public Object get(Object key) {
+	public Object get(String key) {
 		Object ret=null;
 		synchronized(cacheStore) {
 			PhotoCacheItem i=(PhotoCacheItem)cacheStore.get(key);
@@ -34,6 +34,25 @@ public class PhotoCache extends Object {
 			}
 		}
 		return(ret);
+	}
+
+	public void uncache(String key) {
+		synchronized(cacheStore) {
+			cacheStore.remove(key);
+		}
+	}
+
+	public void uncacheLike(String keystart) {
+		synchronized(cacheStore) {
+			for(Enumeration e=cacheStore.keys(); e.hasMoreElements(); ) {
+				String key=(String)e.nextElement();
+
+				// If this matches, kill it.
+				if(key.startsWith(keystart)) {
+					cacheStore.remove(key);
+				}
+			} // for loop
+		} // lock
 	}
 
 	protected synchronized void init() {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.2 2000/07/09 08:34:27 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.3 2000/07/09 08:52:40 dustin Exp $
  */
 
 package net.spy.photo;
@@ -364,6 +364,11 @@ public class PhotoAdmin extends PhotoHelper {
 				st.setInt(1, ps.remote_uid.intValue());
 				st.setInt(2, cat_id);
 				st.executeUpdate();
+
+				// Now, let's uncache any cached category lists we have.
+				PhotoCache cache=new PhotoCache();
+				// Get rid of anything that starts with catList_
+				cache.uncacheLike("catList_");
 			}
 		} catch(Exception e) {
 			se=new ServletException("Error in admEditCategoryForm: " + e);
