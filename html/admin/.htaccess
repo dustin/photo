@@ -1,3 +1,4 @@
+# $Id: .htaccess,v 1.5 1998/11/15 09:07:10 dustin Exp $
 ErrorDocument 401 /~dustin/errors/photo.noauth.shtml
 
 AuthName "Photo user"
