@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.39 2003/06/14 04:04:24 dustin Exp $
+	$Id: build.xml,v 1.40 2003/06/14 04:05:24 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -73,7 +73,7 @@
 	<!-- This is specific to my development at home. -->
 	<target name="install"
 		description="Install a new build in my environment (not for most people)"
-		depends="validateconfigs,install-web-app"/>
+		depends="install-web-app"/>
 
 	<target name="install-web-app-var">
 		<echo message="Installing to ${location}"/>
@@ -130,7 +130,7 @@
 
 	<target name="photo.jar"
 		description="Create photo.jar"
-		depends="all,photoresources.properties">
+		depends="all,photoresources.properties,validateconfigs">
 		<jar jarfile="photo.jar" basedir=".">
 			<include name="**/*.class"/>
 			<include name="net/**/*.properties"/>
