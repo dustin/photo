@@ -8,10 +8,15 @@ Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 
 import os
 import sys
+import time
 import posix
 import shutil
 import urllib2
 import libphoto
+
+def mymkdir(path):
+    if not os.path.isdir(path):
+        os.mkdir(path)
 
 def makeStylesheet():
     f=file("style.css", "w")
@@ -58,7 +63,7 @@ def makeIndex(idx, years):
         <body>
         <h1>Years</h1>
         <ul>\n""")
-    os.mkdir("pages")
+    mymkdir("pages")
     for y in years:
         n=0
         for d in idx[y]:
@@ -170,11 +175,18 @@ def parseIndex(srcurl):
 
     album={}
     print "Parsing index..."
+    start=time.time()
     f=urllib2.urlopen(srcurl + "export")
     d=libphoto.parseIndex(f, MyHandler(album))
     f.close()
-    print "Parsed in %.2fu/%.2fs" % posix.times()[:2]
+    end=time.time()
+    times=posix.times()
+    print "Parsed in %.2fr/%.2fu/%.2fs" % (end-start, times[0], times[1])
     return album
+
+def status(str):
+    sys.stdout.write(" " * 60)
+    sys.stdout.write("\r" + str + "\r")
 
 def fetchImage(srcurl, photo, destdir):
     if srcurl[-1] != '/':
@@ -185,13 +197,16 @@ def fetchImage(srcurl, photo, destdir):
     thumbnail=baseurl + "&thumbnail=1"
 
     for ext,url in (('full', baseurl), ('normal', normal), ('tn', thumbnail)):
-        print "Fetching %s for %s" % (url, ext)
-        f = urllib2.urlopen(url)
-        toWrite=open("%s/%d_%s.%s" % (destdir, photo.id, ext, photo.extension),
-            "w")
-        shutil.copyfileobj(f, toWrite)
-        toWrite.close()
-        f.close()
+        # print "Fetching %s for %s" % (url, ext)
+        destfn="%s/%d_%s.%s" % (destdir, photo.id, ext, photo.extension)
+        if os.path.exists(destfn):
+            status("Already have %s" % destfn)
+        else:
+            f = urllib2.urlopen(url)
+            toWrite=open(destfn, "w")
+            shutil.copyfileobj(f, toWrite)
+            toWrite.close()
+            f.close()
 
 # Start
 
@@ -207,8 +222,9 @@ if __name__ == '__main__':
     baseurl=sys.argv[1]
 
     if sys.argv > 2:
-        os.mkdir(sys.argv[2])
-        os.chdir(sys.argv[2])
+        destdir=sys.argv[2]
+        mymkdir(destdir)
+        os.chdir(destdir)
 
     idx=parseIndex(baseurl)
 
@@ -219,20 +235,26 @@ if __name__ == '__main__':
     makeStylesheet()
     
     times=posix.times()
+    t=time.time()
     for y in years:
         makeYearPage(idx, y)
 
-        os.mkdir("pages/%04d" % (y, ))
+        mymkdir("pages/%04d" % (y, ))
         for m in idx[y].keys():
             photos=idx[y][m]
             makeMonthPage(y, m, photos)
             dir="pages/%04d/%02d" % (y, m)
-            os.mkdir(dir)
+            mymkdir(dir)
             for photo in photos:
                 makePageForPhoto(dir, photo)
                 fetchImage(baseurl, photo, dir)
 
-        newtimes=posix.times()
-        ut=newtimes[0] - times[0]
-        st=newtimes[1] - times[1]
-        print "Processed %04d in %.2fu/%.2fs" % (y, ut, st)
+            newtimes=posix.times()
+            ut=newtimes[0] - times[0]
+            st=newtimes[1] - times[1]
+            newtime=time.time()
+            rt=newtime-t
+            status("Processed %04d/%02d in %.2fr/%.2fu/%.2fs%s\n" \
+                % (y, m, rt, ut, st, ' ' * 20))
+            times=newtimes
+            t=newtime
