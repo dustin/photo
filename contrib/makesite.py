@@ -230,6 +230,25 @@ class ImageFetcher(threadpool.Job):
         self.status=status
 
     def run(self):
+        global config
+        if config.has_key("-i"):
+            if not self.__fetchLocalImage():
+                self.__fetchRemoteImage()
+        else:
+            self.__fetchRemoteImage()
+
+    def __fetchLocalImage(self):
+        rv = False
+        srcpath = os.path.join(config['-i'], self.destpath)
+        if os.path.exists(srcpath):
+            print "Found", srcpath
+            shutil.copy(srcpath, self.destpath)
+            rv = True
+        else:
+            print "Did not find", srcpath
+        return rv
+
+    def __fetchRemoteImage(self):
         f = libphoto.fetchImage(self.baseurl, self.photo.id, self.size, self.tn)
         toWrite=open(self.destpath, "w")
         shutil.copyfileobj(f, toWrite)
@@ -290,6 +309,7 @@ def processMonth(idx, y, m):
 def go():
 
     global config
+    global tp
 
     # Set up the destination directory
     mymkdir(config['destdir'])
@@ -313,7 +333,7 @@ def go():
     makeIndex(idx, years)
     makeStylesheet()
     
-    threadpool.ThreadPool(num=10)
+    tp=threadpool.ThreadPool(num=10)
     for y in years:
         makeYearPage(idx, y)
 
@@ -328,7 +348,7 @@ def go():
 def parseArgs():
     global config
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'vfFa:')
+        opts, args = getopt.getopt(sys.argv[1:], 'vfFa:i:')
         config = dict(opts)
     except getopt.GetoptError, e:
         raise UsageError(e)
@@ -348,10 +368,13 @@ def parseArgs():
 # Start
 
 def usage():
-    print "Usage:  %s [-f] [-F] [-a user] photurl destdir" % (sys.argv[0], );
+    print "Usage:  %s [-f] [-F] [-a user] [-i imgpath] photurl destdir" \
+        % (sys.argv[0], );
     print " -a authenticate as the given user"
     print " -f fetch index even if we already have one"
     print " -F fetch the full size images in addition to the smaller ones"
+    print " -i allows you to specify an alt image path to fetch local copies"
+    print "    (relative to destdir)"
     sys.exit(1)
 
 if __name__ == '__main__':
