@@ -24,6 +24,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import net.spy.util.ProgressStats;
+
 import net.spy.photo.*;
 import net.spy.photo.struts.SearchForm;
 
@@ -96,7 +98,7 @@ public class MakeStaticSite extends Object {
 
 		PhotoImage thumb=pih.getThumbnail(pu.getId());
 		PhotoImage image=pih.getImage(normaldim);
-		System.out.println("Got " + thumb + " and " + image);
+		// System.out.println("Got " + thumb + " and " + image);
 
 		// Store the images by date
 		String imgdir=getImageDir(pid);
@@ -170,11 +172,11 @@ public class MakeStaticSite extends Object {
 		PhotoSearch ps=new PhotoSearch();
 		PhotoSearchResults psr=ps.performSearch(sf, sessionData);
 
-		System.out.println(psr);
+		ProgressStats stats=new ProgressStats(psr.size());
+
+		stats.start();
 		for(Iterator i=psr.iterator(); i.hasNext(); ) {
 			PhotoImageData result=(PhotoImageData)i.next();
-
-			System.out.println(psr);
 
 			// Save the image
 			saveImage(result);
@@ -184,6 +186,10 @@ public class MakeStaticSite extends Object {
 
 			// Save the XML version
 			saveXmlMeta(result);
+
+			stats.stop();
+			System.out.println(stats);
+			stats.start();
 		}
 
 		// Save the XML
