@@ -60,6 +60,14 @@
 			<name>alt</name>
 			<required>false</required>
 		</attribute>
+		<attribute>
+			<name>height</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>width</name>
+			<required>false</required>
+		</attribute>
 	</tag>
 
 	<!-- Provide links to images. -->
