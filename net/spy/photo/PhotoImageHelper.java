@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.17 2002/06/17 00:08:59 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.18 2002/06/23 07:50:32 dustin Exp $
  */
 
 package net.spy.photo;
@@ -99,7 +99,7 @@ public class PhotoImageHelper extends PhotoHelper
 	 */
 	public PhotoImage getThumbnail() throws Exception {
 		PhotoDimensions pdim=
-			new PhotoDimensionsImpl(conf.get("thumbnail_size"));
+			new PhotoDimensionsImpl(getConfig().get("thumbnail_size"));
 		return(getImage(pdim));
 	}
 
