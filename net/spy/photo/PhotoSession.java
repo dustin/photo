@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.72 2001/12/29 07:25:55 dustin Exp $
+ * $Id: PhotoSession.java,v 1.73 2001/12/29 08:12:41 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1121,6 +1121,9 @@ public class PhotoSession extends Object
 
 		// Get the data
 		PhotoSearchResult r=new PhotoSearchResult();
+		// Set the scaling stuff.
+		r.setMaxSize(sessionData.getOptimalDimensions());
+		// Fetch up the image
 		r.find(image_id, sessionData.getUser().getId());
 
 		return(r);
