@@ -36,7 +36,9 @@
 							<table width="100%">
 								<tr valign="top">
 									<td align="left">
-										[Stuff]
+										Logged in as
+										<a href="credform.jsp"><%=
+										sessionData.getUser() %></a>.
 									</td>
 									<td align="right">
 										<template:insert
