@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: find.cgi,v 1.6 1997/11/04 09:36:56 dustin Exp $
+# $Id: find.cgi,v 1.7 1997/11/04 09:58:42 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -83,7 +83,7 @@ sub buildQuery
 	            $sub.=" $b" if($c++>0);
 		    $sub.="\n\t$h{field} ~* '$a'";
 	        }
-		$sub.="\n       )";
+		$sub.="\n      )";
 	    }
 	    else
 	    {
