@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.13 2002/08/14 04:31:23 dustin Exp $
+// $Id: DisplayLink.java,v 1.14 2002/09/14 06:09:10 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -11,6 +11,8 @@ import javax.servlet.jsp.JspException;
 
 import net.spy.photo.PhotoSearchResults;
 import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoImageHelper;
+import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoUtil;
 
 /**
@@ -195,6 +197,20 @@ public class DisplayLink extends PhotoTag {
 				href.append(altText);
 				href.append("\"");
 			}
+
+			if( (width == null) && (height == null) ) {
+				try {
+					PhotoImageHelper ph=new PhotoImageHelper(id);
+					PhotoDimensions size=ph.getThumbnailSize();
+					width="" + size.getWidth();
+					height="" + size.getHeight();
+				} catch(Exception e) {
+					// Just print the stack trace, leave the width and height
+					// blank.
+					e.printStackTrace();
+				}
+			}
+
 			if(width!=null) {
 				href.append(" width=\"");
 				href.append(width);

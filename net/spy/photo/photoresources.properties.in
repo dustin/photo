@@ -29,6 +29,7 @@ index.links.newuser=Create an Account
 index.links.admin.user=User Admin
 index.links.admin.cat=Category Admin
 index.links.admin.newprofile=New Profile
+index.links.admin.properties=Edit Properties
 index.links.admin.droppriv=Drop Privileges
 
 index.content.credits=All pages herein were created using vi.  For more \

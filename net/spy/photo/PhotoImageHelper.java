@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.21 2002/08/08 23:04:57 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.22 2002/09/14 06:09:10 dustin Exp $
  */
 
 package net.spy.photo;
@@ -95,6 +95,23 @@ public class PhotoImageHelper extends PhotoHelper {
 		PhotoDimensions pdim=
 			new PhotoDimensionsImpl(getConfig().get("thumbnail_size"));
 		return(getImage(pdim));
+	}
+
+	/** 
+	 * Get the size of this image as a thumbnail.
+	 */
+	public PhotoDimensions getThumbnailSize() throws Exception {
+		PhotoDimensions rv=null;
+		SpyCache cache=SpyCache.getInstance();
+		String key="ph_thumbnail_size_" + imageId;
+		rv=(PhotoDimensions)cache.get(key);
+		if(rv == null) {
+			PhotoImage pi=getThumbnail();
+			rv=new PhotoDimensionsImpl(pi.getWidth(), pi.getHeight());
+			cache.store(key, rv, 1800000);
+		}
+
+		return(rv);
 	}
 
 	/**

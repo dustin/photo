@@ -1,12 +1,15 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageLink.java,v 1.7 2002/07/10 03:38:09 dustin Exp $
+// $Id: ImageLink.java,v 1.8 2002/09/14 06:09:10 dustin Exp $
 
 package net.spy.photo.taglib;
 
 import javax.servlet.http.HttpServletResponse;
 
 import javax.servlet.jsp.JspException;
+
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoImageHelper;
 
 /**
  * Taglib to link to an image.
@@ -116,6 +119,22 @@ public class ImageLink extends PhotoTag {
 			href.append(" alt=\"");
 			href.append(altText);
 			href.append("\"");
+		}
+
+		// if no width or height was provided, figure out out
+		if( (width == null) && (height == null) ) {
+			try {
+				if(showThumbnail) {
+					PhotoImageHelper ph=new PhotoImageHelper(id);
+					PhotoDimensions size=ph.getThumbnailSize();
+					width="" + size.getWidth();
+					height="" + size.getHeight();
+				}
+			} catch(Exception e) {
+				// Just print the stack trace, leave the width and height
+				// blank.
+				e.printStackTrace();
+			}
 		}
 
 		if(width!=null) {
