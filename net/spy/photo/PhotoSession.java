@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.11 2000/06/28 21:47:37 dustin Exp $
+ * $Id: PhotoSession.java,v 1.12 2000/06/30 00:09:59 dustin Exp $
  */
 
 package net.spy.photo;
@@ -696,20 +696,23 @@ public class PhotoSession extends Object
 		id = request.getParameter("id");
 		search_id = request.getParameter("search_id");
 
-		if(id!=null) {
-			out=doDisplayByID();
-		} else if(search_id!=null) {
-			out=doDisplayBySearchId();
-		}
-		return(out);
-	}
+		// A search displayer thing may use this to add additional
+		// information
+		Hashtable h=new Hashtable();
 
-	protected String doDisplayBySearchId() throws ServletException {
-		PhotoSearchResults results=null;
-		results=(PhotoSearchResults)session.getValue("search_results");
-		int which=Integer.parseInt(request.getParameter("search_id"));
-		PhotoSearchResult r = results.get(which);
-		Hashtable h = new Hashtable();
+		PhotoSearchResult r=null;
+
+		try {
+			if(id!=null) {
+				r=doDisplayByID(h);
+			} else if(search_id!=null) {
+				r=doDisplayBySearchId(h);
+			} else {
+				throw new ServletException("No search id, and no search_id");
+			}
+		} catch(Exception e) {
+			throw new ServletException("Error displaying image:  " + e);
+		}
 
 		h.put("IMAGE",     r.image);
 		h.put("KEYWORDS",  r.keywords);
@@ -721,6 +724,27 @@ public class PhotoSession extends Object
 		h.put("CATNUM",    r.catnum);
 		h.put("ADDEDBY",   r.addedby);
 
+		if(isAdmin()) {
+			// Admin needs CATS
+			int defcat=Integer.parseInt(r.catnum);
+			h.put("CATS", getCatList(defcat));
+			out=tokenize("admin/display.inc", h);
+		} else {
+			out=tokenize("display.inc", h);
+		}
+
+		return(out);
+	}
+
+	protected PhotoSearchResult doDisplayBySearchId(Hashtable h)
+		throws Exception {
+
+		PhotoSearchResults results=null;
+		results=(PhotoSearchResults)session.getValue("search_results");
+		int which=Integer.parseInt(request.getParameter("search_id"));
+		PhotoSearchResult r = results.get(which);
+
+		// Add the PREV and NEXT button stuff
 		if(results.nResults() > which+1) {
 			h.put("NEXT",
 				"<a href=\"" + self_uri + "?func=display&search_id="
@@ -736,88 +760,26 @@ public class PhotoSession extends Object
 		} else {
 			h.put("PREV", "");
 		}
-
-		String output = null;
-		if(isAdmin()) {
-			// Admin needs CATS
-			int defcat=Integer.parseInt(r.catnum);
-			h.put("CATS", getCatList(defcat));
-			output=tokenize("admin/display.inc", h);
-		} else {
-			output=tokenize("display.inc", h);
-		}
-		return(output);
+		return(r);
 	}
 
 	// Find and display images.
-	protected String doDisplayByID() throws ServletException {
-		String query, output = "";
-		int i;
-		Integer image_id;
-		String stmp;
-		Hashtable h = new Hashtable();
-		Connection photo;
+	protected PhotoSearchResult doDisplayByID(Hashtable h)
+		throws Exception {
 
-		try {
-			photo=getDBConn();
-		} catch(Exception e) {
-			throw new ServletException("Can't get database connection:  "
-				+ e.getMessage());
-		}
+		// Get the image_id.  We know it exists, because you can't get to
+		// this function without one...of course, it may not parse.
+		int image_id=Integer.parseInt(request.getParameter("id"));
 
-		stmp = request.getParameter("id");
-		if(stmp == null) {
-			throw new ServletException("Not enough information.");
-		}
-		image_id=Integer.valueOf(stmp);
+		// Get the data
+		PhotoSearchResult r=new PhotoSearchResult();
+		r.find(image_id, remote_uid.intValue());
 
-		query = "select a.id,a.keywords,a.descr,\n"
-			+ "   a.size,a.taken,a.ts,b.name,a.cat,c.username,b.id\n"
-			+ "   from album a, cat b, wwwusers c\n"
-			+ "   where a.cat=b.id and a.id=" + image_id
-			+ "\n   and a.addedby=c.id\n"
-			+ "   and a.cat in (select cat from wwwacl where "
-			+ "userid=" + remote_uid + ")\n";
+		// These don't apply here, bu they need to be defined.
+		h.put("PREV",      "");
+		h.put("NEXT",      "");
 
-		output += "<!-- Query:\n" + query + "\n-->\n";
-
-		try {
-			Statement st = photo.createStatement();
-			ResultSet rs = st.executeQuery(query);
-
-			if(rs.next() == false) {
-				throw new ServletException("No data found for that id.");
-			}
-
-			h.put("IMAGE",     rs.getString(1));
-			h.put("KEYWORDS",  rs.getString(2));
-			h.put("INFO",      rs.getString(3));
-			h.put("SIZE",      rs.getString(4));
-			h.put("TAKEN",     rs.getString(5));
-			h.put("TIMESTAMP", rs.getString(6));
-			h.put("CAT",       rs.getString(7));
-			h.put("CATNUM",    rs.getString(8));
-			h.put("ADDEDBY",   rs.getString(9));
-
-			// These don't apply here.
-			h.put("PREV",      "");
-			h.put("NEXT",      "");
-
-			if(isAdmin()) {
-				// Admin needs CATS
-				int defcat=rs.getInt(8);
-				h.put("CATS", getCatList(defcat));
-				output += tokenize("admin/display.inc", h);
-			} else {
-				output += tokenize("display.inc", h);
-			}
-
-		} catch(SQLException e) {
-			throw new ServletException("Some kinda SQL problem.");
-		}
-		finally { freeDBConn(photo); }
-
-		return(output);
+		return(r);
 	}
 
 	// Send the response text...
@@ -861,14 +823,12 @@ public class PhotoSession extends Object
 		// if we have a starting point, let's start there.
 		try {
 			String startingS=request.getParameter("startfrom");
-			if(startingS==null) {
+			if(startingS!=null) {
 				int starting=Integer.parseInt(startingS);
 				results.set(starting);
 			}
 		} catch(Exception e) {
-			// If there's an exception, something went wrong with finding
-			// where to start from.  This is OK, we'll just start from
-			// where we were when we last displayed a page.
+			log("Error finding out starting point for search results:  " + e);
 		}
 
 		for(i=0; i<5; i++) {
