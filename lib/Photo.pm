@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.51 1998/11/08 01:17:38 dustin Exp $
+# $Id: Photo.pm,v 1.52 1998/11/08 01:38:52 dustin Exp $
 
 package Photo;
 
@@ -30,7 +30,7 @@ sub new
 sub openDB
 {
 	my($self)=shift;
-	$self->{'dbh'}=DBI->connect("dbi:Pg:dbname=dustin;host=bleu", 'nobody','')
+	$self->{'dbh'}=DBI->connect("dbi:Pg:dbname=photo;host=bleu", 'nobody','')
 		 || die("Cannot connect to database\n");
 }
 
