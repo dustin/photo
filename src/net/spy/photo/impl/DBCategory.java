@@ -50,6 +50,12 @@ public class DBCategory extends AbstractSavable implements Category {
 		this.id=cat.getId();
 		this.name=cat.getName();
 		this.acl=cat.getACL().copy();
+		if(id > 0) {
+			setNew(false);
+		} else {
+			setNew(true);
+		}
+		setModified(false);
 	}
 
 	/** 
@@ -97,9 +103,11 @@ public class DBCategory extends AbstractSavable implements Category {
 		// What to do here depends on whether it's a new category or a
 		// modification of an existing category.
 		if(isNew()) {
+			getLogger().info("Creating a new category:  " + this);
 			saveCat=new InsertCategory(conn);
 		} else {
-			// Existing user
+			// Existing category
+			getLogger().info("Modifying an existing category:  " + this);
 			saveCat=new UpdateCategory(conn);
 			((UpdateCategory)saveCat).setId(id);
 		}
