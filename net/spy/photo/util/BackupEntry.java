@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: BackupEntry.java,v 1.1 2000/11/17 10:13:06 dustin Exp $
+ * $Id: BackupEntry.java,v 1.2 2000/11/28 01:08:00 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -28,7 +28,8 @@ public class BackupEntry extends Object implements Serializable {
 			String key=(String)e.nextElement();
 			String data=(String)ht.get(key);
 
-			sb.append("\t<" + key + ">" + data + "</" + key + ">\n");
+			sb.append("\t<" + key + ">"
+			+ PhotoXSLT.normalize(data, true) + "</" + key + ">\n");
 		}
 
 		sb.append("</photo_album_object>\n");

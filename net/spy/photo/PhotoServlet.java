@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.15 2000/11/10 07:17:18 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.16 2000/11/28 01:08:00 dustin Exp $
  */
 
 package net.spy.photo;
@@ -44,6 +44,7 @@ public class PhotoServlet extends HttpServlet
 			security = new PhotoSecurity();
 			// Make sure we have initialized the guest user (and the
 			// database and all that)
+			log("Looking up guest.");
 			security.getUser("guest");
 			log("Finished security");
 		} catch(Exception e) {
@@ -92,7 +93,7 @@ public class PhotoServlet extends HttpServlet
 	// Servlet info
 	public String getServletInfo() {
 		return("Copyright (c) 2000  Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.15 $");
+			+ " - $Revision: 1.16 $");
 	}
 
 	// Do a GET request
