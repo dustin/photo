@@ -14,10 +14,13 @@ import shutil
 import getopt
 import getpass
 import libphoto
+import threading
+import threadpool
 import exceptions
 
 # Global config
 config={}
+tp=threadpool.ThreadPool(num=10)
 
 class UsageError(exceptions.Exception):
     """Exception thrown for invalid usage"""
@@ -198,10 +201,11 @@ def parseIndex():
 
 def status(str):
     """Display a status string"""
-    # sys.stdout.write(" " * 79)
     # Clear the current line
-    sys.stdout.write("\r" + chr(27) + "K")
-    sys.stdout.write(str + "\r")
+    sys.stdout.write(" " * 79)
+    # sys.stdout.write("\r" + chr(27) + "K")
+    # sys.stdout.flush()
+    sys.stdout.write("\r" + str + "\r")
     sys.stdout.flush()
 
 def timefn(f, what, eol='\n'):
@@ -213,29 +217,56 @@ def timefn(f, what, eol='\n'):
     end=time.time()
     ut=tend[0] - tstart[0]
     st=tend[1] - tstart[1]
-    spc=' ' * 20
-    status("Finished %s in %.2fr/%.2fu/%.2fs%s%s" \
-        % (what, end-start, ut, st, spc, eol))
+    status("Finished %s in %.2fr/%.2fu/%.2fs%s" \
+        % (what, end-start, ut, st, eol))
     return rv
+
+class ImageFetcher(threadpool.Job):
+    def __init__(self, baseurl, photo, destpath, size, tn, status):
+        self.baseurl=baseurl
+        self.photo=photo
+        self.destpath=destpath
+        self.size=size
+        self.tn=tn
+        self.status=status
+
+    def run(self):
+        f = libphoto.fetchImage(self.baseurl, self.photo.id, self.size, self.tn)
+        toWrite=open(self.destpath, "w")
+        shutil.copyfileobj(f, toWrite)
+        toWrite.close()
+        f.close()
+        self.status.didOne()
+
+class FetchStatus(object):
+    def __init__(self, todo):
+        self.done=0
+        self.todo=todo
+        self.mutex=threading.Lock()
+
+    def didOne(self):
+        try:
+            self.mutex.acquire()
+            self.done += 1
+            status("Completed %d of %d " % (self.done, self.todo))
+        finally:
+            self.mutex.release()
 
 def fetchImage(photo, destdir):
     global config
+    global tp
 
     imgs=(('full', (None, False)),
         ('normal', ("800x600", False)),
         ('tn', (None, True)))
 
+    todo=[]
     for ext, p in imgs:
         # print "Fetching %s for %s" % (url, ext)
         destfn="%s/%d_%s.%s" % (destdir, photo.id, ext, photo.extension)
-        if os.path.exists(destfn):
-            status("Already have %s" % destfn)
-        else:
-            f = libphoto.fetchImage(config['baseurl'], photo.id, p[0], p[1])
-            toWrite=open(destfn, "w")
-            shutil.copyfileobj(f, toWrite)
-            toWrite.close()
-            f.close()
+        if not os.path.exists(destfn):
+            todo.append((config['baseurl'], photo, destfn, p[0], p[1]))
+    return todo
 
 def processMonth(idx, y, m):
     photos=idx[y][m]
@@ -243,11 +274,17 @@ def processMonth(idx, y, m):
     dir="pages/%04d/%02d" % (y, m)
     mymkdir(dir)
     i=0
+    todo = []
     for photo in photos:
         i = i + 1
-        status("Fetching %d of %d..." % (i,len(photos)))
         makePageForPhoto(dir, photo)
-        fetchImage(photo, dir)
+        todo.extend(fetchImage(photo, dir))
+    st=FetchStatus(len(todo))
+    for t in todo:
+        tp.addTask(ImageFetcher(t[0], t[1], t[2], t[3], t[4], st))
+    status("Need to fetch %d images" % (len(todo), ))
+    # Wait for the count to get back down to zero
+    tp.waitForTaskCount()
 
 def go():
 
@@ -279,7 +316,9 @@ def go():
         makeYearPage(idx, y)
 
         mymkdir("pages/%04d" % (y, ))
-        for m in idx[y].keys():
+        months=idx[y].keys()
+        months.sort()
+        for m in months:
             def pm():
                 processMonth(idx, y, m)
             timefn(pm, "%04d/%02d" % (y, m))
@@ -307,9 +346,8 @@ def parseArgs():
 # Start
 
 def usage():
-    print "Usage:  %s [-v] [-f] [-a user] photurl destdir" % (sys.argv[0], );
+    print "Usage:  %s [-f] [-a user] photurl destdir" % (sys.argv[0], );
     print " -a authenticate as the given user"
-    print " -v verbose"
     print " -f fetch index even if we already have one"
     sys.exit(1)
 
@@ -317,8 +355,11 @@ if __name__ == '__main__':
 
     try:
         # Parse the arguments
-        parseArgs()
-        go()
+        try:
+            parseArgs()
+            go()
+        finally:
+            tp.shutdown()
     except UsageError, e:
         print e
-        usage();
+        usage()
