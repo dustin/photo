@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: RemoteImageServerImpl.java,v 1.2 2002/06/17 02:13:21 dustin Exp $
+// $Id: RemoteImageServerImpl.java,v 1.3 2002/06/17 04:18:14 dustin Exp $
 
 package net.spy.photo.rmi;
 
@@ -24,19 +24,13 @@ import net.spy.util.*;
 public class RemoteImageServerImpl extends UnicastRemoteObject
 	implements RemoteImageServer {
 
-	private RHash rhash=null;
 	private boolean debug=false;
-	private PhotoConfig conf=null;
-
-	private PhotoStorerThread storer=null;
 
 	/**
-	 * Get a RemoteImageServerImpl using the given config.
+	 * Get a RemoteImageServerImpl.
 	 */
 	public RemoteImageServerImpl() throws RemoteException {
 		super();
-		conf=new PhotoConfig();
-		checkStorerThread();
 	}
 
 	/**
@@ -44,67 +38,40 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 	 */
 	public PhotoImage getImage(int image_id, PhotoDimensions dim)
 		throws RemoteException {
-		PhotoImage image_data=null;
-		debug("Requested image " + image_id + " at scale " + dim);
+
+		PhotoImage rv=null;
+
 		try {
-
-			if(dim==null) {
-				image_data=fetchImage(image_id);
-			} else {
-				image_data=fetchScaledImage(image_id, dim);
-			}
-		} catch(Exception e) {
-			log("Error fetching image:  " + e);
-			e.printStackTrace();
-			throw new RemoteException("Error fetching image", e);
-		}
-		// Calculate the width
-		image_data.getWidth();
-		return(image_data);
-	}
-
-	private PhotoImage fetchScaledImage(int image_id, PhotoDimensions dim)
-		throws Exception {
-
-		PhotoImage pi=null;
-		String key = "photo_" + image_id + "_"
-			+ dim.getWidth() + "x" + dim.getHeight();
-
-		// Try cache first
-		getRhash();
-		pi=(PhotoImage)rhash.get(key);
-		if(pi==null) {
-			// Not in cache, get it
-			pi=fetchImage(image_id);
-
-			if(pi.equals(dim) || pi.smallerThan(dim)) {
-				log("Requested scaled size for " + image_id
-					+ "(" + dim + ") is equal to or "
-					+ " greater than its full size, ignoring.");
-			} else {
-				// Scale it
-				pi=scaleImage(pi, dim);
-				// Store it
-				rhash.put(key, pi);
-				log("Stored " + image_id + " with key " + key);
-			}
-		} else {
-			debug("Found " + key + "(" + key.hashCode() + ") in cache.");
+			ImageServerImpl isi=new ImageServerImpl();
+			rv=isi.getImage(image_id, dim);
+		} catch(PhotoException e) {
+			throw new RemoteException("Error getting image", e);
 		}
 
-		return(pi);
+		return(rv);
 	}
+
 
 	/**
 	 * @see RemoteImageServer
 	 */
 	public PhotoImage getImage(int image_id, boolean thumbnail)
 		throws RemoteException {
-		PhotoDimensions dim=null;
-		if(thumbnail) {
-			dim=new PhotoDimensionsImpl(conf.get("thumbnail_size"));
+
+		PhotoImage rv=null;
+
+		try {
+			ImageServerImpl isi=new ImageServerImpl();
+			if(thumbnail) {
+				rv=isi.getThumbnail(image_id);
+			} else {
+				rv=isi.getImage(image_id, null);
+			}
+		} catch(PhotoException e) {
+			throw new RemoteException("Error getting image", e);
 		}
-		return(getImage(image_id, dim));
+
+		return(rv);
 	}
 
 	/**
@@ -114,38 +81,14 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		throws RemoteException {
 		// Make sure we've calculated the width and height
 		image.getWidth();
-		getRhash();
 		try {
-			rhash.put("photo_" + image_id, image);
-		} catch(Exception e) {
+			ImageServerImpl isi=new ImageServerImpl();
+			isi.storeImage(image_id, image);
+		} catch(PhotoException e) {
 			log("Error caching image:  " + e);
 			e.printStackTrace();
 			throw new RemoteException("Error storing image", e);
 		}
-
-		// Let the storer thread know to wake up and start storing images.
-		checkStorerThread();
-		synchronized(storer) {
-			storer.notify();
-		}
-	}
-
-	private void checkStorerThread() {
-		if(storer==null || !(storer.isAlive())) {
-			System.err.println("Starting storer thread.");
-			storer=new PhotoStorerThread();
-			storer.start();
-		}
-	}
-
-	private PhotoImage scaleImage(
-		PhotoImage in, PhotoDimensions dim) throws Exception {
-		
-		Class c=Class.forName(conf.get("scaler_class",
-			"net.spy.JavaImageServerScaler"));
-		ImageServerScaler iss=(ImageServerScaler)c.newInstance();
-		iss.setConfig(conf);
-		return(iss.scaleImage(in, dim));
 	}
 
 	private void log(String what) {
@@ -158,52 +101,6 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		}
 	}
 
-	// Fetch an image
-	private PhotoImage fetchImage(int image_id) throws Exception {
-		String key=null;
-		PhotoImage pi=null;
-
-		key = "photo_" + image_id;
-
-		getRhash();
-		pi=(PhotoImage)rhash.get(key);
-
-		if(pi==null) {
-			Connection photo=null;
-			StringBuffer sdata=new StringBuffer();
-
-			try {
-				SpyDB db=new SpyDB(new PhotoConfig());
-				String query="select * from image_store where id = ?\n"
-					+ " order by line";
-				PreparedStatement st = db.prepareStatement(query);
-				st.setInt(1, image_id);
-				ResultSet rs = st.executeQuery();
-
-				while(rs.next()) {
-					sdata.append(rs.getString("data"));
-				}
-				rs.close();
-				db.close();
-
-			} catch(Exception e) {
-				log("Problem getting image:  " + e);
-				e.printStackTrace();
-				throw new Exception("Problem getting image: " + e);
-			}
-
-			// If we got an exception, throw it
-			Base64 base64 = new Base64();
-			byte data[]=base64.decode(sdata.toString());
-			pi=new PhotoImage(data);
-			rhash.put(key, pi);
-		} else {
-			debug("Found " + key + " in cache.");
-		}
-
-		return(pi);
-	}
-
 	/**
 	 * @see RemoteImageServer
 	 */
@@ -211,27 +108,10 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 		return(true);
 	}
 
-	// Get a cache object server
-	private void getRhash() throws RemoteException {
-		try {
-			if(rhash==null) {
-				rhash = new RHash(conf.get("rhash.url"));
-			}
-		} catch(Exception e) {
-			log("Error getting RHash");
-			e.printStackTrace();
-			rhash=null;
-			throw new RemoteException("Error getting RHash", e);
-		}
-	}
-
 	/**
 	 * Run it.
 	 */
 	public static void main(String args[]) throws Exception {
-		if(args.length < 1) {
-			throw new Exception("imageserver.conf path not given.");
-		}
 		RemoteImageServerImpl i=new RemoteImageServerImpl();
 		Naming.rebind("RemoteImageServer", i);
 		System.err.println("RemoteImageServer bound in registry");
