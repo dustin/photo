@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoBackup.java,v 1.3 2000/11/28 09:52:11 dustin Exp $
+ * $Id: PhotoBackup.java,v 1.4 2000/11/28 10:06:14 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -41,6 +41,7 @@ public class PhotoBackup extends Object {
 
 		// Statistics.
 		BackupStats bs=new BackupStats(ids.size());
+		System.out.println("Beginning backups on " + ids.size() + " objects.");
 
 		// Flip through the IDs and back 'em up.
 		for(Enumeration e=ids.elements(); e.hasMoreElements(); ) {
@@ -121,12 +122,18 @@ public class PhotoBackup extends Object {
 		}
 
 		public String getStats() {
-			long avgProcessTime=(totalTime/done)/1000;
-			long estimate=avgProcessTime*left;
+			double avgProcessTime=((double)totalTime/(double)done)/1000.0;
+			double estimate=avgProcessTime*(double)left;
 
-			return("Avg=" + avgProcessTime
-				+ "s, Estimate=" + estimate + "s"
-				+ " (" + new java.util.Date(System.currentTimeMillis()+(1000*estimate))
+			java.text.NumberFormat nf=java.text.NumberFormat.getInstance();
+			nf.setMaximumFractionDigits(2);
+
+			return("Avg=" + nf.format(avgProcessTime)
+				+ "s, Estimate=" + nf.format(estimate) + "s"
+				+ " ("
+				+ new java.util.Date(
+					System.currentTimeMillis()+(1000*(long)estimate)
+					)
 				+ ")");
 		}
 	}
