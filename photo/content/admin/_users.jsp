@@ -13,7 +13,7 @@
 
 <html:form action="/admuseredit">
 	<html:errors/>
-	<html:select property=userId>
+	<html:select property="userId">
 		<html:option value="-1">New User</html:option>
 		<logic:iterate id="user" type="net.spy.photo.PhotoUser"
 			collection="<%= PhotoSecurity.getAllUsers() %>">
