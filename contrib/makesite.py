@@ -11,8 +11,17 @@ import sys
 import time
 import posix
 import shutil
+import getopt
 import urllib2
 import libphoto
+import exceptions
+
+# Global config
+config={}
+
+class UsageError(exceptions.Exception):
+    """Exception thrown for invalid usage"""
+    pass
 
 def mymkdir(path):
     if not os.path.isdir(path):
@@ -91,7 +100,8 @@ def makeYearPage(idx, year):
             s=" (1 image)"
         else:
             s=" (" + `nimgs` + " images)"
-        f.write('<li><a href="%04d/%02d.html">%02d%s</a></li>\n' % (y, m, m, s))
+        f.write('<li><a href="%04d/%02d.html">%02d%s</a></li>\n' \
+            % (year, m, m, s))
     f.write("</ul>")
     f.write('<div id="footer">')
     f.write('<a href="../index.html">[Index]</a>')
@@ -169,30 +179,49 @@ class MyHandler(libphoto.StaticIndexHandler):
             self.album[year][month]=[]
         self.album[year][month].append(photo)
 
-def parseIndex(srcurl):
-    if srcurl[-1] != '/':
-        srcurl = srcurl + '/'
-
-    album={}
-    print "Parsing index..."
-    start=time.time()
-    f=urllib2.urlopen(srcurl + "export")
-    d=libphoto.parseIndex(f, MyHandler(album))
+def fetchIndex():
+    global config
+    print "Beginning index fetch"
+    destdir=config['destdir']
+    f=urllib2.urlopen(config['baseurl'] + "export")
+    fout=open("index.xml", "w")
+    shutil.copyfileobj(f, fout)
     f.close()
-    end=time.time()
-    times=posix.times()
-    print "Parsed in %.2fr/%.2fu/%.2fs" % (end-start, times[0], times[1])
+    fout.close()
+
+def parseIndex():
+    global config
+    album={}
+    print "Beginning index parse"
+    d=libphoto.parseIndex('index.xml', MyHandler(album))
     return album
 
 def status(str):
-    sys.stdout.write(" " * 60)
-    sys.stdout.write("\r" + str + "\r")
+    """Display a status string"""
+    # sys.stdout.write(" " * 79)
+    # Clear the current line
+    sys.stdout.write("\r" + chr(27) + "K")
+    sys.stdout.write(str + "\r")
+    sys.stdout.flush()
 
-def fetchImage(srcurl, photo, destdir):
-    if srcurl[-1] != '/':
-        srcurl = srcurl + '/'
+def timefn(f, what, eol='\n'):
+    """Time the execution of a function and display the results to the status"""
+    tstart=posix.times()
+    start=time.time()
+    rv=f()
+    tend=posix.times()
+    end=time.time()
+    ut=tend[0] - tstart[0]
+    st=tend[1] - tstart[1]
+    spc=' ' * 20
+    status("Finished %s in %.2fr/%.2fu/%.2fs%s%s" \
+        % (what, end-start, ut, st, spc, eol))
+    return rv
 
-    baseurl="%sPhotoServlet?id=%d" % (srcurl, photo.id)
+def fetchImage(photo, destdir):
+    global config
+
+    baseurl="%sPhotoServlet?id=%d" % (config['baseurl'], photo.id)
     normal=baseurl + "&scale=800x600"
     thumbnail=baseurl + "&thumbnail=1"
 
@@ -208,25 +237,32 @@ def fetchImage(srcurl, photo, destdir):
             toWrite.close()
             f.close()
 
-# Start
+def processMonth(idx, y, m):
+    photos=idx[y][m]
+    makeMonthPage(y, m, photos)
+    dir="pages/%04d/%02d" % (y, m)
+    mymkdir(dir)
+    i=0
+    for photo in photos:
+        i = i + 1
+        status("Fetching %d of %d..." % (i,len(photos)))
+        makePageForPhoto(dir, photo)
+        fetchImage(photo, dir)
 
-def usage():
-    sys.stderr.write("Usage:  %s photurl [destdir]\n");
-    sys.exit(1)
+def go():
 
-if __name__ == '__main__':
+    global config
 
-    if sys.argv < 2:
-        usage()
+    # Set up the destination directory
+    mymkdir(config['destdir'])
+    os.chdir(config['destdir'])
 
-    baseurl=sys.argv[1]
-
-    if sys.argv > 2:
-        destdir=sys.argv[2]
-        mymkdir(destdir)
-        os.chdir(destdir)
-
-    idx=parseIndex(baseurl)
+    if os.path.exists("index.xml"):
+        if config.has_key('-f'):
+            timefn(fetchIndex, "index fetch")
+    else:
+        timefn(fetchIndex, "index fetch")
+    idx=timefn(parseIndex, "index parse")
 
     years=idx.keys()
     years.sort()
@@ -234,27 +270,46 @@ if __name__ == '__main__':
     makeIndex(idx, years)
     makeStylesheet()
     
-    times=posix.times()
-    t=time.time()
     for y in years:
         makeYearPage(idx, y)
 
         mymkdir("pages/%04d" % (y, ))
         for m in idx[y].keys():
-            photos=idx[y][m]
-            makeMonthPage(y, m, photos)
-            dir="pages/%04d/%02d" % (y, m)
-            mymkdir(dir)
-            for photo in photos:
-                makePageForPhoto(dir, photo)
-                fetchImage(baseurl, photo, dir)
+            def pm():
+                processMonth(idx, y, m)
+            timefn(pm, "%04d/%02d" % (y, m))
 
-            newtimes=posix.times()
-            ut=newtimes[0] - times[0]
-            st=newtimes[1] - times[1]
-            newtime=time.time()
-            rt=newtime-t
-            status("Processed %04d/%02d in %.2fr/%.2fu/%.2fs%s\n" \
-                % (y, m, rt, ut, st, ' ' * 20))
-            times=newtimes
-            t=newtime
+def parseArgs():
+    global config
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'vf')
+        config = dict(opts)
+    except getopt.GetoptError, e:
+        raise UsageError(e)
+
+    try:
+        photourl, destdir = args
+        if photourl[-1] != '/':
+            photourl = photourl + '/'
+        config['baseurl']=photourl
+        config['destdir']=destdir
+    except ValueError, e:
+        raise UsageError("Need photourl and destdir")
+
+# Start
+
+def usage():
+    print "Usage:  %s [-v] [-f] photurl destdir" % (sys.argv[0], );
+    print " -v verbose"
+    print " -f fetch index even if we already have one"
+    sys.exit(1)
+
+if __name__ == '__main__':
+
+    try:
+        # Parse the arguments
+        parseArgs()
+        go()
+    except UsageError, e:
+        print e
+        usage();
