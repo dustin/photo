@@ -37,8 +37,8 @@
 			<tr>
 				<td colspan="2">
 					<div align="center">
-						<html:submit styleClass="button">Add Me</html:submit>
-						<html:reset styleClass="button">Clear</html:reset>
+						<html:submit>Add Me</html:submit>
+						<html:reset>Clear</html:reset>
 					</div>
 				</td>
 			</tr>

@@ -6,9 +6,10 @@
 <jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
 
 <html><head><title><tiles:insert attribute='title'/></title>
-<photo:stylesheet url="/style.css"/>
+<photo:stylesheet url="/css/layout.css"/>
+<photo:stylesheet url="/css/colors.css"/>
 <c:if test="${slideshowMode eq 1}">
-	<photo:stylesheet url="/slideshow.css"/>
+	<photo:stylesheet url="/css/slideshow.css"/>
 </c:if>
 </head>
 <body background='<%= props.getProperty("background_img", "") %>'>

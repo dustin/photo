@@ -64,7 +64,7 @@
       <html:form action="nextcomments.do">
         <html:hidden property="startOffset" value="<%= nextOffsetS %>"/>
         <html:hidden property="whichCursor" value="comments"/>
-        <html:submit styleClass="button">Next <%= nextWhu %></html:submit>
+        <html:submit>Next <%= nextWhu %></html:submit>
       </html:form>
       </p>
     <%

@@ -19,10 +19,10 @@
 			<td><bean:message key="forms.changepw.newpw2"/>:</td>
 			<td><html:password property="newpw2" size="8"/></td>
 	</table>
-	<html:submit styleClass="button">
+	<html:submit>
 		<bean:message key="forms.changepw.authbutton"/>
 	</html:submit>
-	<html:reset styleClass="button">
+	<html:reset>
 		<bean:message key="forms.changepw.rstbutton"/>
 	</html:reset>
 </html:form>

@@ -1,19 +1,24 @@
 <%@ page isErrorPage="true"%>
+<%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 <html>
-<head><title>PhotoServlet Error!</title></head>
+	<head>
+		<title>PhotoServlet Error!</title>
+		<photo:stylesheet url="/css/layout.css"/>
+		<photo:stylesheet url="/css/colors.css"/>
+	</head>
 
 <body bgcolor="#fFfFfF">
 
 
-	<center>
 	Problem doing your bidding:
 	<p>
-	<font color="red">
+	<div class="errors">
 	<%= exception.getMessage() %>
-	</font><br/>
-	(<font size="-2"><a href="#geek">details below</a></font>)
+	</div><br/>
+	(<span class="errormagic"><a href="#geek">details below<span
+		class="hiddenmagic"><%
+		exception.printStackTrace(response.getWriter()); %></span></a></span>)
 	</p>
-	</center>
 
 	<br/>
 	<br/>
@@ -51,6 +56,7 @@
 	<br/>
 	<br/>
 	<br/>
+	<div style="text-align: left">
 	<h1>Details</h1>
 	<a name="geek">
 		<pre>
@@ -72,6 +78,7 @@
 
 		<% } %>
 	</a>
+	</div>
 
 </body>
 </html>

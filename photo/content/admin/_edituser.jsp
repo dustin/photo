@@ -71,7 +71,7 @@
 		</logic:iterate>
 	</table>
 
-	<html:submit styleClass="button">Save</html:submit>
+	<html:submit>Save</html:submit>
 	<p>
 		<% String uid=adminUserForm.getUserId();
 			String theUrl="/report/userImgs.do?p.i.user_id=" + uid;

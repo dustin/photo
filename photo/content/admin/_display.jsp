@@ -75,8 +75,8 @@
 
 	</p>
 
-	<html:submit styleClass="button">Save Info</html:submit>
-	<html:reset styleClass="button">Restore to Original</html:reset>
+	<html:submit>Save Info</html:submit>
+	<html:reset>Restore to Original</html:reset>
 
 	</html:form>
 
@@ -116,6 +116,6 @@ Size Image</a>]
 			<html:hidden property="imageId" value="<%= "" + image.getId() %>"/>
 			<html:textarea property="comment" cols="50" rows="2"/>
 			<br/>
-			<html:submit styleClass="button">Add Comment</html:submit>
+			<html:submit>Add Comment</html:submit>
 		</html:form>
 	</photo:guest>

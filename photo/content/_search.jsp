@@ -24,7 +24,7 @@
 	</html:select>
 	<bean:message key="forms.search.simple.contains"/>
 	<html:text property="what"/><br/>
-	<html:submit styleClass="button">
+	<html:submit>
 		<bean:message key="forms.search.simple.submit"/>
 	</html:submit>
 </html:form>
@@ -37,7 +37,7 @@
 
 <form method="GET" action="display.do">
 	ID:  <input name="id" size="6">
-	<html:submit styleClass="button">Lookup</html:submit>
+	<html:submit>Lookup</html:submit>
 </form>
 
 </p>
@@ -203,10 +203,10 @@
 
 		<br/>
 
-		<html:submit styleClass="button">
+		<html:submit>
 			<bean:message key="forms.search.adv.submit"/>
 		</html:submit>
-		<html:reset styleClass="button">
+		<html:reset>
 			<bean:message key="forms.search.adv.reset"/>
 		</html:reset>
 	</p>

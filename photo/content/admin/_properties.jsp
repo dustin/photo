@@ -33,7 +33,7 @@
 		</logic:iterate>
 	</table>
 	<br/>
-	<html:submit styleClass="button">Save Properties</html:submit>
+	<html:submit>Save Properties</html:submit>
 </html:form>
 
 </p>

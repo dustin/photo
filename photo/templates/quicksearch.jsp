@@ -11,6 +11,6 @@
 	<input type="hidden" name="field" value="keywords"/>
 	<input type="hidden" name="action" value="next"/>
 	Quick Search:  <input name="what"/>
-	<input type="submit" class="button" value="Find"/>
+	<input type="submit" value="Find"/>
 </form>
 

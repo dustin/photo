@@ -47,7 +47,7 @@
 
 	</table>
 
-	<html:submit styleClass="button">Create Profile</html:submit>
+	<html:submit>Create Profile</html:submit>
 </html:form>
 
 </p>

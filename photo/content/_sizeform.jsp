@@ -13,7 +13,7 @@
 		<html:option value="1024x768">1024x768</html:option>
 	</html:select>
 	<br/>
-	<html:submit styleClass="button">Set Size</html:submit>
+	<html:submit>Set Size</html:submit>
 
 </html:form>
 </p>
