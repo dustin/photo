@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchForm.java,v 1.4 2002/05/12 09:01:01 dustin Exp $
+// $Id: SearchForm.java,v 1.5 2002/05/22 00:19:50 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -174,31 +174,6 @@ public class SearchForm extends ActionForm {
 
 	public String getMaxret() {
 		return(maxret);
-	}
-
-	/**
-	 * Reset all properties to their default values.
-	 *
-	 * @param mapping The mapping used to select this instance
-	 * @param request The servlet request we are processing
-	 */
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		cats=null;
-		fieldjoin=null;
-		field=null;
-		keyjoin=null;
-		what=null;
-		tstartjoin=null;
-		tstart=null;
-		tendjoin=null;
-		tend=null;
-		startjoin=null;
-		start=null;
-		endjoin=null;
-		end=null;
-		order=null;
-		sdirection=null;
-		maxret=null;
 	}
 
 	/**

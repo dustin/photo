@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveSearchForm.java,v 1.1 2002/05/18 09:08:43 dustin Exp $
+// $Id: SaveSearchForm.java,v 1.2 2002/05/22 00:19:50 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -51,14 +51,6 @@ public class SaveSearchForm extends ActionForm {
 	 */
 	public String getSearch() {
 		return(search);
-	}
-
-	/**
-	 * Reset the properties.
-	 */
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		name=null;
-		search=null;
 	}
 
 	/**

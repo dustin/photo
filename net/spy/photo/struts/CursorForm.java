@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CursorForm.java,v 1.3 2002/05/18 09:08:43 dustin Exp $
+// $Id: CursorForm.java,v 1.4 2002/05/22 00:19:50 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -54,17 +54,6 @@ public class CursorForm extends ActionForm {
 	 */
 	public String getWhichCursor() {
 		return(whichCursor);
-	}
-
-	/**
-	 * Reset all properties to their default values.
-	 *
-	 * @param mapping The mapping used to select this instance
-	 * @param request The servlet request we are processing
-	 */
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		startOffset=null;
-		whichCursor=null;
 	}
 
 	/**

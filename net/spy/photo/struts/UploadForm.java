@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadForm.java,v 1.2 2002/05/18 07:30:11 dustin Exp $
+// $Id: UploadForm.java,v 1.3 2002/05/22 00:19:50 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -148,18 +148,6 @@ public class UploadForm extends ActionForm {
 		}
 
 		return(errors);
-	}
-
-	/**
-	 * Reset the form.
-	 */
-	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		picture=null;
-		category=null;
-		keywords=null;
-		info=null;
-		photoImage=null;
-		taken=PhotoUtil.getToday();
 	}
 
 }
