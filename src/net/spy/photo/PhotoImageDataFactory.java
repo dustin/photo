@@ -16,7 +16,7 @@ import net.spy.cache.SpyCache;
 public class PhotoImageDataFactory extends SpyObject {
 
 	private static final String CACHE_KEY="image_data";
-	private static final long CACHE_TIME=3600000;
+	private static final long CACHE_TIME=86400000;
 
 	private static PhotoImageDataFactory instance=null;
 
@@ -62,6 +62,15 @@ public class PhotoImageDataFactory extends SpyObject {
 			sc.store(CACHE_KEY, rv, CACHE_TIME);
 		}
 		return(rv);
+	}
+
+	/** 
+	 * Cache or recache the images.
+	 */
+	public void recache() throws Exception {
+		SpyCache sc=SpyCache.getInstance();
+		sc.uncache(CACHE_KEY);
+		getCache();
 	}
 
 	/** 

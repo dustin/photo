@@ -64,9 +64,26 @@ public class Persistent extends HttpServlet {
 			throw new ServletException("Can't create security stuff", e);
 		}
 
-		log("Initing TransactionPipeline");
+		log("Initializing TransactionPipeline");
 		pipeline=new TransactionPipeline();
 		log("got TransactionPipeline");
+
+		log("Initializing image cache");
+		try {
+			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			pidf.recache();
+		} catch(Exception e) {
+			throw new ServletException("Can't initialize image cache", e);
+		}
+		log("Image cache initialization complete");
+
+		log("Initializing image server");
+		try {
+			ImageServerFactory.getImageServer();
+		} catch(PhotoException e) {
+			throw new ServletException("Can't initialize image server", e);
+		}
+		log("Image server initialization complete");
 
 		log("Initialization complete");
 	}

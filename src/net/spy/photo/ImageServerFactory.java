@@ -4,6 +4,9 @@
 
 package net.spy.photo;
 
+import net.spy.log.Logger;
+import net.spy.log.LoggerFactory;
+
 /**
  * Get ImageServer objects as configured for this instance.
  */
@@ -35,11 +38,15 @@ public class ImageServerFactory extends Object {
 
 	// Load the instance
 	private static void getServer() throws Exception {
+		Logger log=LoggerFactory.getLogger(ImageServer.class);
+
 		PhotoConfig conf=PhotoConfig.getInstance();
 		String className=conf.get("imageserverimpl",
 			"net.spy.photo.rmi.ImageServerImpl");
+		log.info("Initializing " + className);
 		Class c=Class.forName(className);
 		server=(ImageServer)c.newInstance();
+		log.info("Initialization complete.");
 	}
 
 }

@@ -163,6 +163,7 @@ public class PhotoStorerThread extends SpyThread {
 	// the database.
 	// Returns the number of things found to flush
 	private int doFlush() {
+		getLogger().info("Flushing");
 		SpyDB db = new SpyDB(PhotoConfig.getInstance());
 		int rv=0;
 		ArrayList al = new ArrayList();
@@ -198,6 +199,8 @@ public class PhotoStorerThread extends SpyThread {
 			}
 		}
 
+		getLogger().info("Flush complete:  " + rv + " stored.");
+
 		// Return the number we found.
 		return(rv);
 	}
@@ -206,11 +209,14 @@ public class PhotoStorerThread extends SpyThread {
 	 * Sit around and flush.
 	 */
 	public void run() {
-		getLogger().info("Starting storer thread");
+		getLogger().info("Starting storer thread loop");
 		// Do a flush at the beginning, just in case stuff has been
 		// building up.
 		try {
-				doFlush();
+			synchronized(this) {
+				wait(300*1000);
+			}
+			doFlush();
 		} catch(Exception e1) {
 			// Don't care, all these can fail, we'll just keep trying.
 		}
