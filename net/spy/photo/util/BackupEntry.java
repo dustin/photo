@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: BackupEntry.java,v 1.6 2002/02/21 09:26:03 dustin Exp $
+ * $Id: BackupEntry.java,v 1.7 2002/06/23 07:34:27 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -20,7 +20,7 @@ import net.spy.*;
 import net.spy.photo.*;
 
 /**
- * Backup Entries subclass here.
+ * Superclass of all backup entries.
  */
 public abstract class BackupEntry extends Object implements Serializable {
 
@@ -50,14 +50,23 @@ public abstract class BackupEntry extends Object implements Serializable {
 		return(nodeType);
 	}
 
+	/**
+	 * Restore a backup entry to the DB.
+	 */
 	public abstract void restore() throws Exception;
 
+	/**
+	 * Get an instance of a BackupEntry for a given Node.
+	 */
 	public BackupEntry(Node n) throws Exception {
 		super();
 		doc=n.getOwnerDocument();
 		myData=(Element)n;
 	}
 
+	/**
+	 * Write this entry to the given output stream.
+	 */
 	public void writeTo(OutputStream o) throws Exception {
 		OutputFormat format = new OutputFormat(doc);
 		format.setIndenting(true);

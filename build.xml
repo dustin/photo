@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.12 2002/06/23 03:50:36 dustin Exp $
+	$Id: build.xml,v 1.13 2002/06/23 07:34:27 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -37,7 +37,7 @@
 		<delete dir="docs"/>
 	</target>
 
-	<target name="docs">
+	<target name="docs" depends="spfiles">
 		<mkdir dir="docs"/>
 		<javadoc destdir="docs"
 			author="true"

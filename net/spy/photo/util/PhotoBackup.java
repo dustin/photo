@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoBackup.java,v 1.6 2002/02/21 09:26:03 dustin Exp $
+ * $Id: PhotoBackup.java,v 1.7 2002/06/23 07:34:27 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -14,11 +14,17 @@ import java.util.zip.*;
 import net.spy.*;
 import net.spy.photo.*;
 
+/**
+ * Utility to backup images.
+ */
 public class PhotoBackup extends Object {
 	public PhotoBackup() {
 		super();
 	}
 
+	/**
+	 * Set the directory to which to write the backups.
+	 */
 	public void backupTo(String dir) throws Exception {
 		SpyDB db=new SpyDB(new PhotoConfig());
 
@@ -81,6 +87,10 @@ public class PhotoBackup extends Object {
 		}
 	}
 
+	/**
+	 * Perform a backup.  argv[0] is the destination directory where the
+	 * backups will be written.
+	 */
 	public static void main(String args[]) throws Exception {
 		PhotoBackup pb=new PhotoBackup();
 		pb.backupTo(args[0]);

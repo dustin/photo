@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoCleanup.java,v 1.3 2002/03/01 20:57:57 dustin Exp $
+ * $Id: PhotoCleanup.java,v 1.4 2002/06/23 07:34:27 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -14,9 +14,14 @@ import java.io.*;
 import net.spy.*;
 import net.spy.photo.*;
 
+/**
+ * Run cleanup queries.
+ */
 public class PhotoCleanup extends Thread {
 
-	// Constructor
+	/**
+	 * Create the Cleaner.
+	 */
 	public PhotoCleanup() {
 		super("photo_cleanup");
 		this.setDaemon(true);
@@ -38,6 +43,9 @@ public class PhotoCleanup extends Thread {
 		}
 	}
 
+	/**
+	 * Run forever.
+	 */
 	public void run() {
 		// Do a flush at the beginning, just in case stuff has been
 		// building up.
@@ -62,7 +70,9 @@ public class PhotoCleanup extends Thread {
 		}
 	}
 
-	// In case it's run as its own little thingy.
+	/**
+	 * Main for a standalone cleaner.
+	 */
 	public static void main(String args[]) {
 		PhotoCleanup cleaner=new PhotoCleanup();
 		cleaner.start();

@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoRestore.java,v 1.4 2001/01/31 18:50:02 dustin Exp $
+// $Id: PhotoRestore.java,v 1.5 2002/06/23 07:34:27 dustin Exp $
 
 package net.spy.photo.util;
 
@@ -11,12 +11,21 @@ import java.util.*;
 import java.io.*;
 import java.util.zip.*;
 
+/**
+ * Restore image backups.
+ */
 public class PhotoRestore extends Object {
 
+	/**
+	 * Get a restorer.
+	 */
 	public PhotoRestore() {
 		super();
 	}
 
+	/**
+	 * Create a BackupEntry from an input stream.
+	 */
 	public BackupEntry restore(InputStream input) throws Exception {
 		// Our result
 		BackupEntry ret=null;
@@ -49,6 +58,9 @@ public class PhotoRestore extends Object {
 		return(ret);
 	}
 
+	/**
+	 * Restore an image.
+	 */
 	public static void main(String args[]) throws Exception {
 		PhotoRestore pr=new PhotoRestore();
 

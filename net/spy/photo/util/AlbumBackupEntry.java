@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.11 2002/02/24 22:50:29 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.12 2002/06/23 07:34:27 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -13,19 +13,31 @@ import net.spy.*;
 import net.spy.db.*;
 import net.spy.photo.*;
 
+/**
+ * Backup entry that represents an entry in the album table (a photo).
+ */
 public class AlbumBackupEntry extends BackupEntry {
 
+	/**
+	 * Get a new backup entry for the given image ID.
+	 */
 	public AlbumBackupEntry(int id) throws Exception {
 		super();
 		setNodeType("photo_album_object");
 		init(id);
 	}
 
+	/**
+	 * Get a new backup entry and attach it to the given node.
+	 */
 	public AlbumBackupEntry(Node n) throws Exception {
 		super(n);
 		setNodeType("photo_album_object");
 	}
 
+	/**
+	 * Restore this backup entry.
+	 */
 	public void restore() throws Exception {
 
 		Connection conn=null;

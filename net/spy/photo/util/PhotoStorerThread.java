@@ -1,13 +1,12 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.12 2002/04/01 08:18:32 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.13 2002/06/23 07:34:27 dustin Exp $
  */
 
 package net.spy.photo.util;
 
 import java.sql.*;
-import java.lang.*;
 import java.util.*;
 import java.io.*;
 
@@ -15,18 +14,27 @@ import net.spy.*;
 import net.spy.photo.*;
 import net.spy.util.*;
 
+/**
+ * Store images in the DB.  Uploaded images go directly into the cache and
+ * are referenced in the album table.  They're usable without being stored,
+ * and may in fact never be pulled from the DB for display unless the cache
+ * is cleared.  It's quite important to make sure the images make it into
+ * the database for long-term storage, however.
+ */
 public class PhotoStorerThread extends Thread {
 
 	// chunks should be divisible by 57
 	private final static int CHUNK_SIZE=2052;
 
-	// Constructor
+	/**
+	 * Get a PhotoStorerThread.
+	 */
 	public PhotoStorerThread() {
 		super("storer_thread");
 		this.setDaemon(true);
 	}
 
-	// Takes and image_id, pulls in the image from cache, and goes about
+	// Takes an image_id, pulls in the image from cache, and goes about
 	// encoding it to put it into the database in a transaction.  The last
 	// query in the transaction records the image having been stored.
 	private void storeImage(int image_id) throws Exception {
@@ -216,12 +224,5 @@ public class PhotoStorerThread extends Thread {
 					"doFlush() returned > 0, flushing again.");
 			} // Flush loop
 		} // Forever loop
-	}
-
-	// In case it's run as its own little thingy.
-	public static void main(String args[]) {
-		System.err.println(
-			"net.spy.photo.util.PhotoStorerThread's main invocation is "
-			+ "deprecated");
 	}
 }
