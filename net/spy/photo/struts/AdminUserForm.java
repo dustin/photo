@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminUserForm.java,v 1.2 2002/06/22 21:09:01 dustin Exp $
+// $Id: AdminUserForm.java,v 1.3 2002/06/22 22:07:34 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -17,9 +17,10 @@ public class AdminUserForm extends ActionForm {
 
 	private String userId=null;
 	private String username=null;
+	private String password=null;
 	private String realname=null;
 	private String email=null;
-	private String canadd=null;
+	private boolean canadd=false;
 	private String catAclAdd[]=null;
 	private String catAclView[]=null;
 
@@ -52,6 +53,14 @@ public class AdminUserForm extends ActionForm {
 		return(username);
 	}
 
+	public String getPassword() {
+		return(password);
+	}
+
+	public void setPassword(String password) {
+		this.password=password;
+	}
+
 	public void setRealname(String realname) {
 		this.realname=realname;
 	}
@@ -68,7 +77,7 @@ public class AdminUserForm extends ActionForm {
 		return(email);
 	}
 
-	public String getCanadd() {
+	public boolean getCanadd() {
 		return(canadd);
 	}
 
@@ -80,7 +89,7 @@ public class AdminUserForm extends ActionForm {
 		return(catAclView);
 	}
 
-	public void setCanadd(String canadd) {
+	public void setCanadd(boolean canadd) {
 		this.canadd=canadd;
 	}
 
@@ -102,18 +111,48 @@ public class AdminUserForm extends ActionForm {
 
 		if(userId==null || userId.length()<1) {
 			errors.add("userId",
-				new ActionError("error.adminselectuserform.userId"));
+				new ActionError("error.adminuserform.userId"));
 		} else {
 			try {
 				Integer.parseInt(userId);
 			} catch(NumberFormatException nfe) {
 				errors.add("userId",
-					new ActionError("error.adminselectuserform.userId.nfe"));
+					new ActionError("error.adminuserform.userId.nfe"));
 			}
 		}
 
+		// If the action is AdminSaveUserAction, we need to do more checks.
 		if(mapping.getType().equals(AdminSaveUserAction.class.getName())) {
-			// XXX:  more checks
+			if(username==null || username.length() < 1) {
+				errors.add("username",
+					new ActionError("error.adminuserform.username"));
+			}
+			if(password==null || password.length() < 1) {
+				errors.add("password",
+					new ActionError("error.adminuserform.password"));
+			}
+			if(realname==null || realname.length() < 1) {
+				errors.add("username",
+					new ActionError("error.adminuserform.realname"));
+			}
+			if(email==null || email.length() < 1) {
+				errors.add("email",
+					new ActionError("error.adminuserform.email"));
+			} else {
+				// This is cheap, but it's a start (7 == d@x.net)
+				if(email.length() < 7 || (email.indexOf('@')==-1)) {
+					errors.add("email",
+						new ActionError("error.adminuserform.email.inv"));
+				}
+			}
+			if(catAclView == null) {
+				errors.add("catAclView",
+					new ActionError("error.adminuserform.catAclView"));
+			}
+			if(catAclAdd == null) {
+				errors.add("catAclAdd",
+					new ActionError("error.adminuserform.catAclAdd"));
+			}
 		}
 
 		return(errors);

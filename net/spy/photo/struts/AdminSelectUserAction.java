@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectUserAction.java,v 1.2 2002/06/22 21:09:01 dustin Exp $
+// $Id: AdminSelectUserAction.java,v 1.3 2002/06/22 22:07:34 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -40,7 +40,16 @@ public class AdminSelectUserAction extends PhotoAction {
 		int userid=Integer.parseInt(auf.getUserId());
 
 		// The form can remain blank if the user id is -1 (new user)
-		if(userid!=-1) {
+		if(userid==-1) {
+			// Empty user, fill it out with some defaults
+			auf.setUsername("newuser");
+			auf.setPassword("");
+			auf.setRealname("");
+			auf.setEmail("");
+			auf.setCanadd(false);
+			auf.setCatAclAdd(new String[0]);
+			auf.setCatAclView(new String[0]);
+		} else {
 			// Look up the user
 			PhotoSecurity sec=null;
 			try {
@@ -56,11 +65,10 @@ public class AdminSelectUserAction extends PhotoAction {
 
 			// Set the easy stuff
 			auf.setUsername(user.getUsername());
+			auf.setPassword(user.getPassword());
 			auf.setRealname(user.getRealname());
 			auf.setEmail(user.getEmail());
-			if(user.canAdd()) {
-				auf.setCanadd("1");
-			}
+			auf.setCanadd(user.canAdd());
 
 			// Populate the ACL stuff
 			Vector viewable=new Vector();

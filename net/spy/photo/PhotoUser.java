@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.15 2002/05/17 00:15:33 dustin Exp $
+// $Id: PhotoUser.java,v 1.16 2002/06/22 22:07:33 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -350,6 +350,14 @@ public class PhotoUser extends Object implements Serializable {
 			pass=security.getDigest(pass);
 		}
 		this.password=pass;
+	}
+
+	/**
+	 * Get the user's hashed password.  Useful for administration forms and
+	 * stuff.
+	 */
+	public String getPassword() {
+		return(password);
 	}
 
 	/**
