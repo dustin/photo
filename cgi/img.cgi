@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: img.cgi,v 1.1 1998/07/07 19:26:42 dustin Exp $
+# $Id: img.cgi,v 1.2 1998/08/30 03:54:58 dustin Exp $
 
 use Photo;
 use strict;
@@ -14,3 +14,4 @@ $img=~s/^\///;
 $img=~s/[^\/0-9\.tnjpgif]//g;
 
 $p->displayImage($img);
+$p->finished();
