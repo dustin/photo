@@ -45,11 +45,6 @@
 			scale="true"/>
 	</div>
 
-	<%--
-	<photo:imgLink id="<%= image.getId() %>"/>
-	<img border="0" src="PhotoServlet?func=getimage&id=<%= image.getId()%>"/>
-	--%>
-
 	<p>
 		<b>Category</b>:  ``<%= image.getCatName() %>''&nbsp;<b>Keywords</b>:
 			<i><%= image.getKeywords() %></i><br>

@@ -83,9 +83,7 @@
 
 	</form>
 
-[<a href="PhotoServlet?func=logview&view=viewers&which=<%=
-	"" + image.getId() %>">
-Who's seen this?</a>] | 
+[<a href="logview.jsp?id=<%= "" + image.getId() %>"> Who's seen this?</a>] |
 [<a href="display.jsp?id=<%= "" + image.getId() %>">Linkable image</a>] |
 [<a href="PhotoServlet?func=getimage&photo_id=<%= "" + image.getId() %>">Full
 Size Image</a>]
