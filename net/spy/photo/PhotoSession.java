@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.58 2001/07/16 02:24:10 dustin Exp $
+ * $Id: PhotoSession.java,v 1.59 2001/07/16 04:44:19 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1290,13 +1290,6 @@ public class PhotoSession extends Object
 		boolean thumbnail=false;
 		ServletOutputStream out=null;
 
-		response.setContentType("image/jpeg");
-		java.util.Date d=new java.util.Date();
-		long l=d.getTime();
-		// This is thirty days
-		l+=25920000000L;
-		response.setDateHeader("Expires", l);
-
 		String s = request.getParameter("photo_id");
 		which = Integer.valueOf(s).intValue();
 
@@ -1317,13 +1310,26 @@ public class PhotoSession extends Object
 
 			if(thumbnail) {
 				log("Requesting thumbnail");
+
+				// We're going to go ahead and allow the thumbnails to be
+				// cached for an hour.
+				long l=System.currentTimeMillis();
+				// This is an hour in milliseconds.
+				l+=3600000;
+				response.setDateHeader("Expires", l);
+
 				image=p.getThumbnail(remote_uid.intValue());
 			} else {
 				log("Requesting full image");
 				image=p.getImage(remote_uid.intValue());
 			}
+
 			logger.log(new PhotoLogImageEntry(remote_uid.intValue(),
 				which, true, request));
+
+			// OK, let the other side know this is going to be a jpeg.
+			response.setContentType("image/jpeg");
+
 			out.write(image.getData());
 
 		} catch(Exception e) {
