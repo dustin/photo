@@ -67,11 +67,15 @@ public abstract class PhotoMigration extends Object {
 				if(curline.equals(";")) {
 					Statement st=conn.createStatement();
 					long starttime=System.currentTimeMillis();
-					st.executeUpdate(query.toString());
+					int updated=st.executeUpdate(query.toString());
 					long stoptime=System.currentTimeMillis();
 					st.close();
 					st=null;
-					System.out.println("Completed query in "
+					String rows=" rows";
+					if(updated==1) {
+						rows=" row";
+					}
+					System.out.println("Updated " + updated + rows + " in "
 						+ (stoptime-starttime) + "ms");
 					query=new StringBuffer();
 				} else if(curline.startsWith("--")) {
