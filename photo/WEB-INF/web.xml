@@ -40,9 +40,16 @@
 		<listener-class>net.spy.photo.SessionWatcher</listener-class>
 	</listener>
 
+	<!-- Normal mapping -->
 	<servlet-mapping>
 		<servlet-name>PhotoServlet</servlet-name>
 		<url-pattern>/PhotoServlet</url-pattern>
+	</servlet-mapping>
+
+	<!-- Mapping with path-info -->
+	<servlet-mapping>
+		<servlet-name>PhotoServlet</servlet-name>
+		<url-pattern>/PhotoServlet/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- The action servlet -->
