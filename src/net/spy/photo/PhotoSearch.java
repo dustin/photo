@@ -234,20 +234,14 @@ public class PhotoSearch extends PhotoHelper {
 
 			while(rs.next()) {
 				int photoId=rs.getInt("id");
-
-				if(resultId<results.getMaxRet()) {
-					// Fully populate the first few search results.
-					PhotoImageData r=PhotoImageDataImpl.getData(photoId);
-					// Add it to our search result set.
-					results.add(new PhotoSearchResult(r, resultId));
-				} else {
-					// The remaining search results just reference their IDs
-					Integer i=new Integer(rs.getInt(7));
-					results.add(i);
-				}
+				// Fully populate the first few search results.
+				PhotoImageData r=PhotoImageDataImpl.getData(photoId);
+				// Add it to our search result set.
+				results.add(new PhotoSearchResult(r, resultId));
 				// Counting results...
 				resultId++;
 			}
+			rs.close();
 			photo.close();
 		} catch(Exception e) {
 			throw new ServletException("Error performing search", e);

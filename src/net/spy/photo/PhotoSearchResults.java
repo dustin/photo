@@ -55,32 +55,4 @@ public class PhotoSearchResults extends Cursor {
 		return("Photo search results " + super.toString());
 	}
 
-	/**
-	 * Get the entry at the given location.
-	 */
-	public Object get(int which) {
-		PhotoSearchResult ret=null;
-		Object o=super.get(which);
-		// We hope that it's a PhotoSearchResult, but an Integer will do.
-		try {
-			ret=(PhotoSearchResult)o;
-		} catch(ClassCastException e) {
-			try {
-				// Synchronize on the object in this position.
-				synchronized(o) {
-					Integer i=(Integer)o;
-					PhotoImageData pid=PhotoImageDataImpl.getData(i.intValue());
-					ret=new PhotoSearchResult(pid, which);
-					// Next time, won't need to do this again.
-					set(which, ret);
-				}
-			} catch(Exception e2) {
-				getLogger().warn("Error getting result "
-					+ which + " from " + o, e2);
-			}
-		}
-		return(ret);
-	}
-
 }
-
