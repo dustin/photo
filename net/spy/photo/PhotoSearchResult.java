@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.25 2002/05/18 03:02:27 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.26 2002/05/20 19:30:22 dustin Exp $
  */
 
 package net.spy.photo;
@@ -17,6 +17,9 @@ import javax.servlet.http.*;
 import net.spy.*;
 import net.spy.cache.*;
 
+/**
+ * This object represents a search result or individual photo lookup.
+ */
 public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	private Hashtable mydata=null;
 	private int id=-1;
@@ -205,10 +208,16 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		mydata.put("SCALED_HEIGHT", "" + scaled.getHeight());
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public String getScaledWidth() {
 		return((String)mydata.get("SCALED_WIDTH"));
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public String getScaledHeight() {
 		return((String)mydata.get("SCALED_HEIGHT"));
 	}
@@ -237,38 +246,65 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		return((String)mydata.get("CAT"));
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public void setSize(String to) {
 		mydata.put("SIZE", to);
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public String getSize() {
 		return((String)mydata.get("SIZE"));
 	}
 
+	/**
+	 * @deprecated Should be a Date
+	 */
 	public void setTaken(String to) {
 		mydata.put("TAKEN", to);
 	}
 
+	/**
+	 * @deprecated Should be a Date
+	 */
 	public String getTaken() {
 		return((String)mydata.get("TAKEN"));
 	}
 
+	/**
+	 * @deprecated Should be a Date
+	 */
 	public void setTs(String to) {
 		mydata.put("TS", to);
 	}
 
+	/**
+	 * @deprecated Should be a Date
+	 */
 	public String getTs() {
 		return((String)mydata.get("TS"));
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public void setImage(String to) {
 		mydata.put("IMAGE", to);
 	}
 
+	/**
+	 * @deprecated this is a mess
+	 */
 	public String getImage() {
 		return((String)mydata.get("IMAGE"));
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public void setCatNum(String to) {
 		mydata.put("CATNUM", to);
 	}
@@ -281,34 +317,58 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		return((String)mydata.get("ADDEDBY"));
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public void setWidth(String to) {
 		mydata.put("WIDTH", to);
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public String getWidth() {
 		return((String)mydata.get("WIDTH"));
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public void setHeight(String to) {
 		mydata.put("HEIGHT", to);
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public String getHeight() {
 		return((String)mydata.get("HEIGHT"));
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public void setTnWidth(String to) {
 		mydata.put("TN_WIDTH", to);
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public String getTnWidth() {
 		return((String)mydata.get("TN_WIDTH"));
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public void setTnHeight(String to) {
 		mydata.put("TN_HEIGHT", to);
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public String getTnHeight() {
 		return((String)mydata.get("TN_HEIGHT"));
 	}
@@ -325,6 +385,9 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		return("" + id);
 	}
 
+	/**
+	 * @deprecated should be an int
+	 */
 	public int getCatNum() {
 		initialize();
 		int ret=Integer.parseInt((String)mydata.get("CATNUM"));
@@ -333,6 +396,8 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 
 	/**
 	 * Get the Image ID.
+	 *
+	 * @deprecated this doesn't do what it should.
 	 */
 	public int getImageId() {
 		return(id);
