@@ -40,6 +40,12 @@
 
     <form-bean name="uploadForm" type="net.spy.photo.struts.UploadForm"/>
 
+    <form-bean name="savedSearchForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="searchId" type="java.lang.Integer"/>
+		</form-bean>
+
     <form-bean name="saveSearchForm"
 			type="org.apache.struts.validator.DynaValidatorForm">
 
@@ -190,14 +196,33 @@
 	</action>
 
 	<!-- Searches -->
-	<action    path="/search"
+	<!-- This action causes the form to reset -->
+	<action path="/search"
+		type="org.apache.struts.actions.ForwardAction"
+		input="top.search"
+		name="searchForm"
+		parameter="/int/search.do">
+	</action>
+
+	<!-- This actually performs the search, but does not reset the form -->
+	<action path="/int/search"
 		type="net.spy.photo.struts.SearchAction"
 		input="top.search"
 		name="searchForm">
+
 		<forward name="next" path="/filterSearch.do" />
 		<forward name="showResults" path="/filterSearch.do" />
 		<!-- Backwards compatibility -->
 		<forward name="success" path="/filterSearch.do" />
+	</action>
+
+	<action path="/savedSearch"
+		type="net.spy.photo.struts.GetSavedSearchAction"
+		input="index"
+		name="savedSearchForm">
+
+		<!-- Send it on to the search class -->
+		<forward name="next" path="/int/search.do" />
 	</action>
 
 	<!-- Search result cursor movement -->

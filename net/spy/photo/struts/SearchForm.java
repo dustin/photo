@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchForm.java,v 1.9 2003/04/25 06:32:23 dustin Exp $
+// $Id: SearchForm.java,v 1.10 2003/08/09 20:47:26 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -213,24 +213,28 @@ public class SearchForm extends ActionForm {
 	 * @param request The servlet request we are processing
 	 */
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		cats=null;
-		fieldjoin=null;
-		field=null;
-		keyjoin=null;
-		what=null;
-		tstartjoin=null;
-		tstart=null;
-		tendjoin=null;
-		tend=null;
-		startjoin=null;
-		start=null;
-		endjoin=null;
-		end=null;
-		order=null;
-		sdirection=null;
-		maxret=null;
-		filter=null;
-		action=null;
+		System.err.println("SearchForm.reset() - mapping is " + mapping);
+		if(mapping.getPath().equals("/search")) {
+			System.err.println("Resetting");
+			cats=null;
+			fieldjoin=null;
+			field=null;
+			keyjoin=null;
+			what=null;
+			tstartjoin=null;
+			tstart=null;
+			tendjoin=null;
+			tend=null;
+			startjoin=null;
+			start=null;
+			endjoin=null;
+			end=null;
+			order=null;
+			sdirection=null;
+			maxret=null;
+			filter=null;
+			action=null;
+		}
 	}
 
 	/**

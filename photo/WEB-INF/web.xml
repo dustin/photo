@@ -27,6 +27,11 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
+	<servlet>
+		<servlet-name>debug</servlet-name>
+		<servlet-class>net.spy.jwebkit.DebugServlet</servlet-class>
+	</servlet>
+
 	<!-- The main image servlet -->
 	<servlet>
 		<servlet-name>PhotoServlet</servlet-name>
@@ -91,6 +96,11 @@
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>debug</servlet-name>
+		<url-pattern>/debugServlet</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>

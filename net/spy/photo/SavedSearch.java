@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SavedSearch.java,v 1.5 2003/08/09 08:37:17 dustin Exp $
+// $Id: SavedSearch.java,v 1.6 2003/08/09 20:47:26 dustin Exp $
 
 package net.spy.photo;
 
@@ -52,6 +52,13 @@ public class SavedSearch extends Object {
 		name=rs.getString("name");
 		byte data[]=base64.decode(rs.getString("search"));
 		search=new String(data);
+	}
+
+	/** 
+	 * Get the ID of this saved search.
+	 */
+	public int getId() {
+		return(id);
 	}
 
 	/**
@@ -107,21 +114,6 @@ public class SavedSearch extends Object {
 		}
 
 		return(rv);
-	}
-
-	private Map parseQuery(String q) {
-		Map rv=null;
-		// XXX:  Insert implementation
-		return(rv);
-	}
-
-	/** 
-	 * Get this search as a SearchForm object (NOT IMPLEMENTED).
-	 */
-	public SearchForm getSearchForm() {
-		SearchForm sf=new SearchForm();
-		Map m=parseQuery(search);
-		return(sf);
 	}
 
 	private static Map getSearchesMap() throws PhotoException {

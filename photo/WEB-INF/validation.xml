@@ -62,6 +62,12 @@
 				</field>
 			</form>
 
+			<form name="savedSearchForm">
+				<field property="searchId" depends="required,integer">
+					<arg0 key="Saved Search ID" resource="false"/>
+				</field>
+			</form>
+
 			<form name="adminifyForm">
 				<field property="action" depends="required,mask">
 					<arg0 key="Admin action" resource="false"/>
