@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaverThread.java,v 1.2 2002/06/03 08:14:10 dustin Exp $
+// $Id: PhotoSaverThread.java,v 1.3 2002/06/03 17:03:12 dustin Exp $
 
 package net.spy.photo;
 
@@ -92,6 +92,7 @@ public class PhotoSaverThread extends Thread {
 				System.out.println("Saving " + ps);
 				ps.saveImage();
 				report(SUCCESS, ps, null);
+                System.out.println("Queue size:  " + jobQueue.size());
 			} catch(EmptyStackException e) {
 				try {
 					synchronized(jobQueue) {
