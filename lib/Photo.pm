@@ -1,14 +1,14 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.65 1999/01/13 02:54:23 dustin Exp $
+# $Id: Photo.pm,v 1.66 1999/01/17 22:57:21 dustin Exp $
 
 package Photo;
 
 use CGI;
 use DBI;
 use DCache;
-use MIME::Base64;
+use MIME::Base64();
 use strict;
 
 use vars qw($cgidir $uriroot $includes $adminc $ldir);
@@ -296,7 +296,7 @@ sub cacheImage
 				$done=20;
 				while($r=$s->fetch) {
 						$done--;
-			$out.=decode_base64($r->[2]);
+			$out.=MIME::Base64::decode($r->[2]);
 				}
 	}
 	$s->finish;
@@ -400,7 +400,7 @@ sub showSaved
 	$cgi.="/photo.cgi";
 
 	while($r=$s->fetch) {
-		$out.= "	<li><a href=\"$cgi?" . decode_base64($r->[3])
+		$out.= "	<li><a href=\"$cgi?" . MIME::Base64::decode($r->[3])
 			   . "\">$r->[1]</a></li>\n";
 	}
 	$s->finish;
@@ -430,7 +430,7 @@ sub doFind
 
 	if($start==0) { # is this your first time?
 		my($selfurl, %stuff);
-		$selfurl=encode_base64($q->query_string);
+		$selfurl=MIME::Base64::encode($q->query_string);
 
 		%stuff=("SEARCH" => $selfurl);
 		$self->showTemplate("$Photo::includes/savesearch.inc", %stuff);
@@ -634,7 +634,7 @@ sub addImage
 				$query="insert into image_store values($id, $i, '$_');\n";
 				$self->doQuery($query);
 				$i++;
-			} split(/\n/, encode_base64($premime));
+			} split(/\n/, MIME::Base64::encode($premime));
 		}
 
 		# set the image size, now that we know it...
@@ -787,7 +787,7 @@ sub base64image
 			$self->cacheImage($key, $img, $type);
 		}
 	}
-	return(encode_base64($c->getcache_only($key)));
+	return(MIME::Base64::encode($c->getcache_only($key)));
 }
 
 1;
