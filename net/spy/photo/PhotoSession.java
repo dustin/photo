@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.112 2002/03/04 09:03:19 dustin Exp $
+ * $Id: PhotoSession.java,v 1.113 2002/03/05 00:52:40 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1230,7 +1230,7 @@ public class PhotoSession extends Object
 		}
 
 		// Verify the person has access to this image
-		security.checkAccess(sessionData.getUser().getId(), photo_id);
+		security.checkAccess(sessionData.getUser(), photo_id);
 
 		Comment comment=new Comment();
 		comment.setUser(sessionData.getUser());
@@ -1361,12 +1361,14 @@ public class PhotoSession extends Object
 	private PhotoSearchResult doDisplayByID(int image_id, Hashtable h)
 		throws Exception {
 
+		// Check access
+		security.checkAccess(sessionData.getUser(), image_id);
 		// Get the data
 		PhotoSearchResult r=new PhotoSearchResult();
 		// Set the scaling stuff.
 		r.setMaxSize(sessionData.getOptimalDimensions());
 		// Fetch up the image
-		r.find(image_id, sessionData.getUser().getId());
+		r.find(image_id);
 
 		return(r);
 	}
@@ -1568,7 +1570,7 @@ public class PhotoSession extends Object
 				pdim=new PhotoDimensionsImpl(size);
 			}
 			log("Fetching " + which + " scaled to " + pdim);
-			image=p.getImage(sessionData.getUser().getId(), pdim);
+			image=p.getImage(sessionData.getUser(), pdim);
 
 			logger.log(new PhotoLogImageEntry(sessionData.getUser().getId(),
 				which, pdim, request));
@@ -1605,8 +1607,7 @@ public class PhotoSession extends Object
 
 			// Verify access
 			try {
-				PhotoSecurity.checkAccess(sessionData.getUser().getId(),
-					which);
+				PhotoSecurity.checkAccess(sessionData.getUser(), which);
 			} catch(Exception e) {
 				// Log it separately so the user doesn't see the security
 				// details.

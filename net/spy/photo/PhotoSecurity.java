@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.17 2002/02/23 07:51:29 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.18 2002/03/05 00:52:40 dustin Exp $
  */
 
 package net.spy.photo;
@@ -58,8 +58,10 @@ public class PhotoSecurity extends PhotoHelper {
 			rs.close();
 			st.close();
 			st=conn.prepareStatement(
-				"select cat, canview, canadd from wwwacl where userid=?");
+				"select distinct cat, canview, canadd\n"
+					+ " from wwwacl where (userid=? or userid=?)");
 			st.setInt(1, u.getId());
+			st.setInt(2, PhotoUtil.getDefaultId());
 			rs=st.executeQuery();
 			// Add the ACL entries.
 			while(rs.next()) {
@@ -203,38 +205,36 @@ public class PhotoSecurity extends PhotoHelper {
 		return(ret);
 	}
 
-	/**
-	 * Check to see if the given uid has access to the given image ID.
-	 */
-	public static void checkAccess(int uid, int image_id) throws Exception {
+	public static void checkAccess(PhotoUser user, int image_id) throws
+		Exception {
+
 		boolean ok=false;
 
-		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
-		// Verify specific access to viewability.
-		PreparedStatement pst=db.prepareStatement(
-			"select 1 from album a, wwwacl w\n"
-				+ " where id=?\n"
-				+ " and a.cat=w.cat\n"
-				+ " and canview=true\n"
-				+  " and (w.userid=? or w.userid=?)\n", 900);
-		pst.setInt(1, image_id);
-		pst.setInt(2, uid);
-		pst.setInt(3, PhotoUtil.getDefaultId());
-		ResultSet rs=pst.executeQuery();
+		try {
+			PhotoImageData pid=PhotoImageData.getData(image_id);
 
-		// If there's a result, access is granted
-		if(rs.next()) {
-			ok=true;
+			ok=user.canView(pid.getCatId());
+		} catch(Exception e) {
+			// Will return false
+			e.printStackTrace();
 		}
-
-		rs.close();
-		pst.close();
-		db.close();
 
 		if(!ok) {
 			throw new Exception("Access to image " + image_id
-				+ " is not allowed by user " + uid);
+				+ " is not allowed by user " + user);
 		}
+	}
+
+	/**
+	 * Check to see if the given uid has access to the given image ID.
+	 *
+	 * @deprecated Why not just use the photo user?
+	 */
+	public static void checkAccess(int uid, int image_id) throws Exception {
+		PhotoSecurity sec=new PhotoSecurity();
+		PhotoUser u=sec.getUser(uid);
+
+		checkAccess(u, image_id);
 	}
 
 	// Load the user info from a result set

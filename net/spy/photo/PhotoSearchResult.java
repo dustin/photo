@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.21 2002/02/23 07:51:29 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.22 2002/03/05 00:52:40 dustin Exp $
  */
 
 package net.spy.photo;
@@ -136,74 +136,14 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	 *
 	 * @throws Exception on failure
 	 */
-	public void find(int id, int uid) throws Exception {
+	public void find(int id) throws Exception {
 		this.id=id;
 
-		Exception ex=null;
-
-		try {
-			String query= "select a.id,a.keywords,a.descr,\n"
-            	+ "   a.size,a.taken,a.ts,b.name,a.cat,c.username,b.id,\n"
-				+ "   a.width, a.height\n"
-            	+ "   from album a, cat b, wwwusers c\n"
-            	+ "   where a.cat=b.id and a.id=?\n"
-            	+ "   and a.addedby=c.id\n"
-            	+ "   and a.cat in (select cat from wwwacl where "
-            	+ "userid=? or userid=?)\n";
-			SpyDB photo=new SpyDB(new PhotoConfig());
-			PreparedStatement st=photo.prepareStatement(query);
-			st.setInt(1, id);
-			st.setInt(2, uid);
-			st.setInt(3, PhotoUtil.getDefaultId());
-			ResultSet rs=st.executeQuery();
-
-			// Store it.
-			storeResult(rs);
-
-			photo.close();
-		} catch(Exception e) {
-			// We'll throw this a bit later.
-			ex=e;
-		}
-		// If we had an exception, get rid of it!
-		if(ex!=null) {
-			throw ex;
-		}
+		PhotoImageData pid=PhotoImageData.getData(id);
+		storeResult(pid);
 	}
 
-	private void find(int id) throws Exception {
-		this.id=id;
-
-		Exception ex=null;
-
-		try {
-			String query= "select a.id,a.keywords,a.descr,\n"
-            	+ "   a.size,a.taken,a.ts,b.name,a.cat,c.username,b.id,\n"
-				+ "   a.width, a.height\n"
-            	+ "   from album a, cat b, wwwusers c\n"
-            	+ "   where a.cat=b.id and a.id=?\n"
-            	+ "   and a.addedby=c.id\n";
-			SpyDB photo=new SpyDB(new PhotoConfig());
-			PreparedStatement st=photo.prepareStatement(query);
-			st.setInt(1, id);
-			ResultSet rs=st.executeQuery();
-			// Store it.
-			storeResult(rs);
-		} catch(Exception e) {
-			// Save it to be thrown later.
-			ex=e;
-		}
-		// If we had an exception, toss it up
-		if(ex!=null) {
-			throw ex;
-		}
-	}
-
-	private void storeResult(ResultSet rs) throws Exception {
-		// If there's not a result, error
-		if(!rs.next()) {
-			throw new Exception("No result received for " + id);
-		}
+	private void storeResult(PhotoImageData pid) throws Exception {
 
 		// If we don't already have a result hash, build one.
 		if(mydata==null) {
@@ -211,28 +151,21 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		}
 
 		// Grab the components
-		int i=1;
-		mydata.put("IMAGE",    rs.getString(i++));
-		mydata.put("KEYWORDS", rs.getString(i++));
-		mydata.put("DESCR",    rs.getString(i++));
-		mydata.put("SIZE",     rs.getString(i++));
-		mydata.put("TAKEN",    rs.getString(i++));
-		mydata.put("TS",       rs.getString(i++));
-		mydata.put("CAT",      rs.getString(i++));
-		mydata.put("CATNUM",   rs.getString(i++));
-		mydata.put("ADDEDBY",  rs.getString(i++));
-		i++; // skip this one
+		mydata.put("IMAGE",    "" + pid.getId());
+		mydata.put("KEYWORDS", pid.getKeywords());
+		mydata.put("DESCR",    pid.getDescr());
+		mydata.put("SIZE",     "" + pid.getSize());
+		mydata.put("TAKEN",    pid.getTaken());
+		mydata.put("TS",       pid.getTimestamp());
+		mydata.put("CAT",      pid.getCatName());
+		mydata.put("CATNUM",   "" + pid.getCatId());
+		mydata.put("ADDEDBY",  pid.getAddedBy().getUsername());
 
 		// Get the width and the height
-		mydata.put("WIDTH", rs.getString(i++));
-		mydata.put("HEIGHT", rs.getString(i++));
+		mydata.put("WIDTH",    "" + pid.getWidth());
+		mydata.put("HEIGHT",   "" + pid.getHeight());
 
 		calculateThumbnailSize();
-
-		// If there's another result error
-		if(rs.next()) {
-			throw new Exception("Too many results received for " + id);
-		}
 	}
 
 	void calculateThumbnailSize() {

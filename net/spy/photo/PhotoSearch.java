@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.18 2002/02/21 09:26:03 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.19 2002/03/05 00:52:40 dustin Exp $
  */
 
 package net.spy.photo;
@@ -15,6 +15,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import net.spy.*;
+import net.spy.db.*;
 import net.spy.util.*;
 
 public class PhotoSearch extends PhotoHelper {
@@ -97,8 +98,10 @@ public class PhotoSearch extends PhotoHelper {
 			// Go get a query
 			String query=buildQuery(request, sessionData.getUser().getId());
 
-			SpyDB photo=new SpyDB(new PhotoConfig());
-			ResultSet rs = photo.executeQuery(query);
+			// Cache this query for fifteen minutes.  It's unique to the
+			// user, but the user is often guest.
+			SpyCacheDB photo=new SpyCacheDB(new PhotoConfig());
+			ResultSet rs = photo.executeQuery(query, 900000);
 
 			// Figure out how many they want to display.
 			String tmp=request.getParameter("maxret");
@@ -152,15 +155,16 @@ public class PhotoSearch extends PhotoHelper {
 		boolean needao=false;
 		String atmp[];
 
-		query = "select a.keywords,a.descr,b.name,\n"
+		query = "select distinct a.keywords,a.descr,b.name,\n"
 			+ " a.size,a.taken,a.ts,a.id,a.cat,c.username,b.id,\n"
 			+ " a.width,a.height\n"
-			+ "   from album a, cat b, wwwusers c\n   where a.cat=b.id\n"
+			+ "   from album a, cat b, wwwusers c, wwwacl acl\n"
+			+ "       where a.cat=b.id\n"
 			+ "       and a.addedby=c.id\n"
-			+ "       and a.cat in (select cat from wwwacl\n"
-			+ "              where canview=true and\n"
-			+ "                    (userid=" + remote_uid + " or userid="
-			+ PhotoUtil.getDefaultId() + "))";
+			+ "       and a.cat = acl.cat\n"
+			+ "       and acl.canview=true\n"
+			+ "       and ( acl.userid=" + remote_uid + "\n"
+			+ "             or acl.userid= " + PhotoUtil.getDefaultId() + ")\n";
 
 		// Find out what the fieldjoin is real quick...
 		stmp=request.getParameter("fieldjoin");
@@ -327,6 +331,8 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		query += "\n order by " + order;
+
+		System.err.println("Searching with the following query:\n" + query);
 
 		return(query);
 	}
