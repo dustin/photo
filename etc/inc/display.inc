@@ -27,14 +27,15 @@ function openWindow(URL,name) {
 </table>
 
 <center>
-<img src="%SELF_URI%?func=getimage&photo_id=%IMAGE%">
+<img width=%WIDTH% height=%HEIGHT%
+	src="%SELF_URI%?func=getimage&photo_id=%IMAGE%">
 </center>
 <p>
 
 Category: %CAT%
 <p>
 
-Size: %SIZE% bytes
+Size: %SIZE% bytes, %WIDTH%x%HEIGH%
 <p>
 
 Taken: %TAKEN%
