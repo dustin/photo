@@ -44,10 +44,11 @@
 		</attribute>
 	</tag>
 
-	<!-- Meta info displayer. -->
+	<!-- Meta info fetcher. -->
 	<tag>
-		<name>showMetaInfo</name>
+		<name>metaInfo</name>
 		<tagclass>net.spy.photo.taglib.MetaInfo</tagclass>
+		<teiclass>net.spy.photo.taglib.MetaInfoExtraInfo</teiclass>
 	</tag>
 
 	<!-- Get category lists. -->

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MetaInfo.java,v 1.3 2002/08/08 23:04:57 dustin Exp $
+// $Id: MetaInfo.java,v 1.4 2003/08/09 07:25:18 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -55,27 +55,21 @@ public class MetaInfo extends PhotoTag {
 	 * Get the meta info and shove it into the webpage.
 	 */
 	public int doStartTag() throws JspException {
-		try {
-			// get the number formatter.
-			NumberFormat nf=NumberFormat.getNumberInstance();
+		int totalShown=0;
+		int totalImages=0;
 
-			int totalShown=getCount(
+		try {
+			totalShown=getCount(
 				"select count(*) from photo_logs\n"
 					+ " where log_type=get_log_type('ImgView')");
-			int totalImages=getCount("select count(*) from album");
-
-			String out="This database contains about "
-				+ nf.format(totalImages)
-				+ " images and has displayed about "
-				+ nf.format(totalShown)
-				+ ".";
-			if(out!=null) {
-				pageContext.getOut().write(out);
-			}
+			totalImages=getCount("select count(*) from album");
 		} catch(Exception e) {
 			e.printStackTrace();
-			throw new JspException("Error sending output.");
+			throw new JspException("Problem loading meta info " + e);
 		}
+
+		pageContext.setAttribute("metaShown", new Integer(totalShown));
+		pageContext.setAttribute("metaImages", new Integer(totalImages));
 
 		return(EVAL_BODY_INCLUDE);
 	}

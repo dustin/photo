@@ -16,6 +16,10 @@ page.content.footer=Copyright &copy; 1997-2003 Dustin Sallings of \
 	are property of their owners, and may not be \
 	used without permission.
 
+# Meta info
+index.metainfo= This database contains about {0} images \
+	and has displayed about {1}.
+
 # Index
 index.links.login=Login
 index.links.logout=Logout

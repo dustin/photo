@@ -2,6 +2,7 @@
 
 <jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
@@ -103,6 +104,18 @@
 	</photo:admin>
 </table>
 
-<p>
-	<photo:showMetaInfo/>
-</p>
+<div class="metaInfo">
+	<photo:metaInfo>
+		<%-- This is kind of ugly, but there seems to be a resin jstl bug --%>
+		<c:set var="mImgs">
+			<fmt:formatNumber><%= metaImages %></fmt:formatNumber>
+		</c:set>
+		<c:set var="mShwn">
+			<fmt:formatNumber><%= metaShown %></fmt:formatNumber>
+		</c:set>
+		<fmt:message key="index.metainfo">
+			<fmt:param><c:out value="${mImgs}" /></fmt:param>
+			<fmt:param><c:out value="${mShwn}" /></fmt:param>
+		</fmt:message>
+	</photo:metaInfo>
+</div>
