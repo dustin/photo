@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.23 2002/05/23 06:54:51 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.24 2002/05/27 04:56:31 dustin Exp $
  */
 
 package net.spy.photo;
@@ -297,6 +297,7 @@ public class PhotoSearch extends PhotoHelper {
 		} catch(Exception e) {
 			throw new ServletException("Error performing search", e);
 		}
+		System.out.println("performSearch returning " + results);
 		return(results);
 	}
 
