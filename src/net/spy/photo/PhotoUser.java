@@ -5,6 +5,8 @@
 package net.spy.photo;
 
 import java.io.Serializable;
+import java.io.ObjectStreamException;
+import java.io.InvalidObjectException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -617,6 +619,32 @@ public class PhotoUser extends AbstractSavable
 		sb.append("</photo_user>\n");
 
 		return(sb.toString());
+	}
+
+	private Object writeReplace() throws ObjectStreamException {
+		return(new SerializedForm(getId()));
+	}
+
+	private static class SerializedForm implements Serializable {
+		private int uid=0;
+
+		public SerializedForm(int i) {
+			super();
+			this.uid=i;
+		}
+
+		private Object readResolve() throws ObjectStreamException {
+			PhotoUser rv=null;
+			try {
+				rv=PhotoUser.getPhotoUser(uid);
+			} catch(PhotoException e) {
+				InvalidObjectException t=new InvalidObjectException(
+					"Problem resolving user " + uid);
+				t.initCause(e);
+				throw t;
+			}
+			return(rv);
+		}
 	}
 
 	private static class CacheEntry extends Object {
