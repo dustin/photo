@@ -2,7 +2,7 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: saveuser.cgi,v 1.1 1997/12/06 09:42:30 dustin Exp $
+# $Id: saveuser.cgi,v 1.2 1997/12/07 07:10:36 dustin Exp $
 
 use Postgres;
 use CGI;
@@ -45,15 +45,22 @@ else
 
 if($in{'newuser'} == 0)
 {
-    $query ="update wwwusers set password=$in{'password'}\n";
+    my @vars=('username', 'realname', 'email');
+    $query ="update wwwusers set\n";
+    for(@vars)
+    {
+	$query.="    $_='$in{$_}',\n";
+    }
+    $query.="    password=$in{'password'}\n";
     $query.="    where username='$in{'username'}';";
 
     print "<!-- $query -->\n";
 }
 else
 {
-    $query ="insert into wwwusers (username, password)\n";
-    $query.="    values('$in{'username'}', $in{'password'})";
+    $query ="insert into wwwusers (username, password, email, realname)\n";
+    $query.="    values('$in{'username'}', $in{'password'},\n";
+    $query.="           '$in{'email'}', '$in{'realname'}')";
 
     print "<!-- $query -->\n";
 }

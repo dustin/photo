@@ -2,7 +2,7 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: edituser.cgi,v 1.2 1997/12/07 07:03:28 dustin Exp $
+# $Id: edituser.cgi,v 1.3 1997/12/07 07:10:35 dustin Exp $
 
 use Postgres;
 use CGI;
@@ -54,6 +54,16 @@ else
 }
 
 print <<EOF;
+
+<tr>
+    <td>Real Name:</td>
+    <td><input name="realname" value="$r[3]"></td>
+</tr>
+
+<tr>
+    <td>E-mail address:</td>
+    <td><input name="email" value="$r[2]"></td>
+</tr>
 
 <tr>
     <td>Password:</td>
