@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Start with the latest patch
+base=`tla logs -f | tail -1`
+
+# Find out how many changes there are that are not build number changes
+changes=""
+changen=`tla changes | egrep -v "^\*|etc/build.number" | wc -l`
+
+# Figure out if we have uncommitted changes
+if [ $changen -gt 0 ]
+then
+	changes="++"
+fi
+echo "$base$changes"

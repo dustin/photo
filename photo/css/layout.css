@@ -74,13 +74,13 @@ h2 { font-size: medium; }
 
 .leftstuff {
 	float: left;
-	width: 49%;
+	width: 59%;
 	text-align: left;
 }
 
 .rightstuff {
 	float: left;
-	width: 49%;
+	width: 40%;
 	text-align: right;
 }
 

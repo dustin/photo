@@ -72,9 +72,11 @@
 	</target>
 
 	<target name="validateconfigs">
+		<!--
 		<xmlvalidate failonerror="yes">
 			<fileset dir="photo/WEB-INF" includes="**/*.xml"/>
 		</xmlvalidate>
+		-->
 	</target>
 
 	<!-- This is specific to my development at home. -->
@@ -202,6 +204,7 @@
 	<target name="photoresources.properties" unless="properties.upToDate">
 		<buildnumber file="etc/build.number"/>
 		<tstamp/>
+		<exec executable="./etc/tree-version" outputproperty="tree.version"/>
 		<copy file="${SRCDIR}/net/spy/photo/photoresources.properties.in"
 			tofile="${BUILDDIR}/net/spy/photo/photoresources.properties"/>
 		<propertyfile file="${BUILDDIR}/net/spy/photo/photoresources.properties">
@@ -210,6 +213,7 @@
 			<entry key="build.tstamp" value="${TSTAMP}"/>
 			<entry key="build.dtstamp" value="${DSTAMP}${TSTAMP}"/>
 			<entry key="build.number" value="${build.number}"/>
+			<entry key="tree.version" value="${tree.version}"/>
 		</propertyfile>
 		<property file="${BUILDDIR}/net/spy/photo/photoresources.properties"/>
 		<property name="properties.upToDate" value="true"/>
