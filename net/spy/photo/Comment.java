@@ -1,18 +1,23 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.14 2002/11/10 09:41:59 dustin Exp $
+// $Id: Comment.java,v 1.15 2002/12/15 07:08:25 dustin Exp $
 
 package net.spy.photo;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.sql.Connection;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import net.spy.SpyDB;
+import net.spy.db.Savable;
+import net.spy.db.SaveException;
+import net.spy.db.SaveContext;
 
 import net.spy.photo.sp.FindImagesByComments;
 import net.spy.photo.sp.GetCommentsForPhoto;
@@ -22,7 +27,7 @@ import net.spy.photo.sp.GetGeneratedKey;
 /**
  * Comments on photos.
  */
-public class Comment extends Object implements java.io.Serializable {
+public class Comment extends Object implements Savable, java.io.Serializable {
 
 	private int commentId=-1;
 
@@ -33,6 +38,8 @@ public class Comment extends Object implements java.io.Serializable {
 	private String remoteAddr=null;
 	private Timestamp timestamp=null;
 	private String timestampString=null;
+	private boolean isNew=false;
+	private boolean isModified=false;
 
 	/**
 	 * Get an instance of Comment.
@@ -41,6 +48,7 @@ public class Comment extends Object implements java.io.Serializable {
 		super();
 		timestamp=new Timestamp(System.currentTimeMillis());
 		timestampString=timestamp.toString();
+		isNew=true;
 	}
 
 	// Get a comment from a result row
@@ -53,6 +61,7 @@ public class Comment extends Object implements java.io.Serializable {
 		timestampString=rs.getString("ts");
 		remoteAddr=rs.getString("remote_addr");
 		user=sec.getUser(rs.getInt("user_id"));
+		isNew=false;
 	}
 
 	/**
@@ -116,17 +125,36 @@ public class Comment extends Object implements java.io.Serializable {
 		return(al);
 	}
 
+	// Savable implementation
+
+	/** 
+	 * True if this is a new object.
+	 */
+	public boolean isNew() {
+		return(isNew);
+	}
+
+	/** 
+	 * True if this object has been modified;
+	 */
+	public boolean isModified() {
+		return(isModified);
+	}
+
 	/**
 	 * Save a new comment.
 	 */
-	public void save() throws Exception {
-		if(commentId!=-1) {
-			throw new Exception("You can only save *new* comments.");
+	public void save(Connection conn, SaveContext context)
+		throws SaveException, SQLException {
+		// Basic checks
+		if(!isNew()) {
+			throw new SaveException("You can only save *new* comments.");
 		}
 		if(user.getUsername().equals("guest")) {
-			throw new Exception("Guest is not allowed to comment.");
+			throw new SaveException("Guest is not allowed to comment.");
 		}
-		InsertComment db=new InsertComment(new PhotoConfig());
+
+		InsertComment db=new InsertComment(conn);
 		db.setUserId(user.getId());
 		db.setPhotoId(photoId);
 		db.setComment(note);
@@ -135,11 +163,11 @@ public class Comment extends Object implements java.io.Serializable {
 
 		int updated=db.executeUpdate();
 		if(updated!=1) {
-			throw new Exception("No rows updated?");
+			throw new SaveException("No rows updated?");
 		}
 		db.close();
 
-		GetGeneratedKey ggk=new GetGeneratedKey(new PhotoConfig());
+		GetGeneratedKey ggk=new GetGeneratedKey(conn);
 		ggk.setSeq("commentary_comment_id_seq");
 		ResultSet rs=ggk.executeQuery();
 		if(!rs.next()) {
@@ -151,6 +179,15 @@ public class Comment extends Object implements java.io.Serializable {
 		rs.close();
 		ggk.close();
 	}
+
+	/** 
+	 * Get the dependent objects.
+	 */
+	public Collection getSavables(SaveContext context) {
+		return(null);
+	}
+
+	// End savable implementation
 
 	/**
 	 * Get the comment ID of this comment record.
@@ -164,6 +201,7 @@ public class Comment extends Object implements java.io.Serializable {
 	 */
 	public void setUser(PhotoUser user) {
 		this.user=user;
+		isModified=true;
 	}
 
 	/**
@@ -178,6 +216,7 @@ public class Comment extends Object implements java.io.Serializable {
 	 */
 	public void setPhotoId(int photoId) {
 		this.photoId=photoId;
+		isModified=true;
 	}
 
 	/**
@@ -192,6 +231,7 @@ public class Comment extends Object implements java.io.Serializable {
 	 */
 	public void setNote(String note) {
 		this.note=note;
+		isModified=true;
 	}
 
 	/**
@@ -206,6 +246,7 @@ public class Comment extends Object implements java.io.Serializable {
 	 */
 	public void setRemoteAddr(String remoteAddr) {
 		this.remoteAddr=remoteAddr;
+		isModified=true;
 	}
 
 	/**

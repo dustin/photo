@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CommentAction.java,v 1.3 2002/08/06 03:37:08 dustin Exp $
+// $Id: CommentAction.java,v 1.4 2002/12/15 07:08:25 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -11,14 +11,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import net.spy.db.Saver;
+
 import net.spy.photo.Comment;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUser;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
+import net.spy.photo.PhotoConfig;
 
 /**
  * Action that submits a comment.
@@ -64,7 +67,8 @@ public class CommentAction extends PhotoAction {
 		comment.setNote(cf.getComment());
 
 		try {
-			comment.save();
+			Saver s=new Saver(new PhotoConfig());
+			s.save(comment);
 		} catch(Exception e) {
 			throw new ServletException("Error saving comment", e);
 		}

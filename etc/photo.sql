@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.32 2002/09/16 04:32:49 dustin Exp $
+-- $Id: photo.sql,v 1.33 2002/12/15 07:08:25 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -220,7 +220,7 @@ create index images_id on image_store(id);
 -- A SQL function to return the count of elements in a category.
 
 create function catsum (integer)
-	returns integer AS
+	returns bigint AS
 	'select count(*) from album where cat = $1'
 	language 'SQL';
 
