@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.14 2002/01/10 10:44:41 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.15 2002/02/14 22:00:31 dustin Exp $
  */
 
 package net.spy.photo;
@@ -22,16 +22,6 @@ public class PhotoSecurity extends PhotoHelper {
 
 	public PhotoSecurity() throws Exception {
 		super();
-	}
-
-	/**
-	 * Verify a password against what is stored in the database.
-	 *
-	 * @deprecated Why would I want to do this?
-	 */
-	public boolean checkPW(String user, String pass) {
-		PhotoUser pu=getUser(user);
-		return(pu.checkPassword(pass));
 	}
 
 	// Get a digest for a string
