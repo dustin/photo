@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.26 2002/03/12 09:08:44 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.27 2002/03/12 09:48:24 dustin Exp $
  */
 
 package net.spy.photo;
@@ -552,6 +552,10 @@ public class PhotoAdmin extends PhotoHelper {
 				if(conn!=null) {
 					conn.rollback();
 				}
+			}
+			// Turn autocommit back on.
+			if(conn!=null) {
+				conn.setAutoCommit(true);
 			}
 		}
 

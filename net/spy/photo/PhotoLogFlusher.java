@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.13 2002/03/01 10:22:36 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.14 2002/03/12 09:48:24 dustin Exp $
  */
 
 package net.spy.photo;
@@ -20,12 +20,28 @@ import net.spy.util.*;
  */
 public class PhotoLogFlusher extends SpyLogFlusher {
 
+	private boolean flushing=false;
+
 	/**
 	 * Get a log flusher.
 	 */
 	public PhotoLogFlusher() {
 		super("PhotoLog");
-		setPriority(NORM_PRIORITY-2);
+		setPriority(NORM_PRIORITY-1);
+	}
+
+	/**
+	 * Stringify.
+	 */
+	public String toString() {
+		StringBuffer sb=new StringBuffer();
+		sb.append(super.toString());
+
+		if(flushing) {
+			sb.append(" - currently flushing");
+		}
+
+		return(sb.toString());
 	}
 
 	/**
@@ -33,8 +49,11 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 	 */
 	protected void doFlush() throws Exception {
 		Vector v = flush();
+		// Just for sanity sake.
+		flushing=false;
 		// Only do all this crap if there's something to log.
 		if(v.size() > 0) {
+			flushing=true;
 			Debug debug=new Debug("net.spy.photo.flush.debug");
 			debug.debug("Flushing with " + v.size() + " items.");
 			SpyDB photodb=null;
@@ -79,6 +98,7 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 				st.close();
 			} finally {
 				photodb.close();
+				flushing=false;
 			}
 			debug.debug("Flush complete.");
 		}
