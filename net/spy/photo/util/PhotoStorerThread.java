@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.3 2001/07/13 09:00:24 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.4 2002/01/17 10:09:29 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -137,15 +137,16 @@ public class PhotoStorerThread extends Thread {
 
 	// Get a list of images that have been added, but not yet added into
 	// the database.
-	protected void doFlush() {
+	// Returns the number of things found to flush
+	private int doFlush() {
 		SpyDB pdb = getDB();
-		Vector v = null;
+		int rv=0;
+		Vector v = new Vector();
 		try {
 			Connection db=pdb.getConn();
 			Statement st=db.createStatement();
 			String query = "select * from upload_log where stored is null";
 			ResultSet rs=st.executeQuery(query);
-			v = new Vector();
 			while(rs.next()) {
 				v.addElement(rs.getString("photo_id"));
 			}
@@ -159,23 +160,29 @@ public class PhotoStorerThread extends Thread {
 		// that we don't hold the database connection open whlie we're
 		// making the list *and* getting another database connection to act
 		// on it.
-		if(v != null) {
+		if(v.size() > 0) {
+			rv=v.size();
 			try {
 				for(int i = 0; i<v.size(); i++) {
 					String stmp = (String)v.elementAt(i);
 					storeImage(Integer.valueOf(stmp).intValue());
 				}
 			} catch(Exception e) {
-				// Don't care, we'll try again soon.
+				// Return 0 so we won't try again *right now*, but we will
+				// in a bit.
+				rv=0;
 			}
 		}
+
+		// Return the number we found.
+		return(rv);
 	}
 
 	public void run() {
 		// Do a flush at the beginning, just in case stuff has been
 		// building up.
 		try {
-			doFlush();
+				doFlush();
 		} catch(Exception e1) {
 			// Don't care, all these can fail, we'll just keep trying.
 		}
@@ -186,10 +193,13 @@ public class PhotoStorerThread extends Thread {
 				// Check every x minutes
 				sleep(m * 60 * 1000);
 			} catch(Exception e) {
-			} finally {
-				doFlush();
 			}
-		}
+			// Loop immediately as often as it flushes.
+			while(doFlush()>0) {
+				System.err.println(
+					"doFlush() returned > 0, flushing again.");
+			} // Flush loop
+		} // Forever loop
 	}
 
 	// In case it's run as its own little thingy.
