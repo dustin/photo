@@ -19,6 +19,10 @@
     <form-bean name="changePWForm" type="net.spy.photo.struts.ChangePWForm"/>
     <form-bean name="forgotPWForm" type="net.spy.photo.struts.ForgotPWForm"/>
     <form-bean name="commentForm" type="net.spy.photo.struts.CommentForm"/>
+    <form-bean name="addToGalleryform"
+			type="net.spy.photo.struts.AddToGalleryForm"/>
+    <form-bean name="saveGalleryForm"
+			type="net.spy.photo.struts.SaveGalleryForm"/>
 
 		<!-- Admin beans -->
 		<form-bean name="adminUserForm" type="net.spy.photo.struts.AdminUserForm"/>
@@ -139,6 +143,22 @@
 		type="net.spy.photo.struts.NewUserAction"
 		input="/newuserform.jsp"
 		name="newUserForm">
+		<forward name="success" path="/index.jsp" />
+	</action>
+
+	<!-- Add a new image to a gallery -->
+	<action path="/addToGallery"
+		type="net.spy.photo.struts.AddToGalleryAction"
+		input="/display.jsp"
+		name="addToGalleryForm">
+		<forward name="success" path="/display.jsp" />
+	</action>
+
+	<!-- Save a gallery -->
+	<action path="/saveGallery"
+		type="net.spy.photo.struts.SaveGalleryAction"
+		input="/savegallery.jsp"
+		name="saveGalleryForm">
 		<forward name="success" path="/index.jsp" />
 	</action>
 
