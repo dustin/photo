@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.1 2000/06/28 21:47:37 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.2 2000/07/09 08:34:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -352,6 +352,17 @@ public class PhotoAdmin extends PhotoHelper {
 					"insert into cat(name) values(?)"
 					);
 				st.setString(1, cat_name);
+				st.executeUpdate();
+				// Find out what the ID of that was so that we can grant
+				// ourselves access to it.
+				st=photo.prepareStatement("select currval('cat_id_seq')");
+				ResultSet rs=st.executeQuery();
+				rs.next();
+				cat_id=rs.getInt(1);
+				// OK, grant ourselves access to it.
+				st=photo.prepareStatement("insert into wwwacl values(?,?)");
+				st.setInt(1, ps.remote_uid.intValue());
+				st.setInt(2, cat_id);
 				st.executeUpdate();
 			}
 		} catch(Exception e) {

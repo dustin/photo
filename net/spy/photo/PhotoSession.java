@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.27 2000/07/08 05:50:48 dustin Exp $
+ * $Id: PhotoSession.java,v 1.28 2000/07/09 08:34:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -23,8 +23,8 @@ import net.spy.*;
 public class PhotoSession extends Object
 { 
 	// This kinda stuff is only persistent for a single connection.
-	protected Integer remote_uid=null;
-	protected String remote_user=null, self_uri=null;
+	protected String remote_user=null;
+	protected String self_uri=null;
 	protected MultipartRequest multi=null;
 	protected SpyLog logger=null;
 	protected PhotoSecurity security = null;
@@ -38,6 +38,7 @@ public class PhotoSession extends Object
 	public HttpServletRequest request=null;
 	public HttpServletResponse response=null;
 	public HttpSession session=null;
+	public Integer remote_uid=null;
 
 	public PhotoSession(PhotoServlet p,
 		HttpServletRequest request,
