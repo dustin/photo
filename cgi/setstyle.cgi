@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: setstyle.cgi,v 1.2 1998/10/17 23:22:08 dustin Exp $
+# $Id: setstyle.cgi,v 1.3 1998/10/17 23:49:58 dustin Exp $
 
 use Photo;
 use CGI;
@@ -21,9 +21,16 @@ if(!defined($in{'font'}) || !defined($in{'h_transform'})) {
 }
 
 $style=<<EOF;
-body,td { font-family: $in{'font'}, Arial; background-color: $in{'bgcolor'}; }
-h1,h2,h3,h4,h5 { text-transform: $in{'h_transform'}; }
+body,td {font-family: $in{'font'}, Arial; background-color: $in{'bgcolor'};}
 EOF
+
+if($in{'d_transform'} ne "none") {
+	$style.="blockquote {text-transform: $in{'d_transform'};};";
+};
+
+if($in{'h_transform'} ne "none") {
+	$style.="h1,h2,h3,h4,h5 {text-transform: $in{'h_transform'};}";
+};
 
 $cookie=$q->cookie(-name=>'photo_style',
                    -path=>$Photo::cgidir,
