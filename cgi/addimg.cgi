@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: addimg.cgi,v 1.3 1997/11/03 09:31:44 dustin Exp $
+# $Id: addimg.cgi,v 1.4 1997/11/04 08:01:42 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -69,6 +69,8 @@ if($stat[7]==0)
     unlink("$ldir/$fn");
     exit(0);
 }
+
+system("/usr/local/bin/convert -size 100x100 $ldir/$fn $ldir/tn/$fn");
 
 $query ="insert into album (fn, keywords, descr, cat, size, taken)\n";
 $query.="    values('$fn',\n\t'$keywords',\n\t'$info',\n\t$cat,\n";

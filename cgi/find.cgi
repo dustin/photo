@@ -1,15 +1,17 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: find.cgi,v 1.2 1997/11/03 09:31:46 dustin Exp $
+# $Id: find.cgi,v 1.3 1997/11/04 08:01:43 dustin Exp $
 
 use CGI;
 use Postgres;
 
+$idir="/~dustin/photo/album";
+
 sub buildQuery
 {
     my($q)=@_;
-    my(%h, $query, $needao, $sub, @tmp, $tmp, $snao, $ln);
+    my(%h, $query, $needao, $sub, @tmp, $tmp, $snao, $ln, $order);
 
     for($q->param)
     {
@@ -20,7 +22,7 @@ sub buildQuery
     $h{what}=~s/\'/\\\'/g;
 
     $query ="select a.oid,a.keywords,a.descr,b.name,\n";
-    $query.="    a.size,a.taken,a.ts,a.cat,b.id\n";
+    $query.="    a.size,a.taken,a.ts,a.fn,a.cat,b.id\n";
     $query.="    from album a, cat b\n    where a.cat=b.id";
 
     if($h{searchtype} eq "simple")
@@ -91,7 +93,16 @@ sub buildQuery
 	}
     }
 
-    $query.="\n    order by a.ts;\n";
+    if($h{order}=~/[A-z0-9]/)
+    {
+	$order=$h{order};
+    }
+    else
+    {
+	$order="a.taken";
+    }
+
+    $query.="\n    order by $order;\n";
 
     return($query);
 }
@@ -120,14 +131,18 @@ $n=$s->ntuples;
 
 print "<h2>Found $n matches:</h2><br><ul>\n";
 
-while(($oid, $keywords, $descr, $cat, $size, $taken, $ts)=$s->fetchrow())
+while(($oid, $keywords, $descr, $cat, $size, $taken, $ts, $image)
+    =$s->fetchrow())
 {
-    print "    <li><a href=\"/cgi-bin/dustin/photo/display.cgi?$oid\">";
-    print "\nKeywords: $keywords</a><br>\n";
+    print "    <li>\n<table>\n<tr>\n<td valign=\"top\">\n";
+    print "\nKeywords: $keywords<br>\n";
     print "Category:  $cat<br>\n";
     print "Size:  $size bytes<br>\n";
     print "Taken:  $taken<br>\n";
     print "Added:  $ts<br>\n";
+    print "</td><td><a href=\"/cgi-bin/dustin/photo/display.cgi?$oid\">";
+    print "<img border=\"0\" src=\"$idir/tn/$image\"></a>\n";
+    print "</td></tr></table>\n";
     print "<blockquote>\n$descr\n</blockquote>\n</li>\n";
 }
 

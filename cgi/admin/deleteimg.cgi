@@ -2,7 +2,7 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: deleteimg.cgi,v 1.1 1997/11/02 12:12:47 dustin Exp $
+# $Id: deleteimg.cgi,v 1.2 1997/11/04 08:01:44 dustin Exp $
 
 use Postgres;
 
@@ -45,6 +45,7 @@ $query="delete from album where oid=$ARGV[0];";
 if($dbh->execute($query))
 {
     unlink("$Iroot/$image");
+    unlink("$Iroot/tn/$image");
     print "Entry has been deleted from the database, and $Iroot/$image ";
     print "has been deleted\n";
 }
