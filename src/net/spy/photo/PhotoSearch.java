@@ -271,20 +271,32 @@ public class PhotoSearch extends PhotoHelper {
 		if(kw == null) {
 			kw="";
 		}
-		StringTokenizer st=new StringTokenizer(kw);
-		while(st.hasMoreTokens()) {
-			Keyword k=Keyword.getKeyword(st.nextToken());
-			if(k != null) {
-				keywords.add(k);
-			}
-		}
+		// Figure out the operation
 		int joinop=SearchIndex.OP_AND;
 		if("or".equals(keyjoin)) {
 			joinop=SearchIndex.OP_OR;
 		}
-		// Remove everything that doesn't match our keywords (unless we
-		// don't have any)
-		if(keywords.size() > 0) {
+		// Flip through the keywords
+		boolean missingKw=false;
+		StringTokenizer st=new StringTokenizer(kw);
+		while(st.hasMoreTokens()) {
+			String kwstring=st.nextToken();
+			Keyword k=Keyword.getKeyword(kwstring);
+			if(k != null) {
+				keywords.add(k);
+			} else {
+				getLogger().info("Unknown keyword:  " + kwstring);
+				missingKw=true;
+			}
+		}
+		if(joinop == SearchIndex.OP_AND && missingKw) {
+			// If the joinop is AND and an invalid keyword was requested, just
+			// clear the set, we're done
+			getLogger().info("ANDing an unknown keyword");
+			rset.clear();
+		} else if(keywords.size() > 0) {
+			// Remove everything that doesn't match our keywords (unless we
+			// don't have any)
 			getLogger().info("Got images with keywords " + keywords);
 			SearchIndex index=SearchIndex.getInstance();
 			Set keyset=index.getForKeywords(keywords, joinop);
