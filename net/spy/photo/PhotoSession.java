@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.12 2000/06/30 00:09:59 dustin Exp $
+ * $Id: PhotoSession.java,v 1.13 2000/06/30 01:02:09 dustin Exp $
  */
 
 package net.spy.photo;
@@ -522,7 +522,7 @@ public class PhotoSession extends Object
 			c_text += "blockquote {text-transform: " + stmp + ";};\n";
 		}
 
-		stmp = request.getParameter("d_transform");
+		stmp = request.getParameter("h_transform");
 		if(stmp != null && stmp.length() > 1) {
 			c_text += "h1,h2,h3,h4,h5 {text-transform: " + stmp + ";};\n";
 		}
