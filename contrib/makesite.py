@@ -7,6 +7,7 @@ Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 """
 
 import os
+import posix
 import libphoto
 
 def makeStylesheet():
@@ -82,74 +83,68 @@ def makeYearPage(idx, year):
             s=" (1 image)"
         else:
             s=" (" + `nimgs` + " images)"
-        f.write('<li><a href="%04d%02d.html">%02d%s</a></li>\n' % (y, m, m, s))
+        f.write('<li><a href="%04d/%02d.html">%02d%s</a></li>\n' % (y, m, m, s))
     f.write("</ul>")
     f.write('<div id="footer">')
-    f.write("<a href=\"../index.html\">[Index]</a>")
+    f.write('<a href="../index.html">[Index]</a>')
     f.write("</div>")
     f.write("</body></html>\n")
 
 def makeMonthPage(y, m, photos):
-    f=file("pages/%04d%02d.html" % (y, m), "w")
-    month="%04d%02d" % (y, m)
+    f=file("pages/%04d/%02d.html" % (y, m), "w")
     f.write(header("Photos from %02d %04d" % (m, y))
-        + """<link rel="stylesheet" href="../style.css" />
+        + """<link rel="stylesheet" href="../../style.css" />
         </head>
         <body>
         <div class="monthList">\n""")
     for photo in photos:
-        f.write('<a href="%s/%d.html">' % (month, photo.id))
+        f.write('<a href="%02d/%d.html">' % (m, photo.id))
         (yr,mn,dt)=photo.dateParts()
-        f.write('<img alt="%d" src="../images/%04d%02d%02d/%d_t%s"/></a>\n' \
+        f.write('<img alt="%d" src="../../images/%04d%02d%02d/%d_t%s"/></a>\n' \
                 % (photo.id, yr, mn, dt, photo.id, photo.extension))
     f.write("</div>\n")
     f.write('<div id="footer">')
-    f.write("<a href=\"../index.html\">[Index]</a>")
-    f.write(' / <a href="%04d.html">[%04d]</a>' % (y, y))
+    f.write('<a href="../../index.html">[Index]</a>')
+    f.write(' / <a href="../%04d.html">[%04d]</a>' % (y, y))
     f.write("</div>")
     f.write("</body></html>\n")
 
 def makePageForPhoto(dir, photo):
-    f=file(dir + "/" + `photo.id` + ".html", "w")
-    f.write(header("Image " + `photo.id`)
-        + """<link rel="stylesheet" href="../../style.css" />
-        </head>
-        <body>\n<div class="idPage">\n""")
-    f.write("""<div id="imgView">\n""")
-    f.write("<a href=\"http://bleu.west.spy.net/photo/display.do?id=")
-    f.write(`photo.id` + "\">")
     (y,m,d)=photo.dateParts()
     shortpath="%04d%02d%02d/%d%s" % (y, m, d, photo.id, photo.extension)
-    f.write('<img alt="%d" src="../../images/%s"/>' % (photo.id, shortpath))
-    f.write("</a>\n")
 
-    f.write("<dl>")
-    f.write("<dt>Taken</dt><dd>" + photo.taken + "</dd>\n")
+    f=file(dir + "/" + `photo.id` + ".html", "w")
 
-    f.write("<dt>Keywords</dt><dd>")
-    f.write(photo.keywords)
-    f.write("</dd>\n")
+    f.write(header("Image " + `photo.id`))
+    f.write("""<link rel="stylesheet" href="../../../style.css" />
+</head>
+ <body>
+ <div class="idPage">
+ <div id="imgView">
+ <a href="http://bleu.west.spy.net/photo/display.do?id=%(id)d">
+ <img alt="Image %(id)d" src="../../../images/%(shortpath)s"/>
+ </a>
+ <dl>
+    <dt>Taken</dt><dd>%(taken)s</dd>
+    <dt>Keywords</dt><dd>%(keywords)s</dd>
+    <dt>Description</dt><dd>%(descr)s</dd>
+    <dt>Photo Album Link</dt>
+    <dd><a href="http://bleu.west.spy.net/photo/display.do?id=%(id)d">
+        Image %(id)d</a>
+    </dd>
+ </dl>
+ </div>
+ </div>
 
-    f.write("<dt>Description</dt><dd>")
-    f.write(photo.descr)
-    f.write("</dd>\n")
-
-    f.write("<dt>Photo album link</dt><dd>")
-    f.write("<a href=\"http://bleu.west.spy.net/photo/display.do?id=")
-    f.write(`photo.id` + "\">")
-    f.write("image " + `photo.id`)
-    f.write("</a></dd>")
-    f.write("</dl>")
-
-    f.write("""</div>\n</div>\n""")
-
-    # Navigation
-    f.write('<div id="footer">')
-    f.write("<a href=\"../../index.html\">[Index]</a>")
-    f.write(' / <a href="../%04d.html">[%04d]</a>' % (y, y))
-    f.write(' / <a href="../%04d%02d.html">[%02d]</a>' % (y, m, m))
-    f.write("</div>")
-    f.write("</body></html>\n")
+ <div id="footer">
+    <a href="../../index.html">[Index]</a>
+    / <a href="../%(year)04d.html">[%(year)04d]</a>
+    / <a href="../%(year)04d/%(month)02d.html">[%(month)02d]</a>
+ </div>
+ </body></html>""" % \
+        {'id': photo.id, 'shortpath': shortpath, 'taken': photo.taken,
+            'keywords': photo.keywords, 'descr': photo.descr,
+            'year': y, 'month': m})
 
 class MyHandler(libphoto.StaticIndexHandler):
     """Sax handler for pulling out photo entries and putting them in a dict"""
@@ -170,7 +165,7 @@ def parseIndex():
     album={}
     print "Parsing index..."
     d=libphoto.parseIndex("index.xml", MyHandler(album))
-    print "Parsed"
+    print "Parsed in %.2fu/%.2fs" % posix.times()[:2]
     return album
 
 # Start
@@ -185,14 +180,20 @@ if __name__ == '__main__':
     makeIndex(idx, years)
     makeStylesheet()
     
+    times=posix.times()
     for y in years:
         makeYearPage(idx, y)
 
+        os.mkdir("pages/%04d" % (y, ))
         for m in idx[y].keys():
-            print "%04d/%02d ------" % (y, m)
             photos=idx[y][m]
             makeMonthPage(y, m, photos)
-            dir="pages/%04d%02d" % (y, m)
+            dir="pages/%04d/%02d" % (y, m)
             os.mkdir(dir)
             for photo in photos:
                 makePageForPhoto(dir, photo)
+
+        newtimes=posix.times()
+        ut=newtimes[0] - times[0]
+        st=newtimes[1] - times[1]
+        print "Processed %04d in %.2fu/%.2fs" % (y, ut, st)
