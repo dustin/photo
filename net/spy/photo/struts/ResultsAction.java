@@ -1,9 +1,10 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ResultsAction.java,v 1.1 2002/05/16 17:07:02 dustin Exp $
+// $Id: ResultsAction.java,v 1.2 2002/05/16 18:35:24 dustin Exp $
 
 package net.spy.photo.struts;
 
+import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 

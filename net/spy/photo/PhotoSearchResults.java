@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.12 2002/02/24 07:36:55 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.13 2002/05/16 18:35:24 dustin Exp $
  */
 
 package net.spy.photo;
@@ -88,8 +88,9 @@ public class PhotoSearchResults extends Cursor {
 					replace(which, ret);
 				}
 			} catch(Exception e2) {
+                e2.printStackTrace();
 				System.err.println("Error getting result "
-					+ which + ":  " + e2);
+					+ which + " from " + o + ":  " + e2);
 			}
 		}
 		return(ret);

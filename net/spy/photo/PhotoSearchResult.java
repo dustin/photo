@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.23 2002/05/15 08:26:15 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.24 2002/05/16 18:35:24 dustin Exp $
  */
 
 package net.spy.photo;
@@ -41,6 +41,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		super();
 		this.id=id;
 		this.search_id=search_id;
+        initialize();
 	}
 
 	/**

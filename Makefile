@@ -72,7 +72,6 @@ CLASSES=\
 	net/spy/photo/PhotoAheadFetcher.class \
 	net/spy/photo/PhotoXSLT.class \
 	net/spy/photo/xslt/ResinXSLT.class \
-	net/spy/photo/xslt/ApacheXSLT.class \
 	net/spy/photo/PhotoXML.class \
 	net/spy/photo/SetPW.class \
 	net/spy/photo/StopWatch.class \
@@ -92,6 +91,8 @@ CLASSES=\
 	net/spy/photo/struts/LoginAction.class \
 	net/spy/photo/struts/SearchForm.class \
 	net/spy/photo/struts/SearchAction.class \
+	net/spy/photo/struts/CursorForm.class \
+	net/spy/photo/struts/ResultsAction.class \
 	net/spy/photo/util/BackupEntry.class \
 	net/spy/photo/util/AlbumBackupEntry.class \
 	net/spy/photo/util/PhotoBackup.class \
@@ -106,6 +107,8 @@ CLASSES=\
 	net/spy/photo/migration/PhotoMigration04.class \
 	net/spy/photo/migration/PhotoMigration05.class \
 	$(RCLASSES)
+
+	# net/spy/photo/xslt/ApacheXSLT.class
 
 .SUFFIXES: .spt .java .class .jar
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.2 2002/05/15 08:28:06 dustin Exp $
+// $Id: DisplayLink.java,v 1.3 2002/05/16 18:35:24 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -16,6 +16,8 @@ public class DisplayLink extends PhotoTag {
 	private int id=0;
 	private boolean showThumbnail=false;
 	private String altText=null;
+    private String width=null;
+    private String height=null;
 
 	/**
 	 * Get an instance of ImageLink.
@@ -24,6 +26,20 @@ public class DisplayLink extends PhotoTag {
 		super();
 		release();
 	}
+
+    /**
+     * Set the width for the img src HTML tag.
+     */
+    public void setWidth(String width) {
+        this.width=width;
+    }
+
+    /**
+     * Set the height for the img src HTML tag.
+     */
+    public void setHeight(String height) {
+        this.height=height;
+    }
 
 	/**
 	 * Set the id of the image to which we want to link.
@@ -72,6 +88,16 @@ public class DisplayLink extends PhotoTag {
 				sb.append(altText);
 				sb.append("\"");
 			}
+            if(width!=null) {
+                sb.append(" width=\"");
+                sb.append(width);
+                sb.append("\"");
+            }
+            if(height!=null) {
+                sb.append(" height=\"");
+                sb.append(height);
+                sb.append("\"");
+            }
 			sb.append("></img>");
 		}
 
