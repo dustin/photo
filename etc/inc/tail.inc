@@ -16,7 +16,8 @@ Last modified %LAST_MODIFIED%<br>
 </td>
 <td align="right" valign="top">
 <a href="http://photoservlet.sourceforge.net/">
-<img border=0 src="http://sourceforge.net/sflogo.php?group_id=7312&type=1"></a>
+<img border=0 alt="SourceForge"
+src="http://sourceforge.net/sflogo.php?group_id=7312&type=1"></a>
 </td>
 </tr>
 </table>
