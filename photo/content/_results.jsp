@@ -15,6 +15,29 @@
 
 <p>
 
+<table width="100%">
+<tr>
+<photo:canAdd>
+	<td valign="top" align="left">
+		<form method="POST" action="savesearch.do">
+			<input type="hidden" name="search"
+				value="<%= sessionData.getEncodedSearch() %>"/>
+			Save search as:  <input name="name"/>
+			<input type="submit" value="Save"/>
+		</form>
+	</td>
+</photo:canAdd>
+
+	<td valign="top" align="right">
+		<div align="right" class="search_matches">
+			Search matched <%= results.nResults() %> entries.
+		</div>
+	</td>
+</tr>
+</table>
+
+<p class="search_results">
+
 <table>
 
 <logic:iterate id="i" collection="<%= results %>"

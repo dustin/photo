@@ -11,6 +11,8 @@
     <form-bean name="searchForm" type="net.spy.photo.struts.SearchForm"/>
     <form-bean name="cursorForm" type="net.spy.photo.struts.CursorForm"/>
     <form-bean name="uploadForm" type="net.spy.photo.struts.UploadForm"/>
+    <form-bean name="saveSearchForm"
+			type="net.spy.photo.struts.SaveSearchForm"/>
   </form-beans>
 
   <action-mappings>
@@ -56,6 +58,13 @@
 		type="net.spy.photo.struts.UploadAction"
 		name="uploadForm">
 		<forward name="success" path="/uploaded.jsp" />
+	</action>
+
+	<!-- Saving a search. -->
+	<action path="/savesearch"
+		type="net.spy.photo.struts.SaveSearchAction"
+		name="saveSearchForm">
+		<forward name="success" path="/savedsearch.jsp"/>
 	</action>
 
   </action-mappings>
