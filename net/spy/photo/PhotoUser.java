@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.29 2003/01/10 08:43:33 dustin Exp $
+// $Id: PhotoUser.java,v 1.30 2003/04/09 07:24:27 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 package net.spy.photo;
@@ -54,7 +54,7 @@ public class PhotoUser extends AbstractSavable implements Serializable {
 	private Set groups=null;
 
 	private static final String CACHE_KEY="n.s.p.PhotoUserMap";
-	private static final int CACHE_TIME=3600;
+	private static final int CACHE_TIME=3600000; // one hour
 
 	/**
 	 * Get a new, empty user.
