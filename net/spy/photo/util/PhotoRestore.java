@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoRestore.java,v 1.1 2000/11/28 09:52:11 dustin Exp $
+// $Id: PhotoRestore.java,v 1.2 2000/11/29 07:02:19 dustin Exp $
 
 package net.spy.photo.util;
 
@@ -13,21 +13,16 @@ import java.util.zip.*;
 
 public class PhotoRestore extends Object {
 
-	int which=-1;
-
-	public PhotoRestore(String which) {
+	public PhotoRestore() {
 		super();
-		this.which=Integer.parseInt(which);
 	}
 
-	public BackupEntry restore() throws Exception {
+	public BackupEntry restore(InputStream input) throws Exception {
 		// Our result
 		BackupEntry ret=null;
 
-		// Get the stream
-		FileInputStream fis=new FileInputStream("/tmp/bak/album/" + which);
-		GZIPInputStream gis=new GZIPInputStream(fis);
-		InputSource is=new InputSource(gis);
+		// Input source
+		InputSource is=new InputSource(input);
 
 		// Get the parser
 		DOMParser dp=new DOMParser();
@@ -52,7 +47,14 @@ public class PhotoRestore extends Object {
 	}
 
 	public static void main(String args[]) throws Exception {
-		PhotoRestore pr=new PhotoRestore(args[0]);
-		BackupEntry be = pr.restore();
+		PhotoRestore pr=new PhotoRestore();
+
+		// Get the stream
+
+		FileInputStream fis=new FileInputStream(args[0]);
+		GZIPInputStream gis=new GZIPInputStream(fis);
+
+		BackupEntry be = pr.restore(gis);
+		gis.close();
 	}
 }

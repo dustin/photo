@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoBackup.java,v 1.4 2000/11/28 10:06:14 dustin Exp $
+ * $Id: PhotoBackup.java,v 1.5 2000/11/29 07:02:19 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -54,7 +54,7 @@ public class PhotoBackup extends Object {
 			String filename=basedir+i;
 			File outfile=new File(basedir+i);
 			if(outfile.exists()) {
-				System.out.println("Not backing up " + i + ", already exists.");
+				System.out.println("Not backing up " + i +", already exists.");
 			} else {
 
 				// Startwatch
@@ -75,7 +75,8 @@ public class PhotoBackup extends Object {
 
 				// Stopwatch
 				bs.stop();
-				System.out.println("Wrote in " + bs.getLastTime() + " - " + bs.getStats());
+				System.out.println("Wrote in " + bs.getLastTime()
+					+ " - " + bs.getStats());
 			}
 		}
 	}

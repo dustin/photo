@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: AlbumBackupEntry.java,v 1.4 2000/11/28 09:52:11 dustin Exp $
+ * $Id: AlbumBackupEntry.java,v 1.5 2000/11/29 07:02:19 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -19,8 +19,8 @@ public class AlbumBackupEntry extends BackupEntry {
 	public AlbumBackupEntry(int id) throws Exception {
 		super();
 		this.id=id;
-		init();
 		nodeType="photo_album_object";
+		init();
 	}
 
 	public AlbumBackupEntry(Node n) throws Exception {
@@ -29,6 +29,9 @@ public class AlbumBackupEntry extends BackupEntry {
 	}
 
 	protected void init() throws Exception {
+		// Get an element for storing the data
+		Element root = doc.createElement(nodeType);
+
 		// Get the data
 		SpyDB db=new SpyDB(new PhotoConfig());
 		PreparedStatement pst=db.prepareStatement(
@@ -41,8 +44,11 @@ public class AlbumBackupEntry extends BackupEntry {
 		rs.next();
 
 		for(int i=1; i<=cols; i++) {
-			ht.put(md.getColumnName(i), rs.getString(i));
+			Element el=doc.createElement(md.getColumnName(i));
+			el.appendChild( doc.createTextNode(rs.getString(i)) );
+			root.appendChild(el);
 		}
+
 
 		PreparedStatement pst2=db.prepareStatement(
 			"select data from image_store where id = ? order by line"
@@ -50,11 +56,14 @@ public class AlbumBackupEntry extends BackupEntry {
 		pst2.setInt(1, id);
 		rs=pst2.executeQuery();
 
-		StringBuffer sb=new StringBuffer("\n");
+		Element image_data=doc.createElement("image_data");
 		while(rs.next()) {
-			sb.append(rs.getString("data"));
+			Element el=doc.createElement("image_row");
+			el.appendChild( doc.createTextNode(rs.getString("data")) );
+			image_data.appendChild(el);
 		}
 
-		ht.put("image_data", sb.toString());
+		root.appendChild(image_data);
+		doc.appendChild(root);
 	}
 }
