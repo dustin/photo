@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Link.java,v 1.2 2002/06/28 03:45:47 dustin Exp $
+// $Id: Link.java,v 1.3 2002/06/28 03:57:22 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -78,6 +78,7 @@ public class Link extends PhotoTag {
 				ResourceBundle rb=getResourceBundle();
 				content=rb.getString(message);
 			} catch(MissingResourceException mre) {
+				mre.printStackTrace();
 				content="[missing resource:  " + message + "]";
 			}
 			usedMessage=true;
