@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.9 2000/11/27 09:45:44 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.10 2000/12/26 03:30:59 dustin Exp $
  */
 
 package net.spy.photo;
@@ -104,12 +104,19 @@ public class PhotoSearch extends PhotoHelper {
 			Statement st=photo.createStatement();
 			ResultSet rs = st.executeQuery(query);
 
+			// Figure out how many they want to display.
+			String tmp=request.getParameter("maxret");
+			if(tmp!=null) {
+				int rv=Integer.parseInt(tmp);
+				results.setMaxRet(rv);
+			}
+
 			int result_id=0;
 
 			while(rs.next()) {
 				int photo_id=rs.getInt(7);
 
-				if(result_id<10) {
+				if(result_id<results.getMaxRet()) {
 					// Fully populate the first ten search results.
 					PhotoSearchResult r=new PhotoSearchResult();
 					r.setKeywords(rs.getString(1));

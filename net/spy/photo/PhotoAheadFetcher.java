@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.8 2000/11/10 07:17:18 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.9 2000/12/26 03:30:59 dustin Exp $
  */
 
 package net.spy.photo;
@@ -73,7 +73,7 @@ public class PhotoAheadFetcher extends Thread {
 			PhotoSearchResults r=(PhotoSearchResults)e.nextElement();
 			String self_uri=r.getURI();
 
-			for(int i=0; i<5; i++) {
+			for(int i=0; i<r.getMaxRet(); i++) {
 				PhotoSearchResult res=null;
 				// Synchronize on the result thingy so that the display
 				// doesn't get weird if the client is moving too fast.

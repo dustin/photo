@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 	Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
-	$Id: find.xinc,v 1.5 2000/12/01 08:27:04 dustin Exp $
+	$Id: find.xinc,v 1.6 2000/12/26 03:30:59 dustin Exp $
 -->
 
 <page>
@@ -117,6 +117,15 @@
 					<option value="desc">newest</option>
 				</select>
 				images first.
+
+				<br/>
+
+				Return
+				<select name="maxret">
+					<option value="5">5</option>
+					<option value="10">10</option>
+				</select>
+				images per page.
 
 				<br/>
 

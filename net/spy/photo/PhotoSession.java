@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.42 2000/12/26 00:43:57 dustin Exp $
+ * $Id: PhotoSession.java,v 1.43 2000/12/26 03:30:59 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1139,7 +1139,7 @@ public class PhotoSession extends Object
 
 			middle="<search_result_row>\n";
 
-			for(i=0; i<5; i++) {
+			for(i=0; i<results.getMaxRet(); i++) {
 				PhotoSearchResult r=results.next();
 				if(r!=null) {
 					// No, this really doesn't belong here.
@@ -1200,8 +1200,12 @@ public class PhotoSession extends Object
 		int remaining=results.nRemaining();
 
 		if(remaining>0) {
-			int nextwhu=5;
-			if(remaining<5) {
+			// Decide how to display the button.  The button will read
+			// ``Next x'' and x will either be the maximum search result
+			// page size, or the number of remaining elements, whichever is
+			// smaller.
+			int nextwhu=results.getMaxRet();
+			if(remaining<nextwhu) {
 				nextwhu=remaining;
 			}
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.5 2000/07/05 07:36:49 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.6 2000/12/26 03:30:59 dustin Exp $
  */
 
 package net.spy.photo;
@@ -17,6 +17,7 @@ public class PhotoSearchResults extends Object {
 	protected Vector _results=null;
 	protected int _current=0;
 	protected String self_uri=null;
+	protected int maxret=5;
 
 	public PhotoSearchResults(String self_uri) {
 		super();
@@ -48,6 +49,16 @@ public class PhotoSearchResults extends Object {
 		} else {
 			_current=to;
 		}
+	}
+
+	// Set the max ret size
+	public void setMaxRet(int maxret) {
+		this.maxret=maxret;
+	}
+
+	// Get the max ret size
+	public int getMaxRet() {
+		return(maxret);
 	}
 
 	/**
