@@ -1,5 +1,5 @@
 #
-# $Id: InsertUserProfile.spt,v 1.2 2003/01/04 10:03:50 dustin Exp $
+# $Id: InsertUserProfile.spt,v 1.3 2003/01/04 10:42:14 dustin Exp $
 #
 
 @package
@@ -9,7 +9,7 @@ net.spy.photo.sp
 ModifyUserProfile
 
 @description
-Insert a new user profile
+Insert a new user profile.
 
 @sql
 insert into user_profiles(description, expires, name)

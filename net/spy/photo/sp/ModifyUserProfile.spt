@@ -1,12 +1,12 @@
 #
-# $Id: ModifyUserProfile.spt,v 1.1 2003/01/04 10:03:50 dustin Exp $
+# $Id: ModifyUserProfile.spt,v 1.2 2003/01/04 10:42:14 dustin Exp $
 #
 
 @package
 net.spy.photo.sp
 
 @description
-Modify a user profile
+Modify a user profile.
 
 @params
 description required VARCHAR Description of this profile

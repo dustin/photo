@@ -1,12 +1,12 @@
 #
-# $Id
+# $Id: EditImage.spt,v 1.2 2003/01/04 10:42:14 dustin Exp $
 #
 
 @package
 net.spy.photo.sp
 
 @description
-Edit an image
+Edit an image.
 
 @sql
 update album
