@@ -185,7 +185,7 @@ def fetchIndex():
     global config
     print "Beginning index fetch"
     destdir=config['destdir']
-    f=libphoto.fetchIndex(config['baseurl'])
+    f=libphoto.fetchIndex(config['baseurl'], config.get('-u'))
     fout=open("index.xml", "w")
     shutil.copyfileobj(f, fout)
     f.close()
@@ -236,6 +236,7 @@ class ImageFetcher(threadpool.Job):
                 self.__fetchRemoteImage()
         else:
             self.__fetchRemoteImage()
+        self.status.didOne()
 
     def __fetchLocalImage(self):
         rv = False
@@ -253,7 +254,6 @@ class ImageFetcher(threadpool.Job):
         shutil.copyfileobj(f, toWrite)
         toWrite.close()
         f.close()
-        self.status.didOne()
 
 class FetchStatus(object):
     def __init__(self, todo):
@@ -349,7 +349,7 @@ def go():
 def parseArgs():
     global config
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'vfFa:i:I')
+        opts, args = getopt.getopt(sys.argv[1:], 'a:u:i:fFi')
         config = dict(opts)
     except getopt.GetoptError, e:
         raise UsageError(e)
@@ -361,6 +361,8 @@ def parseArgs():
         config['baseurl']=photourl
         config['destdir']=destdir
     except ValueError, e:
+        print "opts", opts
+        print "args", args
         raise UsageError("Need photourl and destdir")
 
     if config.has_key('-a'):
@@ -369,14 +371,15 @@ def parseArgs():
 # Start
 
 def usage():
-    print "Usage:  %s [-f] [-F] [-a user] [-I] [-i imgpath] photurl destdir" \
-        % (sys.argv[0], );
-    print " -a authenticate as the given user"
+    print "Usage:  %s [-fFi] [-a user] [-u user] [-i imgpath] photurl destdir" \
+        % (sys.argv[0], )
     print " -f fetch index even if we already have one"
     print " -F fetch the full size images in addition to the smaller ones"
-    print " -I do not process images"
     print " -i allows you to specify an alt image path to fetch local copies"
     print "    (relative to destdir)"
+    print " -a authenticate as the given user"
+    print " -u get photo album for the specified user (must be authed as admin)"
+    print " -I do not process images"
     sys.exit(1)
 
 if __name__ == '__main__':

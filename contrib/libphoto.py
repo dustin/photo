@@ -110,13 +110,17 @@ def authenticate(baseurl, username, password):
     # XXX:  Need to validate the authentication was successful
     res.close()
 
-def fetchIndex(baseurl):
+def fetchIndex(baseurl, foruser=None):
     """Fetch the export index, return a reader"""
     if baseurl[-1] != '/':
         baseurl = baseurl + "/"
     url=baseurl + "export"
     print "Fetching index from", url
     req=urllib2.Request(baseurl + "export")
+    # If there's a user specified, request it
+    if(foruser is not None):
+        d={'user': foruser}
+        req=urllib2.Request(baseurl + "export", urllib.urlencode(d))
     rv=urlopener.open(req)
     return rv
 
