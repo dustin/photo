@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.32 1998/09/05 03:53:09 dustin Exp $
+# $Id: Photo.pm,v 1.33 1998/09/05 21:16:41 dustin Exp $
 
 package Photo;
 
@@ -270,13 +270,13 @@ sub displayImage
 	$s->finish;
 
 	$c->cache($key, $type, $out);
+    } else {
+        if($tn) {
+            $self->makeThumbnail($img, $type);
+        }
     }
 
-    if($tn) {
-	$self->makeThumbnail($img, $type);
-    } else {
-        $c->printcache_only($key);
-    }
+    $c->printcache_only($key);
 }
 
 sub showSaved
