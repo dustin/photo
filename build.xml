@@ -18,8 +18,8 @@
 	<property name="BUILDTMP" value="${BUILDTOP}/tmp/"/>
 	<property name="DOCDIR" value="${BUILDTOP}/docs/"/>
 	<property name="WARDIR" value="${BUILDTOP}/wars/"/>
-	<property name="WARDEST" value="/afs/.spy.net/misc/web/resin/wars"/>
-	<property name="LAZYWARDEST" value="/afs/.spy.net/misc/web/resin/lazy-wars"/>
+	<property name="WARDEST" value="/afs/.spy.net/misc/web/java/wars"/>
+	<property name="LAZYWARDEST" value="/afs/.spy.net/misc/web/java/lazy-wars"/>
 
 	<property name="wars" value="photo"/>
 	<property name="lazy-wars"
