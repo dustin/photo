@@ -97,6 +97,12 @@ Sort by when the picture was
     <option value="a.ts">added
     <option selected value="a.taken">taken
 </select>
+and show
+<select name="sdirection">
+    <option value="">oldest
+    <option value="desc">newest
+</select>
+images first.
 <br>
 Return at most
 <select name="maxret">
