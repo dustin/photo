@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.9 1998/07/06 03:28:31 dustin Exp $
+# $Id: Photo.pm,v 1.10 1998/07/06 07:06:12 dustin Exp $
 
 package Photo;
 
@@ -177,10 +177,58 @@ sub saveSearch
     $self->showTemplate("$Photo::includes/savedsearch.inc", %p);
 }
 
+sub makeThumbnail
+{
+    my($self, $img, $type)=@_;
+    my($query, $r, $s, $c, $key, $tmp, $out);
+
+    $c=DCache->new;
+
+    $key="photo-image: $img";
+    if(!$c->checkcache($key)) {
+
+	$out="";
+
+	$query ="select * from image_store where id=\n";
+	$query.="(select id from image_map where name='$img')\n";
+	$query.="    order by line\n";
+
+	$s=$self->doQuery($query);
+	while($r=$s->fetch) {
+	    $out.=decode_base64($r->[2]);
+	}
+
+	$c->cache($key, $type, $out);
+    }
+
+    open(OUT, ">/tmp/photoout.$$");
+    $c->printcache_only($key, \*OUT);
+    close(OUT);
+
+    system('/usr/local/bin/convert', '-size', '100x100',
+           "/tmp/photoout.$$", "/tmp/photoout.tn.$$");
+
+    unlink("/tmp/photoout.$$");
+
+    $c=DCache->new;
+    $key="photo-image: tn/$img";
+
+    $out="";
+    open(IN, "/tmp/photoout.tn.$$");
+    while( read(IN, $tmp, 1024) ) {
+	$out.=$tmp;
+    }
+    close(IN);
+    unlink("/tmp/photoout.tn.$$");
+
+    $c->cache($key, $type, $out);
+    $c->printcache_only($key);
+}
+
 sub displayImage
 {
     my($self, $img)=@_;
-    my($query, $r, $s, $c, $key, $tmp, $q, $type);
+    my($query, $r, $s, $c, $key, $tmp, $q, $type, $tn);
 
     $q=CGI->new;
 
@@ -193,6 +241,11 @@ sub displayImage
     print $q->header($type);
 
     $key="photo-image: $img";
+    $tn=0;
+    if($img=~/^tn./) {
+	$tn=1;
+	$img=~s/^tn.//;
+    }
 
     $c=DCache->new;
 
@@ -214,7 +267,11 @@ sub displayImage
 	$c->cache($key, $type, $out);
     }
 
-    $c->printcache_only($key);
+    if($tn) {
+	$self->makeThumbnail($img, $type);
+    } else {
+        $c->printcache_only($key);
+    }
 }
 
 sub showSaved
