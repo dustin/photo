@@ -141,6 +141,13 @@
 		<forward name="success" path="/admin/edituser.jsp" />
 	</action>
 
+	<action path="/admusersave"
+		name="adminUserForm"
+		input="/admin/edituser.jsp"
+		type="net.spy.photo.struts.AdminSaveUserAction">
+		<forward name="success" path="/admin/users.jsp" />
+	</action>
+
   </action-mappings>
 
 </struts-config>

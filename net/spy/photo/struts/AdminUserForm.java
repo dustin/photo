@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminUserForm.java,v 1.1 2002/06/22 08:27:07 dustin Exp $
+// $Id: AdminUserForm.java,v 1.2 2002/06/22 21:09:01 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -110,6 +110,10 @@ public class AdminUserForm extends ActionForm {
 				errors.add("userId",
 					new ActionError("error.adminselectuserform.userId.nfe"));
 			}
+		}
+
+		if(mapping.getType().equals(AdminSaveUserAction.class.getName())) {
+			// XXX:  more checks
 		}
 
 		return(errors);

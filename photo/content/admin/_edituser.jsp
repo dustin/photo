@@ -14,8 +14,29 @@
 	<template:put name='title' content='User Administration' direct='true'/>
 </template:insert>
 
-<html:form action="/admuseredit">
+<html:form action="/admusersave">
 	<html:errors/>
+
+	<table border="1">
+		<tr>
+			<td>Username</td>
+			<td><html:text property="username"/></td>
+		</tr>
+		<tr>
+			<td>Realname</td>
+			<td><html:text property="realname"/></td>
+		</tr>
+		<tr>
+			<td>Email</td>
+			<td><html:text property="email"/></td>
+		</tr>
+		<tr>
+			<td>Can add</td>
+			<td><html:checkbox property="email"/></td>
+		</tr>
+	</table>
+
+	<%--
 	<html:select property=userId>
 		<html:option value="-1">New User</html:option>
 		<logic:iterate id="i" collection="<%= PhotoSecurity.getAllUsers() %>">
@@ -25,6 +46,7 @@
 			</html:option>
 		</logic:iterate>
 	</html:select>
+	--%>
 
-	<html:submit>Edit</html:submit>
+	<html:submit>Save</html:submit>
 </html:form>
