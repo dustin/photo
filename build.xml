@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.28 2002/10/08 18:10:06 dustin Exp $
+	$Id: build.xml,v 1.29 2002/11/05 08:17:37 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -22,7 +22,7 @@
 		</fileset>
 	</path>
 
-	<target name="clean">
+	<target name="clean" description="Clean up all generated files.">
 		<delete>
 			<fileset dir="net">
 				<include name="**/*.class"/>
@@ -40,7 +40,7 @@
 		<delete dir="docs"/>
 	</target>
 
-	<target name="docs" depends="spfiles">
+	<target name="docs" depends="spfiles" description="Create the documentation.">
 		<mkdir dir="docs"/>
 		<javadoc destdir="docs"
 			author="true"
@@ -57,7 +57,9 @@
 	</target>
 
 	<!-- This is specific to my development at home. -->
-	<target name="install" depends="install-jar,install-jsp"/>
+	<target name="install"
+		description="Install a new build in my environment (not for most people)"
+		depends="install-jar,install-jsp"/>
 
 	<target name="install-jsp">
 		<copy todir="/afs/.spy.net/misc/web/root/photo/">
@@ -83,7 +85,9 @@
 		</copy>
 	</target>
 
-	<target name="photo.jar" depends="all,photoresources.properties">
+	<target name="photo.jar"
+		description="Create photo.jar"
+		depends="all,photoresources.properties">
 		<jar jarfile="photo.jar" basedir=".">
 			<include name="**/*.class"/>
 			<include name="net/**/*.properties"/>
@@ -108,7 +112,9 @@
 		</zip>
 	</target>
 
-	<target name="dist" depends="photo.zip">
+	<target name="dist"
+		description="Create a release."
+		depends="photo.zip">
 		<tstamp/>
 		<move file="photo.zip" tofile="photoservlet-${DSTAMP}.zip"/>
 	</target>
