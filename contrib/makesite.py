@@ -7,7 +7,10 @@ Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 """
 
 import os
+import sys
 import posix
+import shutil
+import urllib2
 import libphoto
 
 def makeStylesheet():
@@ -100,8 +103,8 @@ def makeMonthPage(y, m, photos):
     for photo in photos:
         f.write('<a href="%02d/%d.html">' % (m, photo.id))
         (yr,mn,dt)=photo.dateParts()
-        f.write('<img alt="%d" src="../../images/%04d%02d%02d/%d_t%s"/></a>\n' \
-                % (photo.id, yr, mn, dt, photo.id, photo.extension))
+        f.write('<img alt="%d" src="%02d/%d_tn.%s"/></a>\n' \
+                % (photo.id, m, photo.id, photo.extension))
     f.write("</div>\n")
     f.write('<div id="footer">')
     f.write('<a href="../../index.html">[Index]</a>')
@@ -111,7 +114,7 @@ def makeMonthPage(y, m, photos):
 
 def makePageForPhoto(dir, photo):
     (y,m,d)=photo.dateParts()
-    shortpath="%04d%02d%02d/%d%s" % (y, m, d, photo.id, photo.extension)
+    shortpath="%d_normal.%s" % (photo.id, photo.extension)
 
     f=file(dir + "/" + `photo.id` + ".html", "w")
 
@@ -122,7 +125,7 @@ def makePageForPhoto(dir, photo):
  <div class="idPage">
  <div id="imgView">
  <a href="http://bleu.west.spy.net/photo/display.do?id=%(id)d">
- <img alt="Image %(id)d" src="../../../images/%(shortpath)s"/>
+ <img alt="Image %(id)d" src="%(shortpath)s"/>
  </a>
  <dl>
     <dt>Taken</dt><dd>%(taken)s</dd>
@@ -161,18 +164,53 @@ class MyHandler(libphoto.StaticIndexHandler):
             self.album[year][month]=[]
         self.album[year][month].append(photo)
 
-def parseIndex():
+def parseIndex(srcurl):
+    if srcurl[-1] != '/':
+        srcurl = srcurl + '/'
+
     album={}
     print "Parsing index..."
-    d=libphoto.parseIndex("index.xml", MyHandler(album))
+    f=urllib2.urlopen(srcurl + "export")
+    d=libphoto.parseIndex(f, MyHandler(album))
+    f.close()
     print "Parsed in %.2fu/%.2fs" % posix.times()[:2]
     return album
 
+def fetchImage(srcurl, photo, destdir):
+    if srcurl[-1] != '/':
+        srcurl = srcurl + '/'
+
+    baseurl="%sPhotoServlet?id=%d" % (srcurl, photo.id)
+    normal=baseurl + "&scale=800x600"
+    thumbnail=baseurl + "&thumbnail=1"
+
+    for ext,url in (('full', baseurl), ('normal', normal), ('tn', thumbnail)):
+        print "Fetching %s for %s" % (url, ext)
+        f = urllib2.urlopen(url)
+        toWrite=open("%s/%d_%s.%s" % (destdir, photo.id, ext, photo.extension),
+            "w")
+        shutil.copyfileobj(f, toWrite)
+        toWrite.close()
+        f.close()
+
 # Start
+
+def usage():
+    sys.stderr.write("Usage:  %s photurl [destdir]\n");
+    sys.exit(1)
 
 if __name__ == '__main__':
 
-    idx=parseIndex()
+    if sys.argv < 2:
+        usage()
+
+    baseurl=sys.argv[1]
+
+    if sys.argv > 2:
+        os.mkdir(sys.argv[2])
+        os.chdir(sys.argv[2])
+
+    idx=parseIndex(baseurl)
 
     years=idx.keys()
     years.sort()
@@ -192,6 +230,7 @@ if __name__ == '__main__':
             os.mkdir(dir)
             for photo in photos:
                 makePageForPhoto(dir, photo)
+                fetchImage(baseurl, photo, dir)
 
         newtimes=posix.times()
         ut=newtimes[0] - times[0]
