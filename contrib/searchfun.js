@@ -45,10 +45,13 @@ function arrayUnion(a) {
 }
 
 // This should perform some kind of and logic across selections
-function getImageIds() {
+function getImageIds(kwidlist) {
 	var tmpa=new Array();
-	for(var i = 0; i<kws.length; i++) {
-		tmpa.push(imgs[kws[i]]);
+	// This gets them in the most efficient order for performing the union
+	kwidlist.sort();
+	kwidlist.reverse();
+	for(var i = 0; i<kwidlist.length; i++) {
+		tmpa.push(imgs[kwidlist[i]]);
 	}
 	return arrayUnion(tmpa);
 }
@@ -61,7 +64,7 @@ function setResults(h) {
 function showResults() {
 	// Maximum number of images to show
 	var total = imgsPerPage;
-	var tmpimgs=getImageIds();
+	var tmpimgs=getImageIds(kws);
 	if(newestFirst) {
 		tmpimgs.reverse();
 	}
@@ -111,27 +114,62 @@ function search() {
 			kws.push(kwmap[mykws[i]]);
 		}
 	}
-	kws.sort();
-	kws.reverse();
 	showResults();
+}
+
+function findPartial(kw, minmatches) {
+	var matches=0;
+	var rv="";
+	for(var i=0; matches < 10 && i<keywords.length; i++) {
+		if(keywords[i].substring(0, kw.length) == kw) {
+			matches++;
+			rv += "<li>" + keywords[i] + " (" + imgs[i].length + ")</li>\n";
+		}
+	}
+	if(matches >= minmatches) {
+		rv = "Keywords beginning with <b>" + kw + "</b>:<ul>" + rv + "</ul>";
+	} else {
+		rv = "";
+	}
+	return rv;
 }
 
 function pressedKey(inp) {
 	var div = document.getElementById("keywordlist");
 	var h = "";
+	var partial = "";
 	if(inp.length > 0) {
 		var mykws=inp.split(" ");
+		var kwtmp=new Array();
 		for(var i=0; i<mykws.length; i++) {
 			if(mykws[i] == ' ' || mykws[i] == '') {
 				// Nothing
 			} else if(kwmap[mykws[i]] != undefined) {
+				kwtmp.push(kwmap[mykws[i]]);
 				h += mykws[i] + "-(" + imgs[kwmap[mykws[i]]].length + ") ";
+				partial += findPartial(mykws[i], 2);
 			} else {
 				h += mykws[i] + "-[no match] ";
+				partial += findPartial(mykws[i], 1);
 			}
 		}
+		var searchtmp=getImageIds(kwtmp);
+		var imgsstr="images";
+		if(searchtmp.length == 1) {
+			imgsstr="image";
+		}
+		h += " -- " + searchtmp.length + " " + imgsstr + " will result";
 	}
 	div.innerHTML=h;
+
+	var div2 = document.getElementById("keywordmatches");
+	if(partial != '') {
+		div2.style.display="block";
+		div2.innerHTML = partial;
+	} else {
+		div2.style.display="none";
+		div2.innerHTML = '';
+	}
 }
 
 onload = function() {

@@ -241,11 +241,10 @@ class ImageFetcher(threadpool.Job):
         rv = False
         srcpath = os.path.join(config['-i'], self.destpath)
         if os.path.exists(srcpath):
-            print "Found", srcpath
             shutil.copy(srcpath, self.destpath)
             rv = True
         else:
-            print "Did not find", srcpath
+            status("No local image for %d at %s\n" % (self.photo.id, srcpath))
         return rv
 
     def __fetchRemoteImage(self):
@@ -309,7 +308,6 @@ def processMonth(idx, y, m):
 def go():
 
     global config
-    global tp
 
     # Set up the destination directory
     mymkdir(config['destdir'])
@@ -333,7 +331,6 @@ def go():
     makeIndex(idx, years)
     makeStylesheet()
     
-    tp=threadpool.ThreadPool(num=10)
     for y in years:
         makeYearPage(idx, y)
 
@@ -383,6 +380,7 @@ if __name__ == '__main__':
         # Parse the arguments
         parseArgs()
         try:
+            tp=threadpool.ThreadPool(num=10)
             go()
         finally:
             if tp is not None:

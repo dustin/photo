@@ -8,11 +8,28 @@
 	<head>
 		<title>Testing</title>
 		<link rel="stylesheet" href="style.css"/>
+		<style type="text/css">
+			#keywordmatches {
+				display: none;
+				background-color: #e7edd3;
+				color: black;
+				font-size: x-small;
+				border: 1px solid #69c;
+				width: 250px;
+			}
+
+			#keywordmatches ul {
+				text-indent: -0.5px;
+				list-style: none;
+				padding-left: 1em;
+				margin: 1px;
+			}
+		</style>
 	</head>
 
 	<body>
 
-		<script language="JavaScript" src="test.js"></script>
+		<script language="JavaScript" src="searchdata.js"></script>
 		<script language="JavaScript" src="searchfun.js"></script>
 
 		<form name="bigform" method="POST" action=""
@@ -21,6 +38,7 @@
 			<input id="keywords" name="keywords" size="60" value=""
 				OnKeyUp="pressedKey(this.value);"/>
 			<div style="font-size: x-small" id="keywordlist"><span/></div>
+			<div id="keywordmatches"><span/></div>
 			Newest images
 			<select id="sdir" name="sdir">
 				<option value="newfirst">first</option>
