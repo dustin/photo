@@ -1,5 +1,7 @@
 <%@ page import="net.spy.photo.Category" %>
 <%@ page import="net.spy.photo.Comment" %>
+<%@ page import="net.spy.photo.PhotoSessionData" %>
+<%@ page import="net.spy.photo.PhotoSearchResults" %>
 <%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
@@ -10,19 +12,59 @@
 		imageId=request.getParameter("image_id");
 	}
 	String searchId=request.getParameter("search_id");
+
+	boolean bySearch=false;
+	int prevId=-1;
+	int nextId=-1;
+	if(searchId!=null) {
+
+		// Get the search cursor
+		PhotoSessionData sessionData=
+			(PhotoSessionData)session.getAttribute("photoSession");
+		PhotoSearchResults results=sessionData.getResults();
+		if(results==null) {
+			throw new ServletException("There are no search results!");
+		}
+		int maxIndex=results.nResults();
+
+		bySearch=true;
+
+		int searchIndex=Integer.parseInt(searchId);
+		// If this isn't the first result, link back.
+		if(searchIndex>0) {
+			prevId=searchIndex-1;
+		}
+		// Add a link to the next unless it'd send us past the end of the
+		// results.
+		if( (searchIndex+1)<maxIndex) {
+			nextId=searchIndex+1;
+		}
+	}
 %>
 
 <photo:getImage imageId="<%= imageId %>" searchId="<%= searchId %>">
 
 	<table width="100%">
 		<tr valign="top">
-			<td align="left" width="10%"></td>
+			<td align="left" width="10%">
+				<% if(prevId>=0) { %>
+					<photo:imgLink id="<%= 0 %>" searchId="<%= prevId %>">
+						<img border="0" src="/~dustin/images/l_arrow.gif"/>
+					</photo:imgLink>
+				<% } %>
+			</td>
+
 			<td align="center">
 				<div class="displayBrief"><%= image.getDescr() %></div>
 			</td>
-			<td
-			align="right"
-			width="10%"></td>
+
+			<td align="right" width="10%">
+				<% if(nextId>=0) { %>
+					<photo:imgLink id="<%= 0 %>" searchId="<%= nextId %>">
+						<img border="0" src="/~dustin/images/r_arrow.gif"/>
+					</photo:imgLink>
+				<% } %>
+			</td>
 		</tr>
 	</table>
 
