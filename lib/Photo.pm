@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.52 1998/11/08 01:38:52 dustin Exp $
+# $Id: Photo.pm,v 1.53 1998/11/08 05:00:40 dustin Exp $
 
 package Photo;
 
@@ -561,7 +561,7 @@ sub addImage
 		$self->rollback;
 	} else {
 		%tmp=(
-			'OID' => $id,
+			'ID' => $id,
 			'QUERY' => $query
 		);
 		$self->showTemplate("$Photo::includes/add_success.inc", %tmp);
@@ -634,21 +634,18 @@ sub deleteImage
 	my($self, $id)=@_;
 	my($query, $s, $r, %p);
 
-	$query ="select a.id,a.name,b.keywords,b.descr,b.id,b.cat,\n";
-	$query.="		c.id,c.name\n";
-	$query.="	from cat a, album b, image_map c\n";
-	$query.="	where a.id=b.cat and b.id=$id\n";
-	$query.="		and c.name=b.fn;";
+	$query ="select keywords,descr,id\n";
+	$query.="	from album\n";
+	$query.="	where id=$id\n";
 
 	$s=$self->doQuery($query);
 
 	if($r=$s->fetch) {
-		($p{AID}, $p{CAT}, $p{KEYWORDS}, $p{DESCR}, $p{IMAGE},
-		 $p{BCAT}, $p{BOID}, $p{MAPID})=@{$r};
+		($p{KEYWORDS}, $p{DESCR}, $p{ID})=@{$r};
 	}
 
 	eval {
-		$query="delete from album where id=$id;\n";
+		$query="delete from album where id=$id\n";
 		$self->doQuery($query);
 	};
 
