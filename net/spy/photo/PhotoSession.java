@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.25 2000/07/05 08:15:42 dustin Exp $
+ * $Id: PhotoSession.java,v 1.26 2000/07/07 06:05:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -221,26 +221,34 @@ public class PhotoSession extends Object
 	protected String showSaved() {
 		String out="";
 		Connection photo=null;
+		PhotoCache cache=new PhotoCache();
 
-		try {
-			photo=getDBConn();
-			BASE64Decoder base64 = new BASE64Decoder();
-			Statement st=photo.createStatement();
+		out=(String)cache.get("saved_searches");
 
-			String query = "select * from searches order by name\n";
-			ResultSet rs = st.executeQuery(query);
-			while(rs.next()) {
-				byte data[];
-				data=base64.decodeBuffer(rs.getString(4));
-				String tmp = new String(data);
-				out += "    <li><a href=\"" + self_uri + "?"
-					+ tmp + "\">" + rs.getString(2) + "</a></li>\n";
-			}
-		} catch(Exception e) {
-			log("Error getting search data, returning none:  " + e);
-		} finally {
-			if(photo != null) {
-				freeDBConn(photo);
+		if(out==null) {
+			out="";
+			try {
+				photo=getDBConn();
+				BASE64Decoder base64 = new BASE64Decoder();
+				Statement st=photo.createStatement();
+
+				String query = "select * from searches order by name\n";
+				ResultSet rs = st.executeQuery(query);
+				while(rs.next()) {
+					byte data[];
+					data=base64.decodeBuffer(rs.getString(4));
+					String tmp = new String(data);
+					out += "    <li><a href=\"" + self_uri + "?"
+						+ tmp + "\">" + rs.getString(2) + "</a></li>\n";
+				}
+				// Cache it for fifteen minutes.
+				cache.store("saved_searches", out, 15*60*1000);
+			} catch(Exception e) {
+				log("Error getting search data, returning none:  " + e);
+			} finally {
+				if(photo != null) {
+					freeDBConn(photo);
+				}
 			}
 		}
 		return(out);
@@ -387,33 +395,44 @@ public class PhotoSession extends Object
 	public String getCatList(int def) {
 		String out="";
 		Connection photo=null;
-		try {
-			photo=getDBConn();
+		PhotoCache cache=new PhotoCache();
 
-			String query = "select * from cat where id in\n"
-			  	+ "(select cat from wwwacl where\n"
-			  	+ "    userid=?)\n"
-			  	+ "order by name\n";
+		String key="catList_" + def;
 
-			PreparedStatement st = photo.prepareStatement(query);
-			st.setInt(1, remote_uid.intValue());
-			ResultSet rs = st.executeQuery();
+		out=(String)cache.get(key);
+		// If we don't have it, build it and cache it.
+		if(out==null) {
+			out="";
+			try {
+				photo=getDBConn();
 
-			while(rs.next()) {
-				int id=rs.getInt("id");
-				String selected="";
-				if(id==def) {
-					selected=" selected";
+				String query = "select * from cat where id in\n"
+			  		+ "(select cat from wwwacl where\n"
+			  		+ "    userid=?)\n"
+			  		+ "order by name\n";
+
+				PreparedStatement st = photo.prepareStatement(query);
+				st.setInt(1, remote_uid.intValue());
+				ResultSet rs = st.executeQuery();
+
+				while(rs.next()) {
+					int id=rs.getInt("id");
+					String selected="";
+					if(id==def) {
+						selected=" selected";
+					}
+					out += "    <option value=\"" + id + "\"" + selected
+						+ ">" + rs.getString("name") + "\n";
 				}
-				out += "    <option value=\"" + id + "\"" + selected
-					+ ">" + rs.getString("name") + "\n";
+			} catch(Exception e) {
+				log("Error getting category list:  " + e);
+			} finally {
+					if(photo != null) {
+						freeDBConn(photo);
+					}
 			}
-		} catch(Exception e) {
-			log("Error getting category list:  " + e);
-		} finally {
-				if(photo != null) {
-					freeDBConn(photo);
-				}
+			// Cache this for five minutes.
+			cache.store(key, out, 5*60*1000);
 		}
 		return(out);
 	}

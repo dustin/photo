@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.5 2000/07/05 21:45:55 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.6 2000/07/07 06:05:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -90,7 +90,7 @@ public class PhotoSecurity extends PhotoHelper {
 					u.realname=rs.getString("realname");
 					u.canadd=rs.getBoolean("canadd");
 					// User cache is valid for 30 minutes
-					cache.store(u.username, u, 30*60*1000);
+					cache.store(key, u, 30*60*1000);
 					ret=u;
 				}
 			} catch(Exception e) {
