@@ -1,8 +1,10 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.9 2002/06/11 23:31:37 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.10 2002/06/30 22:57:56 dustin Exp $
 
 package net.spy.photo;
+
+import java.util.Hashtable;
 
 /**
  * Session data goes here.
@@ -16,12 +18,11 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	private boolean xmlraw=false;
 	private String stylesheet=null;
 	private PhotoUser user=null;
-	// Search results go here
-	private PhotoSearchResults results=null;
-	// A cursor for looking at image comments.
-	private Cursor comments=null;
+
 	private String encodedSearch=null;
 	private PhotoDimensions optimalDimensions=null;
+
+	private Hashtable cursors=null;
 
 	private int admin_type=NOADMIN;
 
@@ -35,6 +36,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public PhotoSessionData() {
 		super();
+		cursors=new Hashtable();
 	}
 
 	/**
@@ -91,27 +93,52 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 
 	/**
 	 * Get the search results that are currently being accessed.
+	 *
+	 * @deprecated use getCursor instead
 	 */
 	public PhotoSearchResults getResults() {
-		return(results);
+		return((PhotoSearchResults)getCursor("searchResults"));
 	}
 
+	/**
+	 * @deprecated use setCursor instead
+	 */
 	public void setResults(PhotoSearchResults results) {
-		this.results=results;
+		setCursor("searchResults", results);
+	}
+
+	/**
+	 * Get a cursor by name.
+	 *
+	 * @return the Cursor or null if no such cursor exists
+	 */
+	public Cursor getCursor(String name) {
+		return((Cursor)cursors.get(name));
+	}
+
+	/**
+	 * Set a cursor by name.
+	 */
+	public void setCursor(String name, Cursor cursor) {
+		cursors.put(name, cursor);
 	}
 
 	/**
 	 * Set the comments list.
+	 *
+	 * @deprecated use setCursor instead
 	 */
 	public void setComments(Cursor comments) {
-		this.comments=comments;
+		setCursor("comments", comments);
 	}
 
 	/**
 	 * Get the comments list.
+	 *
+	 * @deprecated use getCursor instead
 	 */
 	public Cursor getComments() {
-		return(comments);
+		return(getCursor("comments"));
 	}
 
 	/**
