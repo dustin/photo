@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePhoto.java,v 1.2 2001/07/13 09:00:24 dustin Exp $
+ * $Id: CachePhoto.java,v 1.3 2002/02/21 20:44:27 dustin Exp $
  */
 
 package net.spy.photo.tools;
@@ -55,6 +55,7 @@ public class CachePhoto extends Object {
 			sb.append(rs.getString("data"));
 		}
 
+		rs.close();
 		db.close();
 
 		return(sb.toString());

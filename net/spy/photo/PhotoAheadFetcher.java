@@ -1,92 +1,69 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.11 2001/07/16 08:01:05 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.12 2002/02/21 20:44:27 dustin Exp $
  */
 
 package net.spy.photo;
 
 import java.util.*;
 
+import net.spy.util.*;
+
 /**
  * This object fetches ahead in resultsets as to speed up the appearance of
  * the photo album.
  */
-public class PhotoAheadFetcher extends Thread {
-	private static Vector sets=null;
-	private boolean keepgoing=true;
+public class PhotoAheadFetcher extends Object {
+	private ThreadPool tp=null;
 
 	/**
 	 * Get a new PhotoheadFetcher (auto starts).
 	 */
 	public PhotoAheadFetcher() {
 		super(); // thanks for asking
-		setDaemon(true);
-		setName("PhotoAheadFetcher");
-		start();
+
+		tp=new ThreadPool("PhotoAheadFetcher", 3);
 	}
 
 	/**
 	 * Tell the Aheadfetcher to stop soon.
 	 */
 	public void close() {
-		keepgoing=false;
-	}
-
-	/**
-	 * Do the actual updating here.
-	 */
-	public void run() {
-		// Create the sets vector.
-		sets=new Vector();
-		while(keepgoing) {
-			try {
-				synchronized(sets) {
-					sets.wait();
-				}
-				fetchAhead();
-			} catch(Exception e) {
-				System.err.println("PhotoAheadFetcher error:  " + e);
-				e.printStackTrace();
-				try {
-					// Sleep a second on failure.
-					sleep(1000);
-				} catch(Exception e2) {
-					// Don't care, it'll just go faster.
-				}
-			}
-		}
+		tp.shutdown();
 	}
 
 	/**
 	 * Add the PhotoSearchResults to the ahead-fetching queue.
 	 */
 	public void next(PhotoSearchResults r) {
-		synchronized(sets) {
-			sets.addElement(r);
-			sets.notify();
-		}
+		tp.addTask(new FetchAhead(r));
 	}
 
-	// We got a notify, fetch ahead.
-	private void fetchAhead() throws Exception {
-		Vector tofetch=new Vector();
+	// This class uses the thread pool to fetch ahead.
+	private class FetchAhead extends Object implements Runnable {
 
-		// In a lock, copy the current queue into a temporary one, and
-		// empty out the queue.
-		synchronized(sets) {
-			for(Enumeration e=sets.elements(); e.hasMoreElements();) {
-				tofetch.addElement(e.nextElement());
-			}
-			sets.removeAllElements();
+		private PhotoSearchResults results=null;
+
+		public FetchAhead(PhotoSearchResults r) {
+			super();
+			this.results=r;
 		}
 
-		// System.out.println("Need to fetch ahead in the following:\n"
-		// 	+ tofetch);
+		/**
+	 	 * Do the actual updating here.
+	 	 */
+		public void run() {
+			try {
+				fetchAhead();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
 
-		// Outside of the lock, fetch (precache) the entries.
-		for(Enumeration e=tofetch.elements(); e.hasMoreElements();) {
-			PhotoSearchResults r=(PhotoSearchResults)e.nextElement();
+		// We got a notify, fetch ahead.
+		private void fetchAhead() throws Exception {
+			PhotoSearchResults r=results;
 			String self_uri=r.getURI();
 
 			// OK, we're not going to use the normal next() method on the
@@ -106,10 +83,12 @@ public class PhotoAheadFetcher extends Thread {
 				 	// This will cache the thumbnails
 				 	int image_id=Integer.parseInt((String)h.get("IMAGE"));
 				 	PhotoImageHelper p=new PhotoImageHelper(image_id);
+					System.out.println("PhotoAheadFetcher fetching "
+						+ image_id);
 				 	p.getThumbnail();
 				} // Got a result
 			} // end for loop on a given result set
-		} // end for loop on all result sets
+		}
 
 	}
 

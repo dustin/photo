@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.11 2002/02/20 11:32:12 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.12 2002/02/21 20:44:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -44,9 +44,32 @@ public class PhotoImageHelper extends PhotoHelper
 	 */
 	public PhotoImage getImage(PhotoDimensions dim)
 		throws Exception {
+
 		ensureConnected();
-		// log("Getting image " + image_id + " from ImageServer");
-		return(server.getImage(image_id, dim));
+		PhotoImage rv=null;
+
+		// Cache any images smaller than 320x200
+		PhotoDimensions pdim=new PhotoDimensionsImpl("320x200");
+		if(dim.equals(pdim) || dim.smallerThan(pdim)) {
+			SpyCache cache=new SpyCache();
+			String key="img_" + image_id + "_"
+				+ dim.getWidth() + "x" + dim.getHeight();
+
+			rv=(PhotoImage)cache.get(key);
+
+			if(rv==null) {
+				log("Cache miss on " + key);
+				// Grab it from the server
+				rv=server.getImage(image_id, dim);
+				// Cache for ten minutes
+				cache.store(key, rv, 10*60*1000);
+			}
+		} else {
+			log("Getting image " + image_id + " from ImageServer");
+			rv=server.getImage(image_id, dim);
+		}
+
+		return(rv);
 	}
 
 	/**
@@ -61,24 +84,10 @@ public class PhotoImageHelper extends PhotoHelper
 	 * Get the thumbnail for an image.
 	 */
 	public PhotoImage getThumbnail() throws Exception {
-		// Thumbnails are cachable.
-		SpyCache cache=new SpyCache();
-		String key="img_t_" + image_id;
-		PhotoImage pi=(PhotoImage)cache.get(key);
-
-		// If we didn't get it from our cache, get it from the image server's
-		if(pi==null) {
-			ensureConnected();
-			/*
-			log("Getting image "
-				+ image_id + " (as thumbnail) from ImageServer");
-			*/
-			// Grab it from the image server.
-			pi=server.getImage(image_id, true);
-			// Cache the image for ten minutes.
-			cache.store(key, pi, 10*60*1000);
-		}
-		return(pi);
+		PhotoConfig conf=new PhotoConfig();
+		PhotoDimensions pdim=
+			new PhotoDimensionsImpl(conf.get("thumbnail_size"));
+		return(getImage(pdim));
 	}
 
 	/**
