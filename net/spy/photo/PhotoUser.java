@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.30 2003/04/09 07:24:27 dustin Exp $
+// $Id: PhotoUser.java,v 1.31 2003/05/10 08:44:39 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 package net.spy.photo;
@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
@@ -42,7 +44,9 @@ import net.spy.photo.sp.GetACLForUser;
 /**
  * Represents a user in the photo system.
  */
-public class PhotoUser extends AbstractSavable implements Serializable {
+public class PhotoUser extends AbstractSavable
+	implements Comparable, Serializable {
+
 	private int id=-1;
 	private String username=null;
 	private String password=null;
@@ -207,20 +211,14 @@ public class PhotoUser extends AbstractSavable implements Serializable {
 
 	/** 
 	 * Get all known users.
+	 * @return an unmodifiable sorted set of users
+	 * @throws PhotoUserException 
 	 */
-	public static Collection getAllPhotoUsers() throws PhotoUserException {
+	public static SortedSet getAllPhotoUsers() throws PhotoUserException {
 		Map m=getUserMap();
-		Collection rv=new ArrayList(m.size() / 3);
-
-		// Find every instance with an integer key.
-		for(Iterator i=m.entrySet().iterator(); i.hasNext(); ) {
-			Map.Entry me=(Map.Entry)i.next();
-			if(me.getKey() instanceof Integer) {
-				rv.add(me.getValue());
-			}
-		}
-
-		return(rv);
+		SortedSet rv=new TreeSet();
+		rv.addAll(m.values());
+		return(Collections.unmodifiableSortedSet(rv));
 	}
 
 	/** 
@@ -245,6 +243,42 @@ public class PhotoUser extends AbstractSavable implements Serializable {
 		sb.append("}");
 
 		return (sb.toString());
+	}
+
+	/** 
+	 * Hashcode of this object.
+	 * 
+	 * @return the hashcode of the username
+	 */
+	public int hashCode() {
+		return(username.hashCode());
+	}
+
+	/** 
+	 * True if these objects are equal.
+	 * 
+	 * @param o the other object
+	 * @return true if o is a PhotoUser with the same ID
+	 */
+	public boolean equals(Object o) {
+		boolean rv=false;
+		if(o instanceof PhotoUser) {
+			PhotoUser u=(PhotoUser)o;
+			rv= (id == u.id);
+		}
+		return(rv);
+	}
+
+	/** 
+	 * Compare these users by username.
+	 * 
+	 * @param o the object to compare to
+	 * @return this.username.compareTo(o.username)
+	 */
+	public int compareTo(Object o) {
+		PhotoUser pu=(PhotoUser)o;
+		int rv=username.compareTo(pu.username);
+		return(rv);
 	}
 
 	/**

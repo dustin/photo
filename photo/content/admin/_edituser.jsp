@@ -5,6 +5,8 @@
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
+<jsp:useBean id="adminUserForm" scope="session"
+	class="net.spy.photo.struts.AdminUserForm"/>
 
 <photo:admin explodeOnImpact="true"/>
 
@@ -73,4 +75,10 @@
 	</table>
 
 	<html:submit>Save</html:submit>
+	<p>
+		<% String uid=adminUserForm.getUserId();
+			String theUrl="/admin/userPhotos.jsp?user=" + uid;
+		%>
+		<photo:link url='<%= theUrl %>'>Photos this user has seen</photo:link>
+	</p>
 </html:form>
