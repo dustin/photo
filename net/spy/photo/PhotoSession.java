@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
+ * $Id: PhotoSession.java,v 1.2 2000/06/25 07:38:32 dustin Exp $
  */
 
 package net.spy.photo;
@@ -35,6 +35,8 @@ public class PhotoSession extends Object
 	protected PhotoStorerThread storer_thread = null;
 
 	protected PhotoServlet photo_servlet = null;
+
+	protected Hashtable groups=null;
 
 	HttpServletRequest request=null;
 	HttpServletResponse response=null;
@@ -88,48 +90,52 @@ public class PhotoSession extends Object
 		}
 		log("func is " + func);
 		if(func == null) {
-			doIndex(request, response);
+			doIndex();
 		} else if(func.equalsIgnoreCase("search")) {
 			doFind();
 		} else if(func.equalsIgnoreCase("nextresults")) {
 			displaySearchResults();
 		} else if(func.equalsIgnoreCase("addimage")) {
-			doAddPhoto(request, response);
+			doAddPhoto();
 		} else if(func.equalsIgnoreCase("index")) {
-			doIndex(request, response);
+			doIndex();
 		} else if(func.equalsIgnoreCase("findform")) {
-			doFindForm(request, response);
+			doFindForm();
 		} else if(func.equalsIgnoreCase("addform")) {
-			doAddForm(request, response);
+			doAddForm();
 		} else if(func.equalsIgnoreCase("catview")) {
-			doCatView(request, response);
+			doCatView();
 		} else if(func.equalsIgnoreCase("setstyle")) {
-			doSetStyle(request, response);
+			doSetStyle();
 		} else if(func.equalsIgnoreCase("styleform")) {
-			doStyleForm(request, response);
+			doStyleForm();
 		} else if(func.equalsIgnoreCase("getstylesheet")) {
-			doGetStylesheet(request, response);
+			doGetStylesheet();
 		} else if(func.equalsIgnoreCase("display")) {
 			doDisplay();
 		} else if(func.equalsIgnoreCase("logview")) {
-			doLogView(request, response);
+			doLogView();
 		} else if(func.equalsIgnoreCase("getimage")) {
-			showImage(request, response);
+			showImage();
 		} else if(func.equalsIgnoreCase("credform")) {
-			showCredForm(request, response);
+			showCredForm();
 		} else if(func.equalsIgnoreCase("savesearch")) {
-			saveSearch(request, response);
+			saveSearch();
 		} else if(func.equalsIgnoreCase("setcred")) {
-			setCreds(request, response);
-			doIndex(request, response);
+			setCreds();
+			doIndex();
+		} else if(func.equalsIgnoreCase("setadmin")) {
+			setAdmin();
+			doIndex();
+		} else if(func.equalsIgnoreCase("unsetadmin")) {
+			unsetAdmin();
+			doIndex();
 		} else {
 			throw new ServletException("No known function.");
 		}
 	}
 
-	protected void saveSearch(HttpServletRequest request,
-		HttpServletResponse response)
-		throws ServletException {
+	protected void saveSearch() throws ServletException {
 		PhotoSearch ps = new PhotoSearch();
 		PhotoUser user = (PhotoUser)userdb.get(remote_user);
 		String output="";
@@ -142,7 +148,7 @@ public class PhotoSession extends Object
 			h.put("MESSAGE", e.getMessage());
 			output=tokenize("addsearch_fail.inc", h);
 		}
-		send_response(response, output);
+		send_response(output);
 	}
 
 	protected void getCreds() throws ServletException {
@@ -151,18 +157,14 @@ public class PhotoSession extends Object
 	}
 
 	// Show the style form
-	protected void showCredForm (
-		HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+	protected void showCredForm () throws ServletException {
 		String output;
 
 		output = tokenize("authform.inc", new Hashtable());
-		send_response(response, output);
+		send_response(output);
 	}
 
-	public void setCreds (
-		HttpServletRequest request, HttpServletResponse response
-	) throws ServletException, IOException {
+	public void setCreds () throws ServletException, IOException {
 		String username=null, pass=null;
 
 		username=request.getParameter("username");
@@ -249,9 +251,7 @@ public class PhotoSession extends Object
 	}
 
 	// Add an image
-	protected void doAddPhoto(
-		HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+	protected void doAddPhoto() throws ServletException {
 		String category="", keywords="", picture="", info="", taken="";
 		String query="", out="", stmp, type;
 		int id;
@@ -267,7 +267,7 @@ public class PhotoSession extends Object
 
 		// Make sure the user can add.
 		if(!canadd()) {
-			send_response(response, tokenize("add_denied.inc", h));
+			send_response(tokenize("add_denied.inc", h));
 			return;
 		}
 
@@ -280,7 +280,7 @@ public class PhotoSession extends Object
 		if( type == null || (! (type.startsWith("image/jpeg"))) ) {
 			h.put("FILENAME", multi.getFilesystemName("picture"));
 			h.put("FILETYPE", type);
-			send_response(response, tokenize("add_badfiletype.inc", h));
+			send_response(tokenize("add_badfiletype.inc", h));
 			try {
 				f.delete();
 			} catch(Exception e) {
@@ -395,7 +395,7 @@ public class PhotoSession extends Object
 			}
 		}
 
-		send_response(response, out);
+		send_response(out);
 	}
 
 	// Get a list of categories for a select list
@@ -427,19 +427,15 @@ public class PhotoSession extends Object
 	}
 
 	// Show the style form
-	protected void doStyleForm (
-		HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+	protected void doStyleForm () throws ServletException {
 		String output;
 
 		output = tokenize("presetstyle.inc", new Hashtable());
-		send_response(response, output);
+		send_response(output);
 	}
 
 	// Get the stylesheet from the cookie, or the default.
-	protected void doGetStylesheet (
-		HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+	protected void doGetStylesheet () throws ServletException {
 		Cookie cookies[];
 		String output = null;
 		int i;
@@ -474,9 +470,7 @@ public class PhotoSession extends Object
 	}
 
 	// Set the style cookie from the POST data.
-	protected void doSetStyle(
-		HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+	protected void doSetStyle() throws ServletException {
 		Cookie c;
 		String stmp="", font="", bgcolor="", c_text="";
 		Hashtable h = new Hashtable();
@@ -521,13 +515,11 @@ public class PhotoSession extends Object
 		h.put("STYLE", c_text);
 
 		stmp = tokenize("setstyle.inc", h);
-		send_response(response, stmp);
+		send_response(stmp);
 	}
 
 	// Show the add an image form.
-	protected void doAddForm(
-		HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+	protected void doAddForm() throws ServletException {
 		String output = new String("");
 		Hashtable h = new Hashtable();
 
@@ -538,13 +530,11 @@ public class PhotoSession extends Object
 		}
 		h.put("TODAY", PhotoUtil.getToday());
 		output += tokenize("addform.inc", h);
-		send_response(response, output);
+		send_response(output);
 	}
 
 	// Show the search form.
-	protected void doFindForm(
-		HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+	protected void doFindForm() throws ServletException {
 		String output = new String("");
 		Hashtable h = new Hashtable();
 
@@ -554,13 +544,11 @@ public class PhotoSession extends Object
 			h.put("CAT_LIST", "");
 		}
 		output += tokenize("findform.inc", h);
-		send_response(response, output);
+		send_response(output);
 	}
 
 	// View categories
-	protected void doCatView(
-		HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+	protected void doCatView() throws ServletException {
 		String output = new String("");
 		String query, catstuff="";
 		Hashtable h = new Hashtable();
@@ -602,13 +590,11 @@ public class PhotoSession extends Object
 		h.put("CATSTUFF", catstuff);
 
 		output += tokenize("catview.inc", h);
-		send_response(response, output);
+		send_response(output);
 	}
 
 	// Display the index page.
-	protected void doIndex(
-		HttpServletRequest request, HttpServletResponse response)
-		throws ServletException {
+	protected void doIndex() throws ServletException {
 		String output = new String("");;
 		Hashtable h = new Hashtable();
 
@@ -618,7 +604,7 @@ public class PhotoSession extends Object
 			h.put("SAVED", "");
 		}
 		output += tokenize("index.inc", h);
-		send_response(response, output);
+		send_response(output);
 	}
 
 	// Get the UID
@@ -640,6 +626,31 @@ public class PhotoSession extends Object
 			remote_uid = p.id;
 		} catch(Exception e) {
 			throw new ServletException("Unknown user: " + remote_user);
+		}
+	}
+
+	protected void getGroups() throws Exception {
+		String query;
+
+		if(groups == null) {
+			groups = new Hashtable();
+			Connection photo=getDBConn();
+
+			try {
+				PreparedStatement st=photo.prepareStatement(
+					"select * from show_group where username = ?"
+				);
+				st.setString(1, remote_user);
+				ResultSet rs = st.executeQuery();
+				while(rs.next()) {
+					String groupName=rs.getString("groupname");
+					groups.put(groupName, "1");
+				}
+			} catch (Exception e) {
+				log("Error fetching groups:  " + e);
+			} finally {
+				freeDBConn(photo);
+			}
 		}
 	}
 
@@ -692,7 +703,7 @@ public class PhotoSession extends Object
 		}
 
 		String output = tokenize("display.inc", h);
-		send_response(response, output);
+		send_response(output);
 	}
 
 	// Find and display images.
@@ -755,18 +766,26 @@ public class PhotoSession extends Object
 		finally { freeDBConn(photo); }
 		output += tokenize("display.inc", h);
 
-		send_response(response, output);
+		send_response(output);
 	}
 
 	// Send the response text...
-	protected void send_response(HttpServletResponse response, String text)
+	protected void send_response(String text)
 	{
 		// set content type and other response header fields first
 		response.setContentType("text/html");
 		try {
 			PrintWriter out = response.getWriter();
 			out.print(text);
-			out.print(tokenize("tail.inc", new Hashtable()));
+			Hashtable ht=new Hashtable();
+			if(isAdmin()) {
+				ht.put("ADMIN_FLAG",
+					" - <a href=\"" + self_uri
+						+ "?func=unsetadmin\">Admin mode</a>");
+			} else {
+				ht.put("ADMIN_FLAG", "");
+			}
+			out.print(tokenize("tail.inc", ht));
 			out.close();
 		} catch(Exception e) {
 			// I really don't care at this point if this doesn't work...
@@ -833,7 +852,7 @@ public class PhotoSession extends Object
 		output += middle;
 		h.put("LINKTOMORE", linkToMore(results)); 
 		output += tokenize("find_bottom.inc", h);
-		send_response(response, output);
+		send_response(output);
 	}
 
 	// Find images.
@@ -882,8 +901,7 @@ public class PhotoSession extends Object
 	}
 
 	// Show an image
-	protected void showImage(HttpServletRequest request,
-		HttpServletResponse response) throws ServletException {
+	protected void showImage() throws ServletException {
 
 		Vector v;
 		int i, which;
@@ -934,8 +952,7 @@ public class PhotoSession extends Object
 		}
 	}
 
-	protected void doLogView(HttpServletRequest request,
-		HttpServletResponse response) throws ServletException {
+	protected void doLogView() throws ServletException {
 		String view, out="";
 		PhotoLogView logview=null;
 
@@ -962,7 +979,36 @@ public class PhotoSession extends Object
 				throw new ServletException(e.getMessage());
 			}
 		}
-		send_response(response, out);
+		send_response(out);
+	}
+
+	// Set administrative privys
+	protected void setAdmin() throws ServletException {
+		try {
+			getGroups();
+			if(groups.containsKey("admin")) {
+				session.putValue("is_admin", "1");
+			}
+		} catch(Exception e) {
+			log("Error setting admin privs:  " + e);
+		}
+	}
+
+	// Revoke administrative privys
+	protected void unsetAdmin() throws ServletException  {
+		session.removeValue("is_admin");
+	}
+
+	// Returns true if the session is an admin session
+	protected boolean isAdmin() {
+		boolean ret=false;
+		if(session!=null) {
+			String admin= (String)session.getValue("is_admin");
+			if(admin!=null) {
+				ret=true;
+			}
+		}
+		return(ret);
 	}
 
 	// Tokenize a template file and return the tokenized stuff.
