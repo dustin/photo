@@ -41,6 +41,10 @@
 		<pathelement path="${BUILDDIR}"/>
 	</path>
 
+	<!-- Bring in some task definitions. -->
+	<taskdef classpathref="photo.classpath"
+			resource="net/spy/ant/tasks.properties"/>
+
 	<patternset id="arch-stuff">
 		<exclude name="**/*.arch-ids/**"/>
 	</patternset>
@@ -231,9 +235,6 @@
 	</target>
 
 	<target name="spfiles">
-		<taskdef name="spgen" classname="net.spy.util.SPGenTask">
-			<classpath refid="photo.classpath"/>
-		</taskdef>
 		<spgen srcdir="${SRCDIR}" destdir="${GENDIR}"/>
 		<javac srcdir="${GENDIR}" destdir="${BUILDDIR}"
 			deprecation="on" debug="on" verbose="false">

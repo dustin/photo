@@ -4,6 +4,8 @@
 
 package net.spy.photo.struts;
 
+import org.apache.struts.action.ActionMapping;
+
 import net.spy.SpyConfig;
 
 import net.spy.jwebkit.struts.DBSPAction;
@@ -25,7 +27,7 @@ public class AdminReportAction extends DBSPAction {
 	/** 
 	 * Get the PhotoConfig.
 	 */
-	protected SpyConfig getSpyConfig() {
+	protected SpyConfig getSpyConfig(ActionMapping mapping) {
 		return(new PhotoConfig());
 	}
 
