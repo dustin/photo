@@ -68,7 +68,6 @@
 
 				<div align="center">
 					<photo:imgLink id='<%= props.getProperty("photo_of_uot", "1") %>'
-						width="194" height="146"
 						alt="Image of the [Unit of Time]"
 						showThumbnail='true'/>
 				</div>
