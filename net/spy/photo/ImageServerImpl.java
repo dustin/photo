@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.3 2002/06/24 22:06:14 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.4 2002/06/26 21:12:49 dustin Exp $
 
 package net.spy.photo;
 
@@ -23,7 +23,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 
 	private PhotoConfig conf = null;
 	private ImageCache cache=null;
-	private PhotoStorerThread storer=null;
+	private static PhotoStorerThread storer=null;
 
 	/**
 	 * Get a ImageServerImpl using the given config.
@@ -31,6 +31,8 @@ public class ImageServerImpl extends Object implements ImageServer {
 	public ImageServerImpl() {
 		super();
 		conf=new PhotoConfig();
+		// Make sure the storer thread gets started immediately.
+		checkStorerThread();
 	}
 
 	/**
@@ -118,7 +120,7 @@ public class ImageServerImpl extends Object implements ImageServer {
 		}
 	}
 
-	private void checkStorerThread() {
+	private synchronized static void checkStorerThread() {
 		if(storer==null || !(storer.isAlive())) {
 			System.err.println("Starting storer thread.");
 			storer=new PhotoStorerThread();

@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: RemoteImageServerImpl.java,v 1.4 2002/06/17 04:43:13 dustin Exp $
+// $Id: RemoteImageServerImpl.java,v 1.5 2002/06/26 21:12:49 dustin Exp $
 
 package net.spy.photo.rmi;
 
@@ -31,6 +31,8 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 	 */
 	public RemoteImageServerImpl() throws RemoteException {
 		super();
+        // Let it initialize
+        new net.spy.photo.ImageServerImpl();
 	}
 
 	private ImageServer getImageServer() {

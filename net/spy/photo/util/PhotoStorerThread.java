@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.13 2002/06/23 07:34:27 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.14 2002/06/26 21:12:50 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -15,10 +15,10 @@ import net.spy.photo.*;
 import net.spy.util.*;
 
 /**
- * Store images in the DB.  Uploaded images go directly into the cache and
+ * Store images in the DB.	Uploaded images go directly into the cache and
  * are referenced in the album table.  They're usable without being stored,
  * and may in fact never be pulled from the DB for display unless the cache
- * is cleared.  It's quite important to make sure the images make it into
+ * is cleared.	It's quite important to make sure the images make it into
  * the database for long-term storage, however.
  */
 public class PhotoStorerThread extends Thread {
@@ -177,17 +177,18 @@ public class PhotoStorerThread extends Thread {
 		// on it.
 		if(v.size() > 0) {
 			rv=v.size();
-			try {
-				for(int i = 0; i<v.size(); i++) {
-					String stmp = (String)v.elementAt(i);
+			for(int i = 0; i<v.size(); i++) {
+				String stmp = (String)v.elementAt(i);
+				try {
 					storeImage(Integer.valueOf(stmp).intValue());
+				} catch(Exception e) {
+					e.printStackTrace();
+					// Return 0 so we won't try again *right now*, but we will
+					// in a bit.
+					rv=0;
 				}
-			} catch(Exception e) {
-				e.printStackTrace();
-				// Return 0 so we won't try again *right now*, but we will
-				// in a bit.
-				rv=0;
 			}
+
 		}
 
 		// Return the number we found.
