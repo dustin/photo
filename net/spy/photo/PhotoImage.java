@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.14 2002/06/26 21:12:49 dustin Exp $
+// $Id: PhotoImage.java,v 1.15 2002/06/27 04:09:15 dustin Exp $
 
 package net.spy.photo;
 
@@ -36,8 +36,6 @@ public class PhotoImage extends Object
 
 	/**
 	 * Get a PhotoImage object with binary data representing the image.
-	 *
-	 * @see setData
 	 */
 	public PhotoImage(byte data[]) throws PhotoException {
 		super();
@@ -47,7 +45,7 @@ public class PhotoImage extends Object
 	/**
 	 * Set the binary data that represents this image.
 	 *
-	 * @exception Exception if the data format is corrupt or invalid
+	 * @exception PhotoException if the data format is corrupt or invalid
 	 */
 	public void setData(byte data[]) throws PhotoException {
 		image_data=data;
