@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Cursor.java,v 1.2 2002/02/24 01:11:52 dustin Exp $
+ * $Id: Cursor.java,v 1.3 2002/05/16 05:44:34 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,7 +14,8 @@ import net.spy.*;
 /**
  * An object that will be cursor through other objects.
  */
-public class Cursor extends Object implements Serializable {
+public class Cursor extends Object implements Serializable, Enumeration {
+
 	private Vector _results=null;
 	private int _current=0;
 	private int maxret=10;
@@ -109,6 +110,24 @@ public class Cursor extends Object implements Serializable {
 			_current++;
 		}
 		return(r);
+	}
+
+	/**
+	 * Get the next element.
+	 */
+	public Object nextElement() {
+		Object rv=next();
+		if(rv==null) {
+			throw new NoSuchElementException("You seek too much.");
+		}
+		return(rv);
+	}
+
+	/**
+	 * Return true if there are more elements.
+	 */
+	public boolean hasMoreElements() {
+		return(nRemaining() > 0);
 	}
 
 	/**
