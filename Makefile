@@ -69,7 +69,7 @@ clean:
 net/spy/rmi/ImageServerImpl_Stub.class: net/spy/rmi/ImageServerImpl_Skel.class
 
 net/spy/rmi/ImageServerImpl_Skel.class: net/spy/rmi/ImageServer.class
-	$(RMIC) -d . net.spy.rmi.ImageServerImpl
+	env CLASSPATH=$(CLASSPATH) $(RMIC) -d . net.spy.rmi.ImageServerImpl
 
 
 .java.class:
