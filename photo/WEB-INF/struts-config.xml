@@ -109,7 +109,7 @@
 		type="net.spy.photo.struts.UploadAction"
 		input="/addform.jsp"
 		name="uploadForm">
-		<forward name="success" path="/uploaded.jsp" />
+		<forward name="success" path="/addform.jsp" />
 	</action>
 
 	<!-- Saving a search. -->

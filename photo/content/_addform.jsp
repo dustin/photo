@@ -6,6 +6,23 @@
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<%
+	// Check to see if there was already an add here.
+	Integer idInteger=(Integer)request.getAttribute("net.spy.photo.UploadID");
+	String idString=null;
+	if(idInteger!=null) {
+		idString=idInteger.toString();
+	}
+%>
+
+<% if(idInteger!=null) { %>
+<p>
+	Your image has been uploaded.  Its ID is <%= idString %> and you can
+	see it <photo:imgLink id="<%= idString %>">here</photo:imgLink> before
+	too long.
+</p>
+<% } %>
+
 <p>
 
 <template:insert template='/templates/section_header.jsp'>
