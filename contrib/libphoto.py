@@ -56,7 +56,7 @@ class StaticIndexHandler(xml.sax.handler.ContentHandler):
             self.current = {}
         self.el=str(name)
         if self.current is not None:
-            self.current[self.el]=""
+            self.current[self.el]=None
 
     def endElement(self, name):
         if name == 'photo':
@@ -69,7 +69,14 @@ class StaticIndexHandler(xml.sax.handler.ContentHandler):
 
     def characters(self, content):
         if self.current is not None:
-            self.current[self.el] = self.current[self.el] + content.strip()
+            # Grab the content.  If this looks a little weird, it's because of
+            # how I deal with line wrapping and stuff.
+            if self.current[self.el] is None:
+                self.current[self.el]=content.strip()
+            else:
+                x = content.strip()
+                if x != '':
+                    self.current[self.el] += " " + x
 
     def gotPhoto(self, photo):
         raise NotImplemented
