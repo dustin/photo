@@ -54,7 +54,7 @@ public class Persistent extends HttpServlet {
 		// initialize the category list early on, because it's simple DB
 		// access and will look for no further data.
 		log("Initializing categories.");
-		Category.getAdminCatList();
+		CategoryFactory.getInstance().getAdminCatList();
 
 		// Security stuff
 		log("Initing security");

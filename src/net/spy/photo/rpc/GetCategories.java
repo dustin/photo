@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.spy.photo.Category;
+import net.spy.photo.CategoryFactory;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
@@ -43,7 +44,8 @@ public class GetCategories extends RPCMethod {
 		Vector rv=new Vector();
 
 		PhotoUser u=getUser();
-		Collection cats=Category.getCatList(u.getId(), Category.ACCESS_WRITE);
+		CategoryFactory cf=CategoryFactory.getInstance();
+		Collection cats=cf.getCatList(u.getId(), CategoryFactory.ACCESS_WRITE);
 		for(Iterator i=cats.iterator(); i.hasNext();) {
 			Category c=(Category)i.next();
 			rv.addElement(c.getName());

@@ -29,6 +29,18 @@ public class PhotoACL extends SpyObject implements Serializable {
 	}
 
 	/** 
+	 * Get a copy of this PhotoACL.
+	 */
+	public PhotoACL copy() {
+		PhotoACL rv=new PhotoACL();
+		for(Iterator i=acl.iterator(); i.hasNext(); ) {
+			PhotoACLEntry e=(PhotoACLEntry)i.next();
+			rv.acl.add(e.copy());
+		}
+		return(rv);
+	}
+
+	/** 
 	 * Iterate this ACL.
 	 * @return an unmodifiable iterator of the ACL entries.
 	 */

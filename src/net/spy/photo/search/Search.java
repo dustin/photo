@@ -28,6 +28,7 @@ import net.spy.util.Base64;
 
 import net.spy.photo.Keyword;
 import net.spy.photo.Category;
+import net.spy.photo.CategoryFactory;
 import net.spy.photo.PhotoUser;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.PhotoConfig;
@@ -415,8 +416,9 @@ public class Search extends SpyObject {
 	private Collection getValidCats(PhotoUser u) throws Exception {
 		// Flip through all of the categories and get them as Integers
 		Collection validCats=new ArrayList(16);
-		for(Iterator i=Category.getCatList(
-			u.getId(), Category.ACCESS_READ).iterator(); i.hasNext();) {
+		CategoryFactory cf=CategoryFactory.getInstance();
+		for(Iterator i=cf.getCatList(
+			u.getId(), CategoryFactory.ACCESS_READ).iterator(); i.hasNext();) {
 			Category cat=(Category)i.next();
 			validCats.add(new Integer(cat.getId()));
 		}

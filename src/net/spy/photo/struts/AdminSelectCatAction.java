@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.spy.photo.Category;
+import net.spy.photo.CategoryFactory;
 import net.spy.photo.PhotoACLEntry;
 
 import org.apache.struts.action.ActionForm;
@@ -54,8 +55,8 @@ public class AdminSelectCatAction extends PhotoAction {
 			acf.setCatAclView(new String[0]);
 		} else {
 			// Look up the user
-			Category cat=null;
-			cat=Category.lookupCategory(Integer.parseInt(acf.getCatId()));
+			CategoryFactory cf=CategoryFactory.getInstance();
+			Category cat=cf.getCategory(Integer.parseInt(acf.getCatId()));
 
 			// Set the easy stuff
 			acf.setName(cat.getName());

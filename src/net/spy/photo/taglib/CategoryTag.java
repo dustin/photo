@@ -13,6 +13,7 @@ import javax.servlet.jsp.PageContext;
 import net.spy.util.SpyUtil;
 
 import net.spy.photo.Category;
+import net.spy.photo.CategoryFactory;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoSessionData;
 
@@ -63,10 +64,10 @@ public class CategoryTag extends PhotoTag {
 	public int doStartTag() throws JspException {
 		int access=0;
 		if(showViewable) {
-			access|=Category.ACCESS_READ;
+			access|=CategoryFactory.ACCESS_READ;
 		}
 		if(showAddable) {
-			access|=Category.ACCESS_WRITE;
+			access|=CategoryFactory.ACCESS_WRITE;
 		}
 
 		// Get the session data
@@ -76,7 +77,8 @@ public class CategoryTag extends PhotoTag {
 
 		Collection cats=null;
 		try {
-			cats=Category.getCatList(sessionData.getUser().getId(), access);
+			CategoryFactory cf=CategoryFactory.getInstance();
+			cats=cf.getCatList(sessionData.getUser().getId(), access);
 		} catch(PhotoException pe) {
 			pe.printStackTrace();
 			throw new JspException("Error getting category list.");

@@ -3,10 +3,12 @@
 
 package net.spy.photo;
 
+import java.io.Serializable;
+
 /**
  * An ACL entry.
  */
-public class PhotoACLEntry extends Object implements java.io.Serializable {
+public class PhotoACLEntry extends Object implements Serializable {
 
 	private int what=0;
 	private boolean canview=false;
@@ -19,6 +21,16 @@ public class PhotoACLEntry extends Object implements java.io.Serializable {
 	public PhotoACLEntry(int id) {
 		super();
 		this.what=id;
+	}
+
+	/** 
+	 * Return a copy of this object.
+	 */
+	public PhotoACLEntry copy() {
+		PhotoACLEntry rv=new PhotoACLEntry(what);
+		rv.canview=canview;
+		rv.canadd=canadd;
+		return(rv);
 	}
 
 	/** 

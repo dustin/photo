@@ -8,6 +8,7 @@ import java.util.Hashtable;
 
 import net.spy.db.Saver;
 
+import net.spy.photo.CategoryFactory;
 import net.spy.photo.Category;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
@@ -67,7 +68,8 @@ public class AddImage extends RPCMethod {
 		// Look up the category.
 		int catId=-1;
 		try {
-			Category cat=Category.lookupCategory(category);
+			CategoryFactory cf=CategoryFactory.getInstance();
+			Category cat=cf.getCategory(category);
 			catId=cat.getId();
 		} catch(Exception e) {
 			throw new PhotoException("Error looking up category.", e);
