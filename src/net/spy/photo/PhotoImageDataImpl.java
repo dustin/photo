@@ -14,25 +14,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import net.spy.SpyObject;
-import net.spy.db.SpyDB;
-
-import net.spy.cache.SpyCache;
-
-import net.spy.photo.sp.GetPhotoInfo;
-import net.spy.photo.sp.GetAlbumKeywords;
 
 /**
  * This class represents, and retreives all useful data for a given image.
  */
-public class PhotoImageDataImpl extends SpyObject
+public abstract class PhotoImageDataImpl extends SpyObject
 	implements Serializable, PhotoImageData {
-
-	private static final String CACHE_KEY="image_data";
-	private static final long CACHE_TIME=3600000;
 
 	private int id=-1;
 	private Collection keywords=null;
@@ -54,9 +42,8 @@ public class PhotoImageDataImpl extends SpyObject
 
 	private Format format=null;
 
-	private PhotoImageDataImpl(ResultSet rs) throws Exception {
+	protected PhotoImageDataImpl() throws Exception {
 		super();
-		initFromResultSet(rs);
 		keywords=new TreeSet();
 	}
 
@@ -65,39 +52,6 @@ public class PhotoImageDataImpl extends SpyObject
 	 */
 	public String toString() {
 		return("{PhotoImageData id=" + id + " - " + dimensions + "}");
-	}
-
-	private void initFromResultSet(ResultSet rs) throws Exception {
-		id=rs.getInt("id");
-		catId=rs.getInt("catid");
-		size=rs.getInt("size");
-		int width=rs.getInt("width");
-		if(rs.wasNull()) {
-			width=-1;
-		}
-		int height=rs.getInt("height");
-		if(rs.wasNull()) {
-			height=-1;
-		}
-		descr=rs.getString("descr");
-		catName=rs.getString("catname");
-		timestamp=rs.getTimestamp("ts");
-		taken=rs.getDate("taken");
-
-		// Look up the format
-		format=Format.getFormat(rs.getInt("format_id"));
-
-		// Look up the user
-		addedBy=Persistent.getSecurity().getUser(rs.getInt("addedby"));
-
-		// Get the dimensions object if a valid width and height came back
-		// from the DB.
-		if(width>=0 && height>=0) {
-			dimensions=new PhotoDimensionsImpl(width, height);
-		}
-
-		// Calculate the thumbnail size.
-		calculateThumbnail();
 	}
 
 	/**
@@ -127,8 +81,10 @@ public class PhotoImageDataImpl extends SpyObject
 		return(id);
 	}
 
-	// Calculate the thumbnail size
-	private void calculateThumbnail() {
+	/** 
+	 * Calculate the thumbnail size.
+	 */
+	protected void calculateThumbnail() {
 		if(dimensions!=null) {
 			// get the optimal thumbnail dimensions
 			PhotoConfig conf=PhotoConfig.getInstance();
@@ -140,79 +96,18 @@ public class PhotoImageDataImpl extends SpyObject
 		}
 	}
 
-	private static Map getCache() throws Exception {
-		SpyCache sc=SpyCache.getInstance();
-		Map rv=(Map)sc.get(CACHE_KEY);
-		if(rv == null) {
-			rv=initFromDB();
-			// Update the index cache
-			SearchIndex si=SearchIndex.getInstance();
-			si.update(rv.values());
-			// Cache it
-			sc.store(CACHE_KEY, rv, CACHE_TIME);
-		}
-		return(rv);
-	}
-
-	/** 
-	 * Clear the image data cache.
-	 */
-	public static void clearCache() {
-		SpyCache sc=SpyCache.getInstance();
-		sc.uncache(CACHE_KEY);
-	}
-
-	/**
-	 * Get the data for the given ID and calculate the scaled image size
-	 * down to fit within the provided dimensions.
-	 */
-	public static PhotoImageData getData(int id) throws Exception {
-		Map m=getCache();
-		PhotoImageData rv=(PhotoImageData)m.get(new Integer(id));
-		if(rv == null) {
-			throw new Exception("No such image:  " + id);
-		}
-		return(rv);
-	}
-
-	// Go get the live data.
-	private static Map initFromDB() throws Exception {
-		Map rv=new HashMap();
-
-		GetPhotoInfo db=new GetPhotoInfo(PhotoConfig.getInstance());
-
-		ResultSet rs=db.executeQuery();
-		while(rs.next()) {
-			PhotoImageDataImpl pidi=new PhotoImageDataImpl(rs);
-			rv.put(new Integer(pidi.getId()), pidi);
-		}
-		rs.close();
-		db.close();
-
-		GetAlbumKeywords gkdb=new GetAlbumKeywords(PhotoConfig.getInstance());
-		rs=gkdb.executeQuery();
-		while(rs.next()) {
-			int photoid=rs.getInt("album_id");
-			int keywordid=rs.getInt("word_id");
-			PhotoImageDataImpl pidi=(PhotoImageDataImpl)rv.get(
-				new Integer(photoid));
-			if(pidi == null) {
-				throw new Exception("Invalid keymap entry to " + photoid);
-			}
-			// Map it in
-			pidi.keywords.add(Keyword.getKeyword(keywordid));
-		}
-		rs.close();
-		gkdb.close();
-
-		return(rv);
-	}
-
 	/**
 	 * Get the keywords for this photo.
 	 */
 	public Collection getKeywords() {
 		return(keywords);
+	}
+
+	/** 
+	 * Add a keyword to this photo.
+	 */
+	protected void addKeyword(Keyword k) {
+		keywords.add(k);
 	}
 
 	/**
@@ -292,6 +187,76 @@ public class PhotoImageDataImpl extends SpyObject
 		return(format);
 	}
 
+	/** 
+	 * Set the ID.
+	 */
+	protected void setId(int to) {
+		this.id=to;
+	}
+
+	/** 
+	 * Set the description.
+	 */
+	protected void setDescr(String to) {
+		this.descr=to;
+	}
+
+	/** 
+	 * Set the category name.
+	 */
+	protected void setCatName(String to) {
+		this.catName=to;
+	}
+
+	/** 
+	 * Set the category ID.
+	 */
+	protected void setCatId(int to) {
+		this.catId=to;
+	}
+
+	/** 
+	 * Set the image size.
+	 */
+	protected void setSize(int to) {
+		this.size=to;
+	}
+
+	/** 
+	 * Set the image dimensions.
+	 */
+	protected void setDimensions(PhotoDimensions to) {
+		this.dimensions=to;
+	}
+
+	/** 
+	 * Set the timestamp this image was acquired.
+	 */
+	protected void setTimestamp(Date to) {
+		this.timestamp=to;
+	}
+
+	/** 
+	 * Set the date this image was taken.
+	 */
+	protected void setTaken(Date to) {
+		this.taken=to;
+	}
+
+	/** 
+	 * Set the format of this image.
+	 */
+	protected void setFormat(Format to) {
+		this.format=to;
+	}
+
+	/** 
+	 * Set the user who added this image.
+	 */
+	protected void setAddedBy(PhotoUser to) {
+		this.addedBy=to;
+	}
+
 	// Serialization voodoo
 	private Object writeReplace() throws ObjectStreamException {
 		return(new SerializedForm(id));
@@ -308,7 +273,8 @@ public class PhotoImageDataImpl extends SpyObject
 		private Object readResolve() throws ObjectStreamException {
 			PhotoImageData rv=null;
 			try {
-				rv=PhotoImageDataImpl.getData(imgId);
+				PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+				rv=pidf.getData(imgId);
 			} catch(Exception e) {
 				InvalidObjectException t=new InvalidObjectException(
 					"Problem resolving ImageData");

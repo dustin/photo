@@ -18,7 +18,8 @@ import net.spy.db.AbstractSavable;
 import net.spy.util.ProgressStats;
 
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImageDataImpl;
+import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.SavablePhotoImageData;
 
 import net.spy.photo.sp.migration.GetAllImgIdsAndKws;
@@ -51,6 +52,8 @@ public class PhotoMigration11 extends PhotoMigration {
 
 		ProgressStats stat=new ProgressStats(imgs.size());
 
+		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+
 		// Now, flip through them and set the correct value.
 		for(Iterator i=imgs.iterator(); i.hasNext(); ) {
 			IdKw idkw=(IdKw)i.next();
@@ -58,7 +61,7 @@ public class PhotoMigration11 extends PhotoMigration {
 			stat.start();
 
 			SavablePhotoImageData savable=new SavablePhotoImageData(
-				PhotoImageDataImpl.getData(idkw.id));
+				pidf.getData(idkw.id));
 			savable.setKeywords(idkw.kw);
 
 			saver.save(savable);

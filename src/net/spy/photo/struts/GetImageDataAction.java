@@ -15,7 +15,7 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataImpl;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoSearchResults;
 
 import org.apache.struts.action.ActionForm;
@@ -55,7 +55,8 @@ public class GetImageDataAction extends PhotoAction {
 		// Check access
 		PhotoSessionData sessionData=getSessionData(req);
 		Persistent.getSecurity().checkAccess(sessionData.getUser(), id);
-		PhotoImageData rv= PhotoImageDataImpl.getData(id);
+		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+		PhotoImageData rv= pidf.getData(id);
 		return(rv);
 	}
 

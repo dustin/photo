@@ -16,6 +16,7 @@ import net.spy.db.Saver;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImageDataImpl;
 import net.spy.photo.SavablePhotoImageData;
+import net.spy.photo.PhotoImageDataFactory;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -43,8 +44,10 @@ public class AdminEditImage extends PhotoAction {
 
 		UploadForm uf=(UploadForm)form;
 
+		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+
 		SavablePhotoImageData savable=new SavablePhotoImageData(
-			PhotoImageDataImpl.getData(Integer.parseInt(uf.getId())));
+			pidf.getData(Integer.parseInt(uf.getId())));
 		savable.setDescr(uf.getInfo());
 		savable.setKeywords(uf.getKeywords());
 		savable.setCatId(Integer.parseInt(uf.getCategory()));

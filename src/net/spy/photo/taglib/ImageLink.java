@@ -12,7 +12,7 @@ import javax.servlet.jsp.JspException;
 
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataImpl;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoDimScaler;
 import net.spy.photo.PhotoImageHelper;
@@ -119,7 +119,8 @@ public class ImageLink extends PhotoTag {
 		if(showOptimal) {
 			scale=true;
 			try {
-				PhotoImageData pid=PhotoImageDataImpl.getData(id);
+				PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+				PhotoImageData pid=pidf.getData(id);
 				PhotoDimensions optdims=sessionData.getOptimalDimensions();
 				PhotoDimensions newDims=PhotoDimScaler.scaleTo(
 					pid.getDimensions(), optdims);

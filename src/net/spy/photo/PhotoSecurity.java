@@ -100,7 +100,8 @@ public class PhotoSecurity extends PhotoHelper {
 		boolean ok=false;
 
 		try {
-			PhotoImageData pid=PhotoImageDataImpl.getData(imageId);
+			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			PhotoImageData pid=pidf.getData(imageId);
 			ok=user.canView(pid.getCatId());
 
 			if(!ok) {
