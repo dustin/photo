@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.92 2002/02/22 00:50:34 dustin Exp $
+ * $Id: PhotoSession.java,v 1.93 2002/02/23 00:37:55 dustin Exp $
  */
 
 package net.spy.photo;
@@ -37,6 +37,9 @@ public class PhotoSession extends Object
 
 	private PhotoAheadFetcher aheadfetcher=null;
 
+	// I use this enough that I might as well have it here.
+	private PhotoConfig conf=null;
+
 	// These are public because they may be used by PhotoHelpers
 	public HttpServletRequest request=null;
 	public HttpServletResponse response=null;
@@ -49,6 +52,8 @@ public class PhotoSession extends Object
 		photo_servlet=p;
 		this.request=request;
 		this.response=response;
+
+		this.conf=new PhotoConfig();
 
 		// The aheadfetcher
 		this.aheadfetcher=p.aheadfetcher;
@@ -68,9 +73,6 @@ public class PhotoSession extends Object
 
 		// If we didn't get a session data, create a new one.
 		if(sessionData==null) {
-			// Get a conf.
-			PhotoConfig conf=new PhotoConfig();
-
 			// Get the object
 			sessionData=new PhotoSessionData();
 			// Initialize the user
@@ -124,7 +126,6 @@ public class PhotoSession extends Object
 			type = request.getContentType();
 			if(type != null && type.startsWith("multipart/form-data")) {
 				// Get this to figure out the size and location of the uploads.
-				PhotoConfig conf=new PhotoConfig();
 				multi = new MultipartRequest(request,
 					conf.get("upload_tmp_dir", "/tmp"),
 					conf.getInt("upload_max_size", (5*1024*1024)));
@@ -446,7 +447,7 @@ public class PhotoSession extends Object
 			log("saved_searches was not cached, must fetch from the db");
 			try {
 				out="";
-				SpyDB photo=new SpyDB(new PhotoConfig());
+				SpyDB photo=new SpyDB(conf);
 				Base64 base64 = new Base64();
 
 				String query = "select * from searches order by name\n";
@@ -543,7 +544,7 @@ public class PhotoSession extends Object
 		try {
 			String query=null;
 
-			db=new SpyDB(new PhotoConfig());
+			db=new SpyDB(conf);
 			photo=db.getConn();
 			photo.setAutoCommit(false);
 
@@ -642,7 +643,7 @@ public class PhotoSession extends Object
 		if(out==null) {
 			out="";
 			try {
-				SpyDB photo=new SpyDB(new PhotoConfig());
+				SpyDB photo=new SpyDB(conf);
 
 				String query = "select * from cat where id in\n"
 			  		+ "(select cat from wwwacl where\n"
@@ -752,7 +753,7 @@ public class PhotoSession extends Object
 
 		// OK, let's try to log it.
 		try {
-			SpyDB db=new SpyDB(new PhotoConfig());
+			SpyDB db=new SpyDB(conf);
 			PreparedStatement pst=db.prepareStatement(
 				"insert into user_profile_log"
 				+ "(profile_id, wwwuser_id, remote_addr) "
@@ -960,7 +961,7 @@ public class PhotoSession extends Object
 		String catstuff="";
 
 		try {
-			SpyDB photo = new SpyDB(new PhotoConfig());
+			SpyDB photo = new SpyDB(conf);
 
 			String query = "select name,id,catsum(id) as cs from cat\n"
 			  	+ "where id in\n"
@@ -1016,7 +1017,7 @@ public class PhotoSession extends Object
 
 		ret=(String)cache.get(key);
 		if(ret==null) {
-			SpyDB db=new SpyDB(new PhotoConfig());
+			SpyDB db=new SpyDB(conf);
 			ResultSet rs=db.executeQuery("select count(*) from photo_log");
 			rs.next();
 			ret=nf.format(rs.getInt(1));
@@ -1037,7 +1038,7 @@ public class PhotoSession extends Object
 
 		ret=(String)cache.get(key);
 		if(ret==null) {
-			SpyDB db=new SpyDB(new PhotoConfig());
+			SpyDB db=new SpyDB(conf);
 			ResultSet rs=db.executeQuery("select count(*) from album");
 			rs.next();
 			ret=nf.format(rs.getInt(1));
@@ -1421,7 +1422,6 @@ public class PhotoSession extends Object
 
 		s=request.getParameter("thumbnail");
 		if(s!=null) {
-			PhotoConfig conf=new PhotoConfig();
 			size=conf.get("thumbnail_size");
 		}
 		s=request.getParameter("scale");
