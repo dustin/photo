@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.Comparator;
 import java.util.Date;
-import java.text.SimpleDateFormat;
 
 import java.net.URLEncoder;
 
@@ -43,14 +42,11 @@ public class PhotoSearch extends PhotoHelper {
 
 	private static PhotoSearch instance=null;
 
-	private SimpleDateFormat dateParser=null;
-
 	/**
 	 * Get a PhotoSearch instance.
 	 */
 	private PhotoSearch() {
 		super();
-		dateParser=new SimpleDateFormat("yyyy/MM/dd");
 	}
 
 	/** 
@@ -296,22 +292,12 @@ public class PhotoSearch extends PhotoHelper {
 		}
 	}
 
-	private Date parseDate(String in) {
-		Date rv=null;
-		try {
-			rv=dateParser.parse(in);
-		} catch(Exception e) {
-			// ignore
-		}
-		return(rv);
-	}
-
 	private void processRange(Set rset, int which, String start, String end)
 		throws Exception {
 
 		SearchIndex index=SearchIndex.getInstance();
-		Date s=parseDate(start);
-		Date e=parseDate(end);
+		Date s=PhotoUtil.parseDate(start);
+		Date e=PhotoUtil.parseDate(end);
 
 		if(s != null || e != null) {
 			Collection matches=null;

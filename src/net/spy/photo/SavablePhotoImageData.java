@@ -10,7 +10,6 @@ import java.util.StringTokenizer;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 import net.spy.db.SpyDB;
@@ -30,8 +29,6 @@ import net.spy.photo.sp.UpdateImage;
  */
 public class SavablePhotoImageData extends AbstractSavable
 	implements PhotoImageData {
-
-	private static SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
 
 	private Collection keywords=null;
 	private String descr=null;
@@ -296,14 +293,14 @@ public class SavablePhotoImageData extends AbstractSavable
 	}
 
 	/** 
-	 * Set the taken date from a string in the format of MM/dd/yyyy.
+	 * Set the taken date from a string in one of the photo date formats.
 	 */
 	public void setTaken(String to) {
-		try {
-			setTaken(sdf.parse(to));
-		} catch(ParseException e) {
-			throw new RuntimeException("Invalid date format", e);
+		Date d=PhotoUtil.parseDate(to);
+		if(d == null) {
+			throw new RuntimeException("Invalid date format:  " + to);
 		}
+		setTaken(d);
 	}
 
 	public void setTaken(Date to) {

@@ -6,6 +6,9 @@
 
 package net.spy.photo;
 
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
@@ -20,6 +23,51 @@ import net.spy.jwebkit.RequestUtil;
  * Utilities.
  */
 public class PhotoUtil extends Object {
+
+	private static final Collection dateFormats=initDateFormats();
+
+	private static Collection initDateFormats() {
+		ArrayList rv=new ArrayList();
+
+		SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
+		sdf.setLenient(false);
+		rv.add(sdf);
+
+		sdf=new SimpleDateFormat("MM-dd-yyyy");
+		sdf.setLenient(false);
+		rv.add(sdf);
+
+		sdf=new SimpleDateFormat("yyyy-MM-dd");
+		sdf.setLenient(false);
+		rv.add(sdf);
+
+		sdf=new SimpleDateFormat("yyyy/MM/dd");
+		sdf.setLenient(false);
+		rv.add(sdf);
+
+		return(rv);
+	}
+
+	/** 
+	 * Parse a date in one of the known formats.
+	 * @param s a string to parse
+	 * @return the date, or null if the date could not be parsed
+	 */
+	public static Date parseDate(String s) {
+		Date rv=null;
+		if(s != null && s.length() > 0) {
+			for(Iterator i=dateFormats.iterator(); rv==null && i.hasNext(); ) {
+				SimpleDateFormat sdf=(SimpleDateFormat)i.next();
+
+				try {
+					rv=sdf.parse(s);
+				} catch(Exception e) {
+					// Ignored, try the next one
+				}
+			}
+		}
+		return(rv);
+	}
 
 	/**
 	 * Simple splitter.

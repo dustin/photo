@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.Hashtable;
@@ -19,6 +18,8 @@ import java.util.Vector;
 
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+
+import net.spy.photo.PhotoUtil;
 
 /**
  * Upload an image.
@@ -80,12 +81,6 @@ public class UploadImage extends Object {
 		throw new Exception("Usage error");
 	}
 
-	private static Date parseDate(String date) throws ParseException {
-		SimpleDateFormat sdf=new SimpleDateFormat("MM/DD/yyyy");
-		Date rv=sdf.parse(date);
-		return(rv);
-	}
-
 	private static byte[] readData(File file) throws IOException {
 		byte rv[]=new byte[(int)file.length()];
 		FileInputStream fis=new FileInputStream(file);
@@ -108,7 +103,10 @@ public class UploadImage extends Object {
 		String keywords=args[i++];
 		String info=args[i++];
 		String category=args[i++];
-		Date taken=parseDate(args[i++]);
+		Date taken=PhotoUtil.parseDate(args[i++]);
+		if(taken == null) {
+			throw new NullPointerException("Could not parse date:  " + taken);
+		}
 
 		// Get the image uploader
 		UploadImage uploader=new UploadImage(url);
