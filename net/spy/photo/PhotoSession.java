@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.8 2000/06/26 06:42:31 dustin Exp $
+ * $Id: PhotoSession.java,v 1.9 2000/06/28 05:53:40 dustin Exp $
  */
 
 package net.spy.photo;
@@ -80,67 +80,75 @@ public class PhotoSession extends Object
 
 		// Figure out what they want, default to index.
 		if(multi==null) {
-			func=request.getParameter("func");
+			func=request.getParameter("func").toLowerCase();
 		} else {
-			func=multi.getParameter("func");
+			func=multi.getParameter("func").toLowerCase();
 		}
 		log("func is " + func);
 		if(func == null) {
 			doIndex();
-		} else if(func.equalsIgnoreCase("search")) {
+		} else if(func.equals("search")) {
 			doFind();
-		} else if(func.equalsIgnoreCase("nextresults")) {
+		} else if(func.equals("nextresults")) {
 			displaySearchResults();
-		} else if(func.equalsIgnoreCase("addimage")) {
+		} else if(func.equals("addimage")) {
 			doAddPhoto();
-		} else if(func.equalsIgnoreCase("index")) {
+		} else if(func.equals("index")) {
 			doIndex();
-		} else if(func.equalsIgnoreCase("findform")) {
+		} else if(func.equals("findform")) {
 			doFindForm();
-		} else if(func.equalsIgnoreCase("addform")) {
+		} else if(func.equals("addform")) {
 			doAddForm();
-		} else if(func.equalsIgnoreCase("catview")) {
+		} else if(func.equals("catview")) {
 			doCatView();
-		} else if(func.equalsIgnoreCase("setstyle")) {
+		} else if(func.equals("setstyle")) {
 			doSetStyle();
-		} else if(func.equalsIgnoreCase("styleform")) {
+		} else if(func.equals("styleform")) {
 			doStyleForm();
-		} else if(func.equalsIgnoreCase("getstylesheet")) {
+		} else if(func.equals("getstylesheet")) {
 			doGetStylesheet();
-		} else if(func.equalsIgnoreCase("display")) {
+		} else if(func.equals("display")) {
 			doDisplay();
-		} else if(func.equalsIgnoreCase("logview")) {
+		} else if(func.equals("logview")) {
 			doLogView();
-		} else if(func.equalsIgnoreCase("getimage")) {
+		} else if(func.equals("getimage")) {
 			showImage();
-		} else if(func.equalsIgnoreCase("credform")) {
+		} else if(func.equals("credform")) {
 			showCredForm();
-		} else if(func.equalsIgnoreCase("savesearch")) {
+		} else if(func.equals("savesearch")) {
 			saveSearch();
-		} else if(func.equalsIgnoreCase("edittext")) {
+		} else if(func.equals("edittext")) {
 			saveImageInfo();
 			doDisplay();
-		} else if(func.equalsIgnoreCase("setcred")) {
+		} else if(func.equals("setcred")) {
 			setCreds();
 			doIndex();
-		} else if(func.equalsIgnoreCase("setadmin")) {
+		} else if(func.equals("setadmin")) {
 			setAdmin();
 			doIndex();
-		} else if(func.equalsIgnoreCase("unsetadmin")) {
+		} else if(func.equals("unsetadmin")) {
 			unsetAdmin();
 			doIndex();
-		} else if(func.equalsIgnoreCase("admcat")) {
+		} else if(func.equals("admcat")) {
 			admShowCategories();
-		} else if(func.equalsIgnoreCase("admcatedit")) {
+		} else if(func.equals("admcatedit")) {
 			admEditCategoryForm();
-		} else if(func.equalsIgnoreCase("admsavecat")) {
+		} else if(func.equals("admsavecat")) {
 			admSaveCategory();
-		} else if(func.equalsIgnoreCase("admuser")) {
+		} else if(func.equals("admuser")) {
 			admShowUsers();
-		} else if(func.equalsIgnoreCase("admuseredit")) {
+		} else if(func.equals("admuseredit")) {
 			admEditUserForm();
-		} else if(func.equalsIgnoreCase("admsaveuser")) {
+		} else if(func.equals("admsaveuser")) {
 			admSaveUser();
+		} else if(func.startsWith("rep")) {
+			// Anything that starts with rep is probably reporting.
+			try {
+				PhotoReporting rep=new PhotoReporting(this);
+				send_response(rep.process(func));
+			} catch(Exception e) {
+				throw new ServletException("Reporting Exception:  " + e);
+			}
 		} else {
 			throw new ServletException("No known function.");
 		}
