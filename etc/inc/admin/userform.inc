@@ -47,7 +47,8 @@
 <table border="1">
 <tr>
     <th>Category</th>
-    <th>Visible</th>
+    <th>Can View</th>
+    <th>Can Add</th>
 </tr>
 %ACLTABLE%
 </table>
