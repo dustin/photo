@@ -64,10 +64,10 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 
 .PHONY: test
 
-all: $(CLASSES)
-
 photo.jar: $(CLASSES)
 	$(JAR) cv0f $@ `find net/spy -name "*.class"`
+
+all: $(CLASSES)
 
 test: $(CLASSES)
 	env CLASSPATH=/tmp $(SERVLETRUNNER) $(PWD)/etc/resin.conf
