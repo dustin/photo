@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.73 2001/12/29 08:12:41 dustin Exp $
+ * $Id: PhotoSession.java,v 1.74 2001/12/29 09:17:36 dustin Exp $
  */
 
 package net.spy.photo;
@@ -125,7 +125,12 @@ public class PhotoSession extends Object
 			out=dispatchFunction(func);
 
 		} catch(Exception e) {
-			log("Error:  " + e + "\nStack:  " + SpyUtil.getStack(e, 1));
+			String msg=e.toString();
+			if(e instanceof ServletException) {
+				ServletException se=(ServletException)e;
+				msg+=" -- " + se.getRootCause();
+			}
+			log("Error:  " + msg + "\nStack:  " + SpyUtil.getStack(e, 1));
 			out=createError(e);
 			try {
 				sendXML(out);
@@ -146,12 +151,22 @@ public class PhotoSession extends Object
 	private String createError(Exception e) {
 		StringBuffer rv=new StringBuffer();
 
+		String msg=e.getMessage();
+		if(e instanceof ServletException) {
+			ServletException se=(ServletException)e;
+			if(se.getRootCause()!=null
+				&& se.getRootCause().getMessage()!=null) {
+
+				msg+=" -- " + se.getRootCause().getMessage();
+			}
+		}
+
 		// XML header
 		rv.append("<?xml version=\"1.0\"?>\n");
 
 		rv.append("<exception>\n");
 		rv.append("\t<text>\n");
-		rv.append("\t\t" + PhotoXSLT.normalize(e.getMessage(), true) + "\n");
+		rv.append("\t\t" + PhotoXSLT.normalize(msg, true) + "\n");
 		rv.append("\t</text>\n");
 		rv.append("\t<exception_class>\n");
 		rv.append("\t\t" + PhotoXSLT.normalize(e.getClass().getName(), true)
