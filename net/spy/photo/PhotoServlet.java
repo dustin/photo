@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.25 2002/07/10 03:38:08 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.26 2003/07/28 04:17:58 dustin Exp $
  */
 
 package net.spy.photo;
@@ -42,7 +42,7 @@ public class PhotoServlet extends HttpServlet {
 	 */
 	public String getServletInfo() {
 		return("Copyright (c) 2000  Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.25 $");
+			+ " - $Revision: 1.26 $");
 	}
 
 	/**
@@ -74,13 +74,20 @@ public class PhotoServlet extends HttpServlet {
 
 		// Get the sessionData
 		HttpSession session=request.getSession(false);
+		PhotoUser pu=null;
+		PhotoSessionData sessionData=null;
 		if(session==null) {
-			throw new ServletException("No session!");
+			pu=Persistent.getSecurity().getDefaultUser();
+		} else {
+			sessionData=(PhotoSessionData)session.getAttribute("photoSession");
+			if(sessionData!=null) {
+				pu=Persistent.getSecurity().getDefaultUser();
+			}
 		}
-		PhotoSessionData sessionData=
-			(PhotoSessionData)session.getAttribute("photoSession");
-		if(sessionData==null) {
-			throw new ServletException("No sesion data in session");
+
+		// There should be one by now
+		if(pu == null) {
+			throw new ServletException("Couldn't find a photo user anywhere");
 		}
 
 		String stmp=request.getParameter("id");
@@ -120,12 +127,12 @@ public class PhotoServlet extends HttpServlet {
 				pdim=new PhotoDimensionsImpl(size);
 			}
 
-			log("Fetching " + which + " scaled to " + pdim);
-			PhotoImage image=p.getImage(sessionData.getUser(), pdim);
+			log("Fetching " + which + " scaled to " + pdim + " for " + pu);
+			PhotoImage image=p.getImage(pu, pdim);
 
 			// Log it
 			Persistent.getLogger().log(new PhotoLogImageEntry(
-				sessionData.getUser().getId(), which, pdim, request));
+				pu.getId(), which, pdim, request));
 
 			// Tell the client what we're sending
 			response.setContentType("image/" + image.getFormatString());
@@ -137,7 +144,9 @@ public class PhotoServlet extends HttpServlet {
 			out.write(image.getData());
 
 			// Mark it in the session
-			sessionData.sawImage(which);
+			if(sessionData != null) {
+				sessionData.sawImage(which);
+			}
 
 		} catch(Exception e) {
 			throw new ServletException("Error displaying image", e);
