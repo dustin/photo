@@ -1,7 +1,12 @@
+<html><head><title>Editing %IMAGE%</title>
+</head>
+
+<body bgcolor="#fFfFfF">
+
 <center>
-<img src="%CGIDIR%/img.cgi/%IMAGE%"><br>
+<img src="%SELF_URI%?func=getimage&photo_id=%IMAGE%"><br>
 </center>
-<form method="POST" action="%CGIDIR%/admin/admin.cgi">
+<form method="POST" action="%SELF_URI%">
 <input type="hidden" name="func" value="edittext">
 <input type="hidden" name="id" value="%IMAGE%">
 
@@ -25,3 +30,4 @@ Info:
 <input type="reset" value="Restore to Original">
 
 </form>
+</body></html>
