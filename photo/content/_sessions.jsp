@@ -16,7 +16,7 @@
 	<th>Most Recent</th>
 </tr>
 
-<logic:iterate id="i" type="javax.servlet.http.HttpSession"
+<logic:iterate id="ses" type="javax.servlet.http.HttpSession"
 	collection="<%= SessionWatcher.listSessions() %>">
 
 	<% PhotoSessionData sessionData=
