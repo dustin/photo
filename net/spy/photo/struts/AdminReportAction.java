@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminReportAction.java,v 1.4 2003/07/14 06:21:28 dustin Exp $
+// $Id: AdminReportAction.java,v 1.5 2003/07/14 07:02:34 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -23,6 +23,7 @@ import org.apache.struts.action.ActionMapping;
 
 import net.spy.SpyConfig;
 import net.spy.db.DBSP;
+import net.spy.db.CachedResultSet;
 
 import net.spy.photo.PhotoConfig;
 
@@ -91,7 +92,7 @@ public class AdminReportAction extends AdminAction {
 		ResultSet rs=db.executeQuery();
 
 		// Store the result set
-		request.setAttribute("rs", rs);
+		request.setAttribute("rs", new CachedResultSet(rs));
 
 		db.close();
 		// It's closed, but it still has useful information
