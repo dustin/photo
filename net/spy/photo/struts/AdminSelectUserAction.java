@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectUserAction.java,v 1.3 2002/06/22 22:07:34 dustin Exp $
+// $Id: AdminSelectUserAction.java,v 1.4 2002/06/22 23:27:45 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -17,7 +17,7 @@ import net.spy.photo.*;
 /**
  * Action used to begin editing a new user.
  */
-public class AdminSelectUserAction extends PhotoAction {
+public class AdminSelectUserAction extends AdminAction {
 
 	/**
 	 * Get an instance of AdminSelectUserAction.
@@ -34,6 +34,10 @@ public class AdminSelectUserAction extends PhotoAction {
 		HttpServletRequest request,HttpServletResponse response)
 		throws IOException, ServletException {
 
+		// Verify the user is an admin
+		checkAdmin(request);
+
+		// Get the form
 		AdminUserForm auf=(AdminUserForm)form;
 
 		// Get the user id from the form

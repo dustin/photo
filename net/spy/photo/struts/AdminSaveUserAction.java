@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveUserAction.java,v 1.2 2002/06/22 22:07:33 dustin Exp $
+// $Id: AdminSaveUserAction.java,v 1.3 2002/06/22 23:27:45 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -16,7 +16,7 @@ import net.spy.photo.*;
 /**
  * Action used to save a new user
  */
-public class AdminSaveUserAction extends PhotoAction {
+public class AdminSaveUserAction extends AdminAction {
 
 	/**
 	 * Get an instance of AdminSaveUserAction.
@@ -33,6 +33,10 @@ public class AdminSaveUserAction extends PhotoAction {
 		HttpServletRequest request,HttpServletResponse response)
 		throws IOException, ServletException {
 
+		// Verify the user is an admin
+		checkAdmin(request);
+
+		// Get the form
 		AdminUserForm auf=(AdminUserForm)form;
 
 		// Get the security to get the user to populate to the fields to
