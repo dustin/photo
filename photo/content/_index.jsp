@@ -83,9 +83,7 @@
 
 					<ul>
 						<li>
-							<photo:link url="/admin/users.jsp">
-								User Admin
-							</photo:link>
+							<photo:link url="/admin/users.jsp">User Admin</photo:link>
 						</li>
 						<li>
 							<photo:link url="/admin/categories.jsp">
@@ -93,9 +91,7 @@
 							</photo:link>
 						</li>
 						<li>
-							<photo:link url="/PhotoServlet?func=admnewprofileform">
-								New Profile
-							</photo:link>
+							<photo:link url="/admin/newprofile.jsp">New Profile</photo:link>
 						</li>
 						<li>
 							<photo:link url="/adminify.do?action=unsetadmin">
