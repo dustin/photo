@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.8 2001/07/16 08:01:05 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.9 2001/12/28 03:29:42 dustin Exp $
  */
 
 package net.spy.photo;
@@ -18,10 +18,12 @@ import net.spy.*;
  * Represents results from a search.
  */
 public class PhotoSearchResults extends Object implements Serializable {
-	protected Vector _results=null;
-	protected int _current=0;
-	protected String self_uri=null;
-	protected int maxret=5;
+	private Vector _results=null;
+	private int _current=0;
+	private String self_uri=null;
+	private int maxret=5;
+
+	private PhotoDimensions maxSize=null;
 
 	/**
 	 * Get a search results object for the given URI.
@@ -38,7 +40,17 @@ public class PhotoSearchResults extends Object implements Serializable {
 	public void add(PhotoSearchResult r) {
 		// Set the result id
 		r.setId(_results.size());
+		// Tell it the size we want the images
+		r.setMaxSize(maxSize);
+		// Now add it
 		_results.addElement(r);
+	}
+
+	/**
+	 * Set the maximum image size to be represented.
+	 */
+	public void setMaxSize(PhotoDimensions maxSize) {
+		this.maxSize=maxSize;
 	}
 
 	/**

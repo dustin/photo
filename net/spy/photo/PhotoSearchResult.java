@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.14 2001/04/29 08:18:11 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.15 2001/12/28 03:29:42 dustin Exp $
  */
 
 package net.spy.photo;
@@ -18,11 +18,13 @@ import net.spy.*;
 import net.spy.cache.*;
 
 public class PhotoSearchResult extends PhotoHelper implements Serializable {
-	protected Hashtable mydata=null;
-	protected int id=-1;
-	protected int search_id=-1;
-	protected String html=null;
-	protected String xml=null;
+	private Hashtable mydata=null;
+	private int id=-1;
+	private int search_id=-1;
+	private String html=null;
+	private String xml=null;
+
+	private PhotoDimensions maxSize=null;
 
 	/**
 	 * Get an uninitialized search result.
@@ -39,6 +41,13 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		super();
 		this.id=id;
 		this.search_id=search_id;
+	}
+
+	/**
+	 * Set the maximum image size to be represented.
+	 */
+	public void setMaxSize(PhotoDimensions maxSize) {
+		this.maxSize=maxSize;
 	}
 
 	/**
@@ -59,6 +68,8 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 	 */
 	public String showXML(String self_uri) {
 		if(xml==null) {
+			// Calculate the scaled size.
+			calculateScaled();
 			// Initialize the xml thingy.
 			xml="";
 			// Make sure we have the data.
@@ -220,15 +231,35 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		mydata.put("CATNUM",   rs.getString(i++));
 		mydata.put("ADDEDBY",  rs.getString(i++));
 		i++; // skip this one
-		mydata.put("WIDTH",    rs.getString(i++));
-		mydata.put("HEIGHT",   rs.getString(i++));
-		mydata.put("TN_WIDTH",    rs.getString(i++));
-		mydata.put("TN_HEIGHT",   rs.getString(i++));
+
+		// Get the width and the height
+		mydata.put("WIDTH", rs.getString(i++));
+		mydata.put("HEIGHT", rs.getString(i++));
+
+		// Get the thumbnail size
+		mydata.put("TN_WIDTH", rs.getString(i++));
+		mydata.put("TN_HEIGHT", rs.getString(i++));
 
 		// If there's another result error
 		if(rs.next()) {
 			throw new Exception("Too many results received for " + id);
 		}
+	}
+
+	private void calculateScaled() {
+		int width=Integer.parseInt((String)mydata.get("WIDTH"));
+		int height=Integer.parseInt((String)mydata.get("HEIGHT"));
+		// Calculate the scaled image size
+		PhotoDimScaler pds=new PhotoDimScaler(
+			new PhotoDimensionsImpl(width, height));
+		PhotoDimensions scaled=null;
+		if(maxSize!=null) {
+			scaled=pds.scaleTo(maxSize);
+		} else {
+			scaled=new PhotoDimensionsImpl(width, height);
+		}
+		mydata.put("SCALED_WIDTH", "" + scaled.getWidth());
+		mydata.put("SCALED_HEIGHT", "" + scaled.getHeight());
 	}
 
 	public void setKeywords(String to) {

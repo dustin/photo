@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.63 2001/12/28 01:54:13 dustin Exp $
+ * $Id: PhotoSession.java,v 1.64 2001/12/28 03:29:42 dustin Exp $
  */
 
 package net.spy.photo;
@@ -32,8 +32,6 @@ public class PhotoSession extends Object
 	private PhotoSecurity security = null;
 	private PhotoServlet photo_servlet = null;
 
-	private String xslt_stylesheet=null;
-
 	private boolean xmlraw=false;
 	private boolean debug=true;
 
@@ -42,9 +40,7 @@ public class PhotoSession extends Object
 	// These are public because they may be used by PhotoHelpers
 	public HttpServletRequest request=null;
 	public HttpServletResponse response=null;
-	public HttpSession session=null;
-
-	private PhotoUser user=null;
+	public PhotoSessionData sessionData=null;
 
 	public PhotoSession(PhotoServlet p,
 		HttpServletRequest request,
@@ -53,14 +49,37 @@ public class PhotoSession extends Object
 		photo_servlet=p;
 		this.request=request;
 		this.response=response;
-		this.session=request.getSession(true);
 
 		// The aheadfetcher
 		this.aheadfetcher=p.aheadfetcher;
 
 		logger=p.logger;
 		security=p.security;
-		xmlraw=false;
+
+		initSessionData(request);
+		xmlraw=sessionData.isXmlraw();
+	}
+
+	// Initialize the session.
+	private void initSessionData(HttpServletRequest request) {
+		HttpSession session=request.getSession(true);
+
+		sessionData=(PhotoSessionData)session.getAttribute("photoSession");
+
+		// If we didn't get a session data, create a new one.
+		if(sessionData==null) {
+			// Get the object
+			sessionData=new PhotoSessionData();
+			// Initialize the user
+			sessionData.setUser(security.getUser("guest"));
+			// Initialize the XML setting
+			initXMLStatus();
+			// Initialize the optimal dimensions
+			sessionData.setOptimalDimensions(
+				new PhotoDimensionsImpl(800, 600));
+
+			session.setAttribute("photoSession", sessionData);
+		}
 	}
 
 	// This gets us back into the servlet engine's log.
@@ -86,8 +105,6 @@ public class PhotoSession extends Object
 
 			getCreds();
 
-			getStyleSheet();
-
 			// Figure out what they want, default to index.
 			if(multi==null) {
 				func=request.getParameter("func");
@@ -100,8 +117,6 @@ public class PhotoSession extends Object
 			} else {
 				func=multi.getParameter("func");
 			}
-
-			checkXMLStatus();
 
 			out=dispatchFunction(func);
 
@@ -124,28 +139,18 @@ public class PhotoSession extends Object
 		}
 	}
 
-	private void checkXMLStatus() {
-
-		System.err.println("Checking XML status.");
+	// Initialize the XML settings
+	private void initXMLStatus() {
 
 		// Figure out the xml status
-		Boolean xmlstatus=(Boolean)session.getAttribute("photo_xmlraw");
-		if(xmlstatus==null) {
-			String agent=request.getHeader("User-Agent").toLowerCase();
-			if(agent!=null) {
-				if(agent.startsWith("mozilla/5")) {
-					xmlraw=true;
-					session.setAttribute("photo_xmlraw", new Boolean(true));
-					log("Found a Mozilla client, sending raw XML");
-				} else {
-					session.setAttribute("photo_xmlraw", new Boolean(false));
-				}
+		String agent=request.getHeader("User-Agent").toLowerCase();
+		if(agent!=null) {
+			if(agent.startsWith("mozilla/5")) {
+				xmlraw=true;
+				sessionData.setXmlraw(true);
+				log("Found a Mozilla client, sending raw XML");
 			}
-		} else {
-			xmlraw=xmlstatus.booleanValue();
 		}
-
-		System.err.println("XML status is " + xmlraw);
 	}
 
 	private String createError(Exception e) {
@@ -184,7 +189,7 @@ public class PhotoSession extends Object
 
 		// Lowercase it so that we don't have to keep doing case ignores
 		func=func.toLowerCase();
-		log(user + " requested " + func);
+		log(sessionData.getUser() + " requested " + func);
 		String out=null;
 
 		// OK, see what they're doing.
@@ -258,7 +263,7 @@ public class PhotoSession extends Object
 	private String saveSearch() throws ServletException {
 		try {
 			PhotoSearch ps = new PhotoSearch();
-			ps.saveSearch(request, user);
+			ps.saveSearch(request, sessionData.getUser());
 
 			PhotoXML xml=new PhotoXML();
 			xml.setTitle("Saved Search");
@@ -281,9 +286,7 @@ public class PhotoSession extends Object
 		// Make sure something was passed in.
 		if(ss!=null) {
 			// Make it available for the session
-			session.setAttribute("photo_stylesheet", ss);
-			// Make it immediately available
-			xslt_stylesheet=ss;
+			sessionData.setStylesheet(ss);
 		}
 	}
 
@@ -292,27 +295,15 @@ public class PhotoSession extends Object
 		String to=request.getParameter("to");
 		// Make sure something was passed in.
 		if(to!=null) {
-			// Make it available for the session
-			session.setAttribute("photo_xmlraw", Boolean.valueOf(to));
 			// Make it immediately available.
 			xmlraw=Boolean.getBoolean(to);
-		}
-	}
-
-	// Figure out what stylesheet to use
-	private void getStyleSheet() {
-		xslt_stylesheet=null;
-
-		PhotoConfig conf=new PhotoConfig();
-
-		if(session!=null) {
-			xslt_stylesheet=(String)session.getAttribute("photo_stylesheet");
+			// Make it available for the session
+			sessionData.setXmlraw(xmlraw);
 		}
 	}
 
 	private void getCreds() throws ServletException {
-		getUid();
-		log("Authenticated as " + user);
+		log("Authenticated as " + sessionData.getUser());
 	}
 
 	public void setCreds() throws ServletException, IOException {
@@ -327,13 +318,7 @@ public class PhotoSession extends Object
 		// We don't do anything unless the password is correct.
 		if(user.checkPassword(pass)) {
 			// Save the username.
-			session.setAttribute("photo_user", user);
-
-			// Make it available
-			this.user=user;
-
-			// Set the UID variable.
-			getUid();
+			sessionData.setUser(user);
 		}
 	}
 
@@ -390,7 +375,7 @@ public class PhotoSession extends Object
 
 	// Find out if the authenticated user can add stuff.
 	private boolean canadd() {
-		return(user.canAdd());
+		return(sessionData.getUser().canAdd());
 	}
 
 	// Add an image
@@ -402,7 +387,7 @@ public class PhotoSession extends Object
 
 		// Make sure the user can add.
 		if(!canadd()) {
-			log("User " + user + " has no permission to add.");
+			log("User " + sessionData.getUser() + " has no permission to add.");
 			throw new ServletException(
 				"You are not allowed to add images.");
 		}
@@ -499,7 +484,7 @@ public class PhotoSession extends Object
 			st.setInt(3, Integer.parseInt(multi.getParameter("category")));
 			st.setString(4, multi.getParameter("taken"));
 			st.setInt(5, size);
-			st.setInt(6, user.getId());
+			st.setInt(6, sessionData.getUser().getId());
 			st.setTimestamp(7,
 				new java.sql.Timestamp(System.currentTimeMillis()));
 			// Set the image width and height in the database.
@@ -522,7 +507,7 @@ public class PhotoSession extends Object
 				+ "  values(?, ?, ?)\n";
 			st=photo.prepareStatement(query);
 			st.setInt(1, id);
-			st.setInt(2, user.getId());
+			st.setInt(2, sessionData.getUser().getId());
 			st.setDate(3, new java.sql.Date(System.currentTimeMillis()));
 			st.executeUpdate();
 
@@ -587,7 +572,7 @@ public class PhotoSession extends Object
 			  		+ "order by name\n";
 
 				PreparedStatement st = photo.prepareStatement(query);
-				st.setInt(1, user.getId());
+				st.setInt(1, sessionData.getUser().getId());
 				st.setInt(2, PhotoUtil.getDefaultId());
 				ResultSet rs = st.executeQuery();
 
@@ -830,11 +815,11 @@ public class PhotoSession extends Object
 		}
 
 		// Verify the old password
-		if(user.checkPassword(oldpw)) {
+		if(sessionData.getUser().checkPassword(oldpw)) {
 			if(newp1.equals(newp2)) {
 				// Everything's OK, set it.
-				user.setPassword(newp1);
-				user.save();
+				sessionData.getUser().setPassword(newp1);
+				sessionData.getUser().save();
 				sb.append("<ok/>");
 			} else {
 				// New and old password don't match
@@ -846,7 +831,7 @@ public class PhotoSession extends Object
 			// The oldpw entered for the user is incorrect
 			sb.append("<error>");
 			sb.append("Invalid password for ");
-			sb.append(user);
+			sb.append(sessionData.getUser());
 			sb.append("</error>");
 		}
 
@@ -873,7 +858,7 @@ public class PhotoSession extends Object
 			  	+ "   userid=? or userid=?)\n"
 			  	+ " order by cs desc";
 			PreparedStatement st = photo.prepareStatement(query);
-			st.setInt(1, user.getId());
+			st.setInt(1, sessionData.getUser().getId());
 			st.setInt(2, PhotoUtil.getDefaultId());
 			ResultSet rs = st.executeQuery();
 
@@ -999,7 +984,7 @@ public class PhotoSession extends Object
 
 		sb.append("<meta_stuff>\n");
 		sb.append("  <self_uri>" + self_uri + "</self_uri>\n");
-		sb.append(user.toXML());
+		sb.append(sessionData.getUser().toXML());
 		// gm+="  <username>" + user + "</username>\n";
 
 		String tmp="";
@@ -1044,29 +1029,7 @@ public class PhotoSession extends Object
 			response.getWriter().print(xml);
 			response.getWriter().close();
 		} else {
-			PhotoXSLT.sendXML(xml, xslt_stylesheet, response);
-		}
-	}
-
-	// Get the UID
-	private void getUid() throws ServletException {
-		try {
-			if(session==null) {
-				user=security.getUser("guest");
-			} else {
-				user=(PhotoUser)session.getAttribute("photo_user");
-				// If we have a session, but no username, add guest.
-				if(user==null) {
-					user=security.getUser("guest");
-					session.setAttribute("photo_user", user);
-					// make sure admin isn't set.
-					unsetAdmin();
-				}
-			}
-		} catch(Exception e) {
-			log("Error getting user:  " + e);
-			e.printStackTrace();
-			throw new ServletException("Error initing uid", e);
+			PhotoXSLT.sendXML(xml, sessionData.getStylesheet(), response);
 		}
 	}
 
@@ -1138,9 +1101,8 @@ public class PhotoSession extends Object
 	private PhotoSearchResult doDisplayBySearchId(Hashtable h)
 		throws Exception {
 
-		PhotoSearchResults results=null;
-		results=(PhotoSearchResults)session.getAttribute("search_results");
-		int which=Integer.parseInt(request.getParameter("search_id"));
+		PhotoSearchResults results=sessionData.getResults();
+		int which=sessionData.getSearchId();
 		PhotoSearchResult r = results.get(which);
 
 		// Add the PREV and NEXT button stuff, if applicable.
@@ -1162,7 +1124,7 @@ public class PhotoSession extends Object
 
 		// Get the data
 		PhotoSearchResult r=new PhotoSearchResult();
-		r.find(image_id, user.getId());
+		r.find(image_id, sessionData.getUser().getId());
 
 		return(r);
 	}
@@ -1177,7 +1139,7 @@ public class PhotoSession extends Object
 
 			String tail=null;
 			SpyCache cache=new SpyCache();
-			String key="t_tail_" + user.getId() + "." + isAdmin();
+			String key="t_tail_" + sessionData.getUser().getId() + "." + isAdmin();
 			tail=(String)cache.get(key);
 
 			// If we didn't get a tail from the cache, build one.
@@ -1208,11 +1170,7 @@ public class PhotoSession extends Object
 	// Display search results
 	// This whole thing will fail if there's no session.
 	private String displaySearchResults() throws Exception {
-		if(session==null) {
-			throw new ServletException("There's no session!");
-		}
-		PhotoSearchResults results=
-			(PhotoSearchResults)session.getAttribute("search_results");
+		PhotoSearchResults results=sessionData.getResults();
 		if(results==null) {
 			throw new ServletException("There are no search results!");
 		}
@@ -1265,7 +1223,7 @@ public class PhotoSession extends Object
 		meta.append("" + results.nResults());
 		meta.append("</total>\n");
 		meta.append("\t<search_query>\n");
-		meta.append((String)session.getAttribute("encoded_search"));
+		meta.append(sessionData.getEncodedSearch());
 		meta.append("\t</search_query>\n");
 		meta.append("</meta_stuff>\n");
 
@@ -1291,10 +1249,9 @@ public class PhotoSession extends Object
 			PhotoSearch ps = new PhotoSearch();
 			PhotoSearchResults results=null;
 			// Get the results and put them in the mofo session
-			results=ps.performSearch(request, user);
-			session.setAttribute("search_results", results);
-			session.setAttribute("encoded_search",
-				ps.encodeSearch(request));
+			results=ps.performSearch(request, sessionData.getUser());
+			sessionData.setResults(results);
+			sessionData.setEncodedSearch(ps.encodeSearch(request));
 		} catch(Exception e) {
 			log("Error performing search:  " + e);
 		}
@@ -1365,13 +1322,13 @@ public class PhotoSession extends Object
 				l+=3600000;
 				response.setDateHeader("Expires", l);
 
-				image=p.getThumbnail(user.getId());
+				image=p.getThumbnail(sessionData.getUser().getId());
 			} else {
 				log("Requesting full image");
-				image=p.getImage(user.getId());
+				image=p.getImage(sessionData.getUser().getId());
 			}
 
-			logger.log(new PhotoLogImageEntry(user.getId(),
+			logger.log(new PhotoLogImageEntry(sessionData.getUser().getId(),
 				which, true, request));
 
 			// OK, let the other side know this is going to be a jpeg.
@@ -1419,9 +1376,10 @@ public class PhotoSession extends Object
 	// Set administrative privys
 	private void setAdmin() throws ServletException {
 		try {
-			if(user.isInGroup("admin")) {
-				log(user + " is in the admin group, setting admin");
-				session.setAttribute("photo_is_admin", "iamthewalrus");
+			if(sessionData.getUser().isInGroup("admin")) {
+				log(sessionData.getUser()
+					+ " is in the admin group, setting admin");
+				sessionData.setIsadmin(true);
 			}
 		} catch(Exception e) {
 			log("Error setting admin privs:  " + e);
@@ -1430,32 +1388,20 @@ public class PhotoSession extends Object
 
 	// Revoke administrative privys
 	private void unsetAdmin() throws ServletException  {
-		if(session!=null) {
-			session.removeAttribute("photo_is_admin");
-		}
+		sessionData.setIsadmin(false);
 	}
 
 	// Returns true if the session is an admin session
 	public boolean isAdmin() {
-		boolean ret=false;
-		if(session!=null) {
-			String admin= (String)session.getAttribute("photo_is_admin");
-			if(admin!=null) {
-				log("photo_is_admin is set to " + admin);
-				if(admin.equals("iamthewalrus")) {
-					ret=true;
-				}
-			}
-		}
-		return(ret);
+		return(sessionData.isAdmin());
 	}
 
+	// deeezbug
 	private void debug (String msg) {
 		if (debug) {
 			log("PhotoSession debug: " + msg);
 		}
 	}
-
 
 	// Tokenize a template file and return the tokenized stuff.
 	private String tokenize(String file, Hashtable vars)
@@ -1479,7 +1425,7 @@ public class PhotoSession extends Object
 	 * Get the remote user.
 	 */
 	public PhotoUser getUser() {
-		return(user);
+		return(sessionData.getUser());
 	}
 
 }
