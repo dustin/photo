@@ -15,7 +15,6 @@
 <% if(searchIdS == null) { %>
 	<div class="displayBrief"><c:out value="${image.descr}"/></div>
 <% } else { %>
-	<%--
 	<table width="100%">
 		<tr valign="top">
 			<td align="left" width="10%">
@@ -43,7 +42,6 @@
 			</td>
 		</tr>
 	</table>
---%>
 <% } %>
 
 	<div align="center">
