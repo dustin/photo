@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.8 1998/09/06 21:50:00 dustin Exp $
+# $Id: admin.cgi,v 1.9 1998/11/08 01:05:40 dustin Exp $
 
 use CGI;
 use Photo;
@@ -23,7 +23,7 @@ sub badFunc
 sub deleteImage
 {
     my($q, $p)=@_;
-    $p->deleteImage($q->param('oid'));
+    $p->deleteImage($q->param('id'));
     listRecent($q,$p);
 }
 
@@ -33,10 +33,10 @@ sub doDisplay
     my($query, $s, @r, @mapme, %p, $n, $r, $tmp);
     %p=();
 
-    $query ="select a.oid,a.fn,a.keywords,a.descr,\n";
+    $query ="select a.id,a.keywords,a.descr,\n";
     $query.="    a.size,a.taken,a.ts,b.name,a.cat,b.id\n";
     $query.="    from album a, cat b\n";
-    $query.="    where a.cat=b.id and a.oid=" . $q->param('oid');
+    $query.="    where a.cat=b.id and a.id=" . $q->param('id');
 
     print "<!-- Query:\n$query\n-->\n";
 
@@ -44,10 +44,10 @@ sub doDisplay
 
     @r=@{$s->fetch};
     $s->finish;
-    @mapme=qw(OID IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM);
+    @mapme=qw(IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM);
     map { $p{$mapme[$_]}=$r[$_] } (0..$#r);
 
-    print $q->start_html(-title=>"Editing $p{'OID'}", -bgcolor=>'#fFfFfF');
+    print $q->start_html(-title=>"Editing $p{'IMAGE'}", -bgcolor=>'#fFfFfF');
 
     $p{'CATS'}="";
     $query ="select * from cat order by name";
@@ -98,7 +98,7 @@ sub listRecent
     print $q->start_html(-title=>'Image Administration',
 		         -bgcolor=>'#fFfFfF');
 
-    $query ="select a.id,a.name,b.oid,b.cat,b.keywords,b.taken,b.ts,b.fn\n";
+    $query ="select a.id,a.name,b.id,b.cat,b.keywords,b.taken,b.ts\n";
     $query.="    from cat a, album b where a.id=b.cat\n";
     $query.="\tand b.cat=$i\n" if(defined($i=$q->param('cat')));
     $query.="    order by a.name, b.ts desc;";
@@ -121,8 +121,8 @@ sub listRecent
     $i=$maxret;
 
     while($r=$s->fetch) {
-        ($p{'AID'},$p{'CAT'},$p{'OID'},$p{'BCAT'},$p{'KEYWORDS'},
-	 $p{'TAKEN'},$p{'TS'},$p{'IMAGE'})=@{$r};
+        ($p{'AID'},$p{'CAT'},$p{'IMAGE'},$p{'BCAT'},$p{'KEYWORDS'},
+	 $p{'TAKEN'},$p{'TS'})=@{$r};
          $p->showTemplate("$Photo::includes/admin/recent_row.inc", %p);
 
 	 last if(--$i==0);
@@ -403,7 +403,7 @@ sub editText
     my($q,$p)=@_;
     my(%in, $query);
     %in=map { $_, $q->param($_) } $q->param;
-    print $q->start_html(-title=>"Updating OID $in{'oid'}",
+    print $q->start_html(-title=>"Updating ID $in{'id'}",
 			 -bgcolor=>"#fFfFfF");
     $in{'info'}=~s/\'/\\'/g;
     $in{'keywords'}=~s/\'/\\\'/g;
@@ -411,7 +411,7 @@ sub editText
 
     $query ="update album set cat=$in{cat}, keywords='$in{keywords}',\n";
     $query.="    descr='$in{info}', taken='$in{taken}'\n";
-    $query.="    where oid=$in{'oid'};";
+    $query.="    where id=$in{'id'};";
 
     $p->doQuery($query);
 
