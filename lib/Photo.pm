@@ -1,37 +1,47 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: photolib.pl,v 1.8 1998/04/24 17:09:19 dustin Exp $
+# $Id: Photo.pm,v 1.1 1998/04/25 03:09:28 dustin Exp $
+
+package Photo;
 
 use CGI;
 use DBI;
+use strict;
+
+use vars qw($cgidir $imagedir $uriroot $Itop $includes $adminc);
 
 # Global stuffs
-$cgidir="/cgi-bin/dustin/photo";
-$imagedir="/~dustin/images/";
-$uriroot="/~dustin/photo";
-$Itop="$uriroot/album";
-$includes="/usr/people/dustin/public_html/photo/inc";
-$adminc="/usr/people/dustin/public_html/photo/admin/inc";
+$Photo::cgidir="/cgi-bin/dustin/photo";
+$Photo::imagedir="/~dustin/images/";
+$Photo::uriroot="/~dustin/photo";
+$Photo::Itop="$Photo::uriroot/album";
+$Photo::includes="/usr/people/dustin/public_html/photo/inc";
+$Photo::adminc="/usr/people/dustin/public_html/photo/admin/inc";
 
-# Here we store the persistent database handler.
-local($dbh)=0;
+sub new
+{
+    my $self = {};
+    bless($self);
+    return($self);
+}
 
 sub openDB
 {
-    $dbh=DBI->connect("dbi:Pg:dbname=photo", 'dustin','')
+    my($self)=shift;
+    $self->{'dbh'}=DBI->connect("dbi:Pg:dbname=photo", 'dustin','')
          || die("Cannot connect to database\n");
 }
 
 sub doQuery
 {
+    my $self=shift;
     my($query)=@_;
-    my($s);
+    my($s,$dbh);
 
-    # Open the database if it's not already.
-    openDB() unless($dbh);
+    $self->openDB unless($self->{'dbh'});
 
-    $s=$dbh->prepare($query)
+    $s=$self->{'dbh'}->prepare($query)
 	  || die("Database Error:  $DBI::err\n<!--\n$query\n-->\n");
 
     $s->execute
@@ -42,6 +52,7 @@ sub doQuery
 
 sub addTail
 {
+    my $self=shift;
     my(%p, @a, @vars);
 
     @vars=qw(FILE_DEV FILE_INO FILE_MODE FILE_NLINK FILE_UID FILE_GID
@@ -56,19 +67,21 @@ sub addTail
 
     $p{'LAST_MODIFIED'}=localtime($p{FILE_MTIME});
 
-    showTemplate("$includes/tail.inc", %p);
+    $self->showTemplate("$includes/tail.inc", %p);
 }
 
 sub myself
 {
-    my($self);
-    $self=$ENV{REQUEST_URI};
-    $self=~s/(.*?)\?.*/$1/;
-    return($self);
+    my $self=shift;
+    my($s);
+    $s=$ENV{REQUEST_URI};
+    $s=~s/(.*?)\?.*/$1/;
+    return($s);
 }
 
 sub showTemplate
 {
+    my $self=shift;
     my($fn, %p)=@_;
     my($q);
 
@@ -76,10 +89,10 @@ sub showTemplate
     map { $p{uc($_)}=$q->param($_) unless(defined($p{uc($_)}))} $q->param;
     map { $p{$_}=$ENV{$_} unless(defined($p{uc($_)})) } keys(%ENV);
 
-    $p{'URIROOT'}=$uriroot;
-    $p{'CGIDIR'}=$cgidir;
-    $p{'IMAGEDIR'}=$imagedir;
-    $p{'ITOP'}=$Itop;
+    $p{'URIROOT'}=$Photo::uriroot;
+    $p{'CGIDIR'}=$Photo::cgidir;
+    $p{'IMAGEDIR'}=$Photo::imagedir;
+    $p{'ITOP'}=$Photo::Itop;
     $p{'SELF_URI'}=&myself;
 
     $p{'ALL_VARS'}=join("\n", sort(keys(%p)));
