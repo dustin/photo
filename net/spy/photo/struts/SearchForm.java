@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchForm.java,v 1.2 2002/05/12 08:51:34 dustin Exp $
+// $Id: SearchForm.java,v 1.3 2002/05/12 08:58:33 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -185,6 +185,21 @@ public class SearchForm extends ActionForm {
 	 */
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		cats=null;
+		fieldjoin=null;
+		field=null;
+		keyjoin=null;
+		what=null;
+		tstartjoin=null;
+		tstart=null;
+		tendjoin=null;
+		tend=null;
+		startjoin=null;
+		start=null;
+		endjoin=null;
+		end=null;
+		order=null;
+		sdirection=null;
+		maxret=null;
 	}
 
 	/**
