@@ -395,7 +395,11 @@ public class PhotoSearch extends PhotoHelper {
 				}
 			}
 		} else {
-			throw new ServletException("Invalid field:  " + form.getField());
+			stmp = form.getWhat();
+			if(stmp != null && stmp.length() > 0) {
+				throw new ServletException("Invalid field:  "
+					+ form.getField());
+			}
 		}
 
 		// Starts and ends

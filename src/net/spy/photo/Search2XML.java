@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 import java.text.SimpleDateFormat;
 
 import org.apache.xerces.dom.DOMImplementationImpl;
@@ -80,7 +82,9 @@ public class Search2XML extends SpyObject {
 		Element el=doc.createElement(name);
 		for(Iterator i=c.iterator(); i.hasNext();) {
 			Keyword k=(Keyword)i.next();
-			el.appendChild(addNode(doc, "keyword", String.valueOf(k.getId())));
+			Element kwel=doc.createElement("keyword");
+			kwel.setAttribute("kwid", String.valueOf(k.getId()));
+			el.appendChild(kwel);
 		}
 		return(el);
 	}
@@ -115,16 +119,52 @@ public class Search2XML extends SpyObject {
 		serial.serialize(root);
 	}
 
+	private void kw2xml(Set kwset, OutputStream os) throws Exception {
+		Document doc=dom.createDocument(null, "keywordmap", null);
+		Element root=doc.getDocumentElement();
+
+		Element el=root;
+
+		for(Iterator i=kwset.iterator(); i.hasNext(); ) {
+			Keyword kw=(Keyword)i.next();
+			Element kwel=doc.createElement("keyword");
+			kwel.setAttribute("id", String.valueOf(kw.getId()));
+			kwel.setAttribute("word", kw.getKeyword());
+			el.appendChild(kwel);
+		}
+
+		OutputFormat format = new OutputFormat(doc);
+		format.setIndenting(true);
+		format.setOmitDocumentType(true);
+		format.setOmitXMLDeclaration(true);
+		XMLSerializer serial = new XMLSerializer(os, format);
+		serial.asDOMSerializer();
+		serial.serialize(root);
+	}
+
 	public void stream(PhotoSearchResults psr, OutputStream os)
 		throws Exception {
 
 		os.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes());
-		os.write("<album>".getBytes());
+		os.write("<photoexport>\n".getBytes());
+
+		Set keywords=new HashSet();
+		for(Iterator i=psr.iterator(); i.hasNext();) {
+			PhotoImageData result=(PhotoImageData)i.next();
+			keywords.addAll(result.getKeywords());
+		}
+		kw2xml(keywords, os);
+
+		// yeah, this is lame, we do two passes through here to get all of the
+		// keywords and stuff
+		psr.set(0);
+		os.write("<album>\n".getBytes());
 		for(Iterator i=psr.iterator(); i.hasNext();) {
 			PhotoImageData result=(PhotoImageData)i.next();
 			stream(result, os);
 		}
-		os.write("</album>".getBytes());
+		os.write("</album>\n".getBytes());
+		os.write("</photoexport>\n".getBytes());
 	}
 
 }

@@ -12,16 +12,20 @@ class KwHandler(libphoto.StaticIndexHandler):
 
     def __init__(self):
         libphoto.StaticIndexHandler.__init__(self)
-        self.keywords={}
+        # Keyword to photo map
+        self.kwmap={}
+        # All photos
         self.photos=[]
     
     def gotPhoto(self, photo):
         self.photos.append(photo)
-        for kw in str(photo.keywords).split():
-            if self.keywords.has_key(kw):
-                self.keywords[kw].append(photo.id)
+        # Map in the photo to the keyword
+        for kwid in photo.keywords:
+            kw=self.keywords[kwid]
+            if self.kwmap.has_key(kw):
+                self.kwmap[kw].append(photo.id)
             else:
-                self.keywords[kw] = [photo.id]
+                self.kwmap[kw] = [photo.id]
 
 def kwcmp(a, b):
     rv = cmp(len(b[1]), len(a[1]))
@@ -33,9 +37,9 @@ if __name__ == '__main__':
     kwh=KwHandler()
     libphoto.parseIndex("index.xml", kwh)
     # Sort all of the keywords
-    for k in kwh.keywords.items():
-        kwh.keywords[k[0]].sort()
-    keywords=kwh.keywords.items()
+    for k in kwh.kwmap.items():
+        kwh.kwmap[k[0]].sort()
+    keywords=kwh.kwmap.items()
     keywords.sort(kwcmp)
 
     # OK, let's figure out which images we actually need
@@ -43,7 +47,7 @@ if __name__ == '__main__':
     photomap2={}
     for p in kwh.photos:
         photomapsrc[p.id]=p
-    for k in kwh.keywords.items():
+    for k in kwh.kwmap.items():
         for id in k[1]:
             photomap2[id] = photomapsrc[id]
     del photomapsrc

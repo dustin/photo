@@ -162,9 +162,13 @@ def makePageForPhoto(dir, photo):
     / <a href="../%(year)04d/%(month)02d.html">[%(month)02d]</a>
  </div>
  </body></html>""" % \
-        {'id': photo.id, 'shortpath': shortpath, 'taken': photo.taken,
-            'keywords': photo.keywords, 'descr': photo.descr,
-            'year': y, 'month': m})
+        {'id': photo.id,
+            'shortpath': shortpath,
+            'taken': photo.taken,
+            'keywords': ' '.join(photo.keywordStrings),
+            'descr': photo.descr,
+            'year': y,
+            'month': m})
 
 class MyHandler(libphoto.StaticIndexHandler):
     """Sax handler for pulling out photo entries and putting them in a dict"""

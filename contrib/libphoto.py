@@ -37,6 +37,9 @@ class Photo(object):
         for col in ['addedby', 'taken', 'ts', 'keywords', 'descr', 'extension']:
             self.__dict__[col]=d[col]
 
+    def mapKeywords(self, d):
+        self.keywordStrings=[d[k] for k in self.keywords]
+
     def dims(self):
         return "%dx%d" % (self.width, self.height)
 
@@ -55,29 +58,40 @@ class StaticIndexHandler(xml.sax.handler.ContentHandler):
         self.current = None
         self.lastwasspace = False
         self.el = None
+        self.keywords={}
 
     def startElement(self, name, attrs):
         if name == 'photo':
             self.current = {}
-        self.el=str(name)
-        if self.current is not None:
+        elif name == 'keywords':
+            self.current['keywords']=[]
+        elif name == 'keyword':
+            if attrs.has_key("id"):
+                self.keywords[int(attrs['id'])] = attrs['word']
+            else:
+                self.current['keywords'].append(int(attrs['kwid']))
+        else:
+            self.el=str(name)
+        if self.current is not None and self.el is not None:
             self.current[self.el]=None
 
     def endElement(self, name):
         if name == 'photo':
             # Finished a photo, store it
             photo=Photo(self.current)
-            self.gotPhoto(Photo(self.current))
+            photo.mapKeywords(self.keywords)
+            self.gotPhoto(photo)
 
             # Reset the current entry
             self.current = None
+            self.el = None
 
     def characters(self, content):
         if content[-1] == ' ':
             self.lastwasspace=True
         else:
             self.lastwasspace=False
-        if self.current is not None:
+        if self.el is not None and self.current is not None:
             # Grab the content.  If this looks a little weird, it's because of
             # how I deal with line wrapping and stuff.
             if self.current[self.el] is None:
