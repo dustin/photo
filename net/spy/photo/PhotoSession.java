@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.30 2000/07/12 08:04:00 dustin Exp $
+ * $Id: PhotoSession.java,v 1.31 2000/07/16 08:38:48 dustin Exp $
  */
 
 package net.spy.photo;
@@ -310,11 +310,23 @@ public class PhotoSession extends Object
 			// Get the size from the file.
 			int size=(int)f.length();
 
+			// Encode the shit;
+			int length=0;
+			in = new FileInputStream(f);
+			byte data[] = new byte[size];
+			// Read in the data
+			length=in.read(data);
+			// If we didn't read enough data, give up.
+			if(length!=size) {
+				throw new Exception("Error reading enough data!");
+			}
+			PhotoImage photo_image=new PhotoImage(data);
+
 			photo=getDBConn();
 			photo.setAutoCommit(false);
 			query = "insert into album(keywords, descr, cat, taken, size, "
-				+ " addedby, ts)\n"
-				+ "   values(?, ?, ?, ?, ?, ?, ?)";
+				+ " addedby, ts, width, height)\n"
+				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement st=photo.prepareStatement(query);
 			// Toss in the parameters
 			st.setString(1, multi.getParameter("keywords"));
@@ -324,6 +336,9 @@ public class PhotoSession extends Object
 			st.setInt(5, size);
 			st.setInt(6, remote_uid.intValue());
 			st.setDate(7, new java.sql.Date(System.currentTimeMillis()));
+			// Set the image width and height in the database.
+			st.setInt(8, photo_image.width());
+			st.setInt(9, photo_image.height());
 			st.executeUpdate();
 
 			query = "select currval('album_id_seq')\n";
@@ -331,22 +346,9 @@ public class PhotoSession extends Object
 			rs.next();
 			id=rs.getInt(1);
 
-			// Encode the shit;
-			int length=0;
-			in = new FileInputStream(f);
-			byte data[] = new byte[size];
-
-			// Read in the data
-			length=in.read(data);
-
-			// If we didn't read enough data, give up.
-			if(length!=size) {
-				throw new Exception("Error reading enough data!");
-			}
-
 			// Get a helper to store the data.
-			PhotoImageHelper photo_image=new PhotoImageHelper(id);
-			photo_image.storeImage(new PhotoImage(data));
+			PhotoImageHelper photo_helper=new PhotoImageHelper(id);
+			photo_helper.storeImage(photo_image);
 
 			// Log that the data was stored in the cache, so that, perhaps,
 			// it can be permanently stored later on.
