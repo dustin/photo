@@ -34,6 +34,20 @@ action="/cgi-bin/dustin/photo/setstyle.cgi">
 	   </select>
 	   </td>
    </tr>
+   <tr>
+   		<td>Background Color:</td>
+		<td>
+			<select name="bgcolor">
+			<option>white
+			<option>red
+			<option>green
+			<option>blue
+			<option value="#ccffcc">TUMS green
+			<option value="#ccccff">Light blue
+			<option value="#ffcccc">Nasty pink
+			</select>
+		</td>
+   </tr>
 </table>
 
 <input type="submit" value="Set Style">
