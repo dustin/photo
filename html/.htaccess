@@ -1,0 +1,15 @@
+ErrorDocument 401 /~dustin/errors/photo.noauth.shtml
+
+Auth_PGhost localhost
+Auth_PGport 5432
+Auth_PGdatabase photo
+Auth_PGpwd_table wwwusers
+Auth_PGuid_field username
+Auth_PGpwd_field password
+Auth_PG_nopasswd on
+AuthName photo visitor
+AuthType basic
+
+<LIMIT GET POST>
+require valid-user
+</LIMIT>
