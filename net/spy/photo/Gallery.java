@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.2 2002/06/30 21:19:51 dustin Exp $
+// $Id: Gallery.java,v 1.3 2002/07/01 07:07:53 dustin Exp $
 
 package net.spy.photo;
 
@@ -31,6 +31,15 @@ public class Gallery extends Object {
 	public Gallery(PhotoUser owner, String name) {
 		super();
 		this.name=name;
+		this.owner=owner;
+		this.images=new Vector();
+	}
+
+	/**
+	 * Get an instance of Gallery belonging to a given owner.
+	 */
+	public Gallery(PhotoUser owner) {
+		super();
 		this.owner=owner;
 		this.images=new Vector();
 	}
@@ -110,6 +119,10 @@ public class Gallery extends Object {
 	public void save() throws PhotoException {
 		SpyDB db=new SpyDB(new PhotoConfig());
 		Connection conn=null;
+
+		if(name==null) {
+			throw new PhotoException("Gallery name not provided.");
+		}
 
 		try {
 			conn=db.getConn();
@@ -213,6 +226,7 @@ public class Gallery extends Object {
 	 * Add a new image to the gallery.
 	 */
 	public void addImage(PhotoImageData pid) {
+		removeImage(pid);
 		images.addElement(pid);
 	}
 
@@ -221,7 +235,7 @@ public class Gallery extends Object {
 	 */
 	public void addImage(int imageId) throws Exception {
 		PhotoImageData pid=PhotoImageData.getData(imageId);
-		images.addElement(pid);
+		addImage(pid);
 	}
 
 	/**
@@ -251,6 +265,13 @@ public class Gallery extends Object {
 	 */
 	public String getName() {
 		return(name);
+	}
+
+	/**
+	 * Set the name of this Gallery.
+	 */
+	public void setName(String to) {
+		this.name=to;
 	}
 
 	/**
