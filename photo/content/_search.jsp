@@ -38,7 +38,7 @@
 	<template:put name='title' content='Find image by ID' direct='true'/>
 </template:insert>
 
-<form method="GET" action="display.jsp">
+<form method="GET" action="display.do">
 	ID:  <input name="id" size="6">
 	<input type="submit" value="Lookup">
 </form>

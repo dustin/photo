@@ -84,7 +84,7 @@
 	</html:form>
 
 [<a href="logview.jsp?id=<%= "" + image.getId() %>"> Who's seen this?</a>] |
-[<a href="display.jsp?id=<%= "" + image.getId() %>">Linkable image</a>] |
+[<photo:imgLink id='<%= "" + image.getId() %>'>Linkable image</photo:imgLink>] |
 [<a href="PhotoServlet?photo_id=<%= "" + image.getId() %>">Full
 Size Image</a>]
 

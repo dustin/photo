@@ -49,6 +49,12 @@
 		<forward name="success" path="/index.jsp" />
 	</action>
 
+	<!-- How to handle displays -->
+	<action path="/display" type="net.spy.photo.struts.AdminSwitchAction">
+		<forward name="subadmin" path="/admin/display.jsp"/>
+		<forward name="noadmin" path="/display.jsp"/>
+	</action>
+
 	<!-- Change password -->
 	<action    path="/changepw"
 		type="net.spy.photo.struts.ChangePWAction"
@@ -70,7 +76,7 @@
     type="net.spy.photo.struts.CommentAction"
     input="/commentinput.jsp"
     name="commentForm">
-		<forward name="success" path="/display.jsp" />
+		<forward name="success" path="/display.do" />
   </action>
 
 	<!-- Enable/disable administrative access. -->
@@ -150,7 +156,7 @@
 	<action path="/addToGallery"
 		type="net.spy.photo.struts.AddToGalleryAction"
 		name="addToGalleryForm">
-		<forward name="success" path="/display.jsp" />
+		<forward name="success" path="/display.do" />
 	</action>
 
 	<!-- Save a gallery -->
@@ -206,9 +212,9 @@
 	<!-- Modify an image's data -->
 	<action path="/admeditimage"
 		name="uploadForm"
-		input="/display.jsp"
+		input="/admin/display.jsp"
 		type="net.spy.photo.struts.AdminEditImage">
-		<forward name="success" path="/display.jsp"/>
+		<forward name="success" path="/display.do"/>
 	</action>
 
   </action-mappings>
