@@ -13,54 +13,39 @@
 	}
 %>
 
-<p>
+<div class="comments">
+	<logic:iterate id="comments" collection="<%= allcomments %>"
+		type="net.spy.photo.GroupedComments"
+		length="6">
 
-<table width="100%">
+		<div class="commentblock">
+			<div class="commentimage">
+				<photo:imgLink showThumbnail="true" id="<%= comments.getPhotoId() %>"/>
+			</div>
+			<logic:iterate id="comment"
+				type="net.spy.photo.Comment"
+				collection="<%= comments %>">
+				<div class="commentheader">
+					At <%= comment.getTimestamp() %>
+						<%= comment.getUser().getRealname() %>
+						said the following:
+				</div>
+				<div class="commentbody">
+					<%= comment.getNote() %>
+				</div>
+			</logic:iterate>
+			<% if(comments.hasMore()) { %>
+				<div class="commentmore">
+					<photo:imgLink id="<%= comments.getPhotoId() %>">
+						More comments available on the image page.
+					</photo:imgLink>
+				</div>
+			<% } %>
+		</div>
 
-<logic:iterate id="comments" collection="<%= allcomments %>"
-	type="net.spy.photo.GroupedComments"
-	length="6">
+	</logic:iterate>
 
-	<tr valign="top">
-		<td class="commentimage">
-			<photo:imgLink showThumbnail="true"
-				id="<%= comments.getPhotoId() %>"/>
-		</td>
-		<td>
-			<table class="comments" width="100%">
-				<logic:iterate id="comment"
-					type="net.spy.photo.Comment"
-					collection="<%= comments %>">
-					<tr valign="top" class="commentheader">
-						<td>At <%= comment.getTimestamp() %>
-							<%= comment.getUser().getRealname() %>
-							said the following:
-						</td>
-					</tr>
-					<tr valign="top" class="commentbody">
-						<td>
-							<%= comment.getNote() %>
-						</td>
-					</tr>
-				</logic:iterate>
-				<% if(comments.hasMore()) { %>
-					<tr class="commentmore">
-						<td>
-							<photo:imgLink id="<%= comments.getPhotoId() %>">
-								More comments available on the image page.
-							</photo:imgLink>
-						</td>
-					</tr>
-				<% } %>
-			</table>
-		</td>
-	</tr>
-
-</logic:iterate>
-
-</table>
-
-</p>
+</div>
 
 <%
   // Figure out if there are any more.

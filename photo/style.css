@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
  *
- * $Id: style.css,v 1.7 2003/07/16 17:03:47 dustin Exp $
+ * $Id: style.css,v 1.8 2003/07/16 18:18:09 dustin Exp $
  */
 body {
-	font-family: Arial, Helvetica, sans-serif;
-	/* background: #cfcfff; */
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	text-align: center;
 }
 
@@ -29,6 +28,7 @@ h2 { font-size: large; }
 	border-width: 5px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-bottom: 5px;
 	width: 33%;
 }
 
@@ -36,7 +36,8 @@ h2 { font-size: large; }
 	text-align: left;
 	background: white;
 	border-style: solid;
-	width: 75%;
+	border-width: 1px;
+	width: 80%;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -49,11 +50,11 @@ h2 { font-size: large; }
 .footer {
 	border-style: none solid solid solid;
 	font-size: x-small;
-	width: 75%;
+	border-width: 1px;
+	width: 80%;
 	background: white;
 	margin-left: auto;
 	margin-right: auto;
-	vertical-align: bottom;
 	background: white;
 	height: 7em;
 }
@@ -67,21 +68,15 @@ h2 { font-size: large; }
 }
 
 .leftstuff {
-	/* border-style: none none solid solid; */
 	float: left;
 	width: 49%;
 	text-align: left;
-	background: white;
-	height: 6em;
 }
 
 .rightstuff {
-	/* border-style: none solid solid none; */
 	float: left;
 	width: 49%;
 	text-align: right;
-	background: white;
-	height: 6em;
 }
 
 /* Errors are in a div of this class */
@@ -96,14 +91,30 @@ h2 { font-size: large; }
 	text-align: center;
 }
 
+.commentblock {
+	height: 150px;
+	margin-bottom: 1px;
+	padding: 0.5em;
+	border-style: solid;
+	border-color: white;
+	border-width: 2px;
+}
+
 .comments {
 	background: #ccccff;
+	margin-left: 2em;
+	margin-right: 2em;
+	font-size: smaller;
 }
 
 .commentimage {
 	background: #ccccff;
 	vertical-align: middle;
 	text-align: center;
+	padding-right: 1em;
+	float: left;
+	width: 220px;
+	height: 146px;
 }
 
 .commentmore {
@@ -112,13 +123,13 @@ h2 { font-size: large; }
 }
 
 .commentheader {
-	font-size: x-small;
+	font-size: smaller;
 	background: #999999;
 }
 
 /*
 .commentbody {
-	background: #ccccff;
+	border-style: none;
 }
 */
 
@@ -126,6 +137,7 @@ h2 { font-size: large; }
 	font-weight: bold;
 }
 
+/*
 .searchresults {
-	/* At some point */
 }
+*/
