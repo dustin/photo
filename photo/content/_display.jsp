@@ -61,7 +61,7 @@
 	[<a href="logview.jsp?id=<%= "" + image.getId() %>"> Who's seen this?</a>] | 
 </photo:guest>
 [<a href="display.jsp?id=<%= "" + image.getId() %>">Linkable image</a>] |
-[<a href="PhotoServlet/<%= image.getId() %>.jpg?func=getimage&photo_id=<%= image.getId() %>">Full Size Image</a>]
+[<a href="PhotoServlet/<%= image.getId() %>.jpg?photo_id=<%= image.getId() %>">Full Size Image</a>]
 
 
 <p class="comments">
