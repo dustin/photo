@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaverThread.java,v 1.4 2002/06/05 21:07:50 dustin Exp $
+// $Id: PhotoSaverThread.java,v 1.5 2002/06/05 21:10:10 dustin Exp $
 
 package net.spy.photo;
 
@@ -39,7 +39,7 @@ public class PhotoSaverThread extends Thread {
 		sb.append(" - Queue size:  ");
 		sb.append(jobQueue.size());
 
-		sb.append(" ");
+		sb.append(" - ");
 		if(!processing) {
 			sb.append("NOT ");
 		}
