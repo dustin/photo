@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.spy.SpyObject;
 import net.spy.db.SpyDB;
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
@@ -23,7 +24,7 @@ import net.spy.util.Base64;
 /**
  * Security dispatch type stuff happens here.
  */
-public class PhotoSecurity extends PhotoHelper {
+public class PhotoSecurity extends SpyObject {
 
 	/**
 	 * Get a PhotoSecurity object.
@@ -38,7 +39,7 @@ public class PhotoSecurity extends PhotoHelper {
 	public String getDigest(String input) throws Exception {
 		// We need the trim so we can ignore whitespace.
 		byte dataB[]=input.trim().getBytes();
-		PhotoConfig conf=getConfig();
+		PhotoConfig conf=PhotoConfig.getInstance();
 		MessageDigest md = MessageDigest.getInstance(conf.get("cryptohash"));
 		md.update(dataB);
 		Base64 base64=new Base64();
@@ -62,7 +63,8 @@ public class PhotoSecurity extends PhotoHelper {
 		PhotoUser ret=null;
 
 		// Get the username from the config
-		String username=getConfig().get("default_user", "guest");
+		PhotoConfig conf=PhotoConfig.getInstance();
+		String username=conf.get("default_user", "guest");
 
 		try {
 			ret=PhotoUser.getPhotoUser(username);

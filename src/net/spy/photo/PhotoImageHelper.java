@@ -5,12 +5,13 @@ package net.spy.photo;
 
 import java.lang.ref.SoftReference;
 
+import net.spy.SpyObject;
 import net.spy.cache.SpyCache;
 
 /**
  * Get images from the image server.
  */
-public class PhotoImageHelper extends PhotoHelper { 
+public class PhotoImageHelper extends SpyObject { 
 
 	private int imageId=-1;
 
@@ -92,8 +93,8 @@ public class PhotoImageHelper extends PhotoHelper {
 	 * Get the thumbnail for an image.
 	 */
 	public PhotoImage getThumbnail() throws Exception {
-		PhotoDimensions pdim=
-			new PhotoDimensionsImpl(getConfig().get("thumbnail_size"));
+		PhotoConfig cf=PhotoConfig.getInstance();
+		PhotoDimensions pdim= new PhotoDimensionsImpl(cf.get("thumbnail_size"));
 		return(getImage(pdim));
 	}
 

@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 
+import net.spy.SpyObject;
 import net.spy.db.SpyDB;
 import net.spy.util.Base64;
 
@@ -32,7 +33,7 @@ import net.spy.photo.sp.InsertSearch;
 /**
  * Perform searches.
  */
-public class PhotoSearch extends PhotoHelper {
+public class PhotoSearch extends SpyObject {
 
 	private static final String CHARSET="UTF-8";
 
@@ -72,7 +73,7 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		try {
-			InsertSearch is=new InsertSearch(getConfig());
+			InsertSearch is=new InsertSearch(PhotoConfig.getInstance());
 			is.setName(name);
 			is.setAddedBy(user.getId());
 			is.setSearchData(search);
