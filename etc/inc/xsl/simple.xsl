@@ -9,7 +9,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: simple.xsl,v 1.4 2000/12/27 06:05:25 dustin Exp $
+ $Id: simple.xsl,v 1.5 2001/01/06 07:32:08 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -28,10 +28,13 @@
 						</font>
 					</b>
 				</center>
-				<!-- Here's where all the real body goes -->
+
 				<xsl:apply-templates/>
 
 				<hr/>
+				<p>
+					<xsl:call-template name="quick_search"/>
+				</p>
 				Logged in as
 				<a href="{meta_stuff/self_uri}?func=credform">
 				<xsl:value-of select="meta_stuff/photo_user/username"/></a>.
@@ -51,6 +54,54 @@
 		</body>
 	</html>
 
+</xsl:template>
+
+<xsl:template match="index_page">
+
+	<p>
+		<xsl:call-template name="section_header">
+			<xsl:with-param name="title">
+				Options
+			</xsl:with-param>
+		</xsl:call-template>
+		<ul>
+			<xsl:if test="/page/meta_stuff/photo_user/canadd">
+				<li>
+					<a href="{/page/meta_stuff/self_uri}?func=addform">Add a new Image</a>
+				</li>
+			</xsl:if>
+			<li>
+				<a href="{/page/meta_stuff/self_uri}?func=findform">Advanced Search</a>
+			</li>
+			<li>
+				<a href="{/page/meta_stuff/self_uri}?func=catview">Category View</a>
+			</li>
+		</ul>
+	</p>
+	<p>
+		<xsl:call-template name="section_header">
+			<xsl:with-param name="title">
+				Canned Searches
+			</xsl:with-param>
+		</xsl:call-template>
+		<ul>
+			<xsl:for-each select="saved_searches/item">
+				<li>
+					<a href="{@link}"><xsl:value-of select="."/></a>
+				</li>
+			</xsl:for-each>
+		</ul>
+	</p>
+	<p>
+		<xsl:call-template name="section_header">
+			<xsl:with-param name="title">
+				Credits
+			</xsl:with-param>
+		</xsl:call-template>
+			All pages herein were created using vi.  For more
+			information on the vi web page publishing system,
+			type <i>man vi</i> at your prompt.
+	</p>
 </xsl:template>
 
 <!-- Handling Search Results -->
@@ -109,7 +160,7 @@
 </xsl:template>
 
 <!-- category view -->
-<xsl:template match="cat_view">
+<xsl:template match="category_view">
 	<ul>
 		<xsl:for-each select="cat_view_item">
 			<li>
@@ -161,6 +212,17 @@
 		Administrative Privileges</a>
 	<br/>
 	<a href="{/page/meta_stuff/self_uri}?func=changepwform">Change Password</a>
+</xsl:template>
+
+<xsl:template match="upload_success">
+	Well, it looks like your image made it.
+	The ID is <xsl:value-of select="id"/>.  It can be seen by clicking
+	<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={id}">here</a>.
+</xsl:template>
+
+<xsl:template match="save_search_success">
+	Your search has been saved, press the ``back'' button on your browser
+	to continue with your search.
 </xsl:template>
 
 </xsl:stylesheet>

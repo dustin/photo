@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.14 2001/01/06 07:19:08 dustin Exp $
+ $Id: default.xsl,v 1.15 2001/01/06 07:32:08 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -156,17 +156,6 @@
 			</td>
 			<td>
 
-				<!--
-				<p>
-					<xsl:call-template name="section_header">
-						<xsl:with-param name="title">
-							Quick Search
-						</xsl:with-param>
-					</xsl:call-template>
-					<xsl:call-template name="quick_search"/>
-				</p>
-				-->
-
 			</td>
 		</tr>
 	</table>
@@ -197,21 +186,6 @@
 	<xsl:value-of select="/page/meta_stuff/total_images"/> images and has
 	displayed about
 	<xsl:value-of select="/page/meta_stuff/total_images_shown"/>.
-</xsl:template>
-
-<!-- Anywhere we need quick search, we can call it by name -->
-<xsl:template name="quick_search" match="quick_search">
-	<form method="POST" action="{/page/meta_stuff/self_uri}">
-		<input type="hidden" name="func" value="search"/>
-		<input type="hidden" name="maxret" value="5"/>
-		<input type="hidden" name="fieldjoin" value="and"/>
-		<input type="hidden" name="keyjoin" value="and"/>
-		<input type="hidden" name="order" value="a.ts"/>
-		<input type="hidden" name="sdirection" value="desc"/>
-		<input type="hidden" name="field" value="keywords"/>
-		Quick Search:  <input name="what"/>
-		<input type="submit" value="Find"/>
-	</form>
 </xsl:template>
 
 <!-- Handling Search Results -->

@@ -4,7 +4,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: common.xsl,v 1.6 2001/01/06 07:19:08 dustin Exp $
+ $Id: common.xsl,v 1.7 2001/01/06 07:32:08 dustin Exp $
  -->
 
 <!-- Default Section handling -->
@@ -193,5 +193,21 @@
 		</body>
 	</html>
 </xsl:template>
+
+<!-- Anywhere we need quick search, we can call it by name -->
+<xsl:template name="quick_search" match="quick_search">
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<input type="hidden" name="func" value="search"/>
+		<input type="hidden" name="maxret" value="5"/>
+		<input type="hidden" name="fieldjoin" value="and"/>
+		<input type="hidden" name="keyjoin" value="and"/>
+		<input type="hidden" name="order" value="a.ts"/>
+		<input type="hidden" name="sdirection" value="desc"/>
+		<input type="hidden" name="field" value="keywords"/>
+		Quick Search:  <input name="what"/>
+		<input type="submit" value="Find"/>
+	</form>
+</xsl:template>
+
 
 </xsl:stylesheet>
