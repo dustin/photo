@@ -6,6 +6,8 @@
 
 <h2>Add a Photo</h2>
 
+<font size="+3" color="red">%CANNOTADD%</font>
+
 <form method="POST" enctype="multipart/form-data"
 action="%SELF_URI%">
 
