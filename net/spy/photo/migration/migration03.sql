@@ -5,10 +5,14 @@ create table user_profiles (
 	description text not null,
 	expires date not null,
 	primary key(profile_id)
-);
-create unique index user_profilesbyname on user_profiles(name);
-grant all on user_profiles to nobody;
-grant all on user_profiles_profile_id_seq to nobody;
+)
+;
+create unique index user_profilesbyname on user_profiles(name)
+;
+grant all on user_profiles to nobody
+;
+grant all on user_profiles_profile_id_seq to nobody
+;
 
 -- Profile ACLs
 create table user_profile_acls (
@@ -16,9 +20,12 @@ create table user_profile_acls (
 	cat_id integer not null,
 	foreign key(profile_id) references user_profiles(profile_id),
 	foreign key(cat_id) references cat(id)
-);
-create index user_profile_aclsbyp on user_profile_acls(profile_id);
-grant all on user_profile_acls to nobody;
+)
+;
+create index user_profile_aclsbyp on user_profile_acls(profile_id)
+;
+grant all on user_profile_acls to nobody
+;
 
 -- This table logs when users are created with profiles
 create table user_profile_log (
@@ -30,11 +37,16 @@ create table user_profile_log (
 	primary key(log_id),
 	foreign key(profile_id) references user_profiles(profile_id),
 	foreign key(wwwuser_id) references wwwusers(id)
-);
-create index user_profile_log_byuser on user_profile_log(wwwuser_id);
-create index user_profile_log_byprof on user_profile_log(profile_id);
-grant all on user_profile_log_log_id_seq to nobody;
-grant all on user_profile_log to nobody;
+)
+;
+create index user_profile_log_byuser on user_profile_log(wwwuser_id)
+;
+create index user_profile_log_byprof on user_profile_log(profile_id)
+;
+grant all on user_profile_log_log_id_seq to nobody
+;
+grant all on user_profile_log to nobody
+;
 
 -- View to show the profile users along with the profiles that created them
 create view user_byprofiles as
@@ -49,8 +61,10 @@ create view user_byprofiles as
 			and user_profiles.profile_id=user_profile_log.profile_id
 		order by
 			user_id
+
 ;
-grant select on user_byprofiles to nobody;
+grant select on user_byprofiles to nobody
+;
 
 -- View to show the profiles and the permissions they grant
 create view user_profile_view as
@@ -63,5 +77,7 @@ create view user_profile_view as
 			and c.id=a.cat_id
 		order by
 			p.expires
+
 ;
-grant select on user_profile_view to nobody;
+grant select on user_profile_view to nobody
+;
