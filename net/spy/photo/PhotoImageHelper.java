@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.7 2001/07/16 02:24:10 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.8 2001/12/28 12:39:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -38,10 +38,12 @@ public class PhotoImageHelper extends PhotoHelper
 		boolean ok=false;
 
 		SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+		// Verify specific access to viewability.
 		PreparedStatement pst=db.prepareStatement(
 			"select 1 from album a, wwwacl w\n"
 			+ " where id=?\n"
 			+ " and a.cat=w.cat\n"
+			+ " and canview=true\n"
 			+ " and (w.userid=? or w.userid=?)\n", 900);
 		pst.setInt(1, image_id);
 		pst.setInt(2, uid);

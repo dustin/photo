@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.17 2001/07/20 09:51:56 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.18 2001/12/28 12:39:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -66,7 +66,8 @@ public class PhotoAdmin extends PhotoHelper {
 
 			Statement st=photo.createStatement();
 			ResultSet rs=st.executeQuery(
-				"select id, username from wwwusers"
+				"select id, username from wwwusers\n"
+					+ " order by lower(username)"
 				);
 			while(rs.next()) {
 				users+="\t\t<option value=\""
@@ -100,7 +101,6 @@ public class PhotoAdmin extends PhotoHelper {
 			String s_user_id=ps.request.getParameter("userid");
 			int userid=Integer.parseInt(s_user_id);
 			Hashtable h=new Hashtable();
-			Hashtable cats=new Hashtable();
 			String acltable="";
 
 			// Defaults -- Basically for a new uesr
@@ -139,12 +139,20 @@ public class PhotoAdmin extends PhotoHelper {
 			// Second DB query gets a list of the categories the user can
 			// see
 			st=photo.prepareStatement(
-				"select cat from wwwacl where userid=?"
+				"select cat, canview, canadd from wwwacl where userid=?"
 				);
 			st.setInt(1, userid);
 			rs=st.executeQuery();
+			Hashtable cats_add=new Hashtable();
+			Hashtable cats_view=new Hashtable();
 			while(rs.next()) {
-				cats.put(rs.getString("cat"), "1");
+				String cat=rs.getString("cat");
+				if(rs.getBoolean("canview")) {
+					cats_view.put(cat, "1");
+				}
+				if(rs.getBoolean("canadd")) {
+					cats_add.put(cat, "1");
+				}
 			}
 
 			// Third DB query gets all of the categories
@@ -157,18 +165,40 @@ public class PhotoAdmin extends PhotoHelper {
 				String cat_id_s=rs.getString("id");
 				int cat_id=rs.getInt("id");
 
-				if(cats.containsKey(cat_id_s)) {
+				if(cats_add.containsKey(cat_id_s)
+					|| cats_view.containsKey(cat_id_s)) {
+
 					acltable+="<tr>\n\t<td><font color=\"green\">"
 						+ rs.getString("name")
 						+ "</font></td>";
-					acltable+="<td><input type=\"checkbox\" name=\"catacl\" "
-						+ "checked=\"1\" " + "value=\"" + cat_id
-							+ "\"></td></tr>\n";
+
+						acltable+="<td><input type=\"checkbox\" "
+							+ "name=\"catacl_view\" ";
+						// If they're allowed to see it, check it
+						if(cats_view.containsKey(cat_id_s)) {
+							acltable+= "checked=\"1\" ";
+						}
+						acltable+= "value=\"" + cat_id
+								+ "\"></td></tr>\n";
+
+						acltable+="<td><input type=\"checkbox\" "
+							+ "name=\"catacl_add\" ";
+						// If they're allowed to add to it, check it
+						if(cats_add.containsKey(cat_id_s)) {
+							acltable+= "checked=\"1\" ";
+						}
+						acltable+= "value=\"" + cat_id
+								+ "\"></td></tr>\n";
+
 				} else {
 					acltable+="<tr>\n\t<td><font color=\"red\">"
 						+ rs.getString("name")
 						+ "</font></td>";
-					acltable+="<td><input type=\"checkbox\" name=\"catacl\" "
+					acltable+="<td><input type=\"checkbox\" "
+						+ "name=\"catacl_view\" "
+						+ "value=\"" + cat_id + "\"></td></tr>\n";
+					acltable+="<td><input type=\"checkbox\" "
+						+ "name=\"catacl_add\" "
 						+ "value=\"" + cat_id + "\"></td></tr>\n";
 				}
 			}
@@ -226,11 +256,20 @@ public class PhotoAdmin extends PhotoHelper {
 		}
 
 		// Add the new ACLs for the user
-		String acls[]=ps.request.getParameterValues("catacl");
+		String acls[]=ps.request.getParameterValues("catacl_view");
 		if(acls!=null) {
 			for(int i=0; i<acls.length; i++) {
 				int cat_id=Integer.parseInt(acls[i]);
-				user.addACLEntry(cat_id);
+				user.addViewACLEntry(cat_id);
+			}
+		}
+
+		// Add the new ACLs for the user
+		acls=ps.request.getParameterValues("catacl_add");
+		if(acls!=null) {
+			for(int i=0; i<acls.length; i++) {
+				int cat_id=Integer.parseInt(acls[i]);
+				user.addAddACLEntry(cat_id);
 			}
 		}
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.12 2001/07/19 10:07:09 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.13 2001/12/28 12:39:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -64,12 +64,18 @@ public class PhotoSecurity extends PhotoHelper {
 			rs.close();
 			st.close();
 			st=conn.prepareStatement(
-				"select cat from wwwacl where userid=?");
+				"select cat, canview, canadd from wwwacl where userid=?");
 			st.setInt(1, u.getId());
 			rs=st.executeQuery();
 			// Add the ACL entries.
 			while(rs.next()) {
-				u.addACLEntry(rs.getInt("cat"));
+				int cat=rs.getInt("cat");
+				if(rs.getBoolean("canview")) {
+					u.addViewACLEntry(cat);
+				}
+				if(rs.getBoolean("canadd")) {
+					u.addAddACLEntry(cat);
+				}
 			}
 			rs.close();
 			st.close();

@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.7 2001/07/19 10:07:09 dustin Exp $
+// $Id: PhotoUser.java,v 1.8 2001/12/28 12:39:37 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -11,6 +11,7 @@ import java.util.*;
 import java.io.Serializable;
 
 import net.spy.*;
+import net.spy.db.*;
 
 /**
  * Represents a user in the photo system.
@@ -23,7 +24,7 @@ public class PhotoUser extends Object implements Serializable {
 	private String realname=null;
 	private boolean canadd=false;
 
-	private Hashtable acl=null;
+	private Vector acl=null;
 	private Hashtable groups=null;
 
 	/**
@@ -31,7 +32,7 @@ public class PhotoUser extends Object implements Serializable {
 	 */
 	public PhotoUser() {
 		super();
-		acl=new Hashtable();
+		acl=new Vector();
 	}
 
 	/**
@@ -49,19 +50,47 @@ public class PhotoUser extends Object implements Serializable {
 	}
 
 	/**
-	 * Get the list of category IDs (as Integer objects) the user has
-	 * access to.
+	 * Get the ACL list.
 	 */
 	public Enumeration getACLEntries() {
-		return(acl.keys());
+		return(acl.elements());
+	}
+
+	// Get an ACL entry by category id
+	private PhotoACLEntry getACLEntryForCat(int cat) {
+		PhotoACLEntry rv=null;
+
+		for(Enumeration e=getACLEntries(); rv==null && e.hasMoreElements();) {
+			PhotoACLEntry acl=(PhotoACLEntry)e.nextElement();
+
+			if(acl.getCat() == cat) {
+				rv=acl;
+			}
+		}
+
+		// If there isn't an entry for this category, make one and return it.
+		if(rv==null) {
+			rv=new PhotoACLEntry(getId(), cat);
+			acl.addElement(rv);
+		}
+
+		return(rv);
 	}
 
 	/**
-	 * Add an ACL entry.
+	 * Add an ACL entry permitting view access to a given category.
 	 */
-	public void addACLEntry(int cat) {
-		Integer c=new Integer(cat);
-		acl.put(c, "YEP");
+	public void addViewACLEntry(int cat) {
+		PhotoACLEntry aclEntry=getACLEntryForCat(cat);
+		aclEntry.setCanView(true);
+	}
+
+	/**
+	 * Add an ACL entry permitting add access to a given category.
+	 */
+	public void addAddACLEntry(int cat) {
+		PhotoACLEntry aclEntry=getACLEntryForCat(cat);
+		aclEntry.setCanAdd(true);
 	}
 
 	/**
@@ -129,6 +158,38 @@ public class PhotoUser extends Object implements Serializable {
 	 */
 	public boolean canAdd() {
 		return(canadd);
+	}
+
+	/**
+	 * True if the user can add to the specific category.
+	 */
+	public boolean canAdd(int cat) {
+		boolean rv=false;
+		if(groups==null) {
+			try {
+				Hashtable h=new Hashtable();
+				SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+				PreparedStatement st=db.prepareStatement(
+					"select 1 from wwwacl\n"
+					+ " where userid = ?"
+					+ "  and canadd=true\n"
+					+ "  and cat=?", 900);
+				st.setInt(1, getId());
+				st.setInt(2, cat);
+				ResultSet rs=st.executeQuery();
+				// If there's a result, access is granted.
+				if(rs.next()) {
+					rv=true;
+				}
+				rs.close();
+				st.close();
+				db.close();
+			} catch(Exception e) {
+				// Spill your guts.
+				e.printStackTrace();
+			}
+		}
+		return(rv);
 	}
 
 	/**
@@ -230,13 +291,16 @@ public class PhotoUser extends Object implements Serializable {
 
 			// Then in with the new.
 			st=conn.prepareStatement(
-				"insert into wwwacl(userid,cat) values(?,?)");
+				"insert into wwwacl(userid,cat,canview,canadd) "
+				+ "values(?,?,?,?)");
 
 			for(Enumeration e=getACLEntries(); e.hasMoreElements(); ) {
-				Integer i=(Integer)e.nextElement();
+				PhotoACLEntry aclEntry=(PhotoACLEntry)e.nextElement();
 
 				st.setInt(1, getId());
-				st.setInt(2, i.intValue());
+				st.setInt(2, aclEntry.getCat());
+				st.setBoolean(3, aclEntry.canView());
+				st.setBoolean(4, aclEntry.canAdd());
 				st.executeUpdate();
 			}
 			st.close();

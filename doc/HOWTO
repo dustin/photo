@@ -109,8 +109,11 @@ to do the following things:
 
 MIGRATION
 
-If you are upgrading to a release before 2000/07/16, you will need the
-migration kit.  The current migration kit is v01.
+If you are upgrading to a release before 2001/12/27, you will need to run
+the second migration kit.
+
+If you are upgrading to a release before 2000/07/16, you will need to run
+the first migration kit.
 
 Please be sure to back up your data before you attempt to run the migration
 kit.  Backups are essential to data integrity!
@@ -122,16 +125,20 @@ your cache before restarting the spyservices.  This is located in
 Restart the application server with the new classfile in place.
 
 Once you've got your data backed up, cache cleared, and spyservices running
-under the new version, you can use the following command to begin the
+under the new version, you can use the following commands to begin the
 migration:
 
 	java net.spy.photo.migration.PhotoMigration01
+	java net.spy.photo.migration.PhotoMigration02
 
 Make sure to run this with the same class path you used to start the
 application server.
 
 It may take a while depending on how many images you have.  When it's done,
 every image (including thumbnails) will be cached and ready to go.
+
+It is safe to run the migration kits more than once, so when it doubt, run
+them again.
 
 ----------------------------------------------------------------------
 
@@ -345,5 +352,5 @@ photo=> insert into wwwgroup values(3, 'admin');
     ApJServMount /s /root
 
 ----------------------------------------------------------------------
-$Id: HOWTO,v 1.11 2001/01/09 01:40:24 dustin Exp $
+$Id: HOWTO,v 1.12 2001/12/28 12:39:36 dustin Exp $
 

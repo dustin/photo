@@ -29,6 +29,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoLogFlusher.class \
 	net/spy/photo/PhotoLogView.class \
 	net/spy/photo/PhotoLogImageEntry.class \
+	net/spy/photo/PhotoACLEntry.class \
 	net/spy/photo/PhotoUser.class \
 	net/spy/photo/Profile.class \
 	net/spy/photo/PhotoSecurity.class \

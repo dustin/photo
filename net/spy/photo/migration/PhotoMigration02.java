@@ -22,7 +22,12 @@ public class PhotoMigration02 extends PhotoMigration {
 			db.executeUpdate("alter table wwwacl add column canadd boolean");
 			db.executeUpdate("alter table wwwacl alter column canadd "
 				+ "set default false");
-			db.executeUpdate("update wwwacl set canadd=false");
+			// This emulates the ``old'' way, set the canadd flag to true
+			// for every category the user has an ACL entry for if the user
+			// has a canadd flag set.
+			db.executeUpdate("update wwwacl set canadd="
+				+ "(select canadd from wwwusers where "
+				+ "wwwacl.userid = wwwusers.id)");
 		} catch(Exception e) {
 			System.err.println("Error adding column:  " + e);
 		}

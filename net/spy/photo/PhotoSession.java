@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.65 2001/12/28 04:45:30 dustin Exp $
+ * $Id: PhotoSession.java,v 1.66 2001/12/28 12:39:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -373,9 +373,9 @@ public class PhotoSession extends Object
 		return(out);
 	}
 
-	// Find out if the authenticated user can add stuff.
-	private boolean canadd() {
-		return(sessionData.getUser().canAdd());
+	// Find out if the authenticated user can add stuff to the given category
+	private boolean canadd(int cat) {
+		return(sessionData.getUser().canAdd(cat));
 	}
 
 	// Add an image
@@ -385,11 +385,14 @@ public class PhotoSession extends Object
 		int id=-1;
 		Connection photo=null;
 
+		int cat=Integer.parseInt(multi.getParameter("category"));
+
 		// Make sure the user can add.
-		if(!canadd()) {
-			log("User " + sessionData.getUser() + " has no permission to add.");
+		if(!canadd(cat)) {
+			log("User " + sessionData.getUser()
+				+ " has no permission to add in the requested category.");
 			throw new ServletException(
-				"You are not allowed to add images.");
+				"You are not allowed to add images here.");
 		}
 
 		// We need a short lifetime for whatever page this produces
@@ -481,7 +484,7 @@ public class PhotoSession extends Object
 				st.setString(2, multi.getParameter("info"));
 			}
 
-			st.setInt(3, Integer.parseInt(multi.getParameter("category")));
+			st.setInt(3, cat);
 			st.setString(4, multi.getParameter("taken"));
 			st.setInt(5, size);
 			st.setInt(6, sessionData.getUser().getId());
@@ -620,6 +623,7 @@ public class PhotoSession extends Object
 		return(null);
 	}
 
+	// Add a user based on a given profile.
 	private String addUser() throws Exception {
 		String pass1=request.getParameter("password");
 		String pass2=request.getParameter("pass2");
@@ -650,7 +654,7 @@ public class PhotoSession extends Object
 		// Add the ACL entries
 		for(Enumeration e=p.getACLEntries(); e.hasMoreElements();) {
 			Integer i=(Integer)e.nextElement();
-			pu.addACLEntry(i.intValue());
+			pu.addViewACLEntry(i.intValue());
 		}
 
 		pu.save();
@@ -856,6 +860,7 @@ public class PhotoSession extends Object
 			  	+ "where id in\n"
 			  	+ "  (select cat from wwwacl where\n"
 			  	+ "   userid=? or userid=?)\n"
+				+ "  and canview=true\n"
 			  	+ " order by cs desc";
 			PreparedStatement st = photo.prepareStatement(query);
 			st.setInt(1, sessionData.getUser().getId());

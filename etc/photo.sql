@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.9 2001/12/28 11:37:23 dustin Exp $
+-- $Id: photo.sql,v 1.10 2001/12/28 12:39:37 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -106,7 +106,8 @@ grant all on wwwacl to nobody;
 -- view for showing acls by name
 
 create view show_acl as
-	select wwwusers.username, wwwacl.cat, cat.name
+	select wwwusers.username, wwwacl.cat, cat.name, wwwacl.canview,
+		wwwacl.canadd
 	from wwwusers, wwwacl, cat
 	where wwwusers.id=wwwacl.userid
 	and wwwacl.cat=cat.id
