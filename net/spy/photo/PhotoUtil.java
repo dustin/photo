@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.4 2000/07/10 01:58:32 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.5 2000/11/10 07:17:18 dustin Exp $
  */
 
 package net.spy.photo;
@@ -61,6 +61,14 @@ public class PhotoUtil
 		Date ts=new Date();
 		SimpleDateFormat f=new SimpleDateFormat("MM/dd/yyyy");
 		return(f.format(ts));
+	}
+
+	public static int myHash(Hashtable in) {
+		int i=0;
+		for(Enumeration e=in.elements(); e.hasMoreElements(); ) {
+			i+=e.nextElement().hashCode();
+		}
+		return(i);
 	}
 
 	// Get the id of the ``default'' user.  The default default user is

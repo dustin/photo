@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.4 2000/07/16 08:35:48 dustin Exp $
+// $Id: PhotoImage.java,v 1.5 2000/11/10 07:17:18 dustin Exp $
 
 package net.spy.photo;
 

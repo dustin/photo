@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.6 2000/10/17 07:12:21 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.7 2000/11/10 07:17:18 dustin Exp $
  */
 
 package net.spy.photo;
@@ -159,17 +159,18 @@ public class PhotoAdmin extends PhotoHelper {
 				int cat_id=rs.getInt("id");
 
 				if(cats.containsKey(cat_id_s)) {
-					acltable+="<tr>\n\t<td><font color=green>"
+					acltable+="<tr>\n\t<td><font color=\"green\">"
 						+ rs.getString("name")
 						+ "</font></td>";
-					acltable+="<td><input type=checkbox name=catacl checked "
-						+ "value=" + cat_id + "></td></tr>\n";
+					acltable+="<td><input type=\"checkbox\" name=\"catacl\" "
+						+ "checked=\"1\" " + "value=\"" + cat_id
+							+ "\"></td></tr>\n";
 				} else {
-					acltable+="<tr>\n\t<td><font color=red>"
+					acltable+="<tr>\n\t<td><font color=\"red\">"
 						+ rs.getString("name")
 						+ "</font></td>";
-					acltable+="<td><input type=checkbox name=catacl "
-						+ "value=" + cat_id + "></td></tr>\n";
+					acltable+="<td><input type=\"checkbox\" name=\"catacl\" "
+						+ "value=\"" + cat_id + "\"></td></tr>\n";
 				}
 			}
 			h.put("ACLTABLE", acltable);

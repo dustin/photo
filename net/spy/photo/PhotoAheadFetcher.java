@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoAheadFetcher.java,v 1.7 2000/10/08 09:12:06 dustin Exp $
+ * $Id: PhotoAheadFetcher.java,v 1.8 2000/11/10 07:17:18 dustin Exp $
  */
 
 package net.spy.photo;
@@ -84,7 +84,7 @@ public class PhotoAheadFetcher extends Thread {
 				 	Hashtable h=new Hashtable();
 				 	// Populate the data thingies.
 				 	res.addToHash(h);
-				 	res.showHTML(self_uri);
+				 	res.showXML(self_uri);
 
 				 	// This will cache the thumbnails
 				 	int image_id=Integer.parseInt((String)h.get("IMAGE"));

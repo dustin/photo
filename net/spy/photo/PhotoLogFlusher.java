@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.5 2000/10/08 09:12:06 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.6 2000/11/10 07:17:18 dustin Exp $
  */
 
 package net.spy.photo;

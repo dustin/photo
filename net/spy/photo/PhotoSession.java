@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.37 2000/10/17 07:12:21 dustin Exp $
+ * $Id: PhotoSession.java,v 1.38 2000/11/10 07:17:18 dustin Exp $
  */
 
 package net.spy.photo;
@@ -26,8 +26,7 @@ import net.spy.log.*;
 public class PhotoSession extends Object
 { 
 	// This kinda stuff is only persistent for a single connection.
-	protected String remote_user=null;
-	protected String self_uri=null;
+	protected String remote_user=null, self_uri=null;
 	protected MultipartRequest multi=null;
 	protected SpyLog logger=null;
 	protected PhotoSecurity security = null;
@@ -35,6 +34,9 @@ public class PhotoSession extends Object
 	protected PhotoServlet photo_servlet = null;
 	protected Hashtable groups=null;
 
+	protected String xslt_stylesheet=null;
+
+	protected boolean xmlraw=false;
 	protected boolean debug=true;
 
 	protected PhotoAheadFetcher aheadfetcher=null;
@@ -58,8 +60,8 @@ public class PhotoSession extends Object
 		this.aheadfetcher=p.aheadfetcher;
 
 		logger=p.logger;
-
 		security=p.security;
+		xmlraw=false;
 	}
 
 	// This gets us back into the servlet engine's log.
@@ -84,9 +86,17 @@ public class PhotoSession extends Object
 
 		getCreds();
 
+		getStyleSheet();
+
 		// Figure out what they want, default to index.
 		if(multi==null) {
 			func=request.getParameter("func");
+
+			// Find out if they want raw XML or not...
+			String tmp=request.getParameter("xmlraw");
+			if(tmp!=null) {
+				xmlraw=true;
+			}
 		} else {
 			func=multi.getParameter("func");
 		}
@@ -133,6 +143,9 @@ public class PhotoSession extends Object
 			out=showCredForm();
 		} else if(func.equals("savesearch")) {
 			out=saveSearch();
+		} else if(func.equals("setstylesheet")) {
+			setStyleSheet();
+			out=doIndex();
 		} else if(func.equals("setcred")) {
 			setCreds();
 			out=doIndex();
@@ -185,6 +198,35 @@ public class PhotoSession extends Object
 		return(output);
 	}
 
+	// Set the stylesheet
+	protected void setStyleSheet() throws ServletException {
+		String ss=request.getParameter("stylesheet");
+
+		// Make sure something was passed in.
+		if(ss!=null) {
+			// Make sure a session exists
+			if(session==null) {
+				session=request.getSession(true);
+			}
+
+			// Make it available for the session
+			session.putValue("photo_stylesheet", ss);
+			// Make it immediately available
+			xslt_stylesheet=ss;
+		}
+	}
+
+	// Figure out what stylesheet to use
+	protected void getStyleSheet() {
+		xslt_stylesheet=null;
+
+		PhotoConfig conf=new PhotoConfig();
+
+		if(session!=null) {
+			xslt_stylesheet=(String)session.getValue("photo_stylesheet");
+		}
+	}
+
 	protected void getCreds() throws ServletException {
 		getUid();
 		log("Authenticated as " + remote_user);
@@ -229,12 +271,12 @@ public class PhotoSession extends Object
 		String out="";
 		Connection photo=null;
 		SpyCache cache=new SpyCache();
-
 		out=(String)cache.get("saved_searches");
-
+		// If we don't have it cached, grab it and cache it.
 		if(out==null) {
-			out="";
+			log("saved_searches was not cached, must fetch from the db");
 			try {
+				out="";
 				photo=getDBConn();
 				BASE64Decoder base64 = new BASE64Decoder();
 				Statement st=photo.createStatement();
@@ -245,10 +287,11 @@ public class PhotoSession extends Object
 					byte data[];
 					data=base64.decodeBuffer(rs.getString(4));
 					String tmp = new String(data);
-					out += "    <li><a href=\"" + self_uri + "?"
-						+ tmp + "\">" + rs.getString(2) + "</a></li>\n";
+					out += "    <item link=\"" + self_uri + "?"
+						+ PhotoXSLT.normalize(tmp, true) + "\">"
+						+ rs.getString(2) + "</item>\n";
 				}
-				// Cache it for fifteen minutes.
+				// Cache for fifteen minutes.
 				cache.store("saved_searches", out, 15*60*1000);
 			} catch(Exception e) {
 				log("Error getting search data, returning none:  " + e);
@@ -258,6 +301,7 @@ public class PhotoSession extends Object
 				}
 			}
 		}
+
 		return(out);
 	}
 
@@ -374,7 +418,7 @@ public class PhotoSession extends Object
 			// Log that the data was stored in the cache, so that, perhaps,
 			// it can be permanently stored later on.
 			query = "insert into upload_log (photo_id, wwwuser_id, ts)\n"
-				+ " values(?, ?, ?)\n";
+				+ "  values(?, ?, ?)\n";
 			st=photo.prepareStatement(query);
 			st.setInt(1, id);
 			st.setInt(2, remote_uid.intValue());
@@ -445,11 +489,13 @@ public class PhotoSession extends Object
 					int id=rs.getInt("id");
 					String selected="";
 					if(id==def) {
-						selected=" selected";
+						selected=" selected=\"1\"";
 					}
 					out += "    <option value=\"" + id + "\"" + selected
-						+ ">" + rs.getString("name") + "\n";
+						+ "/>" + rs.getString("name") + "\n";
 				}
+				// Cache it for five minutes
+				cache.store(key, out, 5*60*1000);
 			} catch(Exception e) {
 				log("Error getting category list:  " + e);
 			} finally {
@@ -584,7 +630,6 @@ public class PhotoSession extends Object
 
 	// Show the search form.
 	protected String doFindForm() throws ServletException {
-		String output = "";
 		Hashtable h = new Hashtable();
 
 		try {
@@ -592,13 +637,12 @@ public class PhotoSession extends Object
 		} catch(Exception e) {
 			h.put("CAT_LIST", "");
 		}
-		output += tokenize("findform.inc", h);
-		return(output);
+		sendXML("xml/find.xinc", h);
+		return(null);
 	}
 
 	// View categories
 	protected String doCatView() throws ServletException {
-		String output = "";
 		String catstuff="";
 		Hashtable h = new Hashtable();
 		Connection photo=null;
@@ -624,10 +668,21 @@ public class PhotoSession extends Object
 					t = " images";
 				}
 
-				catstuff += "<li>" + rs.getString(1) + ":  <a href=\""+self_uri
-				   	+ "?func=search&searchtype=advanced&cat="
-				   	+ rs.getString(2) + "&maxret=5\">"
-				   	+ rs.getString(3) + t + "</a></li>\n";
+				// Out of that, build the XML for the output.
+				catstuff += "<cat_view_item>\n";
+				catstuff += " <category>" + rs.getString(1) + "</category>\n";
+				catstuff += " <cat_n>" + rs.getString(2) + "</cat_n>\n";
+				catstuff += " <count>" + rs.getString(3) + "</count>\n";
+				catstuff += " <qualifier>" + t + "</qualifier>\n";
+				catstuff += " <link>"
+					+ PhotoXSLT.normalize(
+						self_uri
+						+ "?func=search&searchtype=advanced&cat="
+						+ rs.getString(2) + "&maxret=5",
+						true
+					)
+					+ "</link>\n";
+				catstuff += "</cat_view_item>\n\n";
 			}
 		} catch(Exception e) {
 			log("Error producing category view:  " + e);
@@ -636,7 +691,26 @@ public class PhotoSession extends Object
 
 		h.put("CATSTUFF", catstuff);
 
-		output += tokenize("catview.inc", h);
+		sendXML("xml/catview.xinc", h);
+		return(null);
+	}
+
+	// Display the index page.
+	protected String doIndexInc() throws ServletException {
+		String output = "";;
+		Hashtable h = new Hashtable();
+
+		try {
+			h.put("SAVED", showSaved());
+		} catch(Exception e) {
+			log("Error getting saved search list:  " + e);
+			h.put("SAVED", "");
+		}
+		if(isAdmin()) {
+			output += tokenize("admin/index.inc", h);
+		} else {
+			output += tokenize("index.inc", h);
+		}
 		return(output);
 	}
 
@@ -682,7 +756,6 @@ public class PhotoSession extends Object
 
 	// Display the index page.
 	protected String doIndex() throws ServletException {
-		String output = "";;
 		Hashtable h = new Hashtable();
 
 		// Get the saved searches.
@@ -693,23 +766,98 @@ public class PhotoSession extends Object
 			h.put("SAVED", "");
 		}
 
+		PhotoConfig pc = new PhotoConfig();
+		sendXML(pc.get("xinc_index", "xml/index.xinc"), h);
+
+		return(null);
+	}
+
+	protected void sendText(String tmplate, Hashtable h)
+		throws ServletException {
+
+		try {
+			String txt=tokenize(tmplate, h);
+			PrintWriter out=response.getWriter();
+			out.print(txt);
+			out.close();
+		} catch(Exception e) {
+			// nothing now
+		}
+	}
+
+	// Get the global meta data
+	protected String getGlobalMeta() {
+		String gm="";
+
+		gm="<meta_stuff>\n";
+		gm+="  <self_uri>" + self_uri + "</self_uri>\n";
+		gm+="  <username>" + remote_user + "</username>\n";
+
+		String tmp="";
 		// Add some statistics on the index
 		try {
-			h.put("TOTAL_IMAGES_SHOWN", getTotalImagesShown());
-			h.put("TOTAL_IMAGES",       getTotalImages());
+			tmp=getTotalImagesShown();
 		} catch(Exception e) {
-			log("Error gathering statistics for the home page:  " + e);
-			h.put("TOTAL_IMAGES_SHOWN", "n");
-			h.put("TOTAL_IMAGES", "n");
+			log("Error gathering global meta data:  " + e);
 		}
+		gm+="<total_images_shown>" + tmp + "</total_images_shown>\n";
+		try {
+			tmp=getTotalImages();
+		} catch(Exception e) {
+			log("Error gathering global meta data:  " + e);
+		}
+		gm+="<total_images>" + tmp + "</total_images>\n";
+		gm+="</meta_stuff>\n";
 
-		// Switch between administration or non-administration users.
-		if(isAdmin()) {
-			output += tokenize("admin/index.inc", h);
-		} else {
-			output += tokenize("index.inc", h);
+		return(gm);
+	}
+
+	// Send (and cache) an XML template.
+	protected void sendXML(String tmplate, Hashtable h)
+		throws ServletException {
+		PhotoConfig conf = new PhotoConfig();
+
+		h.put("GLOBALMETA", getGlobalMeta());
+
+		String xml=null;
+		try {
+			SpyCache cache=new SpyCache();
+			String key="xml_p_" + tmplate + "_" + xslt_stylesheet
+				+ "_" + PhotoUtil.myHash(h) + "_" + xmlraw;
+			String o=(String)cache.get(key);
+			// What the content is whether XML or not.
+			if(xmlraw) {
+				response.setContentType("text/plain");
+			} else {
+				response.setContentType("text/html");
+			}
+			if(o==null) {
+				log(key + " was not cached...rebuilding.");
+
+				// If they want raw XML, get it that way.
+				if(xmlraw) {
+					// Raw XML will just include the parsed template
+					o=tokenize(tmplate, h);
+				} else {
+					StringWriter str=new StringWriter();
+					xml=tokenize(tmplate, h);
+					PhotoXSLT.sendXML(xml, xslt_stylesheet, str);
+					// Get the data
+					o=str.toString();
+				}
+				// ...and cache that for ten minutes...by default
+				cache.store(key, o,
+					((long)(conf.getInt("xml_cache_timeout", 600)))*1000);
+			}
+			PrintWriter out=response.getWriter();
+			out.print(o);
+			out.close();
+		} catch(org.apache.xalan.xslt.XSLProcessorException e) {
+			log("Error parsing this:\n" + xml);
+			throw new ServletException("Error parsing XML:  " + e);
+		} catch(Exception e) {
+			throw new ServletException("Error sending XML:  " + e);
 		}
-		return(output);
 	}
 
 	// Get the UID
@@ -784,6 +932,8 @@ public class PhotoSession extends Object
 
 		// Populate the hash with the image parts.
 		r.addToHash(h);
+		// Generate the XML
+		String datachunk=r.showXML(self_uri);
 
 		if(isAdmin()) {
 			// Admin needs CATS
@@ -791,7 +941,10 @@ public class PhotoSession extends Object
 			h.put("CATS", getCatList(defcat));
 			out=tokenize("admin/display.inc", h);
 		} else {
-			out=tokenize("display.inc", h);
+			// out=tokenize("display.inc", h);
+			h.put("DATA", datachunk);
+			sendXML("xml/display.xinc", h);
+			out=null;
 		}
 
 		return(out);
@@ -808,16 +961,20 @@ public class PhotoSession extends Object
 		// Add the PREV and NEXT button stuff, if applicable.
 		if(results.nResults() > which+1) {
 			h.put("NEXT",
-				"<a href=\"" + self_uri + "?func=display&search_id="
-				+ (which+1) + "\">&gt;&gt;&gt;</a><br>");
+				"<a href=\""
+					+ PhotoXSLT.normalize(self_uri
+						+ "?func=display&search_id=" + (which+1), true )
+					+ "\">&gt;&gt;&gt;</a><br/>");
 		} else {
 			h.put("NEXT", "");
 		}
 
 		if(which>0) {
 			h.put("PREV",
-				"<a href=\"" + self_uri + "?func=display&search_id="
-				+ (which-1) + "\">&lt;&lt;&lt;</a><br>");
+				"<a href=\""
+				+ PhotoXSLT.normalize(self_uri
+					+ "?func=display&search_id=" + (which-1), true )
+				+ "\">&lt;&lt;&lt;</a><br/>");
 		} else {
 			h.put("PREV", "");
 		}
@@ -910,33 +1067,36 @@ public class PhotoSession extends Object
 					+ e);
 			}
 
+			middle="<search_result_row>\n";
+
 			for(i=0; i<5; i++) {
 				PhotoSearchResult r=results.next();
 				if(r!=null) {
 					// No, this really doesn't belong here.
-					if( ((i) % 2) == 0) {
-						middle += "</tr>\n<tr>\n";
+					if( (i>0) && ((i) % 2) == 0) {
+						middle += "</search_result_row>\n<search_result_row>\n";
 					}
-					middle += "<td>\n";
-					middle += r.showHTML(self_uri);
-					middle += "</td>\n";
+					middle += "<search_result>\n";
+					middle += r.showXML(self_uri);
+					middle += "</search_result>\n";
 				}
 			}
+
+			middle+="</search_result_row>\n";
 		}
 
 		Hashtable h = new Hashtable();
 		h.put("TOTAL", "" + results.nResults());
 		h.put("SEARCH", (String)session.getValue("encoded_search"));
-		String output = tokenize("find_top.inc", h);
-		output += middle;
+		h.put("RESULTS", middle);
 		h.put("LINKTOMORE", linkToMore(results)); 
-		output += tokenize("find_bottom.inc", h);
+		// String output = tokenize("xml/results.xinc", h);
 
 		// Ask the aheadfetcher to prefetch the next five entries.
 		aheadfetcher.next(results);
 
-		send_response(output);
-		return(output);
+		sendXML("xml/results.xinc", h);
+		return(null);
 	}
 
 	// Find images.
@@ -975,14 +1135,15 @@ public class PhotoSession extends Object
 				nextwhu=remaining;
 			}
 
-			ret += "<form method=\"POST\" action=\"" + self_uri + "\">\n";
-			ret += "<input type=hidden name=func value=nextresults>\n";
-			ret += "<input type=hidden name=startfrom value="
-				+ results.current() + ">\n";
-
-			ret += "<input type=\"submit\" value=\"Next " + nextwhu + "\">\n";
-			ret += "</form>\n";
-			ret += "<br>\n" + remaining + " pictures remaining.<br>\n";
+			ret += "<linktomore>\n"
+				+ "  <startfrom>" + results.current() + "</startfrom>\n"
+				+ "  <remaining>" + remaining + "</remaining>\n"
+				+ "  <nextpage>"  + nextwhu + "</nextpage>\n"
+				+ "</linktomore>\n";
+		} else {
+			ret += "<linktomore>\n"
+				+ "  <remaining>" + 0 + "</remaining>\n"
+				+ "</linktomore>\n";
 		}
 		return(ret);
 	}

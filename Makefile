@@ -7,7 +7,8 @@ JAVA=$(JAVAHOME)/bin/java
 RMIC=$(JAVAHOME)/bin/rmic
 MYLIB=/home/dustin/lib/java
 C1=$(MYLIB)/jsdk.jar:$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
-CLASSPATH=$(C1):.
+C2=$(MYLIB)/xalan.jar:$(MYLIB)/xerces.jar
+CLASSPATH=$(C1):$(C2):.
 SERVLETRUNNER=/home/dustin/lib/java/JSDK2.0/bin/servletrunner
 
 RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \
@@ -33,6 +34,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 	net/spy/photo/PhotoReporting.class \
 	net/spy/photo/PhotoAdmin.class \
 	net/spy/photo/PhotoAheadFetcher.class \
+	net/spy/photo/PhotoXSLT.class \
 	net/spy/photo/SetPW.class \
 	net/spy/photo/migration/PhotoMigration.class \
 	net/spy/photo/migration/PhotoMigration01.class \
@@ -45,13 +47,13 @@ all: $(CLASSES)
 photo.jar: $(CLASSES)
 	$(JAR) cv0f $@ $(CLASSES)
 
-test: all
+test: $(CLASSES)
 	env CLASSPATH=$(CLASSPATH) $(SERVLETRUNNER) -d $(PWD)
 
 setpw: net/spy/photo/SetPW.class
 	env CLASSPATH=$(CLASSPATH) $(JAVA) net.spy.photo.SetPW
 
-release: all release.tgz
+release: photo.jar release.tgz
 
 release.tgz:
 	mkdir release

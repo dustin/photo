@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.14 2000/10/17 07:12:21 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.15 2000/11/10 07:17:18 dustin Exp $
  */
 
 package net.spy.photo;
@@ -92,7 +92,7 @@ public class PhotoServlet extends HttpServlet
 	// Servlet info
 	public String getServletInfo() {
 		return("Copyright (c) 2000  Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.14 $");
+			+ " - $Revision: 1.15 $");
 	}
 
 	// Do a GET request

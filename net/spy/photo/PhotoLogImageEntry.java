@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogImageEntry.java,v 1.2 2000/07/19 03:21:34 dustin Exp $
+ * $Id: PhotoLogImageEntry.java,v 1.3 2000/11/10 07:17:18 dustin Exp $
  */
 
 package net.spy.photo;

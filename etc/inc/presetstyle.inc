@@ -9,7 +9,7 @@
 <form method="POST"
 action="%SELF_URI%">
 
-<input type=hidden name=func value=setstyle>
+<input type="hidden" name="func" value="setstyle">
 
 <table>
    <tr>

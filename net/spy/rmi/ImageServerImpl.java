@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.7 2000/07/21 17:19:23 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.8 2000/11/10 07:17:18 dustin Exp $
 
 package net.spy.rmi;
 

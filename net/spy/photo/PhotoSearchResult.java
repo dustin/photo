@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.10 2000/10/17 07:12:21 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.11 2000/11/10 07:17:18 dustin Exp $
  */
 
 package net.spy.photo;
@@ -21,6 +21,7 @@ public class PhotoSearchResult extends PhotoHelper {
 	protected int id=-1;
 	protected int search_id=-1;
 	protected String html=null;
+	protected String xml=null;
 
 	/**
 	 * Get an uninitialized search result.
@@ -58,10 +59,26 @@ public class PhotoSearchResult extends PhotoHelper {
 	public String showHTML(String self_uri) {
 		if(html==null) {
 			Hashtable h=new Hashtable();
-			h.put("SELF_URI", self_uri);
 			html=PhotoUtil.tokenize("findmatch.inc", addToHash(h));
 		}
 		return(html);
+	}
+
+	/**
+	 * Grab the XML chunk to be displayed.
+	 */
+	public String showXML(String self_uri) {
+		if(xml==null) {
+			// Make sure we have the data.
+			addToHash(null);
+			for(Enumeration e=mydata.keys(); e.hasMoreElements(); ) {
+				String key=(String)e.nextElement();
+				String data=(String)mydata.get(key);
+
+				xml+="<" + key + ">" + data + "</" + key + ">\n";
+			}
+		}
+		return(xml);
 	}
 
 	/**
@@ -85,7 +102,8 @@ public class PhotoSearchResult extends PhotoHelper {
 			h.put(k, mydata.get(k));
 		}
 
-		h.put("ID",       "" + search_id);
+		mydata.put("ID",       "" + search_id);
+		h.put("ID",            "" + search_id);
 
 		return(h);
 	}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.7 2000/07/16 08:36:49 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.8 2000/11/10 07:17:18 dustin Exp $
  */
 
 package net.spy.photo;

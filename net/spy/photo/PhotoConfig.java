@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoConfig.java,v 1.4 2000/06/29 21:25:08 dustin Exp $
+ * $Id: PhotoConfig.java,v 1.5 2000/11/10 07:17:18 dustin Exp $
  */
 
 package net.spy.photo;
@@ -12,6 +12,8 @@ public class PhotoConfig extends SpyConfig {
 
 	// Places to look for config files.
 	protected String configs[]={
+		"photo.conf",
+		"/home/dustin/prog/java/servlet/photo_xml/photo.conf",
 		"/usr/local/etc/photo.conf",
 		"/afs/spy.net/misc/web/etc/photo.conf"
 	};
@@ -21,10 +23,7 @@ public class PhotoConfig extends SpyConfig {
 
 		boolean gotit=false;
 
-		// Try out a few config file until we find one.
-		for(int i=0; i<configs.length && gotit==false; i++) {
-			gotit=loadConfig(configs[i]);
-		}
+		loadConfig(configs);
 
 		// Now add defaults
 		orput("dbDriverName", "org.postgresql.Driver");
