@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.11 2001/01/09 00:20:04 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.12 2001/07/03 07:48:52 dustin Exp $
  */
 
 package net.spy.photo;
@@ -77,7 +77,7 @@ public class PhotoAdmin extends PhotoHelper {
 			h.put("USERS", users);
 			out=tokenize("admin/admuser.inc", h);
 		} catch(Exception e) {
-			se=new ServletException("Error showing users:  " + e);
+			se=new ServletException("Error showing users", e);
 		} finally {
 			freeDBConn(photo);
 		}
@@ -381,7 +381,7 @@ public class PhotoAdmin extends PhotoHelper {
 				cache.uncacheLike("catList_");
 			}
 		} catch(Exception e) {
-			se=new ServletException("Error in admEditCategoryForm: " + e);
+			se=new ServletException("Error in admEditCategoryForm", e);
 		} finally {
 			freeDBConn(photo);
 		}

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.11 2000/12/27 06:05:25 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.12 2001/07/03 07:48:52 dustin Exp $
  */
 
 package net.spy.photo;
@@ -144,7 +144,7 @@ public class PhotoSearch extends PhotoHelper {
 			}
 
 		} catch(Exception e) {
-			throw new ServletException("Error performing search:  " + e);
+			throw new ServletException("Error performing search", e);
 		} finally {
 			if(photo!=null) {
 				freeDBConn(photo);

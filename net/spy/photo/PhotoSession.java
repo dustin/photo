@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.55 2001/04/29 08:18:11 dustin Exp $
+ * $Id: PhotoSession.java,v 1.56 2001/07/03 07:48:52 dustin Exp $
  */
 
 package net.spy.photo;
@@ -111,8 +111,7 @@ public class PhotoSession extends Object
 			} catch(Exception e2) {
 				log("Compound error:  We also failed to send back the error, "
 					+ e2);
-				throw new ServletException("Error sending error message:  "
-					+ e2);
+				throw new ServletException("Error sending error message", e2);
 			}
 			out=null;
 		}
@@ -239,7 +238,7 @@ public class PhotoSession extends Object
 			Hashtable h = new Hashtable();
 			log("Search save failed:  " + e);
 			throw new ServletException(
-				"Error saving search:  " + e);
+				"Error saving search", e);
 		}
 		return(null);
 	}
@@ -400,7 +399,8 @@ public class PhotoSession extends Object
 			}
 			// Throw an exception declaring the type to be bad.
 			throw new ServletException(
-				multi.getFilesystemName("picture") + " NULL is a bad type, only image/jpeg " +
+				multi.getFilesystemName("picture")
+				+ " NULL is a bad type, only image/jpeg or " +
 					"image/pjpeg is accepted");
 		}
 		if ( 
@@ -421,8 +421,9 @@ public class PhotoSession extends Object
 			// Throw an exception declaring the type to be bad.
 			throw new ServletException(
 				multi.getFilesystemName("picture") + " ("
-				+ type + ") is a bad type, only image/jpeg and " +
-					"image/pjpeg is accepted.  Your browser was " + userAgent + ".");
+				+ type + ") is a bad type, only image/jpeg and "
+				+ "image/pjpeg is accepted.  Your browser was "
+				+ userAgent + ".");
 		}
 
 		// OK, things look good, let's try to store our data.
@@ -513,7 +514,7 @@ public class PhotoSession extends Object
 			} catch(Exception e2) {
 				log("Error rolling back and/or reporting add falure:  " + e2);
 			}
-			throw new ServletException("Error adding image:  " + e);
+			throw new ServletException("Error adding image", e);
 		} finally {
 			if(photo != null) {
 				try {
@@ -1040,7 +1041,7 @@ public class PhotoSession extends Object
 				throw new ServletException("No search id, and no search_id");
 			}
 		} catch(Exception e) {
-			throw new ServletException("Error displaying image:  " + e);
+			throw new ServletException("Error displaying image", e);
 		}
 
 		// Populate the hash with the image parts.
@@ -1326,7 +1327,7 @@ public class PhotoSession extends Object
 			out.write(image.getData());
 
 		} catch(Exception e) {
-			throw new ServletException("Error displaying image:  " + e);
+			throw new ServletException("Error displaying image", e);
 		}
 		// We handle our own response here, because this is an image.
 		return(null);
@@ -1339,7 +1340,7 @@ public class PhotoSession extends Object
 		try {
 			logview=new PhotoLogView(this);
 		} catch(Exception e) {
-			throw new ServletException("Error displaying logs:  " + e);
+			throw new ServletException("Error displaying logs", e);
 		}
 
 		view=request.getParameter("view");
@@ -1356,7 +1357,7 @@ public class PhotoSession extends Object
 			try {
 				out=logview.getViewersOf(Integer.valueOf(which));
 			} catch(Exception e) {
-				throw new ServletException("Error displaying viewers:  " + e);
+				throw new ServletException("Error displaying viewers", e);
 			}
 		}
 		return(out);

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.17 2001/04/29 08:18:11 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.18 2001/07/03 07:48:52 dustin Exp $
  */
 
 package net.spy.photo;
@@ -48,7 +48,7 @@ public class PhotoServlet extends HttpServlet
 			security.getUser("guest");
 			log("Finished security");
 		} catch(Exception e) {
-			throw new ServletException("Can't create security stuff:  " + e);
+			throw new ServletException("Can't create security stuff", e);
 		}
 
 		// The photo cache storer
@@ -93,7 +93,7 @@ public class PhotoServlet extends HttpServlet
 	// Servlet info
 	public String getServletInfo() {
 		return("Copyright (c) 2000  Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.17 $");
+			+ " - $Revision: 1.18 $");
 	}
 
 	// Do a GET request

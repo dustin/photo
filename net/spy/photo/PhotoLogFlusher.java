@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.7 2001/04/29 08:18:11 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.8 2001/07/03 07:48:52 dustin Exp $
  */
 
 package net.spy.photo;
@@ -20,31 +20,21 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 		super("PhotoLog");
 	}
 
-	public void doFlush() {
+	protected void doFlush() throws Exception {
 		Vector v = flush();
-		Statement st = null;
-		Connection db=null;
-		SpyDB photodb=null;
 		// Only do all this crap if there's something to log.
 		if(v.size() > 0) {
+			SpyDB photodb=null;
 			try {
 				photodb = new SpyDB(new PhotoConfig());
-				db=photodb.getConn();
-				st=db.createStatement();
-				for(int i = 0; i<v.size(); i++) {
-					SpyLogEntry l = null;
-					try {
-						l = (SpyLogEntry)v.elementAt(i);
-							st.executeUpdate(l.toString());
-					} catch(SQLException e) {
-						System.err.println("Error writing log:  "
-							+ l + e.getMessage());
-					}
+				Connection db=photodb.getConn();
+				Statement st=db.createStatement();
+				for(Enumeration e=v.elements(); e.hasMoreElements();) {
+					SpyLogEntry l=(SpyLogEntry)e.nextElement();
+					st.executeUpdate(l.toString());
 				}
-			} catch(Exception e) {
-				System.err.println("BAD LOG ERRROR!  " + e.getMessage());
 			} finally {
-				photodb.freeDBConn();
+				photodb.close();
 			}
 		}
 	}
