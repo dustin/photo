@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginForm.java,v 1.1 2002/05/08 10:03:42 dustin Exp $
+// $Id: LoginForm.java,v 1.2 2002/05/12 08:51:34 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -73,11 +73,14 @@ public class LoginForm extends ActionForm {
 	public ActionErrors validate(ActionMapping mapping,
 		HttpServletRequest request) {
 
+		System.out.println("Validating username=" + username
+			+ ", password=" + password);
+
 		ActionErrors errors = new ActionErrors();
 		if ((username == null) || (username.length() < 1))
-			errors.add("username", new ActionError("error.username.required"));
+			errors.add("username", new ActionError("error.login.username"));
 		if ((password == null) || (password.length() < 1))
-			errors.add("password", new ActionError("error.password.required"));
+			errors.add("password", new ActionError("error.login.password"));
 
 		return(errors);
 	}

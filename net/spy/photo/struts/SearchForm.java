@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchForm.java,v 1.1 2002/05/11 09:24:34 dustin Exp $
+// $Id: SearchForm.java,v 1.2 2002/05/12 08:51:34 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -18,7 +18,7 @@ import org.apache.struts.action.ActionMapping;
  */
 public class SearchForm extends ActionForm {
 
-	private Vector cats=null;
+	private String cats[]=null;
 	private String fieldjoin=null;
 	private String field=null;
 	private String keyjoin=null;
@@ -40,15 +40,21 @@ public class SearchForm extends ActionForm {
 	 */
 	public SearchForm() {
 		super();
-		cats=new Vector();
 	}
 
 	/**
 	 * Add a category.
 	 */
-	public void setCat(String cat) {
+	public void setCat(String cat[]) {
 		System.out.println("Added cat " + cat);
-		cats.add(cat);
+		cats=cat;
+	}
+
+	/**
+	 * Get the categories.
+	 */
+	public String[] getCat() {
+		return(cats);
 	}
 
 	public void setFieldjoin(String fieldjoin) {
@@ -178,7 +184,7 @@ public class SearchForm extends ActionForm {
 	 * @param request The servlet request we are processing
 	 */
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		cats.clear();
+		cats=null;
 	}
 
 	/**
@@ -193,40 +199,40 @@ public class SearchForm extends ActionForm {
 		ActionErrors errors = new ActionErrors();
 
 		String tmp=fieldjoin;
-		if(tmp==null || !(tmp.equals("and") || tmp.equals("or"))) {
+		if(tmp!=null && !(tmp.equals("and") || tmp.equals("or"))) {
 			errors.add("fieldjoin", new ActionError("error.search.fieldjoin"));
 		}
 		tmp=field;
-		if(tmp==null || !(tmp.equals("keywords") || tmp.equals("descr"))) {
+		if(tmp!=null && !(tmp.equals("keywords") || tmp.equals("descr"))) {
 			errors.add("field", new ActionError("error.search.field"));
 		}
 		tmp=keyjoin;
-		if(tmp==null || !(tmp.equals("or") || tmp.equals("and"))) {
+		if(tmp!=null && !(tmp.equals("or") || tmp.equals("and"))) {
 			errors.add("keyjoin", new ActionError("error.search.keyjoin"));
 		}
 		tmp=tstartjoin;
-		if(tmp==null || !(tmp.equals("or") || tmp.equals("and"))) {
+		if(tmp!=null && !(tmp.equals("or") || tmp.equals("and"))) {
 			errors.add("tstartjoin",
 				new ActionError("error.search.tstartjoin"));
 		}
 		tmp=tendjoin;
-		if(tmp==null || !(tmp.equals("or") || tmp.equals("and"))) {
+		if(tmp!=null && !(tmp.equals("or") || tmp.equals("and"))) {
 			errors.add("tendjoin", new ActionError("error.search.tendjoin"));
 		}
 		tmp=startjoin;
-		if(tmp==null || !(tmp.equals("or") || tmp.equals("and"))) {
+		if(tmp!=null && !(tmp.equals("or") || tmp.equals("and"))) {
 			errors.add("startjoin", new ActionError("error.search.startjoin"));
 		}
 		tmp=endjoin;
-		if(tmp==null || !(tmp.equals("or") || tmp.equals("and"))) {
+		if(tmp!=null && !(tmp.equals("or") || tmp.equals("and"))) {
 			errors.add("endjoin", new ActionError("error.search.endjoin"));
 		}
 		tmp=order;
-		if(tmp==null || !(tmp.equals("a.taken") || tmp.equals("a.ts"))) {
+		if(tmp!=null && !(tmp.equals("a.taken") || tmp.equals("a.ts"))) {
 			errors.add("order", new ActionError("error.search.order"));
 		}
 		tmp=sdirection;
-		if(tmp==null || !(tmp.equals("") || tmp.equals("desc"))) {
+		if(tmp!=null && !(tmp.equals("") || tmp.equals("desc"))) {
 			errors.add("sdirection",
 				new ActionError("error.search.sdirection"));
 		}

@@ -103,7 +103,7 @@ CLASSES=\
 
 .PHONY: test
 
-photo.jar: $(CLASSES)
+photo.jar: $(CLASSES) net/spy/photo/photoresources.properties
 	$(JAR) cvf $@ `find net/spy -name "*.class"` \
 		`find net/spy -name "*.sql"` \
 		`find net/spy -name "*.properties"`
