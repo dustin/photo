@@ -14,4 +14,4 @@ realname required VARCHAR The real name of the user
 email required VARCHAR The email address of the user
 password required VARCHAR The password of the user
 canadd required BIT True if the user can add
-
+persess required VARCHAR persistent session ID

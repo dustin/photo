@@ -53,6 +53,7 @@ public class PhotoUser extends AbstractSavable
 	private String email=null;
 	private String realname=null;
 	private boolean canadd=false;
+	private String persess=null;
 
 	private ArrayList acl=null;
 	private Set groups=null;
@@ -79,6 +80,7 @@ public class PhotoUser extends AbstractSavable
 		setEmail(rs.getString("email"));
 		setRealname(rs.getString("realname"));
 		canAdd(rs.getBoolean("canadd"));
+		setPersess(rs.getString("persess"));
 
 		setNew(false);
 		setModified(false);
@@ -127,6 +129,11 @@ public class PhotoUser extends AbstractSavable
 				rv.put(new Integer(pu.getId()), pu);
 				rv.put(pu.getUsername().toLowerCase(), pu);
 				rv.put(pu.getEmail().toLowerCase(), pu);
+				// Map by persistent ID.
+				String psid=pu.getPersess();
+				if(psid != null) {
+					rv.put(psid, pu);
+				}
 			}
 			rs.close();
 			db.close();
@@ -293,6 +300,23 @@ public class PhotoUser extends AbstractSavable
 	 */
 	public String getEmail() {
 		return(email);
+	}
+
+	/** 
+	 * Set the persistent session ID.
+	 */
+	public void setPersess(String persess) {
+		this.persess=persess;
+		setModified(true);
+	}
+
+	/** 
+	 * Get the persistent session ID.
+	 * 
+	 * @return 
+	 */
+	public String getPersess() {
+		return(persess);
 	}
 
 	/**
@@ -527,6 +551,7 @@ public class PhotoUser extends AbstractSavable
 		db.setEmail(email);
 		db.setPassword(password);
 		db.setCanadd(canadd);
+		db.setPersess(persess);
 
 		db.executeUpdate();
 		db.close();

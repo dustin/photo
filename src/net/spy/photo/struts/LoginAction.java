@@ -67,7 +67,7 @@ public class LoginAction extends PhotoAction {
 		// Find out of the user wanted to upgrade to admin privs after 
 		Boolean bol=(Boolean)lf.get("admin");
 		if(bol.booleanValue()) {
-			System.err.println(user + " logged in as admin");
+			getLogger().info(user + " logged in as admin");
 			rv=mapping.findForward("setadmin");
 		} else {
 			rv=mapping.findForward("next");

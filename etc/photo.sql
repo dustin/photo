@@ -39,10 +39,12 @@ create table wwwusers(
 	email    text not null,
 	realname text not null,
 	canadd   bool not null,
+	persess varchar(16) null, -- persistent session ID
 	primary key(id)
 );
 create unique index user_byname on wwwusers(username);
 create unique index user_byemail on wwwusers(email);
+create unique index user_bypersess on wwwusers(persess);
 grant all on wwwusers to nobody;
 grant all on wwwusers_id_seq to nobody;
 
