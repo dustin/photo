@@ -17,7 +17,7 @@
 						<li><a href="addform.jsp">Add a New Image</a></li>
 					</photo:guest>
 					<li><a href="search.jsp">Advanced Search</a></li>
-					<li><a href="PhotoServlet?func=catview">Category View</a></li>
+					<li><a href="catview.jsp">Category View</a></li>
 					<li><a href="listcomments.do">Show Recent Comments</a></li>
 					<li><a href="newuserform.jsp">Create an Account</a></li>
 				</ul>
