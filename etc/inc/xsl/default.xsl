@@ -11,7 +11,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.19 2001/01/07 07:51:35 dustin Exp $
+ $Id: default.xsl,v 1.20 2001/01/07 08:17:10 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -193,6 +193,7 @@
 
 <xsl:template match="search_results_page">
 
+	<!-- If the user can add, put a little form at the top to save the search -->
 	<xsl:if test="/page/meta_stuff/photo_user/canadd">
 		<form method="POST" action="{/page/meta_stuff/self_uri}">
 			<input type="hidden" name="func" value="savesearch"/>
@@ -203,8 +204,21 @@
 		</form>
 	</xsl:if>
 
-	<xsl:apply-templates select="sections"/>
+	<!-- Let us know how many results we've got -->
+	<div align="right">
+		<font size="+2">
+			Search matched <xsl:value-of select="meta_stuff/total"/> entries.
+		</font>
+	</div>
 
+	<p>
+
+		<!-- Put the actual results here -->
+		<xsl:apply-templates select="search_results"/>
+
+	</p>
+
+	<!-- if there are more, link to them -->
 	<xsl:variable name="r" select="meta_stuff/linktomore/remaining"/>
 	<xsl:if test="$r>0">
 		<xsl:value-of select="$r"/> results remaining.<p/>
@@ -216,6 +230,7 @@
 				value="Next {meta_stuff/linktomore/nextpage}"/>
 		</form>
 	</xsl:if>
+
 </xsl:template>
 
 <xsl:template match="search_results">

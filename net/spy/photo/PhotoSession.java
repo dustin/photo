@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.50 2001/01/07 04:32:50 dustin Exp $
+ * $Id: PhotoSession.java,v 1.51 2001/01/07 08:17:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -670,8 +670,6 @@ public class PhotoSession extends Object
 
 	// Show the add an image form.
 	protected String doAddForm() throws Exception {
-		String output = "";
-		Hashtable h = new Hashtable();
 
 		PhotoXML xml=new PhotoXML();
 		xml.setTitle("Add a Photo");
@@ -691,15 +689,19 @@ public class PhotoSession extends Object
 	}
 
 	// Show the search form.
-	protected String doFindForm() throws ServletException {
-		Hashtable h = new Hashtable();
+	protected String doFindForm() throws Exception {
 
-		try {
-			h.put("CAT_LIST", getCatList(-1));
-		} catch(Exception e) {
-			h.put("CAT_LIST", "");
-		}
-		sendXML("xml/find.xinc", h);
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("Find an Image");
+		xml.addBodyPart(getGlobalMeta());
+		xml.addBodyPart("<find_form>\n"
+			+ "\t<cat_list>\n"
+			+ getCatList(-1)
+			+ "\t</cat_list>\n"
+			+ "</find_form>"
+			);
+		sendXML(xml.toString());
+
 		return(null);
 	}
 
@@ -961,51 +963,6 @@ public class PhotoSession extends Object
 		out.close();
 	}
 
-	// Send (and cache) an XML template.
-	protected void sendXML(String tmplate, Hashtable h)
-		throws ServletException {
-		PhotoConfig conf = new PhotoConfig();
-		h.put("GLOBALMETA", getGlobalMeta());
-		String xml=null;
-		try {
-			SpyCache cache=new SpyCache();
-			String key="xml_p_" + tmplate + "_" + xslt_stylesheet
-				+ "_" + PhotoUtil.myHash(h) + "_" + xmlraw;
-			String o=(String)cache.get(key);
-			// What the content is whether XML or not.
-			if(xmlraw) {
-				response.setContentType("text/plain");
-			} else {
-				response.setContentType("text/html");
-			}
-			if(o==null) {
-				log(key + " was not cached...rebuilding.");
-				// If they want raw XML, get it that way.
-				if(xmlraw) {
-					// Raw XML will just include the parsed template
-					o=tokenize(tmplate, h);
-				} else {
-					StringWriter str=new StringWriter();
-					xml=tokenize(tmplate, h);
-					PhotoXSLT.sendXML(xml, xslt_stylesheet, str);
-					// Get the data
-					o=str.toString();
-				}
-				// ...and cache that for ten minutes...by default
-				cache.store(key, o,
-					((long)(conf.getInt("xml_cache_timeout", 600)))*1000);
-			}
-			PrintWriter out=response.getWriter();
-			out.print(o);
-			out.close();
-		} catch(org.apache.xalan.xslt.XSLProcessorException e) {
-			log("Error parsing this:\n" + xml);
-			throw new ServletException("Error parsing XML:  " + e);
-		} catch(Exception e) {
-			throw new ServletException("Error sending XML:  " + e);
-		}
-	}
-
 	// Get the UID
 	protected void getUid() throws ServletException {
 		try {
@@ -1186,7 +1143,7 @@ public class PhotoSession extends Object
 
 	// Display search results
 	// This whole thing will fail if there's no session.
-	protected String displaySearchResults() throws ServletException {
+	protected String displaySearchResults() throws Exception {
 		if(session==null) {
 			throw new ServletException("There's no session!");
 		}
@@ -1234,21 +1191,37 @@ public class PhotoSession extends Object
 			middle.append("</search_result_row>\n");
 		}
 
-		Hashtable h = new Hashtable();
-		h.put("TOTAL", "" + results.nResults());
-		h.put("SEARCH", (String)session.getValue("encoded_search"));
-		h.put("RESULTS", middle.toString());
-		h.put("LINKTOMORE", linkToMore(results)); 
-
-		// Ask the aheadfetcher to prefetch the next five entries.
+		// Ask the aheadfetcher to prefetch the next x entries.
 		aheadfetcher.next(results);
 
-		sendXML("xml/results.xinc", h);
+		StringBuffer meta=new StringBuffer();
+		meta.append("<meta_stuff>\n");
+		meta.append(linkToMore(results));
+		meta.append("\t<total>");
+		meta.append("" + results.nResults());
+		meta.append("</total>\n");
+		meta.append("\t<search_query>\n");
+		meta.append((String)session.getValue("encoded_search"));
+		meta.append("\t</search_query>\n");
+		meta.append("</meta_stuff>\n");
+
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("Search Results");
+		xml.addBodyPart(getGlobalMeta());
+		xml.addBodyPart("<search_results_page>\n"
+			+ meta
+			+ "\t<search_results>\n"
+			+ middle
+			+ "\t</search_results>\n"
+			+ "</search_results_page>\n"
+			);
+		sendXML(xml.toString());
+
 		return(null);
 	}
 
 	// Find images.
-	protected String doFind() throws ServletException {
+	protected String doFind() throws Exception {
 
 		// Make sure there's a real session.
 		if(session==null) {
