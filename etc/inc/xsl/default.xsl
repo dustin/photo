@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.10 2000/12/31 07:25:26 dustin Exp $
+ $Id: default.xsl,v 1.11 2001/01/06 03:36:23 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -21,7 +21,7 @@
 				<xsl:value-of select="heading/title"/>
 			</title>
 		</head>
-		<body background="file:///tmp/holiday.gif" bgcolor="#cFcFfF">
+		<body background="/~dustin/images/holiday.gif" bgcolor="#cFcFfF">
 			<center>
 				<b>
 					<font size="+3">
@@ -164,26 +164,28 @@
 	<table border="0" colspan="1" width="100%">
 		<xsl:for-each select="search_result_row">
 			<tr>
-				<td width="25%" align="center">
-					<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={search_result[1]/ID}">
-						<img border="0"
-							width="{search_result[1]/TN_WIDTH}"
-							height="{search_result[1]/TN_HEIGHT}"
-							src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={search_result[1]/IMAGE}&amp;thumbnail=1"/>
-					</a>
-				</td>
-				<td width="25%" bgcolor="#efefff" valign="top">
-					<font size="-1">
-					Keywords: <xsl:value-of select="search_result[1]/KEYWORDS"/>
-						<br/>
-					Category: <xsl:value-of select="search_result[1]/CAT"/><br/>
-					Size:  <xsl:value-of select="search_result[1]/WIDTH"/>x<xsl:value-of select="search_result[1]/HEIGHT"/>
-					(<xsl:value-of select="search_result[1]/SIZE"/> bytes)<br/>
-					Taken:  <xsl:value-of select="search_result[1]/TAKEN"/><br/>
-					Added: <xsl:value-of select="search_result[1]/TS"/> by
-						<xsl:value-of select="search_result[1]/ADDEDBY"/><br/>
-					</font>
-				</td>
+				<xsl:if test="search_result[1]">
+					<td width="25%" align="center">
+						<a href="{/page/meta_stuff/self_uri}?func=display&amp;search_id={search_result[1]/ID}">
+							<img border="0"
+								width="{search_result[1]/TN_WIDTH}"
+								height="{search_result[1]/TN_HEIGHT}"
+								src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={search_result[1]/IMAGE}&amp;thumbnail=1"/>
+						</a>
+					</td>
+					<td width="25%" bgcolor="#efefff" valign="top">
+						<font size="-1">
+						Keywords: <xsl:value-of select="search_result[1]/KEYWORDS"/>
+							<br/>
+						Category: <xsl:value-of select="search_result[1]/CAT"/><br/>
+						Size:  <xsl:value-of select="search_result[1]/WIDTH"/>x<xsl:value-of select="search_result[1]/HEIGHT"/>
+						(<xsl:value-of select="search_result[1]/SIZE"/> bytes)<br/>
+						Taken:  <xsl:value-of select="search_result[1]/TAKEN"/><br/>
+						Added: <xsl:value-of select="search_result[1]/TS"/> by
+							<xsl:value-of select="search_result[1]/ADDEDBY"/><br/>
+						</font>
+					</td>
+				</xsl:if>
 				<xsl:if test="search_result[2]">
 				<td width="25%" bgcolor="#efefff" valign="top">
 					<font size="-1">
