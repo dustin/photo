@@ -22,6 +22,8 @@
 
 		<!-- Admin beans -->
 		<form-bean name="adminUserForm" type="net.spy.photo.struts.AdminUserForm"/>
+		<form-bean name="adminCatForm"
+			type="net.spy.photo.struts.AdminCategoryForm"/>
   </form-beans>
 
   <action-mappings>
@@ -147,6 +149,20 @@
 		input="/admin/edituser.jsp"
 		type="net.spy.photo.struts.AdminSaveUserAction">
 		<forward name="success" path="/admin/users.jsp" />
+	</action>
+
+	<action path="/admcatedit"
+		name="adminCatForm"
+		input="/admin/categories.jsp"
+		type="net.spy.photo.struts.AdminSelectCatAction">
+		<forward name="success" path="/admin/editcat.jsp" />
+	</action>
+
+	<action path="/admcatsave"
+		name="adminCatForm"
+		input="/admin/editcat.jsp"
+		type="net.spy.photo.struts.AdminSaveCatAction">
+		<forward name="success" path="/admin/categories.jsp" />
 	</action>
 
   </action-mappings>
