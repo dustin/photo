@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.39 2000/11/27 07:12:22 dustin Exp $
+ * $Id: PhotoSession.java,v 1.40 2000/11/27 09:45:44 dustin Exp $
  */
 
 package net.spy.photo;
@@ -400,7 +400,8 @@ public class PhotoSession extends Object
 			st.setString(4, multi.getParameter("taken"));
 			st.setInt(5, size);
 			st.setInt(6, remote_uid.intValue());
-			st.setDate(7, new java.sql.Date(System.currentTimeMillis()));
+			st.setTimestamp(7,
+				new java.sql.Timestamp(System.currentTimeMillis()));
 			// Set the image width and height in the database.
 			st.setInt(8, photo_image.width());
 			st.setInt(9, photo_image.height());

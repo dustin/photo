@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.8 2000/11/10 07:17:18 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.9 2000/11/27 09:45:44 dustin Exp $
  */
 
 package net.spy.photo;
@@ -303,14 +303,6 @@ public class PhotoSearch extends PhotoHelper {
 			query += " and\n (" + sub + "\n )";
 		}
 
-		// Stick the order under the subquery.
-		stmp=PhotoUtil.dbquote_str(request.getParameter("order"));
-		if(stmp != null) {
-			order = stmp;
-		} else {
-			order = "a.taken";
-		}
-
 		// Figure out the direction...
 		stmp=PhotoUtil.dbquote_str(request.getParameter("sdirection"));
 		if(stmp != null) {
@@ -319,7 +311,23 @@ public class PhotoSearch extends PhotoHelper {
 			odirection = "";
 		}
 
-		query += "\n order by " + order + " " + odirection;
+		// Stick the order under the subquery.
+		stmp=PhotoUtil.dbquote_str(request.getParameter("order"));
+		if(stmp != null) {
+			if(stmp.equals("a.taken")) {
+				order="a.taken " + odirection + ", a.ts " + odirection;
+			} else {
+				// If it's ordered by timestamp, include the album ID in
+				// the sort, just in case.
+				order="a.ts " + odirection
+					+ ", a.taken " + odirection
+					+ ", a.id " + odirection;
+			}
+		} else {
+			order = "a.taken " + odirection + ", a.ts " + odirection;
+		}
+
+		query += "\n order by " + order;
 
 		return(query);
 	}
