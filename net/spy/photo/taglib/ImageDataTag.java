@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ImageDataTag.java,v 1.3 2002/05/21 07:45:09 dustin Exp $
+// $Id: ImageDataTag.java,v 1.4 2002/06/14 18:27:24 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -47,7 +47,7 @@ public class ImageDataTag extends PhotoTag {
 
 		try {
 			// Check access
-			Persistent.security.checkAccess(sessionData.getUser(), id);
+			Persistent.getSecurity().checkAccess(sessionData.getUser(), id);
 		} catch(Exception e) {
 			throw new JspException("You're not allowed to see " + id);
 		}

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: InitSessionData.java,v 1.2 2002/05/15 08:28:06 dustin Exp $
+// $Id: InitSessionData.java,v 1.3 2002/06/14 18:27:24 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -38,7 +38,7 @@ public class InitSessionData extends PhotoTag {
 			// Get the object
 			sessionData=new PhotoSessionData();
 			// Initialize the user
-			sessionData.setUser(Persistent.security.getUser("guest"));
+			sessionData.setUser(Persistent.getSecurity().getUser("guest"));
 
 			// Initialize the optimal dimensions
 			// Start with cookies

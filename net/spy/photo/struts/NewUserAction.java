@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NewUserAction.java,v 1.1 2002/06/04 07:04:41 dustin Exp $
+// $Id: NewUserAction.java,v 1.2 2002/06/14 18:27:24 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -48,7 +48,7 @@ public class NewUserAction extends PhotoAction {
 		}
 
 		// Verify the user doesn't already exist.
-		PhotoUser pu=Persistent.security.getUser(nuf.getUsername());
+		PhotoUser pu=Persistent.getSecurity().getUser(nuf.getUsername());
 		if(pu!=null) {
 			throw new ServletException("User " + nuf.getUsername()
 				+ " already exists.");

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.3 2002/05/21 07:45:08 dustin Exp $
+// $Id: PhotoImageData.java,v 1.4 2002/06/14 18:27:24 dustin Exp $
 
 package net.spy.photo;
 
@@ -115,7 +115,7 @@ public class PhotoImageData extends Object
 		taken=rs.getString("taken");
 
 		// Look up the user
-		addedBy=Persistent.security.getUser(rs.getInt("addedby"));
+		addedBy=Persistent.getSecurity().getUser(rs.getInt("addedby"));
 
 		// Get the dimensions object if a valid width and height came back
 		// from the DB.

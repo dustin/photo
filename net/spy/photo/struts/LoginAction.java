@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginAction.java,v 1.6 2002/06/04 07:04:41 dustin Exp $
+// $Id: LoginAction.java,v 1.7 2002/06/14 18:27:24 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -39,7 +39,7 @@ public class LoginAction extends PhotoAction {
 
 		PhotoSessionData sessionData=getSessionData(request);
 
-		PhotoUser user=Persistent.security.getUser(lf.getUsername());
+		PhotoUser user=Persistent.getSecurity().getUser(lf.getUsername());
 		if(user==null) {
 			throw new ServletException(
 				"Your username or password is incorrect.");
@@ -49,11 +49,11 @@ public class LoginAction extends PhotoAction {
 			sessionData.setUser(user);
 
 			PhotoLogEntry ple=new PhotoLogEntry(user.getId(), "Login",request);
-			Persistent.logger.log(ple);
+			Persistent.getLogger().log(ple);
 		} else {
 			PhotoLogEntry ple=new PhotoLogEntry(
 				user.getId(), "AuthFail", request);
-			Persistent.logger.log(ple);
+			Persistent.getLogger().log(ple);
 			throw new ServletException(
 				"Your username or password is incorrect.");
 		}

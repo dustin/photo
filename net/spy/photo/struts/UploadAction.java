@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadAction.java,v 1.4 2002/06/03 07:39:19 dustin Exp $
+// $Id: UploadAction.java,v 1.5 2002/06/14 18:27:24 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -61,9 +61,9 @@ public class UploadAction extends PhotoAction {
 			saver.setId(id);
 
 			// Tell the saver to save this image when it gets around to it.
-			Persistent.photoSaverThread.saveImage(saver);
+			Persistent.getPhotoSaverThread().saveImage(saver);
 
-			Persistent.logger.log(new PhotoLogUploadEntry(
+			Persistent.getLogger().log(new PhotoLogUploadEntry(
 				user.getId(), id, request));
 
 			// Before we return, make the ID available to the next handler

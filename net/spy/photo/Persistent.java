@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Persistent.java,v 1.2 2002/06/03 07:39:19 dustin Exp $
+// $Id: Persistent.java,v 1.3 2002/06/14 18:27:23 dustin Exp $
 
 package net.spy.photo;
 
@@ -15,9 +15,9 @@ import net.spy.log.*;
  */
 public class Persistent extends HttpServlet {
 
-	public static PhotoSecurity security = null;
-	public static PhotoAheadFetcher aheadfetcher=null;
-	public static SpyLog logger = null;
+	private static PhotoSecurity security = null;
+	private static PhotoAheadFetcher aheadfetcher=null;
+	private static SpyLog logger = null;
 	public static PhotoSaverThread photoSaverThread=null;
 	private PhotoLogFlusher logflusher=null;
 
@@ -93,6 +93,34 @@ public class Persistent extends HttpServlet {
 		photoSaverThread.stopRunning();
 		log("Calling super destroy.");
 		super.destroy();
+	}
+
+	/**
+	 * Get the PhotoSecurity object for this instance.
+	 */
+	public static PhotoSecurity getSecurity() {
+		return(security);
+	}
+
+	/**
+	 * Get the PhotoAheadFetcher for this instance.
+	 */
+	public static PhotoAheadFetcher getAheadFetcher() {
+		return(aheadfetcher);
+	}
+
+	/**
+	 * Get the SpyLog object for this instance.
+	 */
+	public static SpyLog getLogger() {
+		return(logger);
+	}
+
+	/**
+	 * Get the PhotoSaverThread for this instance.
+	 */
+	public static PhotoSaverThread getPhotoSaverThread() {
+		return(photoSaverThread);
 	}
 
 }
