@@ -55,7 +55,8 @@ sub addTail
 }
 sub showTemplate
 {
-    my($fn, %p, $q)=@_;
+    my($fn, %p)=@_;
+    my($q);
 
     $q=CGI->new;
     map { $p{uc($_)}=$q->param($_) if(!defined($p{$_}))} $q->param;
