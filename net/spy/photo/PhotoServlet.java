@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.2 2000/06/25 09:08:30 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.3 2000/06/28 18:53:34 dustin Exp $
  */
 
 package net.spy.photo;
@@ -61,7 +61,7 @@ public class PhotoServlet extends HttpServlet
 	// Verify we have a valid rhash, if not, reopen it.
 	protected void verify_rhash() {
 		boolean needy=false;
-		if(!rhash.connected()) {
+		if(rhash==null || (!rhash.connected()) ) {
 			log("Need a new rhash");
 			try {
 				// Try to reopen it
