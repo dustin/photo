@@ -295,6 +295,10 @@
 			</classpath>
 			<arg value="${USERNAME}"/>
 			<arg value="${DESTDIR}"/>
+			<sysproperty key="net.spy.log.LoggerImpl"
+				value="net.spy.log.SunLogger"/>
+			<sysproperty key="java.util.logging.config.file"
+				value="etc/static.log.config"/>
 		</java>
 	</target>
 

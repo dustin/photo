@@ -169,6 +169,7 @@ public class MakeStaticSite extends Object {
 		sessionData.setOptimalDimensions(normaldim);
 
 		SearchForm sf=new SearchForm();
+		sf.setSdirection("desc");
 		PhotoSearch ps=new PhotoSearch();
 		PhotoSearchResults psr=ps.performSearch(sf, sessionData);
 

@@ -14,12 +14,14 @@ import java.io.InputStream;
 
 import java.rmi.Naming;
 
+import net.spy.SpyObject;
+
 import net.spy.photo.rmi.RemoteImageServer;
 
 /**
  * Scales images.
  */
-public class PhotoImageScaler extends Object {
+public class PhotoImageScaler extends SpyObject {
 
 	private PhotoImage pi=null;
 
@@ -47,6 +49,10 @@ public class PhotoImageScaler extends Object {
 	public PhotoImage getScaledImage(PhotoDimensions dim, int quality)
 		throws Exception {
 
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Scaling " + pi + " to " + dim);
+		}
+
 		// Get the original image.
 		Image image=Toolkit.getDefaultToolkit().createImage(pi.getData());
 
@@ -63,6 +69,9 @@ public class PhotoImageScaler extends Object {
 		jpg.Compress();
 
 		PhotoImage ri=new PhotoImage(os.toByteArray());
+
+		// flush the image.
+		img.flush();
 
 		return(ri);
 	}
