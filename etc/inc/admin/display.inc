@@ -25,7 +25,7 @@ Keywords:
 <input name="keywords" value="%KEYWORDS%"><br>
 
 Info:
-<textarea cols="60" rows="5" name="info" wrap="hard">%INFO%</textarea><br>
+<textarea cols="60" rows="5" name="info" wrap="hard">%DESCR%</textarea><br>
 
 <input type="submit" value="Save Info">
 <input type="reset" value="Restore to Original">
