@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.60 2001/07/19 10:07:09 dustin Exp $
+ * $Id: PhotoSession.java,v 1.61 2001/07/20 09:51:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -194,6 +194,10 @@ public class PhotoSession extends Object
 			out=showImage();
 		} else if(func.equals("credform")) {
 			out=showCredForm();
+		} else if(func.equals("newuserform")) {
+			out=showNewUserForm();
+		} else if(func.equals("adduser")) {
+			out=addUser();
 		} else if(func.equals("savesearch")) {
 			out=saveSearch();
 		} else if(func.equals("setstylesheet")) {
@@ -276,7 +280,7 @@ public class PhotoSession extends Object
 		log("Authenticated as " + user);
 	}
 
-	public void setCreds () throws ServletException, IOException {
+	public void setCreds() throws ServletException, IOException {
 		String username=request.getParameter("username");
 		String pass=request.getParameter("password");
 
@@ -581,7 +585,7 @@ public class PhotoSession extends Object
 	}
 
 	// Show the ``login'' form
-	private String showCredForm () throws Exception {
+	private String showCredForm() throws Exception {
 		PhotoXML xml=new PhotoXML();
 		xml.setTitle("Authentication Form");
 		xml.addBodyPart(getGlobalMeta());
@@ -590,8 +594,56 @@ public class PhotoSession extends Object
 		return(null);
 	}
 
+	// Show the new user form
+	private String showNewUserForm() throws Exception {
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("New User Form");
+		xml.addBodyPart(getGlobalMeta());
+		xml.addBodyPart("<profile_add_user/>");
+		sendXML(xml.toString());
+		return(null);
+	}
+
+	private String addUser() throws Exception {
+		String pass1=request.getParameter("password");
+		String pass2=request.getParameter("pass2");
+		String username=request.getParameter("username");
+
+		if(pass1==null || pass2==null) {
+			throw new Exception("Pass1 or Pass2 is null");
+		}
+
+		if(!pass1.equals(pass2)) {
+			throw new Exception("Passwords don't match.");
+		}
+
+		// Load the profile
+		Profile p=new Profile(request.getParameter("profile"));
+		PhotoUser pu=security.getUser(username);
+		if(pu!=null) {
+			throw new Exception("User " + username + " already exists");
+		}
+		pu=new PhotoUser();
+
+		// Set the fields
+		pu.setUsername(username);
+		pu.setPassword(pass1);
+		pu.setRealname(request.getParameter("realname"));
+		pu.setEmail(request.getParameter("email"));
+
+		// Add the ACL entries
+		for(Enumeration e=p.getACLEntries(); e.hasMoreElements();) {
+			Integer i=(Integer)e.nextElement();
+			pu.addACLEntry(i.intValue());
+		}
+
+		pu.save();
+		setCreds();
+		return(doIndex());
+	}
+
 	// Show the style form
-	private String doStyleForm () throws ServletException {
+	private String doStyleForm() throws ServletException {
 		return(tokenize("presetstyle.inc", new Hashtable()));
 	}
 

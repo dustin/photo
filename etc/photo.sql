@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.6 2001/07/16 01:48:32 dustin Exp $
+-- $Id: photo.sql,v 1.7 2001/07/20 09:51:56 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -220,6 +220,27 @@ create table upload_log (
 grant all on upload_log to nobody;
 create unique index upload_log_photo on upload_log(photo_id);
 
+-- New user profiles
+create table user_profiles (
+	profile_id serial,
+	name varchar(32) not null,
+	description text not null,
+	primary key(profile_id)
+);
+create unique index user_profilesbyname on user_profiles(name);
+grant all on user_profiles to nobody;
+grant all on user_profiles_profile_id_seq to nobody;
+
+-- Profile ACLs
+create table user_profile_acls (
+	profile_id integer not null,
+	cat_id integer not null,
+	foreign key(profile_id) references user_profiles(profile_id)
+);
+create index user_profile_aclsbyp on user_profile_acls(profile_id);
+grant all on user_profile_acls to nobody;
+
+-- Log view
 create view log_user_ip_agent as
 	select wwwusers.username, photo_log.remote_addr, user_agent.user_agent
 		from wwwusers, photo_log, user_agent

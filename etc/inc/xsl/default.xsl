@@ -23,7 +23,7 @@
 			<link rel="stylesheet"
 			href="{meta_stuff/self_uri}?func=getstylesheet"/>
 		</head>
-		<body background="/~dustin/images/bluedkplaid.jpg" bgcolor="#cFcFfF">
+		<body background="http://bleu.west.spy.net/~dustin/images/bluedkplaid.jpg" bgcolor="#cFcFfF">
 			<center>
 
 				<!-- Title wrapper -->
@@ -402,6 +402,48 @@
 <xsl:template match="save_search_success">
 	Your search has been saved, press the ``back'' button on your browser
 	to continue with your search.
+</xsl:template>
+
+<xsl:template match="profile_add_user">
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<input type="hidden" name="func" value="adduser"/>
+		<center>
+		<table>
+			<tr>
+				<td>Profile</td>
+				<td><input name="profile"/></td>
+			</tr>
+			<tr>
+				<td>Username</td>
+				<td><input name="username"/></td>
+			</tr>
+			<tr>
+				<td>Password</td>
+				<td><input type="password" name="password"/></td>
+			</tr>
+			<tr>
+				<td>Password (again)</td>
+				<td><input type="password" name="pass2"/></td>
+			</tr>
+			<tr>
+				<td>Name</td>
+				<td><input name="realname"/></td>
+			</tr>
+			<tr>
+				<td>Email</td>
+				<td><input name="email"/></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<center>
+						<input type="submit" value="Add Me"/>
+						<input type="reset" value="Clear"/>
+					</center>
+				</td>
+			</tr>
+		</table>
+		</center>
+	</form>
 </xsl:template>
 
 </xsl:stylesheet>

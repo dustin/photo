@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoConfig.java,v 1.6 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoConfig.java,v 1.7 2001/07/20 09:51:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,7 +14,7 @@ public class PhotoConfig extends SpyConfig {
 	// Places to look for config files.
 	private File configs[]={
 		new File("photo.conf"),
-		new File("/home/dustin/prog/java/servlet/photo_xml/photo.conf"),
+		new File("/Users/dustin/prog/java/servlet/photo/photo.conf"),
 		new File("/usr/local/etc/photo.conf"),
 		new File("/afs/spy.net/misc/web/etc/photo.conf")
 	};

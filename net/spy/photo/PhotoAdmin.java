@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.16 2001/07/19 10:07:09 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.17 2001/07/20 09:51:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -201,27 +201,19 @@ public class PhotoAdmin extends PhotoHelper {
 
 		// Username
 		String tmp=ps.request.getParameter("username");
-		if(tmp!=null) {
-			user.setUsername(tmp);
-		}
+		user.setUsername(tmp);
 
 		// Password
 		tmp=ps.request.getParameter("password");
-		if(tmp!=null) {
-			user.setPassword(tmp);
-		}
+		user.setPassword(tmp);
 
 		// Real name
 		tmp=ps.request.getParameter("realname");
-		if(tmp!=null) {
-			user.setRealname(tmp);
-		}
+		user.setRealname(tmp);
 
 		// Email
 		tmp=ps.request.getParameter("email");
-		if(tmp!=null) {
-			user.setEmail(tmp);
-		}
+		user.setEmail(tmp);
 
 		// CanAdd
 		tmp=ps.request.getParameter("canadd");
