@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.2 2000/06/26 06:42:31 dustin Exp $
+-- $Id: photo.sql,v 1.3 2000/07/12 08:04:00 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -19,13 +19,13 @@ CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'
 -- Where the picture info is stored.
 
 create table album(
-	keywords varchar(50),
-	descr    text,
-	cat      integer,
-	taken    date,
-	size     integer,
-	addedby  integer,
-	ts       datetime default datetime(now()),
+	keywords varchar(50) not null,
+	descr    text not null,
+	cat      integer not null,
+	taken    date not null,
+	size     integer not null,
+	addedby  integer not null,
+	ts       datetime not null,
 	id       serial
 );
 
@@ -50,7 +50,7 @@ create trigger album_cleanup_tg before delete on album
 
 create table cat(
 	id   serial,
-	name text
+	name text not null
 );
 
 grant all on cat to nobody;
@@ -61,11 +61,11 @@ grant all on cat_id_seq to nobody;
 
 create table wwwusers(
 	id       serial,
-	username varchar(16),
-	password text,
-	email    text,
-	realname text,
-	canadd   bool
+	username varchar(16) not null,
+	password text not null,
+	email    text not null,
+	realname text not null,
+	canadd   bool not null
 );
 
 create unique index user_byname on wwwusers(username);
@@ -89,8 +89,8 @@ create function getwwwuser(text) returns integer as
 -- The ACLs for the categories
 
 create table wwwacl(
-	userid   integer,
-	cat      integer
+	userid   integer not null,
+	cat      integer not null
 );
 
 create index acl_byid on wwwacl(userid);
@@ -110,8 +110,8 @@ grant all on show_acl to nobody;
 -- The group file for the Web server's ACL crap.
 
 create table wwwgroup(
-	userid    integer,
-	groupname varchar(16)
+	userid    integer not null,
+	groupname varchar(16) not null
 );
 
 grant all on wwwgroup to nobody;
@@ -131,10 +131,10 @@ grant all on show_group to nobody;
 
 create table searches (
 	searches_id	serial,
-	name		text,
-	addedby		integer,
-	search		text,
-	ts			datetime default('now')
+	name		text not null,
+	addedby		integer not null,
+	search		text not null,
+	ts			datetime not null
 );
 
 grant all on searches to nobody;
@@ -145,9 +145,9 @@ grant all on searches_searches_id_seq to nobody;
 -- This is keyed of the id in the album table
 
 create table image_store (
-	id   integer,
-	line integer,
-	data text
+	id   integer not null,
+	line integer not null,
+	data text not null
 );
 
 grant all on image_store to nobody;
@@ -194,7 +194,7 @@ create table photo_log (
 	server_host text not null,
 	user_agent integer not null,
 	cached boolean not null,
-	ts datetime default (datetime(now()))
+	ts datetime not null
 );
 
 grant all on photo_log to nobody;
@@ -209,7 +209,7 @@ create table upload_log (
 	photo_id integer not null,
 	wwwuser_id integer not null,
 	stored datetime,
-	ts datetime default(datetime(now()))
+	ts datetime not null
 );
 
 grant all on upload_log to nobody;

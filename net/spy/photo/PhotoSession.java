@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.29 2000/07/10 01:58:32 dustin Exp $
+ * $Id: PhotoSession.java,v 1.30 2000/07/12 08:04:00 dustin Exp $
  */
 
 package net.spy.photo;
@@ -313,8 +313,8 @@ public class PhotoSession extends Object
 			photo=getDBConn();
 			photo.setAutoCommit(false);
 			query = "insert into album(keywords, descr, cat, taken, size, "
-				+ " addedby)\n"
-				+ "   values(?, ?, ?, ?, ?, ?)";
+				+ " addedby, ts)\n"
+				+ "   values(?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement st=photo.prepareStatement(query);
 			// Toss in the parameters
 			st.setString(1, multi.getParameter("keywords"));
@@ -323,6 +323,7 @@ public class PhotoSession extends Object
 			st.setString(4, multi.getParameter("taken"));
 			st.setInt(5, size);
 			st.setInt(6, remote_uid.intValue());
+			st.setDate(7, new java.sql.Date(System.currentTimeMillis()));
 			st.executeUpdate();
 
 			query = "select currval('album_id_seq')\n";
@@ -349,10 +350,12 @@ public class PhotoSession extends Object
 
 			// Log that the data was stored in the cache, so that, perhaps,
 			// it can be permanently stored later on.
-			query = "insert into upload_log values(?, ?)\n";
+			query = "insert into upload_log (photo_id, wwwuser_id, ts)\n"
+				+ " values(?, ?, ?)\n";
 			st=photo.prepareStatement(query);
 			st.setInt(1, id);
 			st.setInt(2, remote_uid.intValue());
+			st.setDate(3, new java.sql.Date(System.currentTimeMillis()));
 			st.executeUpdate();
 
 			h.put("ID", ""+id);

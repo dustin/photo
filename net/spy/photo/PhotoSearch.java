@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.5 2000/07/10 01:58:32 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.6 2000/07/12 08:04:00 dustin Exp $
  */
 
 package net.spy.photo;
@@ -68,13 +68,14 @@ public class PhotoSearch extends PhotoHelper {
 				throw new Exception("Invalid ``search'' parameter");
 			}
 
-			String query = "insert into searches (name, addedby, search)\n"
-				+ "  values(?, ?, ?)";
+			String query = "insert into searches (name, addedby, search, ts)\n"
+				+ "  values(?, ?, ?, ?)";
 			photo=getDBConn();
 			PreparedStatement st=photo.prepareStatement(query);
 			st.setString(1, name);
 			st.setInt(2, user.id.intValue());
 			st.setString(3, search);
+			st.setDate(4, new java.sql.Date(System.currentTimeMillis()));
 
 			st.executeUpdate();
 		} catch(Exception e) {
