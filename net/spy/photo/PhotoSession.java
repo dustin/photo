@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.5 2000/06/26 03:34:42 dustin Exp $
+ * $Id: PhotoSession.java,v 1.6 2000/06/26 03:44:07 dustin Exp $
  */
 
 package net.spy.photo;
@@ -187,6 +187,9 @@ public class PhotoSession extends Object
 			int cat_id=Integer.parseInt(s_cat_id);
 
 			Hashtable h=new Hashtable();
+
+			h.put("CATID", "-1");
+			h.put("CATNAME", "");
 
 			photo=getDBConn();
 			PreparedStatement st=photo.prepareStatement(
