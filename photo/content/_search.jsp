@@ -198,7 +198,7 @@
 
 		<bean:message key="forms.search.adv.action"/>
 		<html:select property="action">
-			<html:option value="success">
+			<html:option value="next">
 				<bean:message key="forms.search.adv.action.success"/>
 			</html:option>
 			<html:option value="showResults">
