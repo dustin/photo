@@ -59,6 +59,7 @@
 										<photo:link url="/">[Home]</photo:link>
 										| <photo:link url="/sizeform.jsp">[Size]</photo:link>
 										<photo:guest negate="true">
+											| <photo:link url="/sessions.jsp">[Who's On]</photo:link>
 											| <photo:link url="/logout.do">[Logout]</photo:link>
 										</photo:guest>
 									</td>
