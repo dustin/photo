@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.10 2002/06/23 03:18:12 dustin Exp $
+	$Id: build.xml,v 1.11 2002/06/23 03:42:10 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -31,11 +31,14 @@
 			<fileset dir=".">
 				<include name="photo.jar"/>
 				<include name="photo.war"/>
+				<include name="photo.zip"/>
 			</fileset>
 		</delete>
+		<delete dir="docs"/>
 	</target>
 
 	<target name="docs">
+		<mkdir dir="docs"/>
 		<javadoc destdir="docs"
 			author="true"
 			version="true"
@@ -66,6 +69,17 @@
 			<zipfileset dir="etc" prefix="WEB-INF" includes="photo.conf"/>
 		</jar>
 	</target>
+
+	<target name="photo.zip" depends="photo.war,docs">
+		<zip zipfile="photo.zip" basedir="." excludes="**">
+			<zipfileset dir="." prefix="" includes="doc/**"/>
+			<zipfileset dir="docs" prefix="doc/api" includes="**"/>
+			<zipfileset dir="." prefix="" includes="etc/*"/>
+			<zipfileset dir="." prefix="" includes="photo.war"/>
+		</zip>
+	</target>
+
+	<target name="dist" depends="photo.zip"/>
 
 	<target name="all" depends="rmic,spfiles">
 		<javac srcdir="." destdir="." deprecation="on" depend="on" verbose="false">
