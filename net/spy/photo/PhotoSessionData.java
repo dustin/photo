@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.2 2002/02/24 01:11:52 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.3 2002/02/25 04:05:36 dustin Exp $
 
 package net.spy.photo;
 
@@ -9,6 +9,10 @@ package net.spy.photo;
  */
 public class PhotoSessionData extends Object implements java.io.Serializable {
 
+	public static final int NOADMIN=0;
+	public static final int ADMIN=1;
+	public static final int SUBADMIN=2;
+
 	private boolean xmlraw=false;
 	private String stylesheet=null;
 	private PhotoUser user=null;
@@ -16,10 +20,10 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	private PhotoSearchResults results=null;
 	// A cursor for looking at image comments.
 	private Cursor comments=null;
-	private int searchId=0;
 	private String encodedSearch=null;
-	private boolean isadmin=false;
 	private PhotoDimensions optimalDimensions=null;
+
+	private int admin_type=NOADMIN;
 
 	/**
 	 * Get an instance of PhotoSessionData.
@@ -28,30 +32,51 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 		super();
 	}
 
+	/**
+	 * True if this user wants raw XML to be processed on the client.
+	 */
 	public boolean isXmlraw() {
 		return(xmlraw);
 	}
 
+	/**
+	 * Set to true if the user wants raw XML to be processed on the client.
+	 */
 	public void setXmlraw(boolean xmlraw) {
 		this.xmlraw=xmlraw;
 	}
 
+	/**
+	 * Get the stylesheet this session is using.
+	 */
 	public String getStylesheet() {
 		return(stylesheet);
 	}
 
+	/**
+	 * Set the stylesheet this session is using.
+	 */
 	public void setStylesheet(String stylesheet) {
 		this.stylesheet=stylesheet;
 	}
 
+	/**
+	 * Get the user who owns this session.
+	 */
 	public PhotoUser getUser() {
 		return(user);
 	}
 
+	/**
+	 * Set the user who owns this session.
+	 */
 	public void setUser(PhotoUser user) {
 		this.user=user;
 	}
 
+	/**
+	 * Get the search results that are currently being accessed.
+	 */
 	public PhotoSearchResults getResults() {
 		return(results);
 	}
@@ -74,34 +99,68 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 		return(comments);
 	}
 
-	public int getSearchId() {
-		return(searchId);
-	}
-
-	public void setSearchId(int searchId) {
-		this.searchId=searchId;
-	}
-
+	/**
+	 * Get the encoded version of the current search (for saving or
+	 * whatever).
+	 */
 	public String getEncodedSearch() {
 		return(encodedSearch);
 	}
 
+	/**
+	 * Set the encoded search (for saving or whatever).
+	 */
 	public void setEncodedSearch(String encodedSearch) {
 		this.encodedSearch=encodedSearch;
 	}
 
+	/**
+	 * Check to see if a specific flag is set.
+	 *
+	 * @return true if the flag is set.
+	 */
+	public boolean checkAdminFlag(int flag) {
+		return( (admin_type & flag) == flag);
+	}
+
+	/**
+	 * Test for the ADMIN bit.
+	 */
 	public boolean isAdmin() {
-		return(isadmin);
+		return(checkAdminFlag(ADMIN));
 	}
 
+	/**
+	 * Get all the admin bits.
+	 */
+	public int getAdmin() {
+		return(admin_type);
+	}
+
+	/**
+	 * Set the ADMIN bit.
+	 */
 	public void setIsadmin(boolean isadmin) {
-		this.isadmin=isadmin;
+		setAdmin(ADMIN);
 	}
 
+	/**
+	 * Set all the admin bits.
+	 */
+	public void setAdmin(int to) {
+		admin_type=to;
+	}
+
+	/**
+	 * Get the optimal dimensions for this session.
+	 */
 	public PhotoDimensions getOptimalDimensions() {
 		return(optimalDimensions);
 	}
 
+	/**
+	 * Set the optimal dimensions for this session.
+	 */
 	public void setOptimalDimensions(PhotoDimensions optimalDimensions) {
 		this.optimalDimensions=optimalDimensions;
 	}
