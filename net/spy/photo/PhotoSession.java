@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.17 2000/06/30 08:02:10 dustin Exp $
+ * $Id: PhotoSession.java,v 1.18 2000/06/30 08:04:45 dustin Exp $
  */
 
 package net.spy.photo;
@@ -785,16 +785,12 @@ public class PhotoSession extends Object
 		for(i=0; i<5; i++) {
 			PhotoSearchResult r=results.next();
 			if(r!=null) {
-				Hashtable h = new Hashtable();
-				r.addToHash(h);
-
 				// No, this really doesn't belong here.
 				if( ((i) % 2) == 0) {
 					middle += "</tr>\n<tr>\n";
 				}
-
 				middle += "<td>\n";
-				middle += tokenize("findmatch.inc", h);
+				middle += tokenize("findmatch.inc", r.addToHash(null));
 				middle += "</td>\n";
 			}
 		}
