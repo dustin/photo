@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.1 2000/06/24 23:30:57 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.2 2000/07/05 21:43:41 dustin Exp $
  */
 
 package net.spy.photo;
@@ -19,7 +19,7 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 		super();
 	}
 
-	public synchronized void doFlush() {
+	public void doFlush() {
 		Vector v = log_object.flush();
 		Statement st = null;
 		Connection db=null;
