@@ -11,7 +11,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.20 2001/01/07 08:17:10 dustin Exp $
+ $Id: default.xsl,v 1.21 2001/01/07 23:37:00 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -21,6 +21,8 @@
 			<title>
 				<xsl:value-of select="heading/title"/>
 			</title>
+			<link rel="stylesheet"
+			href="{meta_stuff/self_uri}?func=getstylesheet"/>
 		</head>
 		<body background="/~dustin/images/holiday.gif" bgcolor="#cFcFfF">
 			<center>
@@ -85,6 +87,7 @@
 </xsl:template>
 
 <xsl:template match="index_page">
+
 	<table>
 		<tr valign="top">
 
