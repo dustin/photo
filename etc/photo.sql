@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.12 2002/01/13 11:08:32 dustin Exp $
+-- $Id: photo.sql,v 1.13 2002/02/08 23:39:34 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -10,7 +10,7 @@ begin transaction;
 -- add support for PL/pgsql
 
 CREATE FUNCTION plpgsql_call_handler () RETURNS OPAQUE AS
-        '/usr/local/pgsql/lib/plpgsql.so' LANGUAGE 'C';
+        'plpgsql.so' LANGUAGE 'C';
         
 CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'
         HANDLER plpgsql_call_handler
