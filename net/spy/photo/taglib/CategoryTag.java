@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CategoryTag.java,v 1.6 2003/07/31 08:03:42 dustin Exp $
+// $Id: CategoryTag.java,v 1.7 2003/08/01 04:02:21 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -8,6 +8,8 @@ import java.util.Collection;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+
+import net.spy.SpyUtil;
 
 import net.spy.photo.Category;
 import net.spy.photo.PhotoException;
@@ -33,7 +35,7 @@ public class CategoryTag extends PhotoTag {
 	}
 
 	public void setShowViewable(String showViewable) {
-		Boolean b=new Boolean(showViewable);
+		Boolean b=SpyUtil.getBoolean(showViewable);
 		this.showViewable=b.booleanValue();
 	}
 
@@ -46,7 +48,7 @@ public class CategoryTag extends PhotoTag {
 	}
 
 	public void setShowAddable(String showAddable) {
-		Boolean b=new Boolean(showAddable);
+		Boolean b=SpyUtil.getBoolean(showAddable);
 		this.showAddable=b.booleanValue();
 	}
 
