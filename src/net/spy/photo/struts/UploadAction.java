@@ -10,14 +10,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.db.Saver;
-
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoException;
 import net.spy.photo.log.PhotoLogUploadEntry;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.impl.SavablePhotoImageData;
 
 import org.apache.struts.action.ActionForm;
@@ -64,8 +63,8 @@ public class UploadAction extends PhotoAction {
 		savable.setTaken(uf.getTaken());
 		savable.setAddedBy(user);
 
-		Saver s=new Saver(PhotoConfig.getInstance());
-		s.save(savable);
+		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+		pidf.store(savable);
 
 		int id=savable.getId();
 

@@ -13,6 +13,7 @@ import net.spy.photo.Category;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.log.PhotoLogUploadEntry;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.impl.SavablePhotoImageData;
 import net.spy.photo.User;
 import net.spy.photo.PhotoConfig;
@@ -94,8 +95,8 @@ public class AddImage extends RPCMethod {
 		savable.setTaken(taken);
 		savable.setAddedBy(user);
 
-		Saver s=new Saver(PhotoConfig.getInstance());
-		s.save(savable);
+		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+		pidf.store(savable);
 
 		// Log it.
 		// XXX  I really would like a way to get to the actual remote IP

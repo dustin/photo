@@ -10,9 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.db.Saver;
-
-import net.spy.photo.PhotoConfig;
 import net.spy.photo.impl.SavablePhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 
@@ -51,8 +48,7 @@ public class AdminEditImage extends PhotoAction {
 		savable.setCatId(Integer.parseInt(uf.getCategory()));
 		savable.setTaken(uf.getTaken());
 
-		Saver s=new Saver(PhotoConfig.getInstance());
-		s.save(savable);
+		pidf.store(savable);
 
 		return(mapping.findForward("next"));
 	}

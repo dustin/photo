@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import net.spy.factory.GenFactory;
+import net.spy.db.Saver;
+import net.spy.db.Savable;
+import net.spy.db.SaveException;
 
 import net.spy.photo.impl.DBImageDataSource;
 import net.spy.photo.search.SearchIndex;
@@ -74,6 +77,15 @@ public class PhotoImageDataFactory extends GenFactory {
 	 */
 	public PhotoImageData getData(int id) throws Exception {
 		return((PhotoImageData)getObject(id));
+	}
+
+	/** 
+	 * Store a savable and recache the instances.
+	 */
+	public void store(Savable ob) throws Exception {
+		Saver s=new Saver(PhotoConfig.getInstance());
+		s.save(ob);
+		recache();
 	}
 
 }
