@@ -256,9 +256,11 @@ def fetchImage(photo, destdir):
     global config
     global tp
 
-    imgs=(('full', (None, False)),
+    imgs=[
         ('normal', ("800x600", False)),
-        ('tn', (None, True)))
+        ('tn', (None, True))]
+    if config.has_key('-F'):
+        imgs.append( ('full', (None, False)) )
 
     todo=[]
     for ext, p in imgs:
@@ -326,7 +328,7 @@ def go():
 def parseArgs():
     global config
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'vfa:')
+        opts, args = getopt.getopt(sys.argv[1:], 'vfFa:')
         config = dict(opts)
     except getopt.GetoptError, e:
         raise UsageError(e)
@@ -346,9 +348,10 @@ def parseArgs():
 # Start
 
 def usage():
-    print "Usage:  %s [-f] [-a user] photurl destdir" % (sys.argv[0], );
+    print "Usage:  %s [-f] [-F] [-a user] photurl destdir" % (sys.argv[0], );
     print " -a authenticate as the given user"
     print " -f fetch index even if we already have one"
+    print " -F fetch the full size images in addition to the smaller ones"
     sys.exit(1)
 
 if __name__ == '__main__':
