@@ -1,6 +1,6 @@
 <tr>
-	<th>%USERNAME%</th>
-	<th>%REMOTE_ADDR%</th>
-	<th>%TS%</th>
-	<th>%LOG_TYPE%</th>
+	<td>%USERNAME%</td>
+	<td>%REMOTE_ADDR%</td>
+	<td>%TS%</td>
+	<td>%LOG_TYPE%</td>
 </tr>

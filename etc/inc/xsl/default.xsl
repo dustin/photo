@@ -97,6 +97,9 @@
 							<xsl:if test="meta_stuff/isadmin">
 								<a href="{meta_stuff/self_uri}?func=unsetadmin">(admin mode)</a>
 							</xsl:if>
+							<xsl:if test="meta_stuff/issubadmin">
+								<a href="{meta_stuff/self_uri}?func=unsetadmin">(subadmin mode)</a>
+							</xsl:if>
 						<br/>
 						Switch to
 						<a href="{meta_stuff/self_uri}?func=setstylesheet&amp;stylesheet=simple">simple</a>

@@ -1,4 +1,4 @@
-<html><head><title>Recent Logins</title>
+<html><head><title>Recent Log Entries</title>
 %STYLESHEET%
 </head>
 <body bgcolor="#fFfFfF">
