@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.17 2002/07/09 21:33:19 dustin Exp $
+	$Id: build.xml,v 1.18 2002/07/09 22:06:20 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -33,6 +33,7 @@
 				<include name="photo.war"/>
 				<include name="photoservlet-*.zip"/>
 				<include name="pmd-*-report.html"/>
+				<include name="checkstyle.txt"/>
 			</fileset>
 		</delete>
 		<delete dir="docs"/>
@@ -144,6 +145,34 @@
 				<include name="net/spy/photo/**/*.java"/>
 			</fileset>
 		</pmd>
+	</target>
+
+	<!-- checkstyle -->
+	<target name="checkstyle">
+		<taskdef name="checkstyle"
+			classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
+			<classpath>
+				<fileset dir="${user.home}/lib/checkstyle">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</taskdef>
+
+		<delete file="checkstyle.txt"/>
+
+		<checkstyle
+			allowtabs="yes"
+			tabwidth="4"
+			allowNoAuthor="yes"
+			javadocScope="package"
+			requirePackageHtml="yes"
+			ignorewhitespace="yes">
+
+			<fileset dir=".">
+				<include name="net/spy/photo/**/*.java"/>
+			</fileset>
+			<formatter type="plain" toFile="checkstyle.txt"/>
+		</checkstyle>
 	</target>
 
 </project>
