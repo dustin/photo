@@ -166,7 +166,7 @@ public class PhotoImageDataImpl extends SpyObject
 		Map m=getCache();
 		PhotoImageData rv=(PhotoImageData)m.get(new Integer(id));
 		if(rv == null) {
-			throw new Exception("No nuch image:  " + id);
+			throw new Exception("No such image:  " + id);
 		}
 		return(rv);
 	}
