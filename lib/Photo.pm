@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.37 1998/10/05 05:21:11 dustin Exp $
+# $Id: Photo.pm,v 1.38 1998/10/05 05:26:00 dustin Exp $
 
 package Photo;
 
@@ -191,7 +191,7 @@ sub cacheImage
     $dbh->{AutoCommit}=0;
 
     $out="";
-    $query ="declare cursor c for select * from image_store where id=\n";
+    $query ="declare c cursor for select * from image_store where id=\n";
     $query.="(select id from image_map where name='$img')\n";
     $query.="    order by line\n";
     $s=$self->doQuery($query);
