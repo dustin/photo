@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.42 1998/10/17 08:08:06 dustin Exp $
+# $Id: Photo.pm,v 1.43 1998/10/17 09:49:46 dustin Exp $
 
 package Photo;
 
@@ -346,9 +346,9 @@ sub doFind
 	my($self, $q)=@_;
 	my($query, $s, $i, $start, $max, %p, $n, $nn, $r);
 
-	print $q->start_html(
-		-title=>'Find results',
-		-bgcolor=>'#FfFfFf');
+	print "<html><head><title>Find results</title>\n<head>\n".
+		  "<link rel=\"stylesheet\" href=\"$Photo::uriroot/inc/style.css\">".
+		  "</head><body bgcolor=\"#fFfFfF\">";
 
 	$query=$self->buildQuery($q);
 
