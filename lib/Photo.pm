@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.33 1998/09/05 21:16:41 dustin Exp $
+# $Id: Photo.pm,v 1.34 1998/09/05 23:13:35 dustin Exp $
 
 package Photo;
 
@@ -180,6 +180,25 @@ sub saveSearch
     $self->showTemplate("$Photo::includes/savedsearch.inc", %p);
 }
 
+sub cacheImage
+{
+    my($self, $key, $img, $type)=@_;
+    my($query, $r, $s, $c, $out);
+
+    $c=DCache->new;
+
+    $out="";
+    $query ="select * from image_store where id=\n";
+    $query.="(select id from image_map where name='$img')\n";
+    $query.="    order by line\n";
+    $s=$self->doQuery($query);
+    while($r=$s->fetch) {
+        $out.=decode_base64($r->[2]);
+    }
+    $s->finish;
+    $c->cache($key, $type, $out);
+}
+
 sub makeThumbnail
 {
     my($self, $img, $type)=@_;
@@ -187,22 +206,9 @@ sub makeThumbnail
 
     $c=DCache->new;
 
-    $key="photo-image: $img";
+    $key="photo-image: tn/$img";
     if(!$c->checkcache($key)) {
-
-	$out="";
-
-	$query ="select * from image_store where id=\n";
-	$query.="(select id from image_map where name='$img')\n";
-	$query.="    order by line\n";
-
-	$s=$self->doQuery($query);
-	while($r=$s->fetch) {
-	    $out.=decode_base64($r->[2]);
-	}
-	$s->finish;
-
-	$c->cache($key, $type, $out);
+       $self->cacheImage($key, $img, $type);
     }
 
     open(OUT, ">/tmp/photoout.$img.$$");
@@ -226,7 +232,6 @@ sub makeThumbnail
     unlink("/tmp/photoout.tn.$img.$$");
 
     $c->cache($key, $type, $out);
-    $c->printcache_only($key);
 }
 
 sub displayImage
@@ -255,25 +260,11 @@ sub displayImage
 
     if(!$c->checkcache($key)) {
 
-	my($out);
-	$out="";
-
-        $query ="select * from image_store where id=\n";
-        $query.="(select id from image_map where name='$img')\n";
-        $query.="    order by line\n";
-
-        $s=$self->doQuery($query);
-
-        while($r=$s->fetch) {
-	    $out.=decode_base64($r->[2]);
-        }
-	$s->finish;
-
-	$c->cache($key, $type, $out);
-    } else {
         if($tn) {
             $self->makeThumbnail($img, $type);
-        }
+        } else {
+	    $self->cacheImage($key, $img, $type);
+	}
     }
 
     $c->printcache_only($key);
