@@ -417,7 +417,7 @@
 
 	<center>
 		<img width="{SCALED_WIDTH}" height="{SCALED_HEIGHT}"
-		  src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}"/>
+		  src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}&amp;scale={SCALED_WIDTH}x{SCALED_HEIGHT}"/>
 	</center>
 	<p/>
 	Category:  <xsl:value-of select="CAT"/><p/>
@@ -431,6 +431,7 @@
 	<a href="{/page/meta_stuff/self_uri}?func=logview&amp;view=viewers&amp;which={IMAGE}">
 	Who's seen this?</a><br/>
 	<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={IMAGE}">Linkable image</a><br/>
+	<a href="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}">Full Size Image</a><br/>
 
 </xsl:template>
 
