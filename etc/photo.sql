@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.13 2002/02/08 23:39:34 dustin Exp $
+-- $Id: photo.sql,v 1.14 2002/02/11 09:27:02 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -10,11 +10,46 @@ begin transaction;
 -- add support for PL/pgsql
 
 CREATE FUNCTION plpgsql_call_handler () RETURNS OPAQUE AS
-        'plpgsql.so' LANGUAGE 'C';
+        '/usr/local/pgsql/lib/plpgsql.so' LANGUAGE 'C';
         
 CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'
         HANDLER plpgsql_call_handler
         LANCOMPILER 'PL/pgSQL';
+
+-- The categories
+create table cat(
+	id   serial,
+	name text not null,
+	primary key(id)
+);
+grant all on cat to nobody;
+-- implicit sequence
+grant all on cat_id_seq to nobody;
+
+-- Users go here
+create table wwwusers(
+	id       serial,
+	username varchar(16) not null,
+	password text not null,
+	email    text not null,
+	realname text not null,
+	canadd   bool not null,
+	primary key(id)
+);
+create unique index user_byname on wwwusers(username);
+grant all on wwwusers to nobody;
+grant all on wwwusers_id_seq to nobody;
+-- add guest and admin users
+insert into wwwusers(username, password, email, realname, canadd)
+	values('guest', '', 'photos@localhost', 'Guest User', false);
+-- Default password for admin is ``admin''
+insert into wwwusers(username, password, email, realname, canadd)
+	values('admin', '0DPiKuNIrrVmD8IUCuw1hQxNqZc', 'photoadmin@localhost',
+		'Admin User', true);
+-- get a user ID from a username
+create function getwwwuser(text) returns integer as
+	'select id from wwwusers where username = $1'
+	language 'sql';
 
 -- Where the picture info is stored.
 
@@ -30,7 +65,10 @@ create table album(
 	tn_width   integer default 0,
 	tn_height  integer default 0,
 	ts         datetime not null,
-	id         serial
+	id         serial,
+	primary key(id),
+	foreign key(cat) references cat(id),
+	foreign key(addedby) references wwwusers(id)
 );
 
 create index album_bycat on album(cat);
@@ -50,45 +88,7 @@ create function tg_album_delete() returns opaque as
 create trigger album_cleanup_tg before delete on album
 	for each row execute procedure tg_album_delete();
 
--- The categories
-
-create table cat(
-	id   serial,
-	name text not null
-);
-
-grant all on cat to nobody;
--- implicit sequence
-grant all on cat_id_seq to nobody;
-
 -- The passwd file for the Web server's ACL crap.
-
-create table wwwusers(
-	id       serial,
-	username varchar(16) not null,
-	password text not null,
-	email    text not null,
-	realname text not null,
-	canadd   bool not null
-);
-
-create unique index user_byname on wwwusers(username);
-grant all on wwwusers to nobody;
-grant all on wwwusers_id_seq to nobody;
-
--- add guest and admin users
-insert into wwwusers(username, password, email, realname, canadd)
-	values('guest', '', 'photos@localhost', 'Guest User', false);
--- Default password for admin is ``admin''
-insert into wwwusers(username, password, email, realname, canadd)
-	values('admin', '0DPiKuNIrrVmD8IUCuw1hQxNqZc', 'photoadmin@localhost',
-		'Admin User', true);
-
--- get a user ID from a username
-
-create function getwwwuser(text) returns integer as
-	'select id from wwwusers where username = $1'
-	language 'sql';
 
 -- The ACLs for the categories
 
@@ -96,7 +96,9 @@ create table wwwacl(
 	userid   integer not null,
 	cat      integer not null,
 	canview  boolean default true,
-	canadd   boolean default false
+	canadd   boolean default false,
+	foreign key(userid) references wwwusers(id),
+	foreign key(cat) references cat(id)
 );
 
 create index acl_byid on wwwacl(userid);
@@ -119,7 +121,8 @@ grant all on show_acl to nobody;
 
 create table wwwgroup(
 	userid    integer not null,
-	groupname varchar(16) not null
+	groupname varchar(16) not null,
+	foreign key(userid) references wwwusers(id)
 );
 
 grant all on wwwgroup to nobody;
@@ -142,7 +145,9 @@ create table searches (
 	name		text not null,
 	addedby		integer not null,
 	search		text not null,
-	ts			datetime not null
+	ts			datetime not null,
+	primary key(searches_id),
+	foreign key(addedby) references wwwusers(id)
 );
 
 grant all on searches to nobody;
@@ -155,7 +160,8 @@ grant all on searches_searches_id_seq to nobody;
 create table image_store (
 	id   integer not null,
 	line integer not null,
-	data text not null
+	data text not null,
+	foreign key(id) references album(id)
 );
 
 grant all on image_store to nobody;
@@ -172,7 +178,8 @@ create function catsum (integer)
 
 create table user_agent (
 	user_agent_id serial,
-	user_agent text
+	user_agent text,
+	primary key(user_agent_id)
 );
 
 grant all on user_agent to nobody;
@@ -193,7 +200,7 @@ begin
 end;
 ' language 'plpgsql';
 
--- Log image retrievals.
+-- 'Log image retrievals.
 
 create table photo_log (
 	photo_id integer not null,
@@ -202,7 +209,10 @@ create table photo_log (
 	server_host text not null,
 	user_agent integer not null,
 	cached boolean not null,
-	ts datetime not null
+	ts datetime not null,
+	foreign key(photo_id) references album(id),
+	foreign key(wwwuser_id) references wwwusers(id),
+	foreign key(user_agent) references user_agent(user_agent_id)
 );
 
 grant all on photo_log to nobody;
@@ -217,7 +227,9 @@ create table upload_log (
 	photo_id integer not null,
 	wwwuser_id integer not null,
 	stored datetime,
-	ts datetime not null
+	ts datetime not null,
+	foreign key(photo_id) references album(id),
+	foreign key(wwwuser_id) references wwwusers(id)
 );
 
 grant all on upload_log to nobody;
@@ -235,6 +247,16 @@ create unique index user_profilesbyname on user_profiles(name);
 grant all on user_profiles to nobody;
 grant all on user_profiles_profile_id_seq to nobody;
 
+-- Profile ACLs
+create table user_profile_acls (
+	profile_id integer not null,
+	cat_id integer not null,
+	foreign key(profile_id) references user_profiles(profile_id),
+	foreign key(cat_id) references cat(id)
+);
+create index user_profile_aclsbyp on user_profile_acls(profile_id);
+grant all on user_profile_acls to nobody;
+
 -- View the profiles
 create view user_profile_view as
 	select p.name, p.description, p.expires,
@@ -247,15 +269,6 @@ create view user_profile_view as
 		order by
 			p.expires
 ;
-
--- Profile ACLs
-create table user_profile_acls (
-	profile_id integer not null,
-	cat_id integer not null,
-	foreign key(profile_id) references user_profiles(profile_id)
-);
-create index user_profile_aclsbyp on user_profile_acls(profile_id);
-grant all on user_profile_acls to nobody;
 
 -- Log view
 create view log_user_ip_agent as
