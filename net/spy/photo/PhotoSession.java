@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.2 2000/06/25 07:38:32 dustin Exp $
+ * $Id: PhotoSession.java,v 1.3 2000/06/25 08:31:14 dustin Exp $
  */
 
 package net.spy.photo;
@@ -121,6 +121,9 @@ public class PhotoSession extends Object
 			showCredForm();
 		} else if(func.equalsIgnoreCase("savesearch")) {
 			saveSearch();
+		} else if(func.equalsIgnoreCase("edittext")) {
+			saveImageInfo();
+			doDisplay();
 		} else if(func.equalsIgnoreCase("setcred")) {
 			setCreds();
 			doIndex();
@@ -250,6 +253,55 @@ public class PhotoSession extends Object
 		return(r);
 	}
 
+	// Save the new data
+	protected void saveImageInfo() throws ServletException {
+		if(!isAdmin()) {
+			throw new ServletException("Must be an admin to do this.");
+		}
+
+		String keywords="", info="", taken="";
+		String out="", stmp=null;
+		int id=-1;
+		int category=-1;
+
+		// We need a short lifetime for whatever page this produces
+        long l=new java.util.Date().getTime();
+        l+=10000L;
+        response.setDateHeader("Expires", l);
+
+		// Get the ID
+		stmp=request.getParameter("id");
+		id=Integer.parseInt(stmp);
+
+		// Get the category ID
+		stmp=request.getParameter("cat");
+		category=Integer.parseInt(stmp);
+
+		// Get the string data
+		taken=request.getParameter("taken");
+		keywords=request.getParameter("keywords");
+		info=request.getParameter("info");
+
+		Connection photo=null;
+		try {
+			photo=getDBConn();
+			PreparedStatement st=photo.prepareStatement(
+				"update album set cat=?, keywords=?, descr=?, taken=?\n"
+				+ " where id=?"
+				);
+			st.setInt(1, category);
+			st.setString(2, keywords);
+			st.setString(3, info);
+			st.setString(4, taken);
+			st.setInt(5, id);
+			st.executeUpdate();
+		} catch(Exception e) {
+			log("Error updating information:  " + e);
+		} finally {
+			freeDBConn(photo);
+		}
+	}
+
 	// Add an image
 	protected void doAddPhoto() throws ServletException {
 		String category="", keywords="", picture="", info="", taken="";
@@ -374,10 +426,9 @@ public class PhotoSession extends Object
 				photo.rollback();
 				h.put("QUERY", query);
 				h.put("ERRSTR", e.getMessage());
-				out += tokenize("add_success.inc", h);
+				out += tokenize("add_dbfailure.inc", h);
 			} catch(Exception e2) {
-				log(e2.getMessage());
-				// Nothing to see here.
+				log("Error rolling back and/or reporting add faulre:  " + e2);
 			}
 		} finally {
 			if(photo != null) {
@@ -399,7 +450,7 @@ public class PhotoSession extends Object
 	}
 
 	// Get a list of categories for a select list
-	protected String getCatList() {
+	protected String getCatList(int def) {
 		String query, out="";
 		Connection photo=null;
 		try {
@@ -413,8 +464,13 @@ public class PhotoSession extends Object
 
 			ResultSet rs = st.executeQuery(query);
 			while(rs.next()) {
-				out += "    <option value=\"" + rs.getString(1)
-					+ "\">" + rs.getString(2) + "\n";
+				int id=rs.getInt("id");
+				String selected="";
+				if(id==def) {
+					selected=" selected";
+				}
+				out += "    <option value=\"" + id + "\"" + selected
+					+ ">" + rs.getString("name") + "\n";
 			}
 		} catch(Exception e) {
 			// Nothing
@@ -524,7 +580,7 @@ public class PhotoSession extends Object
 		Hashtable h = new Hashtable();
 
 		try {
-			h.put("CAT_LIST", getCatList());
+			h.put("CAT_LIST", getCatList(-1));
 		} catch(Exception e) {
 			h.put("CAT_LIST", "");
 		}
@@ -539,7 +595,7 @@ public class PhotoSession extends Object
 		Hashtable h = new Hashtable();
 
 		try {
-			h.put("CAT_LIST", getCatList());
+			h.put("CAT_LIST", getCatList(-1));
 		} catch(Exception e) {
 			h.put("CAT_LIST", "");
 		}
@@ -702,7 +758,15 @@ public class PhotoSession extends Object
 			h.put("PREV", "");
 		}
 
-		String output = tokenize("display.inc", h);
+		String output = null;
+		if(isAdmin()) {
+			// Admin needs CATS
+			int defcat=Integer.parseInt(r.catnum);
+			h.put("CATS", getCatList(defcat));
+			output=tokenize("admin/display.inc", h);
+		} else {
+			output=tokenize("display.inc", h);
+		}
 		send_response(output);
 	}
 
@@ -760,11 +824,19 @@ public class PhotoSession extends Object
 			h.put("PREV",      "");
 			h.put("NEXT",      "");
 
+			if(isAdmin()) {
+				// Admin needs CATS
+				int defcat=rs.getInt(8);
+				h.put("CATS", getCatList(defcat));
+				output += tokenize("admin/display.inc", h);
+			} else {
+				output += tokenize("display.inc", h);
+			}
+
 		} catch(SQLException e) {
 			throw new ServletException("Some kinda SQL problem.");
 		}
 		finally { freeDBConn(photo); }
-		output += tokenize("display.inc", h);
 
 		send_response(output);
 	}
