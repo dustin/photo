@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoHelper.java,v 1.2 2000/07/01 00:39:57 dustin Exp $
+ * $Id: PhotoHelper.java,v 1.3 2000/07/19 03:21:34 dustin Exp $
  */
 
 package net.spy.photo;
@@ -11,6 +11,7 @@ import java.util.*;
 import java.lang.*;
 
 import net.spy.*;
+import net.spy.log.*;
 
 // The class
 public class PhotoHelper

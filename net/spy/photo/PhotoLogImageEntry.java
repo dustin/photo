@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogImageEntry.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
+ * $Id: PhotoLogImageEntry.java,v 1.2 2000/07/19 03:21:34 dustin Exp $
  */
 
 package net.spy.photo;
-
 
 import java.util.*;
 import java.text.*;
@@ -15,6 +14,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import net.spy.*;
+import net.spy.log.*;
 
 public class PhotoLogImageEntry extends SpyLogEntry {
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.8 2000/07/08 05:50:48 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.9 2000/07/19 03:21:34 dustin Exp $
  */
 
 package net.spy.photo;
@@ -16,6 +16,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import net.spy.*;
+import net.spy.log.*;
 
 // The class
 public class PhotoServlet extends HttpServlet

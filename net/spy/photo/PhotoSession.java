@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.32 2000/07/16 20:00:02 dustin Exp $
+ * $Id: PhotoSession.java,v 1.33 2000/07/19 03:21:34 dustin Exp $
  */
 
 package net.spy.photo;
@@ -18,6 +18,7 @@ import javax.servlet.http.*;
 import com.oreilly.servlet.*;
 
 import net.spy.*;
+import net.spy.log.*;
 
 // The class
 public class PhotoSession extends Object
