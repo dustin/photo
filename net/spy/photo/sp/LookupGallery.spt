@@ -1,0 +1,37 @@
+#
+# $Id
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get the image IDs for the given gallery ID as would be seen by the given
+user.
+
+@sql
+select distinct m.album_id
+	from galleries_map m, galleries g, wwwacl acl, album a
+	where
+		m.gallery_id = g.gallery_id
+		and
+		g.gallery_id = ?
+		and
+		(
+			a.cat=acl.cat
+			and
+			a.id = m.album_id
+			and
+			(acl.userid = ? or acl.userid = ?)
+		)
+
+@params
+gallery_id required INTEGER Gallery ID
+current_user required INTEGER Requesting user
+default_user required INTEGER Default user ID
+
+@results
+album_id INTEGER The image ID of this record in the album.
+
+@cachetime
+3600

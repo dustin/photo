@@ -1,12 +1,17 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.1 2002/06/30 07:51:31 dustin Exp $
+// $Id: Gallery.java,v 1.2 2002/06/30 21:19:51 dustin Exp $
 
 package net.spy.photo;
 
 import java.util.*;
 import java.util.Date;
 import java.sql.*;
+
+import net.spy.SpyDB;
+import net.spy.db.SpyCacheDB;
+
+import net.spy.photo.sp.LookupGallery;
 
 /**
  * A named collection of images.
@@ -31,23 +36,177 @@ public class Gallery extends Object {
 	}
 
 	// Get the gallery for the current row in the given resultset
-	private Gallery(ResultSet rs) throws SQLException {
-		throw new SQLException("NOT IMPLEMENTED");
+	private Gallery(ResultSet rs) throws SQLException, PhotoException {
+		super();
+		this.id=rs.getInt("gallery_id");
+		this.name=rs.getString("gallery_name");
+		this.owner=Persistent.getSecurity().getUser(
+			rs.getInt("wwwuser_id"));
+		this.isPublic=rs.getBoolean("ispublic");
+		this.timestamp=rs.getTimestamp("ts");
+
+		if(owner==null) {
+			throw new PhotoException("User " + rs.getInt("wwwuser_id")
+				+ "not found");
+		}
+	}
+
+	private void loadMap(PhotoUser user) throws Exception {
+		LookupGallery lg=new LookupGallery(new PhotoConfig());
+		lg.set("gallery_id", id);
+		lg.set("current_user", user.getId());
+		lg.set("default_user", PhotoUtil.getDefaultId());
+
+		ResultSet rs=lg.executeQuery();
+
+		images=new Vector();
+		while(rs.next()) {
+			addImage(rs.getInt("album_id"));
+		}
+
+		rs.close();
+		lg.close();
 	}
 
 	/**
 	 * Get the given gallery by ID as it will be seen by the given user.
+	 *
+	 * @return the Gallery or null if there's no match.
 	 */
 	public static Gallery getGallery(PhotoUser user, int id)
 		throws PhotoException {
-		throw new PhotoException("NOT IMPLEMENTED");
+
+		Gallery rv=null;
+
+		try {
+			SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
+			PreparedStatement pst=db.prepareStatement(
+				"select gallery_id, gallery_name, wwwuser_id, ispublic, ts\n"
+					+ " from galleries\n"
+					+ "   where gallery_id=?\n"
+					+ "    and (wwwuser_id=? or ispublic=true)", 3600);
+			pst.setInt(1, id);
+			pst.setInt(2, user.getId());
+			ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				rv=new Gallery(rs);
+			}
+			rs.close();
+			db.close();
+
+			// Load the map
+			rv.loadMap(user);
+
+		} catch(Exception e) {
+			throw new PhotoException("Couldn't look up gallery", e);
+		}
+
+		return(rv);
 	}
 
 	/**
 	 * Save a new gallery.
 	 */
 	public void save() throws PhotoException {
-		throw new PhotoException("NOT IMPLEMENTED");
+		SpyDB db=new SpyDB(new PhotoConfig());
+		Connection conn=null;
+
+		try {
+			conn=db.getConn();
+			conn.setAutoCommit(false);
+			PreparedStatement pst=null;
+
+			// Different prepared statement for new vs. update
+			if(id==-1) {
+				pst=conn.prepareStatement(
+					"insert into galleries "
+						+ "(gallery_name, wwwuser_id, ispublic)\n"
+						+ " values(?,?,?)");
+			} else {
+				pst=conn.prepareStatement(
+					"update galleries "
+						+ "set gallery_name=?, wwwuser_id=?, ispublic=?\n"
+						+ "  where gallery_id=?");
+				pst.setInt(4, id);
+			}
+			// Set the common fields
+			pst.setString(1, getName());
+			pst.setInt(2, getOwner().getId());
+			pst.setBoolean(3, isPublic());
+
+			// Perform the update
+			int affected=pst.executeUpdate();
+
+			// Make sure we didn't mess up
+			if(affected!=1) {
+				throw new PhotoException(
+					"Expected to affect one row, affected " + affected);
+			}
+
+			// Close the statement.
+			pst.close();
+
+			// If it's a new record, get the ID
+			if(id==-1) {
+				Statement st2=conn.createStatement();
+				ResultSet rs=st2.executeQuery(
+					"select currval('galleries_gallery_id_seq')");
+				rs.next();
+				id=rs.getInt(1);
+				rs.close();
+				st2.close();
+			}
+
+			// Save the mappings
+
+			// Delete any old mappings that might exist
+			pst=conn.prepareStatement(
+				"delete from galleries_map where gallery_id=?");
+			pst.setInt(1, id);
+			pst.executeUpdate();
+			pst.close();
+
+			// Load the new gallery
+			pst=conn.prepareStatement(
+				"insert into galleries_map(gallery_id,album_id)\n"
+					+ " values(?,?)");
+			pst.setInt(1, id);
+
+			for(Enumeration e=images.elements(); e.hasMoreElements(); ) {
+				PhotoImageData pid=(PhotoImageData)e.nextElement();
+
+				pst.setInt(2, pid.getId());
+				affected=pst.executeUpdate();
+				if(affected!=1) {
+					throw new PhotoException(
+						"Expected to affect one row, affected " + affected);
+				}
+			}
+			pst.close();
+
+			// Done, commit
+			conn.commit();
+
+		} catch(Exception e) {
+			if(conn!=null) {
+				try {
+					conn.rollback();
+				} catch(SQLException sqle) {
+					sqle.printStackTrace();
+				}
+			}
+			throw new PhotoException("Error saving new gallery", e);
+		} finally {
+			if(conn!=null) {
+				try {
+					conn.setAutoCommit(true);
+				} catch(SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			// Close the DB
+			db.close();
+		}
 	}
 
 	/**
@@ -69,7 +228,8 @@ public class Gallery extends Object {
 	 * String me.
 	 */
 	public String toString() {
-		return("{Gallery name=\"" + name + "\" images:  " + images + "}");
+		return("{Gallery name=\"" + name + "\", id=" + id
+			+ ", images:  " + images + "}");
 	}
 
 	/**
@@ -133,13 +293,22 @@ public class Gallery extends Object {
 	 * Testing and what not.
 	 */
 	public static void main(String args[]) throws Exception {
+
 		PhotoSecurity sec=new PhotoSecurity();
-		PhotoUser user=sec.getUser("dustin");
-		Gallery g=new Gallery(user, "Test Gallery");
+		Gallery g=null;
+		if(args.length == 0) {
+			PhotoUser user=sec.getUser("dustin");
+			g=new Gallery(user, "Test Gallery");
 
-		g.addImage(2600);
-		g.addImage(2069);
+			g.addImage(3985);
+			g.addImage(3929);
+			g.addImage(4009);
 
+			g.save();
+		} else {
+			PhotoUser user=sec.getUser(args[0]);
+			g=getGallery(user, Integer.parseInt(args[1]));
+		}
 		System.out.println(g);
 	}
 
