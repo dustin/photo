@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.13 2002/02/21 07:25:58 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.14 2002/02/21 09:36:17 dustin Exp $
 
 package net.spy.rmi;
 
@@ -86,7 +86,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 		PhotoDimensions dim=null;
 		PhotoConfig sconf=new PhotoConfig();
 		if(thumbnail) {
-			dim=new PhotoDimensionsImpl(sconf.get("thumbnail_size", "220x146"));
+			dim=new PhotoDimensionsImpl(sconf.get("thumbnail_size"));
 		}
 		return(getImage(image_id, dim));
 	}

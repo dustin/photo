@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.90 2002/02/21 07:51:44 dustin Exp $
+ * $Id: PhotoSession.java,v 1.91 2002/02/21 09:36:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1443,7 +1443,7 @@ public class PhotoSession extends Object
 		s=request.getParameter("thumbnail");
 		if(s!=null) {
 			PhotoConfig conf=new PhotoConfig();
-			size=conf.get("thumbnail_size", "220x146");
+			size=conf.get("thumbnail_size");
 		}
 		s=request.getParameter("scale");
 		if(s!=null) {

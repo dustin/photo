@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.19 2002/02/21 09:26:03 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.20 2002/02/21 09:36:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -242,7 +242,7 @@ public class PhotoSearchResult extends PhotoHelper implements Serializable {
 		PhotoConfig conf=new PhotoConfig();
 		PhotoDimensions pdim=new PhotoDimensionsImpl(width, height);
 		PhotoDimensions tdim=new PhotoDimensionsImpl(
-			conf.get("thumbnail_size", "220x146"));
+			conf.get("thumbnail_size"));
 		PhotoDimScaler pds=new PhotoDimScaler(pdim);
 		PhotoDimensions stn=pds.scaleTo(tdim);
 

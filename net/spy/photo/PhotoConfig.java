@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoConfig.java,v 1.9 2002/02/15 09:10:27 dustin Exp $
+ * $Id: PhotoConfig.java,v 1.10 2002/02/21 09:36:17 dustin Exp $
  */
 
 package net.spy.photo;
@@ -40,6 +40,8 @@ public class PhotoConfig extends SpyConfig {
 
 		orput("mail_server", "mail");
 		orput("mail_sender", "dustin+photoservlet@spy.net");
+
+		orput("thumbnail_size", "220x146");
 
 		// XSLT processor
 		orput("xslt_processor", "net.spy.photo.xslt.ResinXSLT");
