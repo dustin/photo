@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.10 2000/10/08 09:12:06 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.11 2000/10/13 06:57:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -28,6 +28,8 @@ public class PhotoServlet extends HttpServlet
 	public SpyLog logger = null;
 
 	protected PhotoCache photoCache=null;
+
+	protected PhotoLogFlusher logflusher=null;
 
 	// The once only init thingy.
 	public void init(ServletConfig config) throws ServletException {
@@ -68,16 +70,28 @@ public class PhotoServlet extends HttpServlet
 		}
 
 		log("Initing logger");
-		logger = new SpyLog("PhotoLog", new PhotoLogFlusher());
+		logflusher=new PhotoLogFlusher();
+		logger = new SpyLog("PhotoLog", logflusher);
 		log("got logger");
 		log("Initialization complete");
+	}
+
+	// Shut the servlet down.
+	public void destroy() {
+		log("Stopping aheadfetcher");
+		aheadfetcher.stop();
+		log("Removing logflusher");
+		logger.removeFlusher(logflusher);
+		log("Stopping logflusher");
+		logflusher.stop();
+		log("Calling super destroy.");
+		super.destroy();
 	}
 
 	// Do a GET request
 	public void doGet (
 		HttpServletRequest request, HttpServletResponse response
 	) throws ServletException, IOException {
-
 		PhotoSession ps = new PhotoSession(this, request, response);
 		ps.process();
 	}

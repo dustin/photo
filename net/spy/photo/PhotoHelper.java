@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoHelper.java,v 1.5 2000/10/08 09:12:06 dustin Exp $
+ * $Id: PhotoHelper.java,v 1.6 2000/10/13 06:57:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -16,12 +16,11 @@ import net.spy.log.*;
 // The class
 public class PhotoHelper
 { 
-	SpyLog logger;
-	PhotoConfig conf;
+	SpyLog logger=null;
+	PhotoConfig conf=null;
 
 	public PhotoHelper() throws Exception {
 		super();
-		initlog();
 		conf = new PhotoConfig();
 	}
 
@@ -30,6 +29,9 @@ public class PhotoHelper
 	}
 
 	protected void log(String message) {
+		if(logger==null) {
+			initlog();
+		}
 		System.err.println("PhotoHelper: " + message);
 	}
 

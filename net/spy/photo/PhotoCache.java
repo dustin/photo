@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoCache.java,v 1.2 2000/07/09 08:52:40 dustin Exp $
+ * $Id: PhotoCache.java,v 1.3 2000/10/13 06:57:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -60,7 +60,8 @@ public class PhotoCache extends Object {
 			cacheStore=new Hashtable();
 		}
 
-		if(cacheCleaner==null) {
+		// start or restart the cache cleaner if needed.
+		if(cacheCleaner==null || (!cacheCleaner.isAlive())) {
 			cacheCleaner=new PhotoCacheCleaner(cacheStore);
 			cacheCleaner.setDaemon(true);
 			cacheCleaner.start();

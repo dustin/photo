@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoCacheCleaner.java,v 1.1 2000/07/05 01:03:41 dustin Exp $
+ * $Id: PhotoCacheCleaner.java,v 1.2 2000/10/13 06:57:56 dustin Exp $
  */
 
 package net.spy.photo;
@@ -11,9 +11,17 @@ import java.util.*;
 public class PhotoCacheCleaner extends Thread {
 	protected Hashtable cacheStore=null;
 
+	// How many cleaning passes we've done.
+	protected int passes=0;
+
 	public PhotoCacheCleaner(Hashtable cacheStore) {
 		super();
 		this.cacheStore=cacheStore;
+		this.setName("PhotoCacheCleaner");
+	}
+
+	public String toString() {
+		return(super.toString() + " - " + passes + " runs");
 	}
 
 	protected void cleanup() throws Exception {
@@ -26,12 +34,12 @@ public class PhotoCacheCleaner extends Thread {
 				}
 			}
 		}
+		passes++;
 	}
 
 	public void run() {
-		// Just loop through periodically and make sure expired cache
-		// entries are removed.
-		while(true) {
+		// Give it ten passes
+		while(passes<12) {
 			try {
 				sleep(300*1000);
 				cleanup();
