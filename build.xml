@@ -196,7 +196,7 @@
 			<zipfileset dir="." prefix="" excludes="**/CVS" includes="contrib/*">
 				<patternset refid="arch-stuff"/>
 			</zipfileset>
-			<zipfileset dir="${BUILDTOP}" prefix="" includes="photo.war"/>
+			<zipfileset dir="${WARDIR}" prefix="" includes="photo.war"/>
 			<zipfileset dir="doc" prefix="" includes="HOWTO"/>
 		</zip>
 	</target>
@@ -204,14 +204,14 @@
 	<target name="dist"
 		description="Create a release."
 		depends="photo.zip">
-		<tstamp/>
 		<move file="${BUILDTOP}/photo.zip"
-			tofile="${BUILDTOP}/photoservlet-${DSTAMP}.zip"/>
+			tofile="${BUILDTOP}/photoservlet-${short.version}.zip"/>
 	</target>
 
 	<target name="photoresources.properties" unless="properties.upToDate">
 		<tstamp/>
 		<exec executable="./etc/tree-version" outputproperty="tree.version"/>
+		<exec executable="./etc/version-num" outputproperty="short.version"/>
 		<copy file="${SRCDIR}/net/spy/photo/photoresources.properties.in"
 			tofile="${BUILDDIR}/net/spy/photo/photoresources.properties"/>
 		<propertyfile file="${BUILDDIR}/net/spy/photo/photoresources.properties">
@@ -220,6 +220,7 @@
 			<entry key="build.tstamp" value="${TSTAMP}"/>
 			<entry key="build.dtstamp" value="${DSTAMP}${TSTAMP}"/>
 			<entry key="tree.version" value="${tree.version}"/>
+			<entry key="short.version" value="${short.version}"/>
 		</propertyfile>
 		<property file="${BUILDDIR}/net/spy/photo/photoresources.properties"/>
 		<property name="properties.upToDate" value="true"/>

@@ -34,7 +34,6 @@ public class PhotoLogEntry extends AbstractSavable {
 	 * Get a new PhotoLogEntry.
 	 *
 	 * @param u The user ID making the request.
-	 * @param p The photo ID that was requested.
 	 * @param type The log type (by string name)
 	 * @param request The HTTP request (to get remote addr and user agent).
 	 */
@@ -46,7 +45,6 @@ public class PhotoLogEntry extends AbstractSavable {
 	 * Get a new PhotoLogEntry.
 	 *
 	 * @param u The user ID making the request.
-	 * @param p The photo ID that was requested.
 	 * @param type The log type (by string name).
 	 * @param remoteAddr The address from which the request was made.
 	 * @param userAgent The agent that added the image.

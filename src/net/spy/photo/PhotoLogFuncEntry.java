@@ -17,7 +17,6 @@ public class PhotoLogFuncEntry extends PhotoLogEntry {
 	 * Get a new PhotoLogFuncEntry for a servlet request.
 	 *
 	 * @param u The user ID making the request.
-	 * @param p The photo ID that was requested.
 	 * @param func The function that was called.
 	 * @param request The HTTP request (to get remote addr and user agent).
 	 */

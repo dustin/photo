@@ -119,9 +119,9 @@ want to try it, send me email.
 
 	It's assumed that the installer knows something about web-apps and
 servlet containers and all that.  PhotoServlet ships as a .war file, but it
-must be expanded and configured to be useful for most people.  that also
-makes it quite a bit easier to tweak the jsps and get what you want out of
-it.  :)
+must be expanded and configured to be useful for most people (note that I
+deploy as a war now).  That also makes it quite a bit easier to tweak the jsps
+and get what you want out of it.  :)
 
 	Go to your application directory, mkdir photo, and unzip the war, then
 edit WEB-INF/photo.conf to match your site config.
@@ -131,10 +131,7 @@ top).  I'd encourage you to look around at other stuff as well.
 
 DATABASE SETUP
 
-    I'm currently using postgres 7.1, but I believe a slightly
-older version will work.  Some changes in Postgres 7.2 prevent this
-software from running out of the box, but minor changes can be made
-to the bootstrap SQL script to get it going.
+    I'm currently using postgres 7.4.
 
     Although photoservlet could theoretically be run with
 another database, it would require changes to the application, the

@@ -374,8 +374,6 @@ public class PhotoUser extends AbstractSavable
 
 	/** 
 	 * Get the persistent session ID.
-	 * 
-	 * @return 
 	 */
 	public String getPersess() {
 		return(persess);
