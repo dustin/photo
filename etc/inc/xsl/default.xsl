@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.8 2000/12/27 06:05:25 dustin Exp $
+ $Id: default.xsl,v 1.9 2000/12/31 06:28:08 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -104,6 +104,24 @@
 			</td>
 		</tr>
 	</table>
+
+	<!-- If we're in admin mode, display the adminu -->
+	<xsl:if test="/page/meta_stuff/isadmin">
+		<h1>Admin Menu</h1>
+		<ul>
+			<li><a
+				href="{/page/meta_stuff/self_uri}?func=admuser">User Admin</a>
+			</li>
+			<li><a
+				href="{/page/meta_stuff/self_uri}?func=admcat">Category Admin</a>
+			</li>
+			<li><a
+				href="{/page/meta_stuff/self_uri}?func=unsetadmin">Drop Privileges</a>
+			</li>
+		</ul>
+		<p/>
+	</xsl:if>
+
 	This database contains about
 	<xsl:value-of select="/page/meta_stuff/total_images"/> images and has
 	displayed about

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.45 2000/12/27 06:05:25 dustin Exp $
+ * $Id: PhotoSession.java,v 1.46 2000/12/31 06:28:08 dustin Exp $
  */
 
 package net.spy.photo;
@@ -927,6 +927,10 @@ public class PhotoSession extends Object
 			log("Error gathering global meta data:  " + e);
 		}
 		sb.append("<total_images>" + tmp + "</total_images>\n");
+		// If the user has requested admin privs, set this flag.
+		if(isAdmin()) {
+			sb.append("<isadmin/>\n");
+		}
 		sb.append("</meta_stuff>\n");
 
 		return(sb.toString());
