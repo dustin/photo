@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.13 1998/11/13 07:36:37 dustin Exp $
+# $Id: admin.cgi,v 1.14 1998/11/13 07:46:09 dustin Exp $
 
 use CGI;
 use Photo;
@@ -223,7 +223,7 @@ sub editUser
     else
     {
 	$p{'USERPART'}=
-        "<input type=\"hidden\" name=\"username\" value=\"$r->[0]\">\n" .
+        "<input type=\"hidden\" name=\"username\" value=\"$r->[1]\">\n" .
         "<input type=\"hidden\" name=\"newuser\" value=\"0\">\n";
     }
 
@@ -339,7 +339,7 @@ sub saveCat
 sub saveUser
 {
     my($q,$p)=@_;
-    my(%in, $query, $s, $r);
+    my(%in, $query, $s, $r, $id);
     %in=map { $_, $q->param($_) } $q->param;
 
     print $q->start_html(-title=>"Saving $in{'username'}",
@@ -376,10 +376,12 @@ sub saveUser
         print "Adding $in{'username'}\n<br><hr>\n";
     }
 
+	$id=$p->getuid($in{'username'});
+
     print "<!-- $query -->\n";
     $p->doQuery($query);
 
-    $query="delete from wwwacl where userid=$in{'username'}\n";
+    $query="delete from wwwacl where userid=$id\n";
     print "<!-- $query -->\n";
     $p->doQuery($query);
 
@@ -390,7 +392,7 @@ sub saveUser
 
     while($r=$s->fetch) {
 	if($in{"cat$r->[0]"}==1) {
-	    $query="insert into wwwacl values($in{'username'}, $r->[0])\n";
+	    $query="insert into wwwacl values($id, $r->[0])\n";
 	    print "<!-- $query -->\n";
 	    $p->doQuery($query);
 	}
