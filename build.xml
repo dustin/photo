@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.35 2003/05/24 08:24:28 dustin Exp $
+	$Id: build.xml,v 1.36 2003/05/26 08:05:07 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -27,6 +27,7 @@
 			<fileset dir="net">
 				<include name="**/*.class"/>
 				<include name="spy/photo/sp/*.java"/>
+				<include name="spy/photo/sp/*/*.java"/>
 				<include name="spy/photo/photoresources.properties"/>
 			</fileset>
 			<fileset dir=".">
