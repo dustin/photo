@@ -116,7 +116,10 @@
 						</td>
 						<td align="right">
 							<xsl:call-template name="quick_search"/>
-							<font size="-1"><a href="{meta_stuff/self_uri}">[HOME]</a></font>
+							<font size="-1">
+								<a href="{meta_stuff/self_uri}">[HOME]</a>
+								| <a href="{meta_stuff/self_uri}?func=setviewsize">[SIZE]</a>
+								</font>
 						</td>
 						</tr>
 						</table>
@@ -157,6 +160,11 @@
 						</xsl:with-param>
 					</xsl:call-template>
 					<ul>
+						<xsl:if test="/page/meta_stuff/photo_user/username='guest'">
+							<li>
+								<a href="{/page/meta_stuff/self_uri}?func=credform">Login</a>
+							</li>
+						</xsl:if>
 						<xsl:if test="/page/meta_stuff/photo_user/canadd">
 							<li>
 								<a href="{/page/meta_stuff/self_uri}?func=addform">Add a new Image</a>

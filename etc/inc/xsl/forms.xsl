@@ -359,4 +359,20 @@
 	</form>
 </xsl:template>
 
+<xsl:template match="viewing_size_form">
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<input type="hidden" name="func" value="setviewsize"/>
+		Choose the optimal viewing size for your display.
+		<select name="dims">
+			<option>640x480</option>
+			<option selected="1">800x600</option>
+			<option>1024x768</option>
+		</select>
+		<br/>
+		Remember:  <input type="checkbox" name="remember"/>
+		<br/>
+		<input type="submit" value="Set Size"/>
+	</form>
+</xsl:template>
+
 </xsl:stylesheet>
