@@ -248,7 +248,7 @@ public class Search extends SpyObject {
 		if("keywords".equals(form.getField())) {
 			processKeywords(rset, form.getWhat(), form.getKeyjoin());
 		} else if("descr".equals(form.getField())) {
-			throw new Exception("Not handling descr currently");
+			processInfo(rset, form.getWhat(), form.getKeyjoin());
 		} else {
 			String stmp = form.getWhat();
 			if(stmp != null && stmp.length() > 0) {
@@ -346,6 +346,44 @@ public class Search extends SpyObject {
 			SearchIndex index=SearchIndex.getInstance();
 			Set keyset=index.getForKeywords(keywords, joinop);
 			rset.retainAll(keyset);
+		}
+	}
+
+	private void processInfo(Set rset, String kw, String keyjoin) {
+		// Find all of the words
+		ArrayList words=new ArrayList();
+		StringTokenizer st=new StringTokenizer(kw.toLowerCase());
+		while(st.hasMoreTokens()) {
+			words.add(st.nextToken());
+		}
+		// Figure out the operation
+		int joinop=SearchIndex.OP_AND;
+		if("or".equals(keyjoin)) {
+			joinop=SearchIndex.OP_OR;
+		}
+
+		for(Iterator ri=rset.iterator(); ri.hasNext(); ) {
+			PhotoImageData pid=(PhotoImageData)ri.next();
+			String info=pid.getDescr().toLowerCase();
+			boolean matchedone=false;
+			boolean matchedall=true;
+			for(Iterator i=words.iterator(); i.hasNext(); ) {
+				String word=(String)i.next();
+				if(info.indexOf(word) >= 0) {
+					matchedone=true;
+				} else {
+					matchedall=false;
+				}
+			}
+			if(matchedone) {
+				if(joinop == SearchIndex.OP_AND && !matchedall) {
+					// And requires all to match, but we didn't match all
+					ri.remove();
+				}
+			} else {
+				// Didn't match anything
+				ri.remove();
+			}
 		}
 	}
 
