@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.12 2002/02/20 11:32:12 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.13 2002/02/21 07:25:58 dustin Exp $
 
 package net.spy.rmi;
 
@@ -70,7 +70,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 			// Not in cache, get it
 			pi=fetchImage(image_id);
 			// Scale it
-			pi=scaleImage(pi, image_id, dim);
+			pi=scaleImage(pi, dim);
 			// Store it
 			rhash.put(key, pi);
 			log("Stored " + image_id + " with key " + key);
@@ -105,102 +105,14 @@ public class ImageServerImpl extends UnicastRemoteObject
 		}
 	}
 
-	private String dumpIS(InputStream s) {
-		String out="";
-		try {
-			byte b[]=new byte[s.available()];
-
-			s.read(b);
-			out=new String(b);
-		} catch(Exception e) {
-			log("Error dumping InputStream:  " + e);
-			e.printStackTrace();
-		}
-		out=out.trim();
-		if(out.length() < 1) {
-			out=null;
-		}
-		return(out);
-	}
-
 	private PhotoImage scaleImage(
-		PhotoImage in, int id, PhotoDimensions dim) throws Exception {
-		Random r = new Random();
-		String part = "/tmp/image." + id + "." + Math.abs(r.nextInt());
-		String thumbfilename = part + ".tn.jpg";
-		String tmpfilename=part + ".jpg";
-		byte b[]=null;
-
-		// OK, got our filenames, now let's calculate the new size:
-		PhotoDimensions imageSize=new PhotoDimensionsImpl(in.getWidth(),
-			in.getHeight());
-		PhotoDimScaler pds=new PhotoDimScaler(imageSize);
-		PhotoDimensions newSize=pds.scaleTo(dim);
-
-		try {
-			// Need these for the process.
-			InputStream stderr=null;
-			InputStream stdout=null;
-			String tmp=null;
-
-			// Make sure we have a defined convert command.
-			tmp=conf.get("convert.cmd");
-			if(tmp==null) {
-				throw new Exception("No convert command has been defined!");
-			}
-
-			// Write the image data to a temporary file.
-			FileOutputStream f = new FileOutputStream(tmpfilename);
-			f.write(in.getData());
-			f.flush();
-			f.close();
-
-			String command=tmp + " -geometry "
-				+ newSize.getWidth() + "x" + newSize.getHeight()
-				+ " " + tmpfilename + " " + thumbfilename;
-			log("Running " + command);
-			Runtime run = Runtime.getRuntime();
-			Process p = run.exec(command);
-			stderr=p.getErrorStream();
-			stdout=p.getInputStream();
-			p.waitFor();
-
-			// Process status.
-			if(p.exitValue()!=0) {
-				log("Exit value was " + p.exitValue());
-			}
-			tmp=dumpIS(stderr);
-			if(tmp!=null) {
-				log("Stderr was as follows:\n" + tmp);
-				log("------");
-			}
-			tmp=dumpIS(stdout);
-			if(tmp!=null) {
-				log("Stdout was as follows:\n" + tmp);
-				log("------");
-			}
-
-			File file=new File(thumbfilename);
-			b=new byte[(int)file.length()];
-
-			FileInputStream fin = new FileInputStream(file);
-
-			fin.read(b);
-
-		} catch(Exception e) {
-			log("Error scaling image:  " + e);
-			throw e;
-		} finally {
-			try {
-				File f = new File(tmpfilename);
-				f.delete();
-				f = new File(thumbfilename);
-				f.delete();
-			} catch(Exception e2) {
-				// No need to do anything, that's just cleanup.
-			}
-		}
-		return(new PhotoImage(b));
+		PhotoImage in, PhotoDimensions dim) throws Exception {
+		
+		Class c=Class.forName(conf.get("scaler_class",
+			"net.spy.rmi.JavaImageServerScaler"));
+		ImageServerScaler iss=(ImageServerScaler)c.newInstance();
+		iss.setConfig(conf);
+		return(iss.scaleImage(in, dim));
 	}
 
 	private void log(String what) {
