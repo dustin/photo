@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.16 2002/07/10 03:38:08 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.17 2002/11/03 07:33:35 dustin Exp $
  */
 
 package net.spy.photo;
@@ -39,7 +39,7 @@ public class PhotoLogFlusher extends SpyLogFlusher {
 	 * Stringify.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb=new StringBuffer(128);
 		sb.append(super.toString());
 
 		if(flushing) {

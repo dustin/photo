@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.21 2002/07/10 03:38:08 dustin Exp $
+// $Id: PhotoUser.java,v 1.22 2002/11/03 07:33:35 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -394,7 +394,7 @@ public class PhotoUser extends Object implements Serializable {
 	 * XML the user.
 	 */
 	public String toXML() {
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb=new StringBuffer(128);
 
 		sb.append("<photo_user>\n");
 

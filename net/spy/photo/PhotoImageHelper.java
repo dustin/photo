@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.22 2002/09/14 06:09:10 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.23 2002/11/03 07:33:35 dustin Exp $
  */
 
 package net.spy.photo;
@@ -50,7 +50,7 @@ public class PhotoImageHelper extends PhotoHelper {
 		PhotoImage rv=null;
 		SpyCache cache=SpyCache.getInstance();
 
-		StringBuffer keyb=new StringBuffer();
+		StringBuffer keyb=new StringBuffer(64);
 		keyb.append("img_");
 		keyb.append(imageId);
 		if(dim!=null) {

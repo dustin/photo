@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Vote.java,v 1.7 2002/07/10 04:00:17 dustin Exp $
+// $Id: Vote.java,v 1.8 2002/11/03 07:33:35 dustin Exp $
 
 package net.spy.photo;
 
@@ -193,7 +193,7 @@ public class Vote extends Object implements java.io.Serializable {
 	 * String me!
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb=new StringBuffer(64);
 		sb.append("Vote ");
 		sb.append(getVoteId());
 		sb.append(" from ");

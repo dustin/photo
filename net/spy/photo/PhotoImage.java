@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImage.java,v 1.18 2002/07/10 04:00:17 dustin Exp $
+// $Id: PhotoImage.java,v 1.19 2002/11/03 07:33:35 dustin Exp $
 
 package net.spy.photo;
 
@@ -96,7 +96,7 @@ public class PhotoImage extends Object
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb=new StringBuffer(64);
 
 		sb.append("PhotoImage (");
 		sb.append(getFormatString());

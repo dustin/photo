@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaverThread.java,v 1.7 2002/07/10 03:38:08 dustin Exp $
+// $Id: PhotoSaverThread.java,v 1.8 2002/11/03 07:33:35 dustin Exp $
 
 package net.spy.photo;
 
@@ -33,7 +33,7 @@ public class PhotoSaverThread extends Thread {
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb=new StringBuffer(128);
 		sb.append(super.toString());
 
 		sb.append(" - Queue size:  ");

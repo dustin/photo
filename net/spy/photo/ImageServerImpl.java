@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.7 2002/07/10 04:00:17 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.8 2002/11/03 07:33:35 dustin Exp $
 
 package net.spy.photo;
 
@@ -149,7 +149,8 @@ public class ImageServerImpl extends Object implements ImageServer {
 		pi=cache.getImage(key);
 
 		if(pi==null) {
-			StringBuffer sdata=new StringBuffer();
+			// Average image is 512k.  Create a buffer of that size to start.
+			StringBuffer sdata=new StringBuffer(512*1024);
 
 			try {
 				SpyDB db=new SpyDB(new PhotoConfig());

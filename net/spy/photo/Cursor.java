@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Cursor.java,v 1.9 2002/07/10 04:00:17 dustin Exp $
+ * $Id: Cursor.java,v 1.10 2002/11/03 07:33:35 dustin Exp $
  */
 
 package net.spy.photo;
@@ -82,7 +82,7 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	 * String representation of the search results.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb=new StringBuffer(128);
 
 		sb.append("{Cursor:  pos=");
 		sb.append(current);

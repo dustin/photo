@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: Profile.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
+// $Id: Profile.java,v 1.7 2002/11/03 07:33:35 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -93,7 +93,7 @@ public class Profile extends Object implements Serializable {
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb=new StringBuffer(128);
 		sb.append("Profile:  ");
 		sb.append(name);
 		sb.append(", expires:  ");

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.16 2002/08/08 23:04:57 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.17 2002/11/03 07:33:35 dustin Exp $
  */
 
 package net.spy.photo;
@@ -78,7 +78,7 @@ public class PhotoUtil extends Object {
 	 * @param uri A uri (beginning with /) within the webapp.
 	 */
 	public static String getRelativeUri(HttpServletRequest req, String uri) {
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb=new StringBuffer(64);
 		sb.append(req.getContextPath());
 
 		if(!uri.startsWith("/")) {

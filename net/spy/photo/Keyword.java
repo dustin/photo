@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Keyword.java,v 1.1 2002/08/14 06:59:08 dustin Exp $
+// $Id: Keyword.java,v 1.2 2002/11/03 07:33:35 dustin Exp $
 
 package net.spy.photo;
 
@@ -56,7 +56,7 @@ public class Keyword extends Object {
 	 * String me.
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb=new StringBuffer(64);
 
 		sb.append("{Keyword id=");
 		sb.append(keywordId);

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.6 2002/07/10 03:38:08 dustin Exp $
+// $Id: Category.java,v 1.7 2002/11/03 07:33:35 dustin Exp $
 
 package net.spy.photo;
 
@@ -304,7 +304,7 @@ public class Category extends Object {
 
 			SpyCacheDB db=new SpyCacheDB(new PhotoConfig());
 
-			StringBuffer query=new StringBuffer();
+			StringBuffer query=new StringBuffer(4096);
 			query.append("select * from cat where id in\n");
 			query.append("(select cat from wwwacl where\n");
 			query.append("    (userid=? or userid=?) ");

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.12 2002/09/14 05:06:34 dustin Exp $
+// $Id: Comment.java,v 1.13 2002/11/03 07:33:35 dustin Exp $
 
 package net.spy.photo;
 
@@ -228,7 +228,7 @@ public class Comment extends Object implements java.io.Serializable {
 	 * String me!
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer();
+		StringBuffer sb=new StringBuffer(128);
 		sb.append("Comment ");
 		sb.append(getCommentId());
 		sb.append(" from ");

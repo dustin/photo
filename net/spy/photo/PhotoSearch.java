@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.30 2002/07/10 04:00:17 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.31 2002/11/03 07:33:35 dustin Exp $
  */
 
 package net.spy.photo;
@@ -67,7 +67,7 @@ public class PhotoSearch extends PhotoHelper {
 	 * Encode the search from a SearchForm.
 	 */
 	public String encodeSearch(SearchForm form) {
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer(512);
 
 		if(form.getFieldjoin() != null) {
 			sb.append("fieldjoin");
