@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.95 2002/02/23 09:03:04 dustin Exp $
+ * $Id: PhotoSession.java,v 1.96 2002/02/23 10:58:51 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1377,9 +1377,6 @@ public class PhotoSession extends Object
 			middle.append("</search_result_row>\n");
 		}
 
-		// Ask the aheadfetcher to prefetch the next x entries.
-		aheadfetcher.next(results);
-
 		StringBuffer meta=new StringBuffer();
 		meta.append("<meta_stuff>\n");
 		meta.append(linkToMore(results));
@@ -1402,6 +1399,9 @@ public class PhotoSession extends Object
 			+ "</search_results_page>\n"
 			);
 		sendXML(xml.toString());
+
+		// Ask the aheadfetcher to prefetch the next x entries.
+		aheadfetcher.next(results);
 
 		return(null);
 	}
