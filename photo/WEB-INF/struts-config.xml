@@ -64,6 +64,7 @@
 	<!-- Image uploads -->
 	<action path="/upload"
 		type="net.spy.photo.struts.UploadAction"
+		input="/addform.jsp"
 		name="uploadForm">
 		<forward name="success" path="/uploaded.jsp" />
 	</action>
