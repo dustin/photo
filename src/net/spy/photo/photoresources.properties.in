@@ -103,12 +103,12 @@ forms.search.adv.action.success=thumbnails
 forms.search.adv.action.showResults=a slideshow
 forms.search.adv.submit=Find
 forms.search.adv.reset=Clear Form
-forms.search.adv.textsearch=Text search
+forms.search.adv.textsearch=Text Search
 forms.search.adv.takenconst=Constrain by When the Picture was Taken
 forms.search.adv.tsconst=Constrain by When the Picture was Added
 forms.search.adv.dispops=Display Options
-forms.search.adv.before=Before
-forms.search.adv.after=after
+forms.search.adv.before=before
+forms.search.adv.after=After
 
 ###### End forms
 

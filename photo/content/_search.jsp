@@ -97,18 +97,18 @@
 
 		<fieldset>
 			<legend><fmt:message key="forms.search.adv.takenconst"/></legend>
-			<fmt:message key="forms.search.adv.before"/>
+			<fmt:message key="forms.search.adv.after"/>
 				<html:text property="tstart"/>
 			<fmt:message key="forms.search.adv.and"/>
-			<fmt:message key="forms.search.adv.after"/>
+			<fmt:message key="forms.search.adv.before"/>
 				<html:text property="tend"/>
 		</fieldset>
 		<fieldset>
 			<legend><fmt:message key="forms.search.adv.tsconst"/></legend>
-			<fmt:message key="forms.search.adv.before"/>
+			<fmt:message key="forms.search.adv.after"/>
 				<html:text property="start"/>
 			<fmt:message key="forms.search.adv.and"/>
-			<fmt:message key="forms.search.adv.after"/>
+			<fmt:message key="forms.search.adv.before"/>
 				<html:text property="end"/>
 		</fieldset>
 
