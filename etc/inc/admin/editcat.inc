@@ -26,6 +26,18 @@
 
 <br>
 
+<table border="1">
+<tr>
+	<th>User</th>
+	<th>Can View</th>
+	<th>Can Add</th>
+</tr>
+%ACLTABLE%
+</table>
+
+
+<br>
+
 <input type="submit" value="Save"> <input type="reset" value="Reset">
 
 </form>
