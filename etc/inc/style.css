@@ -10,6 +10,17 @@ h1,h2,h3,h4,h5 {
 	background-color: #ccccff;
 }
 
+.comment_image {
+	background-color: #ccccff;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.comment_more {
+	font-size: x-small;
+	font-style: italic;
+}
+
 .comment_header {
 	font-size: x-small;
 	background-color: #999999;

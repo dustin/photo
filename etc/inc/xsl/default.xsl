@@ -586,9 +586,9 @@ E-mailed to you.
 
 <xsl:template match="all_comments">
 	<table width="100%">
-		<xsl:for-each select="photo_comment">
+		<xsl:for-each select="photo_comments">
 			<tr valign="top">
-				<td>
+				<td class="comment_image">
 					<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={photo_id}">
 						<img border="0"
 							src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={photo_id}&amp;thumbnail=1"/>
@@ -597,17 +597,28 @@ E-mailed to you.
 
 				<td>
 					<table class="comments" width="100%">
-						<tr valign="top" class="comment_header">
-							<td>At <xsl:value-of select="timestamp"/>&#160;
-								<xsl:value-of select="photo_user/realname"/> said the
-								following:
-							</td>
-						</tr>
-						<tr valign="top" class="comment_body">
-							<td>
-								<xsl:value-of select="note"/>
-							</td>
-						</tr>
+						<xsl:for-each select="photo_comment">
+							<tr valign="top" class="comment_header">
+								<td>At <xsl:value-of select="timestamp"/>&#160;
+									<xsl:value-of select="photo_user/realname"/> said the
+									following:
+								</td>
+							</tr>
+							<tr valign="top" class="comment_body">
+								<td>
+									<xsl:value-of select="note"/>
+								</td>
+							</tr>
+						</xsl:for-each>
+						<xsl:if test="more_comments">
+							<tr>
+								<td class="comment_more">
+									<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={photo_id}">
+										More comments available on the image page.
+									</a>
+								</td>
+							</tr>
+						</xsl:if>
 					</table>
 
 				</td>
