@@ -13,8 +13,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.search.SearchResults;
 import net.spy.photo.PhotoSessionData;
 
 import net.spy.photo.filter.Filter;
@@ -22,10 +26,6 @@ import net.spy.photo.filter.SortingFilter;
 import net.spy.photo.filter.OnceAMonthFilter;
 import net.spy.photo.filter.OnceAWeekFilter;
 import net.spy.photo.filter.OnceADayFilter;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 
 /**
  * Filter search results.
@@ -67,7 +67,7 @@ public class SearchFilterAction extends PhotoAction {
 			getLogger().debug("Filter called with " + filterName);
 			// Get the search results
 			PhotoSessionData sessionData=getSessionData(request);
-			PhotoSearchResults results=sessionData.getResults();
+			SearchResults results=sessionData.getResults();
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Filtering results:  " + results);
 			}

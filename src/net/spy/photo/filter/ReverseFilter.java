@@ -6,7 +6,7 @@ package net.spy.photo.filter;
 import java.util.Collections;
 
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.search.SearchResults;
 
 /**
  * Reverse a search result.
@@ -23,9 +23,7 @@ public class ReverseFilter extends Filter {
 	/** 
 	 * Reverse the current order of the given search results.
 	 */
-	public PhotoSearchResults filter(PhotoSearchResults in)
-		throws PhotoException {
-
+	public SearchResults filter(SearchResults in) throws PhotoException {
 		Collections.reverse(in);
 		// Seek back to the beginning
 		in.set(0);

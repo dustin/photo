@@ -10,8 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.PhotoSearch;
-import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.search.Search;
+import net.spy.photo.search.SearchResults;
 import net.spy.photo.PhotoSessionData;
 
 import org.apache.struts.action.ActionForm;
@@ -43,8 +43,8 @@ public class SearchAction extends PhotoAction {
 		SearchForm sf=(SearchForm)form;
 
 		// Perform the search
-		PhotoSearch ps=PhotoSearch.getInstance();
-		PhotoSearchResults results=null;
+		Search ps=Search.getInstance();
+		SearchResults results=null;
 		results=ps.performSearch(sf, sessionData);
 		sessionData.setResults(results);
 		sessionData.setEncodedSearch(ps.encodeSearch(sf));

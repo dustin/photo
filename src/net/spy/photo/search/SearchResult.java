@@ -1,26 +1,31 @@
 // Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 // arch-tag: 3611B1D4-5D6D-11D9-9C40-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.search;
 
 import java.io.Serializable;
 
 import java.util.Date;
 import java.util.Collection;
 
+import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoUser;
+import net.spy.photo.Format;
+
 /**
  * A search result.
  */
-public class PhotoSearchResult extends Object
+public class SearchResult extends Object
 	implements PhotoImageData, Serializable {
 
 	private PhotoImageData imgData=null;
 	private int searchId=0;
 
 	/**
-	 * Get an instance of PhotoSearchResult.
+	 * Get an instance of SearchResult.
 	 */
-	public PhotoSearchResult(PhotoImageData pid, int id) {
+	public SearchResult(PhotoImageData pid, int id) {
 		super();
 
 		imgData=pid;

@@ -1,7 +1,7 @@
 // Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 // arch-tag: 4F839A3B-5D6D-11D9-95E5-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.search;
 
 import java.io.OutputStream;
 import java.util.Collection;
@@ -24,6 +24,9 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import net.spy.SpyObject;
+
+import net.spy.photo.Keyword;
+import net.spy.photo.PhotoImageData;
 
 /**
  * Convert photo search results to XML.
@@ -143,7 +146,7 @@ public class Search2XML extends SpyObject {
 		serial.serialize(root);
 	}
 
-	public void stream(PhotoSearchResults psr, OutputStream os)
+	public void stream(SearchResults psr, OutputStream os)
 		throws Exception {
 
 		os.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes());

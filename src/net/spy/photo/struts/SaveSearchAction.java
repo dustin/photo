@@ -10,13 +10,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.PhotoSearch;
-import net.spy.photo.PhotoSessionData;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
+
+import net.spy.photo.search.Search;
+import net.spy.photo.PhotoSessionData;
 
 /**
  * Save a search.
@@ -45,7 +45,7 @@ public class SaveSearchAction extends PhotoAction {
 		PhotoSessionData sessionData=getSessionData(request);
 
 		// Get the PhotoSearch object which manages the search save.
-		PhotoSearch search=PhotoSearch.getInstance();
+		Search search=Search.getInstance();
 		search.saveSearch(
 			(String)ssf.get("name"),
 			(String)ssf.get("search"),

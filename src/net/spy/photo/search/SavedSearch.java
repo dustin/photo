@@ -1,7 +1,7 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 // arch-tag: 4E3B5EA0-5D6D-11D9-A0C9-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.search;
 
 import java.net.URLEncoder;
 
@@ -21,6 +21,8 @@ import java.util.Iterator;
 import net.spy.cache.SpyCache;
 import net.spy.util.Base64;
 
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoException;
 import net.spy.photo.sp.GetSearches;
 import net.spy.photo.struts.SearchForm;
 

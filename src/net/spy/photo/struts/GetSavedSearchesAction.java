@@ -20,7 +20,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 
-import net.spy.photo.SavedSearch;
+import net.spy.photo.search.SavedSearch;
 
 /**
  * Load a saved search and overwrite the search form with that search.

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 
 import net.spy.db.TransactionPipeline;
 
+import net.spy.photo.search.SavedSearch;
+
 /**
  * All persistent objects will be available through this class.
  */

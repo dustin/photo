@@ -15,7 +15,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import net.spy.photo.PhotoSessionData;
-import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.search.SearchResults;
 
 import net.spy.photo.PhotoUtil;
 
@@ -46,7 +46,7 @@ public class SetDisplayRefresh extends PhotoAction {
 
 		// Get the session data
 		PhotoSessionData sessionData=getSessionData(request);
-		PhotoSearchResults results=sessionData.getResults();
+		SearchResults results=sessionData.getResults();
 		if(results==null) {
 			throw new ServletException("No results in session.");
 		}

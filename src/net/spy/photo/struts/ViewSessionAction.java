@@ -17,7 +17,7 @@ import org.apache.struts.action.DynaActionForm;
 
 import net.spy.util.Base64;
 
-import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.search.SearchResults;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.SessionWatcher;
 
@@ -53,7 +53,7 @@ public class ViewSessionAction extends PhotoAction {
 		PhotoSessionData otherData=SessionWatcher.getSessionData(sessId);
 
 		// Perform the search
-		PhotoSearchResults results=new PhotoSearchResults();
+		SearchResults results=new SearchResults();
 		results.addAll(otherData.getImageSeenCollection());
 		// Set the viewing size
 		results.setMaxSize(sessionData.getOptimalDimensions());

@@ -11,7 +11,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import net.spy.photo.PhotoSessionData;
-import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.search.SearchResults;
 import net.spy.photo.filter.Filter;
 
 /**
@@ -42,7 +42,7 @@ public class MappedFilterAction extends PhotoAction {
 
 		// Get the search results
 		PhotoSessionData sessionData=getSessionData(request);
-		PhotoSearchResults results=sessionData.getResults();
+		SearchResults results=sessionData.getResults();
 		sessionData.setResults(f.filter(results));
 
 		return(mapping.findForward("next"));

@@ -1,4 +1,5 @@
 <%@ page import="net.spy.photo.*" %>
+<%@ page import="net.spy.photo.search.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 
@@ -10,7 +11,7 @@
 	// Find the results
 	PhotoSessionData sessionData=
 		(PhotoSessionData)session.getAttribute("photoSession");
-	PhotoSearchResults results=sessionData.getResults();
+	SearchResults results=sessionData.getResults();
 	if(results==null) {
 		throw new ServletException("There are no search results!");
 	}
@@ -50,7 +51,7 @@
 <table>
 
 <logic:iterate id="image" collection="<%= results %>"
-	type="net.spy.photo.PhotoSearchResult"
+	type="net.spy.photo.search.SearchResult"
 	length="<%= String.valueOf(results.getMaxRet()) %>">
 
 <tr>

@@ -1,7 +1,7 @@
 // Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 // arch-tag: 50D73132-5D6D-11D9-9F28-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.search;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -16,6 +16,9 @@ import java.util.TreeSet;
 import java.util.Date;
 
 import net.spy.SpyObject;
+
+import net.spy.photo.Keyword;
+import net.spy.photo.PhotoImageData;
 
 /**
  * Search data indexer.

@@ -10,6 +10,8 @@ import java.util.Map;
 
 import net.spy.util.RingBuffer;
 
+import net.spy.photo.search.SearchResults;
+
 /**
  * Session data goes here.
  */
@@ -105,14 +107,14 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	/**
 	 * Get the search results that are currently being accessed.
 	 */
-	public PhotoSearchResults getResults() {
-		return((PhotoSearchResults)getCursor("searchResults"));
+	public SearchResults getResults() {
+		return((SearchResults)getCursor("searchResults"));
 	}
 
 	/**
 	 * Set the results cursor.
 	 */
-	public void setResults(PhotoSearchResults results) {
+	public void setResults(SearchResults results) {
 		setCursor("searchResults", results);
 	}
 

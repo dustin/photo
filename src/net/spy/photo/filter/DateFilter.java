@@ -16,7 +16,7 @@ import java.util.TreeMap;
 
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.search.SearchResults;
 
 /**
  * This filter randomly selects pictures by date.
@@ -57,11 +57,11 @@ public abstract class DateFilter extends SortingFilter {
 	/**
 	 * Filter the set.
 	 */
-	public PhotoSearchResults filter(PhotoSearchResults in, int direction)
+	public SearchResults filter(SearchResults in, int direction)
 		throws PhotoException {
 
 		// Get a base copy of the result set.
-		PhotoSearchResults rv=new PhotoSearchResults(in.size());
+		SearchResults rv=new SearchResults(in.size());
 		rv.setMaxSize(in.getMaxSize());
 		rv.setMaxRet(in.getMaxRet());
 

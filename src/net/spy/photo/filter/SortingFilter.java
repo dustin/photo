@@ -4,7 +4,7 @@
 package net.spy.photo.filter;
 
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.search.SearchResults;
 
 /**
  * Filter that affects sorting.
@@ -31,16 +31,14 @@ public abstract class SortingFilter extends Filter {
 	/** 
 	 * Filter the results and use the FORWARD sort direction.
 	 */
-	public final PhotoSearchResults filter(PhotoSearchResults in)
-		throws PhotoException {
-
+	public final SearchResults filter(SearchResults in) throws PhotoException {
 		return(filter(in, SORT_FORWARD));
 	}
 
 	/**
 	 * Filter a result set.
 	 */
-	public abstract PhotoSearchResults filter(PhotoSearchResults in,
-		int direction) throws PhotoException;
+	public abstract SearchResults filter(SearchResults in, int direction)
+		throws PhotoException;
 
 }

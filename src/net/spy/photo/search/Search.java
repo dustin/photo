@@ -1,7 +1,7 @@
 // Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
 // arch-tag: 34B48890-5D6D-11D9-A728-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.search;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -26,35 +26,41 @@ import net.spy.SpyObject;
 import net.spy.db.SpyDB;
 import net.spy.util.Base64;
 
+import net.spy.photo.Keyword;
+import net.spy.photo.Category;
+import net.spy.photo.PhotoUser;
+import net.spy.photo.PhotoUtil;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.struts.SearchForm;
-
 import net.spy.photo.sp.InsertSearch;
 
 /**
  * Perform searches.
  */
-public class PhotoSearch extends SpyObject {
+public class Search extends SpyObject {
 
 	private static final String CHARSET="UTF-8";
 
 	private static final int BY_TS=1;
 	private static final int BY_TAKEN=2;
 
-	private static PhotoSearch instance=null;
+	private static Search instance=null;
 
 	/**
-	 * Get a PhotoSearch instance.
+	 * Get a Search instance.
 	 */
-	private PhotoSearch() {
+	private Search() {
 		super();
 	}
 
 	/** 
-	 * Get an instance of Photosearch.
+	 * Get an instance of search.
 	 */
-	public static synchronized PhotoSearch getInstance() {
+	public static synchronized Search getInstance() {
 		if(instance == null) {
-			instance=new PhotoSearch();
+			instance=new Search();
 		}
 		return(instance);
 	}
@@ -192,9 +198,8 @@ public class PhotoSearch extends SpyObject {
 		return(out);
 	}
 
-	public PhotoSearchResults performSearch(
-		SearchForm form, PhotoSessionData sessionData)
-		throws Exception {
+	public SearchResults performSearch(SearchForm form,
+		PhotoSessionData sessionData) throws Exception {
 
 		// Get the search index
 		SearchIndex index=SearchIndex.getInstance();
@@ -263,12 +268,12 @@ public class PhotoSearch extends SpyObject {
 		}
 
 		// Populate the results
-		PhotoSearchResults results=new PhotoSearchResults();
+		SearchResults results=new SearchResults();
 		results.setMaxSize(sessionData.getOptimalDimensions());
 		int resultId=0;
 		for(Iterator i=rset.iterator(); i.hasNext(); ) {
 			PhotoImageData r=(PhotoImageData)i.next();
-			results.add(new PhotoSearchResult(r, resultId));
+			results.add(new SearchResult(r, resultId));
 			resultId++; 
 		}
 

@@ -15,7 +15,7 @@ import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.search.SearchResults;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -40,7 +40,7 @@ public class GetImageDataAction extends PhotoAction {
 		throws Exception {
 
 		PhotoSessionData sessionData=getSessionData(req);
-		PhotoSearchResults results=sessionData.getResults();
+		SearchResults results=sessionData.getResults();
 		if(results == null) {
 			throw new PhotoException("No search results");
 		}

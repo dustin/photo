@@ -16,6 +16,9 @@ import javax.servlet.http.HttpSession;
 
 import net.spy.jwebkit.JWHttpServlet;
 
+import net.spy.photo.search.Search;
+import net.spy.photo.search.SearchResults;
+import net.spy.photo.search.Search2XML;
 import net.spy.photo.struts.SearchForm;
 
 /**
@@ -59,8 +62,8 @@ public class ExportServlet extends JWHttpServlet {
 
 			SearchForm sf=new SearchForm();
 			sf.setSdirection("desc");
-			PhotoSearch ps=PhotoSearch.getInstance();
-			PhotoSearchResults psr=ps.performSearch(sf, sessionData);
+			Search ps=Search.getInstance();
+			SearchResults psr=ps.performSearch(sf, sessionData);
 
 			res.setContentType("text/xml");
 			ServletOutputStream sos=res.getOutputStream();

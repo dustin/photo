@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.servlet.jsp.JspException;
 
-import net.spy.photo.PhotoSearchResults;
+import net.spy.photo.search.SearchResults;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.PhotoDimensions;
@@ -133,7 +133,7 @@ public class DisplayLink extends PhotoTag {
 			url.append("search_id=");
 
 			PhotoSessionData sessionData=getSessionData();
-			PhotoSearchResults results=sessionData.getResults();
+			SearchResults results=sessionData.getResults();
 			if(results==null) {
 				throw new JspException("No search results found.");
 			}
