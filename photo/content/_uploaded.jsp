@@ -9,5 +9,6 @@
 %>
 
 Your image has been uploaded.  Its ID is <%= idString %> and you can
-see it <photo:imgLink id="<%= idString %>">here</photo:imgLink>.
+see it <photo:imgLink id="<%= idString %>">here</photo:imgLink> before too
+long.
 
