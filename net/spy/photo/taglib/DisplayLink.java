@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.10 2002/07/01 18:03:19 dustin Exp $
+// $Id: DisplayLink.java,v 1.11 2002/07/04 06:57:59 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -134,7 +134,7 @@ public class DisplayLink extends PhotoTag {
 			}
 
 			// Figure out the maximum number of results.
-			int maxIndex=results.nResults();
+			int maxIndex=results.size();
 
 			// Since this is a search offset, figure out whether it's
 			// relative the the actual value or not.

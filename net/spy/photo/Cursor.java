@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Cursor.java,v 1.6 2002/07/04 03:55:46 dustin Exp $
+ * $Id: Cursor.java,v 1.7 2002/07/04 06:57:59 dustin Exp $
  */
 
 package net.spy.photo;
@@ -84,7 +84,7 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 		sb.append("{Cursor:  pos=");
 		sb.append(_current);
 		sb.append(", n=");
-		sb.append(nResults());
+		sb.append(size());
 		sb.append(", maxret=");
 		sb.append(maxret);
 		sb.append("}");
@@ -141,13 +141,6 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 			r=get(_current);
 		}
 		return(r);
-	}
-
-	/**
-	 * Find out how many results total are in this result set.
-	 */
-	public int nResults() {
-		return(size());
 	}
 
 	/**

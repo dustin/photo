@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.17 2002/07/04 03:27:22 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.18 2002/07/04 06:57:59 dustin Exp $
  */
 
 package net.spy.photo;
@@ -30,7 +30,7 @@ public class PhotoSearchResults extends Cursor {
 	 */
 	public void add(PhotoImageData d) {
 		// Set the result id
-		d.setSearchId(nResults());
+		d.setSearchId(size());
 		// Tell it the size we want the images
 		d.setMaxDims(maxSize);
 		// Now add it

@@ -30,7 +30,7 @@
 
 	<td valign="top" align="right">
 		<div align="right" class="search_matches">
-			Search matched <%= results.nResults() %> entries.
+			Search matched <%= results.size() %> entries.
 		</div>
 	</td>
 </tr>
