@@ -20,6 +20,9 @@
 	<property name="WARDIR" value="${BUILDTOP}/wars/"/>
 	<property name="WARDEST" value="/afs/.spy.net/misc/web/resin/wars"/>
 
+	<property name="wars"
+		value="photo,beckerphoto,wisephoto,jasonphoto,photodemo"/>
+
 	<!-- Set up the class path -->
 	<path id="photo.classpath">
 		<fileset dir="photo/WEB-INF/lib">
@@ -93,21 +96,8 @@
 	</target>
 
 	<target name="install-wars" description="Install all wars" depends="wars">
-		<antcall target="install-war-var">
-			<param name="which" value="photo"/>
-		</antcall>
-		<antcall target="install-war-var">
-			<param name="which" value="beckerphoto"/>
-		</antcall>
-		<antcall target="install-war-var">
-			<param name="which" value="wisephoto"/>
-		</antcall>
-		<antcall target="install-war-var">
-			<param name="which" value="jasonphoto"/>
-		</antcall>
-		<antcall target="install-war-var">
-			<param name="which" value="photodemo"/>
-		</antcall>
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+		<foreach list="${wars}" target="install-war-var" param="which"/>
 	</target>
 
 	<target name="photo.war" depends="photo.jar">
@@ -124,8 +114,9 @@
 
 	<target name="war-var" depends="photo.jar">
 		<echo message="Building ${which}.war"/>
-		<copy file="/afs/@cell/misc/web/photoconfs/${which}.conf"
-			tofile="${BUILDTOP}/photo.conf"/>
+		<filter token="INSTANCE" value="${which}"/>
+		<copy file="etc/photo.conf" tofile="${BUILDTOP}/photo.conf"
+			filtering="true"/>
 		<jar jarfile="${WARDIR}/${which}.war" basedir="." excludes="**">
 			<zipfileset dir="photo" prefix="">
 				<patternset refid="arch-stuff"/>
@@ -140,21 +131,8 @@
 	</target>
 
 	<target name="wars" depends="photo.jar,validateconfigs">
-		<antcall target="war-var">
-			<param name="which" value="photo"/>
-		</antcall>
-		<antcall target="war-var">
-			<param name="which" value="beckerphoto"/>
-		</antcall>
-		<antcall target="war-var">
-			<param name="which" value="wisephoto"/>
-		</antcall>
-		<antcall target="war-var">
-			<param name="which" value="jasonphoto"/>
-		</antcall>
-		<antcall target="war-var">
-			<param name="which" value="photodemo"/>
-		</antcall>
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+		<foreach list="${wars}" target="war-var" param="which"/>
 	</target>
 
 	<target name="install-docs"
