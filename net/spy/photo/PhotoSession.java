@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.18 2000/06/30 08:04:45 dustin Exp $
+ * $Id: PhotoSession.java,v 1.19 2000/06/30 08:24:39 dustin Exp $
  */
 
 package net.spy.photo;
@@ -344,10 +344,11 @@ public class PhotoSession extends Object
 
 			// Log that the data was stored in the cache, so that, perhaps,
 			// it can be permanently stored later on.
-			query = "insert into upload_log values(\n"
-				  + "\t" + id + ", " + remote_uid + ")";
-			log("Running SQL:  " + query);
-			st.executeUpdate(query);
+			query = "insert into upload_log values(?, ?)\n";
+			st=photo.prepareStatement(query);
+			st.setInt(1, id);
+			st.setInt(2, remote_uid.intValue());
+			st.executeUpdate();
 
 			h.put("ID", ""+id);
 
@@ -398,7 +399,7 @@ public class PhotoSession extends Object
 
 			PreparedStatement st = photo.prepareStatement(query);
 			st.setInt(1, remote_uid.intValue());
-			ResultSet rs = st.executeQuery(query);
+			ResultSet rs = st.executeQuery();
 
 			while(rs.next()) {
 				int id=rs.getInt("id");
@@ -560,7 +561,7 @@ public class PhotoSession extends Object
 			  	+ " order by cs desc";
 			PreparedStatement st = photo.prepareStatement(query);
 			st.setInt(1, remote_uid.intValue());
-			ResultSet rs = st.executeQuery(query);
+			ResultSet rs = st.executeQuery();
 
 			while(rs.next()) {
 				String t;
