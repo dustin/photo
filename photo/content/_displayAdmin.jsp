@@ -21,9 +21,8 @@
 	<table width="100%">
 		<tr valign="top">
 			<td align="left" width="10%">
-				<photo:imgLink id="<%= 0 %>" alt="<<<"
-					relative="prev" searchId="<%= searchId %>">
-					<img border="0" src="/~dustin/images/l_arrow.gif"/>
+				<photo:imgLink id="<%= 0 %>" relative="prev" searchId="<%= searchId %>">
+					<photo:imgsrc alt="<<<" border="0" url="/images/l_arrow.gif"/>
 				</photo:imgLink>
 			</td>
 
@@ -32,9 +31,8 @@
 			</td>
 
 			<td align="right" width="10%">
-				<photo:imgLink id="<%= 0 %>" alt=">>>"
-					relative="next" searchId="<%= searchId %>">
-					<img border="0" src="/~dustin/images/r_arrow.gif"/>
+				<photo:imgLink id="<%= 0 %>" relative="next" searchId="<%= searchId %>">
+					<photo:imgsrc alt=">>>" border="0" url="/images/r_arrow.gif"/>
 				</photo:imgLink>
 			</td>
 		</tr>
