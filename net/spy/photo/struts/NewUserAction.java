@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NewUserAction.java,v 1.2 2002/06/14 18:27:24 dustin Exp $
+// $Id: NewUserAction.java,v 1.3 2002/07/04 04:32:29 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -66,8 +66,8 @@ public class NewUserAction extends PhotoAction {
 		pu.setEmail(nuf.getEmail());
 
 		// Populate the ACL entries.
-		for(Enumeration e=p.getACLEntries(); e.hasMoreElements();) {
-			Integer i=(Integer)e.nextElement();
+		for(Iterator it=p.getACLEntries().iterator(); it.hasNext();) {
+			Integer i=(Integer)it.next();
 			pu.addViewACLEntry(i.intValue());
 		}
 

@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: Profile.java,v 1.4 2002/07/04 04:21:53 dustin Exp $
+// $Id: Profile.java,v 1.5 2002/07/04 04:32:29 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -89,9 +89,9 @@ public class Profile extends Object implements Serializable {
 		sb.append(", expires:  ");
 		sb.append(expires);
 		sb.append(":\n");
-		for(Enumeration e=getACLEntries(); e.hasMoreElements(); ) {
+		for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
 			sb.append("\t");
-			sb.append(e.nextElement());
+			sb.append(i.next());
 			sb.append("\n");
 		}
 		return(sb.toString());
@@ -220,8 +220,8 @@ public class Profile extends Object implements Serializable {
 			st=conn.prepareStatement(
 				"insert into user_profile_acls(profile_id,cat_id) values(?,?)");
 
-			for(Enumeration e=getACLEntries(); e.hasMoreElements(); ) {
-				Integer i=(Integer)e.nextElement();
+			for(Iterator it=getACLEntries().iterator(); it.hasNext(); ) {
+				Integer i=(Integer)it.next();
 
 				st.setInt(1, getId());
 				st.setInt(2, i.intValue());
