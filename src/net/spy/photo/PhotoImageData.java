@@ -132,10 +132,8 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 			PhotoDimensions tdim=new PhotoDimensionsImpl(
 				conf.get("thumbnail_size"));
 
-			// get a scaler
-			PhotoDimScaler pds=new PhotoDimScaler(dimensions);
 			// Scale it down
-			tnDims=pds.scaleTo(tdim);
+			tnDims=PhotoDimScaler.scaleTo(tdim, dimensions);
 		}
 	}
 
@@ -143,8 +141,7 @@ public class PhotoImageData extends Object implements Serializable, Cloneable {
 	private void calculateScaled() {
 		if(dimensions!=null && maxDims!=null) {
 			// Get the scaler and scale them down.
-			PhotoDimScaler pds=new PhotoDimScaler(dimensions);
-			scaledDims=pds.scaleTo(maxDims);
+			scaledDims=PhotoDimScaler.scaleTo(maxDims, dimensions);
 		} else {
 			// If either of the values is null, make sure the scaled
 			// dimensions is equal to the existing dimensions.  i.e. if the

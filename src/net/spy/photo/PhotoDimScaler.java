@@ -10,34 +10,35 @@ package net.spy.photo;
  */
 public class PhotoDimScaler extends Object {
 
-	private PhotoDimensions dim=null;
-
 	/**
 	 * Get an instance of PhotoDimScaler with a reference dimension set.
 	 */
-	public PhotoDimScaler(PhotoDimensions dim) {
+	private PhotoDimScaler() {
 		super();
-		this.dim=dim;
 	}
 
 	/**
 	 * Scale a dimension to another dimension.
+	 * @param from the dimensions of the source
+	 * @param to the maximum dimensions to scale to
+	 * @return the largest dimensions of from that fit within to
 	 */
-	public PhotoDimensions scaleTo(PhotoDimensions d) {
-		float x=(float)dim.getWidth();
-		float y=(float)dim.getHeight();
+	public static PhotoDimensions scaleTo(
+		PhotoDimensions from, PhotoDimensions to) {
+		float x=(float)to.getWidth();
+		float y=(float)to.getHeight();
 		float aspect=x/y;
-		int newx=dim.getWidth();
-		int newy=dim.getHeight();
+		int newx=to.getWidth();
+		int newy=to.getHeight();
 
-		if(d.getWidth() <= newx || d.getHeight() <= newy) {
+		if(from.getWidth() <= newx || from.getHeight() <= newy) {
 
-			newx=d.getWidth();
+			newx=from.getWidth();
 			newy=(int)((float)newx/aspect);
 
 			// If it exceeds the boundaries, do it the other way.
-			if(newx > d.getWidth() || newy > d.getHeight()) {
-				newy=d.getHeight();
+			if(newx > from.getWidth() || newy > from.getHeight()) {
+				newy=from.getHeight();
 				newx=(int)((float)newy*aspect);
 			}
 		}
@@ -45,34 +46,19 @@ public class PhotoDimScaler extends Object {
 		PhotoDimensions rv=new PhotoDimensionsImpl(newx, newy);
 
 		// Assertions
-		if(rv.getWidth() > d.getWidth() || rv.getHeight() > d.getHeight()) {
-			throw new Error("Results can't be outside of the input box");
+		if(rv.getWidth() > from.getWidth()
+			|| rv.getHeight() > from.getHeight()) {
+			throw new RuntimeException(
+				"Results can't be outside of the input box");
 		}
 
-		if(rv.getWidth() > dim.getWidth() || rv.getHeight() > dim.getHeight()) {
-			throw new Error("Results can't be outside of the input size");
+		if(rv.getWidth() > to.getWidth() || rv.getHeight() > to.getHeight()) {
+			throw new RuntimeException(
+				"Results can't be outside of the input size");
 		}
 		// End assertions
 
 		return(rv);
 	}
 
-	/**
-	 * Testing and what not.
-	 */
-	public static void main(String args[]) throws Exception {
-		PhotoDimensionsImpl pdibase=new PhotoDimensionsImpl(
-			Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-		PhotoDimensionsImpl pdiconv=new PhotoDimensionsImpl(
-			Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-
-		PhotoDimScaler pds=new PhotoDimScaler(pdibase);
-
-		PhotoDimensions pd=pds.scaleTo(pdiconv);
-
-		System.out.println(pd);
-	}
-
 }
-
-
