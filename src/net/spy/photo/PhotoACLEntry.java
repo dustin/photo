@@ -19,7 +19,7 @@ public class PhotoACLEntry extends Object implements java.io.Serializable {
 	 */
 	public PhotoACLEntry(int id) {
 		super();
-		this.what=what;
+		this.what=id;
 	}
 
 	/** 

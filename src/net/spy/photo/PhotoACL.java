@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+import java.io.Serializable;
+
 import net.spy.SpyObject;
 
 /**
  * An ACL holding a collection of operations.
  */
-public class PhotoACL extends SpyObject {
+public class PhotoACL extends SpyObject implements Serializable {
 
 	private List acl=null;
 	private boolean modified=false;
@@ -22,6 +24,7 @@ public class PhotoACL extends SpyObject {
 	 */
 	public PhotoACL() {
 		super();
+		acl=new ArrayList();
 	}
 
 	/** 
@@ -30,6 +33,19 @@ public class PhotoACL extends SpyObject {
 	 */
 	public Iterator iterator() {
 		return(Collections.unmodifiableCollection(acl).iterator());
+	}
+
+	/** 
+	 * String me.
+	 * 
+	 * @return 
+	 */
+	public String toString() {
+		StringBuffer sb=new StringBuffer(64);
+		sb.append("{PhotoACL entries=");
+		sb.append(acl);
+		sb.append("}");
+		return(sb.toString());
 	}
 
 	/** 
