@@ -1,0 +1,55 @@
+#!/bin/sh
+
+JAVAHOME=/usr/java
+JAVABIN=${JAVAHOME}/bin
+JAVA=${JAVABIN}/java
+
+C1=\
+/home/knitterb/progs/photoservlet:\
+/home/knitterb/progs/photoservlet/photo.jar:\
+/home/knitterb/lib/java:\
+
+C2=""
+for jar in /home/knitterb/lib/java/jars/*.jar
+do
+	C2=${C2}$jar:
+done
+
+CLASSPATH=${C1}${C2}${CLASSPATH}
+
+
+
+running=`ps axww | grep SpyRunner | grep -v grep | awk '{ print $1 }' | sort -n | xargs echo`
+echo "$running"
+if [ "$running" == "" ]
+then
+	echo "Starting..."
+
+	echo "Using CLASSPATH: $CLASSPATH"
+	if [ "$1" == "migrate" ]
+	then
+		${JAVA} net.spy.photo.migration.PhotoMigration01
+	else
+		nohup ${JAVA} -Xmx40m net.spy.SpyRunner /home/knitterb/progs/photoservlet/etc/spyrunner.conf &
+	fi
+else
+	if [ "$1" == "restart" ]
+	then
+		echo "Found it running at $running"
+
+		echo "Stopping $running"
+		kill $running
+		sleep 5
+
+		echo "Starting..."
+
+		echo "Using CLASSPATH: $CLASSPATH"
+		if [ "$1" == "migrate" ]
+		then
+			${JAVA} net.spy.photo.migration.PhotoMigration01
+		else
+			nohup ${JAVA} -Xmx40m net.spy.SpyRunner /home/knitterb/progs/photoservlet/etc/spyrunner.conf &
+		fi
+	fi
+fi
+
