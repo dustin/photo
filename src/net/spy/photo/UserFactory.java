@@ -14,6 +14,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Comparator;
 
+import net.spy.db.Saver;
+import net.spy.db.Savable;
+
 import net.spy.factory.GenFactory;
 import net.spy.factory.CacheEntry;
 import net.spy.factory.HashCacheEntry;
@@ -210,6 +213,21 @@ public class UserFactory extends GenFactory {
 		}
 
 		return(rv);
+	}
+
+	// Mutable stuff
+	public MutableUser getMutable(int id) throws PhotoUserException {
+		return((MutableUser)getUser(id));
+	}
+
+	public MutableUser createNew() {
+		return(new DBUser());
+	}
+
+	public void persist(MutableUser inst) throws Exception {
+		Saver saver=new Saver(PhotoConfig.getInstance());
+		saver.save((Savable)inst);
+		recache();
 	}
 
 	/** 

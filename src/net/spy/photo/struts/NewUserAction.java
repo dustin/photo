@@ -22,7 +22,7 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
 import net.spy.photo.UserFactory;
-import net.spy.photo.impl.DBUser;
+import net.spy.photo.MutableUser;
 import net.spy.photo.PhotoUserException;
 import net.spy.photo.NoSuchPhotoUserException;
 import net.spy.photo.Profile;
@@ -57,20 +57,19 @@ public class NewUserAction extends PhotoAction {
 		// Get the profile
 		Profile p=new Profile((String)nuf.get("profile"));
 
+		UserFactory uf=UserFactory.getInstance();
+
 		// Verify the user doesn't already exist.
-		DBUser pu=null;
 		String username=(String)nuf.get("username");
 		try {
-			pu=(DBUser)Persistent.getSecurity().getUser(username);
+			uf.getUser(username);
+			throw new ServletException("User " + username + " already exists.");
 		} catch(NoSuchPhotoUserException e) {
 			// This is supposed to happen
 		}
-		if(pu!=null) {
-			throw new ServletException("User " + username + " already exists.");
-		}
 
 		// Get the new user and fill it with the data from the form
-		pu=new DBUser();
+		MutableUser pu=uf.createNew();
 		pu.setName(username);
 		pu.setPassword((String)nuf.get("password"));
 		pu.setRealname((String)nuf.get("realname"));
@@ -82,19 +81,12 @@ public class NewUserAction extends PhotoAction {
 			pu.getACL().addViewEntry(i.intValue());
 		}
 
-		// Save the new user
-		Saver saver=new Saver(PhotoConfig.getInstance());
-		saver.save(pu);
-
-		// Recache the photo stuff and get the cached version.
-		UserFactory uf=UserFactory.getInstance();
-		uf.recache();
-		// Get the user from the cache
-		pu=(DBUser)uf.getUser(username);
+		// Save the user.
+		uf.persist(pu);
 
 		// Get the session data and assign the new credentials
 		PhotoSessionData sessionData=getSessionData(request);
-		sessionData.setUser(pu);
+		sessionData.setUser(uf.getUser(username));
 
 		// Try to log it.
 		SpyDB db=new SpyDB(PhotoConfig.getInstance());

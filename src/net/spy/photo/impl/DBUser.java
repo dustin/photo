@@ -22,6 +22,7 @@ import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
 
 import net.spy.photo.User;
+import net.spy.photo.MutableUser;
 import net.spy.photo.UserFactory;
 import net.spy.photo.PhotoACL;
 import net.spy.photo.PhotoACLEntry;
@@ -39,7 +40,8 @@ import net.spy.photo.sp.GetGeneratedKey;
 /**
  * Represents a user in the photo system.
  */
-public class DBUser extends AbstractSavable implements Serializable, User {
+public class DBUser extends AbstractSavable
+	implements Serializable, MutableUser {
 
 	private int id=-1;
 	private String name=null;
@@ -155,6 +157,14 @@ public class DBUser extends AbstractSavable implements Serializable, User {
 		roles.add(role);
 	}
 
+	public void removeRole(String role) {
+		roles.remove(role);
+	}
+
+	public void clearRoles() {
+		roles.clear();
+	}
+
 	/**
 	 * Get a Collection of Strings describing all the roles this user has.
 	 */
@@ -190,10 +200,14 @@ public class DBUser extends AbstractSavable implements Serializable, User {
 		return(acl.canView(cat));
 	}
 
+	public void canAdd(boolean to) {
+		this.canadd=to;
+	}
+
 	/**
 	 * Set the user's addability.
 	 */
-	public void canAdd(boolean canadd) {
+	public void setCanAdd(boolean to) {
 		this.canadd=canadd;
 	}
 
@@ -315,14 +329,14 @@ public class DBUser extends AbstractSavable implements Serializable, User {
 	/**
 	 * Set the user's password.
 	 */
-	public void setPassword(String pass) throws PhotoException {
+	public void setPassword(String pass) {
 		// Make sure the password is hashed
 		if(pass.length()<13) {
 			PhotoSecurity security=Persistent.getSecurity();
 			try {
 				pass=security.getDigest(pass);
 			} catch(Exception e) {
-				throw new PhotoException("Error digesting password", e);
+				throw new RuntimeException("Error digesting password", e);
 			}
 		}
 		this.password=pass;

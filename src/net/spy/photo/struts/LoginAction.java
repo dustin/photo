@@ -20,7 +20,7 @@ import net.spy.photo.log.PhotoLogEntry;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
 import net.spy.photo.UserFactory;
-import net.spy.photo.impl.DBUser;
+import net.spy.photo.MutableUser;
 import net.spy.photo.PhotoUserException;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.Persistent;
@@ -61,16 +61,13 @@ public class LoginAction extends PhotoAction {
 		c.setMaxAge(86400*30*2);
 		response.addCookie(c);
 
+		UserFactory uf=UserFactory.getInstance();
 
-		DBUser dbuser=(DBUser)user;
+		MutableUser muser=uf.getMutable(user.getId());
 		// Set the ID
-		dbuser.setPersess(persess);
-		// Save the user
-		Saver saver=new Saver(PhotoConfig.getInstance());
-		saver.save(dbuser);
+		muser.setPersess(persess);
 
-		// Recache the users
-		UserFactory.getInstance().recache();
+		uf.persist(muser);
 	}
 
 	/**
