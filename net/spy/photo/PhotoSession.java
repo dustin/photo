@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.33 2000/07/19 03:21:34 dustin Exp $
+ * $Id: PhotoSession.java,v 1.34 2000/07/24 05:04:12 knitterb Exp $
  */
 
 package net.spy.photo;
@@ -32,6 +32,8 @@ public class PhotoSession extends Object
 	protected PhotoStorerThread storer_thread = null;
 	protected PhotoServlet photo_servlet = null;
 	protected Hashtable groups=null;
+
+	protected boolean debug=true;
 
 	protected PhotoAheadFetcher aheadfetcher=null;
 
@@ -334,8 +336,20 @@ public class PhotoSession extends Object
 				+ "   values(?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)";
 			PreparedStatement st=photo.prepareStatement(query);
 			// Toss in the parameters
-			st.setString(1, multi.getParameter("keywords"));
-			st.setString(2, multi.getParameter("info"));
+			if (multi.getParameter("keywords") == null) {
+				debug ("keywords null, setting to blank string");
+				st.setString(1, "");
+			} else {
+				st.setString(1, multi.getParameter("keywords"));
+			}
+
+			if (multi.getParameter("info") == null) {
+				debug ("info/desc null, setting to blank string");
+				st.setString(2, "");
+			} else {
+				st.setString(2, multi.getParameter("info"));
+			}
+
 			st.setInt(3, Integer.parseInt(multi.getParameter("category")));
 			st.setString(4, multi.getParameter("taken"));
 			st.setInt(5, size);
@@ -1028,6 +1042,12 @@ public class PhotoSession extends Object
 		}
 		return(ret);
 	}
+
+	protected void debug (String msg) {
+		if (debug)
+			System.out.println("PhotoSession: " + msg);
+	}
+
 
 	// Tokenize a template file and return the tokenized stuff.
 	protected String tokenize(String file, Hashtable vars) {
