@@ -1,5 +1,5 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
-// $Id: PhotoXSLT.java,v 1.7 2002/04/26 20:41:18 dustin Exp $
+// $Id: PhotoXSLT.java,v 1.8 2002/04/26 21:13:55 knitterb Exp $
 
 package net.spy.photo;
 
@@ -34,7 +34,7 @@ public abstract class PhotoXSLT extends Object {
 	 * Abstract XML sending thingy.
 	 */
 	public static void sendXML(String xml, String stylesheet,
-		OutputStream out) {
+		OutputStream out) throws Exception {
 
 		// Lookup the stylesheet
 		PhotoConfig conf=new PhotoConfig();
