@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.1 2002/05/22 00:09:05 dustin Exp $
+	$Id: build.xml,v 1.2 2002/05/23 04:24:01 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -26,6 +26,7 @@
 		<delete>
 			<fileset dir="net">
 				<include name="**/*.class"/>
+				<include name="spy/photo/sp/*.java"/>
 			</fileset>
 		</delete>
 	</target>
@@ -37,12 +38,20 @@
 		</jar>
 	</target>
 
-	<target name="all" depends="rmic">
+	<target name="all" depends="rmic,spfiles">
 		<javac srcdir="." destdir="." deprecation="on" depend="on" verbose="false">
 			<classpath refid="photo.classpath"/>
 			<exclude name="**/Apache*.java"/>
-			<include name="**/*.java"/>
+			<include name="net/spy/photo/**/*.java"/>
+			<include name="net/spy/rmi/**/*.java"/>
 		</javac>
+	</target>
+
+	<target name="spfiles">
+		<taskdef name="spgen" classname="net.spy.util.SPGenTask">
+			<classpath refid="photo.classpath"/>
+		</taskdef>
+		<spgen srcdir="." destdir="."/>
 	</target>
 
 	<target name="rmic" depends="pre-rmic">
@@ -51,10 +60,10 @@
 		</rmic>
 	</target>
 
-	<target name="pre-rmic">
+	<target name="pre-rmic" depends="spfiles">
 		<javac srcdir="." destdir="." deprecation="on" depend="on" verbose="false">
 			<classpath refid="photo.classpath"/>
-			<include name="net/spy/rmi/net.spy.rmi.ImageServerImpl.class"/>
+			<include name="net/spy/rmi/ImageServerImpl.java"/>
 		</javac>
 	</target>
 
