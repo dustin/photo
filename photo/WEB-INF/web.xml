@@ -11,6 +11,13 @@
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
+	<!-- How errors are done -->
+	<error-page>
+		<!-- This will deal with *all* exceptions. -->
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/error.jsp</location>
+	</error-page>
+
 	<!-- Persistent objects -->
 	<servlet>
 		<servlet-name>Persistent</servlet-name>
