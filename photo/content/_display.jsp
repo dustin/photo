@@ -1,7 +1,6 @@
 <%@ page import="net.spy.photo.PhotoImageData" %>
 <%@ page import="net.spy.photo.Comment" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
-<%@ taglib uri='/tlds/struts-template.tld' prefix='template' %>
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>

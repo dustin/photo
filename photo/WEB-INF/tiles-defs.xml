@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+	"http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<!-- The page layout -->
+	<definition name="pageLayout" path="/layout/page.jsp">
+		<put name="title" value="Generic Page"/>
+		<put name="body" value=""/>
+	</definition>
+
+	<!-- Pages -->
+	<definition name="index" extends="pageLayout">
+		<put name="title" value="My Photo Album"/>
+		<put name="body" value="/content/_index.jsp"/>
+	</definition>
+
+	<definition name="display" extends="pageLayout">
+		<put name="title" value="Image Display"/>
+		<put name="body" value="/content/_display.jsp"/>
+	</definition>
+
+</tiles-definitions>

@@ -112,14 +112,14 @@
 		input="/credform.jsp"
 		scope="request"
 		name="loginForm">
-		<forward name="next" path="/index.jsp" />
+		<forward name="next" path="/index.do" />
 		<forward name="setadmin" path="/adminify.do?action=setadmin" />
 	</action>
 
 	<!-- Logout -->
 	<action    path="/logout"
 		type="net.spy.jwebkit.struts.LogoutAction">
-		<forward name="next" path="/index.jsp" />
+		<forward name="next" path="/index.do" />
 	</action>
 
 	<!-- How to handle displays -->
@@ -133,7 +133,7 @@
 
 	<action path="/displaySwitch" type="net.spy.photo.struts.AdminSwitchAction">
 		<forward name="subadmin" path="/admin/display.jsp"/>
-		<forward name="noadmin" path="/display.jsp"/>
+		<forward name="noadmin" path="/displayTile.do"/>
 	</action>
 
 	<action path="/refreshDisplay" type="net.spy.photo.struts.SetDisplayRefresh">
@@ -146,7 +146,7 @@
 		input="/changepw.jsp"
 		scope="request"
 		name="changePWForm">
-		<forward name="next" path="/index.jsp" />
+		<forward name="next" path="/index.do" />
 	</action>
 
 	<!-- Forgot password -->
@@ -171,7 +171,7 @@
 		type="net.spy.photo.struts.AdminifyAction"
 		scope="request"
 		name="adminifyForm">
-		<forward name="next" path="/index.jsp"/>
+		<forward name="next" path="/index.do"/>
 	</action>
 
 	<!-- Set the optimal image size. -->
@@ -180,7 +180,7 @@
 		input="/sizeform.jsp"
 		scope="request"
 		name="setSizeForm">
-		<forward name="next" path="/index.jsp"/>
+		<forward name="next" path="/index.do"/>
 	</action>
 
 	<!-- Searches -->
@@ -244,7 +244,7 @@
 		input="/newuserform.jsp"
 		scope="request"
 		name="newUserForm">
-		<forward name="next" path="/index.jsp" />
+		<forward name="next" path="/index.do" />
 	</action>
 
 	<!-- Add a new image to a gallery -->
@@ -261,7 +261,7 @@
 		input="/savegallery.jsp"
 		scope="request"
 		name="saveGalleryForm">
-		<forward name="next" path="/index.jsp" />
+		<forward name="next" path="/index.do" />
 	</action>
 
 	<!-- ***************************************************************** -->
@@ -318,7 +318,7 @@
 		name="emptyForm"
 		input="/admin/properties.jsp"
 		type="net.spy.photo.struts.AdminSaveProperties">
-		<forward name="next" path="/index.jsp"/>
+		<forward name="next" path="/index.do"/>
 	</action>
 
 	<!-- REPORTING -->
@@ -402,6 +402,14 @@
 
 	<!-- End of reporting -->
 
+	<!-- Tiles stuff -->
+	<action path="/index"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="index"/>
+	<action path="/displayTile"
+		type="org.apache.struts.actions.ForwardAction"
+		parameter="display"/>
+
   </action-mappings>
 
 	<message-resources parameter="net.spy.photo.photoresources"/>
@@ -410,6 +418,12 @@
 		<set-property
 			property="pathnames"
 			value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/>
+	</plug-in>
+
+	<plug-in className="org.apache.struts.tiles.TilesPlugin" >
+		<set-property property="definitions-config"
+			value="/WEB-INF/tiles-defs.xml" />
+		<set-property property="moduleAware" value="true" />
 	</plug-in>
 
 </struts-config>

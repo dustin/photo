@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.40 2003/06/14 04:05:24 dustin Exp $
+	$Id: build.xml,v 1.41 2003/07/23 08:19:27 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -79,6 +79,7 @@
 		<echo message="Installing to ${location}"/>
 		<copy todir="/afs/.spy.net/misc/web/root/${location}/">
 			<fileset dir="photo">
+				<include name="**/*.html"/>
 				<include name="**/*.jsp"/>
 				<include name="**/*.css"/>
 				<include name="images/*"/>
@@ -87,6 +88,7 @@
 				<include name="WEB-INF/web.xml"/>
 				<include name="WEB-INF/validator-rules.xml"/>
 				<include name="WEB-INF/validation.xml"/>
+				<include name="WEB-INF/tiles-defs.xml"/>
 				<include name="WEB-INF/tlds/*.tld"/>
 				<!-- Avoid overwriting spy.jar in case I've done specific upgrades. -->
 				<exclude name="WEB-INF/lib/spy.jar"/>

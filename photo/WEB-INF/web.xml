@@ -89,8 +89,7 @@
 	</servlet-mapping>
 
 	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.do</welcome-file>
 	</welcome-file-list>
 
 	<!-- How errors are done -->
@@ -127,5 +126,26 @@
 		<taglib-uri>/tlds/struts-logic.tld</taglib-uri>
 		<taglib-location>/WEB-INF/tlds/struts-logic.tld</taglib-location>
 	</taglib>
+	<taglib>
+		<taglib-uri>/tlds/struts-tiles.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/struts-tiles.tld</taglib-location>
+	</taglib>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Templates</web-resource-name>
+			<url-pattern>/content/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>denied</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-role>
+		<description>Nobody ever directly accesses this stuff.</description>
+		<role-name>denied</role-name>
+	</security-role>
 
 </web-app>
