@@ -52,7 +52,7 @@
 	<!-- The XMLRPC interface -->
 	<servlet>
 		<servlet-name>XMLRPCServlet</servlet-name>
-		<servlet-class>net.spy.photo.XMLRPCServlet</servlet-class>
+		<servlet-class>net.spy.rpc.XMLRPC</servlet-class>
 	</servlet>
 
 	<!-- The action servlet -->

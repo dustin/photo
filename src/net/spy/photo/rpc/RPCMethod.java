@@ -6,6 +6,8 @@ package net.spy.photo.rpc;
 
 import java.util.Hashtable;
 
+import net.spy.rpc.services.Remote;
+
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoUser;
@@ -13,7 +15,7 @@ import net.spy.photo.PhotoUser;
 /**
  * Superclass for all RPC handlers.
  */
-public abstract class RPCMethod extends Object {
+public abstract class RPCMethod extends Remote {
 
 	private PhotoUser user=null;
 
