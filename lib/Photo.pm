@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.50 1998/10/20 07:47:04 dustin Exp $
+# $Id: Photo.pm,v 1.51 1998/11/08 01:17:38 dustin Exp $
 
 package Photo;
 
@@ -30,7 +30,7 @@ sub new
 sub openDB
 {
 	my($self)=shift;
-	$self->{'dbh'}=DBI->connect("dbi:Pg:dbname=photo;host=bleu", 'nobody','')
+	$self->{'dbh'}=DBI->connect("dbi:Pg:dbname=dustin;host=bleu", 'nobody','')
 		 || die("Cannot connect to database\n");
 }
 
@@ -86,6 +86,20 @@ sub setAuto
 	$self->{'dbh'}->{AutoCommit}=$value;
 }
 
+sub commit
+{
+	my $self=shift;
+	$self->openDB unless($self->{'dbh'});
+	$self->{'dbh'}->commit;
+}
+
+sub rollback
+{
+	my $self=shift;
+	$self->openDB unless($self->{'dbh'});
+	$self->{'dbh'}->rollback;
+}
+
 sub buildQuery
 {
 	my($self, $q)=@_;
@@ -98,8 +112,8 @@ sub buildQuery
 	}
 
 
-	$query ="select a.oid,a.keywords,a.descr,b.name,\n";
-	$query.="	a.size,a.taken,a.ts,a.fn,a.cat,a.addedby,b.id\n";
+	$query ="select a.keywords,a.descr,b.name,\n";
+	$query.="	a.size,a.taken,a.ts,a.id,a.cat,a.addedby,b.id\n";
 	$query.="	from album a, cat b\n	where a.cat=b.id\n";
 	$query.="		and a.cat in (select cat from wwwacl\n";
 	$query.="					   where username='$ENV{REMOTE_USER}')";
@@ -212,12 +226,11 @@ sub cacheImage
 	$self->setAuto(0);
 
 	$out="";
-	$query ="declare c cursor for select * from image_store where id=\n";
-	$query.="(select id from image_map where name='$img')\n";
+	$query ="declare c cursor for select * from image_store where id=$img\n";
 	$query.="	order by line\n";
-		$self->doQuery($query);
+	$self->doQuery($query);
 
-		$done=0;
+	$done=0;
 	while($done==0) {
 			$s=$self->doQuery("fetch 20 in c;\n");
 				$done=20;
@@ -286,11 +299,8 @@ sub displayImage
 
 	$q=CGI->new;
 
-	if($img=~/.jpg$/) {
-		$type="image/jpeg";
-	} else {
-		$type="image/gif";
-	}
+	# Probably need to handle multiple types someday
+	$type="image/jpg";
 
 	print $q->header(-type=>$type, -expires=>'+90d');
 
@@ -375,7 +385,7 @@ sub doFind
 	print "<table><tr>\n";
 
 	while($r=$s->fetch) {
-		($p{OID}, $p{KEYWORDS}, $p{DESCR}, $p{CAT}, $p{SIZE}, $p{TAKEN},
+		($p{KEYWORDS}, $p{DESCR}, $p{CAT}, $p{SIZE}, $p{TAKEN},
 			$p{TS}, $p{IMAGE}, $p{CATNUM}, $p{ADDEDBY})=@{$r};
 		next if($i++<$start);
 
@@ -419,10 +429,10 @@ sub doDisplay
 	my($query, $s, @r, @mapme, %p);
 	%p=();
 
-	$query ="select a.oid,a.fn,a.keywords,a.descr,\n";
+	$query ="select a.id,a.keywords,a.descr,\n";
 	$query.="	a.size,a.taken,a.ts,b.name,a.cat,a.addedby,b.id\n";
 	$query.="	from album a, cat b\n";
-	$query.="	where a.cat=b.id and a.oid=" . $q->param('oid');
+	$query.="	where a.cat=b.id and a.id=" . $q->param('id');
 	$query.="\n	and a.cat in (select cat from wwwacl where ";
 	$query.="username='$ENV{REMOTE_USER}');\n";
 
@@ -434,7 +444,7 @@ sub doDisplay
 		print "ACL ERROR!!!  We don't want your type here.\n";
 	} else {
 		@r=@{$s->fetch};
-		@mapme=qw(OID IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM
+		@mapme=qw(IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM
 				  ADDEDBY);
 		map { $p{$mapme[$_]}=$r[$_] } (0..$#r);
 		$self->showTemplate("$Photo::includes/display.inc", %p);
@@ -483,7 +493,7 @@ sub myquote
 sub addImage
 {
 	my($self, $q)=@_;
-	my(@elements, %in, %tmp, $query, $ext, $fn, $f, $s, $r, $dbh, $size, $n);
+	my(@elements, %in, %tmp, $query, $ext, $f, $s, $r, $dbh, $size, $id);
 
 	@elements=qw(category keywords picture info taken);
 	%tmp=map{$_,1}@elements;
@@ -512,71 +522,55 @@ sub addImage
 		return;
 	}
 
-	$fn=time()."$$.$ext";
 	$f=$q->param('picture');
 
-	$dbh=$self->{dbh};
-
-		$self->setAuto(0);
 	eval {
-		my($premime, $i, $tmp);
-		$query="insert into image_map(name) values('$fn');\n";
+		my($i, $premime, $tmp);
+		$self->setAuto(0);
+		$query ="insert into album(keywords,descr,cat,taken,addedby)\n";
+		$query.="    values($in{'keywords'},\n\t$in{'info'},\n";
+		$query.="    \t$in{'category'},\n\t$in{'taken'},\n";
+		$query.="    '$ENV{'REMOTE_USER'}')\n";
 		$self->doQuery($query);
-		$s=$self->doQuery("select currval('image_store_seq');\n");
-		$r=$s->fetch;
-		$n=$r->[0];
+		$query ="select currval('album_id_seq')\n";
+		$r=$self->doQuery($query)->fetch;
+		$id=$r->[0];
+		$s->finish;
 
-		$premime="";
-		$i=0;
-		$size=0;
-		while ( $tmp=read($f, $premime, 60*57)) {
+		# do encoding
+		$i=0; $size=0; $premime="";
+		while( $tmp=read($f, $premime, 60*57)) {
 			$size+=$tmp;
 			map {
-				$query="insert into image_store values($n, $i, '$_');\n";
-				# print "$query<br>\n";
+				$query="insert into image_store values($id, $i, '$_');\n";
 				$self->doQuery($query);
 				$i++;
 			} split(/\n/, encode_base64($premime));
 		}
-		$s->finish;
+
+		# set the image size, now that we know it...
+		$query ="update album set size=$size where id=$id\n";
+		$self->doQuery($query);
 	};
 
-	if($@) {
-		$self->showTemplate("$Photo::includes/add_uploadfail.inc", %tmp);
-		return;
-	} else {
-		$dbh->commit;
-	}
-
-	print "<!-- Image was $n -->\n";
-
-		$self->setAuto(1);
-
-	$query ="insert into album\n";
-	$query.="	(fn, keywords, descr, cat, size, taken, addedby)\n";
-	$query.="	values('$fn',\n\t$in{'keywords'},\n\t$in{'info'},\n";
-	$query.="\t$in{'category'},\n\t$size,\n\t$in{'taken'},\n";
-	$query.="\t'$ENV{'REMOTE_USER'}');";
-
-	eval { $s=$self->doQuery($query); };
+	close(OUT);
 
 	if($@) {
-		# Try to clean up:
-		eval { $self->doQuery("delete from image_map where id=$n;\n"); };
-		eval { $self->doQuery("delete from image_store where id=$n;\n"); };
-
 		%tmp=('QUERY', $query, 'ERRSTR', $DBI::errstr);
 		$self->showTemplate("$Photo::includes/add_dbfailure.inc", %tmp);
+		$self->rollback;
 	} else {
 		%tmp=(
-			'OID' => $s->{'pg_oid_status'},
+			'OID' => $id,
 			'QUERY' => $query
 		);
 		$self->showTemplate("$Photo::includes/add_success.inc", %tmp);
+		$self->commit;
 	}
 	if($s) {
 		$s->finish;
 	}
+	$self->setAuto(1);
 }
 
 sub addTail
@@ -637,16 +631,14 @@ sub showTemplate
 
 sub deleteImage
 {
-	my($self, $oid)=@_;
+	my($self, $id)=@_;
 	my($query, $s, $r, %p);
 
-	$query ="select a.id,a.name,b.keywords,b.descr,b.fn,b.cat,b.oid,\n";
+	$query ="select a.id,a.name,b.keywords,b.descr,b.id,b.cat,\n";
 	$query.="		c.id,c.name\n";
 	$query.="	from cat a, album b, image_map c\n";
-	$query.="	where a.id=b.cat and b.oid=$oid\n";
+	$query.="	where a.id=b.cat and b.id=$id\n";
 	$query.="		and c.name=b.fn;";
-
-	$p{oid}=$oid;
 
 	$s=$self->doQuery($query);
 
@@ -656,13 +648,7 @@ sub deleteImage
 	}
 
 	eval {
-		$query="delete from album where oid=$oid;\n";
-		$self->doQuery($query);
-
-		$query="delete from image_map where id=$p{MAPID};\n";
-		$self->doQuery($query);
-
-		$query="delete from image_store where id=$p{MAPID};\n";
+		$query="delete from album where id=$id;\n";
 		$self->doQuery($query);
 	};
 
