@@ -11,7 +11,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: bk.xsl,v 1.3 2001/01/07 20:10:32 knitterb Exp $
+ $Id: bk.xsl,v 1.4 2001/01/07 20:58:27 knitterb Exp $
  -->
 
 <xsl:template match="page">
@@ -43,22 +43,32 @@
 						<table border="0" width="100%">
 						<tr valign="top">
 						<td align="left">
-						Home
+							<a href="{meta_stuff/self_uri}">Home</a> |
+							<a href="{/page/meta_stuff/self_uri}?func=findform">Search</a> |
+							<a href="{meta_stuff/self_uri}?func=credform">Login</a> |
+							<xsl:if test="meta_stuff/isadmin">
+								<a href="{meta_stuff/self_uri}?func=unsetadmin">Exit Admin</a>
+							</xsl:if>
+							<!--
+							<xsl:if test="meta_stuff/isadmin">
+								<a href="{meta_stuff/self_uri}?func=unsetadmin">Admin</a>
+							</xsl:if>
+							-->
+
 						</td>
 						</tr>
 						<tr valign="top">
 						<td align="left">
 						Logged in as
-						<a href="{meta_stuff/self_uri}?func=credform">
 						<xsl:value-of
-							select="meta_stuff/photo_user/username"/></a>
+							select="meta_stuff/photo_user/username"/>
 							<xsl:if test="meta_stuff/isadmin">
-								<a href="{meta_stuff/self_uri}?func=unsetadmin">(admin mode)</a>
+								(admin mode)
 							</xsl:if>
 						<br/>
-						Switch to
+						<!-- Switch to
 						<a href="{meta_stuff/self_uri}?func=setstylesheet&amp;stylesheet=simple">simple</a>
-						view.
+						view. -->
 						</td>
 						<td align="right">
 							<xsl:call-template name="quick_search"/>
