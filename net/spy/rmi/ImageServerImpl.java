@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.1 2000/06/30 04:11:19 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.2 2000/06/30 05:44:45 dustin Exp $
 
 package net.spy.rmi;
 
@@ -21,8 +21,8 @@ import net.spy.photo.*;
 public class ImageServerImpl extends UnicastRemoteObject
 	implements ImageServer {
 
-	RHash rhash=null;
-	SpyConfig conf = null;
+	protected RHash rhash=null;
+	protected SpyConfig conf = null;
 
 	public ImageServerImpl(String config) throws RemoteException {
 		super();
@@ -45,6 +45,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 			}
 		} catch(Exception e) {
 			log("Error fetching image:  " + e);
+			e.printStackTrace();
 			throw new RemoteException("Error fetching image", e);
 		}
 		return(image_data);
@@ -64,6 +65,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 			rhash.put("photo_" + image_id, image);
 		} catch(Exception e) {
 			log("Error storing image:  " + e);
+			e.printStackTrace();
 			throw new RemoteException("Error storing image", e);
 		}
 	}
@@ -100,6 +102,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 
 		} catch(Exception e) {
 			log("Error making thumbnail:  " + e);
+			e.printStackTrace();
 			throw new Exception("Error making thumbnail:  " + e);
 		} finally {
 			try {
@@ -175,6 +178,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 
 			} catch(Exception e) {
 				log("Problem getting image:  " + e);
+				e.printStackTrace();
 				ex=new Exception("Problem getting image: " + e);
 			} finally {
 				freeDBConn(photo);
@@ -204,6 +208,12 @@ public class ImageServerImpl extends UnicastRemoteObject
 	}
 
 	protected void freeDBConn(Connection conn) {
+		try {
+			conn.close();
+		} catch(Exception e) {
+			System.err.println("Error closing database:  " + e);
+			e.printStackTrace();
+		}
 	}
 
 	public boolean ping() throws RemoteException {
