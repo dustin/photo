@@ -1,28 +1,49 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: listcats.cgi,v 1.2 1997/12/06 09:42:58 dustin Exp $
+# $Id: listcats.cgi,v 1.3 1998/04/12 22:30:51 dustin Exp $
 
 use Postgres;
+use DCache;
 
-print "Content-type: text/html\n\n";
+require 'photolib.pl';
 
-$dbh=db_connect('photo');
-
-$query="select cat from wwwacl where username='$ENV{REMOTE_USER}'";
-
-$s=$dbh->execute($query);
-
-while(($ok)=$s->fetchrow())
+sub getlist
 {
-    $ok[$ok]=1;
+    my($ret, $query, $ok, @ok, $s, @r);
+
+    $ret="";
+
+    $query="select cat from wwwacl where username='$ENV{REMOTE_USER}'";
+
+    $s=doQuery($query);
+
+    while(($ok)=$s->fetchrow())
+    {
+        $ok[$ok]=1;
+    }
+
+    $query="select * from cat order by name";
+
+    $s=doQuery($query);
+
+    while(@r=$s->fetchrow())
+    {
+        $ret.="    <option value=\"$r[0]\">$r[1]\n" if($ok[$r[0]]);
+    }
+
+    return($ret);
 }
 
-$query="select * from cat order by name";
+my($c, $key, $data);
 
-$s=$dbh->execute($query);
+$c=DCache->new;
 
-while(@r=$s->fetchrow())
-{
-    print "    <option value=\"$r[0]\">$r[1]\n" if($ok[$r[0]]);
+$key="$ENV{SCRIPT_NAME}.$ENV{REMOTE_USER}";
+
+if( ! ($c->checkcache($key, 900))) {
+    $data=&getlist;
+    $c->cache($key, "Content-type: text/html", $data);
 }
+
+print $c->getcache($key);
