@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.25 2002/02/24 22:50:29 dustin Exp $
+-- $Id: photo.sql,v 1.26 2002/02/24 23:49:26 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -243,6 +243,7 @@ grant all on log_types_log_type_id_seq to nobody;
 insert into log_types(log_type) values('Login');
 insert into log_types(log_type) values('ImgView');
 insert into log_types(log_type) values('Upload');
+insert into log_types(log_type) values('AuthFail');
 
 -- A function for looking up log types
 create function get_log_type(TEXT) returns INTEGER as
@@ -350,7 +351,7 @@ create view log_user_ip_agent as
 		and t.log_type ='ImgView';
 ;
 
-grant all on log_user_ip_agent to nobody;
+grant select on log_user_ip_agent to nobody;
 
 create view log_user_ip_keywords as
 	select a.id as photo_id, u.username, l.remote_addr, a.keywords, l.ts
@@ -359,7 +360,24 @@ create view log_user_ip_keywords as
 	    a.id = l.photo_id
 ;
 
-grant all on log_user_ip_keywords to nobody;
+grant select on log_user_ip_keywords to nobody;
+
+-- For viewing auth logs
+create view auth_log_view as
+	select
+		u.username, l.remote_addr, l.ts, t.log_type
+	from
+		wwwusers u, photo_logs l, log_types t
+	where
+		u.id=l.wwwuser_id
+		and l.log_type = t.log_type_id
+		and (t.log_type='Login' or t.log_type='AuthFail')
+	order by
+		l.ts desc
+;
+grant select on auth_log_view to nobody
+;
+
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.101 2002/02/24 22:50:29 dustin Exp $
+ * $Id: PhotoSession.java,v 1.102 2002/02/24 23:49:26 dustin Exp $
  */
 
 package net.spy.photo;
@@ -465,7 +465,7 @@ public class PhotoSession extends Object
 		sendXML(xml.toString());
 	}
 
-	private void setCreds() throws ServletException, IOException {
+	private void setCreds() throws Exception {
 		String username=request.getParameter("username");
 		String pass=request.getParameter("password");
 
@@ -478,16 +478,37 @@ public class PhotoSession extends Object
 				"Your username or password is incorrect.");
 		}
 
-		// We don't do anything unless the password is correct.
-		if(user.checkPassword(pass)) {
-			// Save the username.
-			sessionData.setUser(user);
-			log("Authenticated as " + username);
-		} else {
-			log("AUTH FAILURE:  " + username);
-			throw new ServletException(
-				"Your username or password is incorrect.");
+		String query = "insert into photo_logs "
+			+ "(log_type, wwwuser_id, remote_addr, user_agent)\n"
+			+ "  values(get_log_type(?), ?, ?, get_agent(?))\n";
+
+		SpyDB db=new SpyDB(conf);
+		PreparedStatement pst=db.prepareStatement(query);
+		pst.setInt(2, user.getId());
+		pst.setString(3, request.getRemoteAddr());
+		pst.setString(4, request.getHeader("User-Agent"));
+
+		try {
+			// We don't do anything unless the password is correct.
+			if(user.checkPassword(pass)) {
+				// Save the username.
+				sessionData.setUser(user);
+
+				pst.setString(1, "Login");
+				log("Authenticated as " + username);
+			} else {
+				pst.setString(1, "AuthFail");
+				log("AUTH FAILURE:  " + username);
+
+				throw new ServletException(
+					"Your username or password is incorrect.");
+			}
+		} finally {
+			pst.executeUpdate();
+			pst.close();
+			db.close();
 		}
+
 	}
 
 	// Get the saved searches.

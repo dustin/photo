@@ -22,6 +22,8 @@ insert into log_types(log_type) values('ImgView')
 ;
 insert into log_types(log_type) values('Upload')
 ;
+insert into log_types(log_type) values('AuthFail')
+;
 
 -- A function for looking up log types
 create function get_log_type(TEXT) returns INTEGER as
@@ -137,6 +139,6 @@ drop table tmpagenttable
 -- Dropping old log tables
 
 --   Dropping photo_log
--- drop table photo_log;
+drop table photo_log;
 --   Dropping upload_log
--- drop table upload_log;
+drop table upload_log;
