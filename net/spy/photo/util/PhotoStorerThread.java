@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.2 2001/07/03 08:08:01 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.3 2001/07/13 09:00:24 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -16,6 +16,9 @@ import net.spy.photo.*;
 import net.spy.util.*;
 
 public class PhotoStorerThread extends Thread {
+
+	// chunks should be divisible by 57
+	private final static int CHUNK_SIZE=2052;
 
 	// Constructor
 	public PhotoStorerThread() {
@@ -56,8 +59,8 @@ public class PhotoStorerThread extends Thread {
 			int max=data.length-i;
 			
 			// Make sure we don't get more than 2k at a time.
-			if(max>2048) {
-				max=2048;
+			if(max>CHUNK_SIZE) {
+				max=CHUNK_SIZE;
 			}
 
 			// Get the thing to store.
@@ -81,7 +84,7 @@ public class PhotoStorerThread extends Thread {
 				String tmp = base64.encode((byte[])v.elementAt(i));
 				tmp=tmp.trim();
 
-				if(sdata.length() < 2048) {
+				if(sdata.length() < CHUNK_SIZE) {
 					sdata+=tmp+"\n";
 				} else {
 					storeQuery(image_id, n, st, sdata);
