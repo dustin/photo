@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.110 2002/03/01 21:55:38 dustin Exp $
+ * $Id: PhotoSession.java,v 1.111 2002/03/01 21:59:08 dustin Exp $
  */
 
 package net.spy.photo;
@@ -935,7 +935,7 @@ public class PhotoSession extends Object
 		xml.addBodyPart(getGlobalMeta());
 		xml.addBodyPart("<add_form>\n"
 			+ "\t<cat_list>\n"
-			+ getCatList(-1, "canview")
+			+ getCatList(-1, "canadd")
 			+ "\t</cat_list>\n"
 			+ "\t<today>\n"
 			+ PhotoUtil.getToday()
@@ -955,7 +955,7 @@ public class PhotoSession extends Object
 		xml.addBodyPart(getGlobalMeta());
 		xml.addBodyPart("<find_form>\n"
 			+ "\t<cat_list>\n"
-			+ getCatList(-1, "canadd")
+			+ getCatList(-1, "canview")
 			+ "\t</cat_list>\n"
 			+ "</find_form>"
 			);
