@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.3 1998/04/25 23:27:18 dustin Exp $
+# $Id: Photo.pm,v 1.4 1998/04/30 05:17:42 dustin Exp $
 
 package Photo;
 
@@ -9,7 +9,7 @@ use CGI;
 use DBI;
 use strict;
 
-use vars qw($cgidir $imagedir $uriroot $Itop $includes $adminc);
+use vars qw($cgidir $imagedir $uriroot $Itop $includes $adminc $ldir);
 
 # Global stuffs
 $Photo::cgidir="/perl/dustin/photo";
@@ -18,6 +18,7 @@ $Photo::uriroot="/~dustin/photo";
 $Photo::Itop="$Photo::uriroot/album";
 $Photo::includes="/usr/people/dustin/public_html/photo/inc";
 $Photo::adminc="/usr/people/dustin/public_html/photo/admin/inc";
+$Photo::ldir="/usr/people/dustin/public_html/photo/album";
 
 sub new
 {
@@ -29,7 +30,7 @@ sub new
 sub openDB
 {
     my($self)=shift;
-    $self->{'dbh'}=DBI->connect("dbi:Pg:dbname=photo", 'dustin','')
+    $self->{'dbh'}=DBI->connect("dbi:Pg:dbname=photo", '','')
          || die("Cannot connect to database\n");
 }
 
@@ -48,6 +49,64 @@ sub doQuery
 	  || die("Database Error:  $DBI::errstr\n<!--\n$query\n-->\n");
 
     return($s);
+}
+
+sub addImage
+{
+    my($self, $q)=@_;
+    my(@elements, %in, %tmp, $query, $ext, $fn, $f, @stat, $s);
+
+    @elements=qw(category keywords picture info);
+    %tmp=map{$_,1}@elements;
+    %in=map{
+	  $_,defined($tmp{$_})?$self->{dbh}->quote($q->param($_)):$q->param($_)
+        }$q->param;
+
+    print $q->start_html(-title=>'Adding image',-bgcolor=>'#fFfFfF');
+
+    if($in{'img'}=~/jpg$/i) {
+	$ext="jpg";
+    } elsif($in{'img'}=~/gif$/i) {
+	$ext="gif";
+    } else {
+	%tmp=('FILENAME',$in{'img'});
+	$self->showTemplate("$Photo::includes/add_badfiletype.inc", %tmp);
+	return;
+    }
+
+    $fn=time()."$$.$ext";
+    $f=$q->param('picture');
+    open(OUT, ">$Photo::ldir/$fn");
+    print OUT <$f>;
+    close(OUT);
+    @stat=stat("$Photo::ldir/$fn");
+    if($stat[7]==0)
+    {
+	unlink("$Photo::ldir/$fn");
+	%tmp=('FILENAME',$in{'img'});
+	$self->showTemplate("$Photo::includes/add_badfiletype.inc", %tmp);
+	return;
+    }
+
+    system('/usr/local/bin/convert', '-size', '100x100',
+	   "$Photo::ldir/$fn", "$Photo::ldir/tn/$fn");
+
+    $query ="insert into album (fn, keywords, descr, cat, size, taken)\n";
+    $query.="    values('$fn',\n\t'$in{'keywords'}',\n\t'$in{'$info'}',\n";
+    $query.="\t$in{'cat'},\n\t$stat[7],\n\t'$in{'$taken'}');";
+
+    eval { $s=$self->doQuery($query); };
+
+    if($@) {
+	%tmp=('QUERY', $query, 'ERRSTR', $DBI::errstr);
+	$self->showTemplate("$Photo::includes/add_dbfailure.inc", %tmp);
+    } else {
+	%tmp=(
+	    'OID' => $s->{'pg_oid_status'},
+	    'QUERY' => $query
+	);
+	$self->showTemplate("$Photo::includes/add_success.inc", %tmp);
+    }
 }
 
 sub addTail
