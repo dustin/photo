@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: listcats.cgi,v 1.9 1998/09/04 04:05:43 dustin Exp $
+# $Id: listcats.cgi,v 1.10 1998/10/25 08:23:38 dustin Exp $
 
 use DCache;
 use Photo;
@@ -40,3 +40,8 @@ if( ! ($c->checkcache($key, 900))) {
 }
 
 print $c->getcache($key);
+
+undef($c);
+undef($key);
+undef($data);
+undef($p);

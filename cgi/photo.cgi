@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: photo.cgi,v 1.15 1998/09/04 04:05:45 dustin Exp $
+# $Id: photo.cgi,v 1.16 1998/10/25 08:23:40 dustin Exp $
 
 use CGI;
 use Photo;
@@ -30,3 +30,6 @@ print $q->header;
 defined($funcs{$q->param('func')})?&{$funcs{$q->param('func')}}:badFunc($q);
 $p->addTail();
 print $q->end_html;
+
+undef($p); # destroy!
+undef($q); # destroy!
