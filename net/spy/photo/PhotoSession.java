@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.109 2002/03/01 10:22:36 dustin Exp $
+ * $Id: PhotoSession.java,v 1.110 2002/03/01 21:55:38 dustin Exp $
  */
 
 package net.spy.photo;
@@ -693,12 +693,15 @@ public class PhotoSession extends Object
 	 * because helpers use it.
 	 *
 	 * @param def The ID of the default category.
+	 * @param column The column to check for access ``canview'' or
+	 * ``canadd''
 	 */
-	String getCatList(int def) {
+	private String getCatList(int def, String column) {
 		String out="";
 		SpyCache cache=new SpyCache();
 
-		String key="catList_" + def;
+		String key="catList_" + column + "_"
+			+ sessionData.getUser().getId() + "_" + def;
 
 		out=(String)cache.get(key);
 		// If we don't have it, build it and cache it.
@@ -709,7 +712,8 @@ public class PhotoSession extends Object
 
 				String query = "select * from cat where id in\n"
 			  		+ "(select cat from wwwacl where\n"
-			  		+ "    userid=? or userid=?)\n"
+			  		+ "    (userid=? or userid=?) "
+					+ "     and " + column + "=true)\n"
 			  		+ "order by name\n";
 
 				PreparedStatement st = photo.prepareStatement(query);
@@ -931,7 +935,7 @@ public class PhotoSession extends Object
 		xml.addBodyPart(getGlobalMeta());
 		xml.addBodyPart("<add_form>\n"
 			+ "\t<cat_list>\n"
-			+ getCatList(-1)
+			+ getCatList(-1, "canview")
 			+ "\t</cat_list>\n"
 			+ "\t<today>\n"
 			+ PhotoUtil.getToday()
@@ -951,7 +955,7 @@ public class PhotoSession extends Object
 		xml.addBodyPart(getGlobalMeta());
 		xml.addBodyPart("<find_form>\n"
 			+ "\t<cat_list>\n"
-			+ getCatList(-1)
+			+ getCatList(-1, "canadd")
 			+ "\t</cat_list>\n"
 			+ "</find_form>"
 			);
@@ -1283,7 +1287,7 @@ public class PhotoSession extends Object
 		if(isAdmin() || isSubAdmin()) {
 			// Admin needs CATS
 			int defcat=r.getCatNum();
-			h.put("CATS", getCatList(defcat));
+			h.put("CATS", getCatList(defcat, "canadd"));
 			out=tokenize("admin/display.inc", h);
 		} else {
 

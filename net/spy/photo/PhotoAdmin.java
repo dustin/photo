@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.23 2002/02/25 08:41:47 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.24 2002/03/01 21:55:38 dustin Exp $
  */
 
 package net.spy.photo;
@@ -341,13 +341,34 @@ public class PhotoAdmin extends PhotoHelper {
 		return(admShowUsers());
 	}
 
+	/**
+	 * List all categories.
+	 */
+	private String getCatList() throws Exception {
+		StringBuffer sb=new StringBuffer();
+
+		SpyDB db=new SpyDB(conf);
+		String query="select * from cat";
+		ResultSet rs=db.executeQuery("select * from cat");
+		while(rs.next()) {
+			sb.append("    <option value=\"");
+			sb.append(rs.getInt("id"));
+			sb.append("\">");
+			sb.append(rs.getString("name"));
+			sb.append("</option>\n");
+		}
+		rs.close();
+		db.close();
+		return(sb.toString());
+	}
+
 	// Show the category edit form
-	private String admShowCategories() throws ServletException {
+	private String admShowCategories() throws Exception {
 		if(!ps.isAdmin()) {
 			throw new ServletException("Not admin");
 		}
 		Hashtable h = new Hashtable();
-		h.put("CATS", ps.getCatList(-1));
+		h.put("CATS", getCatList());
 		return(tokenize("admin/admcat.inc", h));
 	}
 
@@ -386,7 +407,7 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Show the category edit form
-	private String admSaveCategory() throws ServletException {
+	private String admSaveCategory() throws Exception {
 		if(!ps.isAdmin()) {
 			throw new ServletException("Not admin");
 		}
