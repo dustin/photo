@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoDimScaler.java,v 1.1 2001/12/28 01:54:13 dustin Exp $
+// $Id: PhotoDimScaler.java,v 1.2 2001/12/28 02:02:37 dustin Exp $
 
 package net.spy.photo;
 
@@ -27,19 +27,34 @@ public class PhotoDimScaler extends Object {
 		float x=(float)dim.getWidth();
 		float y=(float)dim.getHeight();
 		float aspect=x/y;
-		int newx=0;
-		int newy=0;
+		int newx=dim.getWidth();
+		int newy=dim.getHeight();
 
-		newx=d.getWidth();
-		newy=(int)((float)newx/aspect);
+		if(d.getWidth() <= newx || d.getHeight() <= newy) {
 
-		// If it exceeds the boundaries, do it the other way.
-		if(newx > d.getWidth() || newy > d.getHeight()) {
-			newy=d.getHeight();
-			newx=(int)((float)newy*aspect);
+			newx=d.getWidth();
+			newy=(int)((float)newx/aspect);
+
+			// If it exceeds the boundaries, do it the other way.
+			if(newx > d.getWidth() || newy > d.getHeight()) {
+				newy=d.getHeight();
+				newx=(int)((float)newy*aspect);
+			}
 		}
 
-		return(new PhotoDimensionsImpl(newx, newy));
+		PhotoDimensions rv=new PhotoDimensionsImpl(newx, newy);
+
+		// Assertions
+		if(rv.getWidth() > d.getWidth() || rv.getHeight() > d.getHeight()) {
+			throw new Error("Results can't be outside of the input box");
+		}
+
+		if(rv.getWidth() > dim.getWidth() || rv.getHeight() > dim.getHeight()) {
+			throw new Error("Results can't be outside of the input size");
+		}
+		// End assertions
+
+		return(rv);
 	}
 
 	/**
