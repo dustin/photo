@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.53 1998/11/08 05:00:40 dustin Exp $
+# $Id: Photo.pm,v 1.54 1998/11/09 06:23:43 dustin Exp $
 
 package Photo;
 
@@ -116,7 +116,7 @@ sub buildQuery
 	$query.="	a.size,a.taken,a.ts,a.id,a.cat,a.addedby,b.id\n";
 	$query.="	from album a, cat b\n	where a.cat=b.id\n";
 	$query.="		and a.cat in (select cat from wwwacl\n";
-	$query.="					   where username='$ENV{REMOTE_USER}')";
+	$query.="			   where userid=getwwwuser('$ENV{REMOTE_USER}'))";
 
 	$needao=0;
 	$sub="";
@@ -434,7 +434,7 @@ sub doDisplay
 	$query.="	from album a, cat b\n";
 	$query.="	where a.cat=b.id and a.id=" . $q->param('id');
 	$query.="\n	and a.cat in (select cat from wwwacl where ";
-	$query.="username='$ENV{REMOTE_USER}');\n";
+	$query.="userid=getwwwuser('$ENV{REMOTE_USER}') );\n";
 
 	print "<!-- Query:\n$query\n-->\n";
 
@@ -463,7 +463,8 @@ sub doCatView
 
 	$query ="select name,id,catsum(id) as cs from cat\n";
 	$query.="where id in\n";
-	$query.="  (select cat from wwwacl where username='$ENV{REMOTE_USER}')\n";
+	$query.="  (select cat from wwwacl where\n";
+	$query.="   userid=getwwwuser('$ENV{REMOTE_USER}') )\n";
 	$query.=" order by cs desc;";
 	print "<!--\n$query\n-->\n";
 	$s=$self->doQuery($query);
@@ -503,7 +504,8 @@ sub addImage
 
 	$self->start_html($q, 'Adding image');
 
-	$query="select * from wwwusers where username='$ENV{'REMOTE_USER'}'\n";
+	$query="select * from wwwusers where\n".
+	       "        userid=getwwwuser('$ENV{'REMOTE_USER'}')\n";
 	$s=$self->doQuery($query);
 	$r=$s->fetch;
 	if($r->[4]!=1) {
