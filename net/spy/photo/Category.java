@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.1 2002/05/11 09:24:34 dustin Exp $
+// $Id: Category.java,v 1.2 2002/06/20 05:01:18 dustin Exp $
 
 package net.spy.photo;
 
@@ -94,6 +94,23 @@ public class Category extends Object {
 		}
 
 		return(v);
+	}
+
+	/**
+	 * Get a list of all categories (for administrative actions).
+	 */
+	public static Enumeration getAdminCatList() throws PhotoException {
+		Vector v=new Vector();
+		try {
+			SpyDB db=new SpyDB(new PhotoConfig());
+			ResultSet rs=db.executeQuery("select * from cat order by name");
+			while(rs.next()) {
+				v.addElement(new Category(rs));
+			}
+		} catch(Exception e) {
+			throw new PhotoException("Error getting admin category list", e);
+		}
+		return(v.elements());
 	}
 
 	/**
