@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.19 1998/07/19 20:34:57 dustin Exp $
+# $Id: Photo.pm,v 1.20 1998/07/23 06:01:27 dustin Exp $
 
 package Photo;
 
@@ -327,7 +327,8 @@ sub doFind
     $max=$q->param('maxret');    # Find the desired max return
     $max+=0;                     # make it a number
 
-    print "<h2>Found $n match".(($n==1)?"":"es").":</h2><br><ul>\n";
+    print "<h2>Found $n match".(($n==1)?"":"es").":</h2><br>\n";
+    print "<table><tr>\n";
 
     while($r=$s->fetch)
     {
@@ -337,12 +338,15 @@ sub doFind
 
         last if( $max>0 && $i-$start>$max);
 
-        print "<li>\n";
+	# Two columns.
+	print "</tr>\n<tr>\n" if(($i+1)%2==0);
+
+        print "<td>\n";
         $self->showTemplate("$Photo::includes/findmatch.inc", %p);
-        print "</li>\n";
+        print "</td>\n";
     }
 
-    print "</ul>\n";
+    print "</tr></table>\n";
 
     # Add a link to the next matches.
     if( (($start+$max) < $n) && $max>0) {
