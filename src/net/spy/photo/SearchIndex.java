@@ -3,6 +3,7 @@
 package net.spy.photo;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -13,10 +14,12 @@ import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.Date;
 
+import net.spy.SpyObject;
+
 /**
  * Search data indexer.
  */
-public class SearchIndex extends Object {
+public class SearchIndex extends SpyObject {
 
 	/** 
 	 * Operator for ``and'' joins.
@@ -25,7 +28,7 @@ public class SearchIndex extends Object {
 	/** 
 	 * Operator for ``or'' joins.
 	 */
-	public static final int OP_OR=1;
+	public static final int OP_OR=2;
 
 	private static SearchIndex instance=null;
 
@@ -89,6 +92,13 @@ public class SearchIndex extends Object {
 			add(byTaken, pid.getTaken(), pid);
 			add(byTs, pid.getTimestamp(), pid);
 		}
+		getLogger().info("Updated indices");
+		/*
+		getLogger().info("byKeyword:  " + byKeyword);
+		getLogger().info("byCategory:  " + byCategory);
+		getLogger().info("byTaken:  " + byTaken);
+		getLogger().info("byTs:  " + byTs);
+		*/
 	}
 
 	/** 
@@ -105,8 +115,8 @@ public class SearchIndex extends Object {
 	 * @param cats a Collection of Integer objects.
 	 * @param operator the operator
 	 */
-	public synchronized Set getForCats(Collection cats, int operator) {
-		return(getCombined(byCategory, cats, operator));
+	public synchronized Set getForCats(Collection cats) {
+		return(getCombined(byCategory, cats, OP_OR));
 	}
 
 	/** 
@@ -127,6 +137,16 @@ public class SearchIndex extends Object {
 		}
 	}
 
+	private String opToString(int op) {
+		String rv="INVALID";
+		if(op == OP_AND) {
+			rv="AND";
+		} else if(op == OP_OR) {
+			rv="OR";
+		}
+		return(rv);
+	}
+
 	private Set getCombined(Map m, Collection c, int operator) {
 		// Validate the operator
 		checkOp(operator);
@@ -135,10 +155,16 @@ public class SearchIndex extends Object {
 		if(c.size() > 0) {
 			// Get and add the first one
 			Iterator i=c.iterator();
-			rv.addAll((Set)m.get(i.next()));
+			Set s=(Set)m.get(i.next());
+			if(s != null) {
+				rv.addAll(s);
+			}
 			// Now, deal with the rest of them
 			for(; i.hasNext(); ) {
-				Set stmp=(Set)m.get(i.next());
+				Collection stmp=(Collection)m.get(i.next());
+				if(stmp == null) {
+					stmp=Collections.EMPTY_LIST;
+				}
 				if(operator == OP_AND) {
 					rv.retainAll(stmp);
 				} else {

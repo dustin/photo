@@ -9,10 +9,11 @@ package net.spy.photo;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.Comparator;
 
 import java.net.URLEncoder;
 
@@ -209,23 +210,39 @@ public class PhotoSearch extends PhotoHelper {
 		SearchForm form, PhotoSessionData sessionData)
 		throws Exception {
 
+		boolean doneOne=false;
+
 		// Get the search index
 		SearchIndex index=SearchIndex.getInstance();
 
-		// This is the result set of images we want to display.
-		Set rset=new HashSet();
-
-		// Flip through all of the categories and get them as Integers
-		Collection validCats=new ArrayList(16);
-		for(Iterator i=Category.getCatList(
-			sessionData.getUser().getId(), Category.ACCESS_READ).iterator();
-			i.hasNext();) {
-			Category cat=(Category)i.next();
-			validCats.add(new Integer(cat.getId()));
+		// Figure out how the thing should be sorted.
+		Comparator comp=null;
+		if("a.ts".equals(form.getOrder())) {
+			comp=new TimestampComparator();
+		} else {
+			comp=new TakenComprator();
+		}
+		if("desc".equals(form.getSdirection())) {
+			comp=new ReverseComparator(comp);
 		}
 
-		// Start with all the potentially accessible images
-		rset.addAll(index.getForCats(validCats, SearchIndex.OP_OR));
+		// This is the result set of images we want to display and maintain
+		// their sort order
+		Set rset=new TreeSet(comp);
+
+		// Handle any category first
+		String atmp[]=form.getCat();
+		if(atmp != null && atmp.length > 0) {
+			ArrayList al=new ArrayList(atmp.length);
+			for(int i=0; i<atmp.length; i++) {
+				al.add(new Integer(atmp[i]));
+			}
+			getLogger().info("Retaining images with cats " + al);
+			rset.addAll(index.getForCats(al));
+		} else {
+			getLogger().info("Getting images for all categories");
+			rset.addAll(index.getForCats(getValidCats(sessionData.getUser())));
+		}
 
 		// Check to see if there's a field entry
 		if("keywords".equals(form.getField())) {
@@ -249,8 +266,14 @@ public class PhotoSearch extends PhotoHelper {
 			// Remove everything that doesn't match our keywords (unless we
 			// don't have any)
 			if(keywords.size() > 0) {
-				getLogger().info("Retaining images with keywords " + keywords);
-				rset.retainAll(index.getForKeywords(keywords, joinop));
+				getLogger().info("Got images with keywords " + keywords);
+				Set keyset=index.getForKeywords(keywords, joinop);
+				if(doneOne && "and".equals(form.getKeyjoin())) {
+					rset.retainAll(keyset);
+				} else {
+					rset.addAll(keyset);
+				}
+				doneOne=true;
 			}
 		} else if("descr".equals(form.getField())) {
 			throw new Exception("Not handling descr currently");
@@ -262,16 +285,22 @@ public class PhotoSearch extends PhotoHelper {
 			}
 		}
 
-		// Handle any category limitation
-		String atmp[]=form.getCat();
-		if(atmp != null && atmp.length > 0) {
-			ArrayList al=new ArrayList(atmp.length);
-			for(int i=0; i<atmp.length; i++) {
-				al.add(new Integer(atmp[i]));
-			}
-			getLogger().info("Retaining images with cats " + al);
-			rset.retainAll(index.getForCats(al, SearchIndex.OP_OR));
+		// Check for any of the date entries
+		if(form.getTstart() != null && form.getTstart().length() > 0) {
+			throw new Exception("Not handling time fields currently");
 		}
+		if(form.getTend() != null && form.getTend().length() > 0) {
+			throw new Exception("Not handling time fields currently");
+		}
+		if(form.getStart() != null && form.getStart().length() > 0) {
+			throw new Exception("Not handling time fields currently");
+		}
+		if(form.getEnd() != null && form.getEnd().length() > 0) {
+			throw new Exception("Not handling time fields currently");
+		}
+
+		// Limit the results to the valid categories for the given user
+		rset.retainAll(index.getForCats(getValidCats(sessionData.getUser())));
 
 		// Populate the results
 		PhotoSearchResults results=new PhotoSearchResults();
@@ -286,291 +315,75 @@ public class PhotoSearch extends PhotoHelper {
 		return(results);
 	}
 
-	/**
-	 * Perform a search from a SearchForm.
-	 */
-	public PhotoSearchResults oldPerformSearch(
-		SearchForm form, PhotoSessionData sessionData)
-		throws ServletException {
-
-		PhotoSearchResults results=new PhotoSearchResults();
-		results.setMaxSize(sessionData.getOptimalDimensions());
-
-		try {
-
-			// Go get a query
-			String query=buildQuery(form, sessionData.getUser().getId());
-
-			// getLogger().info("Search query: " + query);
-
-			// Cache this query for fifteen minutes.  It's unique to the
-			// user, but the user is often guest.
-			SpyDB photo=new SpyDB(getConfig());
-			ResultSet rs = photo.executeQuery(query);
-
-			// Figure out how many they want to display.
-			String tmp=form.getMaxret();
-			if(tmp!=null) {
-				int rv=Integer.parseInt(tmp);
-				results.setMaxRet(rv);
-			}
-
-			int resultId=0;
-
-			while(rs.next()) {
-				int photoId=rs.getInt("id");
-				// Fully populate the first few search results.
-				PhotoImageData r=PhotoImageDataImpl.getData(photoId);
-				// Add it to our search result set.
-				results.add(new PhotoSearchResult(r, resultId));
-				// Counting results...
-				resultId++;
-			}
-			rs.close();
-			photo.close();
-		} catch(Exception e) {
-			throw new ServletException("Error performing search", e);
+	private Collection getValidCats(PhotoUser u) throws Exception {
+		// Flip through all of the categories and get them as Integers
+		Collection validCats=new ArrayList(16);
+		for(Iterator i=Category.getCatList(
+			u.getId(), Category.ACCESS_READ).iterator(); i.hasNext();) {
+			Category cat=(Category)i.next();
+			validCats.add(new Integer(cat.getId()));
 		}
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("performSearch returning " + results);
-		}
-		return(results);
+		return(validCats);
 	}
 
-	// Build the bigass complex search query from a SearchForm
-	private String buildQuery(SearchForm form, int remoteUid) throws Exception {
-		String query="", sub="", stmp="", order="",
-			odirection="", fieldjoin="", join="";
-		boolean needao=false;
-		String atmp[];
-
-		query = "select distinct a.id, a.taken, a.ts\n"
-			+ "   from album a, cat b, wwwusers c, wwwacl acl\n"
-			+ "       where a.cat=b.id\n"
-			+ "       and a.addedby=c.id\n"
-			+ "       and a.cat = acl.cat\n"
-			+ "       and acl.canview=true\n"
-			+ "       and ( acl.userid=" + remoteUid + "\n"
-			+ "             or acl.userid= " + PhotoUtil.getDefaultId() + ")\n";
-
-		// Find out what the fieldjoin is real quick...
-		stmp=form.getFieldjoin();
-		if(stmp == null) {
-			fieldjoin="and";
-		} else {
-			fieldjoin=PhotoUtil.dbquoteStr(stmp);
+	private static abstract class PIDComparator implements Comparator {
+		public PIDComparator() {
+			super();
+		}
+		public boolean equals(Object ob) {
+			return(ob.getClass() == getClass());
 		}
 
-		// Start with categories.
-		atmp=form.getCat();
+		protected abstract int doCompare(
+			PhotoImageData pid1, PhotoImageData pid2);
 
-		if(atmp != null) {
-			stmp="";
-			boolean snao=false;
+		public int compare(Object ob1, Object ob2) {
+			PhotoImageData pid1=(PhotoImageData)ob1;
+			PhotoImageData pid2=(PhotoImageData)ob2;
 
-			// Do we need and or or?
-			if(needao) {
-				sub += " and";
+			int rv=doCompare(pid1, pid2);
+			if(rv == 0) {
+				rv=(pid1.getId() - pid2.getId());
 			}
-			needao=true;
-
-			for(int i=0; i<atmp.length; i++) {
-				if(snao) {
-					stmp += " or";
-				} else {
-					snao=true;
-				}
-				stmp += "\n        a.cat=" + Integer.valueOf(atmp[i]);
-			}
-
-			if(atmp.length > 1) {
-				sub += "\n     (" + stmp + "\n     )";
-			} else {
-				sub += "\n   " + stmp;
-			}
+			return(rv);
 		}
 
-		join = PhotoUtil.dbquoteStr(form.getKeyjoin());
-		// Default
-		if(join == null) {
-			join = "or";
+	}
+
+	private static class TimestampComparator extends PIDComparator {
+		public TimestampComparator() {
+			super();
 		}
 
-		// Keywords
-		if("keywords".equals(form.getField())) {
-			stmp = form.getWhat();
-			if(stmp == null) {
-				stmp="";
-			}
-			boolean needjoin=false;
+		public int doCompare(PhotoImageData pid1, PhotoImageData pid2) {
+			return(pid1.getTimestamp().compareTo(pid2.getTimestamp()));
+		}
+	}
 
-			ArrayList keywords=new ArrayList();
-			StringTokenizer st=new StringTokenizer(stmp);
-			while(st.hasMoreTokens()) {
-				Keyword kw=Keyword.getKeyword(st.nextToken());
-				if(kw != null) {
-					keywords.add(kw);
-				}
-			}
-			if(keywords.size() == 1) {
-				Keyword kw=(Keyword)keywords.get(0);
-				if(needao) {
-					sub += " " + fieldjoin;
-				}
-				needao=true;
-				sub += "\n   exists (select 1 from album_keywords_map where "
-					+ " album_id = a.id and word_id = " + kw.getId()
-					+ " ) -- " + kw.getKeyword();
-			} else if(keywords.size() > 1) {
-				if(needao) {
-					sub += " " + fieldjoin;
-				}
-				needao=true;
-				sub += "\n    (";
-				for(Iterator i=keywords.iterator(); i.hasNext(); ) {
-					Keyword kw=(Keyword)i.next();
-					if(needjoin) {
-						sub += "\n  " + join;
-					} else {
-						needjoin=true;
-					}
-					sub += "\n\texists (select 1 from album_keywords_map "
-						+ "where album_id = a.id and word_id = " + kw.getId()
-						+ ") -- " + kw.getKeyword();
-				}
-				sub += "\n    )";
-			} else {
-				// No keywords, ignore
-			}
-		} else if("descr".equals(form.getField())) {
-			// OK, lets look for search strings now...
-			stmp = form.getWhat();
-			if(stmp != null && stmp.length() > 0) {
-				boolean needjoin=false;
-
-				// If we need an and or an or, stick it in here.
-				if(needao) {
-					sub += " " + fieldjoin;
-				}
-				needao=true;
-
-				atmp = PhotoUtil.split(" ", stmp);
-
-				if(atmp.length > 1) {
-					sub += "\n     (";
-					for(int i=0; i<atmp.length; i++) {
-						if(needjoin) {
-							sub += join;
-						} else {
-							needjoin=true;
-						}
-						sub += "\n\tdescr ~* '"
-							+ PhotoUtil.dbquoteStr(atmp[i]) + "' ";
-					}
-					sub += "\n     )";
-				} else {
-					sub += "\n    descr ~* '"
-						+ PhotoUtil.dbquoteStr(stmp) + "' ";
-				}
-			}
-		} else {
-			stmp = form.getWhat();
-			if(stmp != null && stmp.length() > 0) {
-				throw new ServletException("Invalid field:  "
-					+ form.getField());
-			}
+	private static class TakenComprator extends PIDComparator {
+		public TakenComprator() {
+			super();
 		}
 
-		// Starts and ends
+		public int doCompare(PhotoImageData pid1, PhotoImageData pid2) {
+			return(pid1.getTaken().compareTo(pid2.getTaken()));
+		}
+	}
 
-		stmp=PhotoUtil.dbquoteStr(form.getTstart());
-		if(stmp != null && stmp.length()>0) {
-			if(needao) {
-				join=PhotoUtil.dbquoteStr(form.getTstartjoin());
-				if(join==null) {
-					join="and";
-				}
-				sub += " " + join;
-			}
-			needao=true;
-			sub += "\n    a.taken>='" + stmp + "'";
+	private static class ReverseComparator implements Comparator {
+		private Comparator comp=null;
+		public ReverseComparator(Comparator c) {
+			super();
+			this.comp=c;
 		}
 
-		stmp=PhotoUtil.dbquoteStr(form.getTend());
-		if(stmp != null && stmp.length()>0) {
-			if(needao) {
-				join=PhotoUtil.dbquoteStr(form.getTendjoin());
-				if(join==null) {
-					join="and";
-				}
-				sub += " " + join;
-			}
-			needao=true;
-			sub += "\n    a.taken<='" + stmp + "'";
+		public boolean equals(Object ob) {
+			return(ob.getClass() == getClass());
 		}
 
-		stmp=PhotoUtil.dbquoteStr(form.getStart());
-		if(stmp != null && stmp.length()>0) {
-			if(needao) {
-				join=PhotoUtil.dbquoteStr(form.getStartjoin());
-				if(join==null) {
-					join="and";
-				}
-				sub += " " + join;
-			}
-			needao=true;
-			sub += "\n    a.ts>='" + stmp + "'";
+		public int compare(Object ob1, Object ob2) {
+			return(0 - comp.compare(ob1, ob2));
 		}
-
-		stmp=PhotoUtil.dbquoteStr(form.getEnd());
-		if(stmp != null && stmp.length()>0) {
-			if(needao) {
-				join=PhotoUtil.dbquoteStr(form.getEndjoin());
-				if(join==null) {
-					join="and";
-				}
-				sub += " " + join;
-			}
-			needao=true;
-			sub += "\n    a.ts<='" + stmp + "'";
-		}
-
-		// Stick the subquery on the bottom.
-		if(sub.length() > 0 ) {
-			query += " and\n (" + sub + "\n )";
-		}
-
-		// Figure out the direction...
-		stmp=PhotoUtil.dbquoteStr(form.getSdirection());
-		if(stmp != null) {
-			odirection=stmp;
-		} else {
-			odirection = "";
-		}
-
-		// Stick the order under the subquery.
-		stmp=PhotoUtil.dbquoteStr(form.getOrder());
-		if(stmp != null) {
-			if(stmp.equals("a.taken")) {
-				order="a.taken " + odirection + ", a.ts " + odirection;
-			} else {
-				// If it's ordered by timestamp, include the album ID in
-				// the sort, just in case.
-				order="a.ts " + odirection
-					+ ", a.taken " + odirection
-					+ ", a.id " + odirection;
-			}
-		} else {
-			order = "a.taken " + odirection + ", a.ts " + odirection;
-		}
-
-		query += "\n order by " + order;
-
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Searching with the following query:\n" + query);
-		}
-
-		return(query);
 	}
 
 }
