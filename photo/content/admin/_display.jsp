@@ -16,7 +16,7 @@
 				<td align="left" width="10%">
 					<photo:imgLink id="<%= 0 %>" relative="prev"
 							searchId="<%= String.valueOf(searchId) %>">
-						<photo:imgsrc alt="<<<" border="0" url="/images/l_arrow.gif"/>
+						<photo:imgsrc alt="<<<" url="/images/l_arrow.gif"/>
 					</photo:imgLink>
 				</td>
 			</c:if>
@@ -29,7 +29,7 @@
 				<td align="right" width="10%">
 					<photo:imgLink id="<%= 0 %>" relative="next"
 							searchId="<%= String.valueOf(searchId) %>">
-						<photo:imgsrc alt=">>>" border="0" url="/images/r_arrow.gif"/>
+						<photo:imgsrc alt=">>>" url="/images/r_arrow.gif"/>
 					</photo:imgLink>
 				</td>
 			</c:if>

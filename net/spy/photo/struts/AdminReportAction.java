@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminReportAction.java,v 1.6 2003/07/23 04:29:26 dustin Exp $
+// $Id: AdminReportAction.java,v 1.7 2003/08/09 03:46:50 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -25,12 +25,14 @@ import net.spy.SpyConfig;
 import net.spy.db.DBSP;
 import net.spy.db.CachedResultSet;
 
+import net.spy.jwebkit.struts.DBSPAction;
+
 import net.spy.photo.PhotoConfig;
 
 /**
  * Report fetch action.
  */
-public class AdminReportAction extends AdminAction {
+public class AdminReportAction extends DBSPAction {
 
 	/**
 	 * Get an instance of AdminReportAction.
@@ -39,23 +41,17 @@ public class AdminReportAction extends AdminAction {
 		super();
 	}
 
-	private DBSP constructDBSP(Class c) throws ServletException {
-		DBSP rv=null;
-		try {
-			Class params[]={SpyConfig.class};
-			Constructor cons=c.getConstructor(params);
-			PhotoConfig conf=new PhotoConfig();
-			Object args[]={conf};
-			rv=(DBSP)cons.newInstance(args);
-		} catch(Exception e) {
-			throw new ServletException("Couldn't find constructor for " + c, e);
-		}
-		return(rv);
+	/** 
+	 * Get the PhotoConfig.
+	 */
+	protected SpyConfig getSpyConfig() {
+		return(new PhotoConfig());
 	}
 
 	/** 
 	 * Perform this action.
 	 */
+	/*
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
@@ -102,5 +98,6 @@ public class AdminReportAction extends AdminAction {
 
 		return(mapping.findForward("next"));
 	}
+*/
 
 }

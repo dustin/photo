@@ -344,7 +344,7 @@
 	<!-- REPORTING -->
 
 	<action path="/report/userCat"
-		className="net.spy.photo.struts.AdminReportMapping"
+		className="net.spy.jwebkit.struts.DBSPMapping"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="User Category Report"/>
@@ -355,7 +355,7 @@
 	</action>
 
 	<action path="/report/userCatXd"
-		className="net.spy.photo.struts.AdminReportMapping"
+		className="net.spy.jwebkit.struts.DBSPMapping"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="User Category Report"/>
@@ -366,7 +366,7 @@
 	</action>
 
 	<action path="/report/userImgs"
-		className="net.spy.photo.struts.AdminReportMapping"
+		className="net.spy.jwebkit.struts.DBSPMapping"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="User Image View Report"/>
@@ -377,7 +377,7 @@
 	</action>
 
 	<action path="/report/topImages"
-		className="net.spy.photo.struts.AdminReportMapping"
+		className="net.spy.jwebkit.struts.DBSPMapping"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="Top Images"/>
@@ -388,7 +388,7 @@
 	</action>
 
 	<action path="/report/topImagesXd"
-		className="net.spy.photo.struts.AdminReportMapping"
+		className="net.spy.jwebkit.struts.DBSPMapping"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="Top Images"/>
@@ -399,7 +399,7 @@
 	</action>
 
 	<action path="/report/mostActiveUsers"
-		className="net.spy.photo.struts.AdminReportMapping"
+		className="net.spy.jwebkit.struts.DBSPMapping"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="Most Active Users"/>
@@ -410,7 +410,7 @@
 	</action>
 
 	<action path="/report/mostActiveUsersXd"
-		className="net.spy.photo.struts.AdminReportMapping"
+		className="net.spy.jwebkit.struts.DBSPMapping"
 		type="net.spy.photo.struts.AdminReportAction">
 
 		<set-property property="reportName" value="Most Active Users"/>
