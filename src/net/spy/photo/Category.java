@@ -35,7 +35,7 @@ import net.spy.photo.sp.InsertACLEntry;
 import net.spy.photo.sp.InsertCategory;
 import net.spy.photo.sp.UpdateCategory;
 import net.spy.photo.sp.ModifyCategory;
-import net.spy.photo.sp.GetACLsForCategory;
+import net.spy.photo.sp.GetAllACLs;
 import net.spy.photo.sp.GetGeneratedKey;
 
 /**
@@ -69,8 +69,11 @@ public class Category extends AbstractSavable implements Comparable {
 	}
 
 	private Category(ResultSet rs) throws SQLException {
+		this();
 		id=rs.getInt("id");
 		name=rs.getString("name");
+		setNew(false);
+		setModified(false);
 	}
 
 	private static Map getCategoryMap() throws SQLException {
@@ -95,8 +98,8 @@ public class Category extends AbstractSavable implements Comparable {
 
 			db.close();
 
-			// Now, flip through the categories and get their ACLs initified.
-			loadACLs(rv.values());
+			// Load all of the ACLs for the categories
+			loadACLs(rv);
 
 			// remember it
 			sc.store(CACHE_KEY, rv, CACHE_TIME);
@@ -191,30 +194,28 @@ public class Category extends AbstractSavable implements Comparable {
 	/**
 	 * Load the ACLs for this Category instance.
 	 */
-	private static void loadACLs(Collection categories) throws SQLException {
+	private static void loadACLs(Map cats) throws SQLException {
 
-		GetACLsForCategory db=new GetACLsForCategory(PhotoConfig.getInstance());
+		GetAllACLs db=new GetAllACLs(PhotoConfig.getInstance());
 
-		for (Iterator i=categories.iterator(); i.hasNext(); ) {
-			Category cat=(Category)i.next();
+		ResultSet rs=db.executeQuery();
+		while(rs.next()) {
+			Integer catId=new Integer(rs.getInt("cat"));
 
-			db.setCat(cat.getId());
-			ResultSet rs=db.executeQuery();
-
-			// (re)set the ACL set for this category
-			cat.setAcl(new PhotoACL());
-
-			while(rs.next()) {
-				int uid=rs.getInt("userid");
-				if(rs.getBoolean("canview")) {
-					cat.acl.addViewEntry(uid);
-				}
-				if(rs.getBoolean("canadd")) {
-					cat.acl.addAddEntry(uid);
-				}
+			Category cat=(Category)cats.get(catId);
+			if(cat == null) {
+				throw new RuntimeException("Invalid cat acl mapping " + catId);
 			}
-			rs.close();
+
+			int uid=rs.getInt("userid");
+			if(rs.getBoolean("canview")) {
+				cat.acl.addViewEntry(uid);
+			}
+			if(rs.getBoolean("canadd")) {
+				cat.acl.addAddEntry(uid);
+			}
 		}
+		rs.close();
 		db.close();
 	}
 
