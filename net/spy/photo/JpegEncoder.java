@@ -25,7 +25,7 @@ import java.lang.*;
 * an image.
 */
 
-public class JpegEncoder extends Frame
+public class JpegEncoder extends Object
 {
     Thread runner;
     BufferedOutputStream outStream;
@@ -47,16 +47,20 @@ public class JpegEncoder extends Frame
          53, 60, 61, 54, 47, 55, 62, 63,
         };
 
-    public JpegEncoder(Image image, int quality, OutputStream out)
-    {
-                MediaTracker tracker = new MediaTracker(this);
-                tracker.addImage(image, 0);
-                try {
-                        tracker.waitForID(0);
-                }
-                catch (InterruptedException e) {
-// Got to do something?
-                }
+    public JpegEncoder(Image image, int quality, OutputStream out) {
+		ImageWatcher watcher=new ImageWatcher(image);
+		try {
+			watcher.waitForImage();
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+			// Try again
+			try {
+				watcher.waitForImage();
+			} catch(InterruptedException e2) {
+				System.err.println("Giving up.");
+				e2.printStackTrace();
+			}
+		}
         /*
         * Quality of the image.
         * 0 to 100 and from bad image quality, high compression to good

@@ -19,6 +19,8 @@ RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \
 	net/spy/rmi/ImageServerImpl_Stub.class \
 	net/spy/rmi/ImageServerImpl.class \
 	net/spy/rmi/ImageServerScaler.class \
+	net/spy/photo/ImageWatcher.class \
+	net/spy/photo/JpegEncoder.class \
 	net/spy/rmi/JavaImageServerScaler.class \
 	net/spy/rmi/ExternalImageServerScaler.class \
 	net/spy/rmi/ImageServer.class
@@ -53,7 +55,6 @@ CLASSES=\
 	net/spy/photo/PhotoSessionData.class \
 	net/spy/photo/Mailer.class \
 	net/spy/photo/PhotoImageObserver.class \
-	net/spy/photo/JpegEncoder.class \
 	net/spy/photo/PhotoImageScaler.class \
 	net/spy/photo/PhotoSession.class \
 	net/spy/photo/Cursor.class \
