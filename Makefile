@@ -51,7 +51,7 @@ CLASSES=net/spy/photo/PhotoServlet.class net/spy/photo/PhotoHelper.class \
 all: $(CLASSES)
 
 photo.jar: $(CLASSES)
-	$(JAR) cv0f $@ `find net/spy/photo -name "*.class"`
+	$(JAR) cv0f $@ `find net/spy -name "*.class"`
 
 test: $(CLASSES)
 	env CLASSPATH=$(CLASSPATH) $(SERVLETRUNNER) -d $(PWD)
