@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.6 2002/05/17 06:20:56 dustin Exp $
+// $Id: Comment.java,v 1.7 2002/06/23 02:10:40 dustin Exp $
 
 package net.spy.photo;
 
@@ -13,8 +13,7 @@ import net.spy.photo.sp.*;
 /**
  * Comments on photos.
  */
-public class Comment extends Object
-	implements java.io.Serializable, XMLAble {
+public class Comment extends Object implements java.io.Serializable {
 
 	private int commentId=-1;
 
@@ -220,32 +219,6 @@ public class Comment extends Object
 	}
 
 	/**
-	 * XML me.
-	 */
-	public String toXML() {
-		StringBuffer sb=new StringBuffer();
-		sb.append("<photo_comment>\n");
-		sb.append("<comment_id>");
-		sb.append(getCommentId());
-		sb.append("</comment_id>\n");
-		sb.append("<photo_id>");
-		sb.append(getPhotoId());
-		sb.append("</photo_id>\n");
-		sb.append("<remote_addr>");
-		sb.append(getRemoteAddr());
-		sb.append("</remote_addr>\n");
-		sb.append("<timestamp>");
-		sb.append(getTimestamp());
-		sb.append("</timestamp>\n");
-		sb.append("<note>");
-		sb.append(PhotoXML.normalize(getNote(), false));
-		sb.append("</note>\n");
-		sb.append(getUser().toXML());
-		sb.append("</photo_comment>\n");
-		return(sb.toString());
-	}
-
-	/**
 	 * String me!
 	 */
 	public String toString() {
@@ -261,42 +234,6 @@ public class Comment extends Object
 		sb.append(":\n");
 		sb.append(getNote());
 		return(sb.toString());
-	}
-
-	/**
-	 * Testing and what not.
-	 */
-	public static void main(String args[]) throws Exception {
-		if(args.length==0) {
-			PhotoSecurity sec=new PhotoSecurity();
-			PhotoUser me=sec.getUser("dustin");
-			System.out.println("Got user:  " + me);
-
-			for(Enumeration e=getAllComments(me); e.hasMoreElements();) {
-				XMLAble xmlable=(XMLAble)e.nextElement();
-				System.out.println(xmlable.toXML());
-			}
-
-			/*
-			Comment comment=new Comment();
-			comment.setUser(me);
-			comment.setNote("This image has been up for a *really* long time.");
-			comment.setRemoteAddr("192.168.1.139");
-			comment.setPhotoId(2156);
-
-			comment.save();
-			System.out.println(comment);
-			*/
-		} else {
-			int img=Integer.parseInt(args[0]);
-			for(Enumeration e=Comment.getCommentsForPhoto(img);
-				e.hasMoreElements();) {
-
-				Comment c=(Comment)e.nextElement();
-				System.out.println(c.toXML());
-				System.out.println("--");
-			}
-		}
 	}
 
 }

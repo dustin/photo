@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.7 2002/06/16 07:14:13 dustin Exp $
+	$Id: build.xml,v 1.8 2002/06/23 02:10:39 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -69,7 +69,6 @@
 	<target name="all" depends="rmic,spfiles">
 		<javac srcdir="." destdir="." deprecation="on" depend="on" verbose="false">
 			<classpath refid="photo.classpath"/>
-			<exclude name="**/Apache*.java"/>
 			<include name="net/spy/photo/**/*.java"/>
 			<include name="net/spy/rmi/**/*.java"/>
 		</javac>

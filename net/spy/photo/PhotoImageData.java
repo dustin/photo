@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageData.java,v 1.4 2002/06/14 18:27:24 dustin Exp $
+// $Id: PhotoImageData.java,v 1.5 2002/06/23 02:10:40 dustin Exp $
 
 package net.spy.photo;
 
@@ -13,8 +13,7 @@ import net.spy.cache.*;
 /**
  * This class represents, and retreives all useful data for a given image.
  */
-public class PhotoImageData extends Object
-	implements Serializable, Cloneable, XMLAble {
+public class PhotoImageData extends Object implements Serializable, Cloneable {
 
 	private int id=-1;
 	private String keywords=null;
@@ -60,40 +59,6 @@ public class PhotoImageData extends Object
 		sb.append("</");
 		sb.append(name);
 		sb.append(">\n");
-	}
-
-	/**
-	 * XML this thing.
-	 */
-	public String toXML() {
-		StringBuffer sb=new StringBuffer();
-
-		xMLement(sb, "IMAGE", "" + getId());
-		xMLement(sb, "KEYWORDS", getKeywords());
-		xMLement(sb, "DESCR", getDescr());
-		xMLement(sb, "SIZE", "" + getSize());
-		xMLement(sb, "TAKEN", "" + getTaken());
-		xMLement(sb, "TS", "" + getTimestamp());
-		xMLement(sb, "CAT", getCatName());
-		xMLement(sb, "CATNUM", "" + getCatId());
-		xMLement(sb, "ADDEDBY", getAddedBy().getUsername());
-
-		if(getDimensions()!=null) {
-			xMLement(sb, "WIDTH", "" + getDimensions().getWidth());
-			xMLement(sb, "HEIGHT", "" + getDimensions().getHeight());
-		}
-
-		if(getScaledDims()!=null) {
-			xMLement(sb, "SCALED_WIDTH", "" + getScaledDims().getWidth());
-			xMLement(sb, "SCALED_HEIGHT", "" + getScaledDims().getHeight());
-		}
-
-		if(getTnDims()!=null) {
-			xMLement(sb, "TN_WIDTH", "" + getTnDims().getWidth());
-			xMLement(sb, "TN_HEIGHT", "" + getTnDims().getHeight());
-		}
-
-		return(sb.toString());
 	}
 
 	private void initFromResultSet(ResultSet rs) throws Exception {

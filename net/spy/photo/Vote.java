@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Vote.java,v 1.2 2002/02/24 07:36:55 dustin Exp $
+// $Id: Vote.java,v 1.3 2002/06/23 02:10:40 dustin Exp $
 
 package net.spy.photo;
 
@@ -12,8 +12,7 @@ import net.spy.*;
 /**
  * Votes on photos.
  */
-public class Vote extends Object
-	implements java.io.Serializable, XMLAble {
+public class Vote extends Object implements java.io.Serializable {
 
 	private int voteId=-1;
 
@@ -186,29 +185,6 @@ public class Vote extends Object
 	}
 
 	/**
-	 * XML me.
-	 */
-	public String toXML() {
-		StringBuffer sb=new StringBuffer();
-		sb.append("<photo_vote>\n");
-		sb.append("<vote_id>");
-		sb.append(getVoteId());
-		sb.append("</vote_id>\n");
-		sb.append("<remote_addr>");
-		sb.append(getRemoteAddr());
-		sb.append("</remote_addr>\n");
-		sb.append("<timestamp>");
-		sb.append(getTimestamp());
-		sb.append("</timestamp>\n");
-		sb.append("<vote>");
-		sb.append(getVote());
-		sb.append("</vote>\n");
-		sb.append(getUser().toXML());
-		sb.append("</photo_vote>\n");
-		return(sb.toString());
-	}
-
-	/**
 	 * String me!
 	 */
 	public String toString() {
@@ -249,7 +225,7 @@ public class Vote extends Object
 				e.hasMoreElements();) {
 
 				Vote c=(Vote)e.nextElement();
-				System.out.println(c.toXML());
+				System.out.println(c.toString());
 				System.out.println("--");
 			}
 		}

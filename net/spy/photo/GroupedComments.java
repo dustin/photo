@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GroupedComments.java,v 1.1 2002/05/17 06:20:56 dustin Exp $
+// $Id: GroupedComments.java,v 1.2 2002/06/23 02:10:40 dustin Exp $
 
 package net.spy.photo;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * Represents a group of comments for an individual image.
  */
-public class GroupedComments extends Vector implements XMLAble, Serializable {
+public class GroupedComments extends Vector implements Serializable {
 
 	private int imageId=-1;
 	private boolean hasMore=false;
@@ -55,29 +55,6 @@ public class GroupedComments extends Vector implements XMLAble, Serializable {
 		} else if(size() == maxComments) {
 			hasMore=true;
 		}
-	}
-
-	/**
-	 * @see XMLAble
-	 */
-	public String toXML() {
-		StringBuffer xml=new StringBuffer();
-
-		xml.append("<photo_comments>\n");
-		xml.append("<photo_id>");
-		xml.append(imageId);
-		xml.append("</photo_id>\n");
-
-		for(Enumeration e=elements(); e.hasMoreElements(); ) {
-			XMLAble c=(XMLAble)e.nextElement();
-			xml.append(c.toXML());
-		}
-		if(hasMore()) {
-			xml.append("<more_comments/>\n");
-		}
-
-		xml.append("</photo_comments>\n");
-		return(xml.toString());
 	}
 
 }
