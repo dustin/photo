@@ -44,7 +44,7 @@ public class SearchAction extends PhotoAction {
 		SearchForm sf=(SearchForm)form;
 
 		// Perform the search
-		PhotoSearch ps=new PhotoSearch();
+		PhotoSearch ps=PhotoSearch.getInstance();
 		PhotoSearchResults results=null;
 		results=ps.performSearch(sf, sessionData);
 		sessionData.setResults(results);

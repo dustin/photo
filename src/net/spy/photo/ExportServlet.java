@@ -58,7 +58,7 @@ public class ExportServlet extends JWHttpServlet {
 
 			SearchForm sf=new SearchForm();
 			sf.setSdirection("desc");
-			PhotoSearch ps=new PhotoSearch();
+			PhotoSearch ps=PhotoSearch.getInstance();
 			PhotoSearchResults psr=ps.performSearch(sf, sessionData);
 
 			res.setContentType("text/xml");

@@ -58,8 +58,8 @@
 
 <html:form action="/search.do">
 
-	<div>
-		<fmt:message key="forms.search.adv.cat"/>:<br/>
+	<fieldset>
+		<legend><fmt:message key="forms.search.adv.cat"/></legend>
 		<html:select property="cat" size="5" multiple="true">
 			<photo:getCatList showViewable="true">
 				<logic:iterate type="net.spy.photo.Category" id="i" name="catList">
@@ -68,16 +68,10 @@
 				</logic:iterate>
 			</photo:getCatList>
 		</html:select>
-	</div>
-	<div>
-		<html:select property="fieldjoin">
-			<html:option value="and">
-				<fmt:message key="forms.search.adv.and"/>
-			</html:option>
-			<html:option value="or">
-				<fmt:message key="forms.search.adv.or"/>
-			</html:option>
-		</html:select>
+	</fieldset>
+
+	<fieldset>
+		<legend><fmt:message key="forms.search.adv.textsearch"/></legend>
 		<html:select property="field">
 			<html:option value="keywords">
 				<fmt:message key="forms.search.adv.keywords"/>
@@ -90,128 +84,85 @@
 		<fmt:message key="forms.search.adv.contains"/>
 
 		<html:select property="keyjoin">
-			<html:option value="or">
-				<fmt:message key="forms.search.adv.oneof"/>
-			</html:option>
 			<html:option value="and">
 				<fmt:message key="forms.search.adv.allof"/>
+			</html:option>
+			<html:option value="or">
+				<fmt:message key="forms.search.adv.oneof"/>
 			</html:option>
 		</html:select>
 
 		<html:text property="what"/><br/>
+		</fieldset>
 
-		</div>
-		<div>
-		<table>
-			<tr>
-				<td>
-					<html:select property="tstartjoin">
-						<html:option value="and">
-							<fmt:message key="forms.search.adv.and"/>
-						</html:option>
-						<html:option value="or">
-							<fmt:message key="forms.search.adv.or"/>
-						</html:option>
-					</html:select>
-					<fmt:message key="forms.search.adv.takensince"/>
-					<html:text property="tstart"/>
-				</td>
-				
-				<td>
-					<html:select property="tendjoin">
-						<html:option value="and">
-							<fmt:message key="forms.search.adv.and"/>
-						</html:option>
-						<html:option value="or">
-							<fmt:message key="forms.search.adv.or"/>
-						</html:option>
-					</html:select>
-					<fmt:message key="forms.search.adv.takenbefore"/>
-					<html:text property="tend"/>
-				</td>
-			</tr>
+		<fieldset>
+			<legend><fmt:message key="forms.search.adv.takenconst"/></legend>
+			Between
+				<html:text property="tstart"/>
+			<fmt:message key="forms.search.adv.and"/>
+				<html:text property="tend"/>
+		</fieldset>
+		<fieldset>
+			<legend><fmt:message key="forms.search.adv.tsconst"/></legend>
+			Between
+				<html:text property="start"/>
+			<fmt:message key="forms.search.adv.and"/>
+				<html:text property="end"/>
+		</fieldset>
 
-			<tr>
-				<td>
-					<html:select property="startjoin">
-						<html:option value="and">
-							<fmt:message key="forms.search.adv.and"/>
-						</html:option>
-						<html:option value="or">
-							<fmt:message key="forms.search.adv.or"/>
-						</html:option>
-					</html:select>
-					<fmt:message key="forms.search.adv.addedsince"/>
-					<html:text property="start"/>
-				</td>
+		<fieldset>
+			<legend><fmt:message key="forms.search.adv.dispops"/></legend>
+			<fmt:message key="forms.search.adv.sortby"/>
+			<html:select property="order">
+				<html:option value="a.taken">taken</html:option>
+				<html:option value="a.ts">added</html:option>
+			</html:select>
+			<fmt:message key="forms.search.adv.andshow"/>
+			<html:select property="sdirection">
+				<html:option value="">oldest</html:option>
+				<html:option value="desc">newest</html:option>
+			</html:select>
+			<fmt:message key="forms.search.adv.imagesfirst"/>
 
-				<td>
-					<html:select property="endjoin">
-						<html:option value="and">
-							<fmt:message key="forms.search.adv.and"/>
-						</html:option>
-						<html:option value="or">
-							<fmt:message key="forms.search.adv.or"/>
-						</html:option>
-					</html:select>
-					<fmt:message key="forms.search.adv.addedbefore"/>
-					<html:text property="end"/>
-				</td>
-			</tr>
-		</table>
-		</div>
-		<div>
+			<br/>
 
-		<fmt:message key="forms.search.adv.sortby"/>
-		<html:select property="order">
-			<html:option value="a.taken">taken</html:option>
-			<html:option value="a.ts">added</html:option>
-		</html:select>
-		<fmt:message key="forms.search.adv.andshow"/>
-		<html:select property="sdirection">
-			<html:option value="">oldest</html:option>
-			<html:option value="desc">newest</html:option>
-		</html:select>
-		<fmt:message key="forms.search.adv.imagesfirst"/>
+			<fmt:message key="forms.search.adv.show"/>
+			<html:select property="maxret">
+				<html:option value="6">6</html:option>
+				<html:option value="10">10</html:option>
+			</html:select>
+			<fmt:message key="forms.search.adv.imagespp"/>
 
-		<br/>
+			<br/>
 
-		<fmt:message key="forms.search.adv.show"/>
-		<html:select property="maxret">
-			<html:option value="6">6</html:option>
-			<html:option value="10">10</html:option>
-		</html:select>
-		<fmt:message key="forms.search.adv.imagespp"/>
+			<fmt:message key="forms.search.adv.filter"/>
+			<html:select property="filter">
+				<html:option value="">
+					<fmt:message key="forms.search.adv.filter.none"/>
+				</html:option>
+				<html:option value="onceamonth">
+					<fmt:message key="forms.search.adv.filter.onceamonth"/>
+				</html:option>
+				<html:option value="onceaweek">
+					<fmt:message key="forms.search.adv.filter.onceaweek"/>
+				</html:option>
+				<html:option value="onceaday">
+					<fmt:message key="forms.search.adv.filter.onceaday"/>
+				</html:option>
+			</html:select>
 
-		<br/>
+			<br/>
 
-		<fmt:message key="forms.search.adv.filter"/>
-		<html:select property="filter">
-			<html:option value="">
-				<fmt:message key="forms.search.adv.filter.none"/>
-			</html:option>
-			<html:option value="onceamonth">
-				<fmt:message key="forms.search.adv.filter.onceamonth"/>
-			</html:option>
-			<html:option value="onceaweek">
-				<fmt:message key="forms.search.adv.filter.onceaweek"/>
-			</html:option>
-			<html:option value="onceaday">
-				<fmt:message key="forms.search.adv.filter.onceaday"/>
-			</html:option>
-		</html:select>
-
-		<br/>
-
-		<fmt:message key="forms.search.adv.action"/>
-		<html:select property="action">
-			<html:option value="next">
-				<fmt:message key="forms.search.adv.action.success"/>
-			</html:option>
-			<html:option value="showResults">
-				<fmt:message key="forms.search.adv.action.showResults"/>
-			</html:option>
-		</html:select>
+			<fmt:message key="forms.search.adv.action"/>
+			<html:select property="action">
+				<html:option value="next">
+					<fmt:message key="forms.search.adv.action.success"/>
+				</html:option>
+				<html:option value="showResults">
+					<fmt:message key="forms.search.adv.action.showResults"/>
+				</html:option>
+			</html:select>
+		</fieldset>
 
 		<br/>
 

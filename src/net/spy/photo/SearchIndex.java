@@ -196,7 +196,11 @@ public class SearchIndex extends SpyObject {
 		if(to != null) {
 			rvm=tail.headMap(to);
 		}
-		return(new HashSet(rvm.values()));
+		HashSet rv=new HashSet();
+		for(Iterator i=rvm.values().iterator(); i.hasNext(); ) {
+			rv.addAll((Collection)i.next());
+		}
+		return(rv);
 	}
 
 	/** 

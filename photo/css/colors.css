@@ -49,6 +49,11 @@ a:hover {
 	color: black;
 }
 
+fieldset legend {
+	background: #ccccff;
+	color: black;
+}
+
 input {
 	background: white;
 	color: black;

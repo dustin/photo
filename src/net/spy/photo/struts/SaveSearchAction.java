@@ -46,7 +46,7 @@ public class SaveSearchAction extends PhotoAction {
 		PhotoSessionData sessionData=getSessionData(request);
 
 		// Get the PhotoSearch object which manages the search save.
-		PhotoSearch search=new PhotoSearch();
+		PhotoSearch search=PhotoSearch.getInstance();
 		search.saveSearch(
 			(String)ssf.get("name"),
 			(String)ssf.get("search"),

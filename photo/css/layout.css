@@ -171,6 +171,15 @@ h2 { font-size: medium; }
 	border-style: inset;
 }
 
+fieldset {
+	margin-bottom: 2px;
+}
+
+fieldset legend {
+	border: solid 1px;
+	font-size: smaller;
+}
+
 /*
 .searchresults {
 }

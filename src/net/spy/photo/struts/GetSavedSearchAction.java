@@ -45,10 +45,8 @@ public class GetSavedSearchAction extends PhotoAction {
 
 		// Stuff that should be copied directly.
 		String straightCopy[]={
-			"fieldjoin", "field", "keyjoin", "what", "tstartjoin", "what",
-			"tstartjoin", "tstart", "tendjoin", "tend", "startjoin",
-			"start", "endjoin", "end", "order", "sdirection", "maxret",
-			"filter", "action"
+			"field", "keyjoin", "what", "what", "tstart", "tend", "start",
+			"end", "order", "sdirection", "maxret", "filter", "action"
 		};
 		PropertyUtils pu=new PropertyUtils();
 		for(int i=0; i<straightCopy.length; i++) {

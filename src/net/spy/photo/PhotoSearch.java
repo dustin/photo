@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.Comparator;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import java.net.URLEncoder;
 
@@ -36,11 +38,29 @@ public class PhotoSearch extends PhotoHelper {
 
 	private static final String CHARSET="UTF-8";
 
+	private static final int BY_TS=1;
+	private static final int BY_TAKEN=2;
+
+	private static PhotoSearch instance=null;
+
+	private SimpleDateFormat dateParser=null;
+
 	/**
 	 * Get a PhotoSearch instance.
 	 */
-	public PhotoSearch() {
+	private PhotoSearch() {
 		super();
+		dateParser=new SimpleDateFormat("yyyy/MM/dd");
+	}
+
+	/** 
+	 * Get an instance of Photosearch.
+	 */
+	public static synchronized PhotoSearch getInstance() {
+		if(instance == null) {
+			instance=new PhotoSearch();
+		}
+		return(instance);
 	}
 
 	/**
@@ -88,12 +108,6 @@ public class PhotoSearch extends PhotoHelper {
 	public String encodeSearch(SearchForm form) {
 		StringBuffer sb = new StringBuffer(512);
 
-		if(form.getFieldjoin() != null) {
-			sb.append("fieldjoin");
-			sb.append('=');
-			sb.append(urlEncode(form.getFieldjoin()));
-			sb.append('&');
-		}
 		if(form.getField() != null) {
 			sb.append("field");
 			sb.append('=');
@@ -112,22 +126,10 @@ public class PhotoSearch extends PhotoHelper {
 			sb.append(urlEncode(form.getWhat()));
 			sb.append('&');
 		}
-		if(form.getTstartjoin() != null) {
-			sb.append("tstartjoin");
-			sb.append('=');
-			sb.append(urlEncode(form.getTstartjoin()));
-			sb.append('&');
-		}
 		if(form.getTstart() != null) {
 			sb.append("tstart");
 			sb.append('=');
 			sb.append(urlEncode(form.getTstart()));
-			sb.append('&');
-		}
-		if(form.getTendjoin() != null) {
-			sb.append("tendjoin");
-			sb.append('=');
-			sb.append(urlEncode(form.getTendjoin()));
 			sb.append('&');
 		}
 		if(form.getTend() != null) {
@@ -136,22 +138,10 @@ public class PhotoSearch extends PhotoHelper {
 			sb.append(urlEncode(form.getTend()));
 			sb.append('&');
 		}
-		if(form.getStartjoin() != null) {
-			sb.append("startjoin");
-			sb.append('=');
-			sb.append(urlEncode(form.getStartjoin()));
-			sb.append('&');
-		}
 		if(form.getStart() != null) {
 			sb.append("start");
 			sb.append('=');
 			sb.append(urlEncode(form.getStart()));
-			sb.append('&');
-		}
-		if(form.getEndjoin() != null) {
-			sb.append("endjoin");
-			sb.append('=');
-			sb.append(urlEncode(form.getEndjoin()));
 			sb.append('&');
 		}
 		if(form.getEnd() != null) {
@@ -210,8 +200,6 @@ public class PhotoSearch extends PhotoHelper {
 		SearchForm form, PhotoSessionData sessionData)
 		throws Exception {
 
-		boolean doneOne=false;
-
 		// Get the search index
 		SearchIndex index=SearchIndex.getInstance();
 
@@ -237,6 +225,8 @@ public class PhotoSearch extends PhotoHelper {
 			for(int i=0; i<atmp.length; i++) {
 				al.add(new Integer(atmp[i]));
 			}
+			// Get rid of anything that's not valid for the current user
+			al.retainAll(getValidCats(sessionData.getUser()));
 			getLogger().info("Retaining images with cats " + al);
 			rset.addAll(index.getForCats(al));
 		} else {
@@ -246,35 +236,7 @@ public class PhotoSearch extends PhotoHelper {
 
 		// Check to see if there's a field entry
 		if("keywords".equals(form.getField())) {
-			// Lookup the keywords
-			ArrayList keywords=new ArrayList();
-			String stmp = form.getWhat();
-			if(stmp == null) {
-				stmp="";
-			}
-			StringTokenizer st=new StringTokenizer(stmp);
-			while(st.hasMoreTokens()) {
-				Keyword kw=Keyword.getKeyword(st.nextToken());
-				if(kw != null) {
-					keywords.add(kw);
-				}
-			}
-			int joinop=SearchIndex.OP_AND;
-			if("or".equals(form.getFieldjoin())) {
-				joinop=SearchIndex.OP_OR;
-			}
-			// Remove everything that doesn't match our keywords (unless we
-			// don't have any)
-			if(keywords.size() > 0) {
-				getLogger().info("Got images with keywords " + keywords);
-				Set keyset=index.getForKeywords(keywords, joinop);
-				if(doneOne && "and".equals(form.getKeyjoin())) {
-					rset.retainAll(keyset);
-				} else {
-					rset.addAll(keyset);
-				}
-				doneOne=true;
-			}
+			processKeywords(rset, form.getWhat(), form.getKeyjoin());
 		} else if("descr".equals(form.getField())) {
 			throw new Exception("Not handling descr currently");
 		} else {
@@ -286,18 +248,8 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		// Check for any of the date entries
-		if(form.getTstart() != null && form.getTstart().length() > 0) {
-			throw new Exception("Not handling time fields currently");
-		}
-		if(form.getTend() != null && form.getTend().length() > 0) {
-			throw new Exception("Not handling time fields currently");
-		}
-		if(form.getStart() != null && form.getStart().length() > 0) {
-			throw new Exception("Not handling time fields currently");
-		}
-		if(form.getEnd() != null && form.getEnd().length() > 0) {
-			throw new Exception("Not handling time fields currently");
-		}
+		processRange(rset, BY_TS, form.getStart(), form.getEnd());
+		processRange(rset, BY_TAKEN, form.getTstart(), form.getTend());
 
 		// Limit the results to the valid categories for the given user
 		rset.retainAll(index.getForCats(getValidCats(sessionData.getUser())));
@@ -313,6 +265,70 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		return(results);
+	}
+
+	private void processKeywords(Set rset, String kw, String keyjoin)
+		throws Exception {
+
+		// Lookup the keywords
+		ArrayList keywords=new ArrayList();
+		if(kw == null) {
+			kw="";
+		}
+		StringTokenizer st=new StringTokenizer(kw);
+		while(st.hasMoreTokens()) {
+			Keyword k=Keyword.getKeyword(st.nextToken());
+			if(k != null) {
+				keywords.add(k);
+			}
+		}
+		int joinop=SearchIndex.OP_AND;
+		if("or".equals(keyjoin)) {
+			joinop=SearchIndex.OP_OR;
+		}
+		// Remove everything that doesn't match our keywords (unless we
+		// don't have any)
+		if(keywords.size() > 0) {
+			getLogger().info("Got images with keywords " + keywords);
+			SearchIndex index=SearchIndex.getInstance();
+			Set keyset=index.getForKeywords(keywords, joinop);
+			rset.retainAll(keyset);
+		}
+	}
+
+	private Date parseDate(String in) {
+		Date rv=null;
+		try {
+			rv=dateParser.parse(in);
+		} catch(Exception e) {
+			// ignore
+		}
+		return(rv);
+	}
+
+	private void processRange(Set rset, int which, String start, String end)
+		throws Exception {
+
+		SearchIndex index=SearchIndex.getInstance();
+		Date s=parseDate(start);
+		Date e=parseDate(end);
+
+		if(s != null || e != null) {
+			Collection matches=null;
+			switch(which) {
+				case BY_TS:
+					matches=index.getForTimestamp(s, e);
+					break;
+				case BY_TAKEN:
+					matches=index.getForTaken(s, e);
+					break;
+				default:
+					throw new IllegalArgumentException("Invalid which:  "
+						+ which);
+			}
+
+			rset.retainAll(matches);
+		}
 	}
 
 	private Collection getValidCats(PhotoUser u) throws Exception {
