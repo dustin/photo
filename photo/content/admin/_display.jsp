@@ -69,7 +69,7 @@
 
 		<br/>
 		<b>Keywords</b>:
-			<html:text property="keywords"
+			<html:text size="60" property="keywords"
 				value="<%= keywordString %>"/><br/>
 		<b>Size</b>:  <%= image.getDimensions() %>
 			(<%= image.getSize() %> bytes)<br/>
