@@ -1,6 +1,7 @@
 <html><head><title>Access Denied</title>
 %STYLESHEET%
 </head>
+<body bgcolor="#fFfFfF">
 <h2>Access Denied</h2>
 
 Sorry, but you're not allowed to upload.  If you feel that you are a

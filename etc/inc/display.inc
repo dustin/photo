@@ -40,7 +40,7 @@ Size: %SIZE% bytes
 Taken: %TAKEN%
 <p>
 
-Added: %TIMESTAMP% by %ADDEDBY%
+Added: %TS% by %ADDEDBY%
 <p>
 
 Keywords:<br>
@@ -49,7 +49,7 @@ Keywords:<br>
 
 
 Info:<br>
-%INFO%
+%DESCR%
 
 <p>
 
