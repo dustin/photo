@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: listcats.cgi,v 1.10 1998/10/25 08:23:38 dustin Exp $
+# $Id: listcats.cgi,v 1.11 1998/11/09 06:26:13 dustin Exp $
 
 use DCache;
 use Photo;
@@ -15,7 +15,8 @@ sub getlist
     $ret="";
 
     $query="select * from cat where id in\n" .
-	   "(select cat from wwwacl where username='$ENV{REMOTE_USER}')\n".
+	   "(select cat from wwwacl where\n" .
+	   "    userid=getwwwuser('$ENV{REMOTE_USER}') )\n".
 	   "order by name;\n";
 
     $s=$p->doQuery($query);
