@@ -1,6 +1,10 @@
-<form method="POST" action="%CGIDIR%/admin/admin.cgi">
+<html><head><title>Photo Admin - Edit Category</title></head>
 
-<input type="hidden" name="func" value="savecat">
+<body bgcolor="#fFfFfF">
+
+<form method="POST" action="%SELF_URI%">
+
+<input type="hidden" name="func" value="admsavecat">
 
 <table border="3">
 
@@ -24,5 +28,5 @@
 
 </form>
 
-<a href="%CGIDIR%/admin/admin.cgi?func=listrecent&cat=%CATID%">List all
-images in this category.</a>
+</body>
+</html>
