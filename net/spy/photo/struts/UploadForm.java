@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadForm.java,v 1.5 2002/06/23 06:15:16 dustin Exp $
+// $Id: UploadForm.java,v 1.6 2002/06/24 21:51:44 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -182,7 +182,10 @@ public class UploadForm extends ActionForm {
 	 * Null the file on reset as to keep the form serializable.
 	 */
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		picture=null;
+        if(picture!=null) {
+            picture.destroy();
+            picture=null;
+        }
 	}
 
 }
