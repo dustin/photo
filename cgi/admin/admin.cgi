@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.6 1998/09/06 21:40:04 dustin Exp $
+# $Id: admin.cgi,v 1.7 1998/09/06 21:46:04 dustin Exp $
 
 use CGI;
 use Photo;
@@ -84,7 +84,7 @@ sub editCat
     $p->showTemplate("$Photo::includes/admin/editcat.inc", %p);
 }
 
-sub doFind
+sub search
 {
     my($q, $p)=@_;
     $p->doFind($q, 1);
