@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.61 1998/11/25 09:53:55 dustin Exp $
+# $Id: Photo.pm,v 1.62 1998/12/30 04:44:59 dustin Exp $
 
 package Photo;
 
@@ -447,7 +447,7 @@ sub doFind
 		$self->showTemplate("$Photo::includes/savesearch.inc", %stuff);
 	}
 
-	$max=$q->param('maxret');	# Find the desired max return
+	$max=$q->param('maxret');	# Find the desired max return "
 	$max+=0;					 # make it a number
 
 	print "<h2>Found $n match".(($n==1)?"":"es")."</h2>\n";
@@ -462,12 +462,19 @@ sub doFind
 
 		last if( $max>0 && $i-$start>$max);
 
+		if($self->ns_version()>=4.5) {
+			$p{'IMAGEDATA'}="data:image/jpeg;base64,".
+				$self->base64image("tn/$p{'IMAGE'}");
+		} else {
+			$p{'IMAGEDATA'}="$Photo::cgidir/tn/img.cgi/$p{'IMAGE'}";
+		}
+
 		# Two columns.
 		print "</tr>\n<tr>\n" if(($i+1)%2==0);
 
 		print "<td>\n";
 		$self->showTemplate("$Photo::includes/findmatch.inc", %p);
-		print "</td>\n";
+		print "</td>\n";  # "
 	}
 	$s->finish;
 
@@ -520,6 +527,12 @@ sub doDisplay
 		@mapme=qw(IMAGE KEYWORDS INFO SIZE TAKEN TIMESTAMP CAT CATNUM
 				  ADDEDBY);
 		map { $p{$mapme[$_]}=$r[$_] } (0..$#r);
+		if($self->ns_version()>=4.5) {
+			$p{'IMAGEDATA'}="data:image/jpeg;base64,".
+				$self->base64image($p{'IMAGE'});
+		} else {
+			$p{'IMAGEDATA'}="$Photo::cgidir/img.cgi/$p{'IMAGE'}";
+		}
 		$self->showTemplate("$Photo::includes/display.inc", %p);
 	}
 	$s->finish;
@@ -745,6 +758,46 @@ sub start_html
 	print "<html><head><title>$title</title>\n<head>\n".
 		  "<link rel=\"stylesheet\" href=\"$Photo::cgidir/style.cgi\">".
 		  "</head><body bgcolor=\"#fFfFfF\">";
+}
+
+sub ns_version
+{
+	my($self)=@_;
+	my(@a);
+
+	@a=split(/[\s\/]+/, $ENV{'HTTP_USER_AGENT'});
+	if($a[0] ne "Mozilla") {
+		return(0);
+	}
+
+	return($a[1]);
+}
+
+sub base64image
+{
+	my($self, $img)=@_;
+	my($c, $key, $type, $tn);
+
+	$type="image/jpg";
+
+	$key="photo-image: $img";
+	$tn=0;
+	if($img+~/^tn./o) {
+		$tn=1;
+		$img=~s/^tn.//o;
+	}
+
+	$c=DCache->new;
+
+	if(!$c->checkcache($key)) {
+
+		if($tn) {
+			$self->makeThumbnail($img, $type);
+		} else {
+			$self->cacheImage($key, $img, $type);
+		}
+	}
+	return(encode_base64($c->getcache_only($key)));
 }
 
 1;
