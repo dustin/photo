@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveUserAction.java,v 1.6 2002/07/14 06:33:05 dustin Exp $
+// $Id: AdminSaveUserAction.java,v 1.7 2002/08/20 03:09:16 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -69,14 +69,22 @@ public class AdminSaveUserAction extends AdminAction {
 		user.canAdd(auf.getCanadd());
 
 		// Set the ACLs
+
+		// First, remove all of the ACL entries
+		user.removeAllACLEntries();
+
+		// Now add back the view entries
 		String acls[]=auf.getCatAclView();
 		for(int i=0; i<acls.length; i++) {
 			int cat=Integer.parseInt(acls[i]);
+			System.err.println("Adding view entry for " + cat);
 			user.addViewACLEntry(cat);
 		}
+		// Followed by the add entries
 		acls=auf.getCatAclAdd();
 		for(int i=0; i<acls.length; i++) {
 			int cat=Integer.parseInt(acls[i]);
+			System.err.println("Adding add entry for " + cat);
 			user.addAddACLEntry(cat);
 		}
 

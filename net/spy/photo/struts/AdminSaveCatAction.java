@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveCatAction.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: AdminSaveCatAction.java,v 1.3 2002/08/20 03:09:16 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -60,11 +60,17 @@ public class AdminSaveCatAction extends AdminAction {
 		cat.setName(acf.getName());
 
 		// Set the ACLs
+
+		// Get rid of the old.
+		cat.removeAllACLEntries();
+
+		// Add the view entries
 		String acls[]=acf.getCatAclView();
 		for(int i=0; i<acls.length; i++) {
 			int uid=Integer.parseInt(acls[i]);
 			cat.addViewACLEntry(uid);
 		}
+		// Add the add entries
 		acls=acf.getCatAclAdd();
 		for(int i=0; i<acls.length; i++) {
 			int uid=Integer.parseInt(acls[i]);

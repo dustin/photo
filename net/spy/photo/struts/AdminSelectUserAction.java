@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectUserAction.java,v 1.8 2002/07/14 07:11:23 dustin Exp $
+// $Id: AdminSelectUserAction.java,v 1.9 2002/08/20 03:09:16 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -116,7 +116,7 @@ public class AdminSelectUserAction extends AdminAction {
 					auf.setAdminStatus(groupName);
 				} else {
 					// If not, set it to none
-					auf.setAdminStatus(rs.getString("none"));
+					auf.setAdminStatus("none");
 				}
 				if(rs.next()) {
 					throw new ServletException(

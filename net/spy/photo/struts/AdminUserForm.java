@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminUserForm.java,v 1.5 2002/07/14 06:33:05 dustin Exp $
+// $Id: AdminUserForm.java,v 1.6 2002/08/20 03:09:16 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -188,6 +188,17 @@ public class AdminUserForm extends ActionForm {
 		}
 
 		return(errors);
+	}
+
+	/** 
+	 * Clear out the old stuff before adding new stuff.
+	 * 
+	 * @param mapping the servlet mapping being called
+	 * @param request the request object
+	 */
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		catAclAdd=new String[0];
+		catAclView=new String[0];
 	}
 
 }
