@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.6 2000/12/27 06:05:25 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.7 2001/01/16 21:14:51 dustin Exp $
  */
 
 package net.spy.photo;
@@ -33,7 +33,6 @@ public class PhotoUtil
 		PhotoConfig conf = new PhotoConfig();
 
 		vars.put("SELF_URI", p.self_uri);
-		vars.put("HTML_URI", conf.get("html_uriroot"));
 		vars.put("REMOTE_USER", p.remote_user);
 		vars.put("REMOTE_UID", p.remote_uid.toString());
 		vars.put("LAST_MODIFIED", "recently");
@@ -50,7 +49,6 @@ public class PhotoUtil
 		String ret=null;
 
 		PhotoConfig conf = new PhotoConfig();
-		vars.put("HTML_URI", conf.get("html_uriroot"));
 		vars.put("LAST_MODIFIED", "recently");
 		ret = t.tokenize(conf.get("includes") + "/" + file, vars);
 		return(ret);
