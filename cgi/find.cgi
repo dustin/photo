@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: find.cgi,v 1.7 1997/11/04 09:58:42 dustin Exp $
+# $Id: find.cgi,v 1.8 1997/11/04 23:19:26 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -130,7 +130,7 @@ sub buildQuery
 	$order="a.taken";
     }
 
-    $query.="\n    order by $order;\n";
+    $query.="\n    order by $order $h{sdirection};\n";
 
     return($query);
 }
