@@ -7,12 +7,14 @@ JAVAC=jikes +P
 JAVA=$(JAVAHOME)/bin/java
 RMIC=$(JAVAHOME)/bin/rmic
 MYLIB=$(HOME)/lib/java
+DISTLIB=photo/WEB-INF/lib
 SD=/System/Library/Frameworks/JavaVM.framework/Classes
 S=$(SD)/classes.jar:$(SD)/ui.jar
 C1=$(MYLIB)/jsdk.jar:$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
 C2=$(MYLIB)/resin.jar:$(MYLIB)/sax.jar:$(MYLIB)/dom.jar
 C3=$(MYLIB)/xerces.jar:$(MYLIB)/xalan.jar:$S
-CLASSPATH=$(C1):$(C2):$(C3):.
+C4=$(DISTLIB)/struts.jar
+CLASSPATH=$(C1):$(C2):$(C3):$(C4):.
 SERVLETRUNNER=$(MYLIB)/resin/bin/start_resin
 
 RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \
@@ -74,6 +76,8 @@ CLASSES=\
 	net/spy/photo/taglib/GuestCheck.class \
 	net/spy/photo/taglib/InitSessionData.class \
 	net/spy/photo/taglib/InitSessionDataExtraInfo.class \
+	net/spy/photo/struts/LoginForm.class \
+	net/spy/photo/struts/LoginAction.class \
 	net/spy/photo/util/BackupEntry.class \
 	net/spy/photo/util/AlbumBackupEntry.class \
 	net/spy/photo/util/PhotoBackup.class \
