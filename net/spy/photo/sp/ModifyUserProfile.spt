@@ -1,0 +1,13 @@
+#
+# $Id: ModifyUserProfile.spt,v 1.1 2003/01/04 10:03:50 dustin Exp $
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Modify a user profile
+
+@params
+description required VARCHAR Description of this profile
+expires required DATE The date this profile expires

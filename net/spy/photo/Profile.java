@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: Profile.java,v 1.8 2002/12/15 09:24:38 dustin Exp $
+// $Id: Profile.java,v 1.9 2003/01/04 10:03:50 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -30,9 +30,10 @@ import net.spy.db.SaveException;
 import net.spy.util.PwGen;
 
 import net.spy.photo.sp.GetGeneratedKey;
+import net.spy.photo.sp.ModifyUserProfile;
+import net.spy.photo.sp.UpdateUserProfile;
 import net.spy.photo.sp.InsertUserProfile;
 import net.spy.photo.sp.InsertProfileACL;
-import net.spy.photo.sp.UpdateUserProfile;
 import net.spy.photo.sp.DeleteACLForProfile;
 
 /**
@@ -205,20 +206,20 @@ public class Profile extends Object implements Serializable, Savable {
 	public void save(Connection conn, SaveContext context)
 		throws SaveException, SQLException {
 
-		DBSP db=null;
+		ModifyUserProfile db=null;
 
 		// Determine whether this is a new user or not.
 		if(isNew()) {
 			db=new InsertUserProfile(conn);
-			db.set("name", getName());
+			((InsertUserProfile)db).setName(getName());
 		} else {
 			db=new UpdateUserProfile(conn);
-			db.set("profile_id", getId());
+			((UpdateUserProfile)db).setProfileId(getId());
 		}
 
 		// Set the common fields and update.
-		db.set("description", getDescription());
-		db.set("expires", new java.sql.Date(expires.getTime()));
+		db.setDescription(getDescription());
+		db.setExpires(new java.sql.Date(expires.getTime()));
 		db.executeUpdate();
 		db.close();
 

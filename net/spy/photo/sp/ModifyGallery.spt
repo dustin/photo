@@ -1,20 +1,12 @@
 #
-# $Id: InsertGallery.spt,v 1.2 2003/01/04 10:03:50 dustin Exp $
+# $Id: ModifyGallery.spt,v 1.1 2003/01/04 10:03:50 dustin Exp $
 #
 
 @package
 net.spy.photo.sp
 
-@implements
-ModifyGallery
-
 @description
-Add a new gallery.
-
-@sql
-insert into galleries
-	(gallery_name, wwwuser_id, ispublic)
-	values(?,?,?)
+Modify a new gallery.
 
 @params
 gallery_name required VARCHAR The name of the gallery

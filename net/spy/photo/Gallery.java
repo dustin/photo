@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.10 2002/12/15 09:02:25 dustin Exp $
+// $Id: Gallery.java,v 1.11 2003/01/04 10:03:49 dustin Exp $
 
 package net.spy.photo;
 
@@ -28,6 +28,7 @@ import net.spy.photo.sp.LookupGallery;
 import net.spy.photo.sp.GetGalleriesForUser;
 import net.spy.photo.sp.GetGalleryForUser;
 import net.spy.photo.sp.GetGeneratedKey;
+import net.spy.photo.sp.ModifyGallery;
 import net.spy.photo.sp.InsertGallery;
 import net.spy.photo.sp.UpdateGallery;
 import net.spy.photo.sp.InsertGalleryMap;
@@ -181,19 +182,19 @@ public class Gallery extends Object implements java.io.Serializable, Savable {
 			throw new SaveException("Gallery name not provided.");
 		}
 
-		DBSP db=null;
+		ModifyGallery db=null;
 
 		// Different prepared statement for new vs. update
 		if(isNew()) {
 			db=new InsertGallery(conn);
 		} else {
 			db=new UpdateGallery(conn);
-			db.set("gallery_id", id);
+			((UpdateGallery)db).setGalleryId(id);
 		}
 		// Set the common fields
-		db.set("gallery_name", getName());
-		db.set("user_id", getOwner().getId());
-		db.set("is_public", isPublic());
+		db.setGalleryName(getName());
+		db.setUserId(getOwner().getId());
+		db.setIsPublic(isPublic());
 
 		// Perform the update
 		int affected=db.executeUpdate();

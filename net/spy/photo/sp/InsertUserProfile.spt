@@ -1,9 +1,12 @@
 #
-# $Id: InsertUserProfile.spt,v 1.1 2002/12/15 09:24:38 dustin Exp $
+# $Id: InsertUserProfile.spt,v 1.2 2003/01/04 10:03:50 dustin Exp $
 #
 
 @package
 net.spy.photo.sp
+
+@implements
+ModifyUserProfile
 
 @description
 Insert a new user profile

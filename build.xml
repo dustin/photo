@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.32 2003/01/04 09:46:42 dustin Exp $
+	$Id: build.xml,v 1.33 2003/01/04 10:03:49 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -82,7 +82,7 @@
 			tofile="/afs/.spy.net/misc/web/root/${location}/WEB-INF/lib/photo.jar"/>
 	</target>
 
-	<target name="install-web-app">
+	<target name="install-web-app" depends="photo.jar">
 		<antcall target="install-web-app-var">
 			<param name="location" value="photo"/>
 		</antcall>
