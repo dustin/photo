@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePhoto.java,v 1.4 2002/02/22 04:18:56 dustin Exp $
+ * $Id: CachePhoto.java,v 1.5 2002/06/16 07:17:38 dustin Exp $
  */
 
 package net.spy.photo.tools;
@@ -14,8 +14,8 @@ import java.rmi.Naming;
 
 import net.spy.*;
 import net.spy.util.*;
-import net.spy.rmi.*;
 import net.spy.photo.*;
+import net.spy.photo.rmi.*;
 
 /**
  * Cache all of the images and verify they look the same in the DB as they
@@ -24,7 +24,7 @@ import net.spy.photo.*;
 public class CachePhoto extends Object {
 
 	private SpyConfig conf=null;
-	private ImageServer server=null;
+	private RemoteImageServer server=null;
 	private String saveDir=null;
 	private Vector errors=null;
 
@@ -36,7 +36,7 @@ public class CachePhoto extends Object {
 
 		conf=new PhotoConfig();
 		String source=null;
-		server = (ImageServer)Naming.lookup(conf.get("imageserver"));
+		server = (RemoteImageServer)Naming.lookup(conf.get("imageserver"));
 		errors=new Vector();
 	}
 

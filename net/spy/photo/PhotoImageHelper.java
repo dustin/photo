@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoImageHelper.java,v 1.15 2002/03/05 00:52:40 dustin Exp $
+ * $Id: PhotoImageHelper.java,v 1.16 2002/06/16 07:14:13 dustin Exp $
  */
 
 package net.spy.photo;
@@ -12,14 +12,14 @@ import java.rmi.Naming;
 
 import net.spy.*;
 import net.spy.cache.*;
-import net.spy.rmi.*;
+import net.spy.photo.rmi.*;
 
 /**
  * Get images from the image server.
  */
 public class PhotoImageHelper extends PhotoHelper
 { 
-	private static ImageServer server = null;
+	private static RemoteImageServer server = null;
 	private int image_id=-1;
 	private PhotoImage image_data=null;
 
@@ -128,10 +128,10 @@ public class PhotoImageHelper extends PhotoHelper
 		}
 
 		if(needconn) {
-			log("Connecting to ImageServer");
+			log("Connecting to RemoteImageServer");
 			String serverpath=conf.get("imageserver");
 			log("Locating " + serverpath);
-			server=(ImageServer)Naming.lookup(serverpath);
+			server=(RemoteImageServer)Naming.lookup(serverpath);
 			if(server==null) {
 				throw new Exception("Can't get a server object");
 			}

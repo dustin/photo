@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoImageScaler.java,v 1.3 2002/02/22 00:50:34 dustin Exp $
+// $Id: PhotoImageScaler.java,v 1.4 2002/06/16 07:17:38 dustin Exp $
 
 package net.spy.photo;
 
@@ -11,7 +11,7 @@ import java.util.*;
 import java.net.*;
 import java.rmi.Naming;
 
-import net.spy.rmi.*;
+import net.spy.photo.rmi.*;
 
 /**
  * Scales images.
@@ -81,9 +81,9 @@ public class PhotoImageScaler extends Object {
 
 		PhotoConfig conf=new PhotoConfig();
 
-		ImageServer server=null;
+		RemoteImageServer server=null;
 		System.out.println("Connecting to image server.");
-		server = (ImageServer)Naming.lookup(conf.get("imageserver"));
+		server = (RemoteImageServer)Naming.lookup(conf.get("imageserver"));
 
 		System.out.println("Getting image.");
 		PhotoImage pi=server.getImage(image_id, null);

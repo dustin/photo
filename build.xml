@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.6 2002/06/05 23:59:11 dustin Exp $
+	$Id: build.xml,v 1.7 2002/06/16 07:14:13 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -83,7 +83,7 @@
 	</target>
 
 	<target name="rmic" depends="pre-rmic">
-		<rmic base="." classname="net.spy.rmi.ImageServerImpl">
+		<rmic base="." classname="net.spy.photo.rmi.RemoteImageServerImpl">
 			<classpath refid="photo.classpath"/>
 		</rmic>
 	</target>
@@ -91,7 +91,7 @@
 	<target name="pre-rmic" depends="spfiles">
 		<javac srcdir="." destdir="." deprecation="on" depend="on" verbose="false">
 			<classpath refid="photo.classpath"/>
-			<include name="net/spy/rmi/ImageServerImpl.java"/>
+			<include name="net/spy/photo/rmi/RemoteImageServerImpl.java"/>
 		</javac>
 	</target>
 
