@@ -5,3 +5,18 @@ body,td {
 h1,h2,h3,h4,h5 {
 	text-transform: capitalize;
 }
+
+.comments {
+	background-color: #ccccff;
+}
+
+.comment_header {
+	font-size: x-small;
+	background-color: #999999;
+}
+
+/*
+.comment_body {
+	background-color: #ccccff;
+}
+*/

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.1 2002/02/23 07:51:29 dustin Exp $
+// $Id: Comment.java,v 1.2 2002/02/23 09:03:04 dustin Exp $
 
 package net.spy.photo;
 
@@ -22,6 +22,7 @@ public class Comment extends Object {
 	private String note=null;
 	private String remoteAddr=null;
 	private Timestamp timestamp=null;
+	private String timestampString=null;
 
 	/**
 	 * Get an instance of Comment.
@@ -29,6 +30,7 @@ public class Comment extends Object {
 	public Comment() {
 		super();
 		timestamp=new java.sql.Timestamp(System.currentTimeMillis());
+		timestampString=timestamp.toString();
 	}
 
 	// Get a comment from a result row
@@ -38,7 +40,7 @@ public class Comment extends Object {
 		commentId=rs.getInt("comment_id");
 		photoId=rs.getInt("photo_id");
 		note=rs.getString("note");
-		timestamp=rs.getTimestamp("ts");
+		timestampString=rs.getString("ts");
 		remoteAddr=rs.getString("remote_addr");
 		user=sec.getUser(rs.getInt("wwwuser_id"));
 	}
@@ -75,6 +77,9 @@ public class Comment extends Object {
 	public void save() throws Exception {
 		if(commentId!=-1) {
 			throw new Exception("You can only save *new* comments.");
+		}
+		if(user.getUsername().equals("guest")) {
+			throw new Exception("Guest is not allowed to comment.");
 		}
 		SpyDB db=new SpyDB(new PhotoConfig());
 		PreparedStatement pst=db.prepareStatement(
@@ -170,8 +175,8 @@ public class Comment extends Object {
 	/**
 	 * Get the timestamp of when this entry was created.
 	 */
-	public Timestamp getTimestamp() {
-		return(timestamp);
+	public String getTimestamp() {
+		return(timestampString);
 	}
 
 	/**

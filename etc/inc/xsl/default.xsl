@@ -433,6 +433,43 @@
 	<a href="{/page/meta_stuff/self_uri}?func=display&amp;id={IMAGE}">Linkable image</a><br/>
 	<a href="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}">Full Size Image</a><br/>
 
+	<xsl:if test="comments/photo_comment">
+		<p class="comments">
+		<h1>Comments:</h1>
+
+		<xsl:for-each select="comments/photo_comment">
+			<table class="comments" width="100%">
+				<tr class="comment_header">
+					<td>At <xsl:value-of select="timestamp"/>&#160;
+						<xsl:value-of select="photo_user/realname"/> said the
+						following:
+					</td>
+				</tr>
+				<tr class="comment_body">
+					<td>
+						<xsl:value-of select="note"/>
+					</td>
+				</tr>
+			</table>
+		</xsl:for-each>
+
+		</p>
+	</xsl:if>
+
+	<p>
+	<xsl:if test="/page/meta_stuff/photo_user/username!='guest'">
+		Submit a comment:<br/>
+		<form action="{/page/meta_stuff/self_uri}" method="POST">
+			<input type="hidden" name="func" value="comment"/>
+			<input type="hidden" name="image_id" value="{IMAGE}"/>
+			<textarea name="comment" wrap="hard" cols="50" rows="2"></textarea>
+			<br/>
+			<input type="submit" value="Comment"/>
+		</form>
+	</xsl:if>
+	</p>
+
+
 </xsl:template>
 
 <!-- category view -->

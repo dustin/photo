@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.94 2002/02/23 07:51:29 dustin Exp $
+ * $Id: PhotoSession.java,v 1.95 2002/02/23 09:03:04 dustin Exp $
  */
 
 package net.spy.photo;
@@ -284,6 +284,9 @@ public class PhotoSession extends Object
 		} else if(func.equals("unsetadmin")) {
 			unsetAdmin();
 			out=doIndex();
+		} else if(func.equals("comment")) {
+			doComment();
+			out=doDisplay();
 		} else if(func.equals("setviewsize")) {
 			out=setViewingSize();
 		} else if(func.startsWith("adm")) {
@@ -1146,13 +1149,39 @@ public class PhotoSession extends Object
 		}
 	}
 
+	private void doComment() throws Exception {
+		String s=request.getParameter("image_id");
+		if(s==null) {
+			throw new Exception("image_id not given.");
+		}
+		int photo_id=Integer.parseInt(s);
+
+		String note=request.getParameter("comment");
+		if(note==null || note.length()<2) {
+			throw new Exception("Note not provided.");
+		}
+
+		Comment comment=new Comment();
+		comment.setUser(sessionData.getUser());
+		comment.setPhotoId(photo_id);
+		comment.setRemoteAddr(request.getRemoteAddr());
+		comment.setNote(note);
+		comment.save();
+
+		log("Saved note from " + sessionData.getUser());
+	}
+
 	// Display dispatcher -- can be called from a helper
 	public String doDisplay() throws Exception {
 		String out="";
 		String id=null;
 		String search_id=null;
 
+		// Allow `id' or `image_id' to be used.
 		id = request.getParameter("id");
+		if(id==null) {
+			id = request.getParameter("image_id");
+		}
 		search_id = request.getParameter("search_id");
 
 		// A search displayer thing may use this to add additional
@@ -1163,7 +1192,7 @@ public class PhotoSession extends Object
 
 		try {
 			if(id!=null) {
-				r=doDisplayByID(h);
+				r=doDisplayByID(Integer.parseInt(id), h);
 			} else if(search_id!=null) {
 				r=doDisplayBySearchId(h);
 			} else {
@@ -1252,10 +1281,8 @@ public class PhotoSession extends Object
 	}
 
 	// Find and display images.
-	private PhotoSearchResult doDisplayByID(Hashtable h) throws Exception {
-		// Get the image_id.  We know it exists, because you can't get to
-		// this function without one...of course, it may not parse.
-		int image_id=Integer.parseInt(request.getParameter("id"));
+	private PhotoSearchResult doDisplayByID(int image_id, Hashtable h)
+		throws Exception {
 
 		// Get the data
 		PhotoSearchResult r=new PhotoSearchResult();
