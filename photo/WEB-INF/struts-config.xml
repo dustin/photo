@@ -54,7 +54,11 @@
 	<!-- How to handle displays -->
 	<action path="/display" type="net.spy.photo.struts.AdminSwitchAction">
 		<forward name="subadmin" path="/admin/display.jsp"/>
-		<forward name="noadmin" path="/display.jsp"/>
+		<forward name="noadmin" path="/refreshDisplay.do"/>
+	</action>
+
+	<action path="/refreshDisplay" type="net.spy.photo.struts.SetDisplayRefresh">
+		<forward name="success" path="/display.jsp"/>
 	</action>
 
 	<!-- Change password -->
@@ -102,6 +106,7 @@
 		input="/search.jsp"
 		name="searchForm">
 		<forward name="success" path="/filterSearch.do" />
+		<forward name="showResults" path="/filterSearch.do" />
 	</action>
 
 	<!-- Search result cursor movement -->
@@ -129,6 +134,7 @@
 		type="net.spy.photo.struts.SearchFilterAction"
 		name="searchForm">
 		<forward name="success" path="/nextresults.do"/>
+		<forward name="showResults" path="/refreshDisplay.do?search_id=0" />
 	</action>
 
 	<!-- Image uploads -->

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: DisplayLink.java,v 1.16 2002/09/16 04:32:50 dustin Exp $
+// $Id: DisplayLink.java,v 1.17 2003/04/25 06:32:23 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -154,7 +154,7 @@ public class DisplayLink extends PhotoTag {
 					searchId--;
 				}
 			} else if(relative.equals("next")) {
-				if(searchId>=maxIndex) {
+				if( (searchId+1) >=maxIndex) {
 					process=false; // Don't process
 				} else {
 					searchId++;

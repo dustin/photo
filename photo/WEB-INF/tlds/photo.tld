@@ -214,4 +214,10 @@
 		<tagclass>net.spy.photo.taglib.SessionInfo</tagclass>
 	</tag>
 
+	<!-- Info about active sessions -->
+	<tag>
+		<name>refresh</name>
+		<tagclass>net.spy.photo.taglib.RefreshTag</tagclass>
+	</tag>
+
 </taglib>

@@ -9,6 +9,7 @@
 <%-- <photo:logRequest/> --%>
 <html><head><title><template:get name='title'/></title>
 <photo:stylesheet url="/style.css"/>
+<photo:refresh/>
 </head>
 <body background='<%= props.getProperty("background_img", "") %>'>
 

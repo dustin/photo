@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.33 2003/01/15 09:20:37 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.34 2003/04/25 06:32:23 dustin Exp $
  */
 
 package net.spy.photo;
@@ -175,6 +175,12 @@ public class PhotoSearch extends PhotoHelper {
 			sb.append("filter");
 			sb.append('=');
 			sb.append(urlEncode(form.getFilter()));
+			sb.append('&');
+		}
+		if(form.getAction() != null) {
+			sb.append("action");
+			sb.append('=');
+			sb.append(urlEncode(form.getAction()));
 			sb.append('&');
 		}
 

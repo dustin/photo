@@ -9,6 +9,7 @@
 	<input type="hidden" name="order" value="a.ts"/>
 	<input type="hidden" name="sdirection" value="desc"/>
 	<input type="hidden" name="field" value="keywords"/>
+	<input type="hidden" name="action" value="success"/>
 	Quick Search:  <input name="what"/>
 	<input type="submit" value="Find"/>
 </form>

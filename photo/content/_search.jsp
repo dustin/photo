@@ -190,6 +190,18 @@
 
 		<br/>
 
+		<bean:message key="forms.search.adv.action"/>
+		<html:select property="action">
+			<html:option value="success">
+				<bean:message key="forms.search.adv.action.success"/>
+			</html:option>
+			<html:option value="showResults">
+				<bean:message key="forms.search.adv.action.showResults"/>
+			</html:option>
+		</html:select>
+
+		<br/>
+
 		<html:submit><bean:message key="forms.search.adv.submit"/></html:submit>
 		<html:reset><bean:message key="forms.search.adv.reset"/></html:reset>
 	</p>

@@ -89,6 +89,9 @@ forms.search.adv.imagespp=images per page.
 forms.search.adv.filter=Select a filter
 forms.search.adv.filter.none=None
 forms.search.adv.filter.onceamonth=Once a Month
+forms.search.adv.action=Show results as 
+forms.search.adv.action.success=thumbnails
+forms.search.adv.action.showResults=a slideshow
 forms.search.adv.submit=Find
 forms.search.adv.reset=Clear Form
 

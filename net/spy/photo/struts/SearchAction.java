@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchAction.java,v 1.5 2002/07/10 03:38:09 dustin Exp $
+// $Id: SearchAction.java,v 1.6 2003/04/25 06:32:23 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -41,16 +41,22 @@ public class SearchAction extends PhotoAction {
 
 		PhotoSessionData sessionData=getSessionData(request);
 
+		SearchForm sf=(SearchForm)form;
+
 		// Perform the search
 		PhotoSearch ps=new PhotoSearch();
 		PhotoSearchResults results=null;
-		results=ps.performSearch((SearchForm)form, sessionData);
+		results=ps.performSearch(sf, sessionData);
 		sessionData.setResults(results);
-		sessionData.setEncodedSearch(ps.encodeSearch((SearchForm)form));
+		sessionData.setEncodedSearch(ps.encodeSearch(sf));
 
-		ActionForward rv=mapping.findForward("success");
+		String f=sf.getAction();
+		if(f==null) {
+			f="success";
+		}
 
-		return(rv);
+		// next
+		return(mapping.findForward(f));
 	}
 
 }

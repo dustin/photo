@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchForm.java,v 1.8 2002/07/04 03:27:22 dustin Exp $
+// $Id: SearchForm.java,v 1.9 2003/04/25 06:32:23 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -34,6 +34,8 @@ public class SearchForm extends ActionForm {
 	private String maxret=null;
 
 	private String filter=null;
+
+	private String action=null;
 
 	/**
 	 * Get an instance of SearchForm.
@@ -190,6 +192,20 @@ public class SearchForm extends ActionForm {
 		this.filter=filter;
 	}
 
+	/** 
+	 * Get the action.
+	 */
+	public String getAction() {
+		return(action);
+	}
+
+	/** 
+	 * Set the action.
+	 */
+	public void setAction(String action) {
+		this.action=action;
+	}
+
 	/**
 	 * Reset all properties to their default values.
 	 *
@@ -214,6 +230,7 @@ public class SearchForm extends ActionForm {
 		sdirection=null;
 		maxret=null;
 		filter=null;
+		action=null;
 	}
 
 	/**
