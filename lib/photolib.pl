@@ -8,6 +8,7 @@ use Postgres;
 $cgidir="/cgi-bin/dustin/photo";
 $imagedir="/~dustin/images/";
 $uriroot="/~dustin/photo";
+$Itop="$uriroot/album";
 $includes="/usr/people/dustin/public_html/photo/inc";
 $adminc="/usr/people/dustin/public_html/photo/admin/inc";
 
@@ -63,6 +64,7 @@ sub showTemplate
     $p{'URIROOT'}=$uriroot;
     $p{'CGIDIR'}=$cgidir;
     $p{'IMAGEDIR'}=$imagedir;
+    $p{'ITOP'}=$Itop;
 
     $p{'ALL_VARS'}=join("\n", sort(keys(%p)));
 
