@@ -10,7 +10,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: default.xsl,v 1.7 2000/12/26 00:43:57 dustin Exp $
+ $Id: default.xsl,v 1.8 2000/12/27 06:05:25 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -21,7 +21,7 @@
 				<xsl:value-of select="heading/title"/>
 			</title>
 		</head>
-		<body bgcolor="#cFcFfF">
+		<body background="file:///tmp/holiday.gif" bgcolor="#cFcFfF">
 			<center>
 				<b>
 					<font size="+3">
@@ -268,6 +268,71 @@
 			</tr>
 		</xsl:for-each>
 	</table>
+</xsl:template>
+
+<!-- Change password form -->
+<xsl:template match="change_password_form">
+
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<input type="hidden" name="func" value="changepw"/>
+		<center>
+		<table border="0">
+			<tr>
+				<td>Old Password:</td>
+				<td><input type="password" name="oldpw"/></td>
+			</tr>
+			<tr>
+				<td>New Password:</td>
+				<td><input type="password" name="newpw1"/></td>
+			</tr>
+			<tr>
+				<td>New Password (confirm):</td>
+				<td><input type="password" name="newpw2"/></td>
+			</tr>
+			<tr>
+				<td align="center" colspan="2">
+					<input type="submit" value="Set Password"/>
+				</td>
+			</tr>
+		</table>
+		</center>
+	</form>
+
+</xsl:template>
+
+<xsl:template match="changed_password">
+	<xsl:if test="error">
+		Error saving password:  <xsl:value-of select="error"/>
+	</xsl:if>
+	<xsl:if test="ok">
+		Password save complete.
+	</xsl:if>
+</xsl:template>
+
+<!-- Authenticate form -->
+<xsl:template match="auth_form">
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<input type="hidden" name="func" value="setcred"/>
+
+		<table>
+			<tr>
+				<td>Username:</td><td><input name="username" size="8"/></td>
+			</tr>
+			<tr>
+				<td>Password:</td>
+				<td><input type="password" name="password"/></td>
+			</tr>
+		</table>
+		<input type="submit" value="Authenticate"/>
+		<input type="reset" value="Clear"/>
+	</form>
+
+	<p/>
+
+	<a href="{/page/meta_stuff/self_uri}?func=setadmin">Request
+		Administrative Privileges</a>
+	<br/>
+	<a href="{/page/meta_stuff/self_uri}?func=changepwform">Change Password</a>
 </xsl:template>
 
 </xsl:stylesheet>

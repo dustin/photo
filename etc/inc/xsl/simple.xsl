@@ -9,7 +9,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: simple.xsl,v 1.3 2000/12/26 00:43:57 dustin Exp $
+ $Id: simple.xsl,v 1.4 2000/12/27 06:05:25 dustin Exp $
  -->
 
 <xsl:template match="page">
@@ -121,6 +121,46 @@
 			</li>
 		</xsl:for-each>
 	</ul>
+</xsl:template>
+
+<!-- Change password form -->
+<xsl:template match="change_password_form">
+
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<input type="hidden" name="func" value="changepw"/>
+
+		Old Password:  <input type="password" name="oldpw"/><br/>
+		New Password:  <input type="password" name="newpw1"/><br/>
+		New Password (confirm):  <input type="password" name="newpw2"/><br/>
+		<input type="submit" value="Set Password"/>
+	</form>
+
+</xsl:template>
+
+<xsl:template match="changed_password">
+	<xsl:if test="error">
+		Error saving password:  <xsl:value-of select="error"/>
+	</xsl:if>
+	<xsl:if test="ok">
+		Password save complete.
+	</xsl:if>
+</xsl:template>
+
+<!-- Authenticate form -->
+<xsl:template match="auth_form">
+	<form method="POST" action="{/page/meta_stuff/self_uri}">
+		<input type="hidden" name="func" value="setcred"/>
+
+		Username:  <input name="username" size="8"/><br/>
+		Password:  <input type="password" name="password"/><br/>
+		<input type="submit" value="Authenticate"/><br/>
+		<input type="reset" value="Clear"/><br/>
+	</form>
+	<p/>
+	<a href="{/page/meta_stuff/self_uri}?func=setadmin">Request
+		Administrative Privileges</a>
+	<br/>
+	<a href="{/page/meta_stuff/self_uri}?func=changepwform">Change Password</a>
 </xsl:template>
 
 </xsl:stylesheet>

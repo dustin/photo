@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.8 2000/11/27 07:12:22 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.9 2000/12/27 06:05:25 dustin Exp $
  */
 
 package net.spy.photo;
@@ -191,54 +191,60 @@ public class PhotoAdmin extends PhotoHelper {
 		Connection photo=null;
 
 		try {
-			String pass=ps.request.getParameter("password");
-			// At 13 or more, it's probably a crypt() or other hash.
-			if(pass.length()<13) {
-				PhotoSecurity security=new PhotoSecurity();
-				pass=security.getDigest(pass);
-			}
+			PhotoSecurity security=new PhotoSecurity();
 			String user_id_s=ps.request.getParameter("userid");
 			int user_id=Integer.parseInt(user_id_s);
 
+			// Try to see if'n we can get one of these already done
+			PhotoUser user = security.getUser(user_id);
+
+			// If we didn't get one, we will this time.
+			if(user==null) {
+				user=new PhotoUser();
+			}
+
+			// Username
+			String tmp=ps.request.getParameter("username");
+			if(tmp!=null) {
+				user.setUsername(tmp);
+			}
+
+			// Password
+			tmp=ps.request.getParameter("password");
+			if(tmp!=null) {
+				user.setPassword(tmp);
+			}
+
+			// Real name
+			tmp=ps.request.getParameter("realname");
+			if(tmp!=null) {
+				user.setRealname(tmp);
+			}
+
+			// Email
+			tmp=ps.request.getParameter("email");
+			if(tmp!=null) {
+				user.setEmail(tmp);
+			}
+
+			// CanAdd
+			tmp=ps.request.getParameter("canadd");
+			if(tmp!=null) {
+				boolean tmpb=false;
+				if(tmp.startsWith("t")) {
+					tmpb=true;
+				}
+				user.canAdd(tmpb);
+			}
+
+			// Save the settings.
+			user.save();
+
+			// Now save the ACLs and stuff.
 			photo=getDBConn();
 			photo.setAutoCommit(false);
 
 			PreparedStatement st=null;
-			
-			// Decide whether it's a new user, or a used user
-			if(user_id>0) {
-				// Used user
-				st=photo.prepareStatement(
-					"update wwwusers set username=?, realname=?, email=?, "
-						+ "password=?, canadd=?\n"
-						+ "\twhere id=?"
-					);
-				st.setString(1, ps.request.getParameter("username"));
-				st.setString(2, ps.request.getParameter("realname"));
-				st.setString(3, ps.request.getParameter("email"));
-				st.setString(4, pass);
-				st.setString(5, ps.request.getParameter("canadd"));
-				st.setInt(6, user_id);
-				st.executeUpdate();
-			} else {
-				// New user
-				st=photo.prepareStatement(
-					"insert into wwwusers(username, realname, email, "
-						+ "password, canadd) values(?, ?, ?, ?, ?)"
-					);
-				st.setString(1, ps.request.getParameter("username"));
-				st.setString(2, ps.request.getParameter("realname"));
-				st.setString(3, ps.request.getParameter("email"));
-				st.setString(4, pass);
-				st.setString(5, ps.request.getParameter("canadd"));
-				st.executeUpdate();
-
-				st=photo.prepareStatement("select currval('wwwusers_id_seq')");
-				ResultSet rs=st.executeQuery();
-				rs.next();
-				// Get the user_id we just inserted.
-				user_id=rs.getInt(1);
-			}
 
 			// Delete all of the ACLs
 			st=photo.prepareStatement("delete from wwwacl where userid=?");

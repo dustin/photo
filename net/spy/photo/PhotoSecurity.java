@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.8 2000/11/10 07:17:18 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.9 2000/12/27 06:05:25 dustin Exp $
  */
 
 package net.spy.photo;
@@ -22,27 +22,8 @@ public class PhotoSecurity extends PhotoHelper {
 
 	// Verify a password against what is stored in the database.
 	public boolean checkPW(String user, String pass) {
-		boolean ret=false;
-		Connection db=null;
-		try {
-			String tpw=getDigest(pass);
-			String pw=null;
-
-			PhotoUser pu=getUser(user);
-			pw=pu.password;
-
-			log("Testing for " + tpw + " = " + pw);
-			ret=tpw.equals(pw);
-		} catch(Exception e) {
-			// Nothing.
-		} finally {
-			try {
-				freeDBConn(db);
-			} catch(Exception e2) {
-				// Nothing.
-			}
-		}
-		return(ret);
+		PhotoUser pu=getUser(user);
+		return(pu.checkPassword(pass));
 	}
 
 	// Get a digest for a string
@@ -83,13 +64,7 @@ public class PhotoSecurity extends PhotoHelper {
 				st.setString(1, username);
 				ResultSet rs=st.executeQuery();
 				while(rs.next()) {
-					PhotoUser u = new PhotoUser();
-					u.id=new Integer(rs.getInt("id"));
-					u.username=rs.getString("username");
-					u.password=rs.getString("password");
-					u.email=rs.getString("email");
-					u.realname=rs.getString("realname");
-					u.canadd=rs.getBoolean("canadd");
+					PhotoUser u = getUser(rs);
 					// User cache is valid for 30 minutes
 					cache.store(key, u, 30*60*1000);
 					ret=u;
@@ -104,5 +79,54 @@ public class PhotoSecurity extends PhotoHelper {
 		}
 
 		return(ret);
+	}
+
+	public PhotoUser getUser(int id) {
+		PhotoUser ret=null;
+
+		// Grab the cache
+		SpyCache cache=new SpyCache();
+		String key="sec_u_id_" + id;
+
+		// Get the data from cache
+		ret = (PhotoUser)cache.get(key);
+
+		// If it's not cached, grab it from the DB.
+		if(ret==null) {
+			Connection photo=null;
+			try {
+				photo=getDBConn();
+				PreparedStatement st=photo.prepareStatement(
+					"select * from wwwusers where id=?"
+					);
+				st.setInt(1, id);
+				ResultSet rs=st.executeQuery();
+				while(rs.next()) {
+					PhotoUser u = getUser(rs);
+					// User cache is valid for 30 minutes
+					cache.store(key, u, 30*60*1000);
+					ret=u;
+				}
+			} catch(Exception e) {
+				log("Error lookup up user:  " + id);
+			} finally {
+				if(photo!=null) {
+					freeDBConn(photo);
+				}
+			}
+		}
+
+		return(ret);
+	}
+
+	private PhotoUser getUser(ResultSet rs) throws Exception {
+		PhotoUser u = new PhotoUser();
+		u.setId(rs.getInt("id"));
+		u.setUsername(rs.getString("username"));
+		u.setPassword(rs.getString("password"));
+		u.setEmail(rs.getString("email"));
+		u.setRealname(rs.getString("realname"));
+		u.canAdd(rs.getBoolean("canadd"));
+		return(u);
 	}
 }

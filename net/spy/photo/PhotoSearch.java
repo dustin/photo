@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.10 2000/12/26 03:30:59 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.11 2000/12/27 06:05:25 dustin Exp $
  */
 
 package net.spy.photo;
@@ -49,7 +49,7 @@ public class PhotoSearch extends PhotoHelper {
 			throw new Exception("Weird, invalid stuff.");
 		}
 
-		if( ! user.canadd ) {
+		if( ! user.canAdd() ) {
 			throw new Exception("No permission to save searches.");
 		}
 
@@ -73,7 +73,7 @@ public class PhotoSearch extends PhotoHelper {
 			photo=getDBConn();
 			PreparedStatement st=photo.prepareStatement(query);
 			st.setString(1, name);
-			st.setInt(2, user.id.intValue());
+			st.setInt(2, user.getId());
 			st.setString(3, search);
 			st.setDate(4, new java.sql.Date(System.currentTimeMillis()));
 
@@ -98,7 +98,7 @@ public class PhotoSearch extends PhotoHelper {
 		try {
 
 			// Go get a query
-			String query=buildQuery(request, user.id);
+			String query=buildQuery(request, user.getId());
 
 			photo=getDBConn();
 			Statement st=photo.createStatement();
@@ -154,7 +154,7 @@ public class PhotoSearch extends PhotoHelper {
 	}
 
 	// Build the bigass complex search query.
-	protected String buildQuery(HttpServletRequest request, Integer remote_uid)
+	protected String buildQuery(HttpServletRequest request, int remote_uid)
 		throws ServletException {
 		String query="", sub="", stmp="", order="",
 			odirection="", fieldjoin="", join="";

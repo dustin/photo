@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.44 2000/12/26 06:21:42 dustin Exp $
+ * $Id: PhotoSession.java,v 1.45 2000/12/27 06:05:25 dustin Exp $
  */
 
 package net.spy.photo;
@@ -175,6 +175,10 @@ public class PhotoSession extends Object
 			out=doFindForm();
 		} else if(func.equals("addform")) {
 			out=doAddForm();
+		} else if(func.equals("changepwform")) {
+			out=doChangePWForm();
+		} else if(func.equals("changepw")) {
+			out=doChangePW();
 		} else if(func.equals("catview")) {
 			out=doCatView();
 		} else if(func.equals("setstyle")) {
@@ -357,7 +361,7 @@ public class PhotoSession extends Object
 
 		try{
 			PhotoUser p = security.getUser(remote_user);
-			r=p.canadd;
+			r=p.canAdd();
 		} catch(Exception e) {
 			log("Error getting canadd permissions:  " + e);
 		}
@@ -557,8 +561,13 @@ public class PhotoSession extends Object
 	}
 
 	// Show the ``login'' form
-	protected String showCredForm () throws ServletException {
-		return(tokenize("authform.inc", new Hashtable()));
+	protected String showCredForm () throws Exception {
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("Authentication Form");
+		xml.addBodyPart(getGlobalMeta());
+		xml.addBodyPart("<auth_form/>");
+		sendXML(xml.toString());
+		return(null);
 	}
 
 	// Show the style form
@@ -685,6 +694,68 @@ public class PhotoSession extends Object
 			h.put("CAT_LIST", "");
 		}
 		sendXML("xml/find.xinc", h);
+		return(null);
+	}
+
+	// The change password form
+	protected String doChangePWForm() throws Exception {
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("Change Password Form");
+		xml.addBodyPart(getGlobalMeta());
+		xml.addBodyPart("<change_password_form/>");
+		sendXML(xml.toString());
+		return(null);
+	}
+
+	// Saving the changed password
+	protected String doChangePW() throws Exception {
+		PhotoXML xml=new PhotoXML();
+		xml.setTitle("Changed Password");
+		xml.addBodyPart(getGlobalMeta());
+
+		// Work on changing the password
+		StringBuffer sb=new StringBuffer();
+		sb.append("<changed_password>\n");
+
+		// Do the password stuff here
+		PhotoUser user=security.getUser(remote_user);
+
+		String oldpw=request.getParameter("oldpw");
+		String newp1=request.getParameter("newpw1");
+		String newp2=request.getParameter("newpw2");
+
+		if(oldpw==null || newp1==null || newp2==null) {
+			throw new ServletException(
+				"Password change form not filled out correctly");
+		}
+
+		// Verify the old password
+		if(user.checkPassword(oldpw)) {
+			if(newp1.equals(newp2)) {
+				// Everything's OK, set it.
+				user.setPassword(newp1);
+				user.save();
+				sb.append("<ok/>");
+			} else {
+				// New and old password don't match
+				sb.append("<error>");
+				sb.append("Passwords don't match.");
+				sb.append("</error>");
+			}
+		} else {
+			// The oldpw entered for the user is incorrect
+			sb.append("<error>");
+			sb.append("Invalid password for ");
+			sb.append(remote_user);
+			sb.append("</error>");
+		}
+
+		sb.append("</changed_password>\n");
+
+		// Add the above body part.
+		xml.addBodyPart(sb.toString());
+
+		sendXML(xml.toString());
 		return(null);
 	}
 
@@ -943,7 +1014,7 @@ public class PhotoSession extends Object
 				}
 			}
 			PhotoUser p=security.getUser(remote_user);
-			remote_uid = p.id;
+			remote_uid = new Integer(p.getId());
 		} catch(Exception e) {
 			throw new ServletException("Unknown user: " + remote_user);
 		}
@@ -1118,7 +1189,7 @@ public class PhotoSession extends Object
 		}
 
 		// We do the middle first, but, well, so what?
-		String middle="";
+		StringBuffer middle=new StringBuffer();
 
 		// Lock the results so the aheadfetcher can't mess us up once we
 		// get going.
@@ -1136,28 +1207,29 @@ public class PhotoSession extends Object
 					+ e);
 			}
 
-			middle="<search_result_row>\n";
+			middle.append("<search_result_row>\n");
 
 			for(i=0; i<results.getMaxRet(); i++) {
 				PhotoSearchResult r=results.next();
 				if(r!=null) {
 					// No, this really doesn't belong here.
 					if( (i>0) && ((i) % 2) == 0) {
-						middle += "</search_result_row>\n<search_result_row>\n";
+						middle.append("</search_result_row>");
+						middle.append("<search_result_row>\n");
 					}
-					middle += "<search_result>\n";
-					middle += r.showXML(self_uri);
-					middle += "</search_result>\n";
+					middle.append("<search_result>\n");
+					middle.append(r.showXML(self_uri));
+					middle.append("</search_result>\n");
 				}
 			}
 
-			middle+="</search_result_row>\n";
+			middle.append("</search_result_row>\n");
 		}
 
 		Hashtable h = new Hashtable();
 		h.put("TOTAL", "" + results.nResults());
 		h.put("SEARCH", (String)session.getValue("encoded_search"));
-		h.put("RESULTS", middle);
+		h.put("RESULTS", middle.toString());
 		h.put("LINKTOMORE", linkToMore(results)); 
 		// String output = tokenize("xml/results.xinc", h);
 
@@ -1170,7 +1242,6 @@ public class PhotoSession extends Object
 
 	// Find images.
 	protected String doFind() throws ServletException {
-		String output = "", middle = "";
 
 		// Make sure there's a real session.
 		if(session==null) {
@@ -1195,7 +1266,7 @@ public class PhotoSession extends Object
 
 	// Link to more search results
 	protected String linkToMore(PhotoSearchResults results) {
-		String ret = "";
+		String ret = null;
 		int remaining=results.nRemaining();
 
 		if(remaining>0) {
@@ -1208,13 +1279,13 @@ public class PhotoSession extends Object
 				nextwhu=remaining;
 			}
 
-			ret += "<linktomore>\n"
+			ret = "<linktomore>\n"
 				+ "  <startfrom>" + results.current() + "</startfrom>\n"
 				+ "  <remaining>" + remaining + "</remaining>\n"
 				+ "  <nextpage>"  + nextwhu + "</nextpage>\n"
 				+ "</linktomore>\n";
 		} else {
-			ret += "<linktomore>\n"
+			ret = "<linktomore>\n"
 				+ "  <remaining>" + 0 + "</remaining>\n"
 				+ "</linktomore>\n";
 		}
@@ -1306,7 +1377,7 @@ public class PhotoSession extends Object
 		try {
 			getGroups();
 			if(groups.containsKey("admin")) {
-				session.putValue("is_admin", "1");
+				session.putValue("photo_is_admin", "1");
 			}
 		} catch(Exception e) {
 			log("Error setting admin privs:  " + e);
@@ -1316,7 +1387,7 @@ public class PhotoSession extends Object
 	// Revoke administrative privys
 	protected void unsetAdmin() throws ServletException  {
 		if(session!=null) {
-			session.removeValue("is_admin");
+			session.removeValue("photo_is_admin");
 		}
 	}
 
@@ -1324,7 +1395,7 @@ public class PhotoSession extends Object
 	public boolean isAdmin() {
 		boolean ret=false;
 		if(session!=null) {
-			String admin= (String)session.getValue("is_admin");
+			String admin= (String)session.getValue("photo_is_admin");
 			if(admin!=null) {
 				ret=true;
 			}

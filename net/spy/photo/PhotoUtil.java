@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.5 2000/11/10 07:17:18 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.6 2000/12/27 06:05:25 dustin Exp $
  */
 
 package net.spy.photo;
@@ -81,7 +81,7 @@ public class PhotoUtil
 			PhotoConfig conf = new PhotoConfig();
 			String user=conf.get("default_user", "guest");
 			PhotoUser u=s.getUser(user);
-			ret=u.id.intValue();
+			ret=u.getId();
 		} catch(Exception e) {
 			ret=-1;
 		}
