@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.4 2000/07/01 00:39:57 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.5 2000/07/05 01:03:41 dustin Exp $
  */
 
 package net.spy.photo;
@@ -26,6 +26,8 @@ public class PhotoServlet extends HttpServlet
 	public PhotoSecurity security = null;
 
 	public SpyLog logger = null;
+
+	protected PhotoCache photoCache=null;
 
 	// The once only init thingy.
 	public void init(ServletConfig config) throws ServletException {
@@ -53,6 +55,15 @@ public class PhotoServlet extends HttpServlet
 		} catch(Exception e) {
 			log("Could not get rhash connection:  " + e);
 			rhash = null;
+		}
+
+		try {
+			log("Initing PhotoCache");
+			photoCache=new PhotoCache();
+			log("Got the photoCache");
+		} catch(Exception e) {
+			log("Could not get photoCache:  " + e);
+			photoCache=null;
 		}
 
 		log("Initing logger");
