@@ -18,6 +18,8 @@ import javax.servlet.http.Cookie;
 
 import net.spy.SpyObject;
 
+import net.spy.photo.struts.LoginAction;
+
 /**
  * Servlet filter for managing persistent auth.
  */
@@ -68,7 +70,7 @@ public class AuthFilter extends SpyObject implements Filter {
 		if(session.isNew() || isguest) {
 			Cookie cookies[]=hreq.getCookies();
 			for(int i=0; cookies!=null && i<cookies.length; i++) {
-				if("persess".equals(cookies[i].getName())) {
+				if(LoginAction.PERSESS_COOKIE.equals(cookies[i].getName())) {
 					try {
 						PhotoUser pu=PhotoUser.getPhotoUserByPersess(
 							cookies[i].getValue());

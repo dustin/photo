@@ -33,6 +33,11 @@ import org.apache.struts.action.DynaActionForm;
  */
 public class LoginAction extends PhotoAction {
 
+	/** 
+	 * Name of the persistent session cookie.
+	 */
+	public static final String PERSESS_COOKIE="persess";
+
 	/**
 	 * Get an instance of LoginAction.
 	 */
@@ -48,7 +53,7 @@ public class LoginAction extends PhotoAction {
 		String persess=PwGen.getPass(16);
 
 		// Add a cookie
-		Cookie c=new Cookie("persess", persess);
+		Cookie c=new Cookie(PERSESS_COOKIE, persess);
 		// Let's keep it for about two months.
 		c.setMaxAge(86400*30*2);
 		response.addCookie(c);
@@ -97,6 +102,10 @@ public class LoginAction extends PhotoAction {
 		Boolean bol=(Boolean)lf.get("persist");
 		if(bol.booleanValue()) {
 			persist(user, request, response);
+		} else {
+			Cookie c=new Cookie(PERSESS_COOKIE, "delete");
+			c.setMaxAge(0); // delete
+			response.addCookie(c);
 		}
 
 		// Find out of the user wanted to upgrade to admin privs after 
