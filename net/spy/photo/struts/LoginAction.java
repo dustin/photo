@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginAction.java,v 1.2 2002/05/09 07:33:19 dustin Exp $
+// $Id: LoginAction.java,v 1.3 2002/05/13 07:22:48 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -16,7 +16,7 @@ import net.spy.photo.*;
 /**
  * Validate user credentials and perform a login.
  */
-public class LoginAction extends Action {
+public class LoginAction extends PhotoAction {
 
 	/**
 	 * Get an instance of LoginAction.
@@ -37,12 +37,7 @@ public class LoginAction extends Action {
 
 		LoginForm lf=(LoginForm)form;
 
-		HttpSession session=request.getSession(true);
-		PhotoSessionData sessionData=
-			(PhotoSessionData)session.getAttribute("photoSession");
-		if(sessionData==null) {
-			throw new ServletException("Couldn't get photoSession");
-		}
+		PhotoSessionData sessionData=getSessionData(request);
 		
 		System.out.println("Attempting a login as " + lf.getUsername());
 

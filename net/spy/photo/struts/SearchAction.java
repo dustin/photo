@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchAction.java,v 1.1 2002/05/11 09:24:34 dustin Exp $
+// $Id: SearchAction.java,v 1.2 2002/05/13 07:22:48 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -16,7 +16,7 @@ import net.spy.photo.*;
 /**
  * Perform a search.
  */
-public class SearchAction extends Action {
+public class SearchAction extends PhotoAction {
 
 	/**
 	 * Get an instance of SearchAction.
@@ -32,6 +32,15 @@ public class SearchAction extends Action {
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws IOException, ServletException {
+
+		PhotoSessionData sessionData=getSessionData(request);
+
+		// Perform the search
+		PhotoSearch2 ps=new PhotoSearch2();
+		PhotoSearchResults results=null;
+		results=ps.performSearch((SearchForm)form, sessionData);
+		sessionData.setResults(results);
+		sessionData.setEncodedSearch(ps.encodeSearch(request));
 
 		ActionForward rv=mapping.findForward("success");
 

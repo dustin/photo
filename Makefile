@@ -54,6 +54,7 @@ CLASSES=\
 	net/spy/photo/PhotoConfig.class \
 	net/spy/photo/SavedSearch.class \
 	net/spy/photo/PhotoSearch.class \
+	net/spy/photo/PhotoSearch2.class \
 	net/spy/photo/Comment.class \
 	net/spy/photo/Vote.class \
 	net/spy/photo/Category.class \
@@ -80,6 +81,7 @@ CLASSES=\
 	net/spy/photo/taglib/InitSessionDataExtraInfo.class \
 	net/spy/photo/taglib/CategoryTag.class \
 	net/spy/photo/taglib/CategoryTagExtraInfo.class \
+	net/spy/photo/struts/PhotoAction.class \
 	net/spy/photo/struts/LoginForm.class \
 	net/spy/photo/struts/LoginAction.class \
 	net/spy/photo/struts/SearchForm.class \
