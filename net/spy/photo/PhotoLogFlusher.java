@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoLogFlusher.java,v 1.10 2001/07/03 09:18:10 dustin Exp $
+ * $Id: PhotoLogFlusher.java,v 1.11 2002/02/25 08:41:47 dustin Exp $
  */
 
 package net.spy.photo;
@@ -15,12 +15,22 @@ import net.spy.*;
 import net.spy.log.*;
 import net.spy.util.*;
 
+/**
+ * Flush logs.
+ */
 public class PhotoLogFlusher extends SpyLogFlusher {
 
+	/**
+	 * Get a log flusher.
+	 */
 	public PhotoLogFlusher() {
 		super("PhotoLog");
+		setPriority(NORM_PRIORITY-2);
 	}
 
+	/**
+	 * Time to flush!
+	 */
 	protected void doFlush() throws Exception {
 		Vector v = flush();
 		// Only do all this crap if there's something to log.

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.105 2002/02/25 04:14:36 dustin Exp $
+ * $Id: PhotoSession.java,v 1.106 2002/02/25 08:41:47 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1203,6 +1203,9 @@ public class PhotoSession extends Object
 		if(isAdmin()) {
 			sb.append("<isadmin/>\n");
 		}
+		if(isSubAdmin()) {
+			sb.append("<issubadmin/>\n");
+		}
 		if(xmlraw) {
 			sb.append("<xmlraw/>\n");
 		}
@@ -1298,7 +1301,7 @@ public class PhotoSession extends Object
 		// Generate the XML
 		String datachunk=r.showXML(self_uri);
 
-		if(isAdmin()) {
+		if(isAdmin() || isSubAdmin()) {
 			// Admin needs CATS
 			int defcat=r.getCatNum();
 			h.put("CATS", getCatList(defcat));
@@ -1402,7 +1405,7 @@ public class PhotoSession extends Object
 			if(tail==null) {
 
 				Hashtable ht=new Hashtable();
-				if(isAdmin()) {
+				if(isAdmin() || isSubAdmin()) {
 					ht.put("ADMIN_FLAG",
 						" - <a href=\"" + self_uri
 							+ "?func=unsetadmin\">Admin mode</a>");
@@ -1640,7 +1643,11 @@ public class PhotoSession extends Object
 			if(sessionData.getUser().isInGroup("admin")) {
 				log(sessionData.getUser()
 					+ " is in the admin group, setting admin");
-				sessionData.setIsadmin(true);
+				sessionData.setAdmin(PhotoSessionData.ADMIN);
+			} else if(sessionData.getUser().isInGroup("subadmin")) {
+				log(sessionData.getUser()
+					+ " is in the subadmin group, setting subadmin");
+				sessionData.setAdmin(PhotoSessionData.SUBADMIN);
 			}
 		} catch(Exception e) {
 			throw new ServletException("Error setting admin privs", e);
@@ -1649,7 +1656,7 @@ public class PhotoSession extends Object
 
 	// Revoke administrative privys
 	private void unsetAdmin() throws ServletException  {
-		sessionData.setIsadmin(false);
+		sessionData.setAdmin(PhotoSessionData.NOADMIN);
 	}
 
 	/**
@@ -1657,7 +1664,15 @@ public class PhotoSession extends Object
 	 * by helpers, hence the package scope.
 	 */
 	boolean isAdmin() {
-		return(sessionData.isAdmin());
+		return(sessionData.checkAdminFlag(PhotoSessionData.ADMIN));
+	}
+
+	/**
+	 * Return true if this session has the subadmin flag set.  May be called
+	 * by helpers, hence the package scope.
+	 */
+	boolean isSubAdmin() {
+		return(sessionData.checkAdminFlag(PhotoSessionData.SUBADMIN));
 	}
 
 	// deeezbug

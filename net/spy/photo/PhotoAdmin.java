@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.22 2002/02/21 09:26:03 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.23 2002/02/25 08:41:47 dustin Exp $
  */
 
 package net.spy.photo;
@@ -57,9 +57,9 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Show the user edit form
-	public String admShowUsers() throws ServletException {
+	private String admShowUsers() throws ServletException {
 		ServletException se=null;
-		if(!isAdmin()) {
+		if(!ps.isAdmin()) {
 			throw new ServletException("Not admin");
 		}
 		String out="";
@@ -96,7 +96,7 @@ public class PhotoAdmin extends PhotoHelper {
 	private String admEditUserForm() throws ServletException {
 		String output="";
 		ServletException se=null;
-		if(!isAdmin()) {
+		if(!ps.isAdmin()) {
 			throw new ServletException("Not admin");
 		}
 		try {
@@ -343,7 +343,7 @@ public class PhotoAdmin extends PhotoHelper {
 
 	// Show the category edit form
 	private String admShowCategories() throws ServletException {
-		if(!isAdmin()) {
+		if(!ps.isAdmin()) {
 			throw new ServletException("Not admin");
 		}
 		Hashtable h = new Hashtable();
@@ -355,7 +355,7 @@ public class PhotoAdmin extends PhotoHelper {
 	private String admEditCategoryForm() throws ServletException {
 		String output="";
 		ServletException se=null;
-		if(!isAdmin()) {
+		if(!ps.isAdmin()) {
 			throw new ServletException("Not admin");
 		}
 		try {
@@ -387,7 +387,7 @@ public class PhotoAdmin extends PhotoHelper {
 
 	// Show the category edit form
 	private String admSaveCategory() throws ServletException {
-		if(!isAdmin()) {
+		if(!ps.isAdmin()) {
 			throw new ServletException("Not admin");
 		}
 		Hashtable h = new Hashtable();
@@ -440,8 +440,8 @@ public class PhotoAdmin extends PhotoHelper {
 	}
 
 	// Save the image stuff
-	private void saveImageInfo() throws ServletException {
-		if(!isAdmin()) {
+	private void saveImageInfo() throws Exception {
+		if(!(ps.isAdmin() || ps.isSubAdmin())) {
 			throw new ServletException("Must be an admin to do this.");
 		}
 		String keywords="", info="", taken="";
@@ -476,6 +476,10 @@ public class PhotoAdmin extends PhotoHelper {
 			info = "";
 		}
 
+		// Make sure the user has access to this.
+		PhotoSecurity security=new PhotoSecurity();
+		security.checkAccess(ps.getUser().getId(), id);
+
 		try {
 			SpyDB photo=new SpyDB(new PhotoConfig());
 			PreparedStatement st=photo.prepareStatement(
@@ -492,11 +496,6 @@ public class PhotoAdmin extends PhotoHelper {
 		} catch(Exception e) {
 			log("Error updating information:  " + e);
 		}
-	}
-
-	// Shortcut to isAdmin();
-	private boolean isAdmin() {
-		return(ps.isAdmin());
 	}
 
 	private void debug(String msg) {

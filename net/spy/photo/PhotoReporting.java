@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoReporting.java,v 1.6 2002/02/25 03:08:43 dustin Exp $
+ * $Id: PhotoReporting.java,v 1.7 2002/02/25 08:41:47 dustin Exp $
  */
 
 package net.spy.photo;
@@ -15,17 +15,32 @@ import javax.servlet.http.*;
 
 import net.spy.*;
 
+/**
+ * Generic reporting.
+ */
 public class PhotoReporting extends PhotoHelper {
 
 	PhotoSession ps=null;
 
+	/**
+	 * Get a reporting object.
+	 */
 	public PhotoReporting(PhotoSession ps) throws Exception {
 		super();
 		this.ps=ps;
 	}
 
-	public String process(String func) throws ServletException {
+	/**
+	 * Process the given report.
+	 */
+	public String process(String func) throws Exception {
 		String out="";
+
+		// This is kinda ugly, but it'll keep some people out.
+		PhotoUser user=ps.getUser();
+		if(user.getUsername().equals("guest")) {
+			throw new Exception("You're not allowed here.");
+		}
 
 		if(func.equals("reporting")) {
 			out=tokenize("reports/index.inc", new Hashtable());

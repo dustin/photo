@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.3 2002/02/25 04:05:36 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.4 2002/02/25 08:41:47 dustin Exp $
 
 package net.spy.photo;
 
@@ -124,13 +124,6 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	}
 
 	/**
-	 * Test for the ADMIN bit.
-	 */
-	public boolean isAdmin() {
-		return(checkAdminFlag(ADMIN));
-	}
-
-	/**
 	 * Get all the admin bits.
 	 */
 	public int getAdmin() {
@@ -138,11 +131,22 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	}
 
 	/**
+	 * Test for the ADMIN bit.
+	 */
+	/*
+	public boolean isAdmin() {
+		return(checkAdminFlag(ADMIN));
+	}
+	*/
+
+	/**
 	 * Set the ADMIN bit.
 	 */
+	/*
 	public void setIsadmin(boolean isadmin) {
 		setAdmin(ADMIN);
 	}
+	*/
 
 	/**
 	 * Set all the admin bits.
