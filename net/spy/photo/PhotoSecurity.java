@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSecurity.java,v 1.24 2002/06/25 00:18:01 dustin Exp $
+ * $Id: PhotoSecurity.java,v 1.25 2002/07/04 03:27:22 dustin Exp $
  */
 
 package net.spy.photo;
@@ -263,17 +263,17 @@ public class PhotoSecurity extends PhotoHelper {
 	/**
 	 * List all users in alphabetical order by username.
 	 *
-	 * @return an Enumeration of PhotoUser objects
+	 * @return an List of PhotoUser objects
 	 */
-	public static Enumeration getAllUsers() throws Exception {
+	public static List getAllUsers() throws Exception {
 		ListUsers db=new ListUsers(new PhotoConfig());
 		ResultSet rs=db.executeQuery();
-		Vector v=new Vector();
+		ArrayList al=new ArrayList();
 
 		while(rs.next()) {
-			v.addElement(getUser(rs));
+			al.add(getUser(rs));
 		}
 
-		return(v.elements());
+		return(al);
 	}
 }

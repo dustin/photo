@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectUserAction.java,v 1.5 2002/06/25 00:18:01 dustin Exp $
+// $Id: AdminSelectUserAction.java,v 1.6 2002/07/04 03:27:22 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -70,17 +70,17 @@ public class AdminSelectUserAction extends AdminAction {
 			auf.setCanadd(user.canAdd());
 
 			// Populate the ACL stuff
-			Vector viewable=new Vector();
-			Vector addable=new Vector();
-			for(Enumeration e=user.getACLEntries(); e.hasMoreElements();) {
-				PhotoACLEntry acl=(PhotoACLEntry)e.nextElement();
+			ArrayList viewable=new ArrayList();
+			ArrayList addable=new ArrayList();
+			for(Iterator i=user.getACLEntries().iterator(); i.hasNext();) {
+				PhotoACLEntry acl=(PhotoACLEntry)i.next();
 
 				int id=acl.getCat();
 				if(acl.canAdd()) {
-					addable.addElement("" + id);
+					addable.add("" + id);
 				}
 				if(acl.canView()) {
-					viewable.addElement("" + id);
+					viewable.add("" + id);
 				}
 			}
 

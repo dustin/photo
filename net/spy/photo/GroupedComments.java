@@ -1,17 +1,16 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GroupedComments.java,v 1.2 2002/06/23 02:10:40 dustin Exp $
+// $Id: GroupedComments.java,v 1.3 2002/07/04 03:27:22 dustin Exp $
 
 package net.spy.photo;
 
-import java.util.Vector;
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.io.Serializable;
 
 /**
  * Represents a group of comments for an individual image.
  */
-public class GroupedComments extends Vector implements Serializable {
+public class GroupedComments extends ArrayList implements Serializable {
 
 	private int imageId=-1;
 	private boolean hasMore=false;
@@ -51,7 +50,7 @@ public class GroupedComments extends Vector implements Serializable {
 		}
 
 		if(size() < maxComments) {
-			addElement(comment);
+			add(comment);
 		} else if(size() == maxComments) {
 			hasMore=true;
 		}

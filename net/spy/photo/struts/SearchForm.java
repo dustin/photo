@@ -1,10 +1,8 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchForm.java,v 1.7 2002/06/29 07:13:56 dustin Exp $
+// $Id: SearchForm.java,v 1.8 2002/07/04 03:27:22 dustin Exp $
 
 package net.spy.photo.struts;
-
-import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 

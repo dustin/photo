@@ -3,8 +3,9 @@
 package net.spy.photo.migration;
 
 import java.sql.*;
-import java.util.Vector;
-import java.util.Enumeration;
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Iterator;
 import net.spy.*;
 import net.spy.photo.*;
 
@@ -39,7 +40,7 @@ public class PhotoMigration01 extends PhotoMigration {
 		SpyDB db=new SpyDB(new PhotoConfig());
 
 		while(n>0) {
-			Vector v=new Vector();
+			ArrayList al=new ArrayList();
 			// Get a list of all of the images we haven't set width and height
 			// on.
 			ResultSet rs=db.executeQuery("select id from album\n"
@@ -60,15 +61,15 @@ public class PhotoMigration01 extends PhotoMigration {
 				dim[1]=image.getWidth();
 				dim[2]=image.getHeight();
 
-				v.addElement(dim);
+				al.add(dim);
 			}
 
-			n=v.size();
+			n=al.size();
 			System.out.println("Updating " + n + " images.");
 
 			// OK, now store them.
-			for(Enumeration e=v.elements(); e.hasMoreElements(); ) {
-				int dim[]=(int [])e.nextElement();
+			for(Iterator i=al.iterator(); i.hasNext(); ) {
+				int dim[]=(int [])i.next();
 				PreparedStatement st=db.prepareStatement(
 					"update album set width=?, height=? where id=?"
 					);

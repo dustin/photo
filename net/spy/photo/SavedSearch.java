@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SavedSearch.java,v 1.1 2002/05/08 02:54:43 dustin Exp $
+// $Id: SavedSearch.java,v 1.2 2002/07/04 03:27:22 dustin Exp $
 
 package net.spy.photo;
 
@@ -68,7 +68,7 @@ public class SavedSearch extends Object {
 		ResultSet rs=db.executeQuery("select * from searches order by name",
 			900);
 
-		List l=new Vector();
+		ArrayList l=new ArrayList();
 		while(rs.next()) {
 			l.add(new SavedSearch(rs));
 		}

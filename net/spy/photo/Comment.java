@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Comment.java,v 1.7 2002/06/23 02:10:40 dustin Exp $
+// $Id: Comment.java,v 1.8 2002/07/04 03:27:22 dustin Exp $
 
 package net.spy.photo;
 
@@ -50,11 +50,11 @@ public class Comment extends Object implements java.io.Serializable {
 	 * Get an Enumeration of Comment objects for all of the comments on a
 	 * given image.
 	 */
-	public static Enumeration getCommentsForPhoto(int image_id)
+	public static Collection getCommentsForPhoto(int image_id)
 		throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
-		Vector v=new Vector();
+		ArrayList al=new ArrayList();
 		SpyDB db=new SpyDB(new PhotoConfig());
 		PreparedStatement pst=db.prepareStatement(
 			"select * from commentary where photo_id=? order by ts desc");
@@ -62,27 +62,27 @@ public class Comment extends Object implements java.io.Serializable {
 		ResultSet rs=pst.executeQuery();
 
 		while(rs.next()) {
-			v.addElement(new Comment(security, rs));
+			al.add(new Comment(security, rs));
 		}
 
 		rs.close();
 		pst.close();
 		db.close();
 
-		return(v.elements());
+		return(al);
 	}
 
 	/**
-	 * Get an Enumeration of GroupedComments objects that represent the
+	 * Get a List of GroupedComments objects that represent the
 	 * comments this user can see.  Each object may represent multiple
 	 * comments, but they will all refer to a single image.
 	 *
 	 * @see GroupedComments
 	 */
-	public static Enumeration getAllComments(PhotoUser user) throws Exception {
+	public static List getAllComments(PhotoUser user) throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
-		Vector v=new Vector();
+		ArrayList al=new ArrayList();
 		FindImagesByComments db=new FindImagesByComments(new PhotoConfig());
 		db.set("user_id", user.getId());
 		ResultSet rs=db.executeQuery();
@@ -94,20 +94,20 @@ public class Comment extends Object implements java.io.Serializable {
 				int newid=rs.getInt("photo_id");
 				if(gc.getPhotoId()!=newid) {
 					// Add what we have so far
-					v.addElement(gc);
+					al.add(gc);
 					// Create a new one
 					gc=new GroupedComments(rs.getInt("photo_id"));
 				}
 				// Add the current entry
 				gc.addComment(new Comment(security, rs));
 			}
-			v.addElement(gc);
+			al.add(gc);
 		}
 
 		rs.close();
 		db.close();
 
-		return(v.elements());
+		return(al);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoLogViewEntry.java,v 1.1 2002/06/12 07:01:07 dustin Exp $
+// $Id: PhotoLogViewEntry.java,v 1.2 2002/07/04 03:27:22 dustin Exp $
 
 package net.spy.photo;
 
@@ -51,69 +51,105 @@ public class PhotoLogViewEntry extends Object {
 	}
 
 	/**
-	 * Get an Enumeration of PhotoLogViewEntry objects representing the
+	 * Get a Collection of PhotoLogViewEntry objects representing the
 	 * most recent viewers of the image represented by the given ID.
 	 */
-	public static Enumeration getViewersOf(int photoId) throws Exception {
-		Vector v=new Vector();
+	public static Collection getViewersOf(int photoId) throws Exception {
+		ArrayList al=new ArrayList();
 
 		GetViewersOfImage db=new GetViewersOfImage(new PhotoConfig());
 		db.set("image_id", photoId);
 
 		ResultSet rs=db.executeQuery();
 		while(rs.next()) {
-			v.addElement(new PhotoLogViewEntry(photoId, rs));
+			al.add(new PhotoLogViewEntry(photoId, rs));
 		}
 		rs.close();
 		db.close();
 
-		return(v.elements());
+		return(al);
 	}
 
+	/**
+	 * Set the image ID of this log entry.
+	 */
 	public void setImageId(int imageId) {
 		this.imageId=imageId;
 	}
 
+	/**
+	 * Get the image ID of this log entry.
+	 */
 	public int getImageId() {
 		return(imageId);
 	}
 
+	/**
+	 * Set the username for this log entry.
+	 */
 	public void setUsername(String username) {
 		this.username=username;
 	}
 
+	/**
+	 * Get the username for this log entry.
+	 */
 	public String getUsername() {
 		return(username);
 	}
 
+	/**
+	 * Set the remote address used in this log entry.
+	 */
 	public void setRemoteAddr(String remoteAddr) {
 		this.remoteAddr=remoteAddr;
 	}
 
+	/**
+	 * Get the remote address used in this log entry.
+	 */
 	public String getRemoteAddr() {
 		return(remoteAddr);
 	}
 
+	/**
+	 * Set the user agent for this log entry.
+	 */
 	public void setUserAgent(String userAgent) {
 		this.userAgent=userAgent;
 	}
 
+	/**
+	 * Get the user agent for this log entry.
+	 */
 	public String getUserAgent() {
 		return(userAgent);
 	}
 
+	/**
+	 * Set the image size (dimensions) for this log entry.
+	 */
 	public void setImageSize(String imageSize) {
 		this.imageSize=imageSize;
 	}
 
+	/**
+	 * Get the image size (dimensions) at which this image was requested.
+	 */
 	public String getImageSize() {
 		return(imageSize);
 	}
 
+	/**
+	 * Set the timestamp of this request.
+	 */
 	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp=timeStamp;
 	}
 
+	/**
+	 * Get the timestamp of this request.
+	 */
 	public Date getTimeStamp() {
 		return(timeStamp);
 	}
@@ -122,10 +158,10 @@ public class PhotoLogViewEntry extends Object {
 	 * Test.
 	 */
 	public static void main(String args[]) throws Exception {
-		for(Enumeration e=getViewersOf(Integer.parseInt(args[0]));
-			e.hasMoreElements(); ) {
+		for(Iterator i=getViewersOf(Integer.parseInt(args[0])).iterator();
+			i.hasNext(); ) {
 
-			System.out.println(e.nextElement());
+			System.out.println(i.next());
 		}
 	}
 

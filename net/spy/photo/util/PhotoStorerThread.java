@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.14 2002/06/26 21:12:50 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.15 2002/07/04 03:27:22 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -44,7 +44,7 @@ public class PhotoStorerThread extends Thread {
 		System.err.println("Storer: Got image for " + image_id + " " 
 			+ pi.size() + " bytes of data to store.");
 		// This is an awkward way of doing this.
-		Vector v=new Vector();
+		ArrayList al=new ArrayList();
 		byte data[]=pi.getData();
 
 		// i will be incremented inside the loop
@@ -63,12 +63,12 @@ public class PhotoStorerThread extends Thread {
 				b[j]=data[i++];
 			}
 
-			v.addElement(b);
+			al.add(b);
 		}
 
 		Connection db=null;
 		try {
-			int i=0, n=0;
+			int n=0;
 			db = pdb.getConn();
 			db.setAutoCommit(false);
 			PreparedStatement pst=db.prepareStatement(
@@ -79,10 +79,10 @@ public class PhotoStorerThread extends Thread {
 
 			pst.setInt(1, image_id);
 
-			for(; i<v.size(); i++) {
-				String tmp = base64.encode((byte[])v.elementAt(i));
+			// Get the encoded data
+			for(Iterator it=al.iterator(); it.hasNext(); ) {
+				String tmp = base64.encode((byte[])it.next());
 				tmp=tmp.trim();
-
 				if(sdata.length() < CHUNK_SIZE) {
 					sdata.append(tmp);
 					sdata.append("\n");
@@ -93,6 +93,7 @@ public class PhotoStorerThread extends Thread {
 					sdata=new StringBuffer(tmp);
 				}
 			}
+
 			// OK, this is sick, but another one right now for the spare.
 			if(sdata.length() > 0) {
 				System.err.println("Storer:  Storing spare.");
@@ -154,7 +155,7 @@ public class PhotoStorerThread extends Thread {
 	private int doFlush() {
 		SpyDB db = new SpyDB(new PhotoConfig());
 		int rv=0;
-		Vector v = new Vector();
+		ArrayList al = new ArrayList();
 		try {
 			// See what's not been stored.
 			String query="select distinct s.id as sid, a.id as aid\n"
@@ -162,7 +163,7 @@ public class PhotoStorerThread extends Thread {
 				+ " where s.id is null";
 			ResultSet rs=db.executeQuery(query);
 			while(rs.next()) {
-				v.addElement(rs.getString("aid"));
+				al.add(rs.getString("aid"));
 			}
 			rs.close();
 			db.close();
@@ -172,23 +173,19 @@ public class PhotoStorerThread extends Thread {
 		}
 
 		// Got the vector, now store the actual images.  This is done so
-		// that we don't hold the database connection open whlie we're
+		// that we don't hold the database connection open while we're
 		// making the list *and* getting another database connection to act
 		// on it.
-		if(v.size() > 0) {
-			rv=v.size();
-			for(int i = 0; i<v.size(); i++) {
-				String stmp = (String)v.elementAt(i);
-				try {
-					storeImage(Integer.valueOf(stmp).intValue());
-				} catch(Exception e) {
-					e.printStackTrace();
-					// Return 0 so we won't try again *right now*, but we will
-					// in a bit.
-					rv=0;
-				}
+		for(Iterator i=al.iterator(); i.hasNext(); ) {
+			String stmp = (String)i.next();
+			try {
+				storeImage(Integer.valueOf(stmp).intValue());
+			} catch(Exception e) {
+				e.printStackTrace();
+				// Return 0 so we won't try again *right now*, but we will
+				// in a bit.
+				rv=0;
 			}
-
 		}
 
 		// Return the number we found.

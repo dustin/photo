@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.18 2002/06/25 00:18:01 dustin Exp $
+// $Id: PhotoUser.java,v 1.19 2002/07/04 03:27:22 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -24,15 +24,15 @@ public class PhotoUser extends Object implements Serializable {
 	private String realname=null;
 	private boolean canadd=false;
 
-	private Vector acl=null;
-	private Hashtable groups=null;
+	private ArrayList acl=null;
+	private HashMap groups=null;
 
 	/**
 	 * Get a new, empty user.
 	 */
 	public PhotoUser() {
 		super();
-		acl=new Vector();
+		acl=new ArrayList();
 	}
 
 	/**
@@ -59,8 +59,8 @@ public class PhotoUser extends Object implements Serializable {
 	/**
 	 * Get the ACL list.
 	 */
-	public Enumeration getACLEntries() {
-		return(acl.elements());
+	public Collection getACLEntries() {
+		return(Collections.unmodifiableCollection(acl));
 	}
 
 	/**
@@ -73,8 +73,8 @@ public class PhotoUser extends Object implements Serializable {
 	public PhotoACLEntry getACLEntryForCat(int cat) {
 		PhotoACLEntry rv=null;
 
-		for(Enumeration e=getACLEntries(); rv==null && e.hasMoreElements();) {
-			PhotoACLEntry acl=(PhotoACLEntry)e.nextElement();
+		for(Iterator i=getACLEntries().iterator(); rv==null && i.hasNext();) {
+			PhotoACLEntry acl=(PhotoACLEntry)i.next();
 
 			if(acl.getCat() == cat) {
 				rv=acl;
@@ -92,7 +92,7 @@ public class PhotoUser extends Object implements Serializable {
 
 		if(rv==null) {
 			rv=new PhotoACLEntry(getId(), cat);
-			acl.addElement(rv);
+			acl.add(rv);
 		}
 
 		return(rv);
@@ -132,14 +132,14 @@ public class PhotoUser extends Object implements Serializable {
 	}
 
 	/**
-	 * Get an Enumeration of Strings describing all the groups this user is
+	 * Get a Collection of Strings describing all the groups this user is
 	 * in.
 	 */
-	public Enumeration getGroups() {
+	public Collection getGroups() {
 		if(groups==null) {
 			initGroups();
 		}
-		return(groups.keys());
+		return(Collections.unmodifiableSet(groups.keySet()));
 	}
 
 	/**
@@ -156,7 +156,7 @@ public class PhotoUser extends Object implements Serializable {
 	private synchronized void initGroups() {
 		if(groups==null) {
 			try {
-				Hashtable h=new Hashtable();
+				HashMap h=new HashMap();
 				SpyDB db=new SpyDB(new PhotoConfig());
 				PreparedStatement st=db.prepareStatement(
 					"select * from show_group where username = ?");
@@ -316,8 +316,8 @@ public class PhotoUser extends Object implements Serializable {
 				"insert into wwwacl(userid,cat,canview,canadd) "
 				+ "values(?,?,?,?)");
 
-			for(Enumeration e=getACLEntries(); e.hasMoreElements(); ) {
-				PhotoACLEntry aclEntry=(PhotoACLEntry)e.nextElement();
+			for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
+				PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
 
 				st.setInt(1, getId());
 				st.setInt(2, aclEntry.getCat());

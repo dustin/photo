@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Category.java,v 1.4 2002/06/25 00:18:01 dustin Exp $
+// $Id: Category.java,v 1.5 2002/07/04 03:27:22 dustin Exp $
 
 package net.spy.photo;
 
@@ -27,14 +27,14 @@ public class Category extends Object {
 	private int id=-1;
 	private String name=null;
 
-	private Vector acl=null;
+	private ArrayList acl=null;
 
 	/**
 	 * Get an instance of Category.
 	 */
 	public Category() {
 		super();
-		acl=new Vector();
+		acl=new ArrayList();
 	}
 
 	private Category(ResultSet rs) throws SQLException {
@@ -97,7 +97,7 @@ public class Category extends Object {
 		ResultSet rs=pst.executeQuery();
 
 		// Add the ACL entries
-		acl=new Vector();
+		acl=new ArrayList();
 		while(rs.next()) {
 			int uid=rs.getInt("userid");
 			if(rs.getBoolean("canview")) {
@@ -168,8 +168,8 @@ public class Category extends Object {
 				"insert into wwwacl(userid, cat, canview, canadd) "
 					+ "values(?,?,?,?)");
 
-			for(Enumeration e=getACLEntries(); e.hasMoreElements(); ) {
-				PhotoACLEntry aclEntry=(PhotoACLEntry)e.nextElement();
+			for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
+				PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
 
 				pst.setInt(1, aclEntry.getUid());
 				pst.setInt(2, id);
@@ -196,8 +196,8 @@ public class Category extends Object {
 	/**
 	 * Get the ACL entries for this category.
 	 */
-	public Enumeration getACLEntries() {
-		return(acl.elements());
+	public Collection getACLEntries() {
+		return(Collections.unmodifiableCollection(acl));
 	}
 
 	/**
@@ -210,8 +210,8 @@ public class Category extends Object {
 	public PhotoACLEntry getACLEntryForUser(int userid) {
 		PhotoACLEntry rv=null;
 
-		for(Enumeration e=getACLEntries(); rv==null && e.hasMoreElements();) {
-			PhotoACLEntry acl=(PhotoACLEntry)e.nextElement();
+		for(Iterator i=getACLEntries().iterator(); rv==null && i.hasNext();) {
+			PhotoACLEntry acl=(PhotoACLEntry)i.next();
 
 			if(acl.getUid() == userid) {
 				rv=acl;
@@ -226,7 +226,7 @@ public class Category extends Object {
 		PhotoACLEntry rv=getACLEntryForUser(userid);
 		if(rv==null) {
 			rv=new PhotoACLEntry(userid, getId());
-			acl.addElement(rv);
+			acl.add(rv);
 		}
 		return(rv);
 	}
@@ -276,7 +276,7 @@ public class Category extends Object {
 	public static Collection getCatList(int uid, int access)
 		throws PhotoException {
 
-		Vector v=new Vector();
+		ArrayList al=new ArrayList();
 
 		if( ((access&ACCESS_READ)>0) && ((access&ACCESS_WRITE)>0) ) {
 			throw new PhotoException(
@@ -311,7 +311,7 @@ public class Category extends Object {
 			ResultSet rs=pst.executeQuery();
 
 			while(rs.next()) {
-				v.addElement(new Category(rs));
+				al.add(new Category(rs));
 			}
 			rs.close();
 			pst.close();
@@ -320,24 +320,24 @@ public class Category extends Object {
 			throw new PhotoException("Error getting category list", se);
 		}
 
-		return(v);
+		return(al);
 	}
 
 	/**
-	 * Get a list of all categories (for administrative actions).
+	 * Get a Collection of all categories (for administrative actions).
 	 */
-	public static Enumeration getAdminCatList() throws PhotoException {
-		Vector v=new Vector();
+	public static Collection getAdminCatList() throws PhotoException {
+		ArrayList al=new ArrayList();
 		try {
 			SpyDB db=new SpyDB(new PhotoConfig());
 			ResultSet rs=db.executeQuery("select * from cat order by name");
 			while(rs.next()) {
-				v.addElement(new Category(rs));
+				al.add(new Category(rs));
 			}
 		} catch(Exception e) {
 			throw new PhotoException("Error getting admin category list", e);
 		}
-		return(v.elements());
+		return(al);
 	}
 
 	/**

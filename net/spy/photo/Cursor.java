@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Cursor.java,v 1.4 2002/05/27 04:56:31 dustin Exp $
+ * $Id: Cursor.java,v 1.5 2002/07/04 03:27:22 dustin Exp $
  */
 
 package net.spy.photo;
@@ -14,9 +14,8 @@ import net.spy.*;
 /**
  * An object that will be cursor through other objects.
  */
-public class Cursor extends Object implements Serializable, Enumeration {
+public class Cursor extends ArrayList implements Serializable, Enumeration {
 
-	private Vector _results=null;
 	private int _current=0;
 	private int maxret=10;
 
@@ -25,33 +24,31 @@ public class Cursor extends Object implements Serializable, Enumeration {
 	 */
 	public Cursor() {
 		super();
-		_results=new Vector();
 	}
 
 	/**
 	 * Get a new cursor on the given enumeration.
 	 */
 	public Cursor(Enumeration e) {
-		this();
+		super();
 		while(e.hasMoreElements()) {
-			_results.addElement(e.nextElement());
+			add(e.nextElement());
 		}
 	}
 
 	/**
-	 * Add a search result to the list.
+	 * Get a new cursor on the given enumeration.
 	 */
-	public void addElement(Object o) {
-		// Now add it
-		_results.addElement(o);
+	public Cursor(Collection c) {
+		super(c);
 	}
 
 	/**
 	 * Set the search result we're lookin' at.
 	 */
 	public void set(int to) {
-		if(to>_results.size()) {
-			_current=_results.size();
+		if(to>size()) {
+			_current=size();
 		} else {
 			_current=to;
 		}
@@ -96,26 +93,12 @@ public class Cursor extends Object implements Serializable, Enumeration {
 	}
 
 	/**
-	 * Get the entry at the given location.
-	 */
-	public Object get(int which) {
-		return(_results.elementAt(which));
-	}
-
-	/**
-	 * Replace the object at the given position with a new object.
-	 */
-	protected Object replace(int which, Object o) {
-		return(_results.set(which, o));
-	}
-
-	/**
 	 * Get the next result, or null if we're done
 	 */
 	public Object next() {
 		Object r=null;
 
-		if(_current<_results.size()) {
+		if(_current<size()) {
 			r=get(_current);
 			_current++;
 		}
@@ -157,14 +140,14 @@ public class Cursor extends Object implements Serializable, Enumeration {
 	 * Find out how many results total are in this result set.
 	 */
 	public int nResults() {
-		return(_results.size());
+		return(size());
 	}
 
 	/**
 	 * Find out how many results are remaining.
 	 */
 	public int nRemaining() {
-		return(_results.size()-_current);
+		return(size()-_current);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Vote.java,v 1.3 2002/06/23 02:10:40 dustin Exp $
+// $Id: Vote.java,v 1.4 2002/07/04 03:27:22 dustin Exp $
 
 package net.spy.photo;
 
@@ -49,11 +49,11 @@ public class Vote extends Object implements java.io.Serializable {
 	 * Get an Enumeration of Vote objects for all of the comments on a
 	 * given image.
 	 */
-	public static Enumeration getVotesForPhoto(int image_id)
+	public static Collection getVotesForPhoto(int image_id)
 		throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
-		Vector v=new Vector();
+		ArrayList al=new ArrayList();
 		SpyDB db=new SpyDB(new PhotoConfig());
 		PreparedStatement pst=db.prepareStatement(
 			"select * from votes where photo_id=? order by ts desc");
@@ -61,14 +61,14 @@ public class Vote extends Object implements java.io.Serializable {
 		ResultSet rs=pst.executeQuery();
 
 		while(rs.next()) {
-			v.addElement(new Vote(security, rs));
+			al.add(new Vote(security, rs));
 		}
 
 		rs.close();
 		pst.close();
 		db.close();
 
-		return(v.elements());
+		return(al);
 	}
 
 	/**
@@ -221,10 +221,9 @@ public class Vote extends Object implements java.io.Serializable {
 			System.out.println(vote);
 		} else {
 			int img=Integer.parseInt(args[0]);
-			for(Enumeration e=Vote.getVotesForPhoto(img);
-				e.hasMoreElements();) {
+			for(Iterator i=Vote.getVotesForPhoto(img).iterator();i.hasNext();){
 
-				Vote c=(Vote)e.nextElement();
+				Vote c=(Vote)i.next();
 				System.out.println(c.toString());
 				System.out.println("--");
 			}

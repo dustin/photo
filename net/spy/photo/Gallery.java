@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: Gallery.java,v 1.5 2002/07/03 06:27:14 dustin Exp $
+// $Id: Gallery.java,v 1.6 2002/07/04 03:27:22 dustin Exp $
 
 package net.spy.photo;
 
@@ -20,7 +20,7 @@ public class Gallery extends Object implements java.io.Serializable {
 
 	private int id=-1;
 	private String name=null;
-	private Vector images=null;
+	private ArrayList images=null;
 	private boolean isPublic=false;
 	private PhotoUser owner=null;
 	private Date timestamp=null;
@@ -32,7 +32,7 @@ public class Gallery extends Object implements java.io.Serializable {
 		super();
 		this.name=name;
 		this.owner=owner;
-		this.images=new Vector();
+		this.images=new ArrayList();
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class Gallery extends Object implements java.io.Serializable {
 	public Gallery(PhotoUser owner) {
 		super();
 		this.owner=owner;
-		this.images=new Vector();
+		this.images=new ArrayList();
 	}
 
 	// Get the gallery for the current row in the given resultset
@@ -80,7 +80,7 @@ public class Gallery extends Object implements java.io.Serializable {
 			while(rs.next()) {
 				Gallery g=new Gallery(rs);
 				g.loadMap(user);
-				rv.addElement(g);
+				rv.add(g);
 			}
 			rs.close();
 			pst.close();
@@ -100,7 +100,7 @@ public class Gallery extends Object implements java.io.Serializable {
 
 		ResultSet rs=lg.executeQuery();
 
-		images=new Vector();
+		images=new ArrayList();
 		while(rs.next()) {
 			addImage(rs.getInt("album_id"));
 		}
@@ -217,8 +217,8 @@ public class Gallery extends Object implements java.io.Serializable {
 					+ " values(?,?)");
 			pst.setInt(1, id);
 
-			for(Enumeration e=images.elements(); e.hasMoreElements(); ) {
-				PhotoImageData pid=(PhotoImageData)e.nextElement();
+			for(Iterator i=images.iterator(); i.hasNext(); ) {
+				PhotoImageData pid=(PhotoImageData)i.next();
 
 				pst.setInt(2, pid.getId());
 				affected=pst.executeUpdate();
@@ -259,7 +259,7 @@ public class Gallery extends Object implements java.io.Serializable {
 	 */
 	public void addImage(PhotoImageData pid) {
 		removeImage(pid);
-		images.addElement(pid);
+		images.add(pid);
 	}
 
 	/**
@@ -307,11 +307,11 @@ public class Gallery extends Object implements java.io.Serializable {
 	}
 
 	/**
-	 * Get an enumeration of PhotoImageData objects describing the contents
+	 * Get a Collection of PhotoImageData objects describing the contents
 	 * of this gallery.
 	 */
-	public Enumeration getImages() {
-		return(images.elements());
+	public Collection getImages() {
+		return(Collections.unmodifiableCollection(images));
 	}
 
 	/**

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoBackup.java,v 1.8 2002/06/24 21:50:30 dustin Exp $
+ * $Id: PhotoBackup.java,v 1.9 2002/07/04 03:27:22 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -48,7 +48,7 @@ public class PhotoBackup extends Object {
 		baseDirFile.mkdirs();
 
 		// Next, grab all the IDs we need
-		Vector ids=new Vector();
+		ArrayList ids=new ArrayList();
 
 		PreparedStatement pst=null;
 		if(cat==null) {
@@ -62,7 +62,7 @@ public class PhotoBackup extends Object {
 
 		ResultSet rs=pst.executeQuery();
 		while(rs.next()) {
-			ids.addElement(new Integer(rs.getInt("id")));
+			ids.add(new Integer(rs.getInt("id")));
 		}
 
 		// Statistics.
@@ -76,8 +76,8 @@ public class PhotoBackup extends Object {
 		}
 
 		// Flip through the IDs and back 'em up.
-		for(Enumeration e=ids.elements(); e.hasMoreElements(); ) {
-			Integer i=(Integer)e.nextElement();
+		for(Iterator it=ids.iterator(); it.hasNext(); ) {
+			Integer i=(Integer)it.next();
 
 			// Count one.
 			bs.click();

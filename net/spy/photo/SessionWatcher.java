@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.7 2002/06/14 18:27:24 dustin Exp $
+// $Id: SessionWatcher.java,v 1.8 2002/07/04 03:27:22 dustin Exp $
 
 package net.spy.photo;
 
@@ -15,7 +15,7 @@ import net.spy.photo.*;
  */
 public class SessionWatcher extends Object implements HttpSessionListener {
 
-	private static Vector allSessions=new Vector();
+	private static HashSet allSessions=new HashSet();
 
 	/**
 	 * Get an instance of SessionWatcher.
@@ -41,7 +41,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 
         // OK, now add that to our list.
 		synchronized(allSessions) {
-			allSessions.addElement(se.getSession());
+			allSessions.add(se.getSession());
 		}
 	}
 
@@ -50,7 +50,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	 */
 	public void sessionDestroyed(HttpSessionEvent se) {
 		synchronized(allSessions) {
-			allSessions.removeElement(se.getSession());
+			allSessions.remove(se.getSession());
 		}
 	}
 
@@ -69,12 +69,12 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	 * Get the SessionData from each session that represents the given
 	 * user.
 	 */
-	public static Enumeration getSessionDataByUser(String username) {
-		Vector v=new Vector();
+	public static Collection getSessionDataByUser(String username) {
+		ArrayList al=new ArrayList();
 
 		synchronized(allSessions) {
-			for(Enumeration e=allSessions.elements(); e.hasMoreElements(); ) {
-				HttpSession session=(HttpSession)e.nextElement();
+			for(Iterator i=allSessions.iterator(); i.hasNext(); ) {
+				HttpSession session=(HttpSession)i.next();
 
 				if(session.getAttribute("photoSession") != null) {
 					PhotoSessionData sessionData=
@@ -83,7 +83,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 					// XXX:  I guess it's theoretically possible for some of
 					// this stuff to be null.
 					if(sessionData.getUser().getUsername().equals(username)) {
-						v.addElement(sessionData);
+						al.add(sessionData);
 					} // Found a match
 				} else {
 					System.err.println(
@@ -92,7 +92,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 			} // Flipping through the sessions
 		} // allSession lock
 
-		return(v.elements());
+		return(al);
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	public static int getSessionCountByUser(String username) {
 		int rv=0;
 
-		for(Enumeration e=getSessionDataByUser(username);e.hasMoreElements();){
-			e.nextElement();
+		for(Iterator i=getSessionDataByUser(username).iterator();i.hasNext();){
+			i.next();
             rv++;
         }
 
@@ -113,18 +113,18 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	 * Get an Enumeration of HttpSession objects representing all users
 	 * currently in the system.
 	 */
-	public static Enumeration listSessions() {
-		Vector v=new Vector();
+	public static Collection listSessions() {
+		ArrayList al=new ArrayList();
 
 		synchronized(allSessions) {
-			for(Enumeration e=allSessions.elements(); e.hasMoreElements();) {
-				HttpSession session=(HttpSession)e.nextElement();
+			for(Iterator i=allSessions.iterator(); i.hasNext();) {
+				HttpSession session=(HttpSession)i.next();
 				if(session.getAttribute("photoSession") != null) {
 					PhotoSessionData sessionData=
 						(PhotoSessionData)session.getAttribute("photoSession");
 
-					// Add the session to the result Vector
-					v.addElement(session);
+					// Add the session to the result List
+					al.add(session);
 				} else {
 					System.err.println(
 						"Warning:  Found a session without a photoSession");
@@ -132,7 +132,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 			}
 		}
 
-		return(v.elements());
+		return(al);
 	}
 
 }

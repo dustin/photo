@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
  *
- * $Id: CachePhoto.java,v 1.5 2002/06/16 07:17:38 dustin Exp $
+ * $Id: CachePhoto.java,v 1.6 2002/07/04 03:27:22 dustin Exp $
  */
 
 package net.spy.photo.tools;
@@ -26,7 +26,7 @@ public class CachePhoto extends Object {
 	private SpyConfig conf=null;
 	private RemoteImageServer server=null;
 	private String saveDir=null;
-	private Vector errors=null;
+	private ArrayList errors=null;
 
 	/**
 	 * Get a new CachePhoto.
@@ -37,7 +37,7 @@ public class CachePhoto extends Object {
 		conf=new PhotoConfig();
 		String source=null;
 		server = (RemoteImageServer)Naming.lookup(conf.get("imageserver"));
-		errors=new Vector();
+		errors=new ArrayList();
 	}
 
 	/**
@@ -146,11 +146,11 @@ public class CachePhoto extends Object {
 			} catch(ImageDataException ide) {
 				System.err.println("Data difference on " + id + ":  " + ide);
 				saveImage(id, dbdata_s, dbdata, data.getData());
-				errors.addElement(ide);
+				errors.add(ide);
 			} catch(Exception e) {
 				System.err.println("Error on image " + id);
 				e.printStackTrace();
-				errors.addElement(e);
+				errors.add(e);
 			}
 			stats.stop();
 			System.out.println("Cached " + id 
@@ -160,8 +160,8 @@ public class CachePhoto extends Object {
 		db.close();
 
 		System.err.println("Errors:");
-		for(Enumeration e=errors.elements(); e.hasMoreElements(); ) {
-			System.err.println("\t" + e.nextElement());
+		for(Iterator i=errors.iterator(); i.hasNext(); ) {
+			System.err.println("\t" + i.next());
 		}
 	}
 
