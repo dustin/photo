@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.16 1998/07/08 07:26:13 dustin Exp $
+# $Id: Photo.pm,v 1.17 1998/07/19 20:20:59 dustin Exp $
 
 package Photo;
 
@@ -503,9 +503,11 @@ sub addImage
 
     $dbh->{AutoCommit}=1;
 
-    $query ="insert into album (fn, keywords, descr, cat, size, taken)\n";
+    $query ="insert into album\n";
+    $query.="    (fn, keywords, descr, cat, size, taken, addedby)\n";
     $query.="    values('$fn',\n\t$in{'keywords'},\n\t$in{'info'},\n";
-    $query.="\t$in{'category'},\n\t$size,\n\t$in{'taken'});";
+    $query.="\t$in{'category'},\n\t$size,\n\t$in{'taken'},\n";
+    $query.="\t'$ENV{'REMOTE_USER'}');";
 
     eval { $s=$self->doQuery($query); };
 
