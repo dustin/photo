@@ -33,6 +33,10 @@
 				</field>
 			</form>
 
+			<form name="addToGalleryForm">
+				<field property="id" depends="required"/>
+			</form>
+
     </formset>
 
 </form-validation>

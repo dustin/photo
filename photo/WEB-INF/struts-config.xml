@@ -28,7 +28,11 @@
 		</form-bean>
 
     <form-bean name="addToGalleryForm"
-			type="net.spy.photo.struts.AddToGalleryForm"/>
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="id" type="java.lang.Integer"/>
+		</form-bean>
+
     <form-bean name="saveGalleryForm"
 			type="net.spy.photo.struts.SaveGalleryForm"/>
     <form-bean name="emptyForm"

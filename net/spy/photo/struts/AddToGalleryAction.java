@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddToGalleryAction.java,v 1.5 2002/07/10 03:38:08 dustin Exp $
+// $Id: AddToGalleryAction.java,v 1.6 2003/05/24 08:32:58 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -19,6 +19,7 @@ import net.spy.photo.PhotoUser;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
 
 /**
  * Action to add an image to a gallery.
@@ -43,7 +44,7 @@ public class AddToGalleryAction extends PhotoAction {
 		HttpServletRequest request,HttpServletResponse response)
 		throws IOException, ServletException {
 
-		AddToGalleryForm atgf=(AddToGalleryForm)form;
+		DynaActionForm atgf=(DynaActionForm)form;
 
 		PhotoSessionData sessionData=getSessionData(request);
 		PhotoUser user=sessionData.getUser();
@@ -61,7 +62,8 @@ public class AddToGalleryAction extends PhotoAction {
 
 		// Add the new image
 		try {
-			g.addImage(atgf.getId());
+			Integer id=(Integer)atgf.get("id");
+			g.addImage(id.intValue());
 		} catch(Exception e) {
 			throw new ServletException("Error adding new image", e);
 		}
