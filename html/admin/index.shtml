@@ -10,7 +10,11 @@
         additions</a></li>
     <li><a href="/cgi-bin/dustin/photo/admin/listcats.cgi">List
         Categories</a></li>
+    <li><a href="/cgi-bin/dustin/photo/admin/listusers.cgi">List
+        Users</a></li>
 </ul>
+
+Adminning as <!--#echo var="REMOTE_USER"-->.
 
 <!--#include virtual="../../tail.shtml"-->
 
