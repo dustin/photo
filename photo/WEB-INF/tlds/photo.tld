@@ -38,4 +38,18 @@
 		</attribute>
 	</tag>
 
+	<!-- Provide links to images. -->
+	<tag>
+		<name>imgLink</name>
+		<tagclass>net.spy.photo.taglib.ImageLink</tagclass>
+		<attribute>
+			<name>id</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>showThumbnail</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+
 </taglib>

@@ -51,9 +51,12 @@
 				</template:insert>
 
 				<center>
+					<!--
 					<a href="PhotoServlet?func=display&id=3469"><img
 						border="0"
 						src="PhotoServlet?func=getimage&photo_id=3469&thumbnail=1"></a>
+						-->
+					<photo:imgLink id='3469' showThumbnail='true'/>
 				</center>
 			</p>
 		</td>
