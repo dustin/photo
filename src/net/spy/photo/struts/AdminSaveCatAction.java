@@ -14,12 +14,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import net.spy.db.Saver;
-
-import net.spy.photo.Category;
-import net.spy.photo.impl.DBCategory;
+import net.spy.photo.MutableCategory;
 import net.spy.photo.CategoryFactory;
-import net.spy.photo.PhotoConfig;
 
 /**
  * Action used to save a category.
@@ -45,17 +41,16 @@ public class AdminSaveCatAction extends PhotoAction {
 		AdminCategoryForm acf=(AdminCategoryForm)form;
 
 		// Get the category
-		DBCategory cat=null;
+		CategoryFactory cf=CategoryFactory.getInstance();
+		MutableCategory cat=null;
 		try {
-			CategoryFactory cf=CategoryFactory.getInstance();
-			Category src=cf.getCategory(Integer.parseInt(acf.getCatId()));
-			cat=new DBCategory(src);
+			cat=cf.getMutable(Integer.parseInt(acf.getCatId()));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		// If we didn't get a category, make a new one.
 		if(cat==null) {
-			cat=new DBCategory();
+			cat=cf.createNew();
 		}
 
 		// OK, now set the new stuff
@@ -79,10 +74,7 @@ public class AdminSaveCatAction extends PhotoAction {
 			cat.getACL().addAddEntry(uid);
 		}
 
-		Saver saver=new Saver(PhotoConfig.getInstance());
-		saver.save(cat);
-
-		CategoryFactory.getInstance().recache();
+		cf.persist(cat);
 
 		return(mapping.findForward("next"));
 	}

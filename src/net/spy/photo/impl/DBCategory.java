@@ -14,6 +14,7 @@ import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 
 import net.spy.photo.Category;
+import net.spy.photo.MutableCategory;
 import net.spy.photo.PhotoACL;
 import net.spy.photo.PhotoACLEntry;
 
@@ -27,7 +28,7 @@ import net.spy.photo.sp.GetGeneratedKey;
 /**
  * Database category representation.
  */
-public class DBCategory extends AbstractSavable implements Category {
+public class DBCategory extends AbstractSavable implements MutableCategory {
 
 	private int id=-1;
 	private String name=null;
@@ -150,6 +151,8 @@ public class DBCategory extends AbstractSavable implements Category {
 
 		for(Iterator i=acl.iterator(); i.hasNext(); ) {
 			PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
+
+			getLogger().info("Mapping " + aclEntry + " to cat " + id);
 
 			iacl.setUserId(aclEntry.getWhat());
 			iacl.setCanView(aclEntry.canView());

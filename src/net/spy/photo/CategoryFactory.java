@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Comparator;
 
+import net.spy.db.Saver;
+import net.spy.db.Savable;
 import net.spy.factory.GenFactory;
 
 import net.spy.photo.impl.DBCategory;
@@ -89,6 +91,29 @@ public class CategoryFactory extends GenFactory {
 	 */
 	public Category getCategory(int id) {
 		return( (Category)getObject(id));
+	}
+
+	/** 
+	 * Create a new mutable category.
+	 */
+	public MutableCategory createNew() {
+		return(new DBCategory());
+	}
+
+	/** 
+	 * Get a mutable version of a given category.
+	 */
+	public MutableCategory getMutable(int id) {
+		return(new DBCategory(getCategory(id)));
+	}
+
+	/** 
+	 * Persist a mutable category.
+	 */
+	public void persist(MutableCategory inst) throws Exception {
+		Saver saver=new Saver(PhotoConfig.getInstance());
+		saver.save((Savable)inst);
+		recache();
 	}
 
 	/** 
