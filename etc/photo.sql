@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.3 2000/07/12 08:04:00 dustin Exp $
+-- $Id: photo.sql,v 1.4 2000/07/16 08:28:14 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
@@ -19,14 +19,18 @@ CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'
 -- Where the picture info is stored.
 
 create table album(
-	keywords varchar(50) not null,
-	descr    text not null,
-	cat      integer not null,
-	taken    date not null,
-	size     integer not null,
-	addedby  integer not null,
-	ts       datetime not null,
-	id       serial
+	keywords   varchar(50) not null,
+	descr      text not null,
+	cat        integer not null,
+	taken      date not null,
+	size       integer not null,
+	addedby    integer not null,
+	width      integer default 0,
+	height     integer default 0,
+	tn_width   integer default 0,
+	tn_height  integer default 0,
+	ts         datetime not null,
+	id         serial
 );
 
 create index album_bycat on album(cat);
