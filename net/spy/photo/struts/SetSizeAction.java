@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SetSizeAction.java,v 1.3 2003/05/25 08:17:42 dustin Exp $
+// $Id: SetSizeAction.java,v 1.4 2003/05/27 03:36:22 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -17,6 +17,7 @@ import net.spy.photo.PhotoSessionData;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
 
 /**
  * Action to set the size of an image.
@@ -38,13 +39,13 @@ public class SetSizeAction extends PhotoAction {
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
 
-		SetSizeForm ssf=(SetSizeForm)form;
+		DynaActionForm ssf=(DynaActionForm)form;
 
 		PhotoSessionData sessionData=getSessionData(request);
-		sessionData.setOptimalDimensions(
-			new PhotoDimensionsImpl(ssf.getDims()));
+		String dims=(String)ssf.get("dims");
+		sessionData.setOptimalDimensions(new PhotoDimensionsImpl(dims));
 
-		System.out.println("Set viewing size to " + ssf.getDims());
+		System.out.println("Set viewing size to " + dims);
 
 		return(mapping.findForward("success"));
 	}

@@ -119,6 +119,7 @@ errors.maxlength={0} can not be more than {1} characters.
 errors.email=Your email address looks invalid.
 errors.twofields=Passwords don't match.
 errors.invalid={0} is not valid.
+errors.dimension={0} is in an invalid dimensions format.
 
 # Search errors
 error.search.fieldjoin=fieldjoin may only be ``or'' or ``and''
@@ -141,27 +142,6 @@ error.upload.picture=Picture required
 error.upload.picture.notread=Error reading picture
 error.upload.id=Image ID required
 error.upload.id.nfe=Image ID wasn't a number
-
-# Save search form
-error.savesearch.name=Name of search required
-error.savesearch.search=Search to save required
-
-# new user (from profile) form
-error.newuser.username=Username not provided
-error.newuser.realname=Invalid ``real name'' parameter
-error.newuser.password=Password field must be at least 6 \
-	characters
-error.newuser.pwmismatch=Passwords don't match
-error.newuser.email=Invalid email address
-
-# Set size form
-error.setsize.dims=Missing ``dims'' parameter
-error.setsize.dims.e=Invalid ``dims'' parameter ({0})
-
-# ChangePW form
-error.changepw.oldpw=Missing old password parameter
-error.changepw.newpw1=New password must be at least six characters
-error.changepw.mismatch=Old and new passwords don't match
 
 # Admin user form
 error.adminuserform.userId=User ID field not supplied

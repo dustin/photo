@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.34 2003/04/25 06:32:23 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.35 2003/05/27 03:36:22 dustin Exp $
  */
 
 package net.spy.photo;
@@ -17,7 +17,6 @@ import net.spy.SpyDB;
 import net.spy.util.Base64;
 import net.spy.util.NestedRuntimeException;
 
-import net.spy.photo.struts.SaveSearchForm;
 import net.spy.photo.struts.SearchForm;
 
 import net.spy.photo.sp.InsertSearch;
@@ -39,9 +38,9 @@ public class PhotoSearch extends PhotoHelper {
 	/**
 	 * Save a search.
 	 */
-	public void saveSearch(SaveSearchForm form, PhotoUser user)
+	public void saveSearch(String name, String search, PhotoUser user)
 		throws Exception {
-		if(user==null || form==null) {
+		if(user==null || name==null || search==null) {
 			throw new Exception("Weird, invalid stuff.");
 		}
 
@@ -51,16 +50,16 @@ public class PhotoSearch extends PhotoHelper {
 
 		try {
 			InsertSearch is=new InsertSearch(getConfig());
-			is.setName(form.getName());
+			is.setName(name);
 			is.setAddedBy(user.getId());
-			is.setSearchData(form.getSearch());
+			is.setSearchData(search);
 			is.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
 
 			is.executeUpdate();
 
 			is.close();
 		} catch(Exception e) {
-			log("Error saving search:  " + e);
+			log("Error saving search", e);
 		}
 	}
 

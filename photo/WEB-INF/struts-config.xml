@@ -31,8 +31,13 @@
 		</form-bean>
 
     <form-bean name="uploadForm" type="net.spy.photo.struts.UploadForm"/>
+
     <form-bean name="saveSearchForm"
-			type="net.spy.photo.struts.SaveSearchForm"/>
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="name" type="java.lang.String"/>
+			<form-property name="search" type="java.lang.String"/>
+		</form-bean>
 
     <form-bean name="newUserForm"
 			type="org.apache.struts.validator.DynaValidatorForm">
@@ -45,9 +50,19 @@
 			<form-property name="profile" type="java.lang.String"/>
 		</form-bean>
 
-    <form-bean name="setSizeForm" type="net.spy.photo.struts.SetSizeForm"/>
+    <form-bean name="setSizeForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
 
-    <form-bean name="changePWForm" type="net.spy.photo.struts.ChangePWForm"/>
+			<form-property name="dims" type="java.lang.String"/>
+		</form-bean>
+
+    <form-bean name="changePWForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="oldpw" type="java.lang.String"/>
+			<form-property name="newpw1" type="java.lang.String"/>
+			<form-property name="newpw2" type="java.lang.String"/>
+		</form-bean>
 
     <form-bean name="forgotPWForm"
 			type="org.apache.struts.validator.DynaValidatorForm">

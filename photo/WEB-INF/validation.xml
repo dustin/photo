@@ -103,6 +103,52 @@
 				</field>
 			</form>
 
+			<form name="setSizeForm">
+				<field property="dims" depends="required,dimension">
+					<arg0 key="Dimension" resource="false"/>
+				</field>
+			</form>
+
+			<form name="saveSearchForm">
+				<field property="name" depends="required,minlength">
+					<arg0 key="Name" resource="false"/>
+					<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+					<var>
+						<var-name>minlength</var-name>
+						<var-value>2</var-value>
+					</var>
+				</field>
+				<field property="search" depends="required,minlength">
+					<arg0 key="Search" resource="false"/>
+					<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+					<var>
+						<var-name>minlength</var-name>
+						<var-value>10</var-value>
+					</var>
+				</field>
+			</form>
+
+			<form name="changePWForm">
+				<field property="oldpw" depends="required">
+					<arg0 key="Old password" resource="false"/>
+				</field>
+				<field property="newpw1" depends="required,minlength">
+					<arg0 key="New password" resource="false"/>
+					<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+					<var>
+						<var-name>minlength</var-name>
+						<var-value>6</var-value>
+					</var>
+				</field>
+				<field property="newpw2" depends="required,twofields">
+					<arg0 key="New password confirm" resource="false"/>
+					<var>
+						<var-name>secondproperty</var-name>
+						<var-value>newpw1</var-value>
+					</var>
+				</field>
+			</form>
+
     </formset>
 
 </form-validation>

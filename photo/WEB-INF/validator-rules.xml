@@ -55,6 +55,17 @@
 					javax.servlet.http.HttpServletRequest"
 				msg="errors.twofields"/>
 
+			<!-- No arguments, just validates the field -->
+			<validator name="dimension"
+				classname="net.spy.photo.struts.ValidationUtils"
+				method="validateDimension"
+				methodParams="java.lang.Object,
+					org.apache.commons.validator.ValidatorAction,
+					org.apache.commons.validator.Field,
+					org.apache.struts.action.ActionErrors,
+					javax.servlet.http.HttpServletRequest"
+				msg="errors.dimension"/>
+
       <validator name="required"
             classname="org.apache.struts.validator.FieldChecks"
                method="validateRequired"
