@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: BackupEntry.java,v 1.4 2000/11/29 07:02:19 dustin Exp $
+ * $Id: BackupEntry.java,v 1.5 2000/11/29 10:00:27 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -19,10 +19,11 @@ import org.apache.xerces.dom.DocumentImpl;
 import net.spy.*;
 import net.spy.photo.*;
 
-public class BackupEntry extends Object implements Serializable {
+public abstract class BackupEntry extends Object implements Serializable {
 
 	// Data stored here.
 	protected Document doc=null;
+	protected Element myData=null;
 
 	// Node type
 	protected String nodeType="unknown_node_type";
@@ -32,10 +33,12 @@ public class BackupEntry extends Object implements Serializable {
 		doc=new DocumentImpl();
 	}
 
+	public abstract void restore() throws Exception;
+
 	public BackupEntry(Node n) throws Exception {
 		super();
-		doc=new DocumentImpl();
-		doc.appendChild(n);
+		doc=n.getOwnerDocument();
+		myData=(Element)n;
 	}
 
 	public void writeTo(OutputStream o) throws Exception {
