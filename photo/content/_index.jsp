@@ -83,7 +83,7 @@
 
 					<ul>
 						<li>
-							<photo:link url="/PhotoServlet?func=admuser">
+							<photo:link url="/admin/users.jsp">
 								User Admin
 							</photo:link>
 						</li>
