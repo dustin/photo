@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoServlet.java,v 1.26 2003/07/28 04:17:58 dustin Exp $
+ * $Id: PhotoServlet.java,v 1.27 2003/07/31 08:03:42 dustin Exp $
  */
 
 package net.spy.photo;
@@ -42,7 +42,7 @@ public class PhotoServlet extends HttpServlet {
 	 */
 	public String getServletInfo() {
 		return("Copyright (c) 2000  Dustin Sallings <dustin@spy.net>"
-			+ " - $Revision: 1.26 $");
+			+ " - $Revision: 1.27 $");
 	}
 
 	/**
@@ -77,10 +77,15 @@ public class PhotoServlet extends HttpServlet {
 		PhotoUser pu=null;
 		PhotoSessionData sessionData=null;
 		if(session==null) {
+			log("Session is null, using the default user");
 			pu=Persistent.getSecurity().getDefaultUser();
 		} else {
-			sessionData=(PhotoSessionData)session.getAttribute("photoSession");
+			sessionData=(PhotoSessionData)
+				session.getAttribute(PhotoSessionData.SES_ATTR);
 			if(sessionData!=null) {
+				pu=sessionData.getUser();
+			} else {
+				log("session data is null, using the default user");
 				pu=Persistent.getSecurity().getDefaultUser();
 			}
 		}

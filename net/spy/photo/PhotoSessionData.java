@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.15 2003/07/25 20:29:35 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.16 2003/07/31 08:03:42 dustin Exp $
 
 package net.spy.photo;
 
@@ -15,6 +15,11 @@ import net.spy.util.RingBuffer;
  * Session data goes here.
  */
 public class PhotoSessionData extends Object implements java.io.Serializable {
+
+	/** 
+	 * The session attribute name.
+	 */
+	public static final String SES_ATTR="photoSession";
 
 	public static final int NOADMIN=0;
 	public static final int ADMIN=1;

@@ -15,8 +15,8 @@
 			<td>Public?</td>
 			<td><html:checkbox property="isPublic"/></td>
 	</table>
-	<html:submit>Save Gallery</html:submit>
-	<html:reset>Reset Form</html:reset>
+	<html:submit styleClass="button">Save Gallery</html:submit>
+	<html:reset styleClass="button">Reset Form</html:reset>
 </html:form>
 
 </p>

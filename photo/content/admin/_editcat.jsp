@@ -45,5 +45,5 @@
 		</logic:iterate>
 	</table>
 
-	<html:submit>Save</html:submit>
+	<html:submit styleClass="button">Save</html:submit>
 </html:form>

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoTag.java,v 1.5 2002/07/10 03:38:09 dustin Exp $
+// $Id: PhotoTag.java,v 1.6 2003/07/31 08:03:42 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -35,7 +35,8 @@ public abstract class PhotoTag extends TagSupport {
 	protected PhotoSessionData getSessionData() throws JspException {
 		if(sessionData==null) {
 			HttpSession session=pageContext.getSession();
-			sessionData=(PhotoSessionData)session.getAttribute("photoSession");
+			sessionData=(PhotoSessionData)
+				session.getAttribute(PhotoSessionData.SES_ATTR);
 
 			if(sessionData==null) {
 				throw new JspException("photoSession not in session.");

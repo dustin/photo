@@ -22,8 +22,12 @@
 			<td><html:checkbox property="admin"/></td>
 		</tr>
 	</table>
-	<html:submit><bean:message key="forms.login.authbutton"/></html:submit>
-	<html:reset><bean:message key="forms.login.rstbutton"/></html:reset>
+	<html:submit styleClass="button">
+		<bean:message key="forms.login.authbutton"/>
+	</html:submit>
+	<html:reset styleClass="button">
+		<bean:message key="forms.login.rstbutton"/>
+	</html:reset>
 </html:form>
 
 </p>
@@ -36,8 +40,12 @@
 	<html:errors/>
 	<bean:message key="forms.forgotpw.username"/>:
 		<html:text property="username"/><br/>
-	<html:submit><bean:message key="forms.forgotpw.submit"/></html:submit>
-	<html:reset><bean:message key="forms.forgotpw.rstbutton"/></html:reset>
+	<html:submit styleClass="button">
+		<bean:message key="forms.forgotpw.submit"/>
+	</html:submit>
+	<html:reset styleClass="button">
+		<bean:message key="forms.forgotpw.rstbutton"/>
+	</html:reset>
 </html:form>
 
 </p>

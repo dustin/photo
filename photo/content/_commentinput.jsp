@@ -23,6 +23,6 @@
 	<html:hidden property="imageId" value="<%= imageId %>"/>
 	<html:textarea property="comment" cols="50" rows="2"/>
 	<br/>
-	<html:submit>Add Comment</html:submit>
+	<html:submit styleClass="reset">Add Comment</html:submit>
 </html:form>
 

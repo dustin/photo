@@ -128,7 +128,7 @@
 					%>
 
 				</table>
-				<input type="submit" value="Report">
+				<html:submit styleClass="button">Report</html:submit>
 			</form>
 		<%
 	}

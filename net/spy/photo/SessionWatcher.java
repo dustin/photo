@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.13 2003/07/25 20:29:35 dustin Exp $
+// $Id: SessionWatcher.java,v 1.14 2003/07/31 08:03:42 dustin Exp $
 
 package net.spy.photo;
 
@@ -44,7 +44,7 @@ public class SessionWatcher extends Object implements HttpSessionListener {
         // The rest of the stuff will remain null until something comes
         // along with something better.
         // Now, add it to the session.
-        session.setAttribute("photoSession", sessionData);
+        session.setAttribute(PhotoSessionData.SES_ATTR, sessionData);
 
         // OK, now add that to our list.
 		synchronized(allSessions) {
@@ -83,9 +83,9 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 			for(Iterator i=allSessions.values().iterator(); i.hasNext(); ) {
 				HttpSession session=(HttpSession)i.next();
 
-				if(session.getAttribute("photoSession") != null) {
-					PhotoSessionData sessionData=
-						(PhotoSessionData)session.getAttribute("photoSession");
+				if(session.getAttribute(PhotoSessionData.SES_ATTR) != null) {
+					PhotoSessionData sessionData=(PhotoSessionData)
+						session.getAttribute(PhotoSessionData.SES_ATTR);
 
 					// XXX:  I guess it's theoretically possible for some of
 					// this stuff to be null.
@@ -127,8 +127,8 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 			for(Iterator i=allSessions.values().iterator(); i.hasNext();) {
 				HttpSession session=(HttpSession)i.next();
 
-				PhotoSessionData sessionData=
-					(PhotoSessionData)session.getAttribute("photoSession");
+				PhotoSessionData sessionData=(PhotoSessionData)
+					session.getAttribute(PhotoSessionData.SES_ATTR);
 
 				if(sessionData!=null) {
 					// Add the session to the result List
@@ -153,7 +153,8 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 		synchronized(allSessions) {
 			HttpSession session=(HttpSession)allSessions.get(id);
 			if(session != null) {
-				rv=(PhotoSessionData)session.getAttribute("photoSession");
+				rv=(PhotoSessionData)
+					session.getAttribute(PhotoSessionData.SES_ATTR);
 			}
 		}
 

@@ -23,5 +23,5 @@
 		</logic:iterate>
 	</html:select>
 
-	<html:submit>Edit</html:submit>
+	<html:submit styleClass="button">Edit</html:submit>
 </html:form>

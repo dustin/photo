@@ -24,7 +24,7 @@
 			<input type="hidden" name="search"
 				value="<%= sessionData.getEncodedSearch() %>"/>
 			Save search as:  <input name="name"/>
-			<input type="submit" value="Save"/>
+			<html:submit styleClass="button">Save</html:submit>
 		</form>
 	</td>
 	<% } %>
@@ -95,7 +95,7 @@
       <html:form action="nextresults.do">
         <html:hidden property="startOffset" value="<%= nextOffsetS %>"/>
         <html:hidden property="whichCursor" value="results"/>
-        <html:submit>Next <%= nextWhu %></html:submit>
+        <html:submit styleClass="button">Next <%= nextWhu %></html:submit>
       </html:form>
       </p>
     <%

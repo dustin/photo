@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoAction.java,v 1.4 2003/07/23 04:29:26 dustin Exp $
+// $Id: PhotoAction.java,v 1.5 2003/07/31 08:03:42 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -33,7 +33,7 @@ public abstract class PhotoAction extends JWebAction {
 
 		HttpSession session=request.getSession(false);
 		PhotoSessionData sessionData=
-			(PhotoSessionData)session.getAttribute("photoSession");
+			(PhotoSessionData)session.getAttribute(PhotoSessionData.SES_ATTR);
 
 		if(sessionData==null) {
 			throw new ServletException("No photoSession in session.");

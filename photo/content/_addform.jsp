@@ -82,8 +82,8 @@
 			</tr>
 			</td>
 		</table>
-		<input type="submit" value="Add Image"/>
-		<input type="reset" value="Clear"/>
+		<html:submit styleClass="button">Add Image</html:submit>
+		<html:reset styleClass="button">Clear</html:reset>
 	</center>
 
 </html:form>
