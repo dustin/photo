@@ -6,6 +6,10 @@
 
 <taglib>
 
+	<tlibversion>1.0</tlibversion>
+	<jspversion>1.1</jspversion>
+	<shortname>photo</shortname>
+
 	<!-- A conditional blocked based on whether the user is logged in -->
 	<tag>
 		<name>guest</name>

@@ -1,22 +1,15 @@
 <?xml version="1.0"?>
 
 <!DOCTYPE web-app
-	PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
-	"http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+	PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+	"http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
 
 <web-app>
 
-	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
-
-	<!-- How errors are done -->
-	<error-page>
-		<!-- This will deal with *all* exceptions. -->
-		<exception-type>java.lang.Exception</exception-type>
-		<location>/error.jsp</location>
-	</error-page>
+	<!-- Watch the sessions -->
+	<listener>
+		<listener-class>net.spy.photo.SessionWatcher</listener-class>
+	</listener>
 
 	<!-- Persistent objects -->
 	<servlet>
@@ -40,29 +33,6 @@
 		<servlet-name>XMLRPCServlet</servlet-name>
 		<servlet-class>net.spy.photo.XMLRPCServlet</servlet-class>
 	</servlet>
-
-	<!-- Watch the sessions -->
-	<listener>
-		<listener-class>net.spy.photo.SessionWatcher</listener-class>
-	</listener>
-
-	<!-- Normal mapping -->
-	<servlet-mapping>
-		<servlet-name>PhotoServlet</servlet-name>
-		<url-pattern>/PhotoServlet</url-pattern>
-	</servlet-mapping>
-
-	<!-- Mapping with path-info -->
-	<servlet-mapping>
-		<servlet-name>PhotoServlet</servlet-name>
-		<url-pattern>/PhotoServlet/*</url-pattern>
-	</servlet-mapping>
-
-	<!-- XMLRPC servlet mapping -->
-	<servlet-mapping>
-		<servlet-name>XMLRPCServlet</servlet-name>
-		<url-pattern>/RPC2</url-pattern>
-	</servlet-mapping>
 
 	<!-- The action servlet -->
 	<servlet>
@@ -95,10 +65,40 @@
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 
+	<!-- Normal mapping -->
+	<servlet-mapping>
+		<servlet-name>PhotoServlet</servlet-name>
+		<url-pattern>/PhotoServlet</url-pattern>
+	</servlet-mapping>
+
+	<!-- Mapping with path-info -->
+	<servlet-mapping>
+		<servlet-name>PhotoServlet</servlet-name>
+		<url-pattern>/PhotoServlet/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- XMLRPC servlet mapping -->
+	<servlet-mapping>
+		<servlet-name>XMLRPCServlet</servlet-name>
+		<url-pattern>/RPC2</url-pattern>
+	</servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+	<!-- How errors are done -->
+	<error-page>
+		<!-- This will deal with *all* exceptions. -->
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/error.jsp</location>
+	</error-page>
 
 	<!-- Photo TLD -->
 	<taglib>
