@@ -275,6 +275,15 @@
 
 				<br/>
 
+				Show
+				<select name="maxret">
+					<option value="6">6</option>
+					<option value="10">10</option>
+				</select>
+				images per page.
+
+				<br/>
+
 				<input type="submit" value="Find"/>
 				<input type="reset" value="Clear Form"/>
 
