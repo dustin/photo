@@ -73,7 +73,9 @@
 							<br/>
 
 							<div class="footerfineprint">
-								<bean:message key="page.content.footer"/>
+								<bean:message key="page.content.footer"/><br/>
+								Build <bean:message key="build.number"/> from
+									<bean:message key="build.dtstamp"/>
 							</div>
 						</div>
 
