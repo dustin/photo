@@ -2,7 +2,7 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: edituser.cgi,v 1.3 1997/12/07 07:10:35 dustin Exp $
+# $Id: edituser.cgi,v 1.4 1997/12/07 07:24:44 dustin Exp $
 
 use Postgres;
 use CGI;
@@ -30,7 +30,7 @@ if($ARGV[0] ne "")
 }
 else
 {
-    @r=('', '');
+    @r=('', '', '', '');
 }
 
 print $q->start_html(-title=>"Editing $r[0]", -bgcolor=>'#fFfFfF');
