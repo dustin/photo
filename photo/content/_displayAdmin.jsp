@@ -21,7 +21,7 @@
 	<table width="100%">
 		<tr valign="top">
 			<td align="left" width="10%">
-				<photo:imgLink id="<%= 0 %>"
+				<photo:imgLink id="<%= 0 %>" alt="<<<"
 					relative="prev" searchId="<%= searchId %>">
 					<img border="0" src="/~dustin/images/l_arrow.gif"/>
 				</photo:imgLink>
@@ -32,7 +32,7 @@
 			</td>
 
 			<td align="right" width="10%">
-				<photo:imgLink id="<%= 0 %>"
+				<photo:imgLink id="<%= 0 %>" alt=">>>"
 					relative="next" searchId="<%= searchId %>">
 					<img border="0" src="/~dustin/images/r_arrow.gif"/>
 				</photo:imgLink>
@@ -47,23 +47,41 @@
 			scale="true"/>
 	</div>
 
-	<%--
-	<photo:imgLink id="<%= image.getId() %>"/>
-	<img border="0" src="PhotoServlet?func=getimage&id=<%= image.getId()%>"/>
-	--%>
+	<form method="POST" action="PhotoServlet">
+		<input type="hidden" name="func" value="admedittext"/>
+		<input type="hidden" name="id" value="<%= image.getId() %>"/>
 
 	<p>
-		<b>Category</b>:  ``<%= image.getCatName() %>''&nbsp;<b>Keywords</b>:
-			<i><%= image.getKeywords() %></i><br>
+		<b>Category</b>:
+		<select name="cat" size="5">
+			<photo:getCatList showAddable="true">
+				<logic:iterate id="i" name="catList"> 
+					<% Category category=(Category)i; %>
+					<option value="<%= category.getId() %>">
+						<%= category.getName() %></option>
+				</logic:iterate>
+			</photo:getCatList>
+		</select>
+
+		<br/>
+		<b>Keywords</b>:
+			<input name="keywords" value="<%= image.getKeywords() %>"><br>
 		<b>Size</b>:  <%= image.getDimensions() %>
 			(<%= image.getSize() %> bytes)<br>
-		<b>Taken</b>:  <%= image.getTaken() %>&nbsp; <b>Added</b>:
+		<b>Taken</b>:  <input name="taken" value="<%= image.getTaken() %>"/>
+			<b>Added</b>:
 			<%= image.getTimestamp() %>
 		by <%= image.getAddedBy() %><br>
 		<b>Info</b>:
-		<blockquote><%= image.getDescr()%></blockquote>
+		<textarea cols="60" rows="5"
+			name="info"><%= image.getDescr() %></textarea>
 
 	</p>
+
+	<input type="submit" value="Save Info">
+	<input type="reset" value="Restore to Original">
+
+	</form>
 
 [<a href="PhotoServlet?func=logview&view=viewers&which=<%=
 	"" + image.getId() %>">

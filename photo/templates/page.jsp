@@ -37,8 +37,10 @@
 								<tr valign="top">
 									<td align="left">
 										Logged in as
-										<a href="credform.jsp"><%=
-										sessionData.getUser() %></a>.
+										<a href="credform.jsp"><%= sessionData.getUser() %></a>
+										<photo:admin>
+											<a href="adminify.do?action=unsetadmin">(admin)</a>
+										</photo:admin>.
 									</td>
 									<td align="right">
 										<template:insert

@@ -42,6 +42,6 @@
 
 <h1>Other Services</h1>
 
-<a href="PhotoServlet?func=setadmin">Request Administrative Privileges</a>
+<a href="adminify.do?action=setadmin">Request Administrative Privileges</a>
 <br/>
 <a href="PhotoServlet?func=changepwform">Change Password</a>

@@ -8,6 +8,7 @@
 
   <form-beans>
     <form-bean name="loginForm" type="net.spy.photo.struts.LoginForm"/>
+    <form-bean name="adminifyForm" type="net.spy.photo.struts.AdminifyForm"/>
     <form-bean name="searchForm" type="net.spy.photo.struts.SearchForm"/>
     <form-bean name="cursorForm" type="net.spy.photo.struts.CursorForm"/>
     <form-bean name="uploadForm" type="net.spy.photo.struts.UploadForm"/>
@@ -23,6 +24,13 @@
 		input="/credform.jsp"
 		name="loginForm">
 		<forward name="success" path="/index.jsp" />
+	</action>
+
+	<!-- Enable/disable administrative access. -->
+	<action path="/adminify"
+		type="net.spy.photo.struts.AdminifyAction"
+		name="adminifyForm">
+		<forward name="success" path="/index.jsp"/>
 	</action>
 
 	<!-- Searches -->
