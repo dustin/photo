@@ -97,6 +97,10 @@
 
 					<ul>
 						<li>
+							<photo:link url="/admin/reporting.jsp"
+								message="index.links.admin.reporting"/>
+						</li>
+						<li>
 							<photo:link url="/admin/users.jsp"
 								message="index.links.admin.user"/>
 						</li>

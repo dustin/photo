@@ -26,6 +26,7 @@ index.links.advsearch=Advanced Search
 index.links.catview=Category View
 index.links.comments=Show Recent Comments
 index.links.newuser=Create an Account
+index.links.admin.reporting=Reporting
 index.links.admin.user=User Admin
 index.links.admin.cat=Category Admin
 index.links.admin.newprofile=New Profile
@@ -197,3 +198,6 @@ error.savegallery.name=<li>Required parameter ``name'' not provided</li>
 
 # GetGalleryForm
 error.getgallery.id=<li>Required parameter ``id'' not provided</li>
+
+# Reporting stuff
+reporting.links.userCat=User/category report.

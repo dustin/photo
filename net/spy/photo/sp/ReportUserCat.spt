@@ -1,5 +1,5 @@
 #
-# $Id: ReportUserCat.spt,v 1.1 2003/05/11 09:24:21 dustin Exp $
+# $Id: ReportUserCat.spt,v 1.2 2003/05/11 09:35:22 dustin Exp $
 #
 
 @package
@@ -25,3 +25,5 @@ select u.username, c.name as cat, count(*)
 		and username != 'guest'
 	group by
 		u.username, c.name
+	order by
+		cat, count(*) desc
