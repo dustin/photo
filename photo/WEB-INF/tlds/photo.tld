@@ -73,10 +73,12 @@
 		<attribute>
 			<name>id</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>searchId</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>relative</name>
@@ -93,10 +95,12 @@
 		<attribute>
 			<name>height</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>width</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 
@@ -107,6 +111,7 @@
 		<attribute>
 			<name>id</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>showThumbnail</name>
@@ -115,18 +120,22 @@
 		<attribute>
 			<name>alt</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>width</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>height</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>scale</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 
@@ -137,6 +146,7 @@
 		<attribute>
 			<name>url</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<!-- Message resource to display as the text of the link -->
@@ -148,6 +158,7 @@
 				simple -->
 			<name>id</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 
@@ -158,6 +169,7 @@
 		<attribute>
 			<name>url</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 
@@ -168,6 +180,7 @@
 		<attribute>
 			<name>url</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>alt</name>
@@ -180,10 +193,12 @@
 		<attribute>
 			<name>width</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>height</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
 
