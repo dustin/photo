@@ -40,7 +40,7 @@
 										<a href="credform.jsp"><%= sessionData.getUser() %></a>
 										<photo:admin>
 											<a href="adminify.do?action=unsetadmin">(admin)</a>
-										</photo:admin>.
+										</photo:admin>
 									</td>
 									<td align="right">
 										<template:insert
@@ -51,8 +51,11 @@
 								<tr>
 									<td></td>
 									<td align="right">
-										<a href="index.jsp">[Home]</a> | 
-										<a href="sizeform.jsp">[Size]</a>
+										<a href="index.jsp">[Home]</a>
+										| <a href="sizeform.jsp">[Size]</a>
+										<photo:guest negate="true">
+											| <a href="logout.do">[Logout]</a>
+										</photo:guest>
 									</td>
 								</tr>
 							</table>
