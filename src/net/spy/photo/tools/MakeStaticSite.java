@@ -24,6 +24,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import net.spy.SpyObject;
 import net.spy.util.ProgressStats;
 
 import net.spy.photo.*;
@@ -33,7 +34,7 @@ import net.spy.photo.struts.SearchForm;
  * Build a static web site of all images that can be viewed by a given
  * user.
  */
-public class MakeStaticSite extends Object {
+public class MakeStaticSite extends SpyObject {
 
 	private PhotoUser pu=null;
 	private SimpleDateFormat outFormat=null;
@@ -96,21 +97,35 @@ public class MakeStaticSite extends Object {
 
 		PhotoImageHelper pih=new PhotoImageHelper(pid.getId());
 
-		PhotoImage thumb=pih.getThumbnail(pu.getId());
-		PhotoImage image=pih.getImage(normaldim);
-		// System.out.println("Got " + thumb + " and " + image);
-
 		// Store the images by date
 		String imgdir=getImageDir(pid);
+		// I need the image to begin with so I can calculate the extension.  I
+		// should probably fix this at some point.
+		PhotoImage image=pih.getImage(normaldim);
 
-		FileOutputStream fos=new FileOutputStream(imgdir + "/"
-			+ pid.getId() + getExtension(image));
-		fos.write(image.getData());
-		fos.close();
-		fos=new FileOutputStream(imgdir + "/" + pid.getId() + "_t"
-			+ getExtension(thumb));
-		fos.write(thumb.getData());
-		fos.close();
+		// Handle the regular file path
+		File iFile=new File(imgdir + "/" + pid.getId() + getExtension(image));
+		if(!iFile.exists()) {
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Need to get full image for " + pid);
+			}
+			FileOutputStream fos=new FileOutputStream(iFile);
+			fos.write(image.getData());
+			fos.close();
+		}
+
+		// Handle the thumbnail path
+		File tnFile=new File(imgdir + "/" + pid.getId()
+			+ "_t" + getExtension(image));
+		if(!tnFile.exists()) {
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Need to get thumbnail for " + pid);
+			}
+			PhotoImage thumb=pih.getThumbnail(pu.getId());
+			FileOutputStream fos=new FileOutputStream(tnFile);
+			fos.write(thumb.getData());
+			fos.close();
+		}
 	}
 
 	private void saveTextMeta(PhotoImageData pid) throws Exception {
@@ -149,6 +164,7 @@ public class MakeStaticSite extends Object {
 		root.appendChild(el);
 
 		el.appendChild(addNode("id", pid.getId()));
+		el.appendChild(addNode("addedby", pid.getAddedBy().getUsername()));
 		el.appendChild(addNode("cat", pid.getCatName()));
 		el.appendChild(addDate("taken", pid.getTaken()));
 		el.appendChild(addTimestamp("ts", pid.getTimestamp()));
@@ -183,7 +199,7 @@ public class MakeStaticSite extends Object {
 			saveImage(result);
 
 			// Save the textual meta data
-			saveTextMeta(result);
+			// saveTextMeta(result);
 
 			// Save the XML version
 			saveXmlMeta(result);
