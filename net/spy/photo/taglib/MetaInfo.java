@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MetaInfo.java,v 1.4 2003/08/09 07:25:18 dustin Exp $
+// $Id: MetaInfo.java,v 1.5 2003/08/09 07:32:58 dustin Exp $
 
 package net.spy.photo.taglib;
 
@@ -70,6 +70,12 @@ public class MetaInfo extends PhotoTag {
 
 		pageContext.setAttribute("metaShown", new Integer(totalShown));
 		pageContext.setAttribute("metaImages", new Integer(totalImages));
+
+		// Also add these to the request scope
+		pageContext.getRequest().setAttribute("metaShown",
+			new Integer(totalShown));
+		pageContext.getRequest().setAttribute("metaImages",
+			new Integer(totalImages));
 
 		return(EVAL_BODY_INCLUDE);
 	}
