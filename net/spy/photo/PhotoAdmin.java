@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoAdmin.java,v 1.3 2000/07/09 08:52:40 dustin Exp $
+ * $Id: PhotoAdmin.java,v 1.4 2000/07/24 05:05:27 knitterb Exp $
  */
 
 package net.spy.photo;
@@ -17,6 +17,8 @@ import javax.servlet.http.*;
 import net.spy.*;
 
 public class PhotoAdmin extends PhotoHelper {
+
+	protected boolean debug=true;
 
 	PhotoSession ps=null;
 
@@ -408,7 +410,16 @@ public class PhotoAdmin extends PhotoHelper {
 		// Get the string data
 		taken=ps.request.getParameter("taken");
 		keywords=ps.request.getParameter("keywords");
+		if (keywords == null) {
+			debug ("keywords null, setting to blank string");
+			keywords = "";
+		}
+
 		info=ps.request.getParameter("info");
+		if (info == null) {
+			debug ("info/desc null, setting to blank string");
+			info = "";
+		}
 
 		Connection photo=null;
 		try {
@@ -433,6 +444,11 @@ public class PhotoAdmin extends PhotoHelper {
 	// Shortcut to isAdmin();
 	protected boolean isAdmin() {
 		return(ps.isAdmin());
+	}
+
+	protected void debug(String msg) {
+		if (debug)
+			System.out.println ("PhotoAdmin: " + msg);
 	}
 
 	// Shortcut to tokenize()
