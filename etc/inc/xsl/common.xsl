@@ -4,7 +4,7 @@
 
 <!--
  Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
- $Id: common.xsl,v 1.9 2001/12/30 22:15:52 dustin Exp $
+ $Id: common.xsl,v 1.10 2002/03/06 02:57:36 dustin Exp $
  -->
 
 <!-- Default Section handling -->
@@ -14,6 +14,7 @@
 
 <!-- This is called with a parameter to produce a section header. -->
 <xsl:template name="section_header">
+	<xsl:param name="title">NO TITLE</xsl:param>
 	<font size="+1">
 		<b>
 			<xsl:value-of select="$title"/>
