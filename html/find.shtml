@@ -3,8 +3,9 @@
 
 <h2>Simple Search</h2>
 
-<form method="POST" action="/cgi-bin/dustin/photo/find.cgi">
+<form method="POST" action="/cgi-bin/dustin/photo/photo.cgi">
 <input type="hidden" name="searchtype" value="simple">
+<input type="hidden" name="func" value="search">
 
 Find all images whose
 
@@ -25,8 +26,9 @@ contains
 Only fields that are filled out will be used, default search will return
 all images.
 
-<form method="post" action="/cgi-bin/dustin/photo/find.cgi">
+<form method="post" action="/cgi-bin/dustin/photo/photo.cgi">
 <input type="hidden" name="searchtype" value="advanced">
+<input type="hidden" name="func" value="search">
 
 Category:
 <select name="cat" multiple size="5">

@@ -6,7 +6,8 @@
 <ul>
     <li><a href="add.shtml">Add an image</a></li>
     <li><a href="find.shtml">Find an image</a></li>
-    <li><a href="/cgi-bin/dustin/photo/catview.cgi">Category view</a></li>
+    <li><a href="/cgi-bin/dustin/photo/photo.cgi?func=catview">
+	Category view</a></li>
 </ul>
 
 <p>
