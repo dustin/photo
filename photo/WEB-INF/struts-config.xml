@@ -14,6 +14,7 @@
     <form-bean name="uploadForm" type="net.spy.photo.struts.UploadForm"/>
     <form-bean name="saveSearchForm"
 			type="net.spy.photo.struts.SaveSearchForm"/>
+    <form-bean name="newUserForm" type="net.spy.photo.struts.NewUserForm"/>
   </form-beans>
 
   <action-mappings>
@@ -74,6 +75,14 @@
 		type="net.spy.photo.struts.SaveSearchAction"
 		name="saveSearchForm">
 		<forward name="success" path="/savedsearch.jsp"/>
+	</action>
+
+	<!-- New user self-creation -->
+	<action    path="/newuser"
+		type="net.spy.photo.struts.NewUserAction"
+		input="/newuserform.jsp"
+		name="NewUserForm">
+		<forward name="success" path="/index.jsp" />
 	</action>
 
   </action-mappings>
