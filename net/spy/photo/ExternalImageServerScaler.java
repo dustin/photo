@@ -1,7 +1,7 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ExternalImageServerScaler.java,v 1.1 2002/06/16 07:14:13 dustin Exp $
+// $Id: ExternalImageServerScaler.java,v 1.1 2002/06/17 02:13:21 dustin Exp $
 
-package net.spy.photo.rmi;
+package net.spy.photo;
 
 import java.util.*;
 import java.io.*;
