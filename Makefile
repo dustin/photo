@@ -6,9 +6,8 @@ JAVAC=$(JAVAHOME)/bin/javac
 JAVA=$(JAVAHOME)/bin/java
 RMIC=$(JAVAHOME)/bin/rmic
 MYLIB=/home/dustin/lib/java
-C1=$(MYLIB)/jsdk.jar:$(MYLIB)/DBCB.jar
-C2=$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
-CLASSPATH=$(C1):$(C2):.
+C1=$(MYLIB)/jsdk.jar:$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
+CLASSPATH=$(C1):.
 SERVLETRUNNER=/home/dustin/lib/java/JSDK2.0/bin/servletrunner
 
 RCLASSES=net/spy/rmi/ImageServerImpl_Skel.class \

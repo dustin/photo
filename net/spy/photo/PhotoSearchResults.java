@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResults.java,v 1.2 2000/06/30 07:53:53 dustin Exp $
+ * $Id: PhotoSearchResults.java,v 1.3 2000/07/04 22:48:31 dustin Exp $
  */
 
 package net.spy.photo;
@@ -16,7 +16,6 @@ import net.spy.*;
 public class PhotoSearchResults extends Object {
 	protected Vector _results=null;
 	protected int _current=0;
-	protected int _max=0;
 
 	public PhotoSearchResults() {
 		super();
@@ -26,36 +25,61 @@ public class PhotoSearchResults extends Object {
 	// Add a search result to the list.
 	public void add(PhotoSearchResult r) {
 		// Set the result id
-		r.setId(_max);
+		r.setId(_results.size());
 		_results.addElement(r);
-		_max++;
+	}
+
+	// Add a photo ID to the result list
+	public void add(Integer what) {
+		_results.addElement(what);
 	}
 
 	// Set the search result we're lookin' at.
 	public void set(int to) {
-		if(to>_max) {
-			_current=_max;
+		if(to>_results.size()) {
+			_current=_results.size();
 		} else {
 			_current=to;
 		}
 	}
 
+	/**
+	 * String representation of the search results.
+	 */
+	public String toString() {
+		return("Photo search results:\n" + _results);
+	}
+
 	// Get the current entry
 	public PhotoSearchResult get() {
-		return((PhotoSearchResult)_results.elementAt(_current));
+		return(get(_current));
 	}
 
 	// Get a specific
 	public PhotoSearchResult get(int which) {
-		return((PhotoSearchResult)_results.elementAt(which));
+		PhotoSearchResult ret=null;
+		Object o=_results.elementAt(which);
+		// We hope that it's a PhotoSearchResult, but an Integer will do.
+		try {
+			ret=(PhotoSearchResult)o;
+		} catch(ClassCastException e) {
+			try {
+				Integer i=(Integer)o;
+				ret=new PhotoSearchResult(i.intValue());
+			} catch(Exception e2) {
+				System.err.println("Error getting result "
+					+ which + ":  " + e2);
+			}
+		}
+		return(ret);
 	}
 
 	// Get the next result, or null if we're done
 	public PhotoSearchResult next() {
 		PhotoSearchResult r=null;
 
-		if(_current<_max) {
-			r=(PhotoSearchResult)_results.elementAt(_current);
+		if(_current<_results.size()) {
+			r=get(_current);
 			_current++;
 		}
 		return(r);
@@ -67,19 +91,19 @@ public class PhotoSearchResults extends Object {
 
 		if(_current>0) {
 			_current--;
-			r=(PhotoSearchResult)_results.elementAt(_current);
+			r=get(_current);
 		}
 		return(r);
 	}
 
 	// Find out how many results total are in this result set
 	public int nResults() {
-		return(_max);
+		return(_results.size());
 	}
 
 	// Find out how many results are remaining
 	public int nRemaining() {
-		return(_max-_current);
+		return(_results.size()-_current);
 	}
 
 	// Find out which one we're on
