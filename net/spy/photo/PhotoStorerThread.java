@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoStorerThread.java,v 1.8 2000/03/17 09:41:31 dustin Exp $
+ * $Id: PhotoStorerThread.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
  */
 
 package net.spy.photo;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
  *
- * $Id: SetPW.java,v 1.3 2000/05/30 04:53:22 dustin Exp $
+ * $Id: SetPW.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
  */
 
 package net.spy.photo;

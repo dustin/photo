@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: PhotoUser.java,v 1.2 1999/11/26 05:28:28 dustin Exp $
+// $Id: PhotoUser.java,v 1.1 2000/06/24 23:30:58 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 

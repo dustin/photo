@@ -1,6 +1,6 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- $Id: photo.sql,v 1.25 2000/01/01 03:35:45 dustin Exp $
+-- $Id: photo.sql,v 1.1 2000/06/24 23:30:57 dustin Exp $
 --
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
