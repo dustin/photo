@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveProfile.java,v 1.4 2003/05/25 08:17:41 dustin Exp $
+// $Id: AdminSaveProfile.java,v 1.5 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -62,7 +62,7 @@ public class AdminSaveProfile extends AdminAction {
 		// Record the new profile identifier.
 		request.setAttribute("net.spy.photo.ProfileId", profile.getName());
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

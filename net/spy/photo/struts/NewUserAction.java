@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NewUserAction.java,v 1.9 2003/05/26 08:02:52 dustin Exp $
+// $Id: NewUserAction.java,v 1.10 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -108,7 +108,7 @@ public class NewUserAction extends PhotoAction {
 		pst.close();
 		db.close();
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

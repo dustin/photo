@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CursorAction.java,v 1.7 2003/05/26 08:02:52 dustin Exp $
+// $Id: CursorAction.java,v 1.8 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -64,7 +64,7 @@ public class CursorAction extends PhotoAction {
 				+ ", yielding " + c);
 		}
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

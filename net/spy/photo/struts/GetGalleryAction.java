@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetGalleryAction.java,v 1.3 2003/05/25 08:17:41 dustin Exp $
+// $Id: GetGalleryAction.java,v 1.4 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -48,7 +48,7 @@ public class GetGalleryAction extends PhotoAction {
 		Gallery g=Gallery.getGallery(user, ggf.getId());
 		sessionData.setCursor("gallery", new Cursor(g.getImages()));
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginAction.java,v 1.13 2003/05/26 08:02:52 dustin Exp $
+// $Id: LoginAction.java,v 1.14 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -70,7 +70,7 @@ public class LoginAction extends PhotoAction {
 			System.err.println(user + " logged in as admin");
 			rv=mapping.findForward("setadmin");
 		} else {
-			rv=mapping.findForward("success");
+			rv=mapping.findForward("next");
 		}
 
 		// Go ahead and say it's alright.

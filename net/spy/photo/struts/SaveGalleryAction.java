@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveGalleryAction.java,v 1.7 2003/05/25 08:17:41 dustin Exp $
+// $Id: SaveGalleryAction.java,v 1.8 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -65,7 +65,7 @@ public class SaveGalleryAction extends PhotoAction {
 		// Throw it away, freeing us up to create a new gallery.
 		session.removeAttribute("newGallery");
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

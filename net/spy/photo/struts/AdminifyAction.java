@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminifyAction.java,v 1.4 2003/05/26 08:02:52 dustin Exp $
+// $Id: AdminifyAction.java,v 1.5 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -54,7 +54,7 @@ public class AdminifyAction extends PhotoAction {
 			throw new ServletException("Invalid adminify action:  " + action);
 		}
 
-		rv=mapping.findForward("success");
+		rv=mapping.findForward("next");
 
 		return(rv);
 	}

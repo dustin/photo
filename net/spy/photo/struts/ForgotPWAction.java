@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ForgotPWAction.java,v 1.5 2003/05/25 08:17:41 dustin Exp $
+// $Id: ForgotPWAction.java,v 1.6 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -79,7 +79,7 @@ public class ForgotPWAction extends PhotoAction {
 
 		request.setAttribute("net.spy.photo.ForgottenUser", user);
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LogoutAction.java,v 1.3 2003/05/25 08:17:41 dustin Exp $
+// $Id: LogoutAction.java,v 1.4 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -40,7 +40,7 @@ public class LogoutAction extends PhotoAction {
 		HttpSession session=request.getSession();
 		session.invalidate();
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

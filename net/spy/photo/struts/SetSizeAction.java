@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SetSizeAction.java,v 1.4 2003/05/27 03:36:22 dustin Exp $
+// $Id: SetSizeAction.java,v 1.5 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -47,7 +47,7 @@ public class SetSizeAction extends PhotoAction {
 
 		System.out.println("Set viewing size to " + dims);
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

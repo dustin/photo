@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveSearchAction.java,v 1.4 2003/05/27 03:36:22 dustin Exp $
+// $Id: SaveSearchAction.java,v 1.5 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -53,7 +53,7 @@ public class SaveSearchAction extends PhotoAction {
 			sessionData.getUser());
 
 		// If we made it this far, we were successful.
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ChangePWAction.java,v 1.5 2003/05/27 03:36:22 dustin Exp $
+// $Id: ChangePWAction.java,v 1.6 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -58,7 +58,7 @@ public class ChangePWAction extends PhotoAction {
 		Saver saver=new Saver(new PhotoConfig());
 		saver.save(user);
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

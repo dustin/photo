@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchFilterAction.java,v 1.7 2003/05/27 04:22:07 dustin Exp $
+// $Id: SearchFilterAction.java,v 1.8 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -94,7 +94,7 @@ public class SearchFilterAction extends PhotoAction {
 
 		String f=sf.getAction();
 		if(f==null) {
-			f="success";
+			f="next";
 		}
 
 		// next

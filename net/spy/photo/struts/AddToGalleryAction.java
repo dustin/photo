@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddToGalleryAction.java,v 1.7 2003/05/25 08:17:41 dustin Exp $
+// $Id: AddToGalleryAction.java,v 1.8 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -68,7 +68,7 @@ public class AddToGalleryAction extends PhotoAction {
 			throw new ServletException("Error adding new image", e);
 		}
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }

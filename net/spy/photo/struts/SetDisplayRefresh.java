@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SetDisplayRefresh.java,v 1.2 2003/05/25 08:17:42 dustin Exp $
+// $Id: SetDisplayRefresh.java,v 1.3 2003/07/14 06:21:28 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -15,11 +15,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import net.spy.photo.RefreshBean;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoSearchResults;
 
-import net.spy.photo.taglib.RefreshTag;
+import net.spy.photo.PhotoUtil;
 
 /**
  * If requested, set up a display refresh for the display page.
@@ -53,15 +52,14 @@ public class SetDisplayRefresh extends PhotoAction {
 		if(searchId != null) {
 			int sid=Integer.parseInt(searchId);
 			if( (sid+1) < results.size()) {
-				RefreshBean rb=new RefreshBean();
-				rb.setDelay(5);
-				rb.setLocation("/refreshDisplay.do?search_id=" + (sid+1));
-				log("Setting refresh bean:  " + rb);
-				request.setAttribute(RefreshTag.REFRESH_BEAN, rb);
+				String loc="/refreshDisplay.do?search_id=" + (sid+1);
+				String aLoc=PhotoUtil.getRelativeUri(request, loc);
+				log("Refreshing to:  " + aLoc);
+				response.addHeader("Refresh", "5; URL=" + aLoc);
 			}
 		}
 
-		return(mapping.findForward("success"));
+		return(mapping.findForward("next"));
 	}
 
 }
