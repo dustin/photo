@@ -137,7 +137,6 @@ all images.
 		<select name="sdirection">
 			<option value="">oldest</option>
 			<option value="desc">newest</option>
-			<option value="hack">hack direction</option>
 		</select>
 		images first.
 
