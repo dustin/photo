@@ -1,3 +1,4 @@
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="net.spy.photo.Comment" %>
 <%@ page import="net.spy.photo.PhotoImageData" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
@@ -8,6 +9,7 @@
 <%
 	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
 	Integer searchId=(Integer)request.getAttribute("search_id");
+	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 %>
 
 	<table width="100%">
@@ -58,14 +60,15 @@
 
 		<br/>
 		<b>Keywords</b>:
-			<html:text property="keywords" value="<%= image.getKeywords() %>"/><br>
+			<html:text property="keywords" value="<%= image.getKeywords() %>"/><br/>
 		<b>Size</b>:  <%= image.getDimensions() %>
-			(<%= image.getSize() %> bytes)<br>
-		<b>Taken</b>:  <html:text property="taken" value="<%= image.getTaken() %>"/>
+			(<%= image.getSize() %> bytes)<br/>
+		<b>Taken</b>:  <html:text property="taken"
+				value="<%= sdf.format(image.getTaken()) %>"/><br/>
 			<b>Added</b>:
 			<%= image.getTimestamp() %>
 		by <%= image.getAddedBy().getRealname() %>
-			(<%= image.getAddedBy().getUsername() %>)<br>
+			(<%= image.getAddedBy().getUsername() %>)<br/>
 		<b>Info</b>:
 		<html:textarea cols="60" rows="5" property="info"
 			value="<%= image.getDescr() %>"/>

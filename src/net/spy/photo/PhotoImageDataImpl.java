@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Date;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,9 +44,8 @@ public class PhotoImageDataImpl extends SpyObject
 
 	private PhotoUser addedBy=null;
 
-	// I need this to be a string until I can sort out my JDBC driver problem.
-	private String timestamp=null;
-	private String taken=null;
+	private Date timestamp=null;
+	private Date taken=null;
 
 	private PhotoImageDataImpl(ResultSet rs) throws Exception {
 		super();
@@ -74,8 +74,8 @@ public class PhotoImageDataImpl extends SpyObject
 		keywords=rs.getString("keywords");
 		descr=rs.getString("descr");
 		catName=rs.getString("catname");
-		timestamp=rs.getString("ts");
-		taken=rs.getString("taken");
+		timestamp=rs.getTimestamp("ts");
+		taken=rs.getDate("taken");
 
 		// Look up the user
 		addedBy=Persistent.getSecurity().getUser(rs.getInt("addedby"));
@@ -228,14 +228,6 @@ public class PhotoImageDataImpl extends SpyObject
 	}
 
 	/**
-	 * Get the timestamp this photo was added (currently as a String until
-	 * I sort out my JDBC driver problem).
-	 */
-	public String getTimestamp() {
-		return(timestamp);
-	}
-
-	/**
 	 * Get the name of the category containing this image.
 	 */
 	public String getCatName() {
@@ -244,11 +236,16 @@ public class PhotoImageDataImpl extends SpyObject
 
 	/**
 	 * Get the date this photo was taken.
-	 *
-	 * @return Format:  yyyy-MM-dd
 	 */
-	public String getTaken() {
+	public Date getTaken() {
 		return(taken);
+	}
+
+	/**
+	 * Get the timestamp this photo was added.
+	 */
+	public Date getTimestamp() {
+		return(timestamp);
 	}
 
 	/**

@@ -4,6 +4,8 @@ package net.spy.photo;
 
 import java.io.Serializable;
 
+import java.util.Date;
+
 /**
  * A search result.
  */
@@ -58,16 +60,16 @@ public class PhotoSearchResult extends Object
 		return(imgData.getAddedBy());
 	}
 
-	public String getTimestamp() {
-		return(imgData.getTimestamp());
-	}
-
 	public String getCatName() {
 		return(imgData.getCatName());
 	}
 
-	public String getTaken() {
+	public Date getTaken() {
 		return(imgData.getTaken());
+	}
+
+	public Date getTimestamp() {
+		return(imgData.getTimestamp());
 	}
 
 	public int getId() {

@@ -4,9 +4,6 @@
 
 package net.spy.photo.filter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,9 +24,6 @@ import net.spy.photo.PhotoSearchResults;
  */
 public abstract class DateFilter extends SortingFilter {
 
-	// Need this for date parsing.
-	private SimpleDateFormat sdf=null;
-
 	// Number of elements that there should be in an array by unit.
 	private static final int DEFAULT_ARRAY_GUESS=16;
 	private int arrayGuess=DEFAULT_ARRAY_GUESS;
@@ -39,8 +33,6 @@ public abstract class DateFilter extends SortingFilter {
 	 */
 	public DateFilter() {
 		super();
-
-		sdf=new SimpleDateFormat("yyyy-MM-dd");
 	}
 
 	/** 
@@ -89,12 +81,7 @@ public abstract class DateFilter extends SortingFilter {
 			// PhotoImageData currently has the dates as strings, this
 			// sucks, but here we go.
 			Calendar cal=Calendar.getInstance();
-			Date dtmp=null;
-			try {
-				dtmp=sdf.parse(pid.getTaken());
-			} catch(ParseException pe) {
-				throw new PhotoException("Couldn't parse date", pe);
-			}
+			Date dtmp=pid.getTaken();
 
 			// Truncate the date appropriately
 			Date taken=roundDate(dtmp);

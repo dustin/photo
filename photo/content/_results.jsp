@@ -1,4 +1,7 @@
 <%@ page import="net.spy.photo.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+
 <%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
 <%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
@@ -48,30 +51,31 @@
 
 <logic:iterate id="image" collection="<%= results %>"
 	type="net.spy.photo.PhotoSearchResult"
-	length="<%= "" + results.getMaxRet() %>">
+	length="<%= String.valueOf(results.getMaxRet()) %>">
 
 <tr>
 	<td style="width: 25%" class="centered">
 		<photo:imgLink id="<%= image.getId() %>"
 			searchId="<%= image.getSearchId() %>"
-			width="<%= "" + image.getTnDims().getWidth() %>"
-			height="<%= "" + image.getTnDims().getHeight() %>"
+			width="<%= String.valueOf(image.getTnDims().getWidth()) %>"
+			height="<%= String.valueOf(image.getTnDims().getHeight()) %>"
 			showThumbnail="true"/>
 	</td>
 	<td style="width: 25%; background: #eFeFef;" class="leftAligned" valign="top">
-		ID:  <%= image.getId() %><br/>
-		Keywords:  <%= image.getKeywords() %><br/>
-		Category:  <%= image.getCatName() %><br/>
-		Size:  <%= image.getDimensions() %><br/>
-		Taken:  <%= image.getTaken() %><br/>
-		Added:  <%= image.getTimestamp() %>
-						by <%= image.getAddedBy().getUsername() %>
+		ID: <c:out value="${image.id}"/><br/>
+		Keywords: <c:out value="${image.keywords}"/><br/>
+		Category: <c:out value="${image.catName}"/><br/>
+		Size: <c:out value="${image.dimensions}"/><br/>
+		Taken: <fmt:formatDate value="${image.taken}" pattern="yyyy-MM-dd"/><br/>
+		Added: <fmt:formatDate value="${image.timestamp}"
+			pattern="yyyy-MM-dd HH:mm:ss"/>
+				by <c:out value="${image.addedBy.username}"/>
 	</td>
 </tr>
 <tr>
 	<td colspan="2" style="width: 25%; background: #eFeFef;" valign="top">
 		<div class="imgDescr">
-			<%= image.getDescr() %>
+			<c:out value="${image.descr}"/>
 		</div>
 	</td>
 </tr>

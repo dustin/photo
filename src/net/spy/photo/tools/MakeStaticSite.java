@@ -22,7 +22,6 @@ import net.spy.photo.struts.SearchForm;
 public class MakeStaticSite extends Object {
 
 	private PhotoUser pu=null;
-	private SimpleDateFormat inFormat=null;
 	private SimpleDateFormat outFormat=null;
 
 	/**
@@ -31,7 +30,6 @@ public class MakeStaticSite extends Object {
 	public MakeStaticSite(PhotoUser pu) {
 		super();
 		this.pu=pu;
-		inFormat=new SimpleDateFormat("yyyy-MM-dd");
 		outFormat=new SimpleDateFormat("yyyyMMdd");
 	}
 
@@ -51,8 +49,8 @@ public class MakeStaticSite extends Object {
 		return(rv);
 	}
 
-	private String fixDate(String d) throws Exception {
-		return(outFormat.format(inFormat.parse(d)));
+	private String fixDate(Date d) throws Exception {
+		return(outFormat.format(d));
 	}
 
 	public void build(String destDir, PhotoDimensions normaldim)

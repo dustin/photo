@@ -2,6 +2,8 @@
 
 package net.spy.photo;
 
+import java.util.Date;
+
 /**
  * PhotoImageData interface.
  */
@@ -43,11 +45,6 @@ public interface PhotoImageData {
 	PhotoUser getAddedBy();
 
 	/** 
-	 * Get the timestamp of this image.
-	 */
-	String getTimestamp();
-
-	/** 
 	 * Get the name of the category of this image.
 	 */
 	String getCatName();
@@ -55,7 +52,12 @@ public interface PhotoImageData {
 	/** 
 	 * Get the date this image was taken/created (yyyy-MM-dd).
 	 */
-	String getTaken();
+	Date getTaken();
+
+	/** 
+	 * Get the timestamp of this image.
+	 */
+	Date getTimestamp();
 
 	/** 
 	 * Get the ID of this image.
