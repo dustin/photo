@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.4 1998/04/30 05:17:42 dustin Exp $
+# $Id: Photo.pm,v 1.5 1998/04/30 05:45:23 dustin Exp $
 
 package Photo;
 
@@ -51,25 +51,32 @@ sub doQuery
     return($s);
 }
 
+sub myquote
+{
+    my($self, $str)=@_;
+    $self->openDB unless($self->{'dbh'});
+    return($self->{'dbh'}->quote($str));
+}
+
 sub addImage
 {
     my($self, $q)=@_;
     my(@elements, %in, %tmp, $query, $ext, $fn, $f, @stat, $s);
 
-    @elements=qw(category keywords picture info);
+    @elements=qw(category keywords picture info taken);
     %tmp=map{$_,1}@elements;
     %in=map{
-	  $_,defined($tmp{$_})?$self->{dbh}->quote($q->param($_)):$q->param($_)
-        }$q->param;
+      $_,defined($tmp{$_})?$self->myquote($q->param($_)):$q->param($_)
+    }$q->param;
 
     print $q->start_html(-title=>'Adding image',-bgcolor=>'#fFfFfF');
 
-    if($in{'img'}=~/jpg$/i) {
+    if($in{'picture'}=~/jpg.$/i) {
 	$ext="jpg";
-    } elsif($in{'img'}=~/gif$/i) {
+    } elsif($in{'picture'}=~/gif.$/i) {
 	$ext="gif";
     } else {
-	%tmp=('FILENAME',$in{'img'});
+	%tmp=('FILENAME',$in{'picture'});
 	$self->showTemplate("$Photo::includes/add_badfiletype.inc", %tmp);
 	return;
     }
@@ -83,17 +90,17 @@ sub addImage
     if($stat[7]==0)
     {
 	unlink("$Photo::ldir/$fn");
-	%tmp=('FILENAME',$in{'img'});
-	$self->showTemplate("$Photo::includes/add_badfiletype.inc", %tmp);
+	%tmp=('FILENAME',$in{'picture'});
+	$self->showTemplate("$Photo::includes/add_uploadfail.inc", %tmp);
 	return;
     }
 
     system('/usr/local/bin/convert', '-size', '100x100',
-	   "$Photo::ldir/$fn", "$Photo::ldir/tn/$fn");
+         "$Photo::ldir/$fn", "$Photo::ldir/tn/$fn");
 
     $query ="insert into album (fn, keywords, descr, cat, size, taken)\n";
-    $query.="    values('$fn',\n\t'$in{'keywords'}',\n\t'$in{'$info'}',\n";
-    $query.="\t$in{'cat'},\n\t$stat[7],\n\t'$in{'$taken'}');";
+    $query.="    values('$fn',\n\t$in{'keywords'},\n\t$in{'info'},\n";
+    $query.="\t$in{'category'},\n\t$stat[7],\n\t$in{'taken'});";
 
     eval { $s=$self->doQuery($query); };
 
