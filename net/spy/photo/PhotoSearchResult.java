@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearchResult.java,v 1.8 2000/07/10 01:58:32 dustin Exp $
+ * $Id: PhotoSearchResult.java,v 1.9 2000/07/16 08:36:27 dustin Exp $
  */
 
 package net.spy.photo;
@@ -122,7 +122,8 @@ public class PhotoSearchResult extends PhotoHelper {
 
 		try {
 			String query= "select a.id,a.keywords,a.descr,\n"
-            	+ "   a.size,a.taken,a.ts,b.name,a.cat,c.username,b.id\n"
+            	+ "   a.size,a.taken,a.ts,b.name,a.cat,c.username,b.id,\n"
+				+ "   a.width, a.height, a.tn_width, a.tn_height\n"
             	+ "   from album a, cat b, wwwusers c\n"
             	+ "   where a.cat=b.id and a.id=?\n"
             	+ "   and a.addedby=c.id\n"
@@ -160,7 +161,8 @@ public class PhotoSearchResult extends PhotoHelper {
 
 		try {
 			String query= "select a.id,a.keywords,a.descr,\n"
-            	+ "   a.size,a.taken,a.ts,b.name,a.cat,c.username,b.id\n"
+            	+ "   a.size,a.taken,a.ts,b.name,a.cat,c.username,b.id,\n"
+				+ "   a.width, a.height, a.tn_width, a.tn_height\n"
             	+ "   from album a, cat b, wwwusers c\n"
             	+ "   where a.cat=b.id and a.id=?\n"
             	+ "   and a.addedby=c.id\n";
@@ -206,6 +208,11 @@ public class PhotoSearchResult extends PhotoHelper {
 		mydata.put("CAT",      rs.getString(i++));
 		mydata.put("CATNUM",   rs.getString(i++));
 		mydata.put("ADDEDBY",  rs.getString(i++));
+		i++; // skip this one
+		mydata.put("WIDTH",    rs.getString(i++));
+		mydata.put("HEIGHT",   rs.getString(i++));
+		mydata.put("TN_WIDTH",    rs.getString(i++));
+		mydata.put("TN_HEIGHT",   rs.getString(i++));
 
 		// If there's another result error
 		if(rs.next()) {
@@ -247,6 +254,22 @@ public class PhotoSearchResult extends PhotoHelper {
 
 	public void setAddedBy(String to) {
 		mydata.put("ADDEDBY", to);
+	}
+
+	public void setWidth(String to) {
+		mydata.put("WIDTH", to);
+	}
+
+	public void setHeight(String to) {
+		mydata.put("HEIGHT", to);
+	}
+
+	public void setTnWidth(String to) {
+		mydata.put("TN_WIDTH", to);
+	}
+
+	public void setTnHeight(String to) {
+		mydata.put("TN_HEIGHT", to);
 	}
 
 	public void setId(int id) {
