@@ -233,6 +233,15 @@
 		<forward name="next" path="top.searchResults" />
 	</action>
 
+	<action path="/reverseSearch"
+		type="net.spy.photo.struts.MappedFilterAction"
+		className="net.spy.photo.struts.FilterMapping"
+		scope="request">
+		<set-property property="filterClass"
+			value="net.spy.photo.filter.ReverseFilter"/>
+		<forward name="next" path="top.searchResults" />
+	</action>
+
 	<!-- Search result cursor movement -->
 	<action    path="/listcomments"
 		type="net.spy.photo.struts.ListCommentsAction">
