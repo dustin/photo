@@ -1,6 +1,6 @@
 // Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoXML.java,v 1.1 2000/12/27 06:05:25 dustin Exp $
+// $Id: PhotoXML.java,v 1.2 2001/12/21 07:50:08 dustin Exp $
 
 package net.spy.photo;
 
@@ -8,9 +8,12 @@ import java.util.*;
 import net.spy.*;
 
 public class PhotoXML extends Object {
-	protected static final String xmlheader="<?xml version=\"1.0\"?>\n";
-	protected String title=null;
-	protected Vector bodyparts=null;
+	private static final String xmlheader="<?xml version=\"1.0\"?>\n";
+	private String title=null;
+	private Vector bodyparts=null;
+
+	private String currentStylesheet=
+		"http://bleu.west.spy.net/~dustin/jphoto/inc/xsl/default.xsl";
 
 	public PhotoXML() {
 		super();
@@ -22,6 +25,8 @@ public class PhotoXML extends Object {
 
 		// Add the XML header.
 		sb.append(xmlheader);
+		sb.append("<?xml-stylesheet type=\"text/xsl\" href=\""
+			+ currentStylesheet + "\"?>\n");
 		sb.append("<page>\n");
 		// Add a title if we've got one.
 		if(title!=null) {

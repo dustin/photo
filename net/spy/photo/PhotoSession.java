@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.61 2001/07/20 09:51:56 dustin Exp $
+ * $Id: PhotoSession.java,v 1.62 2001/12/21 07:50:08 dustin Exp $
  */
 
 package net.spy.photo;
@@ -53,7 +53,7 @@ public class PhotoSession extends Object
 		photo_servlet=p;
 		this.request=request;
 		this.response=response;
-		this.session=request.getSession(false);
+		this.session=request.getSession(true);
 
 		// The aheadfetcher
 		this.aheadfetcher=p.aheadfetcher;
@@ -101,6 +101,8 @@ public class PhotoSession extends Object
 				func=multi.getParameter("func");
 			}
 
+			checkXMLStatus();
+
 			out=dispatchFunction(func);
 
 		} catch(Exception e) {
@@ -120,6 +122,30 @@ public class PhotoSession extends Object
 		if(out!=null) {
 			send_response(out);
 		}
+	}
+
+	private void checkXMLStatus() {
+
+		System.err.println("Checking XML status.");
+
+		// Figure out the xml status
+		Boolean xmlstatus=(Boolean)session.getAttribute("photo_xmlraw");
+		if(xmlstatus==null) {
+			String agent=request.getHeader("User-Agent").toLowerCase();
+			if(agent!=null) {
+				if(agent.startsWith("mozilla/5")) {
+					xmlraw=true;
+					session.setAttribute("photo_xmlraw", new Boolean(true));
+					log("Found a Mozilla client, sending raw XML");
+				} else {
+					session.setAttribute("photo_xmlraw", new Boolean(false));
+				}
+			}
+		} else {
+			xmlraw=xmlstatus.booleanValue();
+		}
+
+		System.err.println("XML status is " + xmlraw);
 	}
 
 	private String createError(Exception e) {
@@ -203,6 +229,9 @@ public class PhotoSession extends Object
 		} else if(func.equals("setstylesheet")) {
 			setStyleSheet();
 			out=doIndex();
+		} else if(func.equals("xmlraw")) {
+			setXMLRaw();
+			out=doIndex();
 		} else if(func.equals("setcred")) {
 			setCreds();
 			out=doIndex();
@@ -249,18 +278,24 @@ public class PhotoSession extends Object
 	// Set the stylesheet
 	private void setStyleSheet() throws ServletException {
 		String ss=request.getParameter("stylesheet");
-
 		// Make sure something was passed in.
 		if(ss!=null) {
-			// Make sure a session exists
-			if(session==null) {
-				session=request.getSession(true);
-			}
-
 			// Make it available for the session
 			session.setAttribute("photo_stylesheet", ss);
 			// Make it immediately available
 			xslt_stylesheet=ss;
+		}
+	}
+
+	// Set the stylesheet
+	private void setXMLRaw() throws ServletException {
+		String to=request.getParameter("to");
+		// Make sure something was passed in.
+		if(to!=null) {
+			// Make it available for the session
+			session.setAttribute("photo_xmlraw", Boolean.valueOf(to));
+			// Make it immediately available.
+			xmlraw=Boolean.getBoolean(to);
 		}
 	}
 
@@ -291,10 +326,6 @@ public class PhotoSession extends Object
 
 		// We don't do anything unless the password is correct.
 		if(user.checkPassword(pass)) {
-			// Make sure there is a session.
-			if(session==null) {
-				session=request.getSession(true);
-			}
 			// Save the username.
 			session.setAttribute("photo_user", user);
 
@@ -989,6 +1020,9 @@ public class PhotoSession extends Object
 		if(isAdmin()) {
 			sb.append("<isadmin/>\n");
 		}
+		if(xmlraw) {
+			sb.append("<xmlraw/>\n");
+		}
 		sb.append("</meta_stuff>\n");
 
 		return(sb.toString());
@@ -1000,7 +1034,7 @@ public class PhotoSession extends Object
 		SpyCache cache=new SpyCache();
 
 		if(xmlraw) {
-			response.setContentType("text/plain");
+			response.setContentType("text/xml");
 		} else {
 			response.setContentType("text/html");
 		}
@@ -1252,11 +1286,6 @@ public class PhotoSession extends Object
 
 	// Find images.
 	private String doFind() throws Exception {
-
-		// Make sure there's a real session.
-		if(session==null) {
-			session=request.getSession(true);
-		}
 
 		try {
 			PhotoSearch ps = new PhotoSearch();

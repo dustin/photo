@@ -1,15 +1,15 @@
 # Makefile for RHash, remote object server stuff.
 
-JAVAHOME=/usr/java
+JAVAHOME=/usr
 JAR=$(JAVAHOME)/bin/jar
 # JAVAC=$(JAVAHOME)/bin/javac
 JAVAC=jikes +P
 JAVA=$(JAVAHOME)/bin/java
 RMIC=$(JAVAHOME)/bin/rmic
 MYLIB=$(HOME)/lib/java
-S=/System/Library/Frameworks/JavaVM.framework/Versions/1.3/Classes/classes.jar
+S=/System/Library/Frameworks/JavaVM.framework/Versions/1.3.1/Classes/classes.jar
 C1=$(MYLIB)/jsdk.jar:$(MYLIB)/spy.jar:$(MYLIB)/postgresql.jar:$(MYLIB)/cos.jar
-C2=$(MYLIB)/resin-xsl.jar:$(MYLIB)/sax.jar:$(MYLIB)/dom.jar
+C2=$(MYLIB)/resin.jar:$(MYLIB)/sax.jar:$(MYLIB)/dom.jar
 C3=$(MYLIB)/xerces.jar:$(MYLIB)/xalan.jar:$S
 CLASSPATH=$(C1):$(C2):$(C3):.
 SERVLETRUNNER=$(MYLIB)/resin/bin/start_resin
