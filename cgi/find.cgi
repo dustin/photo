@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: find.cgi,v 1.1 1997/11/02 10:50:45 dustin Exp $
+# $Id: find.cgi,v 1.2 1997/11/03 09:31:46 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -19,7 +19,8 @@ sub buildQuery
 
     $h{what}=~s/\'/\\\'/g;
 
-    $query ="select a.oid,a.keywords,a.descr,b.name,a.ts,a.cat,b.id\n";
+    $query ="select a.oid,a.keywords,a.descr,b.name,\n";
+    $query.="    a.size,a.taken,a.ts,a.cat,b.id\n";
     $query.="    from album a, cat b\n    where a.cat=b.id";
 
     if($h{searchtype} eq "simple")
@@ -58,6 +59,18 @@ sub buildQuery
 	{
 	    $sub.=" $h{fieldjoin}" if($needao++>0);
 	    $sub.="\n      $h{field} ~* '$h{what}'";
+	}
+
+	if($h{tstart})
+	{
+	    $sub.=" $h{tstartjoin}" if($needao++>0);
+	    $sub.="\n      a.taken>='$h{tstart}'";
+	}
+
+	if($h{tend})
+	{
+	    $sub.=" $h{tendjoin}" if($needao++>0);
+	    $sub.="\n      a.taken<='$h{tend}'";
 	}
 
 	if($h{start})
@@ -107,11 +120,13 @@ $n=$s->ntuples;
 
 print "<h2>Found $n matches:</h2><br><ul>\n";
 
-while(($oid, $keywords, $descr, $cat, $ts)=$s->fetchrow())
+while(($oid, $keywords, $descr, $cat, $size, $taken, $ts)=$s->fetchrow())
 {
     print "    <li><a href=\"/cgi-bin/dustin/photo/display.cgi?$oid\">";
     print "\nKeywords: $keywords</a><br>\n";
     print "Category:  $cat<br>\n";
+    print "Size:  $size bytes<br>\n";
+    print "Taken:  $taken<br>\n";
     print "Added:  $ts<br>\n";
     print "<blockquote>\n$descr\n</blockquote>\n</li>\n";
 }

@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: addimg.cgi,v 1.2 1997/11/02 12:14:24 dustin Exp $
+# $Id: addimg.cgi,v 1.3 1997/11/03 09:31:44 dustin Exp $
 
 use CGI;
 use Postgres;
@@ -31,6 +31,9 @@ $keywords=~s/\'/\\\'/g;
 $info=$q->param('info');
 $info=~s/\'/\\\'/g;
 
+$taken=$q->param('taken');
+$taken=~s/\'/\\\'/g;
+
 $cat=$q->param('category');
 
 if($img=~/jpg$/i)
@@ -49,23 +52,34 @@ else
 
 $fn=time()."$$.$ext";
 
-$query ="insert into album (fn, keywords, descr, cat)\n";
-$query.="    values('$fn',\n\t'$keywords',\n\t'$info',\n$cat);";
-
-if(!($dbh->execute($query)))
-{
-    print "Database Error:  $Postgres::error\n<!--\n$query\n-->\n";
-    exit(0);
-}
-
+$ldir="/usr/people/dustin/public_html/photo/album";
 
 $f=$q->param('picture');
-open(OUT, ">/usr/people/dustin/public_html/photo/album/$fn");
+open(OUT, ">$ldir/$fn");
 while(<$f>)
 {
     print OUT;
 }
 close(OUT);
+@stat=stat("$ldir/$fn");
+
+if($stat[7]==0)
+{
+    print "Sorry, but the image didn't make it.\n";
+    unlink("$ldir/$fn");
+    exit(0);
+}
+
+$query ="insert into album (fn, keywords, descr, cat, size, taken)\n";
+$query.="    values('$fn',\n\t'$keywords',\n\t'$info',\n\t$cat,\n";
+$query.="\t$stat[7],\n\t'$taken');";
+
+if(!($dbh->execute($query)))
+{
+    print "Database Error:  $Postgres::error\n<!--\n$query\n-->\n";
+    unlink("$ldir/$fn");
+    exit(0);
+}
 
 print "<pre>\n$query\n</pre>\n";
 

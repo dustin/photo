@@ -2,7 +2,7 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: edittext.cgi,v 1.1 1997/11/02 12:12:50 dustin Exp $
+# $Id: edittext.cgi,v 1.2 1997/11/03 09:31:49 dustin Exp $
 
 use Postgres;
 use CGI;
@@ -29,7 +29,11 @@ $info=~s/\'/\\'/g;
 $keywords=$in{'keywords'};
 $keywords=~s/\'/\\\'/g;
 
-$query ="update album set cat=$in{cat}, keywords='$keywords', descr='$info'\n";
+$taken=$in{'taken'};
+$taken=~s/\'/\\\'/g;
+
+$query ="update album set cat=$in{cat}, keywords='$keywords',\n";
+$query.="    descr='$info', taken='$taken'\n";
 $query.="    where oid=$in{'oid'};";
 
 if( $dbh->execute($query) )

@@ -1,0 +1,7 @@
+AuthType Basic
+AuthName Photo Album Admin
+AuthUserFile /home/dustin/.ht/passwd.modem
+
+<Limit GET POST>
+require valid-user
+</Limit>

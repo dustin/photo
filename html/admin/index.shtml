@@ -1,0 +1,17 @@
+<html><head><title>Photo Album Admin Utilities</title>
+</head>
+
+<body bgcolor="#fFfFfF">
+
+<h2>Photo Album Admin Utilities</h2>
+
+<ul>
+    <li><a href="/cgi-bin/dustin/photo/admin/listrecent.cgi">List
+        additions</a></li>
+    <li><a href="/cgi-bin/dustin/photo/admin/listcats.cgi">List
+        Categories</a></li>
+</ul>
+
+<!--#include virtual="../../tail.shtml"-->
+
+</body></html>
