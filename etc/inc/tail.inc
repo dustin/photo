@@ -1,4 +1,6 @@
 <hr align="left" width="50%"> <!-- % -->
+<a href="%SELF_URI%">[Home]</a>
+<p>
 
 <table border=0 width="100%"> <!-- % -->
 <tr><td align="left" valign="top">
