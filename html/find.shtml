@@ -1,4 +1,6 @@
-<html><head><title>Find an Image</title></head>
+<html><head><title>Find an Image</title>
+<link rel="stylesheet" href="inc/style.css">
+</head>
 <body bgcolor="fFfFfF">
 
 <h2>Simple Search</h2>

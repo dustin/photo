@@ -1,4 +1,6 @@
-<html><head><title>Add a Photo</title></head>
+<html><head><title>Add a Photo</title>
+<link rel="stylesheet" href="inc/style.css">
+</head>
 
 <body bgcolor="#fFfFfF">
 
