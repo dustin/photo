@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.70 2001/12/29 06:31:42 dustin Exp $
+ * $Id: PhotoSession.java,v 1.71 2001/12/29 07:02:48 dustin Exp $
  */
 
 package net.spy.photo;
@@ -97,7 +97,11 @@ public class PhotoSession extends Object
 		try {
 			type = request.getContentType();
 			if(type != null && type.startsWith("multipart/form-data")) {
-				multi = new MultipartRequest(request, "/tmp");
+				// Get this to figure out the size and location of the uploads.
+				PhotoConfig conf=new PhotoConfig();
+				multi = new MultipartRequest(request,
+					conf.get("upload_tmp_dir", "/tmp"),
+					conf.getInt("upload_max_size", (5*1024*1024)));
 			} else {
 				multi = null;
 			}
