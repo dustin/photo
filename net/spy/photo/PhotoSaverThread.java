@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSaverThread.java,v 1.1 2002/06/03 07:39:19 dustin Exp $
+// $Id: PhotoSaverThread.java,v 1.2 2002/06/03 08:14:10 dustin Exp $
 
 package net.spy.photo;
 
@@ -52,11 +52,31 @@ public class PhotoSaverThread extends Thread {
 	}
 
 	// Report the status of the saving experience.
-	private void report(int status, PhotoSaver ps) {
+	private void report(int status, PhotoSaver ps, PhotoException e) {
+		Mailer m=new Mailer();
+		m.setTo(ps.getUser().getEmail());
+
+		String body=null;
+		String subject=null;
 		if(status==SUCCESS) {
+			subject="Success storing " + ps;
+			body="\n\nThe storage of image " + ps.getId()
+				+ " (keywords " + ps.getKeywords() + ") was successful.";
 			System.out.println("Success storing " + ps);
 		} else {
+			subject="FAILURE storing " + ps;
+			body="\n\nThe storage of image " + ps.getId()
+				+ " (keywords " + ps.getKeywords() + ") has failed with the"
+				+ " following exception:\n\n"
+				+ e;
 			System.out.println("FAILURE storing " + ps);
+		}
+		m.setSubject(subject);
+		m.setBody(body);
+		try {
+			m.send();
+		} catch(Exception e2) {
+			e2.printStackTrace();
 		}
 	}
 
@@ -71,7 +91,7 @@ public class PhotoSaverThread extends Thread {
 				ps=(PhotoSaver)jobQueue.pop();
 				System.out.println("Saving " + ps);
 				ps.saveImage();
-				report(SUCCESS, ps);
+				report(SUCCESS, ps, null);
 			} catch(EmptyStackException e) {
 				try {
 					synchronized(jobQueue) {
@@ -88,7 +108,7 @@ public class PhotoSaverThread extends Thread {
 					}
 				}
 			} catch(PhotoException pe) {
-				report(FAILURE, ps);
+				report(FAILURE, ps, pe);
 			}
 		}
 
