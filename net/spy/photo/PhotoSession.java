@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.102 2002/02/24 23:49:26 dustin Exp $
+ * $Id: PhotoSession.java,v 1.103 2002/02/25 02:23:37 dustin Exp $
  */
 
 package net.spy.photo;
@@ -1235,6 +1235,9 @@ public class PhotoSession extends Object
 		if(note==null || note.length()<2) {
 			throw new Exception("Note not provided.");
 		}
+
+		// Verify the person has access to this image
+		security.checkAccess(sessionData.getUser().getId(), photo_id);
 
 		Comment comment=new Comment();
 		comment.setUser(sessionData.getUser());
