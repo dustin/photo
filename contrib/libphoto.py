@@ -7,7 +7,21 @@ Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 """
 
 import os
+import urllib2
 import xml.sax
+try:
+    import cookielib
+    cookieJar = cookielib.CookieJar()
+    cookieProcessor=urllib2.HTTPCookieProcessor(cookieJar)
+    openerFactory = urllib2.build_opener
+except ImportError:
+    import ClientCookie
+    cookieJar = ClientCookie.MozillaCookieJar()
+    cookieProcessor=ClientCookie.HTTPCookieProcessor(cookieJar)
+    openerFactory = ClientCookie.build_opener
+
+urlopener=openerFactory(cookieProcessor)
+"""Abstracted URL opener that will handle cookies."""
 
 class Photo(object):
     """Object representing an individual photo entry from the xml dump"""
@@ -62,3 +76,26 @@ class StaticIndexHandler(xml.sax.handler.ContentHandler):
 def parseIndex(path, handler):
     """Parse the index at the given path."""
     d=xml.sax.parse(path, handler)
+
+def fetchIndex(baseurl):
+    """Fetch the export index, return a reader"""
+    if baseurl[-1] != '/':
+        baseurl = baseurl + "/"
+    url=baseurl + "export"
+    print "Fetching index from", url
+    req=urllib2.Request(baseurl + "export")
+    rv=urlopener.open(req)
+    return rv
+
+def fetchImage(baseurl, id, size=None, thumbnail=False):
+    """Fetch an image"""
+
+    imgurl="%sPhotoServlet?id=%d" % (baseurl, id)
+    if size is not None:
+        imgurl = imgurl + "&scale=" + size
+    elif thumbnail:
+        imgurl = imgurl + "&thumbnail=1"
+
+    req=urllib2.Request(imgurl)
+    rv=urlopener.open(req)
+    return rv

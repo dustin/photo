@@ -12,7 +12,6 @@ import time
 import posix
 import shutil
 import getopt
-import urllib2
 import libphoto
 import exceptions
 
@@ -183,7 +182,7 @@ def fetchIndex():
     global config
     print "Beginning index fetch"
     destdir=config['destdir']
-    f=urllib2.urlopen(config['baseurl'] + "export")
+    f=libphoto.fetchIndex(config['baseurl'])
     fout=open("index.xml", "w")
     shutil.copyfileobj(f, fout)
     f.close()
@@ -221,17 +220,17 @@ def timefn(f, what, eol='\n'):
 def fetchImage(photo, destdir):
     global config
 
-    baseurl="%sPhotoServlet?id=%d" % (config['baseurl'], photo.id)
-    normal=baseurl + "&scale=800x600"
-    thumbnail=baseurl + "&thumbnail=1"
+    imgs=(('full', (None, False)),
+        ('normal', ("800x600", False)),
+        ('tn', (None, True)))
 
-    for ext,url in (('full', baseurl), ('normal', normal), ('tn', thumbnail)):
+    for ext, p in imgs:
         # print "Fetching %s for %s" % (url, ext)
         destfn="%s/%d_%s.%s" % (destdir, photo.id, ext, photo.extension)
         if os.path.exists(destfn):
             status("Already have %s" % destfn)
         else:
-            f = urllib2.urlopen(url)
+            f = libphoto.fetchImage(config['baseurl'], photo.id, p[0], p[1])
             toWrite=open(destfn, "w")
             shutil.copyfileobj(f, toWrite)
             toWrite.close()
