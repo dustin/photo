@@ -21,5 +21,18 @@
 <logic:iterate id="i" collection="<%= g.getImages() %>">
 	<% PhotoImageData pid=(PhotoImageData)i; %>
 
-	<photo:imgLink id="<%= "" + pid.getId() %>" showThumbnail="true"/>
+	<%--
+	<table align="left" cellpadding="0" width="300">
+	<tr>
+	<td><photo:imgLink id="<%= "" + pid.getId() %>"
+		width="<%= "" + pid.getTnDims().getWidth() %>"
+		height="<%= "" + pid.getTnDims().getHeight() %>"
+		showThumbnail="true"/><br/><%= pid.getTaken() %></td>
+	</tr>
+	</table>
+	--%>
+	<photo:imgLink id="<%= "" + pid.getId() %>"
+		width="<%= "" + pid.getTnDims().getWidth() %>"
+		height="<%= "" + pid.getTnDims().getHeight() %>"
+		showThumbnail="true"/>
 </logic:iterate>

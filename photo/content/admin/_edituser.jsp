@@ -42,9 +42,9 @@
 			<td>Administrative Status</td>
 			<td>
 				<html:select property="adminStatus">
-					<option value="none">None</option>
-					<option value="admin">Admin</option>
-					<option value="subadmin">Subadmin</option>
+					<html:option value="none">None</html:option>
+					<html:option value="admin">Admin</html:option>
+					<html:option value="subadmin">Subadmin</html:option>
 				</html:select>
 			</td>
 		</tr>
