@@ -1,7 +1,7 @@
 #!/usr/local/bin/perl -w
 # Copyright (c) 1997  Dustin Sallings
 # Approved by Jason Hudgins =)	
-# $Id: admin.cgi,v 1.5 1998/09/04 04:01:51 dustin Exp $
+# $Id: admin.cgi,v 1.6 1998/09/06 21:40:04 dustin Exp $
 
 use CGI;
 use Photo;
@@ -82,6 +82,12 @@ sub editCat
     %p=('CATID' => $r->[0], 'CATNAME' => $r->[1]);
 
     $p->showTemplate("$Photo::includes/admin/editcat.inc", %p);
+}
+
+sub doFind
+{
+    my($q, $p)=@_;
+    $p->doFind($q, 1);
 }
 
 sub listRecent
@@ -422,6 +428,7 @@ my %funcs=(
     'listcats'    => \&listCats,
     'listrecent'  => \&listRecent,
     'listusers'   => \&listUsers,
+    'search'      => \&search,
     'savecat'     => \&saveCat,
     'saveuser'    => \&saveUser,
 
