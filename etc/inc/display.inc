@@ -35,7 +35,7 @@ function openWindow(URL,name) {
 Category: %CAT%
 <p>
 
-Size: %SIZE% bytes, %WIDTH%x%HEIGH%
+Size: %SIZE% bytes, %WIDTH%x%HEIGHT%
 <p>
 
 Taken: %TAKEN%
