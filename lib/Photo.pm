@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.59 1998/11/15 09:42:30 dustin Exp $
+# $Id: Photo.pm,v 1.60 1998/11/25 09:47:25 dustin Exp $
 
 package Photo;
 
@@ -265,6 +265,13 @@ sub saveSearch
 {
 	my($self, $q)=@_;
 	my($query, $name, %p);
+
+	# Don't allow guest, we'll probably have a better way to do this in the
+	# future.
+	if($ENV{'REMOTE_USER'} eq "guest") {
+		$self->showTemplate("$Photo::includes/savesearch_deny.inc", ());
+		return;
+	}
 
 	$self->start_html($q, 'Saving your Search');
 
