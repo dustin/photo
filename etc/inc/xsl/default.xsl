@@ -23,7 +23,7 @@
 			<link rel="stylesheet"
 			href="{meta_stuff/self_uri}?func=getstylesheet"/>
 		</head>
-		<body background="http://bleu.west.spy.net/~dustin/images/bluedkplaid.jpg" bgcolor="#cFcFfF">
+		<body background="http://bleu.west.spy.net/~dustin/images/holiday.gif" bgcolor="#cFcFfF">
 			<center>
 
 				<!-- Title wrapper -->
@@ -65,6 +65,17 @@
 						Switch to
 						<a href="{meta_stuff/self_uri}?func=setstylesheet&amp;stylesheet=simple">simple</a>
 						view.
+						<br/>
+						<xsl:choose>
+							<xsl:when test="meta_stuff/xmlraw">
+								<a href="{meta_stuff/self_uri}?func=xmlraw&amp;to=false">
+									Disable XML</a>
+							</xsl:when>
+							<xsl:otherwise>
+								<a href="{meta_stuff/self_uri}?func=xmlraw&amp;to=true">
+									Enable XML</a>
+							</xsl:otherwise>
+						</xsl:choose>
 						</td>
 						<td align="right">
 							<xsl:call-template name="quick_search"/>
@@ -346,7 +357,7 @@
 	</table>
 
 	<center>
-		<img width="{WIDTH}" height="{HEIGHT}"
+		<img width="{SCALED_WIDTH}" height="{SCALED_HEIGHT}"
 		  src="{/page/meta_stuff/self_uri}?func=getimage&amp;photo_id={IMAGE}"/>
 	</center>
 	<p/>
