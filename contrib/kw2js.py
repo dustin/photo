@@ -32,12 +32,26 @@ def kwcmp(a, b):
 if __name__ == '__main__':
     kwh=KwHandler()
     libphoto.parseIndex("index.xml", kwh)
+    # Keep only the keywords that match more than one image
     for k in kwh.keywords.items():
         if len(k[1]) == 1:
             del kwh.keywords[k[0]]
+        else:
+            kwh.keywords[k[0]].sort()
     keywords=kwh.keywords.items()
     keywords.sort(kwcmp)
 
+    # OK, let's figure out which images we actually need
+    photomapsrc={}
+    photomap2={}
+    for p in kwh.photos:
+        photomapsrc[p.id]=p
+    for k in kwh.keywords.items():
+        for id in k[1]:
+            photomap2[id] = photomapsrc[id]
+    del photomapsrc
+
+    # Map out the keywords
     print "keywords=[" + ", ".join(['"' + k[0] + '"' for k in keywords]) + "];"
     i=0
     print "imgs = new Array();"
@@ -46,8 +60,9 @@ if __name__ == '__main__':
         sys.stdout.write(", ".join(map(str, k[1])) + "];\n")
         i = i + 1
 
+    # Map out the locations
     print "photloc = new Array();"
-    for p in kwh.photos:
+    for p in photomap2.itervalues():
         (y, m, d) = p.dateParts()
         loc="%04d/%02d" % (y, m)
         print "photloc[%d]='%s';" % (p.id, loc)

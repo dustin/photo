@@ -14,26 +14,40 @@
 		<script language="JavaScript">
 		var kws = new Array();
 
-		function arrayContains(a, ai) {
+		// This assumes sorted arrays in order to be O(log n)
+		function arrayContains(a, key) {
 			var rv = false;
-			for(var i=0; rv == false && i<a.length; i++) {
-				if(a[i] == ai) {
+			var low = 0;
+			var high = a.length - 1;
+			while(rv == false && low <= high) {
+				var middle = Math.floor((low + high) / 2);
+
+				if(key == a[middle]) {
 					rv = true;
+				} else if(key < a[middle]) {
+					high = middle - 1;
+				} else {
+					low = middle + 1;
 				}
 			}
 			return rv;
 		}
 
-		function arrayUnion(a1, a2) {
-			var rv = new Array();
-			if(a1.length > a2.length) {
-				var b=a1
-				a1=a2
-				a2=b
-			}
-			for(var i=0; i<a1.length; i++) {
-				if(arrayContains(a2, a1[i])) {
-					rv.push(a1[i]);
+		// Get a union of all of the arrays passed in as arguments
+		function arrayUnion(a) {
+			var rv = null;
+			if(a.length < 1) {
+				alert("Too few arguments to arrayUnion");
+			} else {
+				rv = a[0];
+				for(var i=1; i<a.length; i++) {
+					var tmprv=new Array();
+					for(var j=0; j<rv.length; j++) {
+						if(arrayContains(a[i], rv[j])) {
+							tmprv.push(rv[j]);
+						}
+					}
+					rv=tmprv;
 				}
 			}
 			return rv;
@@ -41,14 +55,11 @@
 
 		// This should perform some kind of and logic across selections
 		function getImageIds() {
-			var rv = new Array();
-			if(kws.length > 0) {
-				rv = imgs[kws[0]];
+			var tmpa=new Array();
+			for(var i = 0; i<kws.length; i++) {
+				tmpa.push(imgs[kws[i]]);
 			}
-			for(var i=1; i<kws.length; i++) {
-				rv = arrayUnion(rv, imgs[kws[i]]);
-			}
-			return rv
+			return arrayUnion(tmpa);
 		}
 		function showResults() {
 			var div=document.getElementById("found");
@@ -82,6 +93,10 @@
 			if(c.checked) {
 				kws.push(kwi);
 			}
+			// this will get the shortest list first which makes unions faster
+			kws.sort();
+			kws.reverse();
+			// Update the display
 			showResults();
 		}
 		function initForm(f) {
