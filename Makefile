@@ -86,6 +86,7 @@ CLASSES=\
 	net/spy/photo/taglib/CategoryTagExtraInfo.class \
 	net/spy/photo/taglib/ImageDataTag.class \
 	net/spy/photo/taglib/ImageDataTagExtraInfo.class \
+	net/spy/photo/taglib/MetaInfo.class \
 	net/spy/photo/struts/PhotoAction.class \
 	net/spy/photo/struts/LoginForm.class \
 	net/spy/photo/struts/LoginAction.class \

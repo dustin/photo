@@ -71,3 +71,7 @@
 		</td>
 	</tr>
 </table>
+
+<p>
+	<photo:showMetaInfo/>
+</p>

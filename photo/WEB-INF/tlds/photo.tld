@@ -23,6 +23,12 @@
 		<teiclass>net.spy.photo.taglib.InitSessionDataExtraInfo</teiclass>
 	</tag>
 
+	<!-- Meta info displayer. -->
+	<tag>
+		<name>showMetaInfo</name>
+		<tagclass>net.spy.photo.taglib.MetaInfo</tagclass>
+	</tag>
+
 	<!-- Get category lists. -->
 	<tag>
 		<name>getCatList</name>
