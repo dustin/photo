@@ -1,7 +1,7 @@
 // Copyright (c) 1999 Dustin Sallings
 // arch-tag: 220C0CFE-5D6D-11D9-85A5-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.log;
 
 import java.sql.SQLException;
 import java.sql.Connection;

@@ -16,7 +16,7 @@ import net.spy.db.Saver;
 import net.spy.util.PwGen;
 
 import net.spy.photo.Persistent;
-import net.spy.photo.PhotoLogEntry;
+import net.spy.photo.log.PhotoLogEntry;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUser;
 import net.spy.photo.PhotoUserException;

@@ -1,7 +1,7 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 // arch-tag: 2FA5E266-5D6D-11D9-A7D9-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.log;
 
 import java.sql.ResultSet;
 
@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
+import net.spy.photo.PhotoConfig;
 import net.spy.photo.sp.GetViewersOfImage;
 
 /**

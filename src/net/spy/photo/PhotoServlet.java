@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.spy.photo.impl.PhotoDimensionsImpl;
+import net.spy.photo.log.PhotoLogImageEntry;
 
 /**
  * Serve up images.

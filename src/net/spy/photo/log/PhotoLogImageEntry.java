@@ -1,9 +1,11 @@
 // Copyright (c) 1999 Dustin Sallings
 // arch-tag: 2A43E778-5D6D-11D9-A5AB-000A957659CC
 
-package net.spy.photo;
+package net.spy.photo.log;
 
 import javax.servlet.http.HttpServletRequest;
+
+import net.spy.photo.PhotoDimensions;
 
 /**
  * Log entries for image requests.

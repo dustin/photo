@@ -11,7 +11,7 @@ import net.spy.db.Saver;
 import net.spy.photo.Category;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
-import net.spy.photo.PhotoLogUploadEntry;
+import net.spy.photo.log.PhotoLogUploadEntry;
 import net.spy.photo.impl.SavablePhotoImageData;
 import net.spy.photo.PhotoUser;
 import net.spy.photo.PhotoConfig;
