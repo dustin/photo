@@ -9,7 +9,7 @@ import java.io.ObjectStreamException;
 import java.io.InvalidObjectException;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
@@ -57,7 +57,7 @@ public class PhotoImageDataImpl extends SpyObject
 	private PhotoImageDataImpl(ResultSet rs) throws Exception {
 		super();
 		initFromResultSet(rs);
-		keywords=new HashSet();
+		keywords=new TreeSet();
 	}
 
 	/**

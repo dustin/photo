@@ -29,7 +29,7 @@ import net.spy.photo.sp.InsertKeyword;
 /**
  * This class represents a keyword in the database.
  */
-public class Keyword extends AbstractSavable {
+public class Keyword extends AbstractSavable implements Comparable {
 
 	private static final String CACHE_KEY="keywords";
 	private static final int CACHE_TIME=3600000;
@@ -181,6 +181,15 @@ public class Keyword extends AbstractSavable {
 	 */
 	public int hashCode() {
 		return(keywordId);
+	}
+
+	/** 
+	 * Compare these Keyword objects in their respective keyword natural
+	 * orders.
+	 */
+	public int compareTo(Object o) {
+		Keyword other=(Keyword)o;
+		return(keyword.compareTo(other.keyword));
 	}
 
 	/**
