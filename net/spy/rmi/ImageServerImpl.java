@@ -1,5 +1,5 @@
 // Copyright (c) 1999 Dustin Sallings <dustin@spy.net>
-// $Id: ImageServerImpl.java,v 1.16 2002/03/01 20:57:57 dustin Exp $
+// $Id: ImageServerImpl.java,v 1.17 2002/03/01 22:06:08 dustin Exp $
 
 package net.spy.rmi;
 
@@ -36,6 +36,7 @@ public class ImageServerImpl extends UnicastRemoteObject
 	public ImageServerImpl(File config) throws RemoteException {
 		super();
 		conf=new SpyConfig(config);
+		checkStorerThread();
 	}
 
 	/**
