@@ -14,6 +14,8 @@
 
 <html:form action="upload.do" enctype="multipart/form-data">
 
+	<html:errors/>
+
 	<table border="0" width="100%">
 
 	<tr>
