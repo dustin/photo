@@ -1,10 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.10 2002/06/30 22:57:56 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.11 2002/07/04 04:21:53 dustin Exp $
 
 package net.spy.photo;
 
-import java.util.Hashtable;
+import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * Session data goes here.
@@ -22,7 +23,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	private String encodedSearch=null;
 	private PhotoDimensions optimalDimensions=null;
 
-	private Hashtable cursors=null;
+	private HashMap cursors=null;
 
 	private int admin_type=NOADMIN;
 
@@ -36,7 +37,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public PhotoSessionData() {
 		super();
-		cursors=new Hashtable();
+		cursors=Collections.synchronizedMap(new HashMap());
 	}
 
 	/**

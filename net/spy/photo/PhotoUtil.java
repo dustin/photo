@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoUtil.java,v 1.12 2002/06/23 02:10:40 dustin Exp $
+ * $Id: PhotoUtil.java,v 1.13 2002/07/04 04:21:53 dustin Exp $
  */
 
 package net.spy.photo;
@@ -42,17 +42,6 @@ public class PhotoUtil extends Object {
 		Date ts=new Date();
 		SimpleDateFormat f=new SimpleDateFormat("MM/dd/yyyy");
 		return(f.format(ts));
-	}
-
-	/**
-	 * Hash hashing.
-	 */
-	public static int myHash(Hashtable in) {
-		int i=0;
-		for(Enumeration e=in.elements(); e.hasMoreElements(); ) {
-			i+=e.nextElement().hashCode();
-		}
-		return(i);
 	}
 
 	/**

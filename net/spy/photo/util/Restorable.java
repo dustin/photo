@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2000  Dustin Sallings <dustin@spy.net>
  *
- * $Id: Restorable.java,v 1.1 2002/06/28 23:13:09 dustin Exp $
+ * $Id: Restorable.java,v 1.2 2002/07/04 04:21:53 dustin Exp $
  */
 
 package net.spy.photo.util;
@@ -20,7 +20,7 @@ import net.spy.photo.*;
 public abstract class Restorable extends Object implements Serializable {
 
 	private String base=null;
-	private Hashtable parts=null;
+	private HashMap parts=null;
 
 	/**
 	 * Get a restorable with the given base.
@@ -28,7 +28,7 @@ public abstract class Restorable extends Object implements Serializable {
 	public Restorable(String base) {
 		super();
 		this.base=base;
-		this.parts=new Hashtable();
+		this.parts=new HashMap();
 		// This adds a base handler
 		parts.put(base, new StringBuffer());
 	}

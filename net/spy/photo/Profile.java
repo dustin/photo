@@ -1,6 +1,6 @@
 // Copyright (c) 1999  Dustin Sallings
 //
-// $Id: Profile.java,v 1.3 2002/01/13 11:08:32 dustin Exp $
+// $Id: Profile.java,v 1.4 2002/07/04 04:21:53 dustin Exp $
 
 // This class stores an entry from the wwwusers table.
 
@@ -23,14 +23,14 @@ public class Profile extends Object implements Serializable {
 	private String description=null;
 	private Date expires=null;
 
-	private Hashtable acl=null;
+	private Set acl=null;
 
 	/**
 	 * Get a new, empty user profile.
 	 */
 	public Profile() {
 		super();
-		acl=new Hashtable();
+		acl=new HashSet();
 		name=PwGen.getPass(16);
 		// Expires in thirty days.
 		expires=new Date(System.currentTimeMillis() + (86400l*30l*1000l));
@@ -65,7 +65,7 @@ public class Profile extends Object implements Serializable {
 
 	// Get the ACL entries out of the DB.
 	private void initACLs() throws Exception {
-		acl=new Hashtable();
+		acl=new HashSet();
 		SpyDB db=new SpyDB(new PhotoConfig());
 		PreparedStatement pst=db.prepareStatement(
 			"select cat_id from user_profile_acls where profile_id=?");
@@ -119,11 +119,11 @@ public class Profile extends Object implements Serializable {
 	}
 
 	/**
-	 * Get the list of category IDs (as Integer objects) the user has
+	 * Get the Set of category IDs (as Integer objects) the user has
 	 * access to.
 	 */
-	public Enumeration getACLEntries() {
-		return(acl.keys());
+	public Collection getACLEntries() {
+		return(Collections.unmodifiableSet(acl));
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class Profile extends Object implements Serializable {
 	 */
 	public void addACLEntry(int cat) {
 		Integer c=new Integer(cat);
-		acl.put(c, "YEP");
+		acl.add(c);
 	}
 
 	/**
