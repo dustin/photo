@@ -74,6 +74,7 @@ def makeIndex(idx, years):
         """<link rel="stylesheet" href="style.css" />
         </head>
         <body>
+        <a href="search.html">Search</a>
         <h1>Years</h1>
         <ul>\n""")
     mymkdir("pages")
@@ -314,6 +315,96 @@ def processMonth(idx, y, m):
     if tp is not None:
         tp.waitForTaskCount()
 
+def writeSearchIndex(idx):
+    """Write out the search index"""
+    f=open("searchdata.js", "w")
+    allPhotos=[]
+    for yd in idx.itervalues():
+        for md in yd.itervalues():
+            allPhotos.extend(md)
+    kwmap={}
+    # Index all of the keywords
+    for photo in allPhotos:
+        for kw in photo.keywordStrings:
+            if kwmap.has_key(kw):
+                kwmap[kw].append(photo.id)
+            else:
+                kwmap[kw]=[photo.id]
+
+    # Sorting function
+    def kwcmp(a, b):
+        rv = cmp(len(b[1]), len(a[1]))
+        if rv == 0:
+            rv = cmp(a[0], b[0])
+        return rv
+
+    # Sort all of the IDs in the keywords and the keywords
+    for k in kwmap.items():
+        kwmap[k[0]].sort()
+    keywords=kwmap.items()
+    keywords.sort(kwcmp)
+
+    # OK, let's figure out which images we actually need
+    photomapsrc={}
+    photomap2={}
+    for p in allPhotos:
+        photomapsrc[p.id]=p
+    for k in kwmap.items():
+        for id in k[1]:
+            photomap2[id] = photomapsrc[id]
+    del photomapsrc
+
+    # Map out the keywords
+    f.write("keywords=[" + ", ".join(['"' + k[0] + '"' for k in keywords])
+        + "];\n")
+    i=0
+    f.write("imgs = new Array();\n")
+    for k in keywords:
+        f.write("imgs[%d] = [" % (i, ))
+        f.write(", ".join(map(str, k[1])) + "];\n")
+        i = i + 1
+    # Map out the locations
+    f.write("photloc = new Array();\n")
+    for p in photomap2.itervalues():
+        (y, m, d) = p.dateParts()
+        loc="%04d/%02d" % (y, m)
+        f.write("photloc[%d]='%s';\n" % (p.id, loc))
+
+    f.close()
+
+def copyContrib(which):
+    thePath=None
+    for p in sys.path:
+        tmp=os.path.join(p, which)
+        if os.path.exists(tmp):
+            thePath = tmp
+            break
+    if thePath is None:
+        print "Could not find", which, "in", sys.path
+        sys.exit(1)
+    shutil.copy(thePath, which)
+
+def writePages(idx):
+    years=idx.keys()
+    years.sort()
+
+    makeIndex(idx, years)
+    makeStylesheet()
+    
+    for y in years:
+        makeYearPage(idx, y)
+
+        mymkdir("pages/%04d" % (y, ))
+        months=idx[y].keys()
+        months.sort()
+        for m in months:
+            def pm():
+                processMonth(idx, y, m)
+            timefn(pm, "%04d/%02d" % (y, m))
+
+    copyContrib("search.html")
+    copyContrib("searchfun.js")
+
 def go():
 
     global config
@@ -334,27 +425,17 @@ def go():
         timefn(fetchIndex, "index fetch")
     idx=timefn(parseIndex, "index parse")
 
-    years=idx.keys()
-    years.sort()
+    if not config.has_key('-p'):
+        # Write out all of the pages and get images and stuff
+        writePages(idx)
 
-    makeIndex(idx, years)
-    makeStylesheet()
-    
-    for y in years:
-        makeYearPage(idx, y)
-
-        mymkdir("pages/%04d" % (y, ))
-        months=idx[y].keys()
-        months.sort()
-        for m in months:
-            def pm():
-                processMonth(idx, y, m)
-            timefn(pm, "%04d/%02d" % (y, m))
+    # Write out the search index
+    writeSearchIndex(idx)
 
 def parseArgs():
     global config
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'a:u:i:fFiI')
+        opts, args = getopt.getopt(sys.argv[1:], 'a:u:i:fFiIp')
         config = dict(opts)
     except getopt.GetoptError, e:
         raise UsageError(e)
@@ -376,8 +457,8 @@ def parseArgs():
 # Start
 
 def usage():
-    print "Usage:  %s [-fFi] [-a user] [-u user] [-i imgpath] photurl destdir" \
-        % (sys.argv[0], )
+    print "Usage:  %s [-fFip] [-a user] [-u user] [-i imgpath] " \
+        "photurl destdir" % (sys.argv[0], )
     print " -f fetch index even if we already have one"
     print " -F fetch the full size images in addition to the smaller ones"
     print " -i allows you to specify an alt image path to fetch local copies"
@@ -385,6 +466,7 @@ def usage():
     print " -a authenticate as the given user"
     print " -u get photo album for the specified user (must be authed as admin)"
     print " -I do not process images"
+    print " -p do not process pages"
     sys.exit(1)
 
 if __name__ == '__main__':
