@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: OnceAMonthFilter.java,v 1.3 2002/07/04 00:14:50 dustin Exp $
+// $Id: OnceAMonthFilter.java,v 1.4 2002/07/04 00:19:26 dustin Exp $
 
 package net.spy.photo.filter;
 
@@ -87,34 +87,36 @@ public class OnceAMonthFilter extends Filter {
 			Date taken=cal.getTime();
 
 			// Get a vector from the date
-			Vector v=(Vector)months.get(taken);
-			if(v==null) {
-				v=new Vector();
-				months.put(taken, v);
+			ArrayList a=(ArrayList)months.get(taken);
+			if(a==null) {
+				a=new ArrayList();
+				months.put(taken, a);
 			}
 
-			v.addElement(pid);
+			a.add(pid);
 		}
 
-		// OK, now get the keys (since that's a TreeMap, they'll be sorted)
-		Vector keys=new Vector(months.keySet());
+		// OK, now get the parts (since that's a TreeMap, they'll be sorted)
+        Collection values=months.values();
 		// If we need to reverse the keys, do so now
 		if(sortDirection==SORT_REVERSE) {
-			Collections.reverse(keys);
+            // Make an ArrayList and reverse it, then have that be our
+            // values
+            ArrayList tmp=new ArrayList(values);
+			Collections.reverse(tmp);
+            values=tmp;
 		}
 
 		// Get a new random object
 		Random r=new Random();
 
 		// OK, now we'll flip through the keys to do one per month
-		for(Enumeration e=keys.elements(); e.hasMoreElements(); ) {
-			Date key=(Date)e.nextElement();
-
+		for(Iterator i=values.iterator(); i.hasNext(); ) {
 			// Grab the vector
-			Vector v=(Vector)months.get(key);
+			List l=(List)i.next();
 
 			// Get a random object from vector
-			PhotoImageData pid=(PhotoImageData)v.elementAt(r.nextInt(v.size()));
+			PhotoImageData pid=(PhotoImageData)l.get(r.nextInt(l.size()));
 
 			// Add it to the results
 			rv.add(pid);
