@@ -168,6 +168,8 @@ public class PhotoUser extends AbstractSavable
 			if(defaultUser==null) {
 				throw new PhotoUserException("Default user not found.");
 			}
+			// Add the ``guest'' role to the default user.
+			defaultUser.addRole("guest");
 
 			// Initialize all the ACLs for all the users
 			initACLs(users, defaultUser);
