@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: MakeStaticSite.java,v 1.1 2003/06/02 00:40:33 dustin Exp $
+// $Id: MakeStaticSite.java,v 1.2 2003/12/02 03:34:58 dustin Exp $
 
 package net.spy.photo.tools;
 
@@ -55,10 +55,10 @@ public class MakeStaticSite extends Object {
 		return(outFormat.format(inFormat.parse(d)));
 	}
 
-	public void build(String destDir) throws Exception {
-		PhotoSessionData sessionData=new PhotoSessionData();
+	public void build(String destDir, PhotoDimensions normaldim)
+		throws Exception {
 
-		PhotoDimensions normaldim=new PhotoDimensionsImpl("800x600");
+		PhotoSessionData sessionData=new PhotoSessionData();
 
 		sessionData.setUser(pu);
 		sessionData.setOptimalDimensions(normaldim);
@@ -107,10 +107,23 @@ public class MakeStaticSite extends Object {
 	 * First arg is the username.
 	 */
 	public static void main(String args[]) throws Exception {
-		PhotoUser pu=PhotoUser.getPhotoUser(args[0]);
-		System.out.println("Creating site for " + pu);
+		if(args.length < 2) {
+			String err="Arguments required:  username destDir [max dims]";
+			System.err.println(err);
+			throw new Exception(err);
+		}
+		String username=args[0];
+		String destDir=args[1];
+		PhotoDimensions maxdim=new PhotoDimensionsImpl("800x600");
+		if(args.length > 2) {
+			maxdim=new PhotoDimensionsImpl(args[2]);
+		}
+
+		PhotoUser pu=PhotoUser.getPhotoUser(username);
+		System.out.println("Creating site for " + pu + " max size:  " + maxdim);
+
 		MakeStaticSite mss=new MakeStaticSite(pu);
-		mss.build("/tmp/thesite");
+		mss.build(destDir, maxdim);
 	}
 
 }
