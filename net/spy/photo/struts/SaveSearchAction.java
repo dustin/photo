@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveSearchAction.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: SaveSearchAction.java,v 1.3 2003/05/25 08:17:42 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -33,10 +33,10 @@ public class SaveSearchAction extends PhotoAction {
 	/**
 	 * Process the save search.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		// Cast the form
 		SaveSearchForm ssf=(SaveSearchForm)form;
@@ -45,12 +45,8 @@ public class SaveSearchAction extends PhotoAction {
 		PhotoSessionData sessionData=getSessionData(request);
 
 		// Get the PhotoSearch object which manages the search save.
-		try {
-			PhotoSearch search=new PhotoSearch();
-			search.saveSearch(ssf, sessionData.getUser());
-		} catch(Exception e) {
-			throw new ServletException("Error saving search", e);
-		}
+		PhotoSearch search=new PhotoSearch();
+		search.saveSearch(ssf, sessionData.getUser());
 
 		// If we made it this far, we were successful.
 		return(mapping.findForward("success"));

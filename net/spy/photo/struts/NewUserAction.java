@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: NewUserAction.java,v 1.7 2003/01/09 07:42:55 dustin Exp $
+// $Id: NewUserAction.java,v 1.8 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -45,20 +45,15 @@ public class NewUserAction extends PhotoAction {
 	/**
 	 * Process the request.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		NewUserForm nuf=(NewUserForm)form;
 
 		// Get the profile
-		Profile p=null;
-		try {
-			p=new Profile(nuf.getProfile());
-		} catch(Exception e) {
-			throw new ServletException("Error loading profile", e);
-		}
+		Profile p=new Profile(nuf.getProfile());
 
 		// Verify the user doesn't already exist.
 		PhotoUser pu=null;
@@ -66,8 +61,6 @@ public class NewUserAction extends PhotoAction {
 			pu=Persistent.getSecurity().getUser(nuf.getUsername());
 		} catch(NoSuchPhotoUserException e) {
 			// This is supposed to happen
-		} catch(PhotoUserException e) {
-			throw new ServletException("Error initializing new user.", e);
 		}
 		if(pu!=null) {
 			throw new ServletException("User " + nuf.getUsername()
@@ -77,11 +70,7 @@ public class NewUserAction extends PhotoAction {
 		// Get the new user and fill it with the data from the form
 		pu=new PhotoUser();
 		pu.setUsername(nuf.getUsername());
-		try {
-			pu.setPassword(nuf.getPassword());
-		} catch(Exception e) {
-			throw new ServletException("Error setting password", e);
-		}
+		pu.setPassword(nuf.getPassword());
 		pu.setRealname(nuf.getRealname());
 		pu.setEmail(nuf.getEmail());
 
@@ -92,44 +81,31 @@ public class NewUserAction extends PhotoAction {
 		}
 
 		// Save the new user
-		try {
-			Saver saver=new Saver(new PhotoConfig());
-			saver.save(pu);
-		} catch(Exception e) {
-			throw new ServletException("Error saving user", e);
-		}
+		Saver saver=new Saver(new PhotoConfig());
+		saver.save(pu);
 
 		// Recache the photo stuff and get the cached version.
-		try {
-			PhotoUser.recache();
-			// Get the user from the cache
-			pu=PhotoUser.getPhotoUser(nuf.getUsername());
-
-		} catch(PhotoUserException e) {
-			throw new ServletException("Error refreshing user cache", e);
-		}
+		PhotoUser.recache();
+		// Get the user from the cache
+		pu=PhotoUser.getPhotoUser(nuf.getUsername());
 
 		// Get the session data and assign the new credentials
 		PhotoSessionData sessionData=getSessionData(request);
 		sessionData.setUser(pu);
 
 		// Try to log it.
-		try {
-			SpyDB db=new SpyDB(new PhotoConfig());
-			PreparedStatement pst=db.prepareStatement(
-				"insert into user_profile_log"
-				+ "(profile_id, wwwuser_id, remote_addr) "
-				+ "values(?,?,?)"
-				);
-			pst.setInt(1, p.getId());
-			pst.setInt(2, pu.getId());
-			pst.setString(3, request.getRemoteAddr());
-			pst.executeUpdate();
-			pst.close();
-			db.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		SpyDB db=new SpyDB(new PhotoConfig());
+		PreparedStatement pst=db.prepareStatement(
+			"insert into user_profile_log"
+			+ "(profile_id, wwwuser_id, remote_addr) "
+			+ "values(?,?,?)"
+			);
+		pst.setInt(1, p.getId());
+		pst.setInt(2, pu.getId());
+		pst.setString(3, request.getRemoteAddr());
+		pst.executeUpdate();
+		pst.close();
+		db.close();
 
 		return(mapping.findForward("success"));
 	}

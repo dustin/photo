@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchFilterAction.java,v 1.5 2003/05/04 06:49:54 dustin Exp $
+// $Id: SearchFilterAction.java,v 1.6 2003/05/25 08:17:42 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -40,10 +40,10 @@ public class SearchFilterAction extends PhotoAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		// Get the form
 		SearchForm sf=(SearchForm)form;
@@ -84,11 +84,7 @@ public class SearchFilterAction extends PhotoAction {
 			}
 
 			// perform the filtration and set the results.
-			try {
-				results=filter.filter(results);
-			} catch(PhotoException pe) {
-				throw new ServletException("Error filtering results", pe);
-			}
+			results=filter.filter(results);
 			sessionData.setResults(results);
 		}
 

@@ -18,7 +18,12 @@
     <form-bean name="setSizeForm" type="net.spy.photo.struts.SetSizeForm"/>
 
     <form-bean name="changePWForm" type="net.spy.photo.struts.ChangePWForm"/>
-    <form-bean name="forgotPWForm" type="net.spy.photo.struts.ForgotPWForm"/>
+
+    <form-bean name="forgotPWForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="username" type="java.lang.String"/>
+		</form-bean>
 
     <form-bean name="commentForm"
 			type="org.apache.struts.validator.DynaValidatorForm">

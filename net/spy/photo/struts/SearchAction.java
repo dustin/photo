@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SearchAction.java,v 1.6 2003/04/25 06:32:23 dustin Exp $
+// $Id: SearchAction.java,v 1.7 2003/05/25 08:17:42 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -34,10 +34,10 @@ public class SearchAction extends PhotoAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		PhotoSessionData sessionData=getSessionData(request);
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ChangePWAction.java,v 1.3 2002/12/15 09:02:25 dustin Exp $
+// $Id: ChangePWAction.java,v 1.4 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -36,10 +36,10 @@ public class ChangePWAction extends PhotoAction {
 	/**
 	 * Process the change password request.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		ChangePWForm cpf=(ChangePWForm)form;
 
@@ -51,13 +51,9 @@ public class ChangePWAction extends PhotoAction {
 		}
 
 		// Set the password
-		try {
-			user.setPassword(cpf.getNewpw1());
-			Saver saver=new Saver(new PhotoConfig());
-			saver.save(user);
-		} catch(Exception e) {
-			throw new ServletException("Error setting/save new password", e);
-		}
+		user.setPassword(cpf.getNewpw1());
+		Saver saver=new Saver(new PhotoConfig());
+		saver.save(user);
 
 		return(mapping.findForward("success"));
 	}

@@ -1,6 +1,6 @@
 // Copyright (c) 2003  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminReportAction.java,v 1.2 2003/05/12 06:25:43 dustin Exp $
+// $Id: AdminReportAction.java,v 1.3 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -55,10 +55,10 @@ public class AdminReportAction extends AdminAction {
 	/** 
 	 * Perform this action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		// Verify an admin user
 		checkAdmin(request);
@@ -72,31 +72,26 @@ public class AdminReportAction extends AdminAction {
 		// Get the spt
 		DBSP db=constructDBSP(arm.getSptClass());
 
-		try {
-			// Format p.s. for string.  p.i. for integer, p.f. for float, etc...
-			for(Enumeration e=request.getParameterNames();
-				e.hasMoreElements();) {
+		// Format p.s. for string.  p.i. for integer, p.f. for float, etc...
+		for(Enumeration e=request.getParameterNames();
+			e.hasMoreElements();) {
 
-				String s=(String)e.nextElement();
-				String pn=s.substring(4);
-				String v=request.getParameter(s);
-				if(s.startsWith("p.s.")) {
-					db.set(pn, v);
-				} else if(s.startsWith("p.i.")) {
-					db.set(pn, Integer.parseInt(v));
-				} else if(s.startsWith("p.f.")) {
-					db.set(pn, Float.parseFloat(v));
-				}
+			String s=(String)e.nextElement();
+			String pn=s.substring(4);
+			String v=request.getParameter(s);
+			if(s.startsWith("p.s.")) {
+				db.set(pn, v);
+			} else if(s.startsWith("p.i.")) {
+				db.set(pn, Integer.parseInt(v));
+			} else if(s.startsWith("p.f.")) {
+				db.set(pn, Float.parseFloat(v));
 			}
-
-			ResultSet rs=db.executeQuery();
-
-			// Store the result set
-			request.setAttribute("rs", rs);
-
-		} catch(SQLException e) {
-			throw new ServletException("Problem fulfilling your request", e);
 		}
+
+		ResultSet rs=db.executeQuery();
+
+		// Store the result set
+		request.setAttribute("rs", rs);
 
 		db.close();
 		// It's closed, but it still has useful information

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: UploadAction.java,v 1.6 2002/07/10 03:38:09 dustin Exp $
+// $Id: UploadAction.java,v 1.7 2003/05/25 08:17:42 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -34,10 +34,10 @@ public class UploadAction extends PhotoAction {
 		super();
 	}
 
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		UploadForm uf=(UploadForm)form;
 		// Get the session data.
@@ -52,31 +52,27 @@ public class UploadAction extends PhotoAction {
 				sessionData.getUser() + " can't add to category " + cat);
 		}
 
-		try {
+		// Get the ID
+		int id=PhotoSaver.getNewImageId();
+		PhotoSaver saver=new PhotoSaver();
 
-			// Get the ID
-			int id=PhotoSaver.getNewImageId();
-			PhotoSaver saver=new PhotoSaver();
+		saver.setKeywords(uf.getKeywords());
+		saver.setInfo(uf.getInfo());
+		saver.setCat(cat);
+		saver.setTaken(uf.getTaken());
+		saver.setUser(user);
+		saver.setPhotoImage(uf.getPhotoImage());
+		saver.setId(id);
 
-			saver.setKeywords(uf.getKeywords());
-			saver.setInfo(uf.getInfo());
-			saver.setCat(cat);
-			saver.setTaken(uf.getTaken());
-			saver.setUser(user);
-			saver.setPhotoImage(uf.getPhotoImage());
-			saver.setId(id);
+		// Tell the saver to save this image when it gets around to it.
+		Persistent.getPhotoSaverThread().saveImage(saver);
 
-			// Tell the saver to save this image when it gets around to it.
-			Persistent.getPhotoSaverThread().saveImage(saver);
+		Persistent.getLogger().log(new PhotoLogUploadEntry(
+			user.getId(), id, request));
 
-			Persistent.getLogger().log(new PhotoLogUploadEntry(
-				user.getId(), id, request));
+		// Before we return, make the ID available to the next handler
+		request.setAttribute("net.spy.photo.UploadID", new Integer(id));
 
-			// Before we return, make the ID available to the next handler
-			request.setAttribute("net.spy.photo.UploadID", new Integer(id));
-		} catch(PhotoException e) {
-			throw new ServletException("Error saving image.", e);
-		}
 		return(mapping.findForward("success"));
 	}
 

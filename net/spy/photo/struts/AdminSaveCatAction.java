@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveCatAction.java,v 1.6 2003/01/09 07:42:55 dustin Exp $
+// $Id: AdminSaveCatAction.java,v 1.7 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -35,10 +35,10 @@ public class AdminSaveCatAction extends AdminAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		// Verify the user is an admin
 		checkAdmin(request);
@@ -79,18 +79,10 @@ public class AdminSaveCatAction extends AdminAction {
 			cat.addAddACLEntry(uid);
 		}
 
-		try {
-			Saver saver=new Saver(new PhotoConfig());
-			saver.save(cat);
-		} catch(Exception e) {
-			throw new ServletException("Error saving category", e);
-		}
+		Saver saver=new Saver(new PhotoConfig());
+		saver.save(cat);
 
-		try {
-			Category.recache();
-		} catch(Exception e) {
-			throw new ServletException("Error recaching categories.", e);
-		}
+		Category.recache();
 
 		return(mapping.findForward("success"));
 	}

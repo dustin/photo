@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveProperties.java,v 1.1 2002/09/16 01:51:03 dustin Exp $
+// $Id: AdminSaveProperties.java,v 1.2 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -41,22 +41,18 @@ public class AdminSaveProperties extends AdminAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		PhotoProperties props=null;
-		try {
-			props=new PhotoProperties();
-			props.clear();
-		} catch(Exception e) {
-			throw new ServletException("Error loading properties", e);
-		}
+		props=new PhotoProperties();
+		props.clear();
 
 		for(Iterator i=request.getParameterMap().entrySet().iterator();
-			i.hasNext();)
-		{
+			i.hasNext();) {
+
 			Map.Entry me=(Map.Entry)i.next();
 			String key=(String)me.getKey();
 			String vals[]=(String[])me.getValue();
@@ -71,13 +67,9 @@ public class AdminSaveProperties extends AdminAction {
 			}
 		}
 
-		try {
-			Saver s=new Saver(new PhotoConfig());
-			s.save(props);
-			System.err.println("Saved new properties:  " + props);
-		} catch(Exception e) {
-			throw new ServletException("Error saving new PhotoProperties", e);
-		}
+		Saver s=new Saver(new PhotoConfig());
+		s.save(props);
+		System.err.println("Saved new properties:  " + props);
 
 		// Clear the cache to make the values immediately available
 		SpyCache sc=SpyCache.getInstance();

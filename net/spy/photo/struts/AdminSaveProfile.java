@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSaveProfile.java,v 1.3 2002/12/15 09:24:38 dustin Exp $
+// $Id: AdminSaveProfile.java,v 1.4 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -35,10 +35,10 @@ public class AdminSaveProfile extends AdminAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		// Verify the user is an admin
 		checkAdminOrSubadmin(request);
@@ -56,12 +56,8 @@ public class AdminSaveProfile extends AdminAction {
 		}
 
 		// Save the profile
-		try {
-			Saver saver=new Saver(new PhotoConfig());
-			saver.save(profile);
-		} catch(Exception e) {
-			throw new ServletException("Error saving profile", e);
-		}
+		Saver saver=new Saver(new PhotoConfig());
+		saver.save(profile);
 
 		// Record the new profile identifier.
 		request.setAttribute("net.spy.photo.ProfileId", profile.getName());

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectCatAction.java,v 1.4 2002/11/04 03:11:24 dustin Exp $
+// $Id: AdminSelectCatAction.java,v 1.5 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -36,10 +36,10 @@ public class AdminSelectCatAction extends AdminAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		// Verify the user is an admin
 		checkAdmin(request);
@@ -59,11 +59,7 @@ public class AdminSelectCatAction extends AdminAction {
 		} else {
 			// Look up the user
 			Category cat=null;
-			try {
-				cat=Category.lookupCategory(Integer.parseInt(acf.getCatId()));
-			} catch(Exception e) {
-				throw new ServletException("Couldn't lookup category", e);
-			}
+			cat=Category.lookupCategory(Integer.parseInt(acf.getCatId()));
 
 			// Set the easy stuff
 			acf.setName(cat.getName());

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminifyAction.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: AdminifyAction.java,v 1.3 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -33,10 +33,10 @@ public class AdminifyAction extends PhotoAction {
 	/**
 	 * Enable or disable administrative status.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		ActionForward rv=null;
 

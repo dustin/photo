@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AddToGalleryAction.java,v 1.6 2003/05/24 08:32:58 dustin Exp $
+// $Id: AddToGalleryAction.java,v 1.7 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -39,10 +39,10 @@ public class AddToGalleryAction extends PhotoAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		DynaActionForm atgf=(DynaActionForm)form;
 

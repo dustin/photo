@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminEditImage.java,v 1.3 2002/09/14 05:06:34 dustin Exp $
+// $Id: AdminEditImage.java,v 1.4 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -34,10 +34,10 @@ public class AdminEditImage extends AdminAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		// Verify the user is an admin or subadmin
 		checkAdminOrSubadmin(request);

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: AdminSelectUserAction.java,v 1.10 2003/01/07 09:38:52 dustin Exp $
+// $Id: AdminSelectUserAction.java,v 1.11 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -45,10 +45,10 @@ public class AdminSelectUserAction extends AdminAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		// Verify the user is an admin
 		checkAdmin(request);
@@ -72,12 +72,7 @@ public class AdminSelectUserAction extends AdminAction {
 		} else {
 			// Look up the user
 			PhotoSecurity sec=new PhotoSecurity();
-			PhotoUser user=null;
-			try {
-				user=sec.getUser(userid);
-			} catch(PhotoUserException e) {
-				throw new ServletException("No such user", e);
-			}
+			PhotoUser user=sec.getUser(userid);
 
 			// Set the easy stuff
 			auf.setUsername(user.getUsername());
@@ -106,31 +101,27 @@ public class AdminSelectUserAction extends AdminAction {
 			auf.setCatAclView((String[])viewable.toArray(new String[0]));
 
 			// Look up the group thingy.
-			try {
-				SpyDB db=new SpyDB(new PhotoConfig());
-				PreparedStatement pst=db.prepareStatement(
-					"select groupname from wwwgroup where userid=?");
-				pst.setInt(1, user.getId());
-				ResultSet rs=pst.executeQuery();
-				if(rs.next()) {
-					// If there's a group name, get it
-					String groupName=rs.getString("groupname");
-					auf.setAdminStatus(groupName);
-				} else {
-					// If not, set it to none
-					auf.setAdminStatus("none");
-				}
-				if(rs.next()) {
-					throw new ServletException(
-						"Too many results returned for group lookup, "
-							+ "I'm confused");
-				}
-				rs.close();
-				pst.close();
-				db.close();
-			} catch(SQLException se) {
-				throw new ServletException("Error looking up group", se);
+			SpyDB db=new SpyDB(new PhotoConfig());
+			PreparedStatement pst=db.prepareStatement(
+				"select groupname from wwwgroup where userid=?");
+			pst.setInt(1, user.getId());
+			ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				// If there's a group name, get it
+				String groupName=rs.getString("groupname");
+				auf.setAdminStatus(groupName);
+			} else {
+				// If not, set it to none
+				auf.setAdminStatus("none");
 			}
+			if(rs.next()) {
+				throw new ServletException(
+					"Too many results returned for group lookup, "
+						+ "I'm confused");
+			}
+			rs.close();
+			pst.close();
+			db.close();
 		}
 
 		return(mapping.findForward("success"));

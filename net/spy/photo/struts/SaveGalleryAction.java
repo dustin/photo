@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SaveGalleryAction.java,v 1.6 2002/12/15 09:02:25 dustin Exp $
+// $Id: SaveGalleryAction.java,v 1.7 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -36,10 +36,10 @@ public class SaveGalleryAction extends PhotoAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		SaveGalleryForm sgf=(SaveGalleryForm)form;
 
@@ -59,12 +59,8 @@ public class SaveGalleryAction extends PhotoAction {
 		g.setPublic(sgf.getIsPublic());
 
 		// Add the new image
-		try {
-			Saver saver=new Saver(new PhotoConfig());
-			saver.save(g);
-		} catch(Exception e) {
-			throw new ServletException("Error saving gallery", e);
-		}
+		Saver saver=new Saver(new PhotoConfig());
+		saver.save(g);
 
 		// Throw it away, freeing us up to create a new gallery.
 		session.removeAttribute("newGallery");

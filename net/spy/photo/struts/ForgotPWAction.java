@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ForgotPWAction.java,v 1.4 2003/01/07 09:38:52 dustin Exp $
+// $Id: ForgotPWAction.java,v 1.5 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -23,6 +23,7 @@ import net.spy.util.PwGen;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
 
 /**
  * Action that changes user password.
@@ -39,19 +40,24 @@ public class ForgotPWAction extends PhotoAction {
 	/**
 	 * Process the forgotten password request.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
 		throws IOException, ServletException {
 
-		ForgotPWForm fpf=(ForgotPWForm)form;
+		DynaActionForm fpf=(DynaActionForm)form;
 
 		// Get the user
 		PhotoUser user=null;
 
 		try {
 			// Look up the user
-			user=Persistent.getSecurity().getUser(fpf.getUsername());
+			user=Persistent.getSecurity().getUser((String)fpf.get("username"));
+
+			// Verify the user doesn't end up being guest.
+			if(user.getUsername().equals("guest")) {
+				throw new ServletException("Can't set a password for guest");
+			}
 
 			String newPass=PwGen.getPass(8);
 			user.setPassword(newPass);

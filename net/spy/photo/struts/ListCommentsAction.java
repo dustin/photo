@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: ListCommentsAction.java,v 1.3 2002/07/10 03:38:09 dustin Exp $
+// $Id: ListCommentsAction.java,v 1.4 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -35,21 +35,17 @@ public class ListCommentsAction extends PhotoAction {
 	/**
 	 * Load the comments cursor.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		System.out.println("Preparing a new comments cursor.");
 
 		PhotoSessionData sessionData=getSessionData(request);
-		try {
-			PhotoUser user=sessionData.getUser();
-			Cursor comments=new Cursor(Comment.getAllComments(user));
-			sessionData.setComments(comments);
-		} catch(Exception e) {
-			throw new ServletException("Error preparing comments", e);
-		}
+		PhotoUser user=sessionData.getUser();
+		Cursor comments=new Cursor(Comment.getAllComments(user));
+		sessionData.setComments(comments);
 
 		return(mapping.findForward("success"));
 	}

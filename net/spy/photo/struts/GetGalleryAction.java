@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: GetGalleryAction.java,v 1.2 2002/07/10 03:38:09 dustin Exp $
+// $Id: GetGalleryAction.java,v 1.3 2003/05/25 08:17:41 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -35,22 +35,18 @@ public class GetGalleryAction extends PhotoAction {
 	/**
 	 * Perform the action.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		GetGalleryForm ggf=(GetGalleryForm)form;
 
 		PhotoSessionData sessionData=getSessionData(request);
 		PhotoUser user=sessionData.getUser();
 
-		try {
-			Gallery g=Gallery.getGallery(user, ggf.getId());
-			sessionData.setCursor("gallery", new Cursor(g.getImages()));
-		} catch(Exception e) {
-			throw new ServletException("Couldn't get gallery", e);
-		}
+		Gallery g=Gallery.getGallery(user, ggf.getId());
+		sessionData.setCursor("gallery", new Cursor(g.getImages()));
 
 		return(mapping.findForward("success"));
 	}

@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SetDisplayRefresh.java,v 1.1 2003/04/25 06:32:23 dustin Exp $
+// $Id: SetDisplayRefresh.java,v 1.2 2003/05/25 08:17:42 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -36,10 +36,10 @@ public class SetDisplayRefresh extends PhotoAction {
 	/**
 	 * Set the optimal viewing size.
 	 */
-	public ActionForward perform(ActionMapping mapping,
+	public ActionForward execute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
-		throws IOException, ServletException {
+		throws Exception {
 
 		// Get the session data
 		PhotoSessionData sessionData=getSessionData(request);
