@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.113 2002/03/05 00:52:40 dustin Exp $
+ * $Id: PhotoSession.java,v 1.114 2002/03/22 22:25:44 dustin Exp $
  */
 
 package net.spy.photo;
@@ -988,7 +988,7 @@ public class PhotoSession extends Object
 		String newp1=request.getParameter("newpw1");
 		String newp2=request.getParameter("newpw2");
 
-		verifyField("oldpw", 6);
+		verifyField("oldpw", 1);
 		verifyField("newpw1", 6);
 		verifyField("newpw2", 6);
 
