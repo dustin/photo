@@ -1,10 +1,11 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoTag.java,v 1.1 2002/05/15 08:26:16 dustin Exp $
+// $Id: PhotoTag.java,v 1.2 2002/06/11 00:35:01 dustin Exp $
 
 package net.spy.photo.taglib;
 
 import javax.servlet.*;
+import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
@@ -29,12 +30,11 @@ public abstract class PhotoTag extends TagSupport {
 	 */
 	protected PhotoSessionData getSessionData() throws JspException {
 		if(sessionData==null) {
-			sessionData=(PhotoSessionData)
-				pageContext.getAttribute("sessionData",
-					PageContext.REQUEST_SCOPE);
+			HttpSession session=pageContext.getSession();
+			sessionData=(PhotoSessionData)session.getAttribute("photoSession");
 
 			if(sessionData==null) {
-				throw new JspException("sessionData not in request scope.");
+				throw new JspException("photoSession not in session.");
 			}
 		}
 

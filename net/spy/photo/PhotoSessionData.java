@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: PhotoSessionData.java,v 1.7 2002/06/10 20:02:38 dustin Exp $
+// $Id: PhotoSessionData.java,v 1.8 2002/06/11 00:35:01 dustin Exp $
 
 package net.spy.photo;
 
@@ -209,8 +209,17 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 
 	/**
 	 * Get the optimal dimensions for this session.
+	 * If the optimal dimensions have not yet been set for this session,
+	 * initialize them to the default.
 	 */
 	public PhotoDimensions getOptimalDimensions() {
+		// If not set, initialize.
+		if(optimalDimensions == null) {
+			PhotoConfig conf=new PhotoConfig();
+			PhotoDimensions dim=new PhotoDimensionsImpl(
+				conf.get("optimal_image_size", "800x600"));
+			setOptimalDimensions(dim);
+		}
 		return(optimalDimensions);
 	}
 

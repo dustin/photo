@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: SessionWatcher.java,v 1.3 2002/06/10 20:02:38 dustin Exp $
+// $Id: SessionWatcher.java,v 1.4 2002/06/11 00:35:01 dustin Exp $
 
 package net.spy.photo;
 
@@ -8,8 +8,10 @@ import java.util.*;
 
 import javax.servlet.http.*;
 
+import net.spy.photo.*;
+
 /**
- * Watch session creation and destruction and tally logins and all that.
+ * Watch session creation and destruction and manage sessionData.
  */
 public class SessionWatcher extends Object implements HttpSessionListener {
 
@@ -26,6 +28,18 @@ public class SessionWatcher extends Object implements HttpSessionListener {
 	 * Called when a session is created.
 	 */
 	public void sessionCreated(HttpSessionEvent se) {
+        HttpSession session=se.getSession();
+
+        // Create the session data.
+        PhotoSessionData sessionData=new PhotoSessionData();
+        // Set the user
+        sessionData.setUser(Persistent.security.getUser("guest"));
+        // The rest of the stuff will remain null until something comes
+        // along with something better.
+        // Now, add it to the session.
+        session.setAttribute("photoSession", sessionData);
+
+        // OK, now add that to our list.
 		synchronized(allSessions) {
 			allSessions.addElement(se.getSession());
 		}
