@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999 Dustin Sallings
  *
- * $Id: PhotoSession.java,v 1.47 2000/12/31 06:59:29 dustin Exp $
+ * $Id: PhotoSession.java,v 1.48 2001/01/06 04:56:06 dustin Exp $
  */
 
 package net.spy.photo;
@@ -371,15 +371,15 @@ public class PhotoSession extends Object
 
 	// Add an image
 	protected String doAddPhoto() throws ServletException {
-		String out="", type=null;
+		String type=null;
 		int id=-1;
-		Hashtable h = new Hashtable();
 		Connection photo=null;
 
 		// Make sure the user can add.
 		if(!canadd()) {
 			log("User " + remote_user + " has no permission to add.");
-			return(tokenize("add_denied.inc", h));
+			throw new ServletException(
+				"You are not allowed to add images.");
 		}
 
 		// We need a short lifetime for whatever page this produces
@@ -387,22 +387,21 @@ public class PhotoSession extends Object
         l+=10000L;
         response.setDateHeader("Expires", l);
 
-		File f;
-		f = multi.getFile("picture");
+		File f = multi.getFile("picture");
 
 		// Check that it's the right file type.
 		type = multi.getContentType("picture");
 		log("Type is " + type);
 		if( type == null || (! (type.startsWith("image/jpeg"))) ) {
-			h.put("FILENAME", multi.getFilesystemName("picture"));
-			h.put("FILETYPE", type);
-			out=tokenize("add_badfiletype.inc", h);
 			try {
 				f.delete();
 			} catch(Exception e) {
 				log("Error deleting file " + f + ": "  + e);
 			}
-			return(out);
+			// Throw an exception declaring the type to be bad.
+			throw new ServletException(
+				multi.getFilesystemName("picture") + " ("
+				+ type + ") is a bad type, only image/jpeg is accepted");
 		}
 
 		// OK, things look good, let's try to store our data.
@@ -476,19 +475,24 @@ public class PhotoSession extends Object
 			st.setDate(3, new java.sql.Date(System.currentTimeMillis()));
 			st.executeUpdate();
 
-			h.put("ID", ""+id);
-
 			photo.commit();
-			out += tokenize("add_success.inc", h);
+
+			PhotoXML xml=new PhotoXML();
+			xml.setTitle("Upload Succesful");
+			xml.addBodyPart(getGlobalMeta());
+			xml.addBodyPart("<upload_success>\n"
+				+ "<id>" + id + "</id>"
+				+ "</upload_success>");
+
+			sendXML(xml.toString());
 		} catch(Exception e) {
 			log("Error adding new image to database:  " + e);
 			try {
 				photo.rollback();
-				h.put("ERRSTR", e.getMessage());
-				out += tokenize("add_dbfailure.inc", h);
 			} catch(Exception e2) {
 				log("Error rolling back and/or reporting add falure:  " + e2);
 			}
+			throw new ServletException("Error adding image:  " + e);
 		} finally {
 			if(photo != null) {
 				try {
@@ -507,7 +511,7 @@ public class PhotoSession extends Object
 			}
 		}
 
-		return(out);
+		return(null);
 	}
 
 	// Get a list of categories for a select list
@@ -1085,7 +1089,6 @@ public class PhotoSession extends Object
 			h.put("CATS", getCatList(defcat));
 			out=tokenize("admin/display.inc", h);
 		} else {
-			// out=tokenize("display.inc", h);
 			h.put("DATA", datachunk);
 			sendXML("xml/display.xinc", h);
 			out=null;
