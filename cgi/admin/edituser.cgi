@@ -2,7 +2,7 @@
 #
 # Copyright (c) 1997  Dustin Sallings
 #
-# $Id: edituser.cgi,v 1.1 1997/12/06 09:42:28 dustin Exp $
+# $Id: edituser.cgi,v 1.2 1997/12/07 07:03:28 dustin Exp $
 
 use Postgres;
 use CGI;
@@ -93,17 +93,20 @@ if( !($s=$dbh->execute($query)) )
 
 while(($id, $name)=$s->fetchrow())
 {
-    print "<tr><td>$name</td><td>";
     if($ok[$id]==1)
     {
 	$checkedon="checked";
 	$checkedoff="";
+	$color="007f00";
     }
     else
     {
 	$checkedon="";
 	$checkedoff="checked";
+	$color="ff0000";
     }
+    print "<tr><td><font color=\"#$color\">$name</font></td><td>";
+
     print "Yes <input type=\"radio\" ";
     print "name=\"cat$id\" $checkedon value=\"1\">\n";
     print "No <input type=\"radio\" ";
