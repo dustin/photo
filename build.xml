@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.30 2002/12/06 08:43:00 dustin Exp $
+	$Id: build.xml,v 1.31 2002/12/17 07:59:40 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -59,36 +59,37 @@
 	<!-- This is specific to my development at home. -->
 	<target name="install"
 		description="Install a new build in my environment (not for most people)"
-		depends="install-jar,install-web-content"/>
+		depends="install-web-app"/>
 
-	<target name="install-web-content-var">
+	<target name="install-web-app-var">
+		<echo message="Installing to ${location}"/>
 		<copy todir="/afs/.spy.net/misc/web/root/${location}/">
 			<fileset dir="photo">
 				<include name="**/*.jsp"/>
 				<include name="**/*.css"/>
+				<include name="images/*"/>
+				<include name="WEB-INF/lib/*.jar"/>
+				<include name="WEB-INF/struts-config.xml"/>
+				<include name="WEB-INF/web.xml"/>
+				<include name="WEB-INF/tlds/*.tld"/>
+				<!-- Avoid overwriting spy.jar in case I've done specific upgrades. -->
+				<exclude name="WEB-INF/lib/spy.jar"/>
 			</fileset>
 		</copy>
+		<copy file="photo.jar"
+			tofile="/afs/.spy.net/misc/web/root/${location}/WEB-INF/lib/photo.jar"/>
 	</target>
 
-	<target name="install-web-content">
-		<antcall target="install-web-content-var">
+	<target name="install-web-app">
+		<antcall target="install-web-app-var">
 			<param name="location" value="photo"/>
 		</antcall>
-		<antcall target="install-web-content-var">
+		<antcall target="install-web-app-var">
 			<param name="location" value="photodemo"/>
 		</antcall>
-		<antcall target="install-web-content-var">
+		<antcall target="install-web-app-var">
 			<param name="location" value="beckerphoto"/>
 		</antcall>
-	</target>
-
-	<target name="install-jar" depends="photo.jar">
-		<copy file="photo.jar"
-			tofile="/afs/.spy.net/misc/web/root/photo/WEB-INF/lib/photo.jar"/>
-		<copy file="photo.jar"
-			tofile="/afs/.spy.net/misc/web/root/photodemo/WEB-INF/lib/photo.jar"/>
-		<copy file="photo.jar"
-			tofile="/afs/.spy.net/misc/web/root/beckerphoto/WEB-INF/lib/photo.jar"/>
 	</target>
 
 	<target name="install-docs" depends="docs">
