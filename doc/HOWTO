@@ -76,13 +76,17 @@ Please be sure to back up your data before you attempt to run the migration
 kit.  Remember:  Data loss is your fault.  :)
 
 Also, this release uses a new PhotoImage format, so you'll need to rm -rf
-your cache before restarting the spyservices.
+your cache before restarting the spyservices.  This is by default located
+in /var/tmp/rcache or as defined in the spyrunner.conf as rhash.args.
 
 Once you've got your data backed up, cache cleared, and spyservices running
-under the new version, you can use the following command to beging the
+under the new version, you can use the following command to begin the
 migration:
 
 	java net.spy.photo.migration.PhotoMigration01
+
+Make sure to run this with the same class path you used to start the
+spyservices.
 
 It may take a while depending on how many images you have.  When it's done,
 every image (including thumbnails) will be cached and ready to go.
@@ -176,4 +180,4 @@ images showing up as ``admin'' do you?  :)
 
 Let me know if you have any problems.
 
-$Id: HOWTO,v 1.5 2000/07/16 08:57:19 dustin Exp $
+$Id: HOWTO,v 1.6 2000/07/24 05:02:34 knitterb Exp $
