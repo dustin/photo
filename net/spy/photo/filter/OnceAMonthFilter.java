@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: OnceAMonthFilter.java,v 1.2 2002/06/29 07:40:07 dustin Exp $
+// $Id: OnceAMonthFilter.java,v 1.3 2002/07/04 00:14:50 dustin Exp $
 
 package net.spy.photo.filter;
 
@@ -67,7 +67,7 @@ public class OnceAMonthFilter extends Filter {
 		// Do the actual processing
 
 		// This is where the month groups go
-		HashMap months=new HashMap();
+		TreeMap months=new TreeMap();
 		for(; in.hasMoreElements(); ) {
 			PhotoImageData pid=(PhotoImageData)in.nextElement();
 
@@ -96,10 +96,8 @@ public class OnceAMonthFilter extends Filter {
 			v.addElement(pid);
 		}
 
-		// OK, now get the keys
+		// OK, now get the keys (since that's a TreeMap, they'll be sorted)
 		Vector keys=new Vector(months.keySet());
-		// Sort the keys
-		Collections.sort(keys);
 		// If we need to reverse the keys, do so now
 		if(sortDirection==SORT_REVERSE) {
 			Collections.reverse(keys);
