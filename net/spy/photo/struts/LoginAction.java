@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginAction.java,v 1.7 2002/06/14 18:27:24 dustin Exp $
+// $Id: LoginAction.java,v 1.8 2002/06/22 23:15:06 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -58,7 +58,12 @@ public class LoginAction extends PhotoAction {
 				"Your username or password is incorrect.");
 		}
 
-		rv=mapping.findForward("success");
+		// Find out of the user wanted to upgrade to admin privs after 
+		if(lf.getAdmin()) {
+			rv=mapping.findForward("setadmin");
+		} else {
+			rv=mapping.findForward("success");
+		}
 
 		// Go ahead and say it's alright.
 		return(rv);

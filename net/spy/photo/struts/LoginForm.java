@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: LoginForm.java,v 1.4 2002/05/22 00:19:50 dustin Exp $
+// $Id: LoginForm.java,v 1.5 2002/06/22 23:15:06 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -17,6 +17,7 @@ public class LoginForm extends ActionForm {
 
 	private String username=null;
 	private String password=null;
+	private boolean admin=false;
 
 	/**
 	 * Get an instance of LoginForm.
@@ -51,6 +52,20 @@ public class LoginForm extends ActionForm {
 	 */
 	public void setPassword(String password) {
 		this.password=password;
+	}
+
+	/**
+	 * If true, the user would also like his admin status.
+	 */
+	public void setAdmin(boolean admin) {
+		this.admin=admin;
+	}
+
+	/**
+	 * If true, the user would also like his admin status.
+	 */
+	public boolean getAdmin() {
+		return(admin);
 	}
 
 	/**

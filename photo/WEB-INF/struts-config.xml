@@ -32,6 +32,7 @@
 		input="/credform.jsp"
 		name="loginForm">
 		<forward name="success" path="/index.jsp" />
+		<forward name="setadmin" path="/adminify.do?action=setadmin" />
 	</action>
 
 	<!-- Logout -->

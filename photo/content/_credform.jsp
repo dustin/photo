@@ -18,6 +18,10 @@
 			<td><bean:message key="forms.login.password"/>:</td>
 			<td><html:password property="password" size="8"/></td>
 		</tr>
+		<tr>
+			<td><bean:message key="forms.login.setadmin"/>:</td>
+			<td><html:checkbox property="admin"/></td>
+		</tr>
 	</table>
 	<html:submit><bean:message key="forms.login.authbutton"/></html:submit>
 	<html:reset><bean:message key="forms.login.rstbutton"/></html:reset>
