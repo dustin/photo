@@ -3,7 +3,7 @@
 
 	Copyright (c) 2002	Dustin Sallings <dustin@spy.net>
 
-	$Id: build.xml,v 1.23 2002/07/23 03:39:47 dustin Exp $
+	$Id: build.xml,v 1.24 2002/07/23 03:43:12 dustin Exp $
 -->
 
 <project name="PhotoServlet" default="photo.jar" basedir=".">
@@ -88,7 +88,7 @@
 		<move file="photo.zip" tofile="photoservlet-${DSTAMP}.zip"/>
 	</target>
 
-	<target name="photoresources.properties" depends="buildnumber">
+	<target name="photoresources.properties">
 		<buildnumber file="etc/build.number"/>
 		<tstamp/>
 		<copy file="net/spy/photo/photoresources.properties.in"
