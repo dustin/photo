@@ -1,7 +1,7 @@
 # Photo library routines
 # Copyright(c) 1997-1998  Dustin Sallings
 #
-# $Id: Photo.pm,v 1.67 1999/01/30 22:20:36 dustin Exp $
+# $Id: Photo.pm,v 1.68 1999/01/30 22:24:27 dustin Exp $
 
 package Photo;
 
@@ -746,7 +746,7 @@ sub showTemplate
 	$p{'STYLESHEET'}="<link rel=\"stylesheet\"href=\"".
 		$self->{'config'}{'cgidir'} ."/style.cgi\">";
 
-	open(IN, $self->{'config'}{'includes'} . $fn)
+	open(IN, "$self->{'config'}{'includes'}/$fn")
 		|| die("Can't open $fn:  $!\n");
 	while(<IN>) {
 		s/%([A-Z0-9_]+)%/$p{$1}/g;
