@@ -8,7 +8,7 @@ $Id: makesite.py,v 1.3 2003/12/02 04:55:36 dustin Exp $
 """
 
 import os
-import xml.dom.minidom
+import xml.sax
 
 def makeStylesheet():
     f=file("style.css", "w")
@@ -154,19 +154,11 @@ def makePageForPhoto(dir, photo):
 
 class Photo(object):
 
-    def __init__(self, el):
+    def __init__(self, d):
         for col in ['id', 'size', 'width', 'height', 'tnwidth', 'tnheight']:
-            self.__dict__[col]=int(self.__getText(el, col))
+            self.__dict__[col]=int(d[col])
         for col in ['addedby', 'taken', 'ts', 'keywords', 'descr', 'extension']:
-            self.__dict__[col]=self.__getText(el, col)
-
-    def __getText(self, e, which):
-        rv=""
-        try:
-            rv=e.getElementsByTagName(which)[0].childNodes[0].data
-        except IndexError:
-            pass
-        return rv
+            self.__dict__[col]=d[col]
 
     def dims(self):
         return "%dx%d" % (self.width, self.height)
@@ -178,19 +170,44 @@ class Photo(object):
     def __repr__(self):
         return "<Photo id=%d, dims=%s>" % (self.id, self.dims())
 
+class MyHandler(xml.sax.handler.ContentHandler):
+    """Sax handler for pulling out photo entries and putting them in a dict"""
+
+    def __init__(self, album):
+        xml.sax.handler.ContentHandler.__init__(self)
+        self.album=album
+        self.current = None
+        self.el = None
+
+    def startElement(self, name, attrs):
+        if name == 'photo':
+            self.current = {}
+        self.el=str(name)
+        if self.current is not None:
+            self.current[self.el]=""
+
+    def endElement(self, name):
+        if name == 'photo':
+            # Finished a photo, store it
+            photo=Photo(self.current)
+            (year, month, day)=photo.dateParts()
+            if not self.album.has_key(year):
+                self.album[year]={}
+            if not self.album[year].has_key(month):
+                self.album[year][month]=[]
+            self.album[year][month].append(photo)
+
+            # Reset the current entry
+            self.current = None
+
+    def characters(self, content):
+        if self.current is not None:
+            self.current[self.el] = self.current[self.el] + content.strip()
+
 def parseIndex():
     album={}
     print "Parsing index..."
-    d=xml.dom.minidom.parse("index.xml")
-    for pic in d.getElementsByTagName("photo"):
-        photo=Photo(pic)
-        (year, month, day)=photo.dateParts()
-        if not album.has_key(year):
-            album[year]={}
-        if not album[year].has_key(month):
-            album[year][month]=[]
-        album[year][month].append(photo)
-    del d
+    d=xml.sax.parse("index.xml", MyHandler(album))
     print "Parsed"
     return album
 
