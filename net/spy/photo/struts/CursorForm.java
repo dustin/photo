@@ -1,6 +1,6 @@
 // Copyright (c) 2001  Dustin Sallings <dustin@spy.net>
 //
-// $Id: CursorForm.java,v 1.2 2002/05/18 03:02:28 dustin Exp $
+// $Id: CursorForm.java,v 1.3 2002/05/18 09:08:43 dustin Exp $
 
 package net.spy.photo.struts;
 
@@ -78,7 +78,9 @@ public class CursorForm extends ActionForm {
 
 		// If startOffset isn't a valid number, null it.
 		try {
-			Integer.parseInt(startOffset);
+			if(startOffset!=null) {
+				Integer.parseInt(startOffset);
+			}
 		} catch(NumberFormatException nfe) {
 			nfe.printStackTrace();
 			startOffset=null;

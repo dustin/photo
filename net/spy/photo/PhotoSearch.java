@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999  Dustin Sallings <dustin@spy.net>
  *
- * $Id: PhotoSearch.java,v 1.20 2002/03/05 04:32:23 dustin Exp $
+ * $Id: PhotoSearch.java,v 1.21 2002/05/18 09:08:43 dustin Exp $
  */
 
 package net.spy.photo;
@@ -18,32 +18,34 @@ import net.spy.*;
 import net.spy.db.*;
 import net.spy.util.*;
 
+import net.spy.photo.struts.SearchForm;
+
+/**
+ * Perform searches.
+ */
 public class PhotoSearch extends PhotoHelper {
 
-	public PhotoSearch() throws Exception {
+	public PhotoSearch() {
 		super();
 	}
 
-	// Encode the search from the form stuff.
+	/**
+	 * Encode a search from an HttpServletRequest.
+	 */
 	public String encodeSearch(HttpServletRequest request) {
-		String out = "";
-		for(Enumeration e=request.getParameterNames(); e.hasMoreElements();) {
-			String param=(String)e.nextElement();
-			String values[] = request.getParameterValues(param);
-
-			for(int i = 0; i < values.length; i++) {
-				if(values[i].length()>0) {
-					out+=URLEncoder.encode(param)+"="
-						+ URLEncoder.encode(values[i]) +"&";
-				}
-			}
-		}
-		Base64 base64=new Base64();
-		out=base64.encode(out.getBytes());
-		return(out);
+		return(encodeSearch(getSearchForm(request)));
 	}
 
-	// Save the search.
+	/**
+	 * Save a search based with an HttpServletRequest.
+	 *
+	 * The following parameters are expected:
+	 *
+	 * <ul>
+	 *   <li><code>name</code> - the name of the search</li>
+	 *   <li><code>search</code> - the encoded search parameters</li>
+	 * </ul>
+	 */
 	public void saveSearch(HttpServletRequest request, PhotoUser user)
 		throws Exception {
 		if(user==null || request==null) {
@@ -84,19 +86,168 @@ public class PhotoSearch extends PhotoHelper {
 		}
 	}
 
-	// Actually perform the search
+	/**
+	 * Perform a search from an HttpServletRequest.
+	 */
 	public PhotoSearchResults performSearch(
 		HttpServletRequest request, PhotoSessionData sessionData)
+		throws ServletException  {
+
+		return(performSearch(getSearchForm(request), sessionData));
+	}
+
+	/**
+	 * Get a search form from a HttpServletRequest.
+	 */
+	private SearchForm getSearchForm(HttpServletRequest request) {
+		SearchForm sf=new SearchForm();
+
+		sf.setCat(request.getParameterValues("cat"));
+		sf.setFieldjoin(request.getParameter("fieldjoin"));
+		sf.setField(request.getParameter("field"));
+		sf.setKeyjoin(request.getParameter("keyjoin"));
+		sf.setWhat(request.getParameter("what"));
+		sf.setTstartjoin(request.getParameter("tstartjoin"));
+		sf.setTstart(request.getParameter("tstart"));
+		sf.setTendjoin(request.getParameter("tendjoin"));
+		sf.setTend(request.getParameter("tend"));
+		sf.setStartjoin(request.getParameter("startjoin"));
+		sf.setStart(request.getParameter("start"));
+		sf.setEndjoin(request.getParameter("endjoin"));
+		sf.setEnd(request.getParameter("end"));
+		sf.setOrder(request.getParameter("order"));
+		sf.setSdirection(request.getParameter("sdirection"));
+		sf.setMaxret(request.getParameter("maxret"));
+
+		return(sf);
+	}
+
+	/**
+	 * Encode the search from a SearchForm.
+	 */
+	public String encodeSearch(SearchForm form) {
+		StringBuffer sb = new StringBuffer();
+
+		if(form.getFieldjoin() != null) {
+			sb.append("fieldjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getFieldjoin()));
+			sb.append('&');
+		}
+		if(form.getField() != null) {
+			sb.append("field");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getField()));
+			sb.append('&');
+		}
+		if(form.getKeyjoin() != null) {
+			sb.append("keyjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getKeyjoin()));
+			sb.append('&');
+		}
+		if(form.getWhat() != null) {
+			sb.append("what");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getWhat()));
+			sb.append('&');
+		}
+		if(form.getTstartjoin() != null) {
+			sb.append("tstartjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getTstartjoin()));
+			sb.append('&');
+		}
+		if(form.getTstart() != null) {
+			sb.append("tstart");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getTstart()));
+			sb.append('&');
+		}
+		if(form.getTendjoin() != null) {
+			sb.append("tendjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getTendjoin()));
+			sb.append('&');
+		}
+		if(form.getTend() != null) {
+			sb.append("tend");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getTend()));
+			sb.append('&');
+		}
+		if(form.getStartjoin() != null) {
+			sb.append("startjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getStartjoin()));
+			sb.append('&');
+		}
+		if(form.getStart() != null) {
+			sb.append("start");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getStart()));
+			sb.append('&');
+		}
+		if(form.getEndjoin() != null) {
+			sb.append("endjoin");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getEndjoin()));
+			sb.append('&');
+		}
+		if(form.getEnd() != null) {
+			sb.append("end");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getEnd()));
+			sb.append('&');
+		}
+		if(form.getOrder() != null) {
+			sb.append("order");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getOrder()));
+			sb.append('&');
+		}
+		if(form.getSdirection() != null) {
+			sb.append("sdirection");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getSdirection()));
+			sb.append('&');
+		}
+		if(form.getMaxret() != null) {
+			sb.append("maxret");
+			sb.append('=');
+			sb.append(URLEncoder.encode(form.getMaxret()));
+			sb.append('&');
+		}
+
+		if(form.getCat() != null) {
+			String cats[]=form.getCat();
+			for(int i=0; i<cats.length; i++) {
+				sb.append("cat");
+				sb.append('=');
+				sb.append(URLEncoder.encode(cats[i]));
+				sb.append('&');
+			}
+		}
+
+		Base64 base64=new Base64();
+		String out=base64.encode(sb.toString().getBytes());
+		return(out);
+	}
+
+	/**
+	 * Perform a search from a SearchForm.
+	 */
+	public PhotoSearchResults performSearch(
+		SearchForm form, PhotoSessionData sessionData)
 		throws ServletException {
 
-		PhotoSearchResults results=
-			new PhotoSearchResults(request.getRequestURI());
+		PhotoSearchResults results=new PhotoSearchResults("PhotoServlet");
 		results.setMaxSize(sessionData.getOptimalDimensions());
 
 		try {
 
 			// Go get a query
-			String query=buildQuery(request, sessionData.getUser().getId());
+			String query=buildQuery(form, sessionData.getUser().getId());
 
 			// Cache this query for fifteen minutes.  It's unique to the
 			// user, but the user is often guest.
@@ -104,7 +255,7 @@ public class PhotoSearch extends PhotoHelper {
 			ResultSet rs = photo.executeQuery(query);
 
 			// Figure out how many they want to display.
-			String tmp=request.getParameter("maxret");
+			String tmp=form.getMaxret();
 			if(tmp!=null) {
 				int rv=Integer.parseInt(tmp);
 				results.setMaxRet(rv);
@@ -147,8 +298,8 @@ public class PhotoSearch extends PhotoHelper {
 		return(results);
 	}
 
-	// Build the bigass complex search query.
-	private String buildQuery(HttpServletRequest request, int remote_uid)
+	// Build the bigass complex search query from a SearchForm
+	private String buildQuery(SearchForm form, int remote_uid)
 		throws ServletException {
 		String query="", sub="", stmp="", order="",
 			odirection="", fieldjoin="", join="";
@@ -167,7 +318,7 @@ public class PhotoSearch extends PhotoHelper {
 			+ "             or acl.userid= " + PhotoUtil.getDefaultId() + ")\n";
 
 		// Find out what the fieldjoin is real quick...
-		stmp=request.getParameter("fieldjoin");
+		stmp=form.getFieldjoin();
 		if(stmp == null) {
 			fieldjoin="and";
 		} else {
@@ -175,7 +326,7 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		// Start with categories.
-		atmp=request.getParameterValues("cat");
+		atmp=form.getCat();
 
 		if(atmp != null) {
 			stmp="";
@@ -204,7 +355,7 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		// OK, lets look for search strings now...
-		stmp = request.getParameter("what");
+		stmp = form.getWhat();
 		if(stmp != null && stmp.length() > 0) {
 			String a="", b="", field=null;
 			boolean needjoin=false;
@@ -217,13 +368,13 @@ public class PhotoSearch extends PhotoHelper {
 
 			atmp = PhotoUtil.split(" ", stmp);
 
-			join = PhotoUtil.dbquote_str(request.getParameter("keyjoin"));
+			join = PhotoUtil.dbquote_str(form.getKeyjoin());
 			// Default
 			if(join == null) {
 				join = "or";
 			}
 
-			field = PhotoUtil.dbquote_str(request.getParameter("field"));
+			field = PhotoUtil.dbquote_str(form.getField());
 			// Default
 			if(field == null) {
 				throw new ServletException("No field");
@@ -249,10 +400,10 @@ public class PhotoSearch extends PhotoHelper {
 
 		// Starts and ends
 
-		stmp=PhotoUtil.dbquote_str(request.getParameter("tstart"));
+		stmp=PhotoUtil.dbquote_str(form.getTstart());
 		if(stmp != null && stmp.length()>0) {
 			if(needao) {
-				join=PhotoUtil.dbquote_str(request.getParameter("tstartjoin"));
+				join=PhotoUtil.dbquote_str(form.getTstartjoin());
 				if(join==null) {
 					join="and";
 				}
@@ -262,10 +413,10 @@ public class PhotoSearch extends PhotoHelper {
 			sub += "\n    a.taken>='" + stmp + "'";
 		}
 
-		stmp=PhotoUtil.dbquote_str(request.getParameter("tend"));
+		stmp=PhotoUtil.dbquote_str(form.getTend());
 		if(stmp != null && stmp.length()>0) {
 			if(needao) {
-				join=PhotoUtil.dbquote_str(request.getParameter("tendjoin"));
+				join=PhotoUtil.dbquote_str(form.getTendjoin());
 				if(join==null) {
 					join="and";
 				}
@@ -275,10 +426,10 @@ public class PhotoSearch extends PhotoHelper {
 			sub += "\n    a.taken<='" + stmp + "'";
 		}
 
-		stmp=PhotoUtil.dbquote_str(request.getParameter("start"));
+		stmp=PhotoUtil.dbquote_str(form.getStart());
 		if(stmp != null && stmp.length()>0) {
 			if(needao) {
-				join=PhotoUtil.dbquote_str(request.getParameter("startjoin"));
+				join=PhotoUtil.dbquote_str(form.getStartjoin());
 				if(join==null) {
 					join="and";
 				}
@@ -288,10 +439,10 @@ public class PhotoSearch extends PhotoHelper {
 			sub += "\n    a.ts>='" + stmp + "'";
 		}
 
-		stmp=PhotoUtil.dbquote_str(request.getParameter("end"));
+		stmp=PhotoUtil.dbquote_str(form.getEnd());
 		if(stmp != null && stmp.length()>0) {
 			if(needao) {
-				join=PhotoUtil.dbquote_str(request.getParameter("endjoin"));
+				join=PhotoUtil.dbquote_str(form.getEndjoin());
 				if(join==null) {
 					join="and";
 				}
@@ -307,7 +458,7 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		// Figure out the direction...
-		stmp=PhotoUtil.dbquote_str(request.getParameter("sdirection"));
+		stmp=PhotoUtil.dbquote_str(form.getSdirection());
 		if(stmp != null) {
 			odirection=stmp;
 		} else {
@@ -315,7 +466,7 @@ public class PhotoSearch extends PhotoHelper {
 		}
 
 		// Stick the order under the subquery.
-		stmp=PhotoUtil.dbquote_str(request.getParameter("order"));
+		stmp=PhotoUtil.dbquote_str(form.getOrder());
 		if(stmp != null) {
 			if(stmp.equals("a.taken")) {
 				order="a.taken " + odirection + ", a.ts " + odirection;
@@ -336,4 +487,5 @@ public class PhotoSearch extends PhotoHelper {
 
 		return(query);
 	}
+
 }
