@@ -21,7 +21,7 @@
 		<tr valign="top">
 			<td align="left" width="10%">
 				<photo:imgLink id="<%= 0 %>" relative="prev" searchId="<%= searchId %>">
-					<photo:imgsrc alt="<<<" border="0" url="/images/l_arrow.gif"/>
+					<photo:imgsrc alt="previous" border="0" url="/images/prev.png"/>
 				</photo:imgLink>
 			</td>
 
@@ -30,8 +30,16 @@
 			</td>
 
 			<td align="right" width="10%">
+				<% if(searchId != null) { %>
+					<photo:link url='<%= "/display.do?search_id=" + searchId %>'>
+						<photo:imgsrc alt="pause" border="0" url="/images/pause.png"/>
+					</photo:link>
+					<photo:link url='<%= "/refreshDisplay.do?search_id=" + searchId %>'>
+						<photo:imgsrc alt="slideshow" border="0" url="/images/play.png"/>
+					</photo:link>
+				<% } %>
 				<photo:imgLink id="<%= 0 %>" relative="next" searchId="<%= searchId %>">
-					<photo:imgsrc alt=">>>" border="0" url="/images/r_arrow.gif"/>
+					<photo:imgsrc alt="next" border="0" url="/images/next.png"/>
 				</photo:imgLink>
 			</td>
 		</tr>
