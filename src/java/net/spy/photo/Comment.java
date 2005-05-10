@@ -68,11 +68,11 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	 * Get a Collection of Comment objects for all of the comments on a
 	 * given image.
 	 */
-	public static Collection getCommentsForPhoto(int imageId)
+	public static Collection<Comment> getCommentsForPhoto(int imageId)
 		throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
-		ArrayList al=new ArrayList();
+		ArrayList<Comment> al=new ArrayList();
 		GetCommentsForPhoto db=
 			new GetCommentsForPhoto(PhotoConfig.getInstance());
 		db.setPhotoId(imageId);
@@ -95,10 +95,11 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	 *
 	 * @see GroupedComments
 	 */
-	public static List getAllComments(User user) throws Exception {
+	public static List<GroupedComments> getAllComments(User user)
+		throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
-		ArrayList al=new ArrayList();
+		ArrayList<GroupedComments> al=new ArrayList();
 		FindImagesByComments db=
 			new FindImagesByComments(PhotoConfig.getInstance());
 		db.setUserId(user.getId());

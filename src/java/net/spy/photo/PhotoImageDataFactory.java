@@ -4,9 +4,6 @@
 package net.spy.photo;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import net.spy.factory.GenFactory;
 import net.spy.db.Saver;

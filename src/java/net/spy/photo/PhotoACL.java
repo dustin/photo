@@ -17,7 +17,7 @@ import net.spy.SpyObject;
  */
 public class PhotoACL extends SpyObject implements Serializable {
 
-	private List acl=null;
+	private List<PhotoACLEntry> acl=null;
 	private boolean modified=false;
 
 	/**
@@ -33,8 +33,7 @@ public class PhotoACL extends SpyObject implements Serializable {
 	 */
 	public PhotoACL copy() {
 		PhotoACL rv=new PhotoACL();
-		for(Iterator i=acl.iterator(); i.hasNext(); ) {
-			PhotoACLEntry e=(PhotoACLEntry)i.next();
+		for(PhotoACLEntry e : acl) {
 			rv.acl.add(e.copy());
 		}
 		return(rv);
@@ -44,7 +43,7 @@ public class PhotoACL extends SpyObject implements Serializable {
 	 * Iterate this ACL.
 	 * @return an unmodifiable iterator of the ACL entries.
 	 */
-	public Iterator iterator() {
+	public Iterator<PhotoACLEntry> iterator() {
 		return(Collections.unmodifiableCollection(acl).iterator());
 	}
 
@@ -71,10 +70,10 @@ public class PhotoACL extends SpyObject implements Serializable {
 	public PhotoACLEntry getEntry(int what, boolean create) {
 		PhotoACLEntry rv=null;
 
-		for(Iterator i=acl.iterator(); rv==null && i.hasNext();) {
-			PhotoACLEntry ae=(PhotoACLEntry)i.next();
+		for(PhotoACLEntry ae : acl) {
 			if(ae.getWhat() == what) {
 				rv=ae;
+				break;
 			}
 		}
 

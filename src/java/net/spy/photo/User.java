@@ -32,7 +32,7 @@ public interface User extends Principal, Instance {
 	/**
 	 * Get a Collection of Strings describing all the roles this user has.
 	 */
-	Collection getRoles();
+	Collection<String> getRoles();
 
 	/**
 	 * True if the user is in the given group.

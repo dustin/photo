@@ -5,7 +5,6 @@ package net.spy.photo;
 
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
@@ -21,10 +20,11 @@ import net.spy.jwebkit.RequestUtil;
  */
 public class PhotoUtil extends Object {
 
-	private static final Collection dateFormats=initDateFormats();
+	private static final Collection<SimpleDateFormat> dateFormats
+		=initDateFormats();
 
-	private static Collection initDateFormats() {
-		ArrayList rv=new ArrayList();
+	private static Collection<SimpleDateFormat> initDateFormats() {
+		ArrayList<SimpleDateFormat> rv=new ArrayList();
 
 		SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
 		sdf.setLenient(false);
@@ -53,9 +53,7 @@ public class PhotoUtil extends Object {
 	public static Date parseDate(String s) {
 		Date rv=null;
 		if(s != null && s.length() > 0) {
-			for(Iterator i=dateFormats.iterator(); rv==null && i.hasNext(); ) {
-				SimpleDateFormat sdf=(SimpleDateFormat)i.next();
-
+			for(SimpleDateFormat sdf : dateFormats) {
 				try {
 					rv=sdf.parse(s);
 				} catch(Exception e) {

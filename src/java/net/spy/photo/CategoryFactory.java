@@ -12,8 +12,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Comparator;
+import java.util.Iterator;
 
 import net.spy.db.Saver;
 import net.spy.db.Savable;
@@ -63,7 +63,7 @@ public class CategoryFactory extends GenFactory<Category> {
 	}
 
 	protected Collection<Category> getInstances() {
-		Map rv=new HashMap();
+		Map<Integer, Category> rv=new HashMap();
 
 		try {
 			GetAllCategories db=new GetAllCategories(PhotoConfig.getInstance());
@@ -71,7 +71,7 @@ public class CategoryFactory extends GenFactory<Category> {
 			ResultSet rs=db.executeQuery();
 			while(rs.next()) {
 				Category cat=new DBCategory(rs);
-				rv.put(new Integer(cat.getId()), cat);
+				rv.put(cat.getId(), cat);
 			}
 
 			db.close();
@@ -124,8 +124,7 @@ public class CategoryFactory extends GenFactory<Category> {
 			throw new NullPointerException("Category name may not be null");
 		}
 		Category rv=null;
-		for(Iterator i=getObjects().iterator(); i.hasNext() && rv == null; ) {
-			Category cat=(Category)i.next();
+		for(Category cat : getObjects()) {
 			if(name.equals(cat.getName())) {
 				rv=cat;
 			}
@@ -139,7 +138,7 @@ public class CategoryFactory extends GenFactory<Category> {
 	/**
 	 * Load the ACLs for this Category instance.
 	 */
-	private void loadACLs(Map cats) throws SQLException {
+	private void loadACLs(Map<Integer, Category> cats) throws SQLException {
 
 		GetAllACLs db=new GetAllACLs(PhotoConfig.getInstance());
 
@@ -147,7 +146,7 @@ public class CategoryFactory extends GenFactory<Category> {
 		while(rs.next()) {
 			Integer catId=new Integer(rs.getInt("cat"));
 
-			Category cat=(Category)cats.get(catId);
+			Category cat=cats.get(catId);
 			if(cat == null) {
 				throw new RuntimeException("Invalid cat acl mapping " + catId);
 			}
@@ -164,7 +163,7 @@ public class CategoryFactory extends GenFactory<Category> {
 		db.close();
 	}
 
-	private SortedSet getInternalCatList(int uid, int access)
+	private SortedSet<Category> getInternalCatList(int uid, int access)
 		throws PhotoException {
 
 		boolean seeksRead=((access&ACCESS_READ)>0);
@@ -175,10 +174,10 @@ public class CategoryFactory extends GenFactory<Category> {
 			throw new PhotoException("No access method given.");
 		}
 
-		SortedSet rv=getAdminCatList();
+		SortedSet<Category> rv=getAdminCatList();
 
-		for(Iterator i=rv.iterator(); i.hasNext();) {
-			Category cat=(Category)i.next();
+		for(Iterator<Category> i=rv.iterator(); i.hasNext();) {
+			Category cat=i.next();
 
 			PhotoACLEntry aclE=cat.getACL().getEntry(uid);
 
@@ -208,13 +207,14 @@ public class CategoryFactory extends GenFactory<Category> {
 	 * @param access A bitmask describing the access required for the
 	 * search (ord together).
 	 */
-	public SortedSet getCatList(int uid, int access)
+	public SortedSet<Category> getCatList(int uid, int access)
 		throws PhotoException {
 
 		// The set for this user
-		SortedSet baseSet=getInternalCatList(uid, access);
+		SortedSet<Category> baseSet=getInternalCatList(uid, access);
 		// The set for the default user
-		SortedSet defSet=getInternalCatList(PhotoUtil.getDefaultId(), access);
+		SortedSet<Category> defSet=getInternalCatList(
+			PhotoUtil.getDefaultId(), access);
 
 		// Add all of the default set to the base set.
 		baseSet.addAll(defSet);
@@ -227,8 +227,8 @@ public class CategoryFactory extends GenFactory<Category> {
 	 * @return a new SortedSet of Categories.
 	 * @throws PhotoException if it can't find the categories
 	 */
-	public SortedSet getAdminCatList() throws PhotoException {
-		SortedSet rv=null;
+	public SortedSet<Category> getAdminCatList() throws PhotoException {
+		SortedSet<Category> rv=null;
 		try {
 			rv=new TreeSet(comparator);
 			rv.addAll(getObjects());
@@ -238,10 +238,8 @@ public class CategoryFactory extends GenFactory<Category> {
 		return(rv);
 	}
 
-	private static class CategoryComparator implements Comparator {
-		public int compare(Object o1, Object o2) {
-			Category cat1=(Category)o1;
-			Category cat2=(Category)o2;
+	private static class CategoryComparator implements Comparator<Category> {
+		public int compare(Category cat1, Category cat2) {
 			int rv=cat1.getName().compareTo(cat2.getName());
 			return(rv);
 		}

@@ -5,8 +5,6 @@ package net.spy.photo;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
@@ -66,12 +64,11 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	 * Get the SessionData from each session that represents the given
 	 * user.
 	 */
-	public static Collection getSessionDataByUser(String username) {
-		ArrayList al=new ArrayList();
+	public static Collection<PhotoSessionData> getSessionDataByUser(
+		String username) {
+		ArrayList<PhotoSessionData> al=new ArrayList();
 
-		for(Iterator i=getSessions().iterator(); i.hasNext(); ) {
-			HttpSession session=(HttpSession)i.next();
-
+		for(HttpSession session : getSessions()) {
 			if(session.getAttribute(PhotoSessionData.SES_ATTR) != null) {
 				PhotoSessionData sessionData=(PhotoSessionData)
 					session.getAttribute(PhotoSessionData.SES_ATTR);
@@ -96,8 +93,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	public static int getSessionCountByUser(String username) {
 		int rv=0;
 
-		for(Iterator i=getSessionDataByUser(username).iterator();i.hasNext();){
-			i.next();
+		for(PhotoSessionData ses : getSessionDataByUser(username)) {
             rv++;
         }
 
@@ -108,12 +104,10 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	 * Get a Collection of HttpSession objects representing all users
 	 * currently in the system.
 	 */
-	public static Collection listSessions() {
-		ArrayList al=new ArrayList();
+	public static Collection<HttpSession> listSessions() {
+		ArrayList<HttpSession> al=new ArrayList();
 
-		for(Iterator i=getSessions().iterator(); i.hasNext();) {
-			HttpSession session=(HttpSession)i.next();
-
+		for(HttpSession session : getSessions()) {
 			PhotoSessionData sessionData=(PhotoSessionData)
 				session.getAttribute(PhotoSessionData.SES_ATTR);
 

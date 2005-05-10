@@ -9,7 +9,6 @@ import java.sql.SQLException;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Collection;
@@ -108,14 +107,10 @@ public class PhotoProperties extends Properties implements Savable {
 
 		InsertProperty ip=new InsertProperty(conn);
 
-		for(Iterator i=entrySet().iterator(); i.hasNext(); ) {
-			Map.Entry me=(Map.Entry)i.next();
+		for(Map.Entry me : entrySet()) {
 
-			String key=(String)me.getKey();
-			String value=(String)me.getValue();
-
-			ip.setName(key);
-			ip.setValue(value);
+			ip.setName((String)me.getKey());
+			ip.setValue((String)me.getValue());
 
 			int affected=ip.executeUpdate();
 			if(affected!=1) {

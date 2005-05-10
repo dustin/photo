@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.spy.SpyObject;
 import net.spy.db.SpyDB;
@@ -54,11 +53,11 @@ public class Vote extends SpyObject implements java.io.Serializable {
 	 * Get a Collection of Vote objects for all of the comments on a
 	 * given image.
 	 */
-	public static Collection getVotesForPhoto(int imageId)
+	public static Collection<Vote> getVotesForPhoto(int imageId)
 		throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
-		ArrayList al=new ArrayList();
+		ArrayList<Vote> al=new ArrayList();
 		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select * from votes where photo_id=? order by ts desc");
@@ -226,10 +225,8 @@ public class Vote extends SpyObject implements java.io.Serializable {
 			System.out.println(vote);
 		} else {
 			int img=Integer.parseInt(args[0]);
-			for(Iterator i=Vote.getVotesForPhoto(img).iterator();i.hasNext();){
-
-				Vote c=(Vote)i.next();
-				System.out.println(c.toString());
+			for(Vote v : Vote.getVotesForPhoto(img)) {
+				System.out.println(v);
 				System.out.println("--");
 			}
 		}

@@ -44,7 +44,7 @@ public class Profile extends AbstractSavable implements Serializable {
 	private String description=null;
 	private Date expires=null;
 
-	private Set acl=null;
+	private Set<Integer> acl=null;
 
 	/**
 	 * Get a new, empty user profile.
@@ -115,9 +115,9 @@ public class Profile extends AbstractSavable implements Serializable {
 		sb.append(", expires:  ");
 		sb.append(expires);
 		sb.append(":\n");
-		for(Iterator i=getACLEntries().iterator(); i.hasNext(); ) {
+		for(int i : getACLEntries()) {
 			sb.append("\t");
-			sb.append(i.next());
+			sb.append(i);
 			sb.append("\n");
 		}
 		return(sb.toString());
@@ -149,7 +149,7 @@ public class Profile extends AbstractSavable implements Serializable {
 	 * Get the Set of category IDs (as Integer objects) the user has
 	 * access to.
 	 */
-	public Collection getACLEntries() {
+	public Collection<Integer> getACLEntries() {
 		return(Collections.unmodifiableSet(acl));
 	}
 
@@ -157,16 +157,14 @@ public class Profile extends AbstractSavable implements Serializable {
 	 * Add an ACL entry.
 	 */
 	public void addACLEntry(int cat) {
-		Integer c=new Integer(cat);
-		acl.add(c);
+		acl.add(cat);
 	}
 
 	/**
 	 * Remove an ACL entry.
 	 */
 	public void removeACLEntry(int cat) {
-		Integer c=new Integer(cat);
-		acl.remove(c);
+		acl.remove(cat);
 	}
 
 	/**
@@ -239,10 +237,8 @@ public class Profile extends AbstractSavable implements Serializable {
 		InsertProfileACL ins=new InsertProfileACL(conn);
 		ins.setProfileId(getId());
 
-		for(Iterator it=getACLEntries().iterator(); it.hasNext(); ) {
-			Integer i=(Integer)it.next();
-
-			ins.setCatId(i.intValue());
+		for(int i : getACLEntries()) {
+			ins.setCatId(i);
 			ins.executeUpdate();
 		}
 		ins.close();

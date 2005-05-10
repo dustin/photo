@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 
 import net.spy.db.SpyDB;
 
@@ -40,7 +39,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 
 	private int id=-1;
 	private String name=null;
-	private ArrayList images=null;
+	private ArrayList<PhotoImageData> images=null;
 	private boolean isPublic=false;
 	private User owner=null;
 	private Date timestamp=null;
@@ -224,9 +223,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 		InsertGalleryMap igm=new InsertGalleryMap(conn);
 		igm.setGalleryId(id);
 
-		for(Iterator i=images.iterator(); i.hasNext(); ) {
-			PhotoImageData pid=(PhotoImageData)i.next();
-
+		for(PhotoImageData pid : images) {
 			igm.setAlbumId(pid.getId());
 			affected=igm.executeUpdate();
 			if(affected!=1) {

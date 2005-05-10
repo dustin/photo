@@ -9,8 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import java.util.Collection;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.spy.SpyObject;
 import net.spy.db.SpyDB;
@@ -150,7 +148,7 @@ public class PhotoSecurity extends SpyObject {
 	 *
 	 * @return an List of User objects
 	 */
-	public Collection getAllUsers() throws Exception {
+	public Collection<User> getAllUsers() throws Exception {
 		return(userFactory.getAllUsers());
 	}
 }

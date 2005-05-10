@@ -31,14 +31,14 @@ import net.spy.photo.sp.GetAllRoles;
 /**
  * Represents a user in the photo system.
  */
-public class UserFactory extends GenFactory {
+public class UserFactory extends GenFactory<User> {
 
 	private static final String CACHE_KEY="net.spy.photo.DBUser";
 	private static final int CACHE_TIME=3600000; // one hour
 
 	private static UserFactory instance=null;
 
-	private Comparator userComparator=null;
+	private Comparator<User> userComparator=null;
 
 	/**
 	 * Get a new, empty user.
@@ -58,13 +58,15 @@ public class UserFactory extends GenFactory {
 		return(instance);
 	}
 
-	private void initACLs(Map idMap, DBUser defaultUser) throws Exception {
+	private void initACLs(Map<Integer, User> idMap, User defaultUser)
+		throws Exception {
+
 		GetAllACLs db=new GetAllACLs(PhotoConfig.getInstance());
 
 		ResultSet rs=db.executeQuery();
 		while(rs.next()) {
-			Integer userId=new Integer(rs.getInt("userid"));
-			DBUser pu=(DBUser)idMap.get(userId);
+			int userId=rs.getInt("userid");
+			User pu=idMap.get(userId);
 			if(pu == null) {
 				throw new PhotoUserException("Invalid user in acl map: "
 					+ userId);
@@ -80,12 +82,9 @@ public class UserFactory extends GenFactory {
 		rs.close();
 		db.close();
 		// Add all of the permissions of the default user to all other users
-		for(Iterator i=idMap.values().iterator(); i.hasNext(); ) {
-			DBUser u=(DBUser)i.next();
-
-			for(Iterator i2=u.getACL().iterator(); i2.hasNext(); ) {
-				PhotoACLEntry acl=(PhotoACLEntry)i2.next();
-
+		for(User u : idMap.values()) {
+			for(Iterator<PhotoACLEntry> i=u.getACL().iterator(); i.hasNext();) {
+				PhotoACLEntry acl=i.next();
 				if(acl.canView()) {
 					u.getACL().addViewEntry(acl.getWhat());
 				}
@@ -98,29 +97,29 @@ public class UserFactory extends GenFactory {
 
 	private Collection fetchAllUsers() throws Exception {
 		PhotoConfig conf=PhotoConfig.getInstance();
-		Map users=new HashMap();
-		Map idMap=new HashMap();
+		Map<String, User> users=new HashMap();
+		Map<Integer, User> idMap=new HashMap();
 
 		GetAllUsers db=new GetAllUsers(conf);
 		ResultSet rs=db.executeQuery();
 		while(rs.next()) {
-			DBUser pu=new DBUser(rs);
+			User pu=new DBUser(rs);
 
 			// Add it to the list so we can initialize the ACLs.
 			users.put(pu.getName(), pu);
-			idMap.put(new Integer(pu.getId()), pu);
+			idMap.put(pu.getId(), pu);
 		}
 		rs.close();
 		db.close();
 
 		// Find the default user so we can initialize the ACLs.
 		String defUsername=conf.get("default_user", "guest");
-		DBUser defaultUser=(DBUser)users.get(defUsername);
+		User defaultUser=users.get(defUsername);
 		if(defaultUser==null) {
 			throw new PhotoUserException("Default user not found.");
 		}
 		// Add the ``guest'' role to the default user.
-		defaultUser.addRole("guest");
+		((DBUser)defaultUser).addRole("guest");
 
 		// Initialize all the ACLs for all the users
 		initACLs(idMap, defaultUser);
@@ -130,11 +129,11 @@ public class UserFactory extends GenFactory {
 		while(rs.next()) {
 			Integer id=new Integer(rs.getInt("userid"));
 			String r=rs.getString("groupname");
-			DBUser pu=(DBUser)idMap.get(id);
+			User pu=idMap.get(id);
 			if(pu == null) {
 				throw new PhotoException("Invalid user in role map: " + id);
 			}
-			pu.addRole(r);
+			((DBUser)pu).addRole(r);
 		}
 		rs.close();
 		db2.close();
@@ -258,10 +257,10 @@ public class UserFactory extends GenFactory {
 		}
 	}
 
-	private static class UserCacheEntry extends HashCacheEntry {
-		public Map byUsername=null;
-		public Map byEmail=null;
-		public Map byPersess=null;
+	private static class UserCacheEntry extends HashCacheEntry<User> {
+		public Map<String, User> byUsername=null;
+		public Map<String, User> byEmail=null;
+		public Map<String, User> byPersess=null;
 
 		public UserCacheEntry() {
 			super();
@@ -270,9 +269,8 @@ public class UserFactory extends GenFactory {
 			byPersess=new HashMap();
 		}
 
-		public void cacheInstance(Instance i) {
-			super.cacheInstance(i);
-			User u=(User)i;
+		public void cacheInstance(User u) {
+			super.cacheInstance(u);
 			byUsername.put(u.getName(), u);
 			byEmail.put(u.getEmail(), u);
 			if(u.getPersess() != null) {
@@ -281,15 +279,15 @@ public class UserFactory extends GenFactory {
 		}
 
 		public User getByUsername(String username) {
-			return( (User)byUsername.get(username));
+			return(byUsername.get(username));
 		}
 
 		public User getByEmail(String email) {
-			return( (User)byEmail.get(email));
+			return(byEmail.get(email));
 		}
 
 		public User getByPersess(String persess) {
-			return( (User)byPersess.get(persess));
+			return(byPersess.get(persess));
 		}
 	}
 }

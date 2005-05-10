@@ -32,7 +32,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	private String encodedSearch=null;
 	private PhotoDimensions optimalDimensions=null;
 
-	private Map cursors=null;
+	private Map<String, Cursor> cursors=null;
 
 	private int adminType=NOADMIN;
 
@@ -40,7 +40,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	private int imagesSeen=0;
     // Keep track of the last image the user viewed.
     private int lastImageSeen=0;
-	private RingBuffer imagesSeenBuf=null;
+	private RingBuffer<Integer> imagesSeenBuf=null;
 
 	/**
 	 * Get an instance of PhotoSessionData.
@@ -95,7 +95,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 * @return the Cursor or null if no such cursor exists
 	 */
 	public Cursor getCursor(String name) {
-		return((Cursor)cursors.get(name));
+		return(cursors.get(name));
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	public synchronized void sawImage(int imageId) {
 		imagesSeen++;
 		lastImageSeen=imageId;
-		imagesSeenBuf.add(new Integer(imageId));
+		imagesSeenBuf.add(imageId);
 	}
 
 	/**
@@ -248,7 +248,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	/** 
 	 * Get a Collection of the images this user session has seen.
 	 */
-	public synchronized Collection getImageSeenCollection() {
+	public synchronized Collection<Integer> getImageSeenCollection() {
 		return(imagesSeenBuf);
 	}
 

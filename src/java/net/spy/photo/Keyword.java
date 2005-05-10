@@ -3,7 +3,6 @@
 
 package net.spy.photo;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
@@ -12,8 +11,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import java.util.Collection;
 
 import net.spy.db.SpyDB;
 import net.spy.db.AbstractSavable;
@@ -28,7 +25,7 @@ import net.spy.photo.sp.InsertKeyword;
 /**
  * This class represents a keyword in the database.
  */
-public class Keyword extends AbstractSavable implements Comparable {
+public class Keyword extends AbstractSavable implements Comparable<Keyword> {
 
 	private static final String CACHE_KEY="keywords";
 	private static final int CACHE_TIME=3600000;
@@ -76,7 +73,7 @@ public class Keyword extends AbstractSavable implements Comparable {
 	 */
 	public static Keyword getKeyword(int id) throws Exception {
 		Cache c=getCache();
-		Keyword rv=(Keyword)c.byId.get(new Integer(id));
+		Keyword rv=c.byId.get(new Integer(id));
 		if(rv == null) {
 			throw new Exception("No such keyword id:  " + id);
 		}
@@ -104,7 +101,7 @@ public class Keyword extends AbstractSavable implements Comparable {
 		}
 		kw=kw.trim().toLowerCase();
 		Cache c=getCache();
-		Keyword rv=(Keyword)c.byWord.get(kw);
+		Keyword rv=c.byWord.get(kw);
 		if(rv == null && create) {
 			// If this didn't match an existing keyword, make a new one
 			rv=new Keyword(kw);
@@ -188,8 +185,7 @@ public class Keyword extends AbstractSavable implements Comparable {
 	 * Compare these Keyword objects in their respective keyword natural
 	 * orders.
 	 */
-	public int compareTo(Object o) {
-		Keyword other=(Keyword)o;
+	public int compareTo(Keyword other) {
 		return(keyword.compareTo(other.keyword));
 	}
 
@@ -223,8 +219,8 @@ public class Keyword extends AbstractSavable implements Comparable {
 	}
 
 	private static class Cache {
-		public Map byId=null;
-		public Map byWord=null;
+		public Map<Integer, Keyword> byId=null;
+		public Map<String, Keyword> byWord=null;
 
 		public Cache() {
 			super();
