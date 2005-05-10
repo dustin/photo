@@ -152,7 +152,14 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 
 	<build>
 		<sourceDirectory>${basedir}/src/java</sourceDirectory>
-		<resources/>
+		<resources>
+			<resource>
+				<directory>${maven.build.dir}/src</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 
 	<reports>

@@ -2,24 +2,109 @@
 <!-- Copyright (c) 2005  Dustin Sallings (dustin@spy.net) -->
 <!-- arch-tag: B5129534-C0B4-11D9-821B-000393CFE6B8 -->
 
-<project default="war"
+<project default="spy:deploy"
 	xmlns:j="jelly:core"
 	xmlns:m="jelly:maven"
+	xmlns:u="jelly:util"
 	xmlns:ant="jelly:ant"
 	xmlns:deploy="deploy">
 
-	<preGoal name="java:compile">
-		<attainGoal name="spy:spt"/>
-		<path id="generated.src" location="${maven.build.src}"/>
+	<goal name="dist" prereqs="war,javadoc">
+		<zip zipfile="${maven.build.dir}/photoservlet-${short.version}.zip"
+			basedir="${maven.build.dir}" excludes="**">
+			<zipfileset dir="${maven.build.dir}/docs" prefix="doc/api"
+				includes="**"/>
+			<zipfileset dir="${basedir}" prefix="" includes="contrib/*"/>
+			<zipfileset dir="${maven.build.dir}" prefix="" includes="photo.war"/>
+			<zipfileset dir="${basedir}" prefix="" includes="doc/HOWTO"/>
+		</zip>
+	</goal>
+
+	<preGoal name="war:init">
+		<xmlvalidate failonerror="yes">
+			<fileset dir="${maven.src.dir}"
+				includes="**/*.xml" excludes="**/resin-web.xml"/>
+		</xmlvalidate>
 	</preGoal>
 
-	<goal name="spy:spt">
+	<preGoal name="war:init">
+		<tstamp/>
+		<exec executable="./etc/tree-version" outputproperty="tree.version"/>
+		<exec executable="./etc/version-num" outputproperty="short.version"/>
+		<j:set var="wtop" value="${maven.build.dir}/src"/>
+		<copy
+			file="${maven.src.dir}/java/net/spy/photo/photoresources.properties.in"
+			tofile="${wtop}/net/spy/photo/photoresources.properties"/>
+		<propertyfile
+				file="${wtop}/net/spy/photo/photoresources.properties">
+			<entry key="build.date" type="date" value="now"/>
+			<entry key="build.dstamp" value="${DSTAMP}"/>
+			<entry key="build.tstamp" value="${TSTAMP}"/>
+			<entry key="build.dtstamp" value="${DSTAMP}${TSTAMP}"/>
+			<entry key="tree.version" value="${tree.version}"/>
+			<entry key="short.version" value="${short.version}"/>
+		</propertyfile>
+		<property
+			file="${wtop}/net/spy/photo/photoresources.properties"/>
+	</preGoal>
+
+	<preGoal name="war:init">
+		<ant:filter token="INSTANCE" value="photo"/>
+		<ant:copy file="${basedir}/etc/photo.conf"
+			tofile="${maven.build.dir}/photo/WEB-INF/photo.conf"
+			filtering="true"/>
+	</preGoal>
+
+	<goal name="spy:deploy" prereqs="war">
+
+		<mkdir dir="${maven.build.dir}/wars/wars"/>
+		<mkdir dir="${maven.build.dir}/wars/lazy-wars"/>
+
+		<j:set var="wars" value="photo" />
+		<j:set var="lazywars" value="beckerphoto,wisephoto,jasonphoto,photodemo"/>
+		<j:set var="buildwars" value="${wars},${lazywars}"/>
+		<u:tokenize var="buildwars" delim=",">${buildwars}</u:tokenize>
+		<j:forEach items="${buildwars}" var="war">
+			Building ${war}.war
+			<j:set var="confsrc" value="${basedir}/etc/photo.conf"/>
+			<u:available file="${basedir}/etc/photo.${war}.conf">
+				<j:set var="confsrc" value="${basedir}/etc/photo.${war}.conf"/>
+			</u:available>
+			<echo>Using ${confsrc}</echo>
+
+			<ant:filter token="INSTANCE" value="${war}"/>
+			<ant:copy file="${confsrc}"
+				tofile="${maven.build.dir}/photo/WEB-INF/photo.conf"
+				filtering="true"/>
+
+			<jar jarfile="${maven.build.dir}/wars/${war}.war"
+				basedir="${maven.build.dir}/photo">
+			</jar>
+
+			<delete file="${maven.build.dir}/photo/WEB-INF/photo.conf"/>
+
+		</j:forEach>
+
+		<!-- Move them into place -->
+		<u:tokenize var="wars" delim=",">${wars}</u:tokenize>
+		<j:forEach items="${wars}" var="war">
+			<move file="${maven.build.dir}/wars/${war}.war"
+				tofile="${maven.build.dir}/wars/wars/${war}.war"/>
+		</j:forEach>
+		<u:tokenize var="lazywars" delim=",">${lazywars}</u:tokenize>
+		<j:forEach items="${lazywars}" var="war">
+			<move file="${maven.build.dir}/wars/${war}.war"
+				tofile="${maven.build.dir}/wars/lazy-wars/${war}.war"/>
+		</j:forEach>
+	</goal>
+
+	<preGoal name="java:compile">
 		<mkdir dir="${maven.build.src}"/>
 		<taskdef name="spgen" classname="net.spy.ant.SPGenTask"
 			classpathref="maven.dependency.classpath"/>
 		<spgen srcdir="${maven.src.dir}/java" destdir="${maven.build.src}"/>
 		<path id="generated.src" location="${maven.build.src}"/>
 		<m:addPath id="maven.compile.src.set" refid="generated.src"/>
-	</goal>
+	</preGoal>
 
 </project>
