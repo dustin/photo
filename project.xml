@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+
+<!-- Copyright (c) 2005  Dustin Sallings (dustin@spy.net)
+arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
+-->
+
+<project>
+
+	<pomVersion>3</pomVersion>
+	<groupId>spy</groupId>
+	<artifactId>photo</artifactId>
+	<currentVersion>2.1</currentVersion>
+	<organization>
+		<name>SPY Internetworking</name>
+		<url>http://bleu.west.spy.net/~dustin/</url>
+	</organization>
+	<inceptionYear>1997</inceptionYear>
+	<package>net.spy.photo</package>
+
+	<name>PhotoServlet</name>
+	<description>
+		The Spy Photo Album
+	</description>
+
+	<shortDescription>PhotoServlet</shortDescription>
+
+	<developers>
+		<name>Dustin Sallings</name>
+		<id>dustin</id>
+		<email>dustin@spy.net</email>
+		<organization>SPY Internetworking</organization>
+	</developers>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>struts</groupId>
+			<artifactId>struts</artifactId>
+			<version>1.2.4</version>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
+    <!-- BEGIN struts dependencies.  struts itself is above -->
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.6.1</version>
+      <url>http://jakarta.apache.org/commons/beanutils.html</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-digester</groupId>
+      <artifactId>commons-digester</artifactId>
+      <version>1.5</version>
+      <url>http://jakarta.apache.org/commons/digester/index.html</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.0</version>
+      <url>http://jakarta.apache.org/commons/fileupload/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>antlr</groupId>
+      <artifactId>antlr</artifactId>
+      <version>2.7.2</version>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-validator</groupId>
+      <artifactId>commons-validator</artifactId>
+      <version>1.1.3</version>
+      <url>http://jakarta.apache.org/commons/validator/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>oro</groupId>
+      <artifactId>oro</artifactId>
+      <version>2.0.7</version>
+      <url>http://jakarta.apache.org/oro/</url>
+      <properties>
+        <war.bundle>true</war.bundle>
+        <cactus.bundle>true</cactus.bundle>
+      </properties>
+    </dependency>
+    <!-- END struts dependencies -->
+
+		<dependency>
+			<groupId>jaf</groupId>
+			<artifactId>activation</artifactId>
+			<jar>activation.jar</jar>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
+		<dependency>
+			<groupId>javamail</groupId>
+			<artifactId>javamail</artifactId>
+			<jar>javamail.jar</jar>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
+
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>7.4.1-jdbc3</version>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
+
+		<dependency>
+			<groupId>spy</groupId>
+			<artifactId>spy</artifactId>
+			<version>2.1.2</version>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
+		<dependency>
+			<groupId>spy</groupId>
+			<artifactId>jwebkit</artifactId>
+			<version>2.0.6</version>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
+		<dependency>
+			<groupId>spy</groupId>
+			<artifactId>spyxmlrpc</artifactId>
+			<version>2.1</version>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
+
+		<dependency>
+			<groupId>xmlrpc</groupId>
+			<artifactId>xmlrpc</artifactId>
+			<version>1.2</version>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
+
+		<dependency>
+			<groupId>servletapi</groupId>
+			<artifactId>servletapi</artifactId>
+			<version>2.3</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<sourceDirectory>${basedir}/src/java</sourceDirectory>
+		<resources/>
+	</build>
+
+	<reports>
+		<report>maven-checkstyle-plugin</report>
+		<report>maven-javadoc-plugin</report>
+		<report>maven-jdepend-plugin</report>
+		<report>maven-junit-report-plugin</report>
+		<report>maven-multiproject-plugin</report>
+		<report>maven-pmd-plugin</report>
+		<report>maven-simian-plugin</report>
+		<report>maven-tasklist-plugin</report>
+	</reports>
+
+</project>
