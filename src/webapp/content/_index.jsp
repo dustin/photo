@@ -2,7 +2,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
-<%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
+<%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <table style="width: 100%">

@@ -1,6 +1,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 
-<%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
+<%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <html:xhtml/>

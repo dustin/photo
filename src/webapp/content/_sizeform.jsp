@@ -1,4 +1,4 @@
-<%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
+<%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 
 <p>
 <h1>Set the Optimal Viewing Size</h1>

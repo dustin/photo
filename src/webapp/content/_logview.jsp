@@ -1,7 +1,7 @@
 <%@ page import="javax.servlet.http.*" %>
 <%@ page import="net.spy.photo.log.PhotoLogViewEntry" %>
-<%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
-<%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
+<%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
+<%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <%

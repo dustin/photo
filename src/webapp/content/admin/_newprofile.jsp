@@ -1,7 +1,7 @@
-<%@ page import="net.spy.photo.Category" %>
-<%@ taglib uri='/tlds/struts-logic.tld' prefix='logic' %>
-<%@ taglib uri='/tlds/struts-html.tld' prefix='html' %>
-<%@ taglib uri='/tlds/struts-bean.tld' prefix='bean' %>
+<%@ page import="net.spy.photo.CategoryFactory" %>
+<%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
+<%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
+<%@ taglib uri='http://jakarta.apache.org/struts/tags-bean' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <%
@@ -33,7 +33,7 @@
 	</tr>
 
 	<logic:iterate id="cat" type="net.spy.photo.Category"
-		collection="<%= Category.getAdminCatList() %>">
+		collection="<%= CategoryFactory.getInstance().getAdminCatList() %>">
 
 		<tr>
 			<td><%= cat.getName() %></td>
