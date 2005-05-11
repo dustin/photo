@@ -99,12 +99,7 @@
 	</goal>
 
 	<preGoal name="java:compile">
-		<mkdir dir="${maven.build.src}"/>
-		<taskdef name="spgen" classname="net.spy.ant.SPGenTask"
-			classpathref="maven.dependency.classpath"/>
-		<spgen srcdir="${maven.src.dir}/java" destdir="${maven.build.src}"/>
-		<path id="generated.src" location="${maven.build.src}"/>
-		<m:addPath id="maven.compile.src.set" refid="generated.src"/>
+		<attainGoal name="spy:spt"/>
 	</preGoal>
 
 </project>
