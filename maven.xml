@@ -27,24 +27,10 @@
 		</xmlvalidate>
 	</preGoal>
 
+	<!-- Build info -->
 	<preGoal name="war:init">
-		<tstamp/>
 		<attainGoal name="tla:versions"/>
-		<j:set var="wtop" value="${maven.build.dir}/src"/>
-		<copy
-			file="${maven.src.dir}/java/net/spy/photo/photoresources.properties.in"
-			tofile="${wtop}/net/spy/photo/photoresources.properties"/>
-		<propertyfile
-				file="${wtop}/net/spy/photo/photoresources.properties">
-			<entry key="build.date" type="date" value="now"/>
-			<entry key="build.dstamp" value="${DSTAMP}"/>
-			<entry key="build.tstamp" value="${TSTAMP}"/>
-			<entry key="build.dtstamp" value="${DSTAMP}${TSTAMP}"/>
-			<entry key="tla.long.version" value="${tla.long.version}"/>
-			<entry key="tla.short.version" value="${tla.short.version}"/>
-		</propertyfile>
-		<property
-			file="${wtop}/net/spy/photo/photoresources.properties"/>
+		<attainGoal name="spy:buildprops"/>
 	</preGoal>
 
 	<preGoal name="war:init">
