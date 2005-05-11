@@ -1,3 +1,3 @@
 # arch-tag: 4701497D-97A3-4CBB-9AE4-A7B5FC931214
 
-precious ^(tags|target|\.DS_Store|velocity.log)$
+precious ^(tags|target|velocity.log)$
