@@ -29,8 +29,7 @@
 
 	<preGoal name="war:init">
 		<tstamp/>
-		<exec executable="./etc/tree-version" outputproperty="tree.version"/>
-		<exec executable="./etc/version-num" outputproperty="short.version"/>
+		<attainGoal name="tla:versions"/>
 		<j:set var="wtop" value="${maven.build.dir}/src"/>
 		<copy
 			file="${maven.src.dir}/java/net/spy/photo/photoresources.properties.in"
@@ -41,8 +40,8 @@
 			<entry key="build.dstamp" value="${DSTAMP}"/>
 			<entry key="build.tstamp" value="${TSTAMP}"/>
 			<entry key="build.dtstamp" value="${DSTAMP}${TSTAMP}"/>
-			<entry key="tree.version" value="${tree.version}"/>
-			<entry key="short.version" value="${short.version}"/>
+			<entry key="tla.long.version" value="${tla.long.version}"/>
+			<entry key="tla.short.version" value="${tla.short.version}"/>
 		</propertyfile>
 		<property
 			file="${wtop}/net/spy/photo/photoresources.properties"/>

@@ -49,7 +49,7 @@
 			<div class="footerfineprint">
 				<fmt:message key="page.content.footer"/><br/>
 				Build 
-				<fmt:message key="build.dtstamp"/> (<fmt:message key="tree.version"/>)
+				<fmt:message key="build.dtstamp"/> (<fmt:message key="tla.long.version"/>)
 			</div> <!-- footerfineprint -->
 		</div><div class="rightstuff">
 				<tiles:insert page='/templates/quicksearch.jsp' />
