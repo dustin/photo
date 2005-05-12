@@ -149,6 +149,18 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 			<version>2.1</version>
 			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
+		<dependency>
+			<groupId>spy</groupId>
+			<artifactId>maven-tla-plugin</artifactId>
+			<version>1.0</version>
+			<type>plugin</type>
+		</dependency>
+		<dependency>
+			<groupId>spy</groupId>
+			<artifactId>maven-spy-build-plugin</artifactId>
+			<version>1.0</version>
+			<type>plugin</type>
+		</dependency>
 
 		<dependency>
 			<groupId>xmlrpc</groupId>
