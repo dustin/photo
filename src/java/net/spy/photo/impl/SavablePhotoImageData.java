@@ -4,6 +4,7 @@
 package net.spy.photo.impl;
 
 import java.util.TreeSet;
+import java.util.HashSet;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Date;
@@ -26,6 +27,7 @@ import net.spy.photo.PhotoDimensions;
 import net.spy.photo.User;
 import net.spy.photo.Format;
 import net.spy.photo.Keyword;
+import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.PhotoException;
 import net.spy.photo.ImageServer;
 import net.spy.photo.ImageServerFactory;
@@ -35,6 +37,10 @@ import net.spy.photo.sp.InsertImage;
 import net.spy.photo.sp.InsertKeywordMap;
 import net.spy.photo.sp.DeleteKeywordMap;
 import net.spy.photo.sp.UpdateImage;
+import net.spy.photo.sp.InsertAnnotation;
+import net.spy.photo.sp.InsertAnnotationKeyword;
+import net.spy.photo.sp.DeleteAnnotations;
+import net.spy.photo.sp.DeleteAnnotationsMap;
 
 /**
  * Savable implementation of PhotoImageData.
@@ -42,7 +48,8 @@ import net.spy.photo.sp.UpdateImage;
 public class SavablePhotoImageData extends AbstractSavable
 	implements PhotoImageData {
 
-	private Collection keywords=null;
+	private Collection<AnnotatedRegion> annotations=null;
+	private Collection<Keyword> keywords=null;
 	private String descr=null;
 	private int catId=-1;
 	private int size=-1;
@@ -81,6 +88,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		this.timestamp=new Date();
 
 		keywords=new TreeSet();
+		annotations=new HashSet();
 
 		id=getNewImageId();
 		setNew(true);
@@ -93,6 +101,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		super();
 
 		this.keywords=proto.getKeywords();
+		this.annotations=proto.getAnnotations();
 		this.descr=proto.getDescr();
 		this.catId=proto.getCatId();
 		this.size=proto.getSize();
@@ -133,6 +142,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		db.close();
 
 		saveKeywords(conn);
+		saveAnnotations(conn);
 
 		// Get the photo cached
 		try {
@@ -162,6 +172,43 @@ public class SavablePhotoImageData extends AbstractSavable
 		ikm.close();
 	}
 
+	private void saveAnnotations(Connection conn)
+		throws SaveException, SQLException {
+		InsertAnnotation ia=new InsertAnnotation(conn);
+		ia.setPhotoId(id);
+
+		for(AnnotatedRegion ar : annotations) {
+
+			ia.setAnnotationId(ar.getId());
+			ia.setTitle(ar.getTitle());
+			ia.setX(ar.getX());
+			ia.setY(ar.getY());
+			ia.setWidth(ar.getWidth());
+			ia.setHeight(ar.getHeight());
+
+			int aff=ia.executeUpdate();
+			if(aff != 1) {
+				throw new SaveException("Expected to update 1 row, updated "
+					+ aff);
+			}
+
+			InsertAnnotationKeyword iak=new InsertAnnotationKeyword(conn);
+			iak.setAnnotationId(ar.getId());
+
+			for(Keyword kw : ar.getKeywords()) {
+				iak.setWordId(kw.getId());
+				aff=iak.executeUpdate();
+				if(aff != 1) {
+					throw new SaveException("Expected to update 1 row, updated "
+						+ aff);
+				}
+			}
+			iak.close();
+		}
+
+		ia.close();
+	}
+
 	private void saveUpd(Connection conn) throws SaveException, SQLException {
 		UpdateImage db=new UpdateImage(conn);
 		db.setDescr(descr);
@@ -178,9 +225,23 @@ public class SavablePhotoImageData extends AbstractSavable
 		DeleteKeywordMap dkm=new DeleteKeywordMap(conn);
 		dkm.setPhotoId(id);
 		dkm.executeUpdate();
+		dkm.close();
 
 		// Insert a new keyword map
 		saveKeywords(conn);
+
+		// Delete the old annotations
+		DeleteAnnotationsMap dam=new DeleteAnnotationsMap(conn);
+		dam.setPhotoId(id);
+		dam.executeUpdate();
+		dam.close();
+		DeleteAnnotations da=new DeleteAnnotations(conn);
+		da.setPhotoId(id);
+		da.executeUpdate();
+		da.close();
+
+		// Insert a new keyword map
+		saveAnnotations(conn);
 	}
 
 	public void save(Connection conn, SaveContext ctx)
@@ -227,6 +288,39 @@ public class SavablePhotoImageData extends AbstractSavable
 		while(st.hasMoreTokens()) {
 			keywords.add(Keyword.getKeyword(st.nextToken(), true));
 		}
+
+		// XXX: Remove any keywords from any annotations that aren't in the
+		// keywords set
+
+		modify();
+	}
+
+	/** 
+	 * Add an annotation.
+	 * 
+	 * @param x x position of the region
+	 * @param h y position of the region
+	 * @param width width of the region
+	 * @param height height of the region
+	 * @param keywords keyword string
+	 * @param title title of the region
+	 */
+	public void addAnnotation(final int x, final int y,
+		final int width, final int height,
+		final String keywords, final String title) throws Exception {
+
+		int newId=PhotoUtil.getNewIdForSeq("region_region_id_seq");
+
+		NewAnnotatedRegion nar=new NewAnnotatedRegion(newId, x, y,
+			width, height, title);
+
+		StringTokenizer st=new StringTokenizer(keywords);
+		while(st.hasMoreTokens()) {
+			nar.addKeyword(Keyword.getKeyword(st.nextToken(), true));
+		}
+
+		annotations.add(nar);
+
 		modify();
 	}
 
@@ -235,8 +329,12 @@ public class SavablePhotoImageData extends AbstractSavable
 		modify();
 	}
 
-	public Collection getKeywords() {
+	public Collection<Keyword> getKeywords() {
 		return(keywords);
+	}
+
+	public Collection<AnnotatedRegion> getAnnotations() {
+		return(annotations);
 	}
 
 	public void setDescr(String to) {
@@ -347,6 +445,24 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public Format getFormat() {
 		return(format);
+	}
+
+	// New annotated region implementation
+	private static final class NewAnnotatedRegion extends AnnotatedRegionImpl {
+		public NewAnnotatedRegion(final int id, final int x, final int y,
+		        final int width, final int height, final String title) {
+			super();
+			setId(id);
+			setX(x);
+			setY(y);
+			setWidth(width);
+			setHeight(height);
+			setTitle(title);
+		}
+
+		public void addKeyword(Keyword k) {
+			super.addKeyword(k);
+		}
 	}
 
 }

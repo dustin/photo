@@ -12,6 +12,8 @@ import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.User;
 import net.spy.photo.Format;
+import net.spy.photo.Keyword;
+import net.spy.photo.AnnotatedRegion;
 
 /**
  * A search result.
@@ -39,7 +41,11 @@ public class SearchResult extends Object
 		return(searchId);
 	}
 
-	public Collection getKeywords() {
+	public Collection<AnnotatedRegion> getAnnotations() {
+		return(imgData.getAnnotations());
+	}
+
+	public Collection<Keyword> getKeywords() {
 		return(imgData.getKeywords());
 	}
 

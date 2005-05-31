@@ -88,14 +88,60 @@ public class DimensionsTest extends TestCase {
 	}
 
 	/** 
+	 * Test the dim scale factor code.
+	 */
+	public void testDimScaleFactor() {
+		PhotoDimensions scaleFrom=new PhotoDimensionsImpl("800x600");
+		PhotoDimensions scaleTo=new PhotoDimensionsImpl("1600x1200");
+		float expectedFactor=2.0f;
+		assertEquals(expectedFactor,
+			PhotoDimUtil.getScaleFactor(scaleFrom, scaleTo), 0.01);
+
+		scaleTo=new PhotoDimensionsImpl("400x300");
+		expectedFactor=0.5f;
+		assertEquals(expectedFactor,
+			PhotoDimUtil.getScaleFactor(scaleFrom, scaleTo), 0.01);
+	}
+
+	/** 
+	 * Test dim scaling by factors.
+	 */
+	public void testDimScaleByFactor() {
+		PhotoDimensions scaleFrom=new PhotoDimensionsImpl("800x600");
+		float scaleFactor=1.0f;
+		PhotoDimensions expected=new PhotoDimensionsImpl("800x600");
+		assertEquals(expected, PhotoDimUtil.scaleBy(scaleFrom, scaleFactor));
+
+		scaleFrom=new PhotoDimensionsImpl("800x600");
+		scaleFactor=0.5f;
+		expected=new PhotoDimensionsImpl("400x300");
+		assertEquals(expected, PhotoDimUtil.scaleBy(scaleFrom, scaleFactor));
+
+		scaleFrom=new PhotoDimensionsImpl("800x600");
+		scaleFactor=2.0f;
+		expected=new PhotoDimensionsImpl("1600x1200");
+		assertEquals(expected, PhotoDimUtil.scaleBy(scaleFrom, scaleFactor));
+	}
+
+	/** 
 	 * Test the PhotoDimUtil scaler implementation.
 	 */
 	public void testDimScaler() {
-		PhotoDimensions scaleFrom=new PhotoDimensionsImpl("1280x832");
-		PhotoDimensions scaleTo=new PhotoDimensionsImpl("800x600");
-		PhotoDimensions expected=new PhotoDimensionsImpl("800x520");
+		// don't scale
+		PhotoDimensions scaleFrom=new PhotoDimensionsImpl("800x600");
+		PhotoDimensions scaleTo=new PhotoDimensionsImpl("1280x832");
+		PhotoDimensions expected=new PhotoDimensionsImpl("800x600");
+		assertSame(scaleFrom, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
 		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
 
+		// Scale down keeping x
+		scaleFrom=new PhotoDimensionsImpl("1280x832");
+		scaleTo=new PhotoDimensionsImpl("800x600");
+		expected=new PhotoDimensionsImpl("800x520");
+		assertNotSame(scaleFrom, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
+		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
+
+		// Scale down keeping y
 		scaleFrom=new PhotoDimensionsImpl("832x1328");
 		scaleTo=new PhotoDimensionsImpl("800x600");
 		expected=new PhotoDimensionsImpl("375x600");

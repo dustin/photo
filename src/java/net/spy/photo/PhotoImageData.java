@@ -14,9 +14,14 @@ import net.spy.factory.Instance;
 public interface PhotoImageData extends Instance {
 
 	/** 
+	 * Get the annotated regions for this image.
+	 */
+	Collection<AnnotatedRegion> getAnnotations();
+
+	/** 
 	 * Get the keywords for this image (space separated).
 	 */
-	Collection getKeywords();
+	Collection<Keyword> getKeywords();
 
 	/** 
 	 * Get the description of this image.

@@ -35,6 +35,30 @@
 				</field>
 			</form>
 
+			<form name="annotationForm">
+				<field property="imageId" depends="required">
+					<arg0 key="Image ID" resource="false"/>
+				</field>
+				<field property="x" depends="required">
+					<arg0 key="X" resource="false"/>
+				</field>
+				<field property="y" depends="required">
+					<arg0 key="Y" resource="false"/>
+				</field>
+				<field property="w" depends="required">
+					<arg0 key="Width" resource="false"/>
+				</field>
+				<field property="h" depends="required">
+					<arg0 key="Height" resource="false"/>
+				</field>
+				<field property="keywords" depends="required">
+					<arg0 key="Keywords" resource="false"/>
+				</field>
+				<field property="title" depends="required">
+					<arg0 key="Title" resource="false"/>
+				</field>
+			</form>
+
 			<form name="addToGalleryForm">
 				<field property="id" depends="required,integer">
 					<arg0 key="Image ID" resource="false"/>

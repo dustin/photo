@@ -15,6 +15,8 @@ import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoDimUtil;
 import net.spy.photo.search.SearchResults;
 
 import org.apache.struts.action.ActionForm;
@@ -28,6 +30,7 @@ import org.apache.struts.action.DynaActionForm;
 public class GetImageDataAction extends PhotoAction {
 
 	private static final String ATTRIBUTE="image";
+	private static final String DIM_ATTR="displayDims";
 
 	/**
 	 * Get an instance of GetImageDataAction.
@@ -94,6 +97,12 @@ public class GetImageDataAction extends PhotoAction {
 			image=getImageById(imageId.intValue(), request);
 		}
 		request.setAttribute(ATTRIBUTE, image);
+
+		PhotoSessionData sessionData=getSessionData(request);
+		// We will need the display dimensions for some tasks
+		request.setAttribute(DIM_ATTR,
+			PhotoDimUtil.scaleTo(image.getDimensions(),
+			sessionData.getOptimalDimensions()));
 
 		ActionForward rv=mapping.findForward("next");
 		return(rv);

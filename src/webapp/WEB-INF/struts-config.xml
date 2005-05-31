@@ -92,6 +92,19 @@
 			<form-property name="comment" type="java.lang.String"/>
 		</form-bean>
 
+    <form-bean name="annotateForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="imageId" type="java.lang.Integer"/>
+			<form-property name="keywords" type="java.lang.String"/>
+			<form-property name="title" type="java.lang.String"/>
+			<form-property name="x" type="java.lang.Integer"/>
+			<form-property name="y" type="java.lang.Integer"/>
+			<form-property name="w" type="java.lang.Integer"/>
+			<form-property name="h" type="java.lang.Integer"/>
+			<form-property name="imgDims" type="java.lang.String"/>
+		</form-bean>
+
     <form-bean name="addToGalleryForm"
 			type="org.apache.struts.validator.DynaValidatorForm">
 
@@ -159,6 +172,15 @@
 		<forward name="next" path="/display.do"/>
 	</action>
 
+	<!-- Annotation form -->
+	<action
+		path="/annotateForm"
+		name="displayForm"
+		scope="request"
+		type="net.spy.photo.struts.GetImageDataAction">
+		<forward name="next" path="top.annotateForm"/>
+	</action>
+
 	<!-- Change password -->
 	<action    path="/changepw"
 		type="net.spy.photo.struts.ChangePWAction"
@@ -182,6 +204,15 @@
     type="net.spy.photo.struts.CommentAction"
     input="top.commentInput"
     name="commentForm">
+		<forward name="next" path="/display.do" />
+  </action>
+
+	<!-- Add an annotated comment -->
+  <action path="/annotate"
+    type="net.spy.photo.struts.AnnotateAction"
+    input="top.annotateForm"
+		scope="request"
+    name="annotateForm">
 		<forward name="next" path="/display.do" />
   </action>
 

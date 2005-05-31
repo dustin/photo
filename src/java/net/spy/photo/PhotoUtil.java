@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 
+import net.spy.db.SpyDB;
+import java.sql.ResultSet;
+
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -122,4 +125,31 @@ public class PhotoUtil extends Object {
 	public static String getRelativeUri(HttpServletRequest req, String uri) {
 		return(RequestUtil.getRelativeUri(req, uri));
 	}
+
+	/**
+	 * Get a new ID for a photo.
+	 */
+	public static int getNewIdForSeq(String seq) throws PhotoException {
+		int rv=0;
+		try {
+			SpyDB db=new SpyDB(PhotoConfig.getInstance());
+			ResultSet rs=db.executeQuery("select nextval('" + seq  + "')");
+			if(!rs.next()) {
+				throw new PhotoException("No result for new ID from " + seq);
+			}
+			rv=rs.getInt(1);
+			if(rs.next()) {
+				throw new PhotoException("Too many results for new ID from "
+					+ seq);
+			}
+			rs.close();
+			db.close();
+		} catch(PhotoException e) {
+			throw e;
+		} catch(Exception e) {
+			throw new PhotoException("Error getting ID from " + seq, e);
+		}
+		return(rv);
+	}
+
 }

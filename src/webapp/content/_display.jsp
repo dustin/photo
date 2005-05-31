@@ -1,4 +1,8 @@
 <%@ page import="net.spy.photo.PhotoImageData" %>
+<%@ page import="net.spy.photo.PhotoDimensions" %>
+<%@ page import="net.spy.photo.PhotoRegion" %>
+<%@ page import="net.spy.photo.PhotoDimUtil" %>
+<%@ page import="net.spy.photo.PhotoRegionUtil" %>
 <%@ page import="net.spy.photo.Comment" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
@@ -6,8 +10,14 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<photo:javascript url="/js/annimg.js"/>
+
 <%
 	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
+	// Need to know the new dims for the rest of the page
+	float scaleFactor=PhotoDimUtil.getScaleFactor(image.getDimensions(),
+		(PhotoDimensions)request.getAttribute("displayDims"));
+
 	String searchIdS=(String)request.getParameter("search_id");
 %>
 
@@ -44,7 +54,9 @@
 <% } %>
 
 	<div id="imgDisplay">
-		<photo:imgSrc id='<%= image.getId() %>' showOptimal="true" />
+		<photo:imgSrc id='<%= image.getId() %>' showOptimal="true"
+			class="annotated"
+			usemap="#annotationMap"/>
 	</div>
 
 	<div>
@@ -64,6 +76,9 @@
 	</div>
 
 <logic:notPresent role="guest">
+	[<photo:link url="/annotateForm.do" id="<%= String.valueOf(image.getId()) %>">
+			Annotate
+	</photo:link>] | 
 	[<photo:link url="/logView.do" id="<%= String.valueOf(image.getId()) %>">
 			Who's seen this?
 	</photo:link>] | 
@@ -117,4 +132,24 @@
 		</html:form>
 	</logic:notPresent>
 </div>
+<map name="annotationMap">
+	<logic:iterate id="region"
+		type="net.spy.photo.AnnotatedRegion"
+		collection="<%= image.getAnnotations() %>">
+
+		<%
+			PhotoRegion scaledRegion=PhotoRegionUtil.scaleRegion(region, scaleFactor);
+			int rx1=scaledRegion.getX();
+			int ry1=scaledRegion.getY();
+			int rx2=scaledRegion.getWidth() + rx1;
+			int ry2=scaledRegion.getHeight() + ry1;
+
+			String coords=rx1 + "," + ry1 + "," + rx2 + "," + ry2;
+		%>
+
+		<area alt="" title="<%= region.getTitle() %>"
+			href="nohref" shape="rect" coords="<%= coords %>"/>
+
+	</logic:iterate>
+</map>
 <%-- arch-tag: AC919514-5D6F-11D9-ACF8-000A957659CC --%>

@@ -1,0 +1,17 @@
+#
+# Copyright (c) 2005 Dustin Sallings <dustin@spy.net>
+# arch-tag: 0C42EE62-A3DC-4A4B-BCD4-5BC0596AC14F
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get all of the keyword mappings for all regions.
+
+@sql
+select region_id, word_id from region_keywords_map
+
+@results
+region_id INTEGER The ID of the annotated region
+word_id INTEGER The ID of the keyword

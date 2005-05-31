@@ -1,0 +1,21 @@
+#
+# Copyright (c) 2005 Dustin Sallings <dustin@spy.net>
+# arch-tag: 84FCA533-A833-4E6E-9BD1-F7A61354BC1C
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Insert a keyword mapping for an annotated region.
+
+@sql
+insert into region_keywords_map (
+		region_id, word_id
+	) values (
+		?, ?
+	)
+
+@params
+annotation_id required INTEGER the ID of the annotated region
+word_id required INTEGER the ID of the keyword

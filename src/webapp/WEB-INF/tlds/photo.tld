@@ -101,6 +101,18 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>class</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>usemap</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
+			<name>onMouseDown</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
 			<name>showOptimal</name>
 			<required>false</required>
 		</attribute>
@@ -157,6 +169,16 @@
 	<tag>
 		<name>stylesheet</name>
 		<tagclass>net.spy.photo.taglib.Stylesheet</tagclass>
+		<attribute>
+			<name>url</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>javascript</name>
+		<tagclass>net.spy.photo.taglib.Javascript</tagclass>
 		<attribute>
 			<name>url</name>
 			<required>true</required>

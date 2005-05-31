@@ -3,8 +3,10 @@
 
 package net.spy.photo.impl;
 
+import java.util.Map;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.TreeSet;
 import java.io.ObjectStreamException;
 
 import java.sql.PreparedStatement;
@@ -15,10 +17,13 @@ import net.spy.SpyObject;
 import net.spy.photo.PhotoImageDataSource;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.Keyword;
+import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
 import net.spy.photo.Persistent;
 import net.spy.photo.sp.GetPhotoInfo;
 import net.spy.photo.sp.GetAlbumKeywords;
+import net.spy.photo.sp.GetAllRegions;
+import net.spy.photo.sp.GetAllRegionKeywords;
 
 /**
  * A PhotoImageDataSource implementation that gets images from the DB.
@@ -47,25 +52,41 @@ public class DBImageDataSource extends SpyObject
 	}
 
 	private Collection getFromDB() throws Exception {
-		HashMap rv=new HashMap();
+		HashMap<Integer, ImgData> rv=new HashMap();
 
 		// Load the images
 		GetPhotoInfo db=new GetPhotoInfo(PhotoConfig.getInstance());
 		ResultSet rs=db.executeQuery();
 		while(rs.next()) {
 			ImgData pidi=new ImgData(rs);
-			rv.put(new Integer(pidi.getId()), pidi);
+			rv.put(pidi.getId(), pidi);
 		}
 		rs.close();
 		db.close();
 
+		loadKeywords(rv);
+		loadAnnotations(rv);
+
+		// Add all of the image annotation keywords to the image keywords
+		for(ImgData imgd : rv.values()) {
+			for(AnnotatedRegion ar : imgd.getAnnotations()) {
+				for(Keyword kw : ar.getKeywords()) {
+					imgd.addKeyword(kw);
+				}
+			}
+		}
+
+		return(rv.values());
+	}
+
+	private void loadKeywords(Map imgs) throws Exception {
 		// Load the keywords for the images
 		GetAlbumKeywords gkdb=new GetAlbumKeywords(PhotoConfig.getInstance());
-		rs=gkdb.executeQuery();
+		ResultSet rs=gkdb.executeQuery();
 		while(rs.next()) {
 			int photoid=rs.getInt("album_id");
 			int keywordid=rs.getInt("word_id");
-			ImgData pidi=(ImgData)rv.get(new Integer(photoid));
+			ImgData pidi=(ImgData)imgs.get(photoid);
 			if(pidi == null) {
 				throw new Exception("Invalid keymap entry to " + photoid);
 			}
@@ -73,9 +94,45 @@ public class DBImageDataSource extends SpyObject
 		}
 		rs.close();
 		gkdb.close();
-
-		return(rv.values());
 	}
+
+	private void loadAnnotations(Map imgs) throws Exception {
+		Map<Integer, AnnotationData> annotations=new HashMap();
+
+		GetAllRegions gar=new GetAllRegions(PhotoConfig.getInstance());
+		ResultSet rs=gar.executeQuery();
+		while(rs.next()) {
+			int annotationId=rs.getInt("region_id");
+			int photoid=rs.getInt("album_id");
+			ImgData pidi=(ImgData)imgs.get(photoid);
+			if(pidi == null) {
+				throw new Exception("Invalid region map entry to " + photoid);
+			}
+			AnnotationData ad=new AnnotationData(rs);
+			pidi.addAnnotation(ad);
+			annotations.put(annotationId, ad);
+		}
+		rs.close();
+		gar.close();
+
+		// We now need to load all of the keywords for all of the annotations
+		GetAllRegionKeywords gark=
+			new GetAllRegionKeywords(PhotoConfig.getInstance());
+		rs=gark.executeQuery();
+		while(rs.next()) {
+			int aid=rs.getInt("region_id");
+			int kid=rs.getInt("word_id");
+
+			AnnotationData ad=annotations.get(aid);
+			if(ad == null) {
+				throw new Exception("Invalid annotation/keymap entry to "
+					+ aid);
+			}
+			ad.addKeyword(Keyword.getKeyword(kid));
+		}
+		gark.close();
+	}
+
 
 	private static final class ImgData extends PhotoImageDataImpl {
 		public ImgData(ResultSet rs) throws Exception {
@@ -109,6 +166,10 @@ public class DBImageDataSource extends SpyObject
 			calculateThumbnail();
 		}
 
+		public void addAnnotation(AnnotatedRegion r) {
+			super.addAnnotation(r);
+		}
+
 		public void addKeyword(Keyword k) {
 			super.addKeyword(k);
 		}
@@ -116,6 +177,25 @@ public class DBImageDataSource extends SpyObject
 		protected Object writeReplace() throws ObjectStreamException {
 			return(new PhotoImageDataImpl.SerializedForm(getId()));
 		}
+	}
+
+	// AnnotationData implementation (as read from the DB)
+	private static final class AnnotationData extends AnnotatedRegionImpl {
+
+		public AnnotationData(ResultSet rs) throws Exception {
+			super();
+			setId(rs.getInt("region_id"));
+			setX(rs.getInt("x"));
+			setY(rs.getInt("y"));
+			setWidth(rs.getInt("width"));
+			setHeight(rs.getInt("height"));
+			setTitle(rs.getString("title"));
+		}
+
+		public void addKeyword(Keyword k) {
+			super.addKeyword(k);
+		}
+
 	}
 
 }

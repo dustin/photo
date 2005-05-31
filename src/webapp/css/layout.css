@@ -180,6 +180,46 @@ fieldset legend {
 	font-size: smaller;
 }
 
+/* This is the UI indicator of image regions being selected.  */
+#zoomBox {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	width: 0px;
+	height: 0px;
+	-moz-opacity: 0.5;
+}
+
+#hlimage {
+	cursor: crosshair;
+	text-align: center;
+}
+
+a.annotation {
+  position: absolute;
+  border: 2px groove black;
+  padding: 0;
+  display: none;
+}
+a.annotation span {
+  display: block;
+  background: white;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+  -moz-opacity: 0.3;
+  filter:alpha(opacity=30);
+}
+a.annotation:hover {
+  border-color: yellow;
+  opacity: 0.3;
+  -moz-opacity: 0.3;
+  filter:alpha(opacity=30);
+}
+img.annotated {
+  border-width: 0;
+}
+
 /*
 .searchresults {
 }

@@ -30,6 +30,10 @@ public class ImageLink extends PhotoTag {
 	private boolean scale=false;
 	private String altText=null;
 
+	private String onMouseDown=null;
+	private String usemap=null;
+	private String className=null;
+
 	/**
 	 * Get an instance of ImageLink.
 	 */
@@ -92,6 +96,27 @@ public class ImageLink extends PhotoTag {
 	 */
 	public void setAlt(String altText) {
 		this.altText=altText;
+	}
+
+	/** 
+	 * Set the onMouseDown script.
+	 */
+	public void setOnMouseDown(String to) {
+		this.onMouseDown=to;
+	}
+
+	/** 
+	 * Set the usemap.
+	 */
+	public void setUsemap(String to) {
+		this.usemap=to;
+	}
+
+	/** 
+	 * Set the class name.
+	 */
+	public void setClass(String to) {
+		this.className=to;
 	}
 
 	/**
@@ -186,6 +211,24 @@ public class ImageLink extends PhotoTag {
 		if(height!=null) {
 			href.append(" height=\"");
 			href.append(height);
+			href.append("\"");
+		}
+
+		if(onMouseDown!=null) {
+			href.append(" onmousedown=\"");
+			href.append(onMouseDown);
+			href.append("\"");
+		}
+
+		if(usemap!=null) {
+			href.append(" usemap=\"");
+			href.append(usemap);
+			href.append("\"");
+		}
+
+		if(className!=null) {
+			href.append(" class=\"");
+			href.append(className);
 			href.append("\"");
 		}
 

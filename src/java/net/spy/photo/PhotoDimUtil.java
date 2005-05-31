@@ -14,6 +14,52 @@ public class PhotoDimUtil extends Object {
 		super();
 	}
 
+	/** 
+	 * Get the scale factor that will be used to scale the first dimensions to
+	 * fit as tightly as possible within the constraints of the second
+	 * dimensions.
+	 * 
+	 * @param from the dimensions to be scaled
+	 * @param to the constraints
+	 * @return the scaling factor that will scale the dims to the constraints
+	 */
+	public static float getScaleFactor(PhotoDimensions from,
+		PhotoDimensions to) {
+
+		float fromw=(float)from.getWidth();
+		float fromh=(float)from.getHeight();
+		float tow=(float)to.getWidth();
+		float toh=(float)to.getHeight();
+
+		float scaleFactor=tow/fromw;
+		if(fromh * scaleFactor > toh) {
+			scaleFactor=toh/fromh;
+		}
+
+		// Assertions
+		if( (fromw * scaleFactor) > tow || (fromh * scaleFactor) > toh) {
+			throw new RuntimeException(
+				"Results can't be outside of the input box");
+		}
+		// End assertions
+
+		return(scaleFactor);
+	}
+
+	/** 
+	 * Scale a set of PhotoDimensions by a specific factor.
+	 * 
+	 * @param from the source PhotoDimensions
+	 * @param factor the factor by which to scale
+	 * @return the scaled PhotoDimensions
+	 */
+	public static PhotoDimensions scaleBy(PhotoDimensions from, float factor) {
+		PhotoDimensions rv=new PhotoDimensionsImpl(
+			(int)(from.getWidth() * factor),
+			(int)(from.getHeight() * factor));
+		return(rv);
+	}
+
 	/**
 	 * Scale a dimension to another dimension.
 	 * This will only scale down, not up.
@@ -24,39 +70,16 @@ public class PhotoDimUtil extends Object {
 	 */
 	public static PhotoDimensions scaleTo(
 		PhotoDimensions from, PhotoDimensions to) {
-		float x=(float)from.getWidth();
-		float y=(float)from.getHeight();
-		float aspect=x/y;
-		int newx=from.getWidth();
-		int newy=from.getHeight();
 
-		if(to.getWidth() <= newx || to.getHeight() <= newy) {
+		PhotoDimensions rv=from;
 
-			newx=to.getWidth();
-			newy=(int)((float)newx/aspect);
+		// This prevents us from scaling down.  We only scale if the
+		// constraints are smaller than the from dimensions
+		if(to.getWidth() < from.getWidth()
+			|| to.getHeight() < from.getHeight()) {
 
-			// If it exceeds the boundaries, do it the other way.
-			if(newx > to.getWidth() || newy > to.getHeight()) {
-				newy=to.getHeight();
-				newx=(int)((float)newy*aspect);
-			}
+			rv=scaleBy(from, getScaleFactor(from, to));
 		}
-
-		PhotoDimensions rv=new PhotoDimensionsImpl(newx, newy);
-
-		// Assertions
-		if(rv.getWidth() > to.getWidth()
-			|| rv.getHeight() > to.getHeight()) {
-			throw new RuntimeException(
-				"Results can't be outside of the input box");
-		}
-
-		if(rv.getWidth() > from.getWidth()
-			|| rv.getHeight() > from.getHeight()) {
-			throw new RuntimeException(
-				"Results can't be outside of the input size");
-		}
-		// End assertions
 
 		return(rv);
 	}

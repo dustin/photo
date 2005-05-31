@@ -8,6 +8,7 @@ import java.io.ObjectStreamException;
 import java.io.InvalidObjectException;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.Map;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import net.spy.photo.Format;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimUtil;
+import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.PhotoImageDataFactory;
 
 /**
@@ -31,7 +33,8 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	implements Serializable, PhotoImageData {
 
 	private int id=-1;
-	private Collection keywords=null;
+	private Collection<AnnotatedRegion> annotations=null;
+	private Collection<Keyword> keywords=null;
 	private String descr=null;
 	private String catName=null;
 	private int catId=-1;
@@ -53,6 +56,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	protected PhotoImageDataImpl() throws Exception {
 		super();
 		keywords=new TreeSet();
+		annotations=new HashSet();
 	}
 
 	/**
@@ -104,10 +108,24 @@ public abstract class PhotoImageDataImpl extends SpyObject
 		}
 	}
 
+	/** 
+	 * Get the annotated regions for this image.
+	 */
+	public Collection<AnnotatedRegion> getAnnotations() {
+		return(annotations);
+	}
+
+	/** 
+	 * Add an annotated region for this image.
+	 */
+	protected void addAnnotation(AnnotatedRegion a) {
+		annotations.add(a);
+	}
+
 	/**
 	 * Get the keywords for this photo.
 	 */
-	public Collection getKeywords() {
+	public Collection<Keyword> getKeywords() {
 		return(keywords);
 	}
 

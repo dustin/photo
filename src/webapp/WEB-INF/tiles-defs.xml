@@ -23,6 +23,12 @@
 		<put name="body" value="/content/_display.jsp"/>
 	</definition>
 
+	<!-- Annotation form -->
+	<definition name="top.annotateForm" extends="pageLayout">
+		<put name="title" type="string" value="Image Display"/>
+		<put name="body" value="/content/_annotateForm.jsp"/>
+	</definition>
+
 	<definition name="top.addImage" extends="pageLayout">
 		<put name="title" type="string" value="Add a New Image"/>
 		<put name="body" value="/content/_addform.jsp"/>
