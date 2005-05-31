@@ -21,6 +21,12 @@ public class PhotoDimensionsImpl
 	 */
 	public PhotoDimensionsImpl(int w, int h) {
 		super();
+		if(w < 0) {
+			throw new IllegalArgumentException("width < 0:  " + w);
+		}
+		if(h < 0) {
+			throw new IllegalArgumentException("height < 0:  " + h);
+		}
 		this.width=w;
 		this.height=h;
 	}
@@ -33,13 +39,20 @@ public class PhotoDimensionsImpl
 		super();
 
 		StringTokenizer st=new StringTokenizer(dims, "x");
-		if(st.countTokens() < 2) {
+		if(st.countTokens() != 2) {
 			throw new IllegalArgumentException(dims
 				+ " is not in the following format:  WIDTHxHEIGHT");
 		}
 
 		width=Integer.parseInt(st.nextToken());
 		height=Integer.parseInt(st.nextToken());
+
+		if(width < 0) {
+			throw new IllegalArgumentException("width < 0:  " + width);
+		}
+		if(height < 0) {
+			throw new IllegalArgumentException("height < 0:  " + height);
+		}
 	}
 
 	/**
