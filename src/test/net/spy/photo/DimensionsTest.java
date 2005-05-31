@@ -102,4 +102,20 @@ public class DimensionsTest extends TestCase {
 		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
 	}
 
+	/** 
+	 * Test the PhotoDimUtil.smallerThan implementation.
+	 */
+	public void testSmallerThan() {
+		PhotoDimensions ob1=new PhotoDimensionsImpl("800x600");
+		PhotoDimensions ob2=new PhotoDimensionsImpl("640x480");
+		assertTrue(PhotoDimUtil.smallerThan(ob2, ob1));
+		assertFalse(PhotoDimUtil.smallerThan(ob1, ob2));
+		assertFalse(PhotoDimUtil.smallerThan(ob1, ob1));
+		assertFalse(PhotoDimUtil.smallerThan(ob2, ob2));
+
+		ob1=new PhotoDimensionsImpl("640x480");
+		ob2=new PhotoDimensionsImpl("481x640");
+		assertTrue(PhotoDimUtil.smallerThan(ob1, ob2));
+	}
+
 }

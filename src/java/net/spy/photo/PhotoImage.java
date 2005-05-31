@@ -117,16 +117,6 @@ public class PhotoImage extends Object
 	/**
 	 * @see PhotoDimensions
 	 */
-	public boolean smallerThan(PhotoDimensions pdim) {
-		int thisone=getWidth() * getHeight();
-		int thatone=pdim.getWidth()*pdim.getHeight();
-
-		return(thisone < thatone);
-	}
-
-	/**
-	 * @see PhotoDimensions
-	 */
 	public int getWidth() {
 		return(width);
 	}

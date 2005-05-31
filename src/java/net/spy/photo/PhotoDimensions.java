@@ -17,12 +17,4 @@ public interface PhotoDimensions {
 	 */
 	int getHeight();
 
-	/**
-	 * Return true if this PhotoDimensions object is smaller than the one
-	 * passed in.
-	 */
-	boolean smallerThan(PhotoDimensions pdim);
-
 }
-
-

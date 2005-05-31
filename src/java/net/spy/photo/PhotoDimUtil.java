@@ -61,4 +61,16 @@ public class PhotoDimUtil extends Object {
 		return(rv);
 	}
 
+	/** 
+	 * Determine whether the first PhotoDimensions instance is smaller than the
+	 * second in area.
+	 * 
+	 * @return true if the area of a is greater than the area of b.
+	 */
+	public static boolean smallerThan(PhotoDimensions a, PhotoDimensions b) {
+		int areaa=a.getWidth() * a.getHeight();
+		int areab=b.getWidth() * b.getHeight();
+		return(areaa < areab);
+	}
+
 }

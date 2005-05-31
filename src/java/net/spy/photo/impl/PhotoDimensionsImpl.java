@@ -73,16 +73,6 @@ public class PhotoDimensionsImpl
 	}
 
 	/**
-	 * @see PhotoDimensions
-	 */
-	public boolean smallerThan(PhotoDimensions pdim) {
-		int thisone=getWidth() * getHeight();
-		int thatone=pdim.getWidth()*pdim.getHeight();
-
-		return(thisone < thatone);
-	}
-
-	/**
 	 * Get the hash code.
 	 */
 	public int hashCode() {
