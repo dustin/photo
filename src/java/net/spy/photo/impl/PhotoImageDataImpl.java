@@ -21,7 +21,7 @@ import net.spy.photo.User;
 import net.spy.photo.Format;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoDimScaler;
+import net.spy.photo.PhotoDimUtil;
 import net.spy.photo.PhotoImageDataFactory;
 
 /**
@@ -100,7 +100,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 				conf.get("thumbnail_size"));
 
 			// Scale it down
-			tnDims=PhotoDimScaler.scaleTo(dimensions, tdim);
+			tnDims=PhotoDimUtil.scaleTo(dimensions, tdim);
 		}
 	}
 

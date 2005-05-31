@@ -88,18 +88,18 @@ public class DimensionsTest extends TestCase {
 	}
 
 	/** 
-	 * Test the PhotoDimScaler implementation.
+	 * Test the PhotoDimUtil scaler implementation.
 	 */
 	public void testDimScaler() {
 		PhotoDimensions scaleFrom=new PhotoDimensionsImpl("1280x832");
 		PhotoDimensions scaleTo=new PhotoDimensionsImpl("800x600");
 		PhotoDimensions expected=new PhotoDimensionsImpl("800x520");
-		assertEquals(expected, PhotoDimScaler.scaleTo(scaleFrom, scaleTo));
+		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
 
 		scaleFrom=new PhotoDimensionsImpl("832x1328");
 		scaleTo=new PhotoDimensionsImpl("800x600");
 		expected=new PhotoDimensionsImpl("375x600");
-		assertEquals(expected, PhotoDimScaler.scaleTo(scaleFrom, scaleTo));
+		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
 	}
 
 }

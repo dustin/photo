@@ -14,7 +14,7 @@ import java.util.Random;
 import net.spy.photo.ImageServerScaler;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoDimScaler;
+import net.spy.photo.PhotoDimUtil;
 
 /**
  * Get an image scaler that scales via an external program.
@@ -60,7 +60,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 		// OK, got our filenames, now let's calculate the new size:
 		PhotoDimensions imageSize=new PhotoDimensionsImpl(in.getWidth(),
 			in.getHeight());
-		PhotoDimensions newSize=PhotoDimScaler.scaleTo(imageSize, dim);
+		PhotoDimensions newSize=PhotoDimUtil.scaleTo(imageSize, dim);
 
 		FileInputStream fin=null;
 

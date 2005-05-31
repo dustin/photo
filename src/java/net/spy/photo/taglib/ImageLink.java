@@ -13,7 +13,7 @@ import net.spy.photo.PhotoUtil;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoDimScaler;
+import net.spy.photo.PhotoDimUtil;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.PhotoSessionData;
 
@@ -121,7 +121,7 @@ public class ImageLink extends PhotoTag {
 				PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 				PhotoImageData pid=pidf.getObject(id);
 				PhotoDimensions optdims=sessionData.getOptimalDimensions();
-				PhotoDimensions newDims=PhotoDimScaler.scaleTo(
+				PhotoDimensions newDims=PhotoDimUtil.scaleTo(
 					pid.getDimensions(), optdims);
 
 				width=String.valueOf(newDims.getWidth());

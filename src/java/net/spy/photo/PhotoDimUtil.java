@@ -6,20 +6,18 @@ package net.spy.photo;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 
 /**
- * Calculate a dimension for a set of dimensions to fit within a given box.
- * This will scale down, not up.
+ * Utilities for working with photo dimensions.
  */
-public class PhotoDimScaler extends Object {
+public class PhotoDimUtil extends Object {
 
-	/**
-	 * Get an instance of PhotoDimScaler with a reference dimension set.
-	 */
-	private PhotoDimScaler() {
+	private PhotoDimUtil() {
 		super();
 	}
 
 	/**
 	 * Scale a dimension to another dimension.
+	 * This will only scale down, not up.
+	 *
 	 * @param from the dimensions of the source
 	 * @param to the maximum dimensions to scale to
 	 * @return the largest dimensions of from that fit within to
