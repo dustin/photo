@@ -146,6 +146,12 @@ public class DimensionsTest extends TestCase {
 		scaleTo=new PhotoDimensionsImpl("800x600");
 		expected=new PhotoDimensionsImpl("375x600");
 		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
+
+		// This case failed when deployed
+		scaleFrom=new PhotoDimensionsImpl("683x430");
+		scaleTo=new PhotoDimensionsImpl("220x146");
+		expected=new PhotoDimensionsImpl("220x138");
+		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
 	}
 
 	/** 

@@ -37,9 +37,13 @@ public class PhotoDimUtil extends Object {
 		}
 
 		// Assertions
-		if( (fromw * scaleFactor) > tow || (fromh * scaleFactor) > toh) {
+		if( (int)((fromw * scaleFactor)) > tow
+			|| (int)((fromh * scaleFactor)) > toh) {
+
 			throw new RuntimeException(
-				"Results can't be outside of the input box");
+				"Results can't be outside of the input box:  "
+				+ from + " -> " + to + " yielded " + scaleFactor + " for "
+				+ (fromw * scaleFactor) + "x" + (fromh * scaleFactor));
 		}
 		// End assertions
 
