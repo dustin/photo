@@ -93,7 +93,7 @@ public class AnnotateAction extends PhotoAction {
 			newRegion.getX(), newRegion.getY(),
 			newRegion.getWidth(), newRegion.getHeight(),
 			(String)df.get("keywords"),
-			(String)df.get("title"));
+			(String)df.get("title"), user);
 
 		// Store it
 		pidf.store(savable);

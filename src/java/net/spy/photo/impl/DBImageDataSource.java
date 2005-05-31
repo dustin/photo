@@ -20,6 +20,7 @@ import net.spy.photo.Keyword;
 import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
 import net.spy.photo.Persistent;
+import net.spy.photo.UserFactory;
 import net.spy.photo.sp.GetPhotoInfo;
 import net.spy.photo.sp.GetAlbumKeywords;
 import net.spy.photo.sp.GetAllRegions;
@@ -190,6 +191,9 @@ public class DBImageDataSource extends SpyObject
 			setWidth(rs.getInt("width"));
 			setHeight(rs.getInt("height"));
 			setTitle(rs.getString("title"));
+			UserFactory uf=UserFactory.getInstance();
+			setUser(uf.getUser(rs.getInt("user_id")));
+			setTimestamp(rs.getTimestamp("ts"));
 		}
 
 		public void addKeyword(Keyword k) {

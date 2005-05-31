@@ -5,11 +5,13 @@ package net.spy.photo.impl;
 
 import java.util.TreeSet;
 import java.util.Collection;
+import java.util.Date;
 
 import net.spy.SpyObject;
 
 import net.spy.photo.Keyword;
 import net.spy.photo.AnnotatedRegion;
+import net.spy.photo.User;
 
 /**
  * Abstract implementation of an annotated region.
@@ -24,6 +26,8 @@ public abstract class AnnotatedRegionImpl extends SpyObject
 	private int height=0;
 	private String title=null;
 	private Collection<Keyword> keywords=null;
+	private User user=null;
+	private Date timestamp=null;
 
 	/**
 	 * Get an instance of AnnotatedRegionImpl.
@@ -129,6 +133,34 @@ public abstract class AnnotatedRegionImpl extends SpyObject
 	 */
 	protected void addKeyword(Keyword k) {
 		keywords.add(k);
+	}
+
+	/** 
+	 * Get the user who created this annotation.
+	 */
+	public User getUser() {
+		return(user);
+	}
+
+	/** 
+	 * Set the user who created this annotation.
+	 */
+	protected void setUser(User to) {
+		this.user=to;
+	}
+
+	/** 
+	 * Get the timestamp of this annotation.
+	 */
+	public Date getTimestamp() {
+		return(timestamp);
+	}
+
+	/** 
+	 * Set the timestamp of this annotation.
+	 */
+	protected void setTimestamp(Date to) {
+		this.timestamp=to;
 	}
 
 }

@@ -17,7 +17,9 @@ select
 		x,
 		y,
 		width,
-		height
+		height,
+		user_id,
+		ts
 	from
 		region
 
@@ -29,3 +31,5 @@ x INTEGER the x position of this region
 y INTEGER the y position of this region
 width INTEGER the width of this region
 height INTEGER the height of this region
+user_id INTEGER the ID of the user who created this annotation
+ts TIMESTAMP the timestamp of the creation of this annotation

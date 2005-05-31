@@ -10,8 +10,11 @@ create table region (
 	y integer not null,
 	width integer not null,
 	height integer not null,
+	user_id integer not null,
+	ts timestamp not null,
 	primary key(region_id),
-	foreign key(album_id) references album(id)
+	foreign key(album_id) references album(id),
+	foreign key(user_id) references wwwusers(id)
 )
 ;
 create index region_byimg on region(album_id)

@@ -17,7 +17,9 @@ insert into region (
 		x,
 		y,
 		width,
-		height
+		height,
+		user_id,
+		ts
 	) values (
 		?, -- region_id,
 		?, -- album_id,
@@ -25,7 +27,9 @@ insert into region (
 		?, -- x,
 		?, -- y,
 		?, -- width,
-		? -- height
+		?, -- height
+		?, -- user_id
+		? -- ts
 	)
 
 @params
@@ -36,3 +40,5 @@ x required INTEGER the x position of this region
 y required INTEGER the y position of this region
 width required INTEGER the width of this region
 height required INTEGER the height of this region
+user_id required INTEGER the user creating this annotation
+ts required TIMESTAMP the timestamp of this annotation

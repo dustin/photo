@@ -3,6 +3,7 @@
 
 package net.spy.photo;
 
+import java.util.Date;
 import java.util.Collection;
 
 /**
@@ -24,5 +25,15 @@ public interface AnnotatedRegion extends PhotoRegion {
 	 * Get the keywords associated with this annotated region.
 	 */
 	Collection<Keyword> getKeywords();
+
+	/** 
+	 * Get the user who created this annotation.
+	 */
+	User getUser();
+
+	/** 
+	 * Get the timestamp indicating when this annotation was added.
+	 */
+	Date getTimestamp();
 
 }

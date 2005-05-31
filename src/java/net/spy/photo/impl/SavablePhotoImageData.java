@@ -185,6 +185,8 @@ public class SavablePhotoImageData extends AbstractSavable
 			ia.setY(ar.getY());
 			ia.setWidth(ar.getWidth());
 			ia.setHeight(ar.getHeight());
+			ia.setUserId(ar.getUser().getId());
+			ia.setTs(new java.sql.Timestamp(ar.getTimestamp().getTime()));
 
 			int aff=ia.executeUpdate();
 			if(aff != 1) {
@@ -299,20 +301,23 @@ public class SavablePhotoImageData extends AbstractSavable
 	 * Add an annotation.
 	 * 
 	 * @param x x position of the region
-	 * @param h y position of the region
+	 * @param y y position of the region
 	 * @param width width of the region
 	 * @param height height of the region
 	 * @param keywords keyword string
 	 * @param title title of the region
+	 * @param u user who's adding this annotation
+	 * @throws Exception 
 	 */
 	public void addAnnotation(final int x, final int y,
 		final int width, final int height,
-		final String keywords, final String title) throws Exception {
+		final String keywords, final String title,
+		final User u) throws Exception {
 
 		int newId=PhotoUtil.getNewIdForSeq("region_region_id_seq");
 
 		NewAnnotatedRegion nar=new NewAnnotatedRegion(newId, x, y,
-			width, height, title);
+			width, height, title, u);
 
 		StringTokenizer st=new StringTokenizer(keywords);
 		while(st.hasMoreTokens()) {
@@ -450,7 +455,7 @@ public class SavablePhotoImageData extends AbstractSavable
 	// New annotated region implementation
 	private static final class NewAnnotatedRegion extends AnnotatedRegionImpl {
 		public NewAnnotatedRegion(final int id, final int x, final int y,
-		        final int width, final int height, final String title) {
+		        final int width, final int height, final String title, User u) {
 			super();
 			setId(id);
 			setX(x);
@@ -458,6 +463,8 @@ public class SavablePhotoImageData extends AbstractSavable
 			setWidth(width);
 			setHeight(height);
 			setTitle(title);
+			setUser(u);
+			setTimestamp(new Date());
 		}
 
 		public void addKeyword(Keyword k) {

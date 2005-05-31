@@ -122,6 +122,9 @@
 		<c:forEach var="region" items="${image.annotations}">
 
 			<div class="commentheader">
+				At <c:out value="${region.timestamp}"/>,
+					<c:out value="${region.user.realname}"/> made annotation
+					#<c:out value="${region.id}"/> at
 				<c:out
 					value="${region.x},${region.y} @ ${region.width}x${region.height}"/>
 			</div>
