@@ -21,6 +21,8 @@
 
 	boxOb.imgX=0;
 	boxOb.imgY=0;
+	boxOb.imgX2=0;
+	boxOb.imgY2=0;
 
 	function showHighlight(event) {
 		// Find the image
@@ -28,6 +30,8 @@
 		var theImage=imageDiv.getElementsByTagName("img")[0];
 		boxOb.imgX=theImage.offsetLeft;
 		boxOb.imgY=theImage.offsetTop;
+		boxOb.imgX2=boxOb.imgX + theImage.offsetWidth;
+		boxOb.imgY2=boxOb.imgY + theImage.offsetHeight;
 
 		boxOb.boxX1=event.clientX + window.scrollX;
 		boxOb.boxY1=event.clientY + window.scrollY;
@@ -37,8 +41,11 @@
 	}
 
 	function movingHighlight(event) {
-		boxOb.boxX2=event.clientX + window.scrollX;
-		boxOb.boxY2=event.clientY + window.scrollY;
+		// Don't allow the selection to go outside of the image.
+		boxOb.boxX2=Math.min(boxOb.imgX2,
+			Math.max(boxOb.imgX, event.clientX + window.scrollX));
+		boxOb.boxY2=Math.min(boxOb.imgY2,
+			Math.max(boxOb.imgY, event.clientY + window.scrollY));
 
 		var boxDiv=document.getElementById("zoomBox");
 		boxDiv.style.left=Math.min(boxOb.boxX1, boxOb.boxX2) + "px;";
@@ -92,5 +99,40 @@
 				<input type="submit" value="Save"/>
 			</html:form>
 		</div>
+
+	<div>
+		<b>Category</b>: <q><c:out value="${image.catName}"/></q>
+		<b>Keywords</b>:
+      <i><c:forEach var="kw" items="${image.keywords}">
+        <c:out value="${kw.keyword}"/>
+      </c:forEach></i><br/>
+		    <b>Size</b>:  <c:out value="${image.dimensions}"/>
+      (<c:out value="${image.size}"/> bytes)<br />
+    <b>Taken</b>:  <c:out value="${image.taken}"/> <b>Added</b>:
+      <c:out value="${image.timestamp}"/>
+    by <c:out value="${image.addedBy.realName}"/><br />
+    <b>Info</b>:
+    <div class="imgDescr"><c:out value="${image.descr}"/></div>
+
+	</div>
+
+	<div class="comments">
+		<h1>Current Annotations</h1>
+
+		<c:forEach var="region" items="${image.annotations}">
+
+			<div class="commentheader">
+				<c:out
+					value="${region.x},${region.y} @ ${region.width}x${region.height}"/>
+			</div>
+			<div class="commentbody">
+				Keywords:  <i><c:forEach var="kw" items="${region.keywords}">
+					<c:out value="${kw.keyword}"/>
+				</c:forEach></i><br/>
+				Title:  <c:out value="${region.title}"/>
+			</div>
+
+		</c:forEach>
+	</div>
 
 <%-- arch-tag: B457C4EC-800F-43F0-A299-4202692C1466 --%>

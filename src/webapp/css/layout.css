@@ -191,8 +191,11 @@ fieldset legend {
 }
 
 #hlimage {
-	cursor: crosshair;
 	text-align: center;
+}
+
+#hlimage img {
+	cursor: crosshair;
 }
 
 a.annotation {
