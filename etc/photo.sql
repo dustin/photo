@@ -96,6 +96,8 @@ create table album(
 	addedby    integer not null,
 	width      integer default 0,
 	height     integer default 0,
+	tn_width   integer default 0,
+	tn_height  integer default 0,
 	format_id  integer default 0,
 	ts         timestamp not null,
 	id         serial,
@@ -505,7 +507,7 @@ grant select on auth_log_view to nobody
 -- List all of the images available by users
 create view viewable_by_user as
 	select
-		i.id as image_id, i.keywords,
+		i.id as image_id,
 		c.name as cat_name,
 		u.id as userid, u.username
 	from
