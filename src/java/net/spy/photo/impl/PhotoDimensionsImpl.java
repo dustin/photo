@@ -105,13 +105,4 @@ public class PhotoDimensionsImpl
 		return(height);
 	}
 
-	/**
-	 * Test me.
-	 */
-	public static void main(String args[]) throws Exception {
-		PhotoDimensionsImpl dimpl=new PhotoDimensionsImpl(args[0]);
-
-		System.out.println(dimpl);
-	}
-
 }

@@ -8,7 +8,7 @@ import net.spy.photo.impl.PhotoRegionImpl;
 /**
  * Utilities for working with PhotoRegions.
  */
-public class PhotoRegionUtil extends Object {
+public final class PhotoRegionUtil extends Object {
 
 	/**
 	 * Get an instance of PhotoRegionUtil.

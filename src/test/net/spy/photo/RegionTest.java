@@ -40,6 +40,7 @@ public class RegionTest extends TestCase {
 		PhotoRegion pr1=new PhotoRegionImpl(5, 5, 70, 70);
 		PhotoRegion pr2=new PhotoRegionImpl(5, 5, 70, 70);
 		assertEquals(pr1, pr2);
+		assertEquals(pr1.hashCode(), pr2.hashCode());
 		assertNotEquals(pr1, new PhotoRegionImpl(4, 5, 70, 70));
 		assertNotEquals(pr1, new PhotoRegionImpl(5, 4, 70, 70));
 		assertNotEquals(pr1, new PhotoRegionImpl(5, 5, 69, 70));

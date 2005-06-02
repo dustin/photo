@@ -8,8 +8,9 @@ import net.spy.photo.impl.PhotoDimensionsImpl;
 /**
  * Utilities for working with photo dimensions.
  */
-public class PhotoDimUtil extends Object {
+public final class PhotoDimUtil extends Object {
 
+	// Cannot be instantiated
 	private PhotoDimUtil() {
 		super();
 	}

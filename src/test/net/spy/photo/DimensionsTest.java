@@ -56,19 +56,43 @@ public class DimensionsTest extends TestCase {
 		PhotoDimensions dim1=new PhotoDimensionsImpl("800x600");
 		PhotoDimensions dim2=new PhotoDimensionsImpl("800x600");
 		assertEquals(dim1, dim2);
+		assertEquals(dim1.hashCode(), dim2.hashCode());
 		assertNotSame(dim1, dim2);
 		PhotoDimensions dim3=new PhotoDimensionsImpl("600x800");
 		assertFalse(dim1 + " should not = " + dim2, dim1.equals(dim3));
 		assertFalse(dim2 + " should not = " + dim3, dim2.equals(dim3));
+		assertFalse(dim2 + ".hashCode() should not = " + dim3 + ".hashCode()",
+			(dim2.hashCode() == dim3.hashCode()));
 		PhotoDimensions dim4=new PhotoDimensionsImpl(600, 800);
 		assertEquals(dim3, dim4);
 		assertEquals(dim4, dim3);
+
+		PhotoDimensions dim5=new PhotoDimensionsImpl(800, 601);
+		assertFalse(dim1 + " should not = " + dim5, dim1.equals(dim5));
+		assertFalse(dim1 + " should not = " + dim5, dim2.equals(dim5));
+		assertFalse(dim1 + ".hashCode() should not = " + dim5 + ".hashCode()",
+			(dim1.hashCode() == dim5.hashCode()));
+
+		PhotoDimensions dim6=new PhotoDimensionsImpl(801, 600);
+		assertFalse(dim1 + " should not = " + dim6, dim1.equals(dim6));
+		assertFalse(dim1 + " should not = " + dim6, dim2.equals(dim6));
+		assertFalse(dim1 + ".hashCode() should not = " + dim6 + ".hashCode()",
+			(dim1.hashCode() == dim6.hashCode()));
 	}
 
 	private void constructNegTest(String arg) {
 		try {
 			PhotoDimensions dim=new PhotoDimensionsImpl(arg);
 			fail("Constructed " + dim + " from " + arg);
+		} catch(IllegalArgumentException e) {
+			/* Pass */
+		}
+	}
+
+	private void constructNegTest(int w, int h) {
+		try {
+			PhotoDimensions dim=new PhotoDimensionsImpl(w, h);
+			fail("Constructed " + dim + " from " + w + "x" + h);
 		} catch(IllegalArgumentException e) {
 			/* Pass */
 		}
@@ -85,6 +109,10 @@ public class DimensionsTest extends TestCase {
 		constructNegTest("-800x-600");
 		constructNegTest("-800x600");
 		constructNegTest("800x-600");
+
+		constructNegTest(-800, -600);
+		constructNegTest(-800, 600);
+		constructNegTest(800, -600);
 	}
 
 	/** 
