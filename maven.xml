@@ -59,6 +59,9 @@
 			</u:available>
 			<echo>Using ${confsrc}</echo>
 
+			<!-- Need to delete the photo.conf so the correct one will be used. -->
+			<ant:delete file="${maven.build.dir}/photo/WEB-INF/photo.conf"/>
+
 			<ant:filter token="INSTANCE" value="${war}"/>
 			<ant:copy file="${confsrc}"
 				tofile="${maven.build.dir}/photo/WEB-INF/photo.conf"
