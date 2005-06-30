@@ -59,7 +59,7 @@ public class PhotoImageScaler extends SpyObject {
 		// Write it out
 		ByteArrayOutputStream os=new ByteArrayOutputStream();
 		JpegEncoder jpg=new JpegEncoder(img, quality, os);
-		jpg.Compress();
+		jpg.compress();
 
 		PhotoImage ri=new PhotoImage(os.toByteArray());
 
