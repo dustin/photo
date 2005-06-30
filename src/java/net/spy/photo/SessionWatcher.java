@@ -90,13 +90,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	 * Return the number of sessions containing the given user.
 	 */
 	public static int getSessionCountByUser(String username) {
-		int rv=0;
-
-		for(PhotoSessionData ses : getSessionDataByUser(username)) {
-            rv++;
-        }
-
-		return(rv);
+		return(getSessionDataByUser(username).size());
 	}
 
 	/**

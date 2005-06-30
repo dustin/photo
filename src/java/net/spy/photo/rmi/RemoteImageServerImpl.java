@@ -20,8 +20,6 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 
 	private ImageServer server=null;
 
-	private boolean debug=false;
-
 	/**
 	 * Get a RemoteImageServerImpl.
 	 */

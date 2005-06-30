@@ -263,7 +263,8 @@ public class PhotoImage extends Object
 				| ((imageData[i++]&0xff));
 		} else {
 			throw new PhotoException(
-				"IHDR Should be the first chunk type in a PNG, not " + ctype);
+				"IHDR Should be the first chunk type in a PNG, not " + ctype
+					+ " (with a length of " + length + ")");
 		}
 
 	}
