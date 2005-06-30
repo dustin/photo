@@ -178,6 +178,12 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 		</dependency>
 
 		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+
+		<dependency>
 			<groupId>servletapi</groupId>
 			<artifactId>servletapi</artifactId>
 			<version>2.3</version>
