@@ -38,15 +38,15 @@ public class DisplayLink extends PhotoTag {
 	/**
 	 * Set the width for the img src HTML tag.
 	 */
-	public void setWidth(String width) {
-		this.width=width;
+	public void setWidth(String to) {
+		this.width=to;
 	}
 
 	/**
 	 * Set the height for the img src HTML tag.
 	 */
-	public void setHeight(String height) {
-		this.height=height;
+	public void setHeight(String to) {
+		this.height=to;
 	}
 
 	/**
@@ -89,8 +89,8 @@ public class DisplayLink extends PhotoTag {
 	/**
 	 * Set the alt text for the thumbnail (if provided).
 	 */
-	public void setAlt(String altText) {
-		this.altText=altText;
+	public void setAlt(String to) {
+		this.altText=to;
 	}
 
 	/**
@@ -99,8 +99,8 @@ public class DisplayLink extends PhotoTag {
 	 * Relative links to search offsets may be of type ``prev'' or
 	 * ``next.''
 	 */
-	public void setRelative(String relative) {
-		this.relative=relative;
+	public void setRelative(String to) {
+		this.relative=to;
 	}
 
 	/**

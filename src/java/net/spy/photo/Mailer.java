@@ -17,7 +17,7 @@ import javax.mail.internet.MimeMessage;
  */
 public class Mailer extends Object {
 
-	private String to=null;
+	private String recipient=null;
 	private String subject=null;
 	private String body=null;
 
@@ -31,22 +31,22 @@ public class Mailer extends Object {
 	/**
 	 * Set the recipient address.
 	 */
-	public void setTo(String to) {
-		this.to=to;
+	public void setRecipient(String to) {
+		this.recipient=to;
 	}
 
 	/**
 	 * Set the subject of the message.
 	 */
-	public void setSubject(String subject) {
-		this.subject=subject;
+	public void setSubject(String to) {
+		this.subject=to;
 	}
 
 	/**
 	 * Set the body of the message.
 	 */
-	public void setBody(String body) {
-		this.body=body;
+	public void setBody(String to) {
+		this.body=to;
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class Mailer extends Object {
 		mailconf.setProperty("mail.from", conf.get("mail_from"));
 
 		Address addrs[]=new InternetAddress[1];
-		addrs[0]=new InternetAddress(to);
+		addrs[0]=new InternetAddress(recipient);
 
 		Session session=Session.getInstance(mailconf, null);
 		Message msg=new MimeMessage(session);

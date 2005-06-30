@@ -16,7 +16,6 @@
 
 package net.spy.photo;
 
-import java.awt.AWTException;
 import java.awt.Image;
 import java.awt.image.PixelGrabber;
 import java.io.BufferedOutputStream;
@@ -41,24 +40,24 @@ public class JpegEncoder extends SpyObject {
 
 	private int imageHeight, imageWidth;
 
-	private int Quality;
+	private int quality;
 
-	private static final int[] jpegNaturalOrder = { 0, 1, 8, 16, 9, 2, 3, 10,
-			17, 24, 32, 25, 18, 11, 4, 5, 12, 19, 26, 33, 40, 48, 41, 34, 27,
-			20, 13, 6, 7, 14, 21, 28, 35, 42, 49, 56, 57, 50, 43, 36, 29, 22,
-			15, 23, 30, 37, 44, 51, 58, 59, 52, 45, 38, 31, 39, 46, 53, 60, 61,
-			54, 47, 55, 62, 63, };
+	private static final int[] jpegNaturalOrder = {
+		0, 1, 8, 16, 9, 2, 3, 10, 17, 24, 32, 25, 18, 11, 4, 5, 12, 19, 26, 33,
+		40, 48, 41, 34, 27, 20, 13, 6, 7, 14, 21, 28, 35, 42, 49, 56, 57, 50,
+		43, 36, 29, 22, 15, 23, 30, 37, 44, 51, 58, 59, 52, 45, 38, 31, 39, 46,
+		53, 60, 61, 54, 47, 55, 62, 63, };
 
-	public JpegEncoder(Image image, int quality, OutputStream out) {
+	public JpegEncoder(Image image, int q, OutputStream out) {
 		ImageWatcher watcher = new ImageWatcher(image);
 		try {
 			watcher.waitForImage();
-		} catch (InterruptedException e) {
+		} catch(InterruptedException e) {
 			getLogger().info("Excepting waiting or image", e);
 			// Try again
 			try {
 				watcher.waitForImage();
-			} catch (InterruptedException e2) {
+			} catch(InterruptedException e2) {
 				getLogger().warn("Giving up.", e2);
 			}
 		}
@@ -66,7 +65,7 @@ public class JpegEncoder extends SpyObject {
 		 * Quality of the image. 0 to 100 and from bad image quality, high
 		 * compression to good image quality low compression
 		 */
-		Quality = quality;
+		quality = q;
 
 		/*
 		 * Getting picture information It takes the Width, Height and RGB scans
@@ -74,19 +73,19 @@ public class JpegEncoder extends SpyObject {
 		 */
 		JpegObj = new JpegInfo(image);
 
-		imageHeight = JpegObj.imageHeight;
-		imageWidth = JpegObj.imageWidth;
+		imageHeight = JpegObj.jiHeight;
+		imageWidth = JpegObj.jiWidth;
 		outStream = new BufferedOutputStream(out);
-		dct = new DCT(Quality);
+		dct = new DCT(quality);
 		Huf = new Huffman(imageWidth, imageHeight);
 	}
 
-	public void setQuality(int quality) {
-		dct = new DCT(quality);
+	public void setQuality(int q) {
+		dct = new DCT(q);
 	}
 
 	public int getQuality() {
-		return Quality;
+		return quality;
 	}
 
 	public void compress() {
@@ -95,12 +94,12 @@ public class JpegEncoder extends SpyObject {
 		writeEOI(outStream);
 		try {
 			outStream.flush();
-		} catch (IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void writeCompressedData(BufferedOutputStream outStream) {
+	private void writeCompressedData(BufferedOutputStream os) {
 		int i, j, r, c, a, b;
 		int comp, xpos, ypos, xblockoffset, yblockoffset;
 		float inputArray[][];
@@ -118,29 +117,29 @@ public class JpegEncoder extends SpyObject {
 		int MinBlockWidth, MinBlockHeight;
 		// This initial setting of MinBlockWidth and MinBlockHeight is done to
 		// ensure they start with values larger than will actually be the case.
-		MinBlockWidth = ((imageWidth % 8 != 0) ? (int) (Math
-				.floor(imageWidth / 8.0) + 1) * 8 : imageWidth);
-		MinBlockHeight = ((imageHeight % 8 != 0) ? (int) (Math
-				.floor(imageHeight / 8.0) + 1) * 8 : imageHeight);
-		for (comp = 0; comp < JpegObj.NumberOfComponents; comp++) {
+		MinBlockWidth = ((imageWidth % 8 != 0)
+			? (int) (Math.floor(imageWidth / 8.0) + 1) * 8 : imageWidth);
+		MinBlockHeight = ((imageHeight % 8 != 0)
+			? (int) (Math.floor(imageHeight / 8.0) + 1) * 8 : imageHeight);
+		for(comp = 0; comp < JpegObj.NumberOfComponents; comp++) {
 			MinBlockWidth = Math.min(MinBlockWidth, JpegObj.BlockWidth[comp]);
 			MinBlockHeight = Math
-					.min(MinBlockHeight, JpegObj.BlockHeight[comp]);
+				.min(MinBlockHeight, JpegObj.BlockHeight[comp]);
 		}
 		xpos = 0;
-		for (r = 0; r < MinBlockHeight; r++) {
-			for (c = 0; c < MinBlockWidth; c++) {
+		for(r = 0; r < MinBlockHeight; r++) {
+			for(c = 0; c < MinBlockWidth; c++) {
 				xpos = c * 8;
 				ypos = r * 8;
-				for (comp = 0; comp < JpegObj.NumberOfComponents; comp++) {
+				for(comp = 0; comp < JpegObj.NumberOfComponents; comp++) {
 					inputArray = (float[][]) JpegObj.Components[comp];
 
-					for (i = 0; i < JpegObj.VsampFactor[comp]; i++) {
-						for (j = 0; j < JpegObj.HsampFactor[comp]; j++) {
+					for(i = 0; i < JpegObj.VsampFactor[comp]; i++) {
+						for(j = 0; j < JpegObj.HsampFactor[comp]; j++) {
 							xblockoffset = j * 8;
 							yblockoffset = i * 8;
-							for (a = 0; a < 8; a++) {
-								for (b = 0; b < 8; b++) {
+							for(a = 0; a < 8; a++) {
+								for(b = 0; b < 8; b++) {
 
 									// I believe this is where the dirty line at
 									// the bottom of the image is
@@ -151,8 +150,8 @@ public class JpegEncoder extends SpyObject {
 									// now. (04/04/98)
 
 									dctArray1[a][b] = inputArray[ypos
-											+ yblockoffset + a][xpos
-											+ xblockoffset + b];
+										+ yblockoffset + a][xpos
+										+ xblockoffset + b];
 								}
 							}
 							// The following code commented out because on some
@@ -162,29 +161,30 @@ public class JpegEncoder extends SpyObject {
 							// Width - 1) && (!JpegObj.lastRowIsDummy[comp] || r
 							// < Height - 1)) {
 							dctArray2 = dct.forwardDCT(dctArray1);
-							dctArray3 = dct.quantizeBlock(dctArray2,
-									JpegObj.QtableNumber[comp]);
+							dctArray3 = dct.quantizeBlock(
+								dctArray2, JpegObj.QtableNumber[comp]);
 							// }
 							// else {
 							// zeroArray[0] = dctArray3[0];
 							// zeroArray[0] = lastDCvalue[comp];
 							// dctArray3 = zeroArray;
 							// }
-							Huf.HuffmanBlockEncoder(outStream, dctArray3,
-									lastDCvalue[comp],
-									JpegObj.DCtableNumber[comp],
-									JpegObj.ACtableNumber[comp]);
+							Huf.HuffmanBlockEncoder(
+								os, dctArray3, lastDCvalue[comp],
+								JpegObj.DCtableNumber[comp],
+								JpegObj.ACtableNumber[comp]);
 							lastDCvalue[comp] = dctArray3[0];
 						}
 					}
 				}
 			}
 		}
-		Huf.flushBuffer(outStream);
+		Huf.flushBuffer(os);
 	}
 
 	private void writeEOI(BufferedOutputStream out) {
-		byte[] EOI = { (byte) 0xFF, (byte) 0xD9 };
+		byte[] EOI = {
+			(byte) 0xFF, (byte) 0xD9 };
 		WriteMarker(EOI, out);
 	}
 
@@ -193,7 +193,8 @@ public class JpegEncoder extends SpyObject {
 		int tempArray[];
 
 		// the SOI marker
-		byte[] SOI = { (byte) 0xFF, (byte) 0xD8 };
+		byte[] SOI = {
+			(byte) 0xFF, (byte) 0xD8 };
 		WriteMarker(SOI, out);
 
 		// The order of the following headers is quiet inconsequential.
@@ -228,8 +229,8 @@ public class JpegEncoder extends SpyObject {
 		COM[1] = (byte) 0xFE;
 		COM[2] = (byte) ((length >> 8) & 0xFF);
 		COM[3] = (byte) (length & 0xFF);
-		java.lang.System.arraycopy(JpegObj.Comment.getBytes(), 0, COM, 4,
-				JpegObj.Comment.length());
+		java.lang.System.arraycopy(
+			JpegObj.Comment.getBytes(), 0, COM, 4, JpegObj.Comment.length());
 		WriteArray(COM, out);
 
 		// The DQT header
@@ -240,10 +241,10 @@ public class JpegEncoder extends SpyObject {
 		DQT[2] = (byte) 0x00;
 		DQT[3] = (byte) 0x84;
 		offset = 4;
-		for (i = 0; i < 2; i++) {
+		for(i = 0; i < 2; i++) {
 			DQT[offset++] = (byte) ((0 << 4) + i);
 			tempArray = (int[]) dct.quantum[i];
-			for (j = 0; j < 64; j++) {
+			for(j = 0; j < 64; j++) {
 				DQT[offset++] = (byte) tempArray[jpegNaturalOrder[j]];
 			}
 		}
@@ -256,13 +257,13 @@ public class JpegEncoder extends SpyObject {
 		SOF[2] = (byte) 0x00;
 		SOF[3] = (byte) 17;
 		SOF[4] = (byte) JpegObj.Precision;
-		SOF[5] = (byte) ((JpegObj.imageHeight >> 8) & 0xFF);
-		SOF[6] = (byte) ((JpegObj.imageHeight) & 0xFF);
-		SOF[7] = (byte) ((JpegObj.imageWidth >> 8) & 0xFF);
-		SOF[8] = (byte) ((JpegObj.imageWidth) & 0xFF);
+		SOF[5] = (byte) ((JpegObj.jiHeight >> 8) & 0xFF);
+		SOF[6] = (byte) ((JpegObj.jiHeight) & 0xFF);
+		SOF[7] = (byte) ((JpegObj.jiWidth >> 8) & 0xFF);
+		SOF[8] = (byte) ((JpegObj.jiWidth) & 0xFF);
 		SOF[9] = (byte) JpegObj.NumberOfComponents;
 		index = 10;
-		for (i = 0; i < SOF[9]; i++) {
+		for(i = 0; i < SOF[9]; i++) {
 			SOF[index++] = (byte) JpegObj.CompID[i];
 			SOF[index++] = (byte) ((JpegObj.HsampFactor[i] << 4) + JpegObj.VsampFactor[i]);
 			SOF[index++] = (byte) JpegObj.QtableNumber[i];
@@ -279,19 +280,21 @@ public class JpegEncoder extends SpyObject {
 		DHT4 = new byte[4];
 		DHT4[0] = (byte) 0xFF;
 		DHT4[1] = (byte) 0xC4;
-		for (i = 0; i < 4; i++) {
+		for(i = 0; i < 4; i++) {
 			bytes = 0;
-			DHT1[index++ - oldindex] = (byte) ((int[]) Huf.bits.elementAt(i))[0];
-			for (j = 1; j < 17; j++) {
+			DHT1[index++
+				- oldindex] = (byte) ((int[]) Huf.bits.elementAt(i))[0];
+			for(j = 1; j < 17; j++) {
 				temp = ((int[]) Huf.bits.elementAt(i))[j];
-				DHT1[index++ - oldindex] = (byte) temp;
+				DHT1[index++
+					- oldindex] = (byte) temp;
 				bytes += temp;
 			}
 			intermediateindex = index;
 			DHT2 = new byte[bytes];
-			for (j = 0; j < bytes; j++) {
-				DHT2[index++ - intermediateindex] = (byte) ((int[]) Huf.val
-						.elementAt(i))[j];
+			for(j = 0; j < bytes; j++) {
+				DHT2[index++
+					- intermediateindex] = (byte) ((int[]) Huf.val.elementAt(i))[j];
 			}
 			DHT3 = new byte[index];
 			java.lang.System.arraycopy(DHT4, 0, DHT3, 0, oldindex);
@@ -312,7 +315,7 @@ public class JpegEncoder extends SpyObject {
 		SOS[3] = (byte) 12;
 		SOS[4] = (byte) JpegObj.NumberOfComponents;
 		index = 5;
-		for (i = 0; i < SOS[4]; i++) {
+		for(i = 0; i < SOS[4]; i++) {
 			SOS[index++] = (byte) JpegObj.CompID[i];
 			SOS[index++] = (byte) ((JpegObj.DCtableNumber[i] << 4) + JpegObj.ACtableNumber[i]);
 		}
@@ -326,7 +329,7 @@ public class JpegEncoder extends SpyObject {
 	void WriteMarker(byte[] data, BufferedOutputStream out) {
 		try {
 			out.write(data, 0, 2);
-		} catch (IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -334,9 +337,10 @@ public class JpegEncoder extends SpyObject {
 	void WriteArray(byte[] data, BufferedOutputStream out) {
 		int length;
 		try {
-			length = ((data[2] & 0xFF) << 8) + (data[3] & 0xFF) + 2;
+			length = ((data[2] & 0xFF) << 8)
+				+ (data[3] & 0xFF) + 2;
 			out.write(data, 0, length);
-		} catch (IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -352,12 +356,12 @@ public class JpegEncoder extends SpyObject {
 		/**
 		 * DCT Block Size - default 8
 		 */
-		public int N = 8;
+		public static final int N = 8;
 
 		/**
 		 * Image Quality (0-100) - default 80 (good image / good compression)
 		 */
-		public int QUALITY = 80;
+		public static final int DCT_QUALITY = 80;
 
 		public Object quantum[] = new Object[2];
 
@@ -366,16 +370,20 @@ public class JpegEncoder extends SpyObject {
 		/**
 		 * Quantitization Matrix for luminace.
 		 */
-		public int quantum_luminance[] = new int[N * N];
+		public int quantum_luminance[] = new int[N
+			* N];
 
-		public double DivisorsLuminance[] = new double[N * N];
+		public double DivisorsLuminance[] = new double[N
+			* N];
 
 		/**
 		 * Quantitization Matrix for chrominance.
 		 */
-		public int quantum_chrominance[] = new int[N * N];
+		public int quantum_chrominance[] = new int[N
+			* N];
 
-		public double DivisorsChrominance[] = new double[N * N];
+		public double DivisorsChrominance[] = new double[N
+			* N];
 
 		/**
 		 * Constructs a new DCT object. Initializes the cosine transform matrix
@@ -396,9 +404,10 @@ public class JpegEncoder extends SpyObject {
 		 * This method sets up the quantization matrix for luminance and
 		 * chrominance using the Quality parameter.
 		 */
-		private void initMatrix(int quality) {
-			double[] AANscaleFactor = { 1.0, 1.387039845, 1.306562965,
-					1.175875602, 1.0, 0.785694958, 0.541196100, 0.275899379 };
+		private void initMatrix(int q) {
+			double[] AANscaleFactor = {
+				1.0, 1.387039845, 1.306562965, 1.175875602, 1.0, 0.785694958,
+				0.541196100, 0.275899379 };
 			int i;
 			int j;
 			int index;
@@ -409,12 +418,12 @@ public class JpegEncoder extends SpyObject {
 			// jpeg_quality_scaling
 			// method in the IJG Jpeg-6a C libraries
 
-			Quality = quality;
-			if (Quality <= 0)
+			Quality = q;
+			if(Quality <= 0)
 				Quality = 1;
-			if (Quality > 100)
+			if(Quality > 100)
 				Quality = 100;
-			if (Quality < 50)
+			if(Quality < 50)
 				Quality = 5000 / Quality;
 			else
 				Quality = 200 - Quality * 2;
@@ -486,17 +495,18 @@ public class JpegEncoder extends SpyObject {
 			quantum_luminance[62] = 103;
 			quantum_luminance[63] = 99;
 
-			for (j = 0; j < 64; j++) {
-				temp = (quantum_luminance[j] * Quality + 50) / 100;
-				if (temp <= 0)
+			for(j = 0; j < 64; j++) {
+				temp = (quantum_luminance[j]
+					* Quality + 50) / 100;
+				if(temp <= 0)
 					temp = 1;
-				if (temp > 255)
+				if(temp > 255)
 					temp = 255;
 				quantum_luminance[j] = temp;
 			}
 			index = 0;
-			for (i = 0; i < 8; i++) {
-				for (j = 0; j < 8; j++) {
+			for(i = 0; i < 8; i++) {
+				for(j = 0; j < 8; j++) {
 					// The divisors for the LL&M method (the slow integer method
 					// used in
 					// jpeg 6a library). This method is currently (04/04/98)
@@ -507,7 +517,7 @@ public class JpegEncoder extends SpyObject {
 					// The divisors for the AAN method (the float method used in
 					// jpeg 6a library.
 					DivisorsLuminance[index] = (1.0 / (quantum_luminance[index]
-							* AANscaleFactor[i] * AANscaleFactor[j] * 8.0));
+						* AANscaleFactor[i] * AANscaleFactor[j] * 8.0));
 					index++;
 				}
 			}
@@ -579,17 +589,18 @@ public class JpegEncoder extends SpyObject {
 			quantum_chrominance[62] = 99;
 			quantum_chrominance[63] = 99;
 
-			for (j = 0; j < 64; j++) {
-				temp = (quantum_chrominance[j] * Quality + 50) / 100;
-				if (temp <= 0)
+			for(j = 0; j < 64; j++) {
+				temp = (quantum_chrominance[j]
+					* Quality + 50) / 100;
+				if(temp <= 0)
 					temp = 1;
-				if (temp >= 255)
+				if(temp >= 255)
 					temp = 255;
 				quantum_chrominance[j] = temp;
 			}
 			index = 0;
-			for (i = 0; i < 8; i++) {
-				for (j = 0; j < 8; j++) {
+			for(i = 0; i < 8; i++) {
+				for(j = 0; j < 8; j++) {
 					// The divisors for the LL&M method (the slow integer method
 					// used in
 					// jpeg 6a library). This method is currently (04/04/98)
@@ -600,7 +611,7 @@ public class JpegEncoder extends SpyObject {
 					// The divisors for the AAN method (the float method used in
 					// jpeg 6a library.
 					DivisorsChrominance[index] = (1.0 / (quantum_chrominance[index]
-							* AANscaleFactor[i] * AANscaleFactor[j] * 8.0));
+						* AANscaleFactor[i] * AANscaleFactor[j] * 8.0));
 					index++;
 				}
 			}
@@ -631,20 +642,21 @@ public class JpegEncoder extends SpyObject {
 		public double[][] forwardDCTExtreme(float input[][]) {
 			double output[][] = new double[N][N];
 			int v, u, x, y;
-			for (v = 0; v < 8; v++) {
-				for (u = 0; u < 8; u++) {
-					for (x = 0; x < 8; x++) {
-						for (y = 0; y < 8; y++) {
+			for(v = 0; v < 8; v++) {
+				for(u = 0; u < 8; u++) {
+					for(x = 0; x < 8; x++) {
+						for(y = 0; y < 8; y++) {
 							output[v][u] += input[x][y]
-									* Math.cos(((double) (2 * x + 1)
-											* (double) u * Math.PI) / 16)
-									* Math.cos(((double) (2 * y + 1)
-											* (double) v * Math.PI) / 16);
+								* Math.cos(((double) (2 * x + 1)
+									* (double) u * Math.PI) / 16)
+								* Math.cos(((double) (2 * y + 1)
+									* (double) v * Math.PI) / 16);
 						}
 					}
 					output[v][u] *= (0.25)
-							* ((u == 0) ? (1.0 / Math.sqrt(2)) : (double) 1.0)
-							* ((v == 0) ? (1.0 / Math.sqrt(2)) : (double) 1.0);
+						* ((u == 0)
+							? (1.0 / Math.sqrt(2)) : (double) 1.0) * ((v == 0)
+							? (1.0 / Math.sqrt(2)) : (double) 1.0);
 				}
 			}
 			return output;
@@ -663,92 +675,146 @@ public class JpegEncoder extends SpyObject {
 			int j;
 
 			// Subtracts 128 from the input values
-			for (i = 0; i < 8; i++) {
-				for (j = 0; j < 8; j++) {
+			for(i = 0; i < 8; i++) {
+				for(j = 0; j < 8; j++) {
 					output[i][j] = (input[i][j] - 128.0);
 					// input[i][j] -= 128;
 
 				}
 			}
 
-			for (i = 0; i < 8; i++) {
-				tmp0 = output[i][0] + output[i][7];
-				tmp7 = output[i][0] - output[i][7];
-				tmp1 = output[i][1] + output[i][6];
-				tmp6 = output[i][1] - output[i][6];
-				tmp2 = output[i][2] + output[i][5];
-				tmp5 = output[i][2] - output[i][5];
-				tmp3 = output[i][3] + output[i][4];
-				tmp4 = output[i][3] - output[i][4];
+			for(i = 0; i < 8; i++) {
+				tmp0 = output[i][0]
+					+ output[i][7];
+				tmp7 = output[i][0]
+					- output[i][7];
+				tmp1 = output[i][1]
+					+ output[i][6];
+				tmp6 = output[i][1]
+					- output[i][6];
+				tmp2 = output[i][2]
+					+ output[i][5];
+				tmp5 = output[i][2]
+					- output[i][5];
+				tmp3 = output[i][3]
+					+ output[i][4];
+				tmp4 = output[i][3]
+					- output[i][4];
 
-				tmp10 = tmp0 + tmp3;
-				tmp13 = tmp0 - tmp3;
-				tmp11 = tmp1 + tmp2;
-				tmp12 = tmp1 - tmp2;
+				tmp10 = tmp0
+					+ tmp3;
+				tmp13 = tmp0
+					- tmp3;
+				tmp11 = tmp1
+					+ tmp2;
+				tmp12 = tmp1
+					- tmp2;
 
-				output[i][0] = tmp10 + tmp11;
-				output[i][4] = tmp10 - tmp11;
+				output[i][0] = tmp10
+					+ tmp11;
+				output[i][4] = tmp10
+					- tmp11;
 
 				z1 = (tmp12 + tmp13) * 0.707106781;
-				output[i][2] = tmp13 + z1;
-				output[i][6] = tmp13 - z1;
+				output[i][2] = tmp13
+					+ z1;
+				output[i][6] = tmp13
+					- z1;
 
-				tmp10 = tmp4 + tmp5;
-				tmp11 = tmp5 + tmp6;
-				tmp12 = tmp6 + tmp7;
+				tmp10 = tmp4
+					+ tmp5;
+				tmp11 = tmp5
+					+ tmp6;
+				tmp12 = tmp6
+					+ tmp7;
 
 				z5 = (tmp10 - tmp12) * 0.382683433;
-				z2 = 0.541196100 * tmp10 + z5;
-				z4 = 1.306562965 * tmp12 + z5;
+				z2 = 0.541196100
+					* tmp10 + z5;
+				z4 = 1.306562965
+					* tmp12 + z5;
 				z3 = tmp11 * 0.707106781;
 
-				z11 = tmp7 + z3;
-				z13 = tmp7 - z3;
+				z11 = tmp7
+					+ z3;
+				z13 = tmp7
+					- z3;
 
-				output[i][5] = z13 + z2;
-				output[i][3] = z13 - z2;
-				output[i][1] = z11 + z4;
-				output[i][7] = z11 - z4;
+				output[i][5] = z13
+					+ z2;
+				output[i][3] = z13
+					- z2;
+				output[i][1] = z11
+					+ z4;
+				output[i][7] = z11
+					- z4;
 			}
 
-			for (i = 0; i < 8; i++) {
-				tmp0 = output[0][i] + output[7][i];
-				tmp7 = output[0][i] - output[7][i];
-				tmp1 = output[1][i] + output[6][i];
-				tmp6 = output[1][i] - output[6][i];
-				tmp2 = output[2][i] + output[5][i];
-				tmp5 = output[2][i] - output[5][i];
-				tmp3 = output[3][i] + output[4][i];
-				tmp4 = output[3][i] - output[4][i];
+			for(i = 0; i < 8; i++) {
+				tmp0 = output[0][i]
+					+ output[7][i];
+				tmp7 = output[0][i]
+					- output[7][i];
+				tmp1 = output[1][i]
+					+ output[6][i];
+				tmp6 = output[1][i]
+					- output[6][i];
+				tmp2 = output[2][i]
+					+ output[5][i];
+				tmp5 = output[2][i]
+					- output[5][i];
+				tmp3 = output[3][i]
+					+ output[4][i];
+				tmp4 = output[3][i]
+					- output[4][i];
 
-				tmp10 = tmp0 + tmp3;
-				tmp13 = tmp0 - tmp3;
-				tmp11 = tmp1 + tmp2;
-				tmp12 = tmp1 - tmp2;
+				tmp10 = tmp0
+					+ tmp3;
+				tmp13 = tmp0
+					- tmp3;
+				tmp11 = tmp1
+					+ tmp2;
+				tmp12 = tmp1
+					- tmp2;
 
-				output[0][i] = tmp10 + tmp11;
-				output[4][i] = tmp10 - tmp11;
+				output[0][i] = tmp10
+					+ tmp11;
+				output[4][i] = tmp10
+					- tmp11;
 
 				z1 = (tmp12 + tmp13) * 0.707106781;
-				output[2][i] = tmp13 + z1;
-				output[6][i] = tmp13 - z1;
+				output[2][i] = tmp13
+					+ z1;
+				output[6][i] = tmp13
+					- z1;
 
-				tmp10 = tmp4 + tmp5;
-				tmp11 = tmp5 + tmp6;
-				tmp12 = tmp6 + tmp7;
+				tmp10 = tmp4
+					+ tmp5;
+				tmp11 = tmp5
+					+ tmp6;
+				tmp12 = tmp6
+					+ tmp7;
 
 				z5 = (tmp10 - tmp12) * 0.382683433;
-				z2 = 0.541196100 * tmp10 + z5;
-				z4 = 1.306562965 * tmp12 + z5;
+				z2 = 0.541196100
+					* tmp10 + z5;
+				z4 = 1.306562965
+					* tmp12 + z5;
 				z3 = tmp11 * 0.707106781;
 
-				z11 = tmp7 + z3;
-				z13 = tmp7 - z3;
+				z11 = tmp7
+					+ z3;
+				z13 = tmp7
+					- z3;
 
-				output[5][i] = z13 + z2;
-				output[3][i] = z13 - z2;
-				output[1][i] = z11 + z4;
-				output[7][i] = z11 - z4;
+				output[5][i] = z13
+					+ z2;
+				output[3][i] = z13
+					- z2;
+				output[1][i] = z11
+					+ z4;
+				output[7][i] = z11
+					- z4;
 			}
 
 			return output;
@@ -758,16 +824,17 @@ public class JpegEncoder extends SpyObject {
 		 * This method quantitizes data and rounds it to the nearest integer.
 		 */
 		public int[] quantizeBlock(double inputData[][], int code) {
-			int outputData[] = new int[N * N];
+			int outputData[] = new int[N
+				* N];
 			int i, j;
 			int index;
 			index = 0;
-			for (i = 0; i < 8; i++) {
-				for (j = 0; j < 8; j++) {
+			for(i = 0; i < 8; i++) {
+				for(j = 0; j < 8; j++) {
 					// The second line results in significantly better
 					// compression.
 					outputData[index] = (int) (Math.round(inputData[i][j]
-							* (((double[]) (Divisors[code]))[index])));
+						* (((double[]) (Divisors[code]))[index])));
 					// outputData[index] = (int)(((inputData[i][j] *
 					// (((double[]) (Divisors[code]))[index])) + 16384.5)
 					// -16384);
@@ -784,14 +851,15 @@ public class JpegEncoder extends SpyObject {
 		 * nearest integer.
 		 */
 		public int[] quantizeBlockExtreme(double inputData[][], int code) {
-			int outputData[] = new int[N * N];
+			int outputData[] = new int[N
+				* N];
 			int i, j;
 			int index;
 			index = 0;
-			for (i = 0; i < 8; i++) {
-				for (j = 0; j < 8; j++) {
+			for(i = 0; i < 8; i++) {
+				for(j = 0; j < 8; j++) {
 					outputData[index] = (int) (Math.round(inputData[i][j]
-							/ (((int[]) (quantum[code]))[index])));
+						/ (((int[]) (quantum[code]))[index])));
 					index++;
 				}
 			}
@@ -829,57 +897,57 @@ public class JpegEncoder extends SpyObject {
 
 		public int NumOfACTables;
 
-		public int[] bitsDCluminance = { 0x00, 0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0,
-				0, 0, 0, 0, 0 };
+		public int[] bitsDCluminance = {
+			0x00, 0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 };
 
-		public int[] valDCluminance = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+		public int[] valDCluminance = {
+			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 
-		public int[] bitsDCchrominance = { 0x01, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1,
-				1, 0, 0, 0, 0, 0 };
+		public int[] bitsDCchrominance = {
+			0x01, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 };
 
-		public int[] valDCchrominance = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+		public int[] valDCchrominance = {
+			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 
-		public int[] bitsACluminance = { 0x10, 0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4,
-				4, 0, 0, 1, 0x7d };
+		public int[] bitsACluminance = {
+			0x10, 0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 0x7d };
 
-		public int[] valACluminance = { 0x01, 0x02, 0x03, 0x00, 0x04, 0x11,
-				0x05, 0x12, 0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07,
-				0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xa1, 0x08, 0x23, 0x42,
-				0xb1, 0xc1, 0x15, 0x52, 0xd1, 0xf0, 0x24, 0x33, 0x62, 0x72,
-				0x82, 0x09, 0x0a, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x25, 0x26,
-				0x27, 0x28, 0x29, 0x2a, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39,
-				0x3a, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x53,
-				0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x63, 0x64, 0x65,
-				0x66, 0x67, 0x68, 0x69, 0x6a, 0x73, 0x74, 0x75, 0x76, 0x77,
-				0x78, 0x79, 0x7a, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
-				0x8a, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9a,
-				0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xb2,
-				0xb3, 0xb4, 0xb5, 0xb6, 0xb7, 0xb8, 0xb9, 0xba, 0xc2, 0xc3,
-				0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xd2, 0xd3, 0xd4,
-				0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xe1, 0xe2, 0xe3, 0xe4,
-				0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xf1, 0xf2, 0xf3, 0xf4,
-				0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa };
+		public int[] valACluminance = {
+			0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41,
+			0x06, 0x13, 0x51, 0x61, 0x07, 0x22, 0x71, 0x14, 0x32, 0x81, 0x91,
+			0xa1, 0x08, 0x23, 0x42, 0xb1, 0xc1, 0x15, 0x52, 0xd1, 0xf0, 0x24,
+			0x33, 0x62, 0x72, 0x82, 0x09, 0x0a, 0x16, 0x17, 0x18, 0x19, 0x1a,
+			0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x34, 0x35, 0x36, 0x37, 0x38,
+			0x39, 0x3a, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x53,
+			0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x63, 0x64, 0x65, 0x66,
+			0x67, 0x68, 0x69, 0x6a, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79,
+			0x7a, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x92, 0x93,
+			0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0xa2, 0xa3, 0xa4, 0xa5,
+			0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7,
+			0xb8, 0xb9, 0xba, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9,
+			0xca, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xe1,
+			0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xf1, 0xf2,
+			0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa };
 
-		public int[] bitsACchrominance = { 0x11, 0, 2, 1, 2, 4, 4, 3, 4, 7, 5,
-				4, 4, 0, 1, 2, 0x77 };
+		public int[] bitsACchrominance = {
+			0x11, 0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 0x77 };
 
-		public int[] valACchrominance = { 0x00, 0x01, 0x02, 0x03, 0x11, 0x04,
-				0x05, 0x21, 0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61, 0x71,
-				0x13, 0x22, 0x32, 0x81, 0x08, 0x14, 0x42, 0x91, 0xa1, 0xb1,
-				0xc1, 0x09, 0x23, 0x33, 0x52, 0xf0, 0x15, 0x62, 0x72, 0xd1,
-				0x0a, 0x16, 0x24, 0x34, 0xe1, 0x25, 0xf1, 0x17, 0x18, 0x19,
-				0x1a, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x35, 0x36, 0x37, 0x38,
-				0x39, 0x3a, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a,
-				0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x63, 0x64,
-				0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x73, 0x74, 0x75, 0x76,
-				0x77, 0x78, 0x79, 0x7a, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
-				0x88, 0x89, 0x8a, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98,
-				0x99, 0x9a, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9,
-				0xaa, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7, 0xb8, 0xb9, 0xba,
-				0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xd2,
-				0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xe2, 0xe3,
-				0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xf2, 0xf3, 0xf4,
-				0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa };
+		public int[] valACchrominance = {
+			0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21, 0x31, 0x06, 0x12,
+			0x41, 0x51, 0x07, 0x61, 0x71, 0x13, 0x22, 0x32, 0x81, 0x08, 0x14,
+			0x42, 0x91, 0xa1, 0xb1, 0xc1, 0x09, 0x23, 0x33, 0x52, 0xf0, 0x15,
+			0x62, 0x72, 0xd1, 0x0a, 0x16, 0x24, 0x34, 0xe1, 0x25, 0xf1, 0x17,
+			0x18, 0x19, 0x1a, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x35, 0x36, 0x37,
+			0x38, 0x39, 0x3a, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a,
+			0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x63, 0x64, 0x65,
+			0x66, 0x67, 0x68, 0x69, 0x6a, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78,
+			0x79, 0x7a, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a,
+			0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0xa2, 0xa3,
+			0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xb2, 0xb3, 0xb4, 0xb5,
+			0xb6, 0xb7, 0xb8, 0xb9, 0xba, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7,
+			0xc8, 0xc9, 0xca, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9,
+			0xda, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xf2,
+			0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa };
 
 		public Vector bits;
 
@@ -911,8 +979,9 @@ public class JpegEncoder extends SpyObject {
 		 * quantized data.
 		 */
 
-		public void HuffmanBlockEncoder(BufferedOutputStream outStream,
-				int zigzag[], int prec, int DCcode, int ACcode) {
+		public void HuffmanBlockEncoder(
+			BufferedOutputStream os, int zigzag[], int prec, int DCcode,
+			int ACcode) {
 			int temp, temp2, nbits, k, r, i;
 
 			NumOfDCTables = 2;
@@ -920,59 +989,64 @@ public class JpegEncoder extends SpyObject {
 
 			// The DC portion
 
-			temp = temp2 = zigzag[0] - prec;
-			if (temp < 0) {
+			temp = temp2 = zigzag[0]
+				- prec;
+			if(temp < 0) {
 				temp = -temp;
 				temp2--;
 			}
 			nbits = 0;
-			while (temp != 0) {
+			while(temp != 0) {
 				nbits++;
 				temp >>= 1;
 			}
 			// if (nbits > 11) nbits = 11;
-			bufferIt(outStream, ((int[][]) DC_matrix[DCcode])[nbits][0],
-					((int[][]) DC_matrix[DCcode])[nbits][1]);
+			bufferIt(
+				os, ((int[][]) DC_matrix[DCcode])[nbits][0],
+				((int[][]) DC_matrix[DCcode])[nbits][1]);
 			// The arguments in bufferIt are code and size.
-			if (nbits != 0) {
-				bufferIt(outStream, temp2, nbits);
+			if(nbits != 0) {
+				bufferIt(os, temp2, nbits);
 			}
 
 			// The AC portion
 
 			r = 0;
 
-			for (k = 1; k < 64; k++) {
-				if ((temp = zigzag[jpegNaturalOrder[k]]) == 0) {
+			for(k = 1; k < 64; k++) {
+				if((temp = zigzag[jpegNaturalOrder[k]]) == 0) {
 					r++;
 				} else {
-					while (r > 15) {
-						bufferIt(outStream,
-								((int[][]) AC_matrix[ACcode])[0xF0][0],
-								((int[][]) AC_matrix[ACcode])[0xF0][1]);
+					while(r > 15) {
+						bufferIt(
+							os, ((int[][]) AC_matrix[ACcode])[0xF0][0],
+							((int[][]) AC_matrix[ACcode])[0xF0][1]);
 						r -= 16;
 					}
 					temp2 = temp;
-					if (temp < 0) {
+					if(temp < 0) {
 						temp = -temp;
 						temp2--;
 					}
 					nbits = 1;
-					while ((temp >>= 1) != 0) {
+					while((temp >>= 1) != 0) {
 						nbits++;
 					}
-					i = (r << 4) + nbits;
-					bufferIt(outStream, ((int[][]) AC_matrix[ACcode])[i][0],
-							((int[][]) AC_matrix[ACcode])[i][1]);
-					bufferIt(outStream, temp2, nbits);
+					i = (r << 4)
+						+ nbits;
+					bufferIt(
+						os, ((int[][]) AC_matrix[ACcode])[i][0],
+						((int[][]) AC_matrix[ACcode])[i][1]);
+					bufferIt(os, temp2, nbits);
 
 					r = 0;
 				}
 			}
 
-			if (r > 0) {
-				bufferIt(outStream, ((int[][]) AC_matrix[ACcode])[0][0],
-						((int[][]) AC_matrix[ACcode])[0][1]);
+			if(r > 0) {
+				bufferIt(
+					os, ((int[][]) AC_matrix[ACcode])[0][0],
+					((int[][]) AC_matrix[ACcode])[0][1]);
 			}
 
 		}
@@ -981,8 +1055,8 @@ public class JpegEncoder extends SpyObject {
 		// bits
 		// and sends them to outStream by the byte.
 
-		void bufferIt(BufferedOutputStream outStream, int code, int size) {
-			int PutBuffer = code;
+		void bufferIt(BufferedOutputStream os, int hufCode, int size) {
+			int PutBuffer = hufCode;
 			int PutBits = bufferPutBits;
 
 			PutBuffer &= (1 << size) - 1;
@@ -990,17 +1064,17 @@ public class JpegEncoder extends SpyObject {
 			PutBuffer <<= 24 - PutBits;
 			PutBuffer |= bufferPutBuffer;
 
-			while (PutBits >= 8) {
+			while(PutBits >= 8) {
 				int c = ((PutBuffer >> 16) & 0xFF);
 				try {
-					outStream.write(c);
-				} catch (IOException e) {
+					os.write(c);
+				} catch(IOException e) {
 					e.printStackTrace();
 				}
-				if (c == 0xFF) {
+				if(c == 0xFF) {
 					try {
-						outStream.write(0);
-					} catch (IOException e) {
+						os.write(0);
+					} catch(IOException e) {
 						e.printStackTrace();
 					}
 				}
@@ -1012,31 +1086,31 @@ public class JpegEncoder extends SpyObject {
 
 		}
 
-		void flushBuffer(BufferedOutputStream outStream) {
+		void flushBuffer(BufferedOutputStream os) {
 			int PutBuffer = bufferPutBuffer;
 			int PutBits = bufferPutBits;
-			while (PutBits >= 8) {
+			while(PutBits >= 8) {
 				int c = ((PutBuffer >> 16) & 0xFF);
 				try {
-					outStream.write(c);
-				} catch (IOException e) {
+					os.write(c);
+				} catch(IOException e) {
 					e.printStackTrace();
 				}
-				if (c == 0xFF) {
+				if(c == 0xFF) {
 					try {
-						outStream.write(0);
-					} catch (IOException e) {
+						os.write(0);
+					} catch(IOException e) {
 						e.printStackTrace();
 					}
 				}
 				PutBuffer <<= 8;
 				PutBits -= 8;
 			}
-			if (PutBits > 0) {
+			if(PutBits > 0) {
 				int c = ((PutBuffer >> 16) & 0xFF);
 				try {
-					outStream.write(c);
-				} catch (IOException e) {
+					os.write(c);
+				} catch(IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -1055,7 +1129,7 @@ public class JpegEncoder extends SpyObject {
 			AC_matrix1 = new int[255][2];
 			DC_matrix = new Object[2];
 			AC_matrix = new Object[2];
-			int p, l, i, lastp, si, code;
+			int p, l, i, lastp, si, hufCode;
 			int[] huffsize = new int[257];
 			int[] huffcode = new int[257];
 
@@ -1065,27 +1139,27 @@ public class JpegEncoder extends SpyObject {
 			 */
 
 			p = 0;
-			for (l = 1; l <= 16; l++) {
-				for (i = 1; i <= bitsDCchrominance[l]; i++) {
+			for(l = 1; l <= 16; l++) {
+				for(i = 1; i <= bitsDCchrominance[l]; i++) {
 					huffsize[p++] = l;
 				}
 			}
 			huffsize[p] = 0;
 			lastp = p;
 
-			code = 0;
+			hufCode = 0;
 			si = huffsize[0];
 			p = 0;
-			while (huffsize[p] != 0) {
-				while (huffsize[p] == si) {
-					huffcode[p++] = code;
-					code++;
+			while(huffsize[p] != 0) {
+				while(huffsize[p] == si) {
+					huffcode[p++] = hufCode;
+					hufCode++;
 				}
-				code <<= 1;
+				hufCode <<= 1;
 				si++;
 			}
 
-			for (p = 0; p < lastp; p++) {
+			for(p = 0; p < lastp; p++) {
 				DC_matrix1[valDCchrominance[p]][0] = huffcode[p];
 				DC_matrix1[valDCchrominance[p]][1] = huffsize[p];
 			}
@@ -1096,27 +1170,27 @@ public class JpegEncoder extends SpyObject {
 			 */
 
 			p = 0;
-			for (l = 1; l <= 16; l++) {
-				for (i = 1; i <= bitsACchrominance[l]; i++) {
+			for(l = 1; l <= 16; l++) {
+				for(i = 1; i <= bitsACchrominance[l]; i++) {
 					huffsize[p++] = l;
 				}
 			}
 			huffsize[p] = 0;
 			lastp = p;
 
-			code = 0;
+			hufCode = 0;
 			si = huffsize[0];
 			p = 0;
-			while (huffsize[p] != 0) {
-				while (huffsize[p] == si) {
-					huffcode[p++] = code;
-					code++;
+			while(huffsize[p] != 0) {
+				while(huffsize[p] == si) {
+					huffcode[p++] = hufCode;
+					hufCode++;
 				}
-				code <<= 1;
+				hufCode <<= 1;
 				si++;
 			}
 
-			for (p = 0; p < lastp; p++) {
+			for(p = 0; p < lastp; p++) {
 				AC_matrix1[valACchrominance[p]][0] = huffcode[p];
 				AC_matrix1[valACchrominance[p]][1] = huffsize[p];
 			}
@@ -1126,27 +1200,27 @@ public class JpegEncoder extends SpyObject {
 			 * is the number of bit
 			 */
 			p = 0;
-			for (l = 1; l <= 16; l++) {
-				for (i = 1; i <= bitsDCluminance[l]; i++) {
+			for(l = 1; l <= 16; l++) {
+				for(i = 1; i <= bitsDCluminance[l]; i++) {
 					huffsize[p++] = l;
 				}
 			}
 			huffsize[p] = 0;
 			lastp = p;
 
-			code = 0;
+			hufCode = 0;
 			si = huffsize[0];
 			p = 0;
-			while (huffsize[p] != 0) {
-				while (huffsize[p] == si) {
-					huffcode[p++] = code;
-					code++;
+			while(huffsize[p] != 0) {
+				while(huffsize[p] == si) {
+					huffcode[p++] = hufCode;
+					hufCode++;
 				}
-				code <<= 1;
+				hufCode <<= 1;
 				si++;
 			}
 
-			for (p = 0; p < lastp; p++) {
+			for(p = 0; p < lastp; p++) {
 				DC_matrix0[valDCluminance[p]][0] = huffcode[p];
 				DC_matrix0[valDCluminance[p]][1] = huffsize[p];
 			}
@@ -1157,26 +1231,26 @@ public class JpegEncoder extends SpyObject {
 			 */
 
 			p = 0;
-			for (l = 1; l <= 16; l++) {
-				for (i = 1; i <= bitsACluminance[l]; i++) {
+			for(l = 1; l <= 16; l++) {
+				for(i = 1; i <= bitsACluminance[l]; i++) {
 					huffsize[p++] = l;
 				}
 			}
 			huffsize[p] = 0;
 			lastp = p;
 
-			code = 0;
+			hufCode = 0;
 			si = huffsize[0];
 			p = 0;
-			while (huffsize[p] != 0) {
-				while (huffsize[p] == si) {
-					huffcode[p++] = code;
-					code++;
+			while(huffsize[p] != 0) {
+				while(huffsize[p] == si) {
+					huffcode[p++] = hufCode;
+					hufCode++;
 				}
-				code <<= 1;
+				hufCode <<= 1;
 				si++;
 			}
-			for (int q = 0; q < lastp; q++) {
+			for(int q = 0; q < lastp; q++) {
 				AC_matrix0[valACluminance[q]][0] = huffcode[q];
 				AC_matrix0[valACluminance[q]][1] = huffsize[q];
 			}
@@ -1199,9 +1273,9 @@ public class JpegEncoder extends SpyObject {
 
 		public Image imageobj;
 
-		public int imageHeight;
+		public int jiHeight;
 
-		public int imageWidth;
+		public int jiWidth;
 
 		public int BlockWidth[];
 
@@ -1214,21 +1288,29 @@ public class JpegEncoder extends SpyObject {
 
 		public Object Components[];
 
-		public int[] CompID = { 1, 2, 3 };
+		public int[] CompID = {
+			1, 2, 3 };
 
-		public int[] HsampFactor = { 1, 1, 1 };
+		public int[] HsampFactor = {
+			1, 1, 1 };
 
-		public int[] VsampFactor = { 1, 1, 1 };
+		public int[] VsampFactor = {
+			1, 1, 1 };
 
-		public int[] QtableNumber = { 0, 1, 1 };
+		public int[] QtableNumber = {
+			0, 1, 1 };
 
-		public int[] DCtableNumber = { 0, 1, 1 };
+		public int[] DCtableNumber = {
+			0, 1, 1 };
 
-		public int[] ACtableNumber = { 0, 1, 1 };
+		public int[] ACtableNumber = {
+			0, 1, 1 };
 
-		public boolean[] lastColumnIsDummy = { false, false, false };
+		public boolean[] lastColumnIsDummy = {
+			false, false, false };
 
-		public boolean[] lastRowIsDummy = { false, false, false };
+		public boolean[] lastRowIsDummy = {
+			false, false, false };
 
 		public int Ss = 0;
 
@@ -1251,8 +1333,8 @@ public class JpegEncoder extends SpyObject {
 			BlockWidth = new int[NumberOfComponents];
 			BlockHeight = new int[NumberOfComponents];
 			imageobj = image;
-			imageWidth = image.getWidth(null);
-			imageHeight = image.getHeight(null);
+			jiWidth = image.getWidth(null);
+			jiHeight = image.getHeight(null);
 			Comment = "JPEG Encoder Copyright 1998, James R. Weeks and BioElectroMech.	";
 			getYCCArray();
 		}
@@ -1271,7 +1353,8 @@ public class JpegEncoder extends SpyObject {
 		 */
 
 		private void getYCCArray() {
-			int values[] = new int[imageWidth * imageHeight];
+			int values[] = new int[jiWidth
+				* jiHeight];
 			int r, g, b, y, x;
 			// In order to minimize the chance that grabPixels will throw an
 			// exception
@@ -1281,19 +1364,20 @@ public class JpegEncoder extends SpyObject {
 			// However, for a situation where memory overhead is a concern, this
 			// may be
 			// the only choice.
-			PixelGrabber grabber = new PixelGrabber(imageobj.getSource(), 0, 0,
-					imageWidth, imageHeight, values, 0, imageWidth);
+			PixelGrabber grabber = new PixelGrabber(
+				imageobj.getSource(), 0, 0, jiWidth, jiHeight, values, 0,
+				jiWidth);
 			MaxHsampFactor = 1;
 			MaxVsampFactor = 1;
-			for (y = 0; y < NumberOfComponents; y++) {
+			for(y = 0; y < NumberOfComponents; y++) {
 				MaxHsampFactor = Math.max(MaxHsampFactor, HsampFactor[y]);
 				MaxVsampFactor = Math.max(MaxVsampFactor, VsampFactor[y]);
 			}
-			for (y = 0; y < NumberOfComponents; y++) {
-				compWidth[y] = (((imageWidth % 8 != 0) ? ((int) Math
-						.ceil(imageWidth / 8.0)) * 8 : imageWidth) / MaxHsampFactor)
-						* HsampFactor[y];
-				if (compWidth[y] != ((imageWidth / MaxHsampFactor) * HsampFactor[y])) {
+			for(y = 0; y < NumberOfComponents; y++) {
+				compWidth[y] = (((jiWidth % 8 != 0)
+					? ((int) Math.ceil(jiWidth / 8.0)) * 8 : jiWidth) / MaxHsampFactor)
+					* HsampFactor[y];
+				if(compWidth[y] != ((jiWidth / MaxHsampFactor) * HsampFactor[y])) {
 					lastColumnIsDummy[y] = true;
 				}
 				// results in a multiple of 8 for compWidth
@@ -1301,32 +1385,25 @@ public class JpegEncoder extends SpyObject {
 				// event that someone tries to compress an 16 x 16 pixel image
 				// which would of course be worse than pointless
 				BlockWidth[y] = (int) Math.ceil(compWidth[y] / 8.0);
-				compHeight[y] = (((imageHeight % 8 != 0) ? ((int) Math
-						.ceil(imageHeight / 8.0)) * 8 : imageHeight) / MaxVsampFactor)
-						* VsampFactor[y];
-				if (compHeight[y] != ((imageHeight / MaxVsampFactor) * VsampFactor[y])) {
+				compHeight[y] = (((jiHeight % 8 != 0)
+					? ((int) Math.ceil(jiHeight / 8.0)) * 8 : jiHeight) / MaxVsampFactor)
+					* VsampFactor[y];
+				if(compHeight[y] != ((jiHeight / MaxVsampFactor) * VsampFactor[y])) {
 					lastRowIsDummy[y] = true;
 				}
 				BlockHeight[y] = (int) Math.ceil(compHeight[y] / 8.0);
 			}
 			try {
-				if (grabber.grabPixels() != true) {
-					try {
-						throw new AWTException("Grabber returned false: "
-								+ grabber.status());
-					} catch (Exception e) {
-					}
-					;
-				}
-			} catch (InterruptedException e) {
+				grabber.grabPixels();
+			} catch(InterruptedException e) {
+				e.printStackTrace();
 			}
-			;
 			float Y[][] = new float[compHeight[0]][compWidth[0]];
 			float Cr1[][] = new float[compHeight[0]][compWidth[0]];
 			float Cb1[][] = new float[compHeight[0]][compWidth[0]];
 			int index = 0;
-			for (y = 0; y < imageHeight; ++y) {
-				for (x = 0; x < imageWidth; ++x) {
+			for(y = 0; y < jiHeight; ++y) {
+				for(x = 0; x < jiWidth; ++x) {
 					r = ((values[index] >> 16) & 0xff);
 					g = ((values[index] >> 8) & 0xff);
 					b = (values[index] & 0xff);
@@ -1342,9 +1419,12 @@ public class JpegEncoder extends SpyObject {
 					// 0.33126 * (float)g + 0.5 * (float)b));
 					// Cr1[y][x] = 128 + (float)(0.8784*(0.5 * (float)r -
 					// 0.41869 * (float)g - 0.08131 * (float)b));
-					Y[y][x] = (float) ((0.299 * r + 0.587 * g + 0.114 * b));
-					Cb1[y][x] = 128 + (float) ((-0.16874 * r - 0.33126 * g + 0.5 * b));
-					Cr1[y][x] = 128 + (float) ((0.5 * r - 0.41869 * g - 0.08131 * b));
+					Y[y][x] = (float) ((0.299
+						* r + 0.587 * g + 0.114 * b));
+					Cb1[y][x] = 128 + (float) ((-0.16874
+						* r - 0.33126 * g + 0.5 * b));
+					Cr1[y][x] = 128 + (float) ((0.5
+						* r - 0.41869 * g - 0.08131 * b));
 					index++;
 				}
 			}
@@ -1371,13 +1451,13 @@ public class JpegEncoder extends SpyObject {
 			inrow = 0;
 			incol = 0;
 			output = new float[compHeight[comp]][compWidth[comp]];
-			for (outrow = 0; outrow < compHeight[comp]; outrow++) {
+			for(outrow = 0; outrow < compHeight[comp]; outrow++) {
 				bias = 1;
-				for (outcol = 0; outcol < compWidth[comp]; outcol++) {
+				for(outcol = 0; outcol < compWidth[comp]; outcol++) {
 					output[outrow][outcol] = (C[inrow][incol++]
-							+ C[inrow++][incol--] + C[inrow][incol++]
-							+ C[inrow--][incol++] + bias)
-							/ (float) 4.0;
+						+ C[inrow++][incol--] + C[inrow][incol++]
+						+ C[inrow--][incol++] + bias)
+						/ (float) 4.0;
 					bias ^= 3;
 				}
 				inrow += 2;

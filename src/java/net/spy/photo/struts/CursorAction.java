@@ -7,13 +7,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.Cursor;
-import net.spy.photo.PhotoSessionData;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
+
+import net.spy.photo.Cursor;
+import net.spy.photo.PhotoSessionData;
 
 /**
  * Action to adjust a cursor before sending it to a result page.

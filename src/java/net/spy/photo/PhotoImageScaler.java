@@ -21,9 +21,9 @@ public class PhotoImageScaler extends SpyObject {
 	/**
 	 * Get an instance of PhotoImageScaler.
 	 */
-	public PhotoImageScaler(PhotoImage pi) {
+	public PhotoImageScaler(PhotoImage img) {
 		super();
-		this.pi=pi;
+		this.pi=img;
 	}
 
 	/**

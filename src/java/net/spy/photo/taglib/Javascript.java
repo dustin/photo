@@ -26,8 +26,8 @@ public class Javascript extends PhotoTag {
 	/**
 	 * Set the relative URL to which to link.
 	 */
-	public void setUrl(String url) {
-		this.url=url;
+	public void setUrl(String to) {
+		this.url=to;
 	}
 
 	/**

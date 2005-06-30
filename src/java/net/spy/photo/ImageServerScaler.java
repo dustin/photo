@@ -22,8 +22,8 @@ public abstract class ImageServerScaler extends SpyObject {
 	/**
 	 * Set the configuration for this instance.
 	 */
-	public void setConfig(SpyConfig conf) {
-		this.conf=conf;
+	public void setConfig(SpyConfig to) {
+		this.conf=to;
 	}
 
 	/**

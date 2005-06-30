@@ -30,36 +30,36 @@ public class ImgSrcTag extends PhotoTag {
 	/**
 	 * Set the relative URL to which to link.
 	 */
-	public void setUrl(String url) {
-		this.url=url;
+	public void setUrl(String to) {
+		this.url=to;
 	}
 
 	/**
 	 * Set an HTML class setting for this image.
 	 */
-	public void setBorder(String styleClass) {
-		this.styleClass=styleClass;
+	public void setBorder(String to) {
+		this.styleClass=to;
 	}
 
 	/**
 	 * Set the width of this image.
 	 */
-	public void setWidth(String width) {
-		this.width=width;
+	public void setWidth(String to) {
+		this.width=to;
 	}
 
 	/**
 	 * Set the height of this image.
 	 */
-	public void setHeight(String height) {
-		this.height=height;
+	public void setHeight(String to) {
+		this.height=to;
 	}
 
 	/**
 	 * Set the alt text for this image link.
 	 */
-	public void setAlt(String alt) {
-		this.alt=alt;
+	public void setAlt(String to) {
+		this.alt=to;
 	}
 
 	/**

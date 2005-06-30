@@ -22,8 +22,8 @@ public class FilterMapping extends ActionMapping {
 	/** 
 	 * Set the filter class to use.
 	 */
-	public void setFilterClass(String filterClass) {
-		this.filterClass=filterClass;
+	public void setFilterClass(String to) {
+		this.filterClass=to;
 	}
 
 	/** 

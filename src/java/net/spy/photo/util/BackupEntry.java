@@ -33,8 +33,8 @@ public abstract class BackupEntry extends Object implements Serializable {
 	/**
 	 * Set the type of this node.
 	 */
-	protected void setNodeType(String nodeType) {
-		this.nodeType=nodeType;
+	protected void setNodeType(String to) {
+		this.nodeType=to;
 	}
 
 	/**

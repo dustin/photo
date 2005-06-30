@@ -168,7 +168,7 @@ public class PhotoBackup extends Object {
 
 		public String getStats() {
 			double avgProcessTime=((double)totalTime/(double)done)/1000.0;
-			double estimate=avgProcessTime*(double)left;
+			double estimate=avgProcessTime*left;
 
 			java.text.NumberFormat nf=java.text.NumberFormat.getInstance();
 			nf.setMaximumFractionDigits(2);

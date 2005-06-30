@@ -5,9 +5,9 @@ package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 /**
  * Form for saving a gallery.
@@ -27,8 +27,8 @@ public class SaveGalleryForm extends PhotoForm {
 	/**
 	 *Set the name for the gallery.
 	 */
-	public void setName(String name) {
-		this.name=name;
+	public void setName(String to) {
+		this.name=to;
 	}
 
 	/**
@@ -48,8 +48,8 @@ public class SaveGalleryForm extends PhotoForm {
 	/**
 	 * Set to true if the gallery is to be public.
 	 */
-	public void setIsPublic(boolean isPublic) {
-		this.isPublic=isPublic;
+	public void setIsPublic(boolean to) {
+		this.isPublic=to;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class SaveGalleryForm extends PhotoForm {
 		ActionErrors errors = new ActionErrors();
 
 		if(name==null) {
-			errors.add("name", new ActionError("error.savegallery.name"));
+			errors.add("name", new ActionMessage("error.savegallery.name"));
 		}
 
 		return(errors);

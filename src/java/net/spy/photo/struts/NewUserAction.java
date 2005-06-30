@@ -10,6 +10,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.validator.DynaValidatorForm;
+
 import net.spy.db.SpyDB;
 import net.spy.photo.MutableUser;
 import net.spy.photo.NoSuchPhotoUserException;
@@ -17,11 +22,6 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.Profile;
 import net.spy.photo.UserFactory;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.validator.DynaValidatorForm;
 
 /**
  * Create a user from a profile.

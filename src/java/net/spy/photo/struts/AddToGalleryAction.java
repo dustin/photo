@@ -8,14 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.spy.photo.Gallery;
-import net.spy.photo.PhotoSessionData;
-import net.spy.photo.User;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
+
+import net.spy.photo.Gallery;
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.User;
 
 /**
  * Action to add an image to a gallery.

@@ -130,8 +130,8 @@ public class DBUser extends AbstractSavable
 	/** 
 	 * Set the persistent session ID.
 	 */
-	public void setPersess(String persess) {
-		this.persess=persess;
+	public void setPersess(String to) {
+		this.persess=to;
 		setModified(true);
 	}
 
@@ -217,8 +217,8 @@ public class DBUser extends AbstractSavable
 	/**
 	 * Set the ID of this user.
 	 */
-	public void setId(int id) {
-		this.id=id;
+	public void setId(int to) {
+		this.id=to;
 		setModified(true);
 	}
 
@@ -233,8 +233,8 @@ public class DBUser extends AbstractSavable
 	/**
 	 * Set the real name of this user.
 	 */
-	public void setRealname(String realname) {
-		this.realname=realname;
+	public void setRealname(String to) {
+		this.realname=to;
 		setModified(true);
 	}
 
@@ -248,8 +248,8 @@ public class DBUser extends AbstractSavable
 	/**
 	 * Set the E-mail address of this  user.
 	 */
-	public void setEmail(String email) {
-		this.email=email.toLowerCase();
+	public void setEmail(String to) {
+		this.email=to.toLowerCase();
 		setModified(true);
 	}
 

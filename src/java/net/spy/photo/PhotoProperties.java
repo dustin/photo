@@ -115,8 +115,8 @@ public class PhotoProperties extends Properties implements Savable {
 
 		for(Map.Entry me : entrySet()) {
 
-			ip.setName((String)me.getKey());
-			ip.setValue((String)me.getValue());
+			ip.setName(me.getKey());
+			ip.setValue(me.getValue());
 
 			int affected=ip.executeUpdate();
 			if(affected!=1) {

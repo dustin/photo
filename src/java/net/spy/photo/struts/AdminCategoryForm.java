@@ -5,9 +5,9 @@ package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 /**
  * Form used for editing categories.
@@ -31,32 +31,32 @@ public class AdminCategoryForm extends PhotoForm {
 		return(catId);
 	}
 
-	public void setCatId(String catId) {
-		this.catId=catId;
+	public void setCatId(String to) {
+		this.catId=to;
 	}
 
 	public String getName() {
 		return(name);
 	}
 
-	public void setName(String name) {
-		this.name=name;
+	public void setName(String to) {
+		this.name=to;
 	}
 
 	public String[] getCatAclAdd() {
 		return(catAclAdd);
 	}
 
-	public void setCatAclAdd(String[] catAclAdd) {
-		this.catAclAdd=catAclAdd;
+	public void setCatAclAdd(String[] to) {
+		this.catAclAdd=to;
 	}
 
 	public String[] getCatAclView() {
 		return(catAclView);
 	}
 
-	public void setCatAclView(String[] catAclView) {
-		this.catAclView=catAclView;
+	public void setCatAclView(String[] to) {
+		this.catAclView=to;
 	}
 
 	/**
@@ -69,13 +69,13 @@ public class AdminCategoryForm extends PhotoForm {
 
 		if(catId==null || catId.length() < 1) {
 			errors.add("catId",
-				new ActionError("error.admincatform.catId"));
+				new ActionMessage("error.admincatform.catId"));
 		} else {
 			try {
 				Integer.parseInt(catId);
 			} catch(NumberFormatException nfe) {
 				errors.add("catId",
-					new ActionError("error.admincatform.catId.nfe"));
+					new ActionMessage("error.admincatform.catId.nfe"));
 			}
 		}
 
@@ -83,15 +83,15 @@ public class AdminCategoryForm extends PhotoForm {
 		if(mapping.getType().equals(AdminSaveCatAction.class.getName())) {
 			if(name==null || name.length() < 1) {
 				errors.add("name",
-					new ActionError("error.admincatform.name"));
+					new ActionMessage("error.admincatform.name"));
 			}
 			if(catAclAdd==null) {
 				errors.add("catAclAdd",
-					new ActionError("error.admincatform.catAclAdd"));
+					new ActionMessage("error.admincatform.catAclAdd"));
 			}
 			if(catAclView==null) {
 				errors.add("catAclView",
-					new ActionError("error.admincatform.catAclView"));
+					new ActionMessage("error.admincatform.catAclView"));
 			}
 		}
 

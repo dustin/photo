@@ -5,14 +5,14 @@ package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.photo.impl.PhotoDimensionsImpl;
-
 import org.apache.commons.validator.Field;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.commons.validator.ValidatorAction;
-import org.apache.commons.validator.ValidatorUtil;
+import org.apache.commons.validator.util.ValidatorUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.validator.Resources;
+
+import net.spy.photo.impl.PhotoDimensionsImpl;
 
 /**
  * Validators and stuff.
@@ -33,7 +33,7 @@ public class ValidationUtils extends Object {
 												HttpServletRequest request) {
 		boolean rv=true;
 		String value =
-			ValidatorUtil.getValueAsString(bean, field.getProperty());
+			ValidatorUtils.getValueAsString(bean, field.getProperty());
 
 		// Missing values are OK
 		if (!GenericValidator.isBlankOrNull(value)) {
@@ -42,7 +42,7 @@ public class ValidationUtils extends Object {
 			} catch(IllegalArgumentException e) {
 				rv=false;
 				errors.add(field.getKey(),
-					Resources.getActionError(request, va, field));
+					Resources.getActionMessage(request, va, field));
 			}
 		}
 

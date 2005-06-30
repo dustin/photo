@@ -34,15 +34,15 @@ public class ConditionalTag extends PhotoTag {
 	/**
 	 * Set the negate value.
 	 */
-	public void setNegate(boolean negate) {
-		this.negate=negate;
+	public void setNegate(boolean to) {
+		this.negate=to;
 	}
 
 	/**
 	 * Set the negate value.
 	 */
-	public void setNegate(String negate) {
-		this.negate=Boolean.valueOf(negate).booleanValue();
+	public void setNegate(String to) {
+		this.negate=Boolean.valueOf(to).booleanValue();
 	}
 
 	/**

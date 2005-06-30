@@ -19,10 +19,10 @@ public class PhotoRegionImpl extends SpyObject implements PhotoRegion {
 	/**
 	 * Get an instance of PhotoRegionImpl.
 	 */
-	public PhotoRegionImpl(int x, int y, int w, int h) {
+	public PhotoRegionImpl(int ex, int why, int w, int h) {
 		super();
-		this.x=x;
-		this.y=y;
+		this.x=ex;
+		this.y=why;
 		this.width=w;
 		this.height=h;
 	}

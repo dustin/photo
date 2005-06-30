@@ -5,9 +5,9 @@ package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 /**
  * Form to create new profiles.
@@ -28,16 +28,16 @@ public class AdminNewProfileForm extends PhotoForm {
 		return(name);
 	}
 
-	public void setName(String name) {
-		this.name=name;
+	public void setName(String to) {
+		this.name=to;
 	}
 
 	public String[] getCategories() {
 		return(categories);
 	}
 
-	public void setCategories(String[] categories) {
-		this.categories=categories;
+	public void setCategories(String[] to) {
+		this.categories=to;
 	}
 
 	/**
@@ -50,11 +50,11 @@ public class AdminNewProfileForm extends PhotoForm {
 
 		if(name==null || name.length() < 1) {
 			errors.add("name",
-				new ActionError("error.adminnewprofileform.name"));
+				new ActionMessage("error.adminnewprofileform.name"));
 		}
 		if(categories==null) {
 			errors.add("categories",
-				new ActionError("error.adminnewprofileform.categories"));
+				new ActionMessage("error.adminnewprofileform.categories"));
 		}
 
 		return(errors);

@@ -39,10 +39,10 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Get an instance of Gallery belonging to a given owner.
 	 */
-	public Gallery(User owner, String name) {
+	public Gallery(User o, String nm) {
 		super();
-		this.name=name;
-		this.owner=owner;
+		this.name=nm;
+		this.owner=o;
 		this.images=new ArrayList();
 
 		setNew(true);
@@ -52,8 +52,8 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Get an instance of Gallery belonging to a given owner.
 	 */
-	public Gallery(User owner) {
-		this(owner, null);
+	public Gallery(User o) {
+		this(o, null);
 	}
 
 	// Get the gallery for the current row in the given resultset
@@ -300,8 +300,8 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * If true, the gallery is public.
 	 */
-	public void setPublic(boolean isPublic) {
-		this.isPublic=isPublic;
+	public void setPublic(boolean to) {
+		this.isPublic=to;
 		setModified(true);
 	}
 

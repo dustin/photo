@@ -5,13 +5,13 @@ package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.photo.PhotoImage;
-import net.spy.photo.PhotoUtil;
-
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
+
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoUtil;
 
 /**
  * Form to receive image uploads.
@@ -35,40 +35,40 @@ public class UploadForm extends PhotoForm {
 		taken=PhotoUtil.getToday();
 	}
 
-	public void setPicture(FormFile picture) {
-		this.picture=picture;
+	public void setPicture(FormFile to) {
+		this.picture=to;
 	}
 
 	public FormFile getPicture() {
 		return(picture);
 	}
 
-	public void setCategory(String category) {
-		this.category=category;
+	public void setCategory(String to) {
+		this.category=to;
 	}
 
 	public String getCategory() {
 		return(category);
 	}
 
-	public void setTaken(String taken) {
-		this.taken=taken;
+	public void setTaken(String to) {
+		this.taken=to;
 	}
 
 	public String getTaken() {
 		return(taken);
 	}
 
-	public void setKeywords(String keywords) {
-		this.keywords=keywords;
+	public void setKeywords(String to) {
+		this.keywords=to;
 	}
 
 	public String getKeywords() {
 		return(keywords);
 	}
 
-	public void setInfo(String info) {
-		this.info=info;
+	public void setInfo(String to) {
+		this.info=to;
 	}
 
 	public String getInfo() {
@@ -79,8 +79,8 @@ public class UploadForm extends PhotoForm {
 		return(id);
 	}
 
-	public void setId(String id) {
-		this.id=id;
+	public void setId(String to) {
+		this.id=to;
 	}
 
 	/**
@@ -105,29 +105,29 @@ public class UploadForm extends PhotoForm {
 
 		// Verify the keywords
 		if( (keywords==null) || (keywords.length() < 1)) {
-			errors.add("keywords", new ActionError("error.upload.keywords"));
+			errors.add("keywords", new ActionMessage("error.upload.keywords"));
 		}
 
 		// Verify the description
 		if( (info==null) || (info.length() < 1) ) {
-			errors.add("info", new ActionError("error.upload.info"));
+			errors.add("info", new ActionMessage("error.upload.info"));
 		}
 
 		// Verify the taken date
 		if( (taken==null) || (taken.length() < 1) ) {
-			errors.add("taken", new ActionError("error.upload.taken"));
+			errors.add("taken", new ActionMessage("error.upload.taken"));
 		}
 
 		// Verify the category format
 		if( (category==null) || (category.length() < 1) ) {
-			errors.add("category", new ActionError("error.upload.category"));
+			errors.add("category", new ActionMessage("error.upload.category"));
 		} else {
 			try {
 				Integer.parseInt(category);
 			} catch(NumberFormatException nfe) {
 				getLogger().info("Could not parse category id", nfe);
 				errors.add("category",
-					new ActionError("error.upload.category.nfe"));
+					new ActionMessage("error.upload.category.nfe"));
 			}
 		}
 
@@ -137,7 +137,7 @@ public class UploadForm extends PhotoForm {
 			// It's an upload, verify the picture
 
 			if( (picture==null) || (picture.getFileSize() == 0) ) {
-				errors.add("picture", new ActionError("error.upload.picture"));
+				errors.add("picture", new ActionMessage("error.upload.picture"));
 			} else {
 				// Get the PhotoImage
 				byte data[]=new byte[picture.getFileSize()];
@@ -146,7 +146,7 @@ public class UploadForm extends PhotoForm {
 					// verify we read enough data
 					if(length != picture.getFileSize()) {
 						errors.add("picture",
-							new ActionError("error.upload.picture.notread"));
+							new ActionMessage("error.upload.picture.notread"));
 					}
 					// Create a PhotoImage out of it.
 					photoImage=new PhotoImage(data);
@@ -156,7 +156,7 @@ public class UploadForm extends PhotoForm {
 				} catch(Exception e) {
 					getLogger().warn("Problem uploading picture", e);
 					errors.add("picture",
-						new ActionError("error.upload.picture.notread"));
+						new ActionMessage("error.upload.picture.notread"));
 				}
 			}
 
@@ -164,13 +164,13 @@ public class UploadForm extends PhotoForm {
 
 			// It's not an upload, so we need to verify the ID
 			if(id==null || id.length() < 1) {
-				errors.add("id", new ActionError("error.upload.id"));
+				errors.add("id", new ActionMessage("error.upload.id"));
 			} else {
 				try {
 					Integer.parseInt(id);
 				} catch(NumberFormatException e) {
 					getLogger().info("Failed to parse image id", e);
-					errors.add("id", new ActionError("error.upload.id.nfe"));
+					errors.add("id", new ActionMessage("error.upload.id.nfe"));
 				}
 			}
 

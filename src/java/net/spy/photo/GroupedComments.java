@@ -20,9 +20,9 @@ public class GroupedComments extends ArrayList implements Serializable {
 	/**
 	 * Get an instance of GroupedComments.
 	 */
-	public GroupedComments(int imageId) {
+	public GroupedComments(int id) {
 		super();
-		this.imageId=imageId;
+		this.imageId=id;
 	}
 
 	/**

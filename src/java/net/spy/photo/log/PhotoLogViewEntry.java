@@ -75,8 +75,8 @@ public class PhotoLogViewEntry extends Object {
 	/**
 	 * Set the image ID of this log entry.
 	 */
-	public void setImageId(int imageId) {
-		this.imageId=imageId;
+	public void setImageId(int to) {
+		this.imageId=to;
 	}
 
 	/**
@@ -89,8 +89,8 @@ public class PhotoLogViewEntry extends Object {
 	/**
 	 * Set the username for this log entry.
 	 */
-	public void setUsername(String username) {
-		this.username=username;
+	public void setUsername(String to) {
+		this.username=to;
 	}
 
 	/**
@@ -103,8 +103,8 @@ public class PhotoLogViewEntry extends Object {
 	/**
 	 * Set the remote address used in this log entry.
 	 */
-	public void setRemoteAddr(String remoteAddr) {
-		this.remoteAddr=remoteAddr;
+	public void setRemoteAddr(String to) {
+		this.remoteAddr=to;
 	}
 
 	/**
@@ -117,8 +117,8 @@ public class PhotoLogViewEntry extends Object {
 	/**
 	 * Set the user agent for this log entry.
 	 */
-	public void setUserAgent(String userAgent) {
-		this.userAgent=userAgent;
+	public void setUserAgent(String to) {
+		this.userAgent=to;
 	}
 
 	/**
@@ -131,8 +131,8 @@ public class PhotoLogViewEntry extends Object {
 	/**
 	 * Set the image size (dimensions) for this log entry.
 	 */
-	public void setImageSize(String imageSize) {
-		this.imageSize=imageSize;
+	public void setImageSize(String to) {
+		this.imageSize=to;
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class PhotoLogViewEntry extends Object {
 	/**
 	 * Set the timestamp of this request.
 	 */
-	public void setTimeStamp(Date timeStamp) {
-		this.timeStamp=timeStamp;
+	public void setTimeStamp(Date to) {
+		this.timeStamp=to;
 	}
 
 	/**

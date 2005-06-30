@@ -79,22 +79,22 @@ public class ImageLink extends PhotoTag {
 	/**
 	 * Set the image width.
 	 */
-	public void setWidth(String width) {
-		this.width=width;
+	public void setWidth(String to) {
+		this.width=to;
 	}
 
 	/**
 	 * Set the image height.
 	 */
-	public void setHeight(String height) {
-		this.height=height;
+	public void setHeight(String to) {
+		this.height=to;
 	}
 
 	/**
 	 * Set the alt text for the thumbnail (if provided).
 	 */
-	public void setAlt(String altText) {
-		this.altText=altText;
+	public void setAlt(String to) {
+		this.altText=to;
 	}
 
 	/** 

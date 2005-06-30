@@ -18,9 +18,9 @@ public class AuthedServletRequest extends HttpServletRequestWrapper {
 	/**
 	 * Get an instance of AuthedServletRequest.
 	 */
-	public AuthedServletRequest(HttpServletRequest req, User user) {
+	public AuthedServletRequest(HttpServletRequest req, User u) {
 		super(req);
-		this.user=user;
+		this.user=u;
 	}
 
 	/** 

@@ -75,8 +75,8 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	/**
 	 * Set the maximum number of results for size.
 	 */
-	public void setMaxRet(int maxret) {
-		this.maxret=maxret;
+	public void setMaxRet(int to) {
+		this.maxret=to;
 	}
 
 	/**

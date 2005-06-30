@@ -9,13 +9,13 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.Category;
-import net.spy.photo.CategoryFactory;
-import net.spy.photo.PhotoACLEntry;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import net.spy.photo.Category;
+import net.spy.photo.CategoryFactory;
+import net.spy.photo.PhotoACLEntry;
 
 /**
  * Action used to begin editing a category.

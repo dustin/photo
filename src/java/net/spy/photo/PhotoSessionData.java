@@ -69,8 +69,8 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 *
 	 * Also, drop any administrative privs.
 	 */
-	public void setUser(User user) {
-		this.user=user;
+	public void setUser(User to) {
+		this.user=to;
 		unSetAdmin();
 	}
 
@@ -129,8 +129,8 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	/**
 	 * Set the encoded search (for saving or whatever).
 	 */
-	public void setEncodedSearch(String encodedSearch) {
-		this.encodedSearch=encodedSearch;
+	public void setEncodedSearch(String to) {
+		this.encodedSearch=to;
 	}
 
 	/**
@@ -217,8 +217,8 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	/**
 	 * Set the optimal dimensions for this session.
 	 */
-	public void setOptimalDimensions(PhotoDimensions optimalDimensions) {
-		this.optimalDimensions=optimalDimensions;
+	public void setOptimalDimensions(PhotoDimensions to) {
+		this.optimalDimensions=to;
 	}
 
 	/**

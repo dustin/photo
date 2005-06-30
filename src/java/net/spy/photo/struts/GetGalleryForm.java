@@ -5,9 +5,9 @@ package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 /**
  * Form for fetching a gallery.
@@ -33,8 +33,8 @@ public class GetGalleryForm extends PhotoForm {
 	/**
 	 * Set the image ID to add to the gallery.
 	 */
-	public void setId(int id) {
-		this.id=id;
+	public void setId(int to) {
+		this.id=to;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class GetGalleryForm extends PhotoForm {
 		ActionErrors errors = new ActionErrors();
 
 		if(id==-1) {
-			errors.add("id", new ActionError("error.getgallery.id"));
+			errors.add("id", new ActionMessage("error.getgallery.id"));
 		}
 
 		return(errors);

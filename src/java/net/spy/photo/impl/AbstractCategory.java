@@ -20,9 +20,9 @@ public abstract class AbstractCategory extends SpyObject implements Category {
 	/**
 	 * Get an instance of Category.
 	 */
-	public AbstractCategory(int id) {
+	public AbstractCategory(int catId) {
 		super();
-		this.id=id;
+		this.id=catId;
 		acl=new PhotoACL();
 	}
 

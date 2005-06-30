@@ -179,8 +179,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Set the user who'll own this comment.
 	 */
-	public void setUser(User user) {
-		this.user=user;
+	public void setUser(User to) {
+		this.user=to;
 		setModified(true);
 	}
 
@@ -194,8 +194,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Set the ID of the photo to which this comment belongs.
 	 */
-	public void setPhotoId(int photoId) {
-		this.photoId=photoId;
+	public void setPhotoId(int to) {
+		this.photoId=to;
 		setModified(true);
 	}
 
@@ -209,8 +209,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Set the actual note.
 	 */
-	public void setNote(String note) {
-		this.note=note;
+	public void setNote(String to) {
+		this.note=to;
 		setModified(true);
 	}
 
@@ -224,8 +224,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Set the remote address of the user at the time this note was added.
 	 */
-	public void setRemoteAddr(String remoteAddr) {
-		this.remoteAddr=remoteAddr;
+	public void setRemoteAddr(String to) {
+		this.remoteAddr=to;
 		setModified(true);
 	}
 

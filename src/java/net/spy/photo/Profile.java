@@ -55,23 +55,23 @@ public class Profile extends AbstractSavable implements Serializable {
 	/**
 	 * Look up a user profile.
 	 */
-	public Profile(String id) throws Exception {
+	public Profile(String idString) throws Exception {
 		super();
 		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select * from user_profiles where name=? and expires>now()");
-		pst.setString(1, id);
+		pst.setString(1, idString);
 		ResultSet rs=pst.executeQuery();
 		if(!rs.next()) {
 			rs.close();
 			pst.close();
 			db.close();
-			throw new Exception("No such profile:  " + id);
+			throw new Exception("No such profile:  " + idString);
 		}
 
 		this.description=rs.getString("description");
 		this.id=rs.getInt("profile_id");
-		this.name=id;
+		this.name=idString;
 		this.expires=rs.getDate("expires");
 		rs.close();
 		pst.close();
@@ -133,8 +133,8 @@ public class Profile extends AbstractSavable implements Serializable {
 	/**
 	 * Set the description of this PhotoProfile.
 	 */
-	public void setDescription(String description) {
-		this.description=description;
+	public void setDescription(String to) {
+		this.description=to;
 		setModified(true);
 	}
 
@@ -177,8 +177,8 @@ public class Profile extends AbstractSavable implements Serializable {
 	/**
 	 * Set the ID of this user.
 	 */
-	public void setId(int id) {
-		this.id=id;
+	public void setId(int to) {
+		this.id=to;
 		setModified(true);
 	}
 

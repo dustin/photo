@@ -33,8 +33,8 @@ public class Link extends PhotoTag {
 	/**
 	 * Set the relative URL to which to link.
 	 */
-	public void setUrl(String url) {
-		this.url=url;
+	public void setUrl(String to) {
+		this.url=to;
 	}
 
 	/**
@@ -54,15 +54,15 @@ public class Link extends PhotoTag {
 	/**
 	 * Set the message to display.
 	 */
-	public void setMessage(String message) {
-		this.message=message;
+	public void setMessage(String to) {
+		this.message=to;
 	}
 
 	/**
 	 * Set the image ID to include in this link.
 	 */
-	public void setId(String id) {
-		this.id=id;
+	public void setId(String to) {
+		this.id=to;
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class Link extends PhotoTag {
 			rv=SKIP_BODY;
 		}
 
-		return(EVAL_BODY_INCLUDE);
+		return(rv);
 	}
 
 	/**

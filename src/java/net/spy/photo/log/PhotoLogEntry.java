@@ -30,33 +30,32 @@ public class PhotoLogEntry extends AbstractSavable {
 	 * Get a new PhotoLogEntry.
 	 *
 	 * @param u The user ID making the request.
-	 * @param type The log type (by string name)
+	 * @param t The log type (by string name)
 	 * @param request The HTTP request (to get remote addr and user agent).
 	 */
-	public PhotoLogEntry(int u, String type, HttpServletRequest request) {
-		this(u, type, request.getRemoteAddr(), request.getHeader("User-Agent"));
+	public PhotoLogEntry(int u, String t, HttpServletRequest request) {
+		this(u, t, request.getRemoteAddr(), request.getHeader("User-Agent"));
 	}
 
 	/**
 	 * Get a new PhotoLogEntry.
 	 *
 	 * @param u The user ID making the request.
-	 * @param type The log type (by string name).
-	 * @param remoteAddr The address from which the request was made.
-	 * @param userAgent The agent that added the image.
+	 * @param t The log type (by string name).
+	 * @param addr The address from which the request was made.
+	 * @param agent The agent that added the image.
 	 */
-	public PhotoLogEntry(int u, String type, String remoteAddr,
-		String userAgent) {
+	public PhotoLogEntry(int u, String t, String addr, String agent) {
 		super();
 
 		this.wwwuserId=u;
-		this.type=type;
-		this.remoteAddr=remoteAddr;
-		this.userAgent=userAgent;
+		this.type=t;
+		this.remoteAddr=addr;
+		this.userAgent=agent;
 		this.timestamp = System.currentTimeMillis();
 
 		if(this.userAgent == null) {
-			getLogger().warn("Got a null user agent from " + remoteAddr);
+			getLogger().warn("Got a null user agent from " + addr);
 			this.userAgent = "-unknown-";
 		}
 	}

@@ -8,16 +8,15 @@ import java.sql.PreparedStatement;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.db.SpyDB;
-import net.spy.photo.MutableUser;
-import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoSecurity;
-import net.spy.photo.PhotoUserException;
-import net.spy.photo.UserFactory;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import net.spy.db.SpyDB;
+import net.spy.photo.MutableUser;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoUserException;
+import net.spy.photo.UserFactory;
 
 /**
  * Action used to save a new user
@@ -41,10 +40,6 @@ public class AdminSaveUserAction extends PhotoAction {
 
 		// Get the form
 		AdminUserForm auf=(AdminUserForm)form;
-
-		// Get the security to get the user to populate to the fields to
-		// save the world.
-		PhotoSecurity security=new PhotoSecurity();
 
 		UserFactory uf=UserFactory.getInstance();
 

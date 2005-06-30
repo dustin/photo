@@ -8,15 +8,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
-import net.spy.db.SpyCacheDB;
-import net.spy.db.SpyDB;
-import net.spy.photo.PhotoConfig;
-import net.spy.util.SpyUtil;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import net.spy.db.SpyCacheDB;
+import net.spy.db.SpyDB;
+import net.spy.photo.PhotoConfig;
+import net.spy.util.SpyUtil;
 
 /**
  * Backup entry that represents an entry in the album table (a photo).

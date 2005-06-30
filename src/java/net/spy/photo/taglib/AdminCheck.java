@@ -28,16 +28,16 @@ public class AdminCheck extends ConditionalTag {
 	 * If true, explode on doStartTag() instead of returning false.  This
 	 * prevents admin pages from being served up to unworty beings.
 	 */
-	public void setExplodeOnImpact(boolean explodeOnImpact) {
-		this.explodeOnImpact=explodeOnImpact;
+	public void setExplodeOnImpact(boolean to) {
+		this.explodeOnImpact=to;
 	}
 
 	/**
 	 * If true, explode on doStartTag() instead of returning false.  This
 	 * prevents admin pages from being served up to unworty beings.
 	 */
-	public void setExplodeOnImpact(String explodeOnImpact) {
-		this.explodeOnImpact=Boolean.valueOf(explodeOnImpact).booleanValue();
+	public void setExplodeOnImpact(String to) {
+		this.explodeOnImpact=Boolean.valueOf(to).booleanValue();
 	}
 
 	/**

@@ -3,10 +3,10 @@
 
 package net.spy.photo.struts;
 
+import org.apache.struts.action.ActionForm;
+
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;
-
-import org.apache.struts.action.ActionForm;
 
 /**
  * Form with logging.

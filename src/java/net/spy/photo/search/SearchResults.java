@@ -38,8 +38,8 @@ public class SearchResults extends Cursor {
 	/**
 	 * Set the maximum image size to be represented.
 	 */
-	public void setMaxSize(PhotoDimensions maxSize) {
-		this.maxSize=maxSize;
+	public void setMaxSize(PhotoDimensions to) {
+		this.maxSize=to;
 	}
 
 	/**

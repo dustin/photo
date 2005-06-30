@@ -300,14 +300,14 @@ public class SavablePhotoImageData extends AbstractSavable
 	 * @param y y position of the region
 	 * @param width width of the region
 	 * @param height height of the region
-	 * @param keywords keyword string
+	 * @param kw keyword string
 	 * @param title title of the region
 	 * @param u user who's adding this annotation
 	 * @throws Exception 
 	 */
 	public void addAnnotation(final int x, final int y,
 		final int width, final int height,
-		final String keywords, final String title,
+		final String kw, final String title,
 		final User u) throws Exception {
 
 		int newId=PhotoUtil.getNewIdForSeq("region_region_id_seq");
@@ -315,7 +315,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		NewAnnotatedRegion nar=new NewAnnotatedRegion(newId, x, y,
 			width, height, title, u);
 
-		StringTokenizer st=new StringTokenizer(keywords);
+		StringTokenizer st=new StringTokenizer(kw);
 		while(st.hasMoreTokens()) {
 			nar.addKeyword(Keyword.getKeyword(st.nextToken(), true));
 		}

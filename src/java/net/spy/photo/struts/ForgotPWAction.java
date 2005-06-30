@@ -7,16 +7,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
+
 import net.spy.photo.Mailer;
 import net.spy.photo.MutableUser;
 import net.spy.photo.User;
 import net.spy.photo.UserFactory;
 import net.spy.util.PwGen;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.DynaActionForm;
 
 /**
  * Action that changes user password.
@@ -59,7 +59,7 @@ public class ForgotPWAction extends PhotoAction {
 		uf.persist(user);
 
 		Mailer m=new Mailer();
-		m.setTo(user.getEmail());
+		m.setRecipient(user.getEmail());
 		m.setSubject("New Password for Photo Album");
 		m.setBody("\n\nYour new password for " + user.getName()
 			+ " is " + newPass + "\n\n");

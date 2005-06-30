@@ -8,6 +8,7 @@ package net.spy.photo.taglib;
 import java.util.Collection;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.PhotoException;
@@ -29,12 +30,12 @@ public class CategoryTag extends PhotoTag {
 		super();
 	}
 
-	public void setShowViewable(boolean showViewable) {
-		this.showViewable=showViewable;
+	public void setShowViewable(boolean to) {
+		this.showViewable=to;
 	}
 
-	public void setShowViewable(String showViewable) {
-		Boolean b=SpyUtil.getBoolean(showViewable);
+	public void setShowViewable(String to) {
+		Boolean b=SpyUtil.getBoolean(to);
 		this.showViewable=b.booleanValue();
 	}
 
@@ -42,12 +43,12 @@ public class CategoryTag extends PhotoTag {
 		return(showViewable);
 	}
 
-	public void setShowAddable(boolean showAddable) {
-		this.showAddable=showAddable;
+	public void setShowAddable(boolean to) {
+		this.showAddable=to;
 	}
 
-	public void setShowAddable(String showAddable) {
-		Boolean b=SpyUtil.getBoolean(showAddable);
+	public void setShowAddable(String to) {
+		Boolean b=SpyUtil.getBoolean(to);
 		this.showAddable=b.booleanValue();
 	}
 
@@ -70,7 +71,7 @@ public class CategoryTag extends PhotoTag {
 		// Get the session data
 		PhotoSessionData sessionData=(PhotoSessionData)
 			pageContext.getAttribute(PhotoSessionData.SES_ATTR,
-				pageContext.SESSION_SCOPE);
+				PageContext.SESSION_SCOPE);
 
 		Collection cats=null;
 		try {

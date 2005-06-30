@@ -3,11 +3,11 @@
 
 package net.spy.photo.struts;
 
+import org.apache.struts.action.ActionMapping;
+
 import net.spy.jwebkit.struts.DBSPAction;
 import net.spy.photo.PhotoConfig;
 import net.spy.util.SpyConfig;
-
-import org.apache.struts.action.ActionMapping;
 
 /**
  * Report fetch action.

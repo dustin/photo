@@ -9,14 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.spy.jwebkit.RequestUtil;
-import net.spy.photo.search.SavedSearch;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
+
+import net.spy.jwebkit.RequestUtil;
+import net.spy.photo.search.SavedSearch;
 
 /**
  * Load a saved search and overwrite the search form with that search.
@@ -41,12 +41,11 @@ public class GetSavedSearchAction extends PhotoAction {
 			"field", "keyjoin", "what", "what", "tstart", "tend", "start",
 			"end", "order", "sdirection", "maxret", "filter", "action"
 		};
-		PropertyUtils pu=new PropertyUtils();
 		for(int i=0; i<straightCopy.length; i++) {
 			String vs[]=(String[])m.get(straightCopy[i]);
 			if(vs != null) {
 				String v=vs[0];
-				pu.setProperty(sf, straightCopy[i], v);
+				PropertyUtils.setProperty(sf, straightCopy[i], v);
 				/*
 				getLogger().info("Set " + straightCopy[i] + " to " + v);
 				*/
@@ -54,7 +53,7 @@ public class GetSavedSearchAction extends PhotoAction {
 		}
 		String vs[]=(String[])m.get("cats");
 		if(vs != null) {
-			pu.setProperty(sf, "cats", vs);
+			PropertyUtils.setProperty(sf, "cats", vs);
 			/*
 			getLogger().info("Set cats to " + vs);
 			*/

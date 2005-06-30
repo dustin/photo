@@ -19,12 +19,12 @@ public abstract class Restorable extends Object implements Serializable {
 	/**
 	 * Get a restorable with the given base.
 	 */
-	public Restorable(String base) {
+	public Restorable(String b) {
 		super();
-		this.base=base;
+		this.base=b;
 		this.parts=new HashMap();
 		// This adds a base handler
-		parts.put(base, new StringBuffer());
+		parts.put(b, new StringBuffer());
 	}
 
 	/**

@@ -5,9 +5,9 @@ package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 /**
  * Form used by an admin to edit a user.
@@ -41,12 +41,12 @@ public class AdminUserForm extends PhotoForm {
 	/**
 	 * Set the string representation of the user ID.
 	 */
-	public void setUserId(String userId) {
-		this.userId=userId;
+	public void setUserId(String to) {
+		this.userId=to;
 	}
 
-	public void setUsername(String username) {
-		this.username=username;
+	public void setUsername(String to) {
+		this.username=to;
 	}
 
 	public String getUsername() {
@@ -57,20 +57,20 @@ public class AdminUserForm extends PhotoForm {
 		return(password);
 	}
 
-	public void setPassword(String password) {
-		this.password=password;
+	public void setPassword(String to) {
+		this.password=to;
 	}
 
-	public void setRealname(String realname) {
-		this.realname=realname;
+	public void setRealname(String to) {
+		this.realname=to;
 	}
 
 	public String getRealname() {
 		return(realname);
 	}
 
-	public void setEmail(String email) {
-		this.email=email;
+	public void setEmail(String to) {
+		this.email=to;
 	}
 
 	public String getEmail() {
@@ -89,16 +89,16 @@ public class AdminUserForm extends PhotoForm {
 		return(catAclView);
 	}
 
-	public void setCanadd(boolean canadd) {
-		this.canadd=canadd;
+	public void setCanadd(boolean to) {
+		this.canadd=to;
 	}
 
-	public void setCatAclAdd(String catAclAdd[]) {
-		this.catAclAdd=catAclAdd;
+	public void setCatAclAdd(String to[]) {
+		this.catAclAdd=to;
 	}
 
-	public void setCatAclView(String catAclView[]) {
-		this.catAclView=catAclView;
+	public void setCatAclView(String to[]) {
+		this.catAclView=to;
 	}
 
 	/**
@@ -111,8 +111,8 @@ public class AdminUserForm extends PhotoForm {
 	/**
 	 * Set the admin type of this user.
 	 */
-	public void setAdminStatus(String adminStatus) {
-		this.adminStatus=adminStatus;
+	public void setAdminStatus(String to) {
+		this.adminStatus=to;
 	}
 
 	/**
@@ -125,13 +125,13 @@ public class AdminUserForm extends PhotoForm {
 
 		if(userId==null || userId.length()<1) {
 			errors.add("userId",
-				new ActionError("error.adminuserform.userId"));
+				new ActionMessage("error.adminuserform.userId"));
 		} else {
 			try {
 				Integer.parseInt(userId);
 			} catch(NumberFormatException nfe) {
 				errors.add("userId",
-					new ActionError("error.adminuserform.userId.nfe"));
+					new ActionMessage("error.adminuserform.userId.nfe"));
 			}
 		}
 
@@ -139,37 +139,37 @@ public class AdminUserForm extends PhotoForm {
 		if(mapping.getType().equals(AdminSaveUserAction.class.getName())) {
 			if(username==null || username.length() < 1) {
 				errors.add("username",
-					new ActionError("error.adminuserform.username"));
+					new ActionMessage("error.adminuserform.username"));
 			}
 			if(password==null || password.length() < 1) {
 				errors.add("password",
-					new ActionError("error.adminuserform.password"));
+					new ActionMessage("error.adminuserform.password"));
 			}
 			if(realname==null || realname.length() < 1) {
 				errors.add("username",
-					new ActionError("error.adminuserform.realname"));
+					new ActionMessage("error.adminuserform.realname"));
 			}
 			if(email==null || email.length() < 1) {
 				errors.add("email",
-					new ActionError("error.adminuserform.email"));
+					new ActionMessage("error.adminuserform.email"));
 			} else {
 				// This is cheap, but it's a start (7 == d@x.net)
 				if(email.length() < 7 || (email.indexOf('@')==-1)) {
 					errors.add("email",
-						new ActionError("error.adminuserform.email.inv"));
+						new ActionMessage("error.adminuserform.email.inv"));
 				}
 			}
 			if(catAclView == null) {
 				errors.add("catAclView",
-					new ActionError("error.adminuserform.catAclView"));
+					new ActionMessage("error.adminuserform.catAclView"));
 			}
 			if(catAclAdd == null) {
 				errors.add("catAclAdd",
-					new ActionError("error.adminuserform.catAclAdd"));
+					new ActionMessage("error.adminuserform.catAclAdd"));
 			}
 			if(adminStatus == null) {
 				errors.add("adminStatus",
-					new ActionError("error.adminuserform.adminStatus"));
+					new ActionMessage("error.adminuserform.adminStatus"));
 			} else {
 				// Check the actual values.
 				if(adminStatus.equals("none")) {
@@ -180,7 +180,7 @@ public class AdminUserForm extends PhotoForm {
 					// OK
 				} else {
 					errors.add("adminStatus",
-						new ActionError("error.adminuserform.adminStatus.inv"));
+						new ActionMessage("error.adminuserform.adminStatus.inv"));
 				}
 			}
 		}

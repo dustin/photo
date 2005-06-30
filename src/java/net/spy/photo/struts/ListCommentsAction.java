@@ -6,14 +6,14 @@ package net.spy.photo.struts;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
 import net.spy.photo.Comment;
 import net.spy.photo.Cursor;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 
 /**
  * Initialize the comments list for this user.

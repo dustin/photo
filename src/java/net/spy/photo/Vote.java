@@ -122,8 +122,8 @@ public class Vote extends SpyObject implements java.io.Serializable {
 	/**
 	 * Set the user who'll own this vote.
 	 */
-	public void setUser(User user) {
-		this.user=user;
+	public void setUser(User to) {
+		this.user=to;
 	}
 
 	/**
@@ -136,8 +136,8 @@ public class Vote extends SpyObject implements java.io.Serializable {
 	/**
 	 * Set the ID of the photo to which this vote belongs.
 	 */
-	public void setPhotoId(int photoId) {
-		this.photoId=photoId;
+	public void setPhotoId(int to) {
+		this.photoId=to;
 	}
 
 	/**
@@ -150,13 +150,13 @@ public class Vote extends SpyObject implements java.io.Serializable {
 	/**
 	 * Set the actual note.
 	 */
-	public void setVote(int vote) {
-		if(vote<0) {
-			vote=0;
-		} else if(vote>10) {
-			vote=10;
+	public void setVote(int to) {
+		if(to<0) {
+			to=0;
+		} else if(to>10) {
+			to=10;
 		}
-		this.vote=vote;
+		this.vote=to;
 	}
 
 	/**
@@ -169,8 +169,8 @@ public class Vote extends SpyObject implements java.io.Serializable {
 	/**
 	 * Set the remote address of the user at the time this note was added.
 	 */
-	public void setRemoteAddr(String remoteAddr) {
-		this.remoteAddr=remoteAddr;
+	public void setRemoteAddr(String to) {
+		this.remoteAddr=to;
 	}
 
 	/**

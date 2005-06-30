@@ -5,9 +5,9 @@ package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 
 /**
  * Form for processing search requests.
@@ -54,80 +54,80 @@ public class SearchForm extends PhotoForm {
 		return(cats);
 	}
 
-	public void setField(String field) {
-		this.field=field;
+	public void setField(String to) {
+		this.field=to;
 	}
 
 	public String getField() {
 		return(field);
 	}
 
-	public void setKeyjoin(String keyjoin) {
-		this.keyjoin=keyjoin;
+	public void setKeyjoin(String to) {
+		this.keyjoin=to;
 	}
 
 	public String getKeyjoin() {
 		return(keyjoin);
 	}
 
-	public void setWhat(String what) {
-		this.what=what;
+	public void setWhat(String to) {
+		this.what=to;
 	}
 
 	public String getWhat() {
 		return(what);
 	}
 
-	public void setTstart(String tstart) {
-		this.tstart=tstart;
+	public void setTstart(String to) {
+		this.tstart=to;
 	}
 
 	public String getTstart() {
 		return(tstart);
 	}
 
-	public void setTend(String tend) {
-		this.tend=tend;
+	public void setTend(String to) {
+		this.tend=to;
 	}
 
 	public String getTend() {
 		return(tend);
 	}
 
-	public void setStart(String start) {
-		this.start=start;
+	public void setStart(String to) {
+		this.start=to;
 	}
 
 	public String getStart() {
 		return(start);
 	}
 
-	public void setEnd(String end) {
-		this.end=end;
+	public void setEnd(String to) {
+		this.end=to;
 	}
 
 	public String getEnd() {
 		return(end);
 	}
 
-	public void setOrder(String order) {
-		this.order=order;
+	public void setOrder(String to) {
+		this.order=to;
 	}
 
 	public String getOrder() {
 		return(order);
 	}
 
-	public void setSdirection(String sdirection) {
-		this.sdirection=sdirection;
+	public void setSdirection(String to) {
+		this.sdirection=to;
 	}
 
 	public String getSdirection() {
 		return(sdirection);
 	}
 
-	public void setMaxret(String maxret) {
-		this.maxret=maxret;
+	public void setMaxret(String to) {
+		this.maxret=to;
 	}
 
 	public String getMaxret() {
@@ -144,8 +144,8 @@ public class SearchForm extends PhotoForm {
 	/**
 	 * Set the search result filter.
 	 */
-	public void setFilter(String filter) {
-		this.filter=filter;
+	public void setFilter(String to) {
+		this.filter=to;
 	}
 
 	/** 
@@ -158,8 +158,8 @@ public class SearchForm extends PhotoForm {
 	/** 
 	 * Set the action.
 	 */
-	public void setAction(String action) {
-		this.action=action;
+	public void setAction(String to) {
+		this.action=to;
 	}
 
 	/**
@@ -199,20 +199,20 @@ public class SearchForm extends PhotoForm {
 
 		String tmp=field;
 		if(tmp!=null && !(tmp.equals("keywords") || tmp.equals("descr"))) {
-			errors.add("field", new ActionError("error.search.field"));
+			errors.add("field", new ActionMessage("error.search.field"));
 		}
 		tmp=keyjoin;
 		if(tmp!=null && !(tmp.equals("or") || tmp.equals("and"))) {
-			errors.add("keyjoin", new ActionError("error.search.keyjoin"));
+			errors.add("keyjoin", new ActionMessage("error.search.keyjoin"));
 		}
 		tmp=order;
 		if(tmp!=null && !(tmp.equals("a.taken") || tmp.equals("a.ts"))) {
-			errors.add("order", new ActionError("error.search.order"));
+			errors.add("order", new ActionMessage("error.search.order"));
 		}
 		tmp=sdirection;
 		if(tmp!=null && !(tmp.equals("") || tmp.equals("desc"))) {
 			errors.add("sdirection",
-				new ActionError("error.search.sdirection"));
+				new ActionMessage("error.search.sdirection"));
 		}
 
 		return(errors);

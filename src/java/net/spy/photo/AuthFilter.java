@@ -34,12 +34,14 @@ public class AuthFilter extends SpyObject implements Filter {
 	 * Perform initialization.
 	 */
 	public void init(FilterConfig config) throws ServletException {
+		// Don't need it
 	}
 
 	/** 
 	 * Destroy the filter.
 	 */
 	public void destroy() {
+		// Don't need it
 	}
 
 	/** 

@@ -58,8 +58,8 @@ public class SavedSearch extends Object {
 	/**
 	 * Set the name of the search.
 	 */
-	public void setName(String name) {
-		this.name=name;
+	public void setName(String to) {
+		this.name=to;
 	}
 
 	/**
@@ -72,8 +72,8 @@ public class SavedSearch extends Object {
 	/**
 	 * Set the actual search parameters.
 	 */
-	public void setSearch(String search) {
-		this.search=search;
+	public void setSearch(String to) {
+		this.search=to;
 	}
 
 	/**
