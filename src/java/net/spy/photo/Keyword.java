@@ -3,22 +3,19 @@
 
 package net.spy.photo;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.HashMap;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import net.spy.db.SpyDB;
+import net.spy.cache.SpyCache;
 import net.spy.db.AbstractSavable;
-import net.spy.db.Saver;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
-import net.spy.cache.SpyCache;
-
+import net.spy.db.Saver;
+import net.spy.db.SpyDB;
 import net.spy.photo.sp.GetKeywords;
 import net.spy.photo.sp.InsertKeyword;
 

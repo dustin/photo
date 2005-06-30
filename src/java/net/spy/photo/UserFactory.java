@@ -4,29 +4,24 @@
 package net.spy.photo;
 
 import java.sql.ResultSet;
-
 import java.util.Collection;
 import java.util.Collections;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import net.spy.db.Saver;
 import net.spy.db.Savable;
-
-import net.spy.factory.GenFactory;
+import net.spy.db.Saver;
 import net.spy.factory.CacheEntry;
+import net.spy.factory.GenFactory;
 import net.spy.factory.HashCacheEntry;
-import net.spy.factory.Instance;
-
 import net.spy.photo.impl.DBUser;
-
-import net.spy.photo.sp.GetAllUsers;
 import net.spy.photo.sp.GetAllACLs;
 import net.spy.photo.sp.GetAllRoles;
+import net.spy.photo.sp.GetAllUsers;
 
 /**
  * Represents a user in the photo system.
@@ -206,7 +201,7 @@ public class UserFactory extends GenFactory<User> {
 	 * @throws PhotoUserException if there's a problem looking up the user
 	 */
 	public User getUser(int id) throws PhotoUserException {
-		User rv=(User)getObject(id);
+		User rv=getObject(id);
 		if(rv==null) {
 			throw new NoSuchPhotoUserException("No such user (id):  " + id);
 		}

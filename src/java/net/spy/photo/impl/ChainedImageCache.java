@@ -3,19 +3,18 @@
 
 package net.spy.photo.impl;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import net.spy.SpyObject;
-
 import net.spy.photo.ImageCache;
-import net.spy.photo.PhotoImage;
-import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoImage;
 
 /**
  * ImageCache implementation that wraps other ImageCache implementations to

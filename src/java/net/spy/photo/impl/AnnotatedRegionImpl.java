@@ -3,14 +3,13 @@
 
 package net.spy.photo.impl;
 
-import java.util.TreeSet;
 import java.util.Collection;
 import java.util.Date;
+import java.util.TreeSet;
 
 import net.spy.SpyObject;
-
-import net.spy.photo.Keyword;
 import net.spy.photo.AnnotatedRegion;
+import net.spy.photo.Keyword;
 import net.spy.photo.User;
 
 /**

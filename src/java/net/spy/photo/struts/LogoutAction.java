@@ -4,13 +4,12 @@
 package net.spy.photo.struts;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionForm;
 
 /**
  * Logout the user (and invalidate any persistent session).

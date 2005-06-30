@@ -3,24 +3,20 @@
 
 package net.spy.photo;
 
-import java.sql.ResultSet;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Properties;
 import java.util.Collection;
-
-import net.spy.db.SaveException;
-import net.spy.db.SaveContext;
-import net.spy.db.Savable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 import net.spy.cache.SpyCache;
-
-import net.spy.photo.sp.GetProperties;
+import net.spy.db.Savable;
+import net.spy.db.SaveContext;
+import net.spy.db.SaveException;
 import net.spy.photo.sp.DeleteAllProperties;
+import net.spy.photo.sp.GetProperties;
 import net.spy.photo.sp.InsertProperty;
 
 /**
@@ -28,19 +24,29 @@ import net.spy.photo.sp.InsertProperty;
  */
 public class PhotoProperties extends Properties implements Savable {
 
+		
 	private boolean isNew=false;
 	private boolean isModified=false;
+
 
 	/**
 	 * Get an instance of PhotoProperties (defaulted by the PhotoConfig).
 	 */
-	public PhotoProperties() throws SQLException {
+	private PhotoProperties() throws SQLException {
 		super(PhotoConfig.getInstance());
 
 		init();
 
 		isNew=false;
 		isModified=false;
+	}
+	
+	/**
+	 * Get the singleton instance of PhotoProperties.
+	 */
+	public static synchronized PhotoProperties getInstance() throws SQLException {
+		// XXX:  use a real singleton here
+		return(new PhotoProperties());
 	}
 
 	private void init() throws SQLException {

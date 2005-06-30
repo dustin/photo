@@ -3,31 +3,24 @@
 
 package net.spy.photo.struts;
 
-import java.io.IOException;
-
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import javax.servlet.ServletException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-
 import net.spy.db.SpyDB;
-
 import net.spy.photo.PhotoACLEntry;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSecurity;
 import net.spy.photo.User;
-import net.spy.photo.PhotoUserException;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Action used to begin editing a new user.

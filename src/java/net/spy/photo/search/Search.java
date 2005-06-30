@@ -3,39 +3,31 @@
 
 package net.spy.photo.search;
 
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.TreeSet;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 import java.util.Comparator;
 import java.util.Date;
-
-import java.net.URLEncoder;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 
 import net.spy.SpyObject;
-import net.spy.db.SpyDB;
-import net.spy.util.Base64;
-
-import net.spy.photo.Keyword;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
-import net.spy.photo.User;
-import net.spy.photo.PhotoUtil;
+import net.spy.photo.Keyword;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoImageData;
-import net.spy.photo.struts.SearchForm;
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoUtil;
+import net.spy.photo.User;
 import net.spy.photo.sp.InsertSearch;
+import net.spy.photo.struts.SearchForm;
+import net.spy.util.Base64;
 
 /**
  * Perform searches.

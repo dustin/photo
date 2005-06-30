@@ -3,16 +3,15 @@
 
 package net.spy.photo.impl;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.spy.SpyObject;
-
 import net.spy.photo.ImageCache;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoImage;
 
 /**
  * ImageCache implementation that keeps soft references to images in memory.

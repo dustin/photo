@@ -3,8 +3,8 @@
 
 package net.spy.photo;
 
-import java.util.Date;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * An annotated region.

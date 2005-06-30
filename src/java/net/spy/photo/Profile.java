@@ -6,34 +6,27 @@
 package net.spy.photo;
 
 import java.io.Serializable;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.SQLException;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
-import net.spy.db.SpyDB;
-import net.spy.db.DBSP;
 import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
-
-import net.spy.util.PwGen;
-
+import net.spy.db.SpyDB;
+import net.spy.photo.sp.DeleteACLForProfile;
 import net.spy.photo.sp.GetGeneratedKey;
+import net.spy.photo.sp.InsertProfileACL;
+import net.spy.photo.sp.InsertUserProfile;
 import net.spy.photo.sp.ModifyUserProfile;
 import net.spy.photo.sp.UpdateUserProfile;
-import net.spy.photo.sp.InsertUserProfile;
-import net.spy.photo.sp.InsertProfileACL;
-import net.spy.photo.sp.DeleteACLForProfile;
+import net.spy.util.PwGen;
 
 /**
  * Represents a user in the photo system.

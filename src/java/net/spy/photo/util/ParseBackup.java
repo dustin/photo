@@ -6,21 +6,17 @@ package net.spy.photo.util;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-
 import java.util.Iterator;
 import java.util.Stack;
-
 import java.util.zip.GZIPInputStream;
 
 import net.spy.photo.PhotoException;
-
 import net.spy.util.Base64;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 

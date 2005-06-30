@@ -8,18 +8,16 @@ import java.sql.ResultSet;
 
 import net.spy.SpyObject;
 import net.spy.db.SpyDB;
-
-import net.spy.util.Base64;
-
-import net.spy.photo.ImageServer;
 import net.spy.photo.ImageCache;
-import net.spy.photo.PhotoConfig;
+import net.spy.photo.ImageServer;
 import net.spy.photo.ImageServerScaler;
-import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoDimUtil;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoDimUtil;
+import net.spy.photo.PhotoImage;
 import net.spy.photo.util.PhotoStorerThread;
+import net.spy.util.Base64;
 
 /**
  * Base image server implementation.

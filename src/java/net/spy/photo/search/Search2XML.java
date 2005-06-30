@@ -4,29 +4,23 @@
 package net.spy.photo.search;
 
 import java.io.OutputStream;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Date;
-import java.util.Set;
-import java.util.HashSet;
 import java.text.SimpleDateFormat;
-
-import org.apache.xerces.dom.DOMImplementationImpl;
-
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import net.spy.SpyObject;
-
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoImageData;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.sun.org.apache.xerces.internal.dom.DOMImplementationImpl;
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 /**
  * Convert photo search results to XML.
@@ -35,7 +29,6 @@ public class Search2XML extends SpyObject {
 
 	private DOMImplementationImpl dom=null;
 
-	private SimpleDateFormat outFormat=null;
 	private SimpleDateFormat dateFormat=null;
 	private SimpleDateFormat tsFormat=null;
 
@@ -47,7 +40,6 @@ public class Search2XML extends SpyObject {
 	private Search2XML() {
 		super();
 
-		outFormat=new SimpleDateFormat("yyyyMMdd");
 		dateFormat=new SimpleDateFormat("yyyy-MM-dd");
 		tsFormat=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 

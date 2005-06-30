@@ -6,18 +6,16 @@ package net.spy.photo.rpc;
 import java.util.Date;
 import java.util.Hashtable;
 
-import net.spy.db.Saver;
-
-import net.spy.photo.CategoryFactory;
 import net.spy.photo.Category;
+import net.spy.photo.CategoryFactory;
+import net.spy.photo.Persistent;
+import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
-import net.spy.photo.log.PhotoLogUploadEntry;
 import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.impl.SavablePhotoImageData;
 import net.spy.photo.User;
-import net.spy.photo.PhotoConfig;
-import net.spy.photo.Persistent;
+import net.spy.photo.impl.SavablePhotoImageData;
+import net.spy.photo.log.PhotoLogUploadEntry;
 
 /**
  * RPC method to add an image. 

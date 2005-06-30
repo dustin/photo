@@ -130,7 +130,7 @@ public class PhotoImage extends Object
 
 	// This sucks, but byte comes back signed.
 	private int getIntValue(int which) {
-		int i=(int)(imageData[which]&0xff);
+		int i=(imageData[which]&0xff);
 		return(i);
 	}
 

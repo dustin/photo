@@ -3,21 +3,17 @@
 
 package net.spy.photo.struts;
 
-import java.io.IOException;
-
 import javax.servlet.ServletException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoUtil;
+import net.spy.photo.search.SearchResults;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import net.spy.photo.PhotoSessionData;
-import net.spy.photo.search.SearchResults;
-
-import net.spy.photo.PhotoUtil;
 
 /**
  * If requested, set up a display refresh for the display page.

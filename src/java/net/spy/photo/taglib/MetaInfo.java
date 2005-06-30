@@ -5,14 +5,10 @@ package net.spy.photo.taglib;
 
 import java.sql.ResultSet;
 
-import java.text.NumberFormat;
-
 import javax.servlet.jsp.JspException;
 
-import net.spy.db.SpyDB;
-
 import net.spy.cache.SpyCache;
-
+import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
 
 /**

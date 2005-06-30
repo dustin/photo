@@ -3,7 +3,6 @@
 
 package net.spy.photo.struts;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * A form that doesn't do any processing.

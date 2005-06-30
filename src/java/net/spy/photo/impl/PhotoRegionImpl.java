@@ -4,7 +4,6 @@
 package net.spy.photo.impl;
 
 import net.spy.SpyObject;
-
 import net.spy.photo.PhotoRegion;
 
 /**

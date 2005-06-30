@@ -5,11 +5,9 @@ package net.spy.photo;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-
 import javax.servlet.http.HttpServlet;
 
 import net.spy.db.TransactionPipeline;
-
 import net.spy.photo.search.SavedSearch;
 
 /**
@@ -83,7 +81,7 @@ public class Persistent extends HttpServlet {
 		log("Saved searches initialization complete");
 
 		log("Initializing properties cache");
-		PhotoProperties photoProps=new PhotoProperties();
+		PhotoProperties.getInstance();
 		log("Properties initialization complete");
 
 		log("Initialization complete");

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" path="target/src"/>
+	<classpathentry output="target/test-classes" kind="src" path="src/test"/>
+	<classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="MAVEN_REPO/struts/jars/struts-1.2.4.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-collections/jars/commons-collections-2.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-beanutils/jars/commons-beanutils-1.6.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-digester/jars/commons-digester-1.5.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-fileupload/jars/commons-fileupload-1.0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/antlr/jars/antlr-2.7.2.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-validator/jars/commons-validator-1.1.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/oro/jars/oro-2.0.7.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/jaf/jars/activation.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/javamail/jars/javamail.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/postgresql/jars/postgresql-7.4.1-jdbc3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/spy-2.1.67.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/jwebkit-2.1.18.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/spyxmlrpc-2.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/xmlrpc/jars/xmlrpc-1.2.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/xerces/jars/xercesImpl-2.6.2.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

@@ -5,13 +5,12 @@ package net.spy.photo.rmi;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-
 import java.rmi.server.UnicastRemoteObject;
 
+import net.spy.photo.ImageServer;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
-import net.spy.photo.ImageServer;
 
 /**
  * Implementation of the remote image server.
@@ -93,12 +92,6 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 
 	private void log(String what) {
 		System.err.println(what);
-	}
-
-	private void debug(String what) {
-		if(debug) {
-			System.err.println(what);
-		}
 	}
 
 	/**

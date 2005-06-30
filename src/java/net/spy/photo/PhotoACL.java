@@ -3,12 +3,11 @@
 
 package net.spy.photo;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-
-import java.io.Serializable;
+import java.util.List;
 
 import net.spy.SpyObject;
 

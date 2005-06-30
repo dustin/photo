@@ -6,24 +6,21 @@ package net.spy.photo.impl;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.Iterator;
 
 import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
-
 import net.spy.photo.Category;
 import net.spy.photo.MutableCategory;
 import net.spy.photo.PhotoACL;
 import net.spy.photo.PhotoACLEntry;
-
 import net.spy.photo.sp.DeleteACLForCat;
+import net.spy.photo.sp.GetGeneratedKey;
 import net.spy.photo.sp.InsertACLEntry;
 import net.spy.photo.sp.InsertCategory;
-import net.spy.photo.sp.UpdateCategory;
 import net.spy.photo.sp.ModifyCategory;
-import net.spy.photo.sp.GetGeneratedKey;
+import net.spy.photo.sp.UpdateCategory;
 
 /**
  * Database category representation.

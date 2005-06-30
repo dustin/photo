@@ -4,7 +4,6 @@
 package net.spy.photo.migration;
 
 import net.spy.db.SpyDB;
-
 import net.spy.photo.PhotoConfig;
 
 /** 

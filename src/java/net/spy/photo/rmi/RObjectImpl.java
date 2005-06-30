@@ -3,11 +3,8 @@
 
 package net.spy.photo.rmi;
 
-import java.io.IOException;
-
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-
 import java.rmi.server.UnicastRemoteObject;
 
 import net.spy.cache.DiskCache;

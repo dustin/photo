@@ -27,10 +27,10 @@ public final class PhotoDimUtil extends Object {
 	public static float getScaleFactor(PhotoDimensions from,
 		PhotoDimensions to) {
 
-		float fromw=(float)from.getWidth();
-		float fromh=(float)from.getHeight();
-		float tow=(float)to.getWidth();
-		float toh=(float)to.getHeight();
+		float fromw=from.getWidth();
+		float fromh=from.getHeight();
+		float tow=to.getWidth();
+		float toh=to.getHeight();
 
 		float scaleFactor=tow/fromw;
 		if(fromh * scaleFactor > toh) {

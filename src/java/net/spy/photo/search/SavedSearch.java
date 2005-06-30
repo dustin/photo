@@ -3,28 +3,21 @@
 
 package net.spy.photo.search;
 
-import java.net.URLEncoder;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.TreeMap;
-
 import java.io.UnsupportedEncodingException;
-
+import java.net.URLEncoder;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 import net.spy.cache.SpyCache;
-import net.spy.util.Base64;
-
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
 import net.spy.photo.sp.GetSearches;
-import net.spy.photo.struts.SearchForm;
+import net.spy.util.Base64;
 
 /**
  * Represents a saved search entry.

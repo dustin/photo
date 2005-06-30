@@ -4,8 +4,8 @@
 // This class stores an entry from the wwwusers table.
 package net.spy.photo;
 
-import java.util.Collection;
 import java.security.Principal;
+import java.util.Collection;
 
 import net.spy.factory.Instance;
 

@@ -4,7 +4,6 @@
 package net.spy.photo.filter;
 
 import net.spy.SpyObject;
-
 import net.spy.photo.PhotoException;
 import net.spy.photo.search.SearchResults;
 

@@ -5,14 +5,13 @@ package net.spy.photo.taglib;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import javax.servlet.jsp.JspException;
 
-import net.spy.photo.search.SearchResults;
-import net.spy.photo.PhotoSessionData;
-import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoImageHelper;
+import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUtil;
+import net.spy.photo.search.SearchResults;
 
 /**
  * Taglib to link to an image.

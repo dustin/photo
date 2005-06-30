@@ -4,33 +4,25 @@
 package net.spy.photo;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
-import net.spy.db.SpyDB;
-
-import net.spy.db.DBSP;
-import net.spy.db.SpyCacheDB;
 import net.spy.db.AbstractSavable;
-import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
-
-import net.spy.photo.sp.LookupGallery;
+import net.spy.db.SaveException;
+import net.spy.photo.sp.DeleteGalleryMappings;
 import net.spy.photo.sp.GetGalleriesForUser;
 import net.spy.photo.sp.GetGalleryForUser;
 import net.spy.photo.sp.GetGeneratedKey;
-import net.spy.photo.sp.ModifyGallery;
 import net.spy.photo.sp.InsertGallery;
-import net.spy.photo.sp.UpdateGallery;
 import net.spy.photo.sp.InsertGalleryMap;
-import net.spy.photo.sp.DeleteGalleryMappings;
+import net.spy.photo.sp.LookupGallery;
+import net.spy.photo.sp.ModifyGallery;
+import net.spy.photo.sp.UpdateGallery;
 
 /**
  * A named collection of images.

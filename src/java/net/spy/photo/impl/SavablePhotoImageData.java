@@ -3,44 +3,40 @@
 
 package net.spy.photo.impl;
 
-import java.util.TreeSet;
-import java.util.HashSet;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Date;
-import java.util.StringTokenizer;
-import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.text.ParseException;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 
-import net.spy.db.SpyDB;
 import net.spy.db.AbstractSavable;
-import net.spy.db.Saver;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
-
-import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImage;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoDimensions;
-import net.spy.photo.User;
-import net.spy.photo.Format;
-import net.spy.photo.Keyword;
+import net.spy.db.SpyDB;
 import net.spy.photo.AnnotatedRegion;
-import net.spy.photo.PhotoException;
+import net.spy.photo.Format;
 import net.spy.photo.ImageServer;
 import net.spy.photo.ImageServerFactory;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.Keyword;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoUtil;
-import net.spy.photo.sp.InsertImage;
-import net.spy.photo.sp.InsertKeywordMap;
-import net.spy.photo.sp.DeleteKeywordMap;
-import net.spy.photo.sp.UpdateImage;
-import net.spy.photo.sp.InsertAnnotation;
-import net.spy.photo.sp.InsertAnnotationKeyword;
+import net.spy.photo.User;
 import net.spy.photo.sp.DeleteAnnotations;
 import net.spy.photo.sp.DeleteAnnotationsMap;
+import net.spy.photo.sp.DeleteKeywordMap;
+import net.spy.photo.sp.InsertAnnotation;
+import net.spy.photo.sp.InsertAnnotationKeyword;
+import net.spy.photo.sp.InsertImage;
+import net.spy.photo.sp.InsertKeywordMap;
+import net.spy.photo.sp.UpdateImage;
 
 /**
  * Savable implementation of PhotoImageData.

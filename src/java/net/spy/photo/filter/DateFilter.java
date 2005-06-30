@@ -3,14 +3,12 @@
 
 package net.spy.photo.filter;
 
-import java.util.Map;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -77,9 +75,6 @@ public abstract class DateFilter extends SortingFilter {
 		for(; in.hasMoreElements(); ) {
 			PhotoImageData pid=(PhotoImageData)in.nextElement();
 
-			// PhotoImageData currently has the dates as strings, this
-			// sucks, but here we go.
-			Calendar cal=Calendar.getInstance();
 			Date dtmp=pid.getTaken();
 
 			// Truncate the date appropriately

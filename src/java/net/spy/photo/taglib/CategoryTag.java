@@ -8,14 +8,11 @@ package net.spy.photo.taglib;
 import java.util.Collection;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 
-import net.spy.util.SpyUtil;
-
-import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoSessionData;
+import net.spy.util.SpyUtil;
 
 /**
  * Present category lists.

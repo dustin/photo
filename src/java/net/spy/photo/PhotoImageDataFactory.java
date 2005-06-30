@@ -5,11 +5,9 @@ package net.spy.photo;
 
 import java.util.Collection;
 
-import net.spy.factory.GenFactory;
-import net.spy.db.Saver;
 import net.spy.db.Savable;
-import net.spy.db.SaveException;
-
+import net.spy.db.Saver;
+import net.spy.factory.GenFactory;
 import net.spy.photo.impl.DBImageDataSource;
 import net.spy.photo.search.SearchIndex;
 

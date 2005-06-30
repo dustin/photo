@@ -8,25 +8,20 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Cookie;
 
 import net.spy.SpyObject;
-
 import net.spy.photo.struts.LoginAction;
 
 /**
  * Servlet filter for managing persistent auth.
  */
 public class AuthFilter extends SpyObject implements Filter {
-
-	private FilterConfig conf=null;
 
 	/**
 	 * Get an instance of AuthFilter.
@@ -39,14 +34,12 @@ public class AuthFilter extends SpyObject implements Filter {
 	 * Perform initialization.
 	 */
 	public void init(FilterConfig config) throws ServletException {
-		conf=config;
 	}
 
 	/** 
 	 * Destroy the filter.
 	 */
 	public void destroy() {
-		conf=null;
 	}
 
 	/** 

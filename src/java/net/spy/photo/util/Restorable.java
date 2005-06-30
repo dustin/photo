@@ -4,7 +4,6 @@
 package net.spy.photo.util;
 
 import java.io.Serializable;
-
 import java.util.HashMap;
 
 import net.spy.photo.PhotoException;

@@ -4,16 +4,15 @@
 package net.spy.photo.search;
 
 import java.io.Serializable;
-
-import java.util.Date;
 import java.util.Collection;
+import java.util.Date;
 
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoDimensions;
-import net.spy.photo.User;
+import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
 import net.spy.photo.Keyword;
-import net.spy.photo.AnnotatedRegion;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoImageData;
+import net.spy.photo.User;
 
 /**
  * A search result.

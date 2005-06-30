@@ -6,17 +6,14 @@ package net.spy.photo.util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.spy.SpyThread;
 import net.spy.db.SpyDB;
-
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageHelper;
-
 import net.spy.util.Base64;
 
 /**

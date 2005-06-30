@@ -5,14 +5,11 @@ package net.spy.photo.util;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-
 import java.util.zip.GZIPInputStream;
 
 import org.apache.xerces.parsers.DOMParser;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
 import org.xml.sax.InputSource;
 
 /**

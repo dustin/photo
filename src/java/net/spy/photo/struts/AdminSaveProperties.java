@@ -3,27 +3,21 @@
 
 package net.spy.photo.struts;
 
-import java.io.IOException;
-
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.spy.cache.SpyCache;
+import net.spy.db.Saver;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoProperties;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import net.spy.db.Saver;
-import net.spy.db.SaveException;
-
-import net.spy.cache.SpyCache;
-
-import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoProperties;
 
 /**
  * Save the properties.
@@ -46,7 +40,7 @@ public class AdminSaveProperties extends PhotoAction {
 		throws Exception {
 
 		PhotoProperties props=null;
-		props=new PhotoProperties();
+		props=PhotoProperties.getInstance();
 		props.clear();
 
 		for(Iterator i=request.getParameterMap().entrySet().iterator();

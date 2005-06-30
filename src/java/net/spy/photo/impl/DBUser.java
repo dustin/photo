@@ -3,39 +3,35 @@
 
 package net.spy.photo.impl;
 
-import java.io.Serializable;
-import java.io.ObjectStreamException;
 import java.io.InvalidObjectException;
-
+import java.io.ObjectStreamException;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import net.spy.db.AbstractSavable;
-import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
-
-import net.spy.photo.User;
+import net.spy.db.SaveException;
 import net.spy.photo.MutableUser;
-import net.spy.photo.UserFactory;
+import net.spy.photo.Persistent;
 import net.spy.photo.PhotoACL;
 import net.spy.photo.PhotoACLEntry;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoSecurity;
-import net.spy.photo.Persistent;
-
-import net.spy.photo.sp.ModifyUser;
-import net.spy.photo.sp.InsertUser;
-import net.spy.photo.sp.UpdateUser;
+import net.spy.photo.User;
+import net.spy.photo.UserFactory;
 import net.spy.photo.sp.DeleteACLForUser;
-import net.spy.photo.sp.InsertACLEntry;
 import net.spy.photo.sp.GetGeneratedKey;
+import net.spy.photo.sp.InsertACLEntry;
+import net.spy.photo.sp.InsertUser;
+import net.spy.photo.sp.ModifyUser;
+import net.spy.photo.sp.UpdateUser;
 
 /**
  * Represents a user in the photo system.
@@ -208,7 +204,7 @@ public class DBUser extends AbstractSavable
 	 * Set the user's addability.
 	 */
 	public void setCanAdd(boolean to) {
-		this.canadd=canadd;
+		this.canadd=to;
 	}
 
 	/**

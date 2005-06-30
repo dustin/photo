@@ -4,12 +4,10 @@
 package net.spy.photo.struts;
 
 import javax.servlet.ServletException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.spy.jwebkit.struts.JWebAction;
-
 import net.spy.photo.PhotoSessionData;
 
 /**

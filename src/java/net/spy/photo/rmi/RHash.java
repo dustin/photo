@@ -3,10 +3,10 @@
 
 package net.spy.photo.rmi;
 
-import java.rmi.Naming;
-import java.rmi.RemoteException;
-import java.rmi.NotBoundException;
 import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 import net.spy.SpyObject;
 

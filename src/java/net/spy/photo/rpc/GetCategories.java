@@ -3,16 +3,13 @@
 
 package net.spy.photo.rpc;
 
-import java.util.Vector;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
 
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
-import net.spy.photo.Persistent;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImage;
-import net.spy.photo.log.PhotoLogUploadEntry;
 import net.spy.photo.User;
 
 

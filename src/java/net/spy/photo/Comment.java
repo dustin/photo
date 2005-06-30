@@ -3,25 +3,21 @@
 
 package net.spy.photo;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.sql.Connection;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.spy.db.SpyDB;
 import net.spy.db.AbstractSavable;
-import net.spy.db.SaveException;
 import net.spy.db.SaveContext;
-
+import net.spy.db.SaveException;
 import net.spy.photo.sp.FindImagesByComments;
 import net.spy.photo.sp.GetCommentsForPhoto;
-import net.spy.photo.sp.InsertComment;
 import net.spy.photo.sp.GetGeneratedKey;
+import net.spy.photo.sp.InsertComment;
 
 /**
  * Comments on photos.

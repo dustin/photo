@@ -3,28 +3,24 @@
 
 package net.spy.photo.impl;
 
-import java.io.Serializable;
-import java.io.ObjectStreamException;
 import java.io.InvalidObjectException;
-
+import java.io.ObjectStreamException;
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.TreeSet;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Date;
 
 import net.spy.SpyObject;
-
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoDimensions;
-import net.spy.photo.User;
+import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimUtil;
-import net.spy.photo.AnnotatedRegion;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.User;
 
 /**
  * This class represents, and retreives all useful data for a given image.

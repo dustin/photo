@@ -4,10 +4,9 @@
 package net.spy.photo.impl;
 
 import net.spy.SpyObject;
-
 import net.spy.photo.ImageCache;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoImage;
 
 /**
  * ImageCache implementation that doesn't perform any caching.

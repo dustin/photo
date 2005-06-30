@@ -3,8 +3,8 @@
 
 package net.spy.photo.filter;
 
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * This filter randomly selects one picture per day from a group and throws

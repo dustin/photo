@@ -3,20 +3,15 @@
 
 package net.spy.photo.struts;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.spy.photo.Persistent;
-import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoDimUtil;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoDimUtil;
+import net.spy.photo.PhotoSessionData;
 import net.spy.photo.search.SearchResults;
 
 import org.apache.struts.action.ActionForm;

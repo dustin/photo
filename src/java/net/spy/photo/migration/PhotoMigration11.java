@@ -3,27 +3,16 @@
 
 package net.spy.photo.migration;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import net.spy.db.Saver;
-import net.spy.db.Savable;
-import net.spy.db.SaveContext;
-import net.spy.db.SaveException;
-import net.spy.db.AbstractSavable;
-
-import net.spy.util.ProgressStats;
-
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.impl.SavablePhotoImageData;
-
 import net.spy.photo.sp.migration.GetAllImgIdsAndKws;
+import net.spy.util.ProgressStats;
 
 /**
  * Migrate to the new keywords mechanism.

@@ -4,19 +4,9 @@
 package net.spy.photo;
 
 import java.security.MessageDigest;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import java.util.Collection;
 
 import net.spy.SpyObject;
-import net.spy.db.SpyDB;
-import net.spy.log.Logger;
-import net.spy.log.LoggerFactory;
-
-import net.spy.cache.SpyCache;
-
 import net.spy.util.Base64;
 
 /**

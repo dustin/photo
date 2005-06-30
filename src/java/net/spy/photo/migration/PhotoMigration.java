@@ -5,18 +5,14 @@ package net.spy.photo.migration;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-
 import java.net.URL;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import net.spy.SpyObject;
-import net.spy.db.SpyDB;
 import net.spy.db.SQLRunner;
-
+import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageHelper;

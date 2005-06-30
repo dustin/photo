@@ -5,17 +5,13 @@ package net.spy.photo.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import java.util.zip.GZIPOutputStream;
 
 import net.spy.db.SpyDB;
-
 import net.spy.photo.PhotoConfig;
 
 /**

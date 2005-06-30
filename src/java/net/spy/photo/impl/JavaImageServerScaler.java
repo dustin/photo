@@ -4,9 +4,9 @@
 package net.spy.photo.impl;
 
 import net.spy.photo.ImageServerScaler;
-import net.spy.photo.PhotoImageScaler;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageScaler;
 
 /**
  * Scale the image in 100% Java.

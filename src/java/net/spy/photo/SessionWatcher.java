@@ -8,7 +8,6 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 
 import net.spy.log.Logger;
 import net.spy.log.LoggerFactory;

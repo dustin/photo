@@ -3,29 +3,24 @@
 
 package net.spy.photo.struts;
 
-import java.util.Map;
 import java.util.HashMap;
-
-import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.filter.Filter;
+import net.spy.photo.filter.OnceADayFilter;
+import net.spy.photo.filter.OnceAMonthFilter;
+import net.spy.photo.filter.OnceAWeekFilter;
+import net.spy.photo.filter.SortingFilter;
+import net.spy.photo.search.SearchResults;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import net.spy.photo.PhotoException;
-import net.spy.photo.search.SearchResults;
-import net.spy.photo.PhotoSessionData;
-
-import net.spy.photo.filter.Filter;
-import net.spy.photo.filter.SortingFilter;
-import net.spy.photo.filter.OnceAMonthFilter;
-import net.spy.photo.filter.OnceAWeekFilter;
-import net.spy.photo.filter.OnceADayFilter;
 
 /**
  * Filter search results.

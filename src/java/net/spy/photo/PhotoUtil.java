@@ -3,20 +3,17 @@
 
 package net.spy.photo;
 
-import java.util.Collection;
-import java.util.ArrayList;
-import java.text.SimpleDateFormat;
-
-import net.spy.db.SpyDB;
 import java.sql.ResultSet;
-
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
 import net.spy.db.SpyDB;
-import net.spy.util.SpyUtil;
 import net.spy.jwebkit.RequestUtil;
+import net.spy.util.SpyUtil;
 
 /**
  * Utilities.

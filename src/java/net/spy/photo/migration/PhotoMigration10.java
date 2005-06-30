@@ -3,27 +3,22 @@
 
 package net.spy.photo.migration;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-import net.spy.db.Saver;
-import net.spy.db.Savable;
+import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
-import net.spy.db.AbstractSavable;
-
-import net.spy.util.ProgressStats;
-
+import net.spy.db.Saver;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageHelper;
-
 import net.spy.photo.sp.migration.GetAllImgIds;
 import net.spy.photo.sp.migration.UpdateFormat;
+import net.spy.util.ProgressStats;
 
 /**
  * Add the format table.

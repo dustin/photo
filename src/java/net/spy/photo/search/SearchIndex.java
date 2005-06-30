@@ -5,18 +5,16 @@ package net.spy.photo.search;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.TreeSet;
-import java.util.Date;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import net.spy.SpyObject;
-
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoImageData;
 
@@ -139,16 +137,6 @@ public class SearchIndex extends SpyObject {
 		} else {
 			throw new IllegalArgumentException("Invalid operator:  "+operator);
 		}
-	}
-
-	private String opToString(int op) {
-		String rv="INVALID";
-		if(op == OP_AND) {
-			rv="AND";
-		} else if(op == OP_OR) {
-			rv="OR";
-		}
-		return(rv);
 	}
 
 	private Set getCombined(Map m, Collection c, int operator) {

@@ -3,32 +3,26 @@
 
 package net.spy.photo.struts;
 
-import java.io.IOException;
-
 import javax.servlet.ServletException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.spy.photo.Persistent;
+import net.spy.photo.PhotoDimUtil;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoRegion;
+import net.spy.photo.PhotoRegionUtil;
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.User;
+import net.spy.photo.impl.PhotoDimensionsImpl;
+import net.spy.photo.impl.PhotoRegionImpl;
+import net.spy.photo.impl.SavablePhotoImageData;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
-
-import net.spy.photo.AnnotatedRegion;
-import net.spy.photo.impl.AnnotatedRegionImpl;
-import net.spy.photo.impl.SavablePhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.Persistent;
-import net.spy.photo.PhotoSessionData;
-import net.spy.photo.User;
-import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoDimensions;
-import net.spy.photo.impl.PhotoDimensionsImpl;
-import net.spy.photo.PhotoDimUtil;
-import net.spy.photo.PhotoRegion;
-import net.spy.photo.impl.PhotoRegionImpl;
-import net.spy.photo.PhotoRegionUtil;
 
 /**
  * Action that submits an annotated region.

@@ -6,15 +6,14 @@ package net.spy.photo.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.util.Random;
 
 import net.spy.photo.ImageServerScaler;
-import net.spy.photo.PhotoImage;
-import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoDimUtil;
+import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoImage;
 
 /**
  * Get an image scaler that scales via an external program.

@@ -4,7 +4,6 @@
 package net.spy.photo.taglib;
 
 import javax.servlet.http.HttpServletRequest;
-
 import javax.servlet.jsp.JspException;
 
 import net.spy.photo.PhotoUtil;

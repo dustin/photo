@@ -3,19 +3,18 @@
 
 package net.spy.photo.taglib;
 
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
-import net.spy.photo.PhotoUtil;
+import net.spy.photo.PhotoDimUtil;
+import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoDimUtil;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoUtil;
 
 /**
  * Taglib to link to an image.

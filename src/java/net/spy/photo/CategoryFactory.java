@@ -5,23 +5,20 @@ package net.spy.photo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import net.spy.db.Saver;
 import net.spy.db.Savable;
+import net.spy.db.Saver;
 import net.spy.factory.GenFactory;
-
 import net.spy.photo.impl.DBCategory;
-import net.spy.photo.sp.GetAllCategories;
 import net.spy.photo.sp.GetAllACLs;
+import net.spy.photo.sp.GetAllCategories;
 
 /**
  * Category access.

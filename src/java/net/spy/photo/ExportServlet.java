@@ -5,20 +5,16 @@ package net.spy.photo;
 
 import java.io.IOException;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.spy.jwebkit.JWHttpServlet;
-
 import net.spy.photo.search.Search;
-import net.spy.photo.search.SearchResults;
 import net.spy.photo.search.Search2XML;
+import net.spy.photo.search.SearchResults;
 import net.spy.photo.struts.SearchForm;
 
 /**

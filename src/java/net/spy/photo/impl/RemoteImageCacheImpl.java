@@ -3,12 +3,11 @@
 
 package net.spy.photo.impl;
 
-import net.spy.photo.rmi.RHash;
-
 import net.spy.photo.ImageCache;
-import net.spy.photo.PhotoImage;
-import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.rmi.RHash;
 
 /**
  * ImageCache that uses RMI.

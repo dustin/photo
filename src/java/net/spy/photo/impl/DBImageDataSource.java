@@ -3,28 +3,24 @@
 
 package net.spy.photo.impl;
 
-import java.util.Map;
+import java.io.ObjectStreamException;
+import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.TreeSet;
-import java.io.ObjectStreamException;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.Map;
 
 import net.spy.SpyObject;
-
-import net.spy.photo.PhotoImageDataSource;
-import net.spy.photo.PhotoConfig;
-import net.spy.photo.Keyword;
 import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
+import net.spy.photo.Keyword;
 import net.spy.photo.Persistent;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImageDataSource;
 import net.spy.photo.UserFactory;
-import net.spy.photo.sp.GetPhotoInfo;
 import net.spy.photo.sp.GetAlbumKeywords;
-import net.spy.photo.sp.GetAllRegions;
 import net.spy.photo.sp.GetAllRegionKeywords;
+import net.spy.photo.sp.GetAllRegions;
+import net.spy.photo.sp.GetPhotoInfo;
 
 /**
  * A PhotoImageDataSource implementation that gets images from the DB.

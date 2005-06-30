@@ -3,28 +3,20 @@
 
 package net.spy.photo.struts;
 
-import java.io.IOException;
-
 import javax.servlet.ServletException;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.db.Saver;
-
-import net.spy.util.PwGen;
-
+import net.spy.photo.MutableUser;
 import net.spy.photo.Persistent;
-import net.spy.photo.log.PhotoLogEntry;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoSecurity;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
 import net.spy.photo.UserFactory;
-import net.spy.photo.MutableUser;
-import net.spy.photo.PhotoUserException;
-import net.spy.photo.PhotoConfig;
-import net.spy.photo.Persistent;
-import net.spy.photo.PhotoSecurity;
+import net.spy.photo.log.PhotoLogEntry;
+import net.spy.util.PwGen;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;

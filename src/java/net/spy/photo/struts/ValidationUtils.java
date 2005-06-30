@@ -3,16 +3,16 @@
 
 package net.spy.photo.struts;
 
-import org.apache.commons.validator.ValidatorAction;
-import org.apache.commons.validator.Field;
-import org.apache.commons.validator.ValidatorUtil;
-import org.apache.commons.validator.GenericValidator;
-import org.apache.struts.validator.Resources;
-import org.apache.struts.action.ActionErrors;
-
 import javax.servlet.http.HttpServletRequest;
 
 import net.spy.photo.impl.PhotoDimensionsImpl;
+
+import org.apache.commons.validator.Field;
+import org.apache.commons.validator.GenericValidator;
+import org.apache.commons.validator.ValidatorAction;
+import org.apache.commons.validator.ValidatorUtil;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.validator.Resources;
 
 /**
  * Validators and stuff.

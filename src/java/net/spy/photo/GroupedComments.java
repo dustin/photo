@@ -4,7 +4,6 @@
 package net.spy.photo;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
 
 /**

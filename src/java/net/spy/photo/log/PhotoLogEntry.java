@@ -3,15 +3,14 @@
 
 package net.spy.photo.log;
 
-import java.sql.SQLException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 
 import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
-
 import net.spy.photo.sp.InsertPhotoLog;
 
 /**

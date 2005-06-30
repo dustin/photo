@@ -3,19 +3,14 @@
 
 package net.spy.photo;
 
-import java.io.PrintStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
-import java.util.Iterator;
 
-import javax.mail.Session;
-import javax.mail.Message;
 import javax.mail.Address;
-import javax.mail.MessagingException;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.Transport;
 
 /**
  * Simple mail sender.

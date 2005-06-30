@@ -3,14 +3,11 @@
 
 package net.spy.photo.impl;
 
-import java.io.IOException;
-
 import net.spy.cache.DiskCache;
-
 import net.spy.photo.ImageCache;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoImage;
 
 /**
  * ImageCache that uses local files.

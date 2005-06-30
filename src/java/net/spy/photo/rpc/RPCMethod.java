@@ -5,12 +5,11 @@ package net.spy.photo.rpc;
 
 import java.util.Hashtable;
 
-import net.spy.rpc.services.Remote;
-
 import net.spy.photo.Persistent;
-import net.spy.photo.PhotoSecurity;
 import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoSecurity;
 import net.spy.photo.User;
+import net.spy.rpc.services.Remote;
 
 /**
  * Superclass for all RPC handlers.

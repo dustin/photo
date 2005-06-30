@@ -8,12 +8,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
-import net.spy.db.SpyDB;
-import net.spy.util.SpyUtil;
-
 import net.spy.db.SpyCacheDB;
-
+import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
+import net.spy.util.SpyUtil;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

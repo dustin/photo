@@ -5,17 +5,11 @@ package net.spy.photo;
 
 import java.awt.Image;
 import java.awt.Toolkit;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import java.rmi.Naming;
-
 import net.spy.SpyObject;
-
-import net.spy.photo.impl.PhotoDimensionsImpl;
 
 /**
  * Scales images.
