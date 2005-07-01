@@ -47,7 +47,7 @@ public class PhotoMigration01 extends PhotoMigration {
 		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 
 		while(n>0) {
-			ArrayList al=new ArrayList();
+			ArrayList<int[]> al=new ArrayList<int[]>();
 			// Get a list of all of the images we haven't set width and height
 			// on.
 			ResultSet rs=db.executeQuery("select id from album\n"

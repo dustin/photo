@@ -42,7 +42,7 @@ public class GetImageDataAction extends PhotoAction {
 		if(results == null) {
 			throw new PhotoException("No search results");
 		}
-		PhotoImageData rv = (PhotoImageData)results.get(id);
+		PhotoImageData rv = results.get(id);
 		return(rv);
 	}
 

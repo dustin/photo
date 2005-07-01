@@ -10,7 +10,7 @@ import net.spy.photo.PhotoImageData;
 /**
  * Represents results from a search.
  */
-public class SearchResults extends Cursor {
+public class SearchResults extends Cursor<PhotoImageData> {
 
 	private PhotoDimensions maxSize=null;
 
@@ -31,8 +31,8 @@ public class SearchResults extends Cursor {
 	/**
 	 * Add a search result to the list.
 	 */
-	public void add(PhotoImageData d) {
-		super.add(new SearchResult(d, size()));
+	public boolean add(PhotoImageData d) {
+		return(super.add(new SearchResult(d, size())));
 	}
 
 	/**

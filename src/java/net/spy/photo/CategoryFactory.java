@@ -60,7 +60,7 @@ public class CategoryFactory extends GenFactory<Category> {
 	}
 
 	protected Collection<Category> getInstances() {
-		Map<Integer, Category> rv=new HashMap();
+		Map<Integer, Category> rv=new HashMap<Integer, Category>();
 
 		try {
 			GetAllCategories db=new GetAllCategories(PhotoConfig.getInstance());
@@ -227,7 +227,7 @@ public class CategoryFactory extends GenFactory<Category> {
 	public SortedSet<Category> getAdminCatList() throws PhotoException {
 		SortedSet<Category> rv=null;
 		try {
-			rv=new TreeSet(comparator);
+			rv=new TreeSet<Category>(comparator);
 			rv.addAll(getObjects());
 		} catch(Exception e) {
 			throw new PhotoException("Error getting admin category list", e);

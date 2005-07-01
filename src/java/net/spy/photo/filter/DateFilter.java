@@ -4,6 +4,7 @@
 package net.spy.photo.filter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -66,14 +67,15 @@ public abstract class DateFilter extends SortingFilter {
 		// Do the actual processing
 
 		// This is where the month groups go
-		TreeMap months=null;
-		if(direction==SORT_REVERSE) {
-			months=new TreeMap(Collections.reverseOrder());
+		TreeMap<Date, Collection<PhotoImageData>> months = null;
+		if(direction == SORT_REVERSE) {
+			months = new TreeMap<Date, Collection<PhotoImageData>>(Collections
+				.reverseOrder());
 		} else {
-			months=new TreeMap();
+			months = new TreeMap<Date, Collection<PhotoImageData>>();
 		}
-		for(; in.hasMoreElements(); ) {
-			PhotoImageData pid=(PhotoImageData)in.nextElement();
+		for(; in.hasMoreElements();) {
+			PhotoImageData pid=in.nextElement();
 
 			Date dtmp=pid.getTaken();
 
@@ -88,9 +90,9 @@ public abstract class DateFilter extends SortingFilter {
 			*/
 
 			// Get a vector from the date
-			ArrayList a=(ArrayList)months.get(taken);
+			Collection<PhotoImageData> a=months.get(taken);
 			if(a==null) {
-				a=new ArrayList(arrayGuess);
+				a=new ArrayList<PhotoImageData>(arrayGuess);
 				months.put(taken, a);
 			}
 

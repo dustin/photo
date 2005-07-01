@@ -24,7 +24,7 @@ public class PhotoUtil extends Object {
 		=initDateFormats();
 
 	private static Collection<SimpleDateFormat> initDateFormats() {
-		ArrayList<SimpleDateFormat> rv=new ArrayList();
+		ArrayList<SimpleDateFormat> rv=new ArrayList<SimpleDateFormat>();
 
 		SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
 		sdf.setLenient(false);

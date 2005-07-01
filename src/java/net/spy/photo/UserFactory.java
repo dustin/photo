@@ -90,10 +90,10 @@ public class UserFactory extends GenFactory<User> {
 		}
 	}
 
-	private Collection fetchAllUsers() throws Exception {
+	private Collection<User> fetchAllUsers() throws Exception {
 		PhotoConfig conf=PhotoConfig.getInstance();
-		Map<String, User> users=new HashMap();
-		Map<Integer, User> idMap=new HashMap();
+		Map<String, User> users=new HashMap<String, User>();
+		Map<Integer, User> idMap=new HashMap<Integer, User>();
 
 		GetAllUsers db=new GetAllUsers(conf);
 		ResultSet rs=db.executeQuery();
@@ -136,12 +136,12 @@ public class UserFactory extends GenFactory<User> {
 		return(users.values());
 	}
 
-	protected CacheEntry getNewCacheEntry() {
+	protected CacheEntry<User> getNewCacheEntry() {
 		return(new UserCacheEntry());
 	}
 
-	protected Collection getInstances() {
-		Collection rv=null;
+	protected Collection<User> getInstances() {
+		Collection<User> rv=null;
 		try {
 			rv=fetchAllUsers();
 		} catch(Exception e) {
@@ -229,16 +229,14 @@ public class UserFactory extends GenFactory<User> {
 	 * @return an unmodifiable sorted set of users
 	 * @throws PhotoUserException 
 	 */
-	public SortedSet getAllUsers() throws PhotoUserException {
-		SortedSet rv=new TreeSet(userComparator);
+	public SortedSet<User> getAllUsers() throws PhotoUserException {
+		SortedSet<User> rv=new TreeSet<User>(userComparator);
 		rv.addAll(getObjects());
 		return(Collections.unmodifiableSortedSet(rv));
 	}
 
-	private static class UserComparator implements Comparator {
-		public int compare(Object o1, Object o2) {
-			User u1=(User)o1;
-			User u2=(User)o2;
+	private static class UserComparator implements Comparator<User> {
+		public int compare(User u1, User u2) {
 			int rv=u1.getName().compareTo(u2.getName());
 			return(rv);
 		}
@@ -259,9 +257,9 @@ public class UserFactory extends GenFactory<User> {
 
 		public UserCacheEntry() {
 			super();
-			byUsername=new HashMap();
-			byEmail=new HashMap();
-			byPersess=new HashMap();
+			byUsername=new HashMap<String, User>();
+			byEmail=new HashMap<String, User>();
+			byPersess=new HashMap<String, User>();
 		}
 
 		public void cacheInstance(User u) {

@@ -4,14 +4,12 @@
 package net.spy.photo.rpc;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Vector;
 
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.PhotoException;
 import net.spy.photo.User;
-
 
 /**
  * Get the categories a user has access to.
@@ -25,30 +23,32 @@ public class GetCategories extends RPCMethod {
 		super();
 	}
 
-	/** 
+	/**
 	 * Get the names of the categories to which the user has add access.
 	 * 
-	 * @param username username
-	 * @param password password
+	 * @param username
+	 *            username
+	 * @param password
+	 *            password
 	 * @return Vector of Strings
-	 * @throws PhotoException if there's trouble getting the cat list
+	 * @throws PhotoException
+	 *             if there's trouble getting the cat list
 	 */
 	public Vector getAddable(String username, String password)
 		throws PhotoException {
 		// Authenticate the user
 		authenticate(username, password);
 
-		Vector rv=new Vector();
+		Vector<String> rv = new Vector<String>();
 
-		User u=getUser();
-		CategoryFactory cf=CategoryFactory.getInstance();
-		Collection cats=cf.getCatList(u.getId(), CategoryFactory.ACCESS_WRITE);
-		for(Iterator i=cats.iterator(); i.hasNext();) {
-			Category c=(Category)i.next();
-			rv.addElement(c.getName());
+		User u = getUser();
+		CategoryFactory cf = CategoryFactory.getInstance();
+		Collection<Category> cats = cf.getCatList(
+			u.getId(), CategoryFactory.ACCESS_WRITE);
+		for(Category c : cats) {
+			rv.add(c.getName());
 		}
 
-		return(rv);
+		return (rv);
 	}
 }
-

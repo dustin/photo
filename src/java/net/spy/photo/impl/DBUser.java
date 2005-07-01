@@ -48,7 +48,7 @@ public class DBUser extends AbstractSavable
 	private String persess=null;
 
 	private PhotoACL acl=null;
-	private Set roles=null;
+	private Set<String> roles=null;
 
 	/**
 	 * Get a new, empty user.
@@ -56,7 +56,7 @@ public class DBUser extends AbstractSavable
 	public DBUser() {
 		super();
 		acl=new PhotoACL();
-		roles=new HashSet();
+		roles=new HashSet<String>();
 		setNew(true);
 		setModified(false);
 	}
@@ -164,7 +164,7 @@ public class DBUser extends AbstractSavable
 	/**
 	 * Get a Collection of Strings describing all the roles this user has.
 	 */
-	public Collection getRoles() {
+	public Collection<String> getRoles() {
 		return(Collections.unmodifiableSet(roles));
 	}
 

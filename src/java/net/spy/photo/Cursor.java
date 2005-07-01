@@ -16,7 +16,7 @@ import net.spy.log.LoggerFactory;
 /**
  * An object that will be cursor through other objects.
  */
-public class Cursor extends ArrayList implements Serializable, Enumeration {
+public class Cursor<T> extends ArrayList<T> implements Serializable, Enumeration {
 
 	private int current=0;
 	private int maxret=10;
@@ -40,17 +40,7 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	/**
 	 * Get a new cursor on the given enumeration.
 	 */
-	public Cursor(Enumeration e) {
-		super();
-		while(e.hasMoreElements()) {
-			add(e.nextElement());
-		}
-	}
-
-	/**
-	 * Get a new cursor on the given enumeration.
-	 */
-	public Cursor(Collection c) {
+	public Cursor(Collection<T> c) {
 		super(c);
 	}
 
@@ -68,7 +58,7 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	/**
 	 * Return the iterator from the current position (not the beginning).
 	 */
-	public Iterator iterator() {
+	public Iterator<T> iterator() {
 		return(new CursorIterator());
 	}
 
@@ -113,8 +103,8 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	/**
 	 * Get the next result, or null if we're done
 	 */
-	public Object next() throws NoSuchElementException {
-		Object r=null;
+	public T next() throws NoSuchElementException {
+		T r=null;
 
 		if(current<size()) {
 			r=get(current);
@@ -128,8 +118,8 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	/**
 	 * Get the next element.
 	 */
-	public Object nextElement() {
-		Object rv=next();
+	public T nextElement() {
+		T rv=next();
 		if(rv==null) {
 			throw new NoSuchElementException("You seek too much.");
 		}
@@ -146,8 +136,8 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	/**
 	 * Get the previous result, or null if we're at the beginning
 	 */
-	public Object prev() {
-		Object r=null;
+	public T prev() {
+		T r=null;
 
 		if(current>0) {
 			current--;
@@ -181,7 +171,7 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 	}
 
 	// Inner class to iterate a cursor
-	private class CursorIterator extends Object implements Iterator {
+	private class CursorIterator extends Object implements Iterator<T> {
 
 		// Get a cursor iterator in a given cursor
 		private CursorIterator() {
@@ -191,7 +181,7 @@ public class Cursor extends ArrayList implements Serializable, Enumeration {
 		/**
 		 * Get the next object.
 		 */
-		public Object next() {
+		public T next() {
 			return(nextElement());
 		}
 

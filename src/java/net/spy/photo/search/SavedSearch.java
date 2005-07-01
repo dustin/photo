@@ -90,16 +90,16 @@ public class SavedSearch extends Object {
 		return(URLEncoder.encode(search, CHARSET));
 	}
 
-	private static Map initSearchesMap() throws PhotoException {
-		Map rv=null;
+	private static Map<Integer, SavedSearch> initSearchesMap() throws PhotoException {
+		Map<Integer, SavedSearch> rv=null;
 		try {
 			GetSearches db=new GetSearches(PhotoConfig.getInstance());
 			ResultSet rs=db.executeQuery();
 
-			rv=new HashMap();
+			rv=new HashMap<Integer, SavedSearch>();
 			while(rs.next()) {
 				SavedSearch ss=new SavedSearch(rs);
-				rv.put(new Integer(ss.id), ss);
+				rv.put(ss.id, ss);
 			}
 			rs.close();
 			db.close();
@@ -110,7 +110,8 @@ public class SavedSearch extends Object {
 		return(rv);
 	}
 
-	private static Map getSearchesMap() throws PhotoException {
+	@SuppressWarnings("unchecked")
+	private static Map<Integer, SavedSearch> getSearchesMap() throws PhotoException {
 		SpyCache sc=SpyCache.getInstance();
 		Map rv=(Map)sc.get(CACHE_KEY);
 		if(rv == null) {
@@ -123,9 +124,9 @@ public class SavedSearch extends Object {
 	/**
 	 * Get the current set of saved searches (cached 15 minutes).
 	 */
-	public static Collection getSearches() throws PhotoException {
-		TreeMap tm=new TreeMap();
-		Map m=getSearchesMap();
+	public static Collection<SavedSearch> getSearches() throws PhotoException {
+		TreeMap<String, SavedSearch> tm=new TreeMap<String, SavedSearch>();
+		Map<Integer, SavedSearch> m=getSearchesMap();
 		for(Iterator i=m.values().iterator();i.hasNext();) {
 			SavedSearch ss=(SavedSearch)i.next();
 			tm.put(ss.name, ss);
@@ -137,8 +138,8 @@ public class SavedSearch extends Object {
 	 * Get a search by ID.
 	 */
 	public static SavedSearch getSearch(int id) throws PhotoException {
-		Map m=getSearchesMap();
-		SavedSearch ss=(SavedSearch)m.get(new Integer(id));
+		Map<Integer, SavedSearch> m=getSearchesMap();
+		SavedSearch ss=m.get(id);
 		if(ss == null) {
 			throw new PhotoException("No such saved search:  " + id);
 		}

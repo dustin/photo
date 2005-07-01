@@ -7,8 +7,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.Iterator;
-import java.util.Stack;
+import java.util.LinkedList;
 import java.util.zip.GZIPInputStream;
+
+import net.spy.photo.PhotoException;
+import net.spy.util.Base64;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -17,16 +20,13 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import net.spy.photo.PhotoException;
-import net.spy.util.Base64;
-
 /**
  * Restore image backups.
  */
 public class ParseBackup extends DefaultHandler {
 
 	private String prefix="";
-	private Stack nodes=null;
+	private LinkedList<String> nodes=null;
 	private int tagnumber=0;
 
 	private Restorable handler=null;
@@ -37,7 +37,7 @@ public class ParseBackup extends DefaultHandler {
 	public ParseBackup() {
 		super();
 
-		nodes=new Stack();
+		nodes=new LinkedList<String>();
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class ParseBackup extends DefaultHandler {
 		String qName, Attributes atts) {
 
 		tagnumber++;
-		nodes.addElement(name);
+		nodes.add(name);
 		prefix="";
 		for(Iterator i=nodes.iterator(); i.hasNext();) {
 			String n=(String)i.next();
@@ -99,7 +99,7 @@ public class ParseBackup extends DefaultHandler {
 	public void endElement(String uri, String name, String qName) {
 		System.out.println("Ending " + name);
 		// Get that node out of the list.
-		nodes.pop();
+		nodes.removeLast();
 	}
 
 	/**

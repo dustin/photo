@@ -46,8 +46,8 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public PhotoSessionData() {
 		super();
-		cursors=Collections.synchronizedMap(new HashMap());
-		imagesSeenBuf=new RingBuffer(128);
+		cursors=Collections.synchronizedMap(new HashMap<String, Cursor>());
+		imagesSeenBuf=new RingBuffer<Integer>(128);
 	}
 
 	/**

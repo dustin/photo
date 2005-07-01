@@ -49,6 +49,7 @@ public class PhotoProperties extends Properties implements Savable {
 		return(new PhotoProperties());
 	}
 
+	@SuppressWarnings("unchecked")
 	private void init() throws SQLException {
 		SpyCache sc=SpyCache.getInstance();
 
@@ -63,8 +64,8 @@ public class PhotoProperties extends Properties implements Savable {
 		putAll(m);
 	}
 
-	private Map initFromDB() throws SQLException {
-		HashMap hm=new HashMap();
+	private Map<String, String> initFromDB() throws SQLException {
+		Map<String, String> hm=new HashMap<String, String>();
 		GetProperties gp=new GetProperties(PhotoConfig.getInstance());
 
 		ResultSet rs=gp.executeQuery();
@@ -115,8 +116,8 @@ public class PhotoProperties extends Properties implements Savable {
 
 		for(Map.Entry me : entrySet()) {
 
-			ip.setName(me.getKey());
-			ip.setValue(me.getValue());
+			ip.setName((String)me.getKey());
+			ip.setValue((String)me.getValue());
 
 			int affected=ip.executeUpdate();
 			if(affected!=1) {

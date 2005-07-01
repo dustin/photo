@@ -28,8 +28,8 @@ import net.spy.photo.PhotoImage;
  */
 public class ChainedImageCache extends SpyObject implements ImageCache {
 
-	private List getList=null;
-	private List putList=null;
+	private List<ImageCache> getList=null;
+	private List<ImageCache> putList=null;
 
 	/**
 	 * Get an instance of ChainedImageCache.
@@ -38,36 +38,36 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 		super();
 
 		// Find all of the unique names and load the objects
-		Map m=new HashMap();
-		List getListNames=parseList("chaincache.get");
+		Map<String, ImageCache> m=new HashMap<String, ImageCache>();
+		List<String> getListNames=parseList("chaincache.get");
 		loadMap(m, getListNames);
-		List putListNames=parseList("chaincache.put");
+		List<String> putListNames=parseList("chaincache.put");
 		loadMap(m, putListNames);
 
 		// Load the getList
 		if(getListNames != null) {
-			getList=new ArrayList();
+			getList=new ArrayList<ImageCache>();
 			for(Iterator i=getListNames.iterator(); i.hasNext();) {
 				getList.add(m.get(i.next()));
 			}
 		}
 		// Load the putList
 		if(putListNames != null) {
-			putList=new ArrayList();
+			putList=new ArrayList<ImageCache>();
 			for(Iterator i=putListNames.iterator(); i.hasNext();) {
 				putList.add(m.get(i.next()));
 			}
 		}
 	}
 
-	private void loadMap(Map m, List l) {
+	@SuppressWarnings("unchecked")
+	private void loadMap(Map<String, ImageCache> m, List<String> l) {
 		if(l != null) {
 			try {
-				for(Iterator i=l.iterator(); i.hasNext();) {
-					String nm=(String)i.next();
+				for(String nm : l) {
 					if(!m.containsKey(nm)) {
-						Class c=Class.forName(nm);
-						Object o=c.newInstance();
+						Class<ImageCache> c=(Class<ImageCache>)Class.forName(nm);
+						ImageCache o=c.newInstance();
 						m.put(nm, o);
 					}
 				}
@@ -78,8 +78,8 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 		}
 	}
 
-	private List parseList(String key) {
-		List rv=null;
+	private List<String> parseList(String key) {
+		List<String> rv=null;
 
 		PhotoConfig conf=PhotoConfig.getInstance();
 
@@ -87,7 +87,7 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 		if(tmp != null) {
 			StringTokenizer st=new StringTokenizer(tmp);
 			if(st.countTokens() > 0) {
-				rv=new ArrayList();
+				rv=new ArrayList<String>();
 				while(st.hasMoreTokens()) {
 					String nt=st.nextToken();
 					if(ChainedImageCache.class.getName().equals(nt)) {

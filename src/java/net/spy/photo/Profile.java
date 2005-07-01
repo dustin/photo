@@ -44,7 +44,7 @@ public class Profile extends AbstractSavable implements Serializable {
 	 */
 	public Profile() {
 		super();
-		acl=new HashSet();
+		acl=new HashSet<Integer>();
 		name=PwGen.getPass(16);
 		// Expires in thirty days.
 		expires=new Date(System.currentTimeMillis() + (86400L*30L*1000L));
@@ -84,7 +84,7 @@ public class Profile extends AbstractSavable implements Serializable {
 
 	// Get the ACL entries out of the DB.
 	private void initACLs() throws Exception {
-		acl=new HashSet();
+		acl=new HashSet<Integer>();
 		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select cat_id from user_profile_acls where profile_id=?");

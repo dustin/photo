@@ -14,7 +14,7 @@ import net.spy.photo.PhotoException;
 public abstract class Restorable extends Object implements Serializable {
 
 	private String base=null;
-	private HashMap parts=null;
+	private HashMap<String, StringBuffer> parts=null;
 
 	/**
 	 * Get a restorable with the given base.
@@ -22,7 +22,7 @@ public abstract class Restorable extends Object implements Serializable {
 	public Restorable(String b) {
 		super();
 		this.base=b;
-		this.parts=new HashMap();
+		this.parts=new HashMap<String, StringBuffer>();
 		// This adds a base handler
 		parts.put(b, new StringBuffer());
 	}
@@ -41,7 +41,7 @@ public abstract class Restorable extends Object implements Serializable {
 	 * Get the handler for a given path.
 	 */
 	protected StringBuffer getHandler(String path) throws PhotoException {
-		StringBuffer sb=(StringBuffer)parts.get(path);
+		StringBuffer sb=parts.get(path);
 		if(sb==null) {
 			throw new PhotoException("No handler for " + path);
 		}

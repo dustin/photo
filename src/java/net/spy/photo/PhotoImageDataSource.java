@@ -10,6 +10,6 @@ import java.util.Collection;
  */
 public interface PhotoImageDataSource {
 
-	Collection getImages();
+	Collection<PhotoImageData> getImages();
 
 }

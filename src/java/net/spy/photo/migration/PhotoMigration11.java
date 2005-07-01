@@ -29,7 +29,7 @@ public class PhotoMigration11 extends PhotoMigration {
 	private void updateKeywords() throws Exception {
 		// Get the IDs
 		GetAllImgIdsAndKws db=new GetAllImgIdsAndKws(PhotoConfig.getInstance());
-		ArrayList imgs=new ArrayList();
+		ArrayList<IdKw> imgs=new ArrayList<IdKw>();
 		ResultSet rs=db.executeQuery();
 		while(rs.next()) {
 			imgs.add(new IdKw(rs.getInt("id"), rs.getString("keywords")));

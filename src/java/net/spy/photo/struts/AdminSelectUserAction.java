@@ -71,8 +71,8 @@ public class AdminSelectUserAction extends PhotoAction {
 			auf.setCanadd(user.canAdd());
 
 			// Populate the ACL stuff
-			ArrayList viewable=new ArrayList();
-			ArrayList addable=new ArrayList();
+			ArrayList<String> viewable=new ArrayList<String>();
+			ArrayList<String> addable=new ArrayList<String>();
 			for(Iterator i=user.getACL().iterator(); i.hasNext();) {
 				PhotoACLEntry acl=(PhotoACLEntry)i.next();
 
@@ -86,8 +86,8 @@ public class AdminSelectUserAction extends PhotoAction {
 			}
 
 			// Store them
-			auf.setCatAclAdd((String[])addable.toArray(new String[0]));
-			auf.setCatAclView((String[])viewable.toArray(new String[0]));
+			auf.setCatAclAdd(addable.toArray(new String[0]));
+			auf.setCatAclView(viewable.toArray(new String[0]));
 
 			// Look up the group thingy.
 			SpyDB db=new SpyDB(PhotoConfig.getInstance());

@@ -18,28 +18,28 @@ import net.spy.photo.PhotoImage;
  */
 public class SoftImageCache extends SpyObject implements ImageCache {
 
-	private Map store=null;
+	private Map<String, Reference<PhotoImage>> store=null;
 
 	/**
 	 * Get an instance of SoftImageCache.
 	 */
 	public SoftImageCache() {
 		super();
-		store=new HashMap();
+		store=new HashMap<String, Reference<PhotoImage>>();
 	}
 
 	public PhotoImage getImage(String key) throws PhotoException {
 		PhotoImage rv=null;
-		Reference r=(Reference)store.get(key);
+		Reference<PhotoImage> r=store.get(key);
 		if(r != null) {
-			rv=(PhotoImage)r.get();
+			rv=r.get();
 		}
 		return(rv);
 	}
 
 	public void putImage(String key, PhotoImage image) throws PhotoException {
 		getLogger().info("Caching " + key);
-		store.put(key, new SoftReference(image));
+		store.put(key, new SoftReference<PhotoImage>(image));
 	}
 
 }

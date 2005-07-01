@@ -15,6 +15,7 @@ import net.spy.photo.Format;
 import net.spy.photo.Keyword;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataSource;
 import net.spy.photo.UserFactory;
 import net.spy.photo.sp.GetAlbumKeywords;
@@ -35,27 +36,27 @@ public class DBImageDataSource extends SpyObject
 		super();
 	}
 
-	/** 
+	/**
 	 * Get the images.
 	 */
-	public Collection getImages() {
-		Collection rv=null;
+	public Collection<PhotoImageData> getImages() {
+		Collection<PhotoImageData> rv = null;
 		try {
-			rv=getFromDB();
+			rv = getFromDB();
 		} catch(Exception e) {
 			throw new RuntimeException("Can't load images from DB", e);
 		}
-		return(rv);
+		return (rv);
 	}
 
-	private Collection getFromDB() throws Exception {
-		HashMap<Integer, ImgData> rv=new HashMap();
+	private Collection<PhotoImageData> getFromDB() throws Exception {
+		HashMap<Integer, PhotoImageData> rv = new HashMap<Integer, PhotoImageData>();
 
 		// Load the images
-		GetPhotoInfo db=new GetPhotoInfo(PhotoConfig.getInstance());
-		ResultSet rs=db.executeQuery();
+		GetPhotoInfo db = new GetPhotoInfo(PhotoConfig.getInstance());
+		ResultSet rs = db.executeQuery();
 		while(rs.next()) {
-			ImgData pidi=new ImgData(rs);
+			ImgData pidi = new ImgData(rs);
 			rv.put(pidi.getId(), pidi);
 		}
 		rs.close();
@@ -65,25 +66,25 @@ public class DBImageDataSource extends SpyObject
 		loadAnnotations(rv);
 
 		// Add all of the image annotation keywords to the image keywords
-		for(ImgData imgd : rv.values()) {
+		for(PhotoImageData imgd : rv.values()) {
 			for(AnnotatedRegion ar : imgd.getAnnotations()) {
 				for(Keyword kw : ar.getKeywords()) {
-					imgd.addKeyword(kw);
+					((ImgData)imgd).addKeyword(kw);
 				}
 			}
 		}
 
-		return(rv.values());
+		return (rv.values());
 	}
 
 	private void loadKeywords(Map imgs) throws Exception {
 		// Load the keywords for the images
-		GetAlbumKeywords gkdb=new GetAlbumKeywords(PhotoConfig.getInstance());
-		ResultSet rs=gkdb.executeQuery();
+		GetAlbumKeywords gkdb = new GetAlbumKeywords(PhotoConfig.getInstance());
+		ResultSet rs = gkdb.executeQuery();
 		while(rs.next()) {
-			int photoid=rs.getInt("album_id");
-			int keywordid=rs.getInt("word_id");
-			ImgData pidi=(ImgData)imgs.get(photoid);
+			int photoid = rs.getInt("album_id");
+			int keywordid = rs.getInt("word_id");
+			ImgData pidi = (ImgData)imgs.get(photoid);
 			if(pidi == null) {
 				throw new Exception("Invalid keymap entry to " + photoid);
 			}
@@ -94,18 +95,19 @@ public class DBImageDataSource extends SpyObject
 	}
 
 	private void loadAnnotations(Map imgs) throws Exception {
-		Map<Integer, AnnotationData> annotations=new HashMap();
+		Map<Integer, AnnotationData> annotations =
+				new HashMap<Integer, AnnotationData>();
 
-		GetAllRegions gar=new GetAllRegions(PhotoConfig.getInstance());
-		ResultSet rs=gar.executeQuery();
+		GetAllRegions gar = new GetAllRegions(PhotoConfig.getInstance());
+		ResultSet rs = gar.executeQuery();
 		while(rs.next()) {
-			int annotationId=rs.getInt("region_id");
-			int photoid=rs.getInt("album_id");
-			ImgData pidi=(ImgData)imgs.get(photoid);
+			int annotationId = rs.getInt("region_id");
+			int photoid = rs.getInt("album_id");
+			ImgData pidi = (ImgData)imgs.get(photoid);
 			if(pidi == null) {
 				throw new Exception("Invalid region map entry to " + photoid);
 			}
-			AnnotationData ad=new AnnotationData(rs);
+			AnnotationData ad = new AnnotationData(rs);
 			pidi.addAnnotation(ad);
 			annotations.put(annotationId, ad);
 		}
@@ -113,23 +115,21 @@ public class DBImageDataSource extends SpyObject
 		gar.close();
 
 		// We now need to load all of the keywords for all of the annotations
-		GetAllRegionKeywords gark=
-			new GetAllRegionKeywords(PhotoConfig.getInstance());
-		rs=gark.executeQuery();
+		GetAllRegionKeywords gark = new GetAllRegionKeywords(PhotoConfig
+			.getInstance());
+		rs = gark.executeQuery();
 		while(rs.next()) {
-			int aid=rs.getInt("region_id");
-			int kid=rs.getInt("word_id");
+			int aid = rs.getInt("region_id");
+			int kid = rs.getInt("word_id");
 
-			AnnotationData ad=annotations.get(aid);
+			AnnotationData ad = annotations.get(aid);
 			if(ad == null) {
-				throw new Exception("Invalid annotation/keymap entry to "
-					+ aid);
+				throw new Exception("Invalid annotation/keymap entry to " + aid);
 			}
 			ad.addKeyword(Keyword.getKeyword(kid));
 		}
 		gark.close();
 	}
-
 
 	private static final class ImgData extends PhotoImageDataImpl {
 		public ImgData(ResultSet rs) throws Exception {
@@ -137,13 +137,13 @@ public class DBImageDataSource extends SpyObject
 			setId(rs.getInt("id"));
 			setCatId(rs.getInt("catid"));
 			setSize(rs.getInt("size"));
-			int w=rs.getInt("width");
+			int w = rs.getInt("width");
 			if(rs.wasNull()) {
-				w=-1;
+				w = -1;
 			}
-			int h=rs.getInt("height");
+			int h = rs.getInt("height");
 			if(rs.wasNull()) {
-				h=-1;
+				h = -1;
 			}
 			setDescr(rs.getString("descr"));
 			setCatName(rs.getString("catname"));
@@ -156,7 +156,7 @@ public class DBImageDataSource extends SpyObject
 			// Look up the user
 			setAddedBy(Persistent.getSecurity().getUser(rs.getInt("addedby")));
 
-			if(w>=0 && h>=0) {
+			if(w >= 0 && h >= 0) {
 				setDimensions(new PhotoDimensionsImpl(w, h));
 			}
 
@@ -172,7 +172,7 @@ public class DBImageDataSource extends SpyObject
 		}
 
 		protected Object writeReplace() throws ObjectStreamException {
-			return(new PhotoImageDataImpl.SerializedForm(getId()));
+			return (new PhotoImageDataImpl.SerializedForm(getId()));
 		}
 	}
 
@@ -187,7 +187,7 @@ public class DBImageDataSource extends SpyObject
 			setWidth(rs.getInt("width"));
 			setHeight(rs.getInt("height"));
 			setTitle(rs.getString("title"));
-			UserFactory uf=UserFactory.getInstance();
+			UserFactory uf = UserFactory.getInstance();
 			setUser(uf.getUser(rs.getInt("user_id")));
 			setTimestamp(rs.getTimestamp("ts"));
 		}

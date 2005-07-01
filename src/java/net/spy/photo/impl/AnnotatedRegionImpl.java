@@ -33,7 +33,7 @@ public abstract class AnnotatedRegionImpl extends SpyObject
 	 */
 	public AnnotatedRegionImpl() {
 		super();
-		keywords=new TreeSet();
+		keywords=new TreeSet<Keyword>();
 	}
 
 	/** 

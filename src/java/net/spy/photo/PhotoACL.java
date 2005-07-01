@@ -24,7 +24,7 @@ public class PhotoACL extends SpyObject implements Serializable {
 	 */
 	public PhotoACL() {
 		super();
-		acl=new ArrayList();
+		acl=new ArrayList<PhotoACLEntry>();
 	}
 
 	/** 

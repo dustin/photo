@@ -48,7 +48,7 @@ public class PhotoBackup extends Object {
 		baseDirFile.mkdirs();
 
 		// Next, grab all the IDs we need
-		ArrayList ids=new ArrayList();
+		ArrayList<Integer> ids=new ArrayList<Integer>();
 
 		PreparedStatement pst=null;
 		if(cat==null) {
@@ -62,7 +62,7 @@ public class PhotoBackup extends Object {
 
 		ResultSet rs=pst.executeQuery();
 		while(rs.next()) {
-			ids.add(new Integer(rs.getInt("id")));
+			ids.add(rs.getInt("id"));
 		}
 
 		// Statistics.

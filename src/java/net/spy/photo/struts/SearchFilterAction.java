@@ -27,7 +27,7 @@ import net.spy.photo.search.SearchResults;
  */
 public class SearchFilterAction extends PhotoAction {
 
-	private Map filters=null;
+	private Map<String, Filter> filters=null;
 
 	/**
 	 * Get an instance of SearchFilterAction.
@@ -38,7 +38,7 @@ public class SearchFilterAction extends PhotoAction {
 	}
 
 	private void initFilters() {
-		filters=new HashMap();
+		filters=new HashMap<String, Filter>();
 		filters.put("onceamonth", new OnceAMonthFilter());
 		filters.put("onceaweek", new OnceAWeekFilter());
 		filters.put("onceaday", new OnceADayFilter());
@@ -71,7 +71,7 @@ public class SearchFilterAction extends PhotoAction {
 			}
 
 			// Get the filter
-			Filter filter=(Filter)filters.get(filterName);
+			Filter filter=filters.get(filterName);
 			if(filter == null) {
 				throw new ServletException("Unknown filter:  " + filterName);
 			}

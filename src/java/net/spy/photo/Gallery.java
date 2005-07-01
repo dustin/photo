@@ -43,7 +43,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 		super();
 		this.name=nm;
 		this.owner=o;
-		this.images=new ArrayList();
+		this.images=new ArrayList<PhotoImageData>();
 
 		setNew(true);
 		setModified(false);
@@ -78,17 +78,17 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Get a list of all galleries visible by the user.
 	 */
-	public static Cursor getGalleries(User user)
+	public static Cursor<Gallery> getGalleries(User user)
 		throws PhotoException {
 
-		Cursor rv=null;
+		Cursor<Gallery> rv=null;
 
 		try {
 			GetGalleriesForUser db=
 				new GetGalleriesForUser(PhotoConfig.getInstance());
 			db.setUserId(user.getId());
 			ResultSet rs=db.executeQuery();
-			rv=new Cursor();
+			rv=new Cursor<Gallery>();
 			while(rs.next()) {
 				Gallery g=new Gallery(rs);
 				g.loadMap(user);
@@ -111,7 +111,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 
 		ResultSet rs=lg.executeQuery();
 
-		images=new ArrayList();
+		images=new ArrayList<PhotoImageData>();
 		while(rs.next()) {
 			addImage(rs.getInt("album_id"));
 		}
@@ -286,7 +286,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	 * Get a Collection of PhotoImageData objects describing the contents
 	 * of this gallery.
 	 */
-	public Collection getImages() {
+	public Collection<PhotoImageData> getImages() {
 		return(Collections.unmodifiableCollection(images));
 	}
 

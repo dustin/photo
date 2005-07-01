@@ -58,8 +58,8 @@ public class AdminSelectCatAction extends PhotoAction {
 			acf.setName(cat.getName());
 
 			// Populate the ACL stuff
-			ArrayList viewable=new ArrayList();
-			ArrayList addable=new ArrayList();
+			ArrayList<String> viewable=new ArrayList<String>();
+			ArrayList<String> addable=new ArrayList<String>();
 			for(Iterator i=cat.getACL().iterator(); i.hasNext();) {
 				PhotoACLEntry acl=(PhotoACLEntry)i.next();
 
@@ -73,8 +73,8 @@ public class AdminSelectCatAction extends PhotoAction {
 			}
 
 			// Store them
-			acf.setCatAclAdd((String[])addable.toArray(new String[0]));
-			acf.setCatAclView((String[])viewable.toArray(new String[0]));
+			acf.setCatAclAdd(addable.toArray(new String[0]));
+			acf.setCatAclView(viewable.toArray(new String[0]));
 		}
 
 		return(mapping.findForward("next"));

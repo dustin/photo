@@ -35,10 +35,10 @@ public class PhotoMigration10 extends PhotoMigration {
 	private void updateFormats() throws Exception {
 		// Get the IDs
 		GetAllImgIds db=new GetAllImgIds(PhotoConfig.getInstance());
-		ArrayList ids=new ArrayList();
+		ArrayList<Integer> ids=new ArrayList<Integer>();
 		ResultSet rs=db.executeQuery();
 		while(rs.next()) {
-			ids.add(new Integer(rs.getInt("id")));
+			ids.add(rs.getInt("id"));
 		}
 		rs.close();
 		db.close();

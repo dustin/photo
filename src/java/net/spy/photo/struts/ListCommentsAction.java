@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionMapping;
 
 import net.spy.photo.Comment;
 import net.spy.photo.Cursor;
+import net.spy.photo.GroupedComments;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
 
@@ -39,7 +40,7 @@ public class ListCommentsAction extends PhotoAction {
 
 		PhotoSessionData sessionData=getSessionData(request);
 		User user=sessionData.getUser();
-		Cursor comments=new Cursor(Comment.getAllComments(user));
+		Cursor comments=new Cursor<GroupedComments>(Comment.getAllComments(user));
 		sessionData.setComments(comments);
 
 		return(mapping.findForward("next"));

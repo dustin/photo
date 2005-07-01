@@ -83,8 +83,8 @@ public class SavablePhotoImageData extends AbstractSavable
 		this.format=data.getFormat();
 		this.timestamp=new Date();
 
-		keywords=new TreeSet();
-		annotations=new HashSet();
+		keywords=new TreeSet<Keyword>();
+		annotations=new HashSet<AnnotatedRegion>();
 
 		id=getNewImageId();
 		setNew(true);
@@ -325,7 +325,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		modify();
 	}
 
-	public void setKeywords(Collection to) {
+	public void setKeywords(Collection<Keyword> to) {
 		this.keywords=to;
 		modify();
 	}

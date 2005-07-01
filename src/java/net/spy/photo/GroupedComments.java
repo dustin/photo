@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Represents a group of comments for an individual image.
  */
-public class GroupedComments extends ArrayList implements Serializable {
+public class GroupedComments extends ArrayList<Comment> implements Serializable {
 
 	private int imageId=-1;
 	private boolean hasMore=false;

@@ -23,22 +23,26 @@ import net.spy.photo.PhotoImageData;
  */
 public class SearchIndex extends SpyObject {
 
-	/** 
+	/**
 	 * Operator for ``and'' joins.
 	 */
-	public static final int OP_AND=1;
-	/** 
+	public static final int OP_AND = 1;
+
+	/**
 	 * Operator for ``or'' joins.
 	 */
-	public static final int OP_OR=2;
+	public static final int OP_OR = 2;
 
-	private static SearchIndex instance=null;
+	private static SearchIndex instance = null;
 
 	// Indexes
-	private Map byKeyword=null;
-	private Map byCategory=null;
-	private SortedMap byTaken=null;
-	private SortedMap byTs=null;
+	private Map<Keyword, Set<PhotoImageData>> byKeyword = null;
+
+	private Map<Integer, Set<PhotoImageData>> byCategory = null;
+
+	private SortedMap<Date, Set<PhotoImageData>> byTaken = null;
+
+	private SortedMap<Date, Set<PhotoImageData>> byTs = null;
 
 	/**
 	 * Get an instance of SearchIndex.
@@ -47,48 +51,49 @@ public class SearchIndex extends SpyObject {
 		super();
 	}
 
-	/** 
+	/**
 	 * Get the SearchIndex instance.
 	 */
 	public static synchronized SearchIndex getInstance() {
 		if(instance == null) {
 			instance = new SearchIndex();
 		}
-		return(instance);
+		return (instance);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addOne(Map m, Object k, PhotoImageData pid) {
-		Set s=(Set)m.get(k);
+		Set s = (Set) m.get(k);
 		if(s == null) {
-			s=new HashSet();
+			s = new HashSet<PhotoImageData>();
 			m.put(k, s);
 		}
 		s.add(pid);
 	}
 
 	private void add(Map m, Collection c, PhotoImageData pid) {
-		for(Iterator i=c.iterator(); i.hasNext();) {
+		for(Iterator i = c.iterator(); i.hasNext();) {
 			addOne(m, i.next(), pid);
 		}
 	}
+
 	private void add(Map m, int i, PhotoImageData pid) {
 		addOne(m, new Integer(i), pid);
 	}
+
 	private void add(Map m, Date d, PhotoImageData pid) {
 		addOne(m, d, pid);
 	}
 
-	/** 
+	/**
 	 * Update the indexes with a collection of PhotoImageData instances.
 	 */
-	public synchronized void update(Collection vals) {
-		byKeyword=new HashMap();
-		byCategory=new HashMap();
-		byTaken=new TreeMap();
-		byTs=new TreeMap();
-		for(Iterator i=vals.iterator(); i.hasNext(); ) {
-			PhotoImageData pid=(PhotoImageData)i.next();
-
+	public synchronized void update(Collection<PhotoImageData> vals) {
+		byKeyword = new HashMap<Keyword, Set<PhotoImageData>>();
+		byCategory = new HashMap<Integer, Set<PhotoImageData>>();
+		byTaken = new TreeMap<Date, Set<PhotoImageData>>();
+		byTs = new TreeMap<Date, Set<PhotoImageData>>();
+		for(PhotoImageData pid : vals) {
 			add(byKeyword, pid.getKeywords(), pid);
 			add(byCategory, pid.getCatId(), pid);
 			add(byTaken, pid.getTaken(), pid);
@@ -96,37 +101,37 @@ public class SearchIndex extends SpyObject {
 		}
 		getLogger().info("Updated indices");
 		/*
-		getLogger().info("byKeyword:  " + byKeyword);
-		getLogger().info("byCategory:  " + byCategory);
-		getLogger().info("byTaken:  " + byTaken);
-		getLogger().info("byTs:  " + byTs);
-		*/
+		 * getLogger().info("byKeyword: " + byKeyword);
+		 * getLogger().info("byCategory: " + byCategory);
+		 * getLogger().info("byTaken: " + byTaken); getLogger().info("byTs: " +
+		 * byTs);
+		 */
 	}
 
-	/** 
+	/**
 	 * Get the set of images for the given category ID.
 	 */
-	public synchronized Set getForCat(int i) {
-		Set rv=(Set)byCategory.get(new Integer(i));
-		return(rv);
+	public synchronized Set<PhotoImageData> getForCat(int i) {
+		return (byCategory.get(i));
 	}
 
-	/** 
+	/**
 	 * Get the set of images for the given collection of categories.
 	 * 
-	 * @param cats a Collection of Integer objects.
-	 * @param operator the operator
+	 * @param cats
+	 *            a Collection of Integer objects.
+	 * @param operator
+	 *            the operator
 	 */
-	public synchronized Set getForCats(Collection cats) {
-		return(getCombined(byCategory, cats, OP_OR));
+	public synchronized Set<PhotoImageData> getForCats(Collection<Integer> cats) {
+		return (getCombined(byCategory, cats, OP_OR));
 	}
 
-	/** 
+	/**
 	 * Get the set of images for the given keyword.
 	 */
-	public synchronized Set getForKeyword(Keyword k) {
-		Set rv=(Set)byKeyword.get(k);
-		return(rv);
+	public synchronized Set<PhotoImageData> getForKeyword(Keyword k) {
+		return (byKeyword.get(k));
 	}
 
 	private void checkOp(int operator) {
@@ -135,27 +140,30 @@ public class SearchIndex extends SpyObject {
 		} else if(operator == OP_OR) {
 			// OK
 		} else {
-			throw new IllegalArgumentException("Invalid operator:  "+operator);
+			throw new IllegalArgumentException("Invalid operator:  " + operator);
 		}
 	}
 
-	private Set getCombined(Map m, Collection c, int operator) {
+	@SuppressWarnings("unchecked")
+	private Set<PhotoImageData> getCombined(
+		Map<? extends Object, Set<PhotoImageData>> m,
+		Collection<? extends Object> c, int operator) {
 		// Validate the operator
 		checkOp(operator);
 
-		Set rv=new HashSet();
+		Set<PhotoImageData> rv = new HashSet<PhotoImageData>();
 		if(c.size() > 0) {
 			// Get and add the first one
-			Iterator i=c.iterator();
-			Set s=(Set)m.get(i.next());
+			Iterator i = c.iterator();
+			Set<PhotoImageData> s = m.get(i.next());
 			if(s != null) {
 				rv.addAll(s);
 			}
 			// Now, deal with the rest of them
-			for(; i.hasNext(); ) {
-				Collection stmp=(Collection)m.get(i.next());
+			for(; i.hasNext();) {
+				Collection<PhotoImageData> stmp = m.get(i.next());
 				if(stmp == null) {
-					stmp=Collections.EMPTY_LIST;
+					stmp = Collections.EMPTY_LIST;
 				}
 				if(operator == OP_AND) {
 					rv.retainAll(stmp);
@@ -165,56 +173,64 @@ public class SearchIndex extends SpyObject {
 			}
 		}
 
-		return(rv);
+		return (rv);
 	}
 
-	/** 
+	/**
 	 * Get the set of images containing the given collection of keywords.
 	 * 
-	 * @param c the collection
-	 * @param operator the join operator AND or OR
+	 * @param c
+	 *            the collection
+	 * @param operator
+	 *            the join operator AND or OR
 	 * @return the set
 	 */
-	public synchronized Set getForKeywords(Collection c, int operator) {
-		return(getCombined(byKeyword, c, operator));
+	public synchronized Set<PhotoImageData> getForKeywords(
+		Collection<Keyword> c, int operator) {
+		return (getCombined(byKeyword, c, operator));
 	}
 
-	private Set getDateRangeSet(SortedMap sm, Date from, Date to) {
-		SortedMap tail=sm;
+	private Set<PhotoImageData> getDateRangeSet(
+		SortedMap<Date, Set<PhotoImageData>> sm, Date from, Date to) {
+		SortedMap<Date, Set<PhotoImageData>> tail = sm;
 		if(from != null) {
-			tail=tail.tailMap(from);
+			tail = tail.tailMap(from);
 		}
-		SortedMap rvm=tail;
+		SortedMap<Date, Set<PhotoImageData>> rvm = tail;
 		if(to != null) {
-			rvm=tail.headMap(to);
+			rvm = tail.headMap(to);
 		}
-		HashSet rv=new HashSet();
-		for(Iterator i=rvm.values().iterator(); i.hasNext(); ) {
-			rv.addAll((Collection)i.next());
+		HashSet<PhotoImageData> rv = new HashSet<PhotoImageData>();
+		for(Set<PhotoImageData> s : rvm.values()) {
+			rv.addAll(s);
 		}
-		return(rv);
+		return (rv);
 	}
 
-	/** 
+	/**
 	 * Get the set of images that were taken between given dates.
 	 * 
-	 * @param from starting date (or null if there is no starting date).
-	 * @param to ending date (or null if there is no ending date).
+	 * @param from
+	 *            starting date (or null if there is no starting date).
+	 * @param to
+	 *            ending date (or null if there is no ending date).
 	 * @return the Set of images.
 	 */
-	public synchronized Set getForTaken(Date from, Date to) {
-		return(getDateRangeSet(byTaken, from, to));
+	public synchronized Set<PhotoImageData> getForTaken(Date from, Date to) {
+		return (getDateRangeSet(byTaken, from, to));
 	}
 
-	/** 
+	/**
 	 * Get the set of images that were added between given dates.
 	 * 
-	 * @param from starting date (or null if there is no starting date).
-	 * @param to ending date (or null if there is no ending date).
+	 * @param from
+	 *            starting date (or null if there is no starting date).
+	 * @param to
+	 *            ending date (or null if there is no ending date).
 	 * @return the Set of images.
 	 */
-	public synchronized Set getForTimestamp(Date from, Date to) {
-		return(getDateRangeSet(byTs, from, to));
+	public synchronized Set<PhotoImageData> getForTimestamp(Date from, Date to) {
+		return (getDateRangeSet(byTs, from, to));
 	}
 
 }

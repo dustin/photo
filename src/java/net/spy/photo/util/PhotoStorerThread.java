@@ -46,7 +46,7 @@ public class PhotoStorerThread extends SpyThread {
 		getLogger().info("Storer: Got image for " + imageId + " " 
 			+ pi.size() + " bytes of data to store.");
 		// This is an awkward way of doing this.
-		ArrayList al=new ArrayList();
+		ArrayList<byte[]> al=new ArrayList<byte[]>();
 		byte data[]=pi.getData();
 
 		// i will be incremented inside the loop
@@ -160,7 +160,7 @@ public class PhotoStorerThread extends SpyThread {
 		getLogger().info("Flushing");
 		SpyDB db = new SpyDB(PhotoConfig.getInstance());
 		int rv=0;
-		ArrayList al = new ArrayList();
+		ArrayList<String> al = new ArrayList<String>();
 		try {
 			// See what's not been stored.
 			String query="select distinct s.id as sid, a.id as aid\n"

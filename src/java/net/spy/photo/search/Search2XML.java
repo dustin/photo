@@ -144,21 +144,21 @@ public class Search2XML extends SpyObject {
 		os.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".getBytes());
 		os.write("<photoexport>\n".getBytes());
 
-		Set keywords=new HashSet();
-		for(Iterator i=psr.iterator(); i.hasNext();) {
-			PhotoImageData result=(PhotoImageData)i.next();
+		Set<Keyword> keywords=new HashSet<Keyword>();
+		for(PhotoImageData result : psr) {
 			keywords.addAll(result.getKeywords());
 		}
+
 		kw2xml(keywords, os);
 
 		// yeah, this is lame, we do two passes through here to get all of the
 		// keywords and stuff
 		psr.set(0);
 		os.write("<album>\n".getBytes());
-		for(Iterator i=psr.iterator(); i.hasNext();) {
-			PhotoImageData result=(PhotoImageData)i.next();
+		for(PhotoImageData result : psr) {
 			stream(result, os);
 		}
+
 		os.write("</album>\n".getBytes());
 		os.write("</photoexport>\n".getBytes());
 	}

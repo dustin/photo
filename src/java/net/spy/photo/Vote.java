@@ -56,7 +56,7 @@ public class Vote extends SpyObject implements java.io.Serializable {
 		throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
-		ArrayList<Vote> al=new ArrayList();
+		ArrayList<Vote> al=new ArrayList<Vote>();
 		SpyDB db=new SpyDB(PhotoConfig.getInstance());
 		PreparedStatement pst=db.prepareStatement(
 			"select * from votes where photo_id=? order by ts desc");

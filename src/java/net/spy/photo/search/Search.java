@@ -34,12 +34,13 @@ import net.spy.util.Base64;
  */
 public class Search extends SpyObject {
 
-	private static final String CHARSET="UTF-8";
+	private static final String CHARSET = "UTF-8";
 
-	private static final int BY_TS=1;
-	private static final int BY_TAKEN=2;
+	private static final int BY_TS = 1;
 
-	private static Search instance=null;
+	private static final int BY_TAKEN = 2;
+
+	private static Search instance = null;
 
 	/**
 	 * Get a Search instance.
@@ -48,14 +49,14 @@ public class Search extends SpyObject {
 		super();
 	}
 
-	/** 
+	/**
 	 * Get an instance of search.
 	 */
 	public static synchronized Search getInstance() {
 		if(instance == null) {
-			instance=new Search();
+			instance = new Search();
 		}
-		return(instance);
+		return (instance);
 	}
 
 	/**
@@ -63,16 +64,16 @@ public class Search extends SpyObject {
 	 */
 	public void saveSearch(String name, String search, User user)
 		throws Exception {
-		if(user==null || name==null || search==null) {
+		if(user == null || name == null || search == null) {
 			throw new Exception("Weird, invalid stuff.");
 		}
 
-		if(!user.canAdd() ) {
+		if(!user.canAdd()) {
 			throw new Exception("No permission to save searches.");
 		}
 
 		try {
-			InsertSearch is=new InsertSearch(PhotoConfig.getInstance());
+			InsertSearch is = new InsertSearch(PhotoConfig.getInstance());
 			is.setName(name);
 			is.setAddedBy(user.getId());
 			is.setSearchData(search);
@@ -88,13 +89,13 @@ public class Search extends SpyObject {
 
 	// URLEncode using CHARSET
 	private String urlEncode(String msg) {
-		String rv=null;
+		String rv = null;
 		try {
-			rv=URLEncoder.encode(msg, CHARSET);
+			rv = URLEncoder.encode(msg, CHARSET);
 		} catch(java.io.UnsupportedEncodingException e) {
 			throw new RuntimeException(CHARSET + " is not supported.", e);
 		}
-		return(rv);
+		return (rv);
 	}
 
 	/**
@@ -177,8 +178,8 @@ public class Search extends SpyObject {
 		}
 
 		if(form.getCat() != null) {
-			String cats[]=form.getCat();
-			for(int i=0; i<cats.length; i++) {
+			String cats[] = form.getCat();
+			for(int i = 0; i < cats.length; i++) {
 				sb.append("cat");
 				sb.append('=');
 				sb.append(urlEncode(cats[i]));
@@ -186,39 +187,39 @@ public class Search extends SpyObject {
 			}
 		}
 
-		Base64 base64=new Base64();
-		String out=base64.encode(sb.toString().getBytes());
-		return(out);
+		Base64 base64 = new Base64();
+		String out = base64.encode(sb.toString().getBytes());
+		return (out);
 	}
 
-	public SearchResults performSearch(SearchForm form,
-		PhotoSessionData sessionData) throws Exception {
+	public SearchResults performSearch(
+		SearchForm form, PhotoSessionData sessionData) throws Exception {
 
 		// Get the search index
-		SearchIndex index=SearchIndex.getInstance();
+		SearchIndex index = SearchIndex.getInstance();
 
 		getLogger().debug("Performing search.");
 
 		// Figure out how the thing should be sorted.
-		Comparator comp=null;
+		Comparator<PhotoImageData> comp = null;
 		if("a.ts".equals(form.getOrder())) {
-			comp=new TimestampComparator();
+			comp = new TimestampComparator();
 		} else {
-			comp=new TakenComprator();
+			comp = new TakenComprator();
 		}
 		if("desc".equals(form.getSdirection())) {
-			comp=new ReverseComparator(comp);
+			comp = new ReverseComparator<PhotoImageData>(comp);
 		}
 
 		// This is the result set of images we want to display and maintain
 		// their sort order
-		Set rset=new TreeSet(comp);
+		Set<PhotoImageData> rset = new TreeSet<PhotoImageData>(comp);
 
 		// Handle any category first
-		String atmp[]=form.getCat();
+		String atmp[] = form.getCat();
 		if(atmp != null && atmp.length > 0) {
-			ArrayList al=new ArrayList(atmp.length);
-			for(int i=0; i<atmp.length; i++) {
+			ArrayList<Integer> al = new ArrayList<Integer>(atmp.length);
+			for(int i = 0; i < atmp.length; i++) {
 				al.add(new Integer(atmp[i]));
 			}
 			// Get rid of anything that's not valid for the current user
@@ -245,8 +246,7 @@ public class Search extends SpyObject {
 		} else {
 			String stmp = form.getWhat();
 			if(stmp != null && stmp.length() > 0) {
-				throw new ServletException("Invalid field:  "
-					+ form.getField());
+				throw new ServletException("Invalid field:  " + form.getField());
 			}
 		}
 		if(getLogger().isDebugEnabled()) {
@@ -254,35 +254,37 @@ public class Search extends SpyObject {
 		}
 
 		// Check for any of the date entries
-		processDates(rset, form.getStart(), form.getEnd(),
-			form.getTstart(), form.getTend());
+		processDates(
+			rset, form.getStart(), form.getEnd(), form.getTstart(), form
+				.getTend());
 		if(getLogger().isDebugEnabled()) {
 			getLogger().debug("After dates:  " + rset.size() + " images");
 		}
 
 		// Populate the results
-		SearchResults results=new SearchResults();
+		SearchResults results = new SearchResults();
 		results.setMaxSize(sessionData.getOptimalDimensions());
-		int resultId=0;
-		for(Iterator i=rset.iterator(); i.hasNext(); ) {
-			PhotoImageData r=(PhotoImageData)i.next();
+		int resultId = 0;
+		for(Iterator i = rset.iterator(); i.hasNext();) {
+			PhotoImageData r = (PhotoImageData)i.next();
 			results.add(new SearchResult(r, resultId));
-			resultId++; 
+			resultId++;
 		}
 
-		return(results);
+		return (results);
 	}
 
 	// In the case of dates, we do an explicit OR between the two date range
 	// sets, and then AND the results back to current response set
-	private void processDates(Set rset, String astart, String aend,
-		String tstart, String tend) throws Exception {
-		Collection aset=processRange(BY_TS, astart, aend);
-		Collection tset=processRange(BY_TAKEN, tstart, tend);
+	private void processDates(
+		Set<PhotoImageData> rset, String astart, String aend, String tstart,
+		String tend) throws Exception {
+		Collection<PhotoImageData> aset = processRange(BY_TS, astart, aend);
+		Collection<PhotoImageData> tset = processRange(BY_TAKEN, tstart, tend);
 
 		// Only process dates if one of them was not null
 		if(aset != null || tset != null) {
-			Set combined=new HashSet();
+			Set<PhotoImageData> combined = new HashSet<PhotoImageData>();
 			if(aset != null) {
 				getLogger().debug("Got set by added date:  " + aset.size());
 				combined.addAll(aset);
@@ -299,30 +301,30 @@ public class Search extends SpyObject {
 		}
 	}
 
-	private void processKeywords(Set rset, String kw, String keyjoin)
-		throws Exception {
+	private void processKeywords(
+		Set<PhotoImageData> rset, String kw, String keyjoin) throws Exception {
 
 		// Lookup the keywords
-		ArrayList keywords=new ArrayList();
+		ArrayList<Keyword> keywords = new ArrayList<Keyword>();
 		if(kw == null) {
-			kw="";
+			kw = "";
 		}
 		// Figure out the operation
-		int joinop=SearchIndex.OP_AND;
+		int joinop = SearchIndex.OP_AND;
 		if("or".equals(keyjoin)) {
-			joinop=SearchIndex.OP_OR;
+			joinop = SearchIndex.OP_OR;
 		}
 		// Flip through the keywords
-		boolean missingKw=false;
-		StringTokenizer st=new StringTokenizer(kw);
+		boolean missingKw = false;
+		StringTokenizer st = new StringTokenizer(kw);
 		while(st.hasMoreTokens()) {
-			String kwstring=st.nextToken();
-			Keyword k=Keyword.getKeyword(kwstring);
+			String kwstring = st.nextToken();
+			Keyword k = Keyword.getKeyword(kwstring);
 			if(k != null) {
 				keywords.add(k);
 			} else {
 				getLogger().debug("Unknown keyword:  " + kwstring);
-				missingKw=true;
+				missingKw = true;
 			}
 		}
 		if(joinop == SearchIndex.OP_AND && missingKw) {
@@ -336,36 +338,36 @@ public class Search extends SpyObject {
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Got images with keywords " + keywords);
 			}
-			SearchIndex index=SearchIndex.getInstance();
-			Set keyset=index.getForKeywords(keywords, joinop);
+			SearchIndex index = SearchIndex.getInstance();
+			Set keyset = index.getForKeywords(keywords, joinop);
 			rset.retainAll(keyset);
 		}
 	}
 
-	private void processInfo(Set rset, String kw, String keyjoin) {
+	private void processInfo(Set<PhotoImageData> rset, String kw, String keyjoin) {
 		// Find all of the words
-		ArrayList words=new ArrayList();
-		StringTokenizer st=new StringTokenizer(kw.toLowerCase());
+		ArrayList<String> words = new ArrayList<String>();
+		StringTokenizer st = new StringTokenizer(kw.toLowerCase());
 		while(st.hasMoreTokens()) {
 			words.add(st.nextToken());
 		}
 		// Figure out the operation
-		int joinop=SearchIndex.OP_AND;
+		int joinop = SearchIndex.OP_AND;
 		if("or".equals(keyjoin)) {
-			joinop=SearchIndex.OP_OR;
+			joinop = SearchIndex.OP_OR;
 		}
 
-		for(Iterator ri=rset.iterator(); ri.hasNext(); ) {
-			PhotoImageData pid=(PhotoImageData)ri.next();
-			String info=pid.getDescr().toLowerCase();
-			boolean matchedone=false;
-			boolean matchedall=true;
-			for(Iterator i=words.iterator(); i.hasNext(); ) {
-				String word=(String)i.next();
+		for(Iterator ri = rset.iterator(); ri.hasNext();) {
+			PhotoImageData pid = (PhotoImageData)ri.next();
+			String info = pid.getDescr().toLowerCase();
+			boolean matchedone = false;
+			boolean matchedall = true;
+			for(Iterator i = words.iterator(); i.hasNext();) {
+				String word = (String)i.next();
 				if(info.indexOf(word) >= 0) {
-					matchedone=true;
+					matchedone = true;
 				} else {
-					matchedall=false;
+					matchedall = false;
 				}
 			}
 			if(matchedone) {
@@ -380,63 +382,61 @@ public class Search extends SpyObject {
 		}
 	}
 
-	private Collection processRange(int which, String start, String end)
-		throws Exception {
+	private Collection<PhotoImageData> processRange(
+		int which, String start, String end) throws Exception {
 
-		SearchIndex index=SearchIndex.getInstance();
-		Date s=PhotoUtil.parseDate(start);
-		Date e=PhotoUtil.parseDate(end);
+		SearchIndex index = SearchIndex.getInstance();
+		Date s = PhotoUtil.parseDate(start);
+		Date e = PhotoUtil.parseDate(end);
 
-		Collection matches=null;
+		Collection<PhotoImageData> matches = null;
 
 		if(s != null || e != null) {
 			switch(which) {
 				case BY_TS:
-					matches=index.getForTimestamp(s, e);
+					matches = index.getForTimestamp(s, e);
 					break;
 				case BY_TAKEN:
-					matches=index.getForTaken(s, e);
+					matches = index.getForTaken(s, e);
 					break;
 				default:
 					throw new IllegalArgumentException("Invalid which:  "
 						+ which);
 			}
 		}
-		return(matches);
+		return (matches);
 	}
 
-	private Collection getValidCats(User u) throws Exception {
+	private Collection<Integer> getValidCats(User u) throws Exception {
 		// Flip through all of the categories and get them as Integers
-		Collection validCats=new ArrayList(16);
-		CategoryFactory cf=CategoryFactory.getInstance();
-		for(Iterator i=cf.getCatList(
-			u.getId(), CategoryFactory.ACCESS_READ).iterator(); i.hasNext();) {
-			Category cat=(Category)i.next();
-			validCats.add(new Integer(cat.getId()));
+		Collection<Integer> validCats = new ArrayList<Integer>(16);
+		CategoryFactory cf = CategoryFactory.getInstance();
+		for(Category cat : cf
+			.getCatList(u.getId(), CategoryFactory.ACCESS_READ)) {
+			validCats.add(cat.getId());
 		}
-		return(validCats);
+		return (validCats);
 	}
 
-	private static abstract class PIDComparator implements Comparator {
+	private static abstract class PIDComparator
+		implements Comparator<PhotoImageData> {
 		public PIDComparator() {
 			super();
 		}
+
 		public boolean equals(Object ob) {
-			return(ob.getClass() == getClass());
+			return (ob.getClass() == getClass());
 		}
 
 		protected abstract int doCompare(
 			PhotoImageData pid1, PhotoImageData pid2);
 
-		public int compare(Object ob1, Object ob2) {
-			PhotoImageData pid1=(PhotoImageData)ob1;
-			PhotoImageData pid2=(PhotoImageData)ob2;
-
-			int rv=doCompare(pid1, pid2);
+		public int compare(PhotoImageData pid1, PhotoImageData pid2) {
+			int rv = doCompare(pid1, pid2);
 			if(rv == 0) {
-				rv=(pid1.getId() - pid2.getId());
+				rv = (pid1.getId() - pid2.getId());
 			}
-			return(rv);
+			return (rv);
 		}
 
 	}
@@ -447,7 +447,7 @@ public class Search extends SpyObject {
 		}
 
 		public int doCompare(PhotoImageData pid1, PhotoImageData pid2) {
-			return(pid1.getTimestamp().compareTo(pid2.getTimestamp()));
+			return (pid1.getTimestamp().compareTo(pid2.getTimestamp()));
 		}
 	}
 
@@ -457,23 +457,25 @@ public class Search extends SpyObject {
 		}
 
 		public int doCompare(PhotoImageData pid1, PhotoImageData pid2) {
-			return(pid1.getTaken().compareTo(pid2.getTaken()));
+			return (pid1.getTaken().compareTo(pid2.getTaken()));
 		}
 	}
 
-	private static class ReverseComparator implements Comparator {
-		private Comparator comp=null;
-		public ReverseComparator(Comparator c) {
+	private static class ReverseComparator<T>
+		implements Comparator<T> {
+		private Comparator<T> comp = null;
+
+		public ReverseComparator(Comparator<T> c) {
 			super();
-			this.comp=c;
+			this.comp = c;
 		}
 
 		public boolean equals(Object ob) {
-			return(ob.getClass() == getClass());
+			return (ob.getClass() == getClass());
 		}
 
-		public int compare(Object ob1, Object ob2) {
-			return(0 - comp.compare(ob1, ob2));
+		public int compare(T ob1, T ob2) {
+			return (0 - comp.compare(ob1, ob2));
 		}
 	}
 

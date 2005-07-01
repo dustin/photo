@@ -65,7 +65,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	 */
 	public static Collection<PhotoSessionData> getSessionDataByUser(
 		String username) {
-		ArrayList<PhotoSessionData> al=new ArrayList();
+		ArrayList<PhotoSessionData> al=new ArrayList<PhotoSessionData>();
 
 		for(HttpSession session : getSessions()) {
 			if(session.getAttribute(PhotoSessionData.SES_ATTR) != null) {
@@ -98,7 +98,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	 * currently in the system.
 	 */
 	public static Collection<HttpSession> listSessions() {
-		ArrayList<HttpSession> al=new ArrayList();
+		ArrayList<HttpSession> al=new ArrayList<HttpSession>();
 
 		for(HttpSession session : getSessions()) {
 			PhotoSessionData sessionData=(PhotoSessionData)

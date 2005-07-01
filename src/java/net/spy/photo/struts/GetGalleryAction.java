@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionMapping;
 
 import net.spy.photo.Cursor;
 import net.spy.photo.Gallery;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
 
@@ -41,7 +42,7 @@ public class GetGalleryAction extends PhotoAction {
 		User user=sessionData.getUser();
 
 		Gallery g=Gallery.getGallery(user, ggf.getId());
-		sessionData.setCursor("gallery", new Cursor(g.getImages()));
+		sessionData.setCursor("gallery", new Cursor<PhotoImageData>(g.getImages()));
 
 		return(mapping.findForward("next"));
 	}

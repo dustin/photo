@@ -221,8 +221,8 @@ public class Keyword extends AbstractSavable implements Comparable<Keyword> {
 
 		public Cache() {
 			super();
-			byId=Collections.synchronizedMap(new HashMap());
-			byWord=Collections.synchronizedMap(new HashMap());
+			byId=Collections.synchronizedMap(new HashMap<Integer, Keyword>());
+			byWord=Collections.synchronizedMap(new HashMap<String, Keyword>());
 		}
 	}
 

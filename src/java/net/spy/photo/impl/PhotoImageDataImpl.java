@@ -51,8 +51,8 @@ public abstract class PhotoImageDataImpl extends SpyObject
 
 	protected PhotoImageDataImpl() throws Exception {
 		super();
-		keywords=new TreeSet();
-		annotations=new HashSet();
+		keywords=new TreeSet<Keyword>();
+		annotations=new HashSet<AnnotatedRegion>();
 	}
 
 	/**

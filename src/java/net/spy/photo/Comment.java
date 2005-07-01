@@ -68,7 +68,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 		throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
-		ArrayList<Comment> al=new ArrayList();
+		ArrayList<Comment> al=new ArrayList<Comment>();
 		GetCommentsForPhoto db=
 			new GetCommentsForPhoto(PhotoConfig.getInstance());
 		db.setPhotoId(imageId);
@@ -95,7 +95,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 		throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
-		ArrayList<GroupedComments> al=new ArrayList();
+		ArrayList<GroupedComments> al=new ArrayList<GroupedComments>();
 		FindImagesByComments db=
 			new FindImagesByComments(PhotoConfig.getInstance());
 		db.setUserId(user.getId());

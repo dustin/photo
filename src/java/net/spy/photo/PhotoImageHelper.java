@@ -75,7 +75,7 @@ public class PhotoImageHelper extends SpyObject {
 
 			// If it's small enough, cache it.
 			if(rv.size() < 32768) {
-				cache.store(key, new SoftReference(rv), 10*60*1000);
+				cache.store(key, new SoftReference<PhotoImage>(rv), 10*60*1000);
 			}
 		}
 
@@ -110,7 +110,7 @@ public class PhotoImageHelper extends SpyObject {
 		if(rv == null) {
 			PhotoImage pi=getThumbnail();
 			rv=new PhotoDimensionsImpl(pi.getWidth(), pi.getHeight());
-			cache.store(key, new SoftReference(rv), 1800000);
+			cache.store(key, new SoftReference<PhotoDimensions>(rv), 1800000);
 		}
 
 		return(rv);
