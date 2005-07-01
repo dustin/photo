@@ -32,7 +32,7 @@ public class PhotoProperties extends Properties implements Savable {
 	/**
 	 * Get an instance of PhotoProperties (defaulted by the PhotoConfig).
 	 */
-	private PhotoProperties() throws SQLException {
+	public PhotoProperties() throws SQLException {
 		super(PhotoConfig.getInstance());
 
 		init();
@@ -44,7 +44,9 @@ public class PhotoProperties extends Properties implements Savable {
 	/**
 	 * Get the singleton instance of PhotoProperties.
 	 */
-	public static synchronized PhotoProperties getInstance() throws SQLException {
+	public static synchronized PhotoProperties getInstance()
+		throws SQLException {
+
 		// XXX:  use a real singleton here
 		return(new PhotoProperties());
 	}
