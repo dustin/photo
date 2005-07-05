@@ -13,6 +13,9 @@ public class PhotoImage extends Object
 
 	// Serialization info
 	private static final long serialVersionUID = -581283675761191893l;
+	
+	// This is the size of a single-pixel GIF.
+	private static final int SMALLEST_IMAGE=42;
 
 	// Image data
 	private byte imageData[]=null;
@@ -33,7 +36,7 @@ public class PhotoImage extends Object
 	 * Get a PhotoImage object with binary data representing the image.
 	 */
 	public PhotoImage(byte data[]) throws PhotoException {
-		super();
+		this();
 		setData(data);
 	}
 
@@ -139,6 +142,9 @@ public class PhotoImage extends Object
         if(imageData==null || imageData.length==0) {
             throw new PhotoException("imageData is empty");
         }
+        if(imageData.length < SMALLEST_IMAGE) {
+        		throw new PhotoException("imageData is too small to be an image");
+        }
 		if(isJpeg()) {
 			format=Format.FORMAT_ID_JPEG;
 		} else if(isPng()) {
@@ -177,11 +183,6 @@ public class PhotoImage extends Object
 	 */
 	private boolean isGif() {
 		int i=0;
-		if(imageData.length < 3) {
-			throw new IllegalArgumentException(
-				"Image data too small to be a GIF, it's only "
-					+ imageData.length + " bytes.");
-		}
 		return(	   ((imageData[i++]&0xff)=='G')
 				&& ((imageData[i++]&0xff)=='I')
 				&& ((imageData[i++]&0xff)=='F'));
@@ -189,10 +190,6 @@ public class PhotoImage extends Object
 
 	private void calcDimGif() throws PhotoException {
 		int i=0;
-
-		if(!isGif()) {
-			throw new PhotoException("This isn't a GIF.");
-		}
 
 		// Skip the header.
 		i+=6;
@@ -213,11 +210,6 @@ public class PhotoImage extends Object
 	 */
 	private boolean isPng() {
 		int i=0;
-		if(imageData.length < 8) {
-			throw new IllegalArgumentException(
-				"Image data too short to be a PNG, it's only "
-					+ imageData.length + " bytes.");
-		}
 		return(	   ((imageData[i++]&0xff)==0x89)
 				&& ((imageData[i++]&0xff)=='P')
 				&& ((imageData[i++]&0xff)=='N')
@@ -231,10 +223,6 @@ public class PhotoImage extends Object
 	private void calcDimPng() throws PhotoException {
 		int i=0;
 		int length=0;
-
-		if(!isPng()) {
-			throw new PhotoException("This isn't a PNG.");
-		}
 
 		// Skip the header.
 		i+=8;
@@ -275,11 +263,6 @@ public class PhotoImage extends Object
 
 	// Return true if the given data is a jpeg.
 	private boolean isJpeg() {
-		if(imageData.length < 24) {
-			throw new IllegalArgumentException(
-				"Too short for a jpeg header, your image data is only "
-					+ imageData.length + " bytes long.");
-		}
 		return( (getIntValue(0)==0xff)
 				&& ( getIntValue(1) == 0xd8 )
 				&& ( getIntValue(2) == 0xff ));
@@ -289,10 +272,6 @@ public class PhotoImage extends Object
 	private void calcDimJpeg() throws PhotoException {
 		int ch=-1, i=0;
 		boolean done=false;
-
-		if(!isJpeg()) {
-			throw new PhotoException("This isn't a JPEG");
-		}
 
 		// Move forward two.
 		i+=2;
