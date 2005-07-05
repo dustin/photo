@@ -15,7 +15,6 @@ import net.spy.db.SpyDB;
 import net.spy.jwebkit.RequestUtil;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.impl.PhotoRegionImpl;
-import net.spy.util.SpyUtil;
 
 /**
  * Utilities.
@@ -64,21 +63,6 @@ public class PhotoUtil extends Object {
 			}
 		}
 		return(rv);
-	}
-
-	/**
-	 * Simple splitter.
-	 */
-	public static String[] split(String on, String input) {
-		return(SpyUtil.split(on, input));
-	}
-
-	/**
-	 * Get a quoted string for doing DB stuff where PreparedStatements
-	 * won't fit.
-	 */
-	public static String dbquoteStr(String thing) {
-		return(SpyDB.dbquoteStr(thing));
 	}
 
 	/**
