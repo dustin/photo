@@ -4,8 +4,10 @@
 package net.spy.photo;
 
 import java.sql.ResultSet;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
@@ -57,6 +59,14 @@ public class PhotoUtil extends Object {
 			for(SimpleDateFormat sdf : dateFormats) {
 				try {
 					rv=sdf.parse(s);
+					// Special case for people who try to enter pictures without
+					// specifying the date properly.
+					Calendar cal=Calendar.getInstance();
+					cal.setTime(rv);
+					int year=cal.get(Calendar.YEAR);
+					if(year < 100) {
+						rv=null;
+					}
 				} catch(Exception e) {
 					// Ignored, try the next one
 				}
