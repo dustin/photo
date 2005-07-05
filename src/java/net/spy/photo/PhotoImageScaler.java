@@ -50,7 +50,7 @@ public class PhotoImageScaler extends SpyObject {
 		Image image=Toolkit.getDefaultToolkit().createImage(pi.getData());
 
 		// Make the dimensions have the proper aspect ratio
-		PhotoDimensions sdim=PhotoDimUtil.scaleTo(pi, dim);
+		PhotoDimensions sdim=PhotoUtil.scaleTo(pi, dim);
 
 		// Scale it
 		Image img=image.getScaledInstance(sdim.getWidth(), sdim.getHeight(),

@@ -6,6 +6,7 @@ package net.spy.photo;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import net.spy.photo.impl.PhotoDimensionsImpl;
 
 /**
@@ -122,12 +123,12 @@ public class DimensionsTest extends TestCase {
 		PhotoDimensions scaleTo=new PhotoDimensionsImpl("1600x1200");
 		float expectedFactor=2.0f;
 		assertEquals(expectedFactor,
-			PhotoDimUtil.getScaleFactor(scaleFrom, scaleTo), 0.01);
+			PhotoUtil.getScaleFactor(scaleFrom, scaleTo), 0.01);
 
 		scaleTo=new PhotoDimensionsImpl("400x300");
 		expectedFactor=0.5f;
 		assertEquals(expectedFactor,
-			PhotoDimUtil.getScaleFactor(scaleFrom, scaleTo), 0.01);
+			PhotoUtil.getScaleFactor(scaleFrom, scaleTo), 0.01);
 	}
 
 	/** 
@@ -137,64 +138,64 @@ public class DimensionsTest extends TestCase {
 		PhotoDimensions scaleFrom=new PhotoDimensionsImpl("800x600");
 		float scaleFactor=1.0f;
 		PhotoDimensions expected=new PhotoDimensionsImpl("800x600");
-		assertEquals(expected, PhotoDimUtil.scaleBy(scaleFrom, scaleFactor));
+		assertEquals(expected, PhotoUtil.scaleBy(scaleFrom, scaleFactor));
 
 		scaleFrom=new PhotoDimensionsImpl("800x600");
 		scaleFactor=0.5f;
 		expected=new PhotoDimensionsImpl("400x300");
-		assertEquals(expected, PhotoDimUtil.scaleBy(scaleFrom, scaleFactor));
+		assertEquals(expected, PhotoUtil.scaleBy(scaleFrom, scaleFactor));
 
 		scaleFrom=new PhotoDimensionsImpl("800x600");
 		scaleFactor=2.0f;
 		expected=new PhotoDimensionsImpl("1600x1200");
-		assertEquals(expected, PhotoDimUtil.scaleBy(scaleFrom, scaleFactor));
+		assertEquals(expected, PhotoUtil.scaleBy(scaleFrom, scaleFactor));
 	}
 
 	/** 
-	 * Test the PhotoDimUtil scaler implementation.
+	 * Test the PhotoUtil scaler implementation.
 	 */
 	public void testDimScaler() {
 		// don't scale
 		PhotoDimensions scaleFrom=new PhotoDimensionsImpl("800x600");
 		PhotoDimensions scaleTo=new PhotoDimensionsImpl("1280x832");
 		PhotoDimensions expected=new PhotoDimensionsImpl("800x600");
-		assertSame(scaleFrom, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
-		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
+		assertSame(scaleFrom, PhotoUtil.scaleTo(scaleFrom, scaleTo));
+		assertEquals(expected, PhotoUtil.scaleTo(scaleFrom, scaleTo));
 
 		// Scale down keeping x
 		scaleFrom=new PhotoDimensionsImpl("1280x832");
 		scaleTo=new PhotoDimensionsImpl("800x600");
 		expected=new PhotoDimensionsImpl("800x520");
-		assertNotSame(scaleFrom, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
-		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
+		assertNotSame(scaleFrom, PhotoUtil.scaleTo(scaleFrom, scaleTo));
+		assertEquals(expected, PhotoUtil.scaleTo(scaleFrom, scaleTo));
 
 		// Scale down keeping y
 		scaleFrom=new PhotoDimensionsImpl("832x1328");
 		scaleTo=new PhotoDimensionsImpl("800x600");
 		expected=new PhotoDimensionsImpl("375x600");
-		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
+		assertEquals(expected, PhotoUtil.scaleTo(scaleFrom, scaleTo));
 
 		// This case failed when deployed
 		scaleFrom=new PhotoDimensionsImpl("683x430");
 		scaleTo=new PhotoDimensionsImpl("220x146");
 		expected=new PhotoDimensionsImpl("220x138");
-		assertEquals(expected, PhotoDimUtil.scaleTo(scaleFrom, scaleTo));
+		assertEquals(expected, PhotoUtil.scaleTo(scaleFrom, scaleTo));
 	}
 
 	/** 
-	 * Test the PhotoDimUtil.smallerThan implementation.
+	 * Test the PhotoUtil.smallerThan implementation.
 	 */
 	public void testSmallerThan() {
 		PhotoDimensions ob1=new PhotoDimensionsImpl("800x600");
 		PhotoDimensions ob2=new PhotoDimensionsImpl("640x480");
-		assertTrue(PhotoDimUtil.smallerThan(ob2, ob1));
-		assertFalse(PhotoDimUtil.smallerThan(ob1, ob2));
-		assertFalse(PhotoDimUtil.smallerThan(ob1, ob1));
-		assertFalse(PhotoDimUtil.smallerThan(ob2, ob2));
+		assertTrue(PhotoUtil.smallerThan(ob2, ob1));
+		assertFalse(PhotoUtil.smallerThan(ob1, ob2));
+		assertFalse(PhotoUtil.smallerThan(ob1, ob1));
+		assertFalse(PhotoUtil.smallerThan(ob2, ob2));
 
 		ob1=new PhotoDimensionsImpl("640x480");
 		ob2=new PhotoDimensionsImpl("481x640");
-		assertTrue(PhotoDimUtil.smallerThan(ob1, ob2));
+		assertTrue(PhotoUtil.smallerThan(ob1, ob2));
 	}
 
 }

@@ -13,12 +13,11 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 
 import net.spy.photo.Persistent;
-import net.spy.photo.PhotoDimUtil;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoRegion;
-import net.spy.photo.PhotoRegionUtil;
 import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.impl.PhotoRegionImpl;
@@ -68,7 +67,7 @@ public class AnnotateAction extends PhotoAction {
 		// Get the dimensions of the image as displayed
 		PhotoDimensions displaySize=
 			new PhotoDimensionsImpl((String)df.get("imgDims"));
-		float scaleFactor=PhotoDimUtil.getScaleFactor(displaySize,
+		float scaleFactor=PhotoUtil.getScaleFactor(displaySize,
 			savable.getDimensions());
 
 		// Get the region as specified
@@ -79,7 +78,7 @@ public class AnnotateAction extends PhotoAction {
 			((Integer)df.get("h")).intValue());
 
 		// The scaled region
-		PhotoRegion newRegion=PhotoRegionUtil.scaleRegion(specifiedRegion,
+		PhotoRegion newRegion=PhotoUtil.scaleRegion(specifiedRegion,
 			scaleFactor);
 
 		// Set the annotation

@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.spy.db.SpyDB;
 import net.spy.jwebkit.RequestUtil;
+import net.spy.photo.impl.PhotoDimensionsImpl;
+import net.spy.photo.impl.PhotoRegionImpl;
 import net.spy.util.SpyUtil;
 
 /**
@@ -45,7 +47,7 @@ public class PhotoUtil extends Object {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Parse a date in one of the known formats.
 	 * @param s a string to parse
 	 * @return the date, or null if the date could not be parsed
@@ -146,6 +148,108 @@ public class PhotoUtil extends Object {
 		} catch(Exception e) {
 			throw new PhotoException("Error getting ID from " + seq, e);
 		}
+		return(rv);
+	}
+
+	/**
+	 * Get the scale factor that will be used to scale the first dimensions to
+	 * fit as tightly as possible within the constraints of the second
+	 * dimensions.
+	 *
+	 * @param from the dimensions to be scaled
+	 * @param to the constraints
+	 * @return the scaling factor that will scale the dims to the constraints
+	 */
+	public static float getScaleFactor(PhotoDimensions from,
+		PhotoDimensions to) {
+	
+		float fromw=from.getWidth();
+		float fromh=from.getHeight();
+		float tow=to.getWidth();
+		float toh=to.getHeight();
+	
+		float scaleFactor=tow/fromw;
+		if(fromh * scaleFactor > toh) {
+			scaleFactor=toh/fromh;
+		}
+	
+		// Assertions
+		if( (int)((fromw * scaleFactor)) > tow
+			|| (int)((fromh * scaleFactor)) > toh) {
+	
+			throw new RuntimeException(
+				"Results can't be outside of the input box:  "
+				+ from + " -> " + to + " yielded " + scaleFactor + " for "
+				+ (fromw * scaleFactor) + "x" + (fromh * scaleFactor));
+		}
+		// End assertions
+	
+		return(scaleFactor);
+	}
+
+	/**
+	 * Scale a set of PhotoDimensions by a specific factor.
+	 *
+	 * @param from the source PhotoDimensions
+	 * @param factor the factor by which to scale
+	 * @return the scaled PhotoDimensions
+	 */
+	public static PhotoDimensions scaleBy(PhotoDimensions from, float factor) {
+		PhotoDimensions rv=new PhotoDimensionsImpl(
+			(int)(from.getWidth() * factor),
+			(int)(from.getHeight() * factor));
+		return(rv);
+	}
+
+	/**
+	 * Scale a dimension to another dimension.
+	 * This will only scale down, not up.
+	 *
+	 * @param from the dimensions of the source
+	 * @param to the maximum dimensions to scale to
+	 * @return the largest dimensions of from that fit within to
+	 */
+	public static PhotoDimensions scaleTo(PhotoDimensions from,
+		PhotoDimensions to) {
+
+		PhotoDimensions rv=from;
+
+		// This prevents us from scaling down.  We only scale if the
+		// constraints are smaller than the from dimensions
+		if(to.getWidth() < from.getWidth()
+			|| to.getHeight() < from.getHeight()) {
+
+			rv=scaleBy(from, getScaleFactor(from, to));
+		}
+
+		return(rv);
+	}
+
+	/**
+	 * Determine whether the first PhotoDimensions instance is smaller than the
+	 * second in area.
+	 *
+	 * @return true if the area of a is greater than the area of b.
+	 */
+	public static boolean smallerThan(PhotoDimensions a, PhotoDimensions b) {
+		int areaa=a.getWidth() * a.getHeight();
+		int areab=b.getWidth() * b.getHeight();
+		return(areaa < areab);
+	}
+
+	/**
+	 * Scale a region by a factor.
+	 *
+	 * @param rin the region
+	 * @param factor the factor
+	 * @return the region applied to a specific scaling factor
+	 */
+	public static PhotoRegion scaleRegion(PhotoRegion rin, float factor) {
+		PhotoRegion rv=new PhotoRegionImpl(
+			(int)(rin.getX() * factor),
+			(int)(rin.getY() * factor),
+			(int)(rin.getWidth() * factor),
+			(int)(rin.getHeight() * factor));
 		return(rv);
 	}
 

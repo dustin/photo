@@ -48,8 +48,6 @@ public class PhotoACL extends SpyObject implements Serializable {
 
 	/** 
 	 * String me.
-	 * 
-	 * @return 
 	 */
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);

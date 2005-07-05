@@ -16,10 +16,10 @@ import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoDimUtil;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
 
 /**
@@ -100,7 +100,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 				conf.get("thumbnail_size"));
 
 			// Scale it down
-			tnDims=PhotoDimUtil.scaleTo(dimensions, tdim);
+			tnDims=PhotoUtil.scaleTo(dimensions, tdim);
 		}
 	}
 

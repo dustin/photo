@@ -12,11 +12,11 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 
 import net.spy.photo.Persistent;
-import net.spy.photo.PhotoDimUtil;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoUtil;
 import net.spy.photo.search.SearchResults;
 
 /**
@@ -96,7 +96,7 @@ public class GetImageDataAction extends PhotoAction {
 		PhotoSessionData sessionData=getSessionData(request);
 		// We will need the display dimensions for some tasks
 		request.setAttribute(DIM_ATTR,
-			PhotoDimUtil.scaleTo(image.getDimensions(),
+			PhotoUtil.scaleTo(image.getDimensions(),
 			sessionData.getOptimalDimensions()));
 
 		ActionForward rv=mapping.findForward("next");

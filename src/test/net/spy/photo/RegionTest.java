@@ -6,6 +6,7 @@ package net.spy.photo;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import net.spy.photo.impl.PhotoRegionImpl;
 
 /**
@@ -51,13 +52,13 @@ public class RegionTest extends TestCase {
 	 */
 	public void testScaling() {
 		PhotoRegion src=new PhotoRegionImpl(50, 50, 50, 50);
-		PhotoRegion rslt=PhotoRegionUtil.scaleRegion(src, 1.0f);
+		PhotoRegion rslt=PhotoUtil.scaleRegion(src, 1.0f);
 		assertEquals(src, rslt);
 
-		rslt=PhotoRegionUtil.scaleRegion(src, 0.5f);
+		rslt=PhotoUtil.scaleRegion(src, 0.5f);
 		assertEquals(new PhotoRegionImpl(25, 25, 25, 25), rslt);
 
-		rslt=PhotoRegionUtil.scaleRegion(src, 2.0f);
+		rslt=PhotoUtil.scaleRegion(src, 2.0f);
 		assertEquals(new PhotoRegionImpl(100, 100, 100, 100), rslt);
 	}
 

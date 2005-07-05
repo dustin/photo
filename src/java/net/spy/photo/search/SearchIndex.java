@@ -120,8 +120,6 @@ public class SearchIndex extends SpyObject {
 	 * 
 	 * @param cats
 	 *            a Collection of Integer objects.
-	 * @param operator
-	 *            the operator
 	 */
 	public synchronized Set<PhotoImageData> getForCats(Collection<Integer> cats) {
 		return (getCombined(byCategory, cats, OP_OR));

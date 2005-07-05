@@ -12,10 +12,10 @@ import net.spy.photo.ImageCache;
 import net.spy.photo.ImageServer;
 import net.spy.photo.ImageServerScaler;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoDimUtil;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoUtil;
 import net.spy.photo.util.PhotoStorerThread;
 import net.spy.util.Base64;
 
@@ -77,7 +77,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 			// Not in cache, get it
 			pi=fetchImage(imageId);
 
-			if(pi.equals(dim) || PhotoDimUtil.smallerThan(pi, dim)) {
+			if(pi.equals(dim) || PhotoUtil.smallerThan(pi, dim)) {
 				getLogger().debug("Requested scaled size for " + imageId
 					+ "(" + dim + ") is equal to or "
 					+ "greater than its full size, ignoring.");
