@@ -57,7 +57,7 @@ public class Mailer extends Object {
 
 		Properties mailconf=new Properties();
 		mailconf.setProperty("mail.host", conf.get("mail_server"));
-		mailconf.setProperty("mail.from", conf.get("mail_from"));
+		mailconf.setProperty("mail.from", conf.get("mail_sender"));
 
 		Address addrs[]=new InternetAddress[1];
 		addrs[0]=new InternetAddress(recipient);
