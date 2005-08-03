@@ -192,7 +192,7 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 		<dependency>
 			<groupId>maven-plugins</groupId>
 			<artifactId>maven-cobertura-plugin</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0</version>
 			<type>plugin</type>
 			<scope>test</scope>
 			<url>http://maven-plugins.sourceforge.net/maven-cobertura-plugin/</url>
