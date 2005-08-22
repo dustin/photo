@@ -1,8 +1,7 @@
 <%@ page import="net.spy.photo.PhotoImageData" %>
 <%@ page import="net.spy.photo.PhotoDimensions" %>
 <%@ page import="net.spy.photo.PhotoRegion" %>
-<%@ page import="net.spy.photo.PhotoDimUtil" %>
-<%@ page import="net.spy.photo.PhotoRegionUtil" %>
+<%@ page import="net.spy.photo.PhotoUtil" %>
 <%@ page import="net.spy.photo.Comment" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
@@ -15,7 +14,7 @@
 <%
 	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
 	// Need to know the new dims for the rest of the page
-	float scaleFactor=PhotoDimUtil.getScaleFactor(image.getDimensions(),
+	float scaleFactor=PhotoUtil.getScaleFactor(image.getDimensions(),
 		(PhotoDimensions)request.getAttribute("displayDims"));
 
 	String searchIdS=(String)request.getParameter("search_id");
@@ -138,7 +137,7 @@
 		collection="<%= image.getAnnotations() %>">
 
 		<%
-			PhotoRegion scaledRegion=PhotoRegionUtil.scaleRegion(region, scaleFactor);
+			PhotoRegion scaledRegion=PhotoUtil.scaleRegion(region, scaleFactor);
 			int rx1=scaledRegion.getX();
 			int ry1=scaledRegion.getY();
 			int rx2=scaledRegion.getWidth() + rx1;
