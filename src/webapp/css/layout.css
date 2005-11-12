@@ -255,7 +255,3 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 	text-decoration: none;
 	display: none;
 }
-
-.indicator {
-	display: none;
-}

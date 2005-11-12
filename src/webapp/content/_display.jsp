@@ -134,17 +134,17 @@
 
 			Element.show("addindicator");
 			var postBody=$H({imgId: imgid, comment: comment}).toQueryString();
-			var myAjax = new Ajax.Request('<c:url value="/ajax/postComment.do"/>', {
+			new Ajax.Request('<c:url value="/ajax/postComment.do"/>', {
 				method: 'post',
 				postBody: postBody,
 				onComplete: function(req) {
 					Form.enable("commentForm");
+					Element.hide("addindicator");
 				},
 				onFailure: function(req) {
 					alert("Failed to add comment.");
 					},
 				onSuccess: function(req) {
-					debug("Succeeded");
 					var c=document.createElement("div");
 					h=document.createElement("div");
 					h.className="commentheader";
@@ -157,10 +157,12 @@
 					c.appendChild(h);
 					c.appendChild(b);
 					$("comments").appendChild(c);
-					Element.hide("addindicator");
 					}
 				});
 		}
+		Event.observe(window, 'load', function() {
+				Element.hide("addindicator");
+			}, false);
 	</script>
 		<fmt:message key="display.comment"/><br/>
 		<html:form action="/addcomment" onsubmit="submitComment(); return false;"
@@ -169,7 +171,7 @@
 			<br/>
 			<html:submit>Add Comment</html:submit>
 			<photo:imgsrc alt="indicator" id="addindicator"
-				styleClass="indicator" url="/images/indicator.gif"/>
+				url="/images/indicator.gif"/>
 		</html:form>
 	</logic:notPresent>
 </div>
