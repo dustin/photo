@@ -16,6 +16,9 @@
 		<title><tiles:insert attribute='title'/></title>
 		<photo:stylesheet url="/css/layout.css"/>
 		<photo:stylesheet url="/css/colors.css"/>
+		<photo:javascript url="/js/debug.js"/>
+		<photo:javascript url="/js/prototype.js"/>
+		<photo:javascript url="/js/s/scriptaculous.js"/>
 		<c:if test="${slideshowMode eq 1}">
 			<photo:stylesheet url="/css/slideshow.css"/>
 		</c:if>

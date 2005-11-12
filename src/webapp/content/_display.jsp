@@ -94,9 +94,11 @@
 --%>
 
 
-<div class="comments">
+<div id="comments" class="comments">
 
 	<h1>Comments</h1>
+
+	<div id="commentanchor"></div>
 
 	<logic:iterate id="comment"
 		type="net.spy.photo.Comment"
@@ -118,16 +120,56 @@
 <div>
 
 	<logic:notPresent role="guest">
-		<fmt:message key="display.comment"/><br/>
-		<html:errors/>
+	<script type="text/javascript">
+		function submitComment() {
 
-		<html:form action="/addcomment">
-			<html:errors/>
-			<html:hidden property="imageId"
-				value="<%= String.valueOf(image.getId()) %>"/>
-			<html:textarea property="comment" cols="50" rows="2"/>
+			var imgid=<%= image.getId() %>;
+			var comment=$F("comment");
+			if(comment == "") {
+				alert("You'll need to actually type in a comment to post it.");
+				return(false);
+			}
+			Form.disable("commentForm");
+			$("comment").value="";
+
+			Element.show("addindicator");
+			var postBody=$H({imgId: imgid, comment: comment}).toQueryString();
+			var myAjax = new Ajax.Request('<c:url value="/ajax/postComment.do"/>', {
+				method: 'post',
+				postBody: postBody,
+				onComplete: function(req) {
+					Form.enable("commentForm");
+				},
+				onFailure: function(req) {
+					alert("Failed to add comment.");
+					},
+				onSuccess: function(req) {
+					debug("Succeeded");
+					var c=document.createElement("div");
+					h=document.createElement("div");
+					h.className="commentheader";
+					h.appendChild(document.createTextNode("You added"));
+					b=document.createElement("div");
+					b.className="commentbody";
+					b.appendChild(document.createTextNode(comment));
+
+					c.className="comments";
+					c.appendChild(h);
+					c.appendChild(b);
+					$("comments").appendChild(c);
+					Element.hide("addindicator");
+					}
+				});
+		}
+	</script>
+		<fmt:message key="display.comment"/><br/>
+		<html:form action="/addcomment" onsubmit="submitComment(); return false;"
+			styleId="commentForm">
+			<html:textarea styleId="comment" property="comment" cols="50" rows="2"/>
 			<br/>
 			<html:submit>Add Comment</html:submit>
+			<photo:imgsrc alt="indicator" id="addindicator"
+				styleClass="indicator" url="/images/indicator.gif"/>
 		</html:form>
 	</logic:notPresent>
 </div>

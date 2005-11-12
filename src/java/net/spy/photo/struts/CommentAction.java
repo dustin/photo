@@ -52,11 +52,7 @@ public class CommentAction extends PhotoAction {
 		int imageId=imageInteger.intValue();
 
 		// Check permission
-		try {
-			Persistent.getSecurity().checkAccess(user, imageId);
-		} catch(Exception e) {
-			throw new ServletException(e.getMessage(), e);
-		}
+		Persistent.getSecurity().checkAccess(user, imageId);
 
 		// Construct the comment.
 		Comment comment=new Comment();
@@ -65,12 +61,8 @@ public class CommentAction extends PhotoAction {
 		comment.setRemoteAddr(request.getRemoteAddr());
 		comment.setNote( (String)df.get("comment") );
 
-		try {
-			Saver s=new Saver(PhotoConfig.getInstance());
-			s.save(comment);
-		} catch(Exception e) {
-			throw new ServletException("Error saving comment", e);
-		}
+		Saver s=new Saver(PhotoConfig.getInstance());
+		s.save(comment);
 
 		ActionForward rv=null;
 

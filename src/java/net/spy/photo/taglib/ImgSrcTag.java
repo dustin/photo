@@ -13,6 +13,7 @@ import net.spy.photo.PhotoUtil;
  */
 public class ImgSrcTag extends PhotoTag {
 
+	private String id=null;
 	private String url=null;
 	private String styleClass=null;
 	private String width=null;
@@ -28,6 +29,13 @@ public class ImgSrcTag extends PhotoTag {
 	}
 
 	/**
+	 * Set the id for this element.
+	 */
+	public void setId(String to) {
+		this.id=to;
+	}
+
+	/**
 	 * Set the relative URL to which to link.
 	 */
 	public void setUrl(String to) {
@@ -37,7 +45,7 @@ public class ImgSrcTag extends PhotoTag {
 	/**
 	 * Set an HTML class setting for this image.
 	 */
-	public void setBorder(String to) {
+	public void setStyleClass(String to) {
 		this.styleClass=to;
 	}
 
@@ -73,6 +81,12 @@ public class ImgSrcTag extends PhotoTag {
 		HttpServletRequest req=(HttpServletRequest)pageContext.getRequest();
 		sb.append(PhotoUtil.getRelativeUri(req, url));
 		sb.append("\"");
+
+		if(id!=null) {
+			sb.append(" id=\"");
+			sb.append(id);
+			sb.append("\""); 
+		}
 
 		if(styleClass!=null) {
 			sb.append(" class=\"");

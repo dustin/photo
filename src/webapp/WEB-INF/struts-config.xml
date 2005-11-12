@@ -356,6 +356,11 @@
 		<forward name="next" path="/reverseSearch.do"/>
 	</action>
 
+	<!-- Ajax stuff -->
+	<action path="/ajax/postComment"
+		type="net.spy.photo.struts.ajax.PostCommentAction" scope="request"
+		name="emptyForm"/>
+
 	<!-- ***************************************************************** -->
 	<!-- Admin stuff -->
 	<!-- ***************************************************************** -->

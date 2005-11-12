@@ -200,6 +200,10 @@
 			<required>true</required>
 		</attribute>
 		<attribute>
+			<name>id</name>
+			<required>false</required>
+		</attribute>
+		<attribute>
 			<name>styleClass</name>
 			<required>false</required>
 		</attribute>
