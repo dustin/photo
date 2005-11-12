@@ -70,7 +70,13 @@
 			<c:out value="${image.timestamp}"/>
 		by <c:out value="${image.addedBy.realName}"/><br />
 		<b>Info</b>:
-		<div class="imgDescr"><c:out value="${image.descr}"/></div>
+		<div id="imgDescr" class="imgDescr"><c:out value="${image.descr}"/></div>
+		<logic:present role="admin">
+			<script type="text/javascript">
+				new Ajax.InPlaceEditor('imgDescr',
+					'<c:url value="/ajax/editComment.do"/>', {rows: 10, cols: 80});
+			</script>
+		</logic:present>
 
 	</div>
 
