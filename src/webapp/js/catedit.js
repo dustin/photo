@@ -10,32 +10,49 @@ function getData(el, which) {
 function setupCategoryEditor(el, url, webappurl) {
 	var editor=new Ajax.InPlaceEditor(el, url);
 	Object.extend(editor, {
+		// Overrode this to prevent some javascript errors when trying to
+		// grab the new form element
+		enterEditMode: function(evt) {
+			this.editing = true;
+			this.onEnterEditMode();
+			if (this.options.externalControl) {
+				Element.hide(this.options.externalControl);
+			}
+			Element.hide(this.element);
+			this.createForm();
+			this.element.parentNode.insertBefore(this.form, this.element);
+			if (evt) {
+				Event.stop(evt);
+			}
+			return false;
+		},
 		createEditField: function() {
 			var text=this.getText();
 
-            var field=document.createElement("select");
-            field.name="value";
+			var field=document.createElement("select");
+			field.name="value";
 
-            this.editField=field;
-            this.form.appendChild(this.editField);
+			this.editField=field;
+			this.form.appendChild(this.editField);
 
 			new Ajax.Request(webappurl + 'ajax/cats/write', {
 				onSuccess: function(req) {
 					var cats=req.responseXML.getElementsByTagName("cat");
-					for(var i=0; i<cats.length; i++) {
-						var cat=cats[i];
-
-            			var op=document.createElement("option");
+					$A(cats).each( function(cat, idx) {
+						var op=document.createElement("option");
 						op.value=getData(cat, "value");
-            			op.text=getData(cat, "key");
-            			field.add(op, null);
+						op.text=getData(cat, "key");
+						field.add(op, null);
 
 						if(op.text == text) {
-							field.selectedIndex=i;
+							field.selectedIndex=idx;
 						}
-					}
+					});
 				}
 				});
 		}
 	});
+	Event.stopObserving(editor.element, 'click', editor.onclickListener);
+	editor.onclickListener=editor.enterEditMode.bindAsEventListener(editor);
+	Event.observe(editor.element, 'click', editor.onclickListener);
 }
