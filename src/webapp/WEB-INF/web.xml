@@ -67,6 +67,11 @@
 		<servlet-class>net.spy.photo.ajax.PhotoEditServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>ajaxcatlist</servlet-name>
+		<servlet-class>net.spy.photo.ajax.Categories</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
 	<!-- The action servlet -->
 	<servlet>
@@ -102,6 +107,11 @@
 	<servlet-mapping>
 		<servlet-name>ajaxphotoedit</servlet-name>
 		<url-pattern>/ajax/photo/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ajaxcatlist</servlet-name>
+		<url-pattern>/ajax/cats/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Normal mapping -->

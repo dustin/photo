@@ -10,6 +10,7 @@
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <photo:javascript url="/js/annimg.js"/>
+<photo:javascript url="/js/catedit.js"/>
 
 <%
 	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
@@ -61,8 +62,8 @@
 	<c:set var="imgId"><%= image.getId() %></c:set>
 
 	<div>
-		<b>Category</b>: <q><c:out
-			value="${image.catName}"/></q>&nbsp;<b>Keywords</b>:
+		<b>Category</b>: <q><span id="imgCat"><c:out
+			value="${image.catName}"/></span></q>&nbsp;<b>Keywords</b>:
 			<i><span id="imgKeywords"><c:forEach
 				var="kw" items="${image.keywords}"> <c:out value="${kw.keyword}"
 					/></c:forEach></span></i><br/>
@@ -82,6 +83,9 @@
 					'<c:url value="/ajax/photo/keywords?imgId=${imgId}"/>');
 				new Ajax.InPlaceEditor('imgTaken',
 					'<c:url value="/ajax/photo/taken?imgId=${imgId}"/>');
+				setupCategoryEditor('imgCat',
+					'<c:url value="/ajax/photo/cat?imgId=${imgId}"/>',
+					'<c:url value="/"/>');
 			</script>
 		</logic:present>
 

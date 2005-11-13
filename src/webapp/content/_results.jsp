@@ -7,6 +7,8 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<photo:javascript url="/js/catedit.js"/>
+
 <%
 	// Find the results
 	PhotoSessionData sessionData=
@@ -67,7 +69,8 @@
 		Keywords: <span id="<c:out value='kw${image.id}'/>"><c:forEach
 			var="kw" items="${image.keywords}"> <c:out value="${kw.keyword}"
 			/></c:forEach></span><br/>
-		Category: <c:out value="${image.catName}"/><br/>
+		Category: <span id="<c:out value='c${image.id}'/>"
+			><c:out value="${image.catName}"/></span><br/>
 		Size: <c:out value="${image.dimensions}"/><br/>
 		Taken:
 			<span id="<c:out value='tk${image.id}'/>"
@@ -94,6 +97,9 @@
 		new Ajax.InPlaceEditor("<c:out value='d${image.id}'/>",
 			'<c:url value="/ajax/photo/descr?imgId=${image.id}"/>',
 			{rows:4, cols:60});
+		setupCategoryEditor("<c:out value='c${image.id}'/>",
+			'<c:url value="/ajax/photo/cat?imgId=${image.id}"/>',
+			'<c:url value="/"/>');
 	</script>
 </logic:present>
 

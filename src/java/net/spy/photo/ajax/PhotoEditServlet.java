@@ -22,12 +22,14 @@ import net.spy.jwebkit.StringElement;
 
 import net.spy.SpyObject;
 import net.spy.db.Saver;
+import net.spy.photo.Category;
+import net.spy.photo.CategoryFactory;
 import net.spy.photo.Comment;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
-import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.impl.SavablePhotoImageData;
 
 /**
@@ -74,12 +76,18 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 		}
 		int id=Integer.parseInt(idString);
 
+		// Look up the handler
+		String pathInfo=request.getPathInfo();
+		Handler h=handlers.get(pathInfo);
+		if(h == null) {
+			throw new Exception("No handler for " + pathInfo);
+		}
+
 		PhotoSessionData ses=getSessionData(request);
 		User user=ses.getUser();
 
 		// Check the access
 		Persistent.getSecurity().checkAccess(user, id);
-		String pathInfo=request.getPathInfo();
 		String role=roles.get(pathInfo);
 		if(role != null) {
 			if(!user.getRoles().contains(role)) {
@@ -93,8 +101,7 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 			}
 		}
 
-		// Look up and invoke the handler
-		Handler h=handlers.get(pathInfo);
+		// Now invoke the handler
 		Object rv=h.handle(id, user, request);
 		if(rv instanceof SAXAble) {
 			sendXml((SAXAble)rv, response);
@@ -179,6 +186,33 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 		public void update(SavablePhotoImageData savable, String value)
 			throws Exception {
 			savable.setTaken(value);
+		}
+	}
+
+	@AjaxHandler(path="/cat")
+	public static class CatHandler extends Handler {
+		public Object handle(int id, User user, HttpServletRequest request)
+			throws Exception {
+			String value=request.getParameter("value");
+			if(value == null || value.length()==0) {
+				throw new NullPointerException("value");
+			}
+			int catId=Integer.parseInt(value);
+
+			if(!user.canAdd(catId)) {
+				throw new Exception(user + " can't access cat " + catId);
+			}
+
+			CategoryFactory cf=CategoryFactory.getInstance();
+			Category cat=cf.getObject(catId);
+
+			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			SavablePhotoImageData savable=new SavablePhotoImageData(
+				pidf.getObject(id));
+			savable.setCatId(catId);
+			pidf.store(savable);
+
+			return(cat.getName());
 		}
 	}
 
