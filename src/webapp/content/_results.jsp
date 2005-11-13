@@ -78,21 +78,24 @@
 				by <c:out value="${image.addedBy.name}"/>
 	</td>
 </tr>
+<tr>
+	<td colspan="2" style="width: 25%; background: #eFeFef;" valign="top">
+		<div id="<c:out value='d${image.id}'/>" class="imgDescr"
+			><c:out value="${image.descr}"/></div>
+	</td>
+</tr>
+
 <logic:present role="admin">
 	<script type="text/javascript">
 		new Ajax.InPlaceEditor("<c:out value='kw${image.id}'/>",
 			'<c:url value="/ajax/photo/keywords?imgId=${image.id}"/>');
 		new Ajax.InPlaceEditor("<c:out value='tk${image.id}'/>",
 			'<c:url value="/ajax/photo/taken?imgId=${image.id}"/>');
+		new Ajax.InPlaceEditor("<c:out value='d${image.id}'/>",
+			'<c:url value="/ajax/photo/descr?imgId=${image.id}"/>',
+			{rows:4, cols:60});
 	</script>
 </logic:present>
-<tr>
-	<td colspan="2" style="width: 25%; background: #eFeFef;" valign="top">
-		<div class="imgDescr">
-			<c:out value="${image.descr}"/>
-		</div>
-	</td>
-</tr>
 
 </logic:iterate>
 
