@@ -58,15 +58,18 @@
 			usemap="#annotationMap"/>
 	</div>
 
+	<c:set var="imgId"><%= image.getId() %></c:set>
+
 	<div>
 		<b>Category</b>: <q><c:out
 			value="${image.catName}"/></q>&nbsp;<b>Keywords</b>:
-			<i><c:forEach var="kw" items="${image.keywords}">
-				<c:out value="${kw.keyword}"/>
-			</c:forEach></i><br/>
+			<i><span id="imgKeywords"><c:forEach
+				var="kw" items="${image.keywords}"> <c:out value="${kw.keyword}"
+					/></c:forEach></span></i><br/>
 		<b>Size</b>:  <c:out value="${image.dimensions}"/>
 			(<c:out value="${image.size}"/> bytes)<br />
-		<b>Taken</b>:  <c:out value="${image.taken}"/> <b>Added</b>:
+		<b>Taken</b>:  <span id="imgTaken"><c:out value="${image.taken}"/></span>
+		<b>Added</b>:
 			<c:out value="${image.timestamp}"/>
 		by <c:out value="${image.addedBy.realName}"/><br />
 		<b>Info</b>:
@@ -74,7 +77,11 @@
 		<logic:present role="admin">
 			<script type="text/javascript">
 				new Ajax.InPlaceEditor('imgDescr',
-					'<c:url value="/ajax/editComment.do"/>', {rows: 10, cols: 80});
+					'<c:url value="/ajax/photo/descr?imgId=${imgId}"/>', {rows: 10, cols: 80});
+				new Ajax.InPlaceEditor('imgKeywords',
+					'<c:url value="/ajax/photo/keywords?imgId=${imgId}"/>');
+				new Ajax.InPlaceEditor('imgTaken',
+					'<c:url value="/ajax/photo/taken?imgId=${imgId}"/>');
 			</script>
 		</logic:present>
 

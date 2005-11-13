@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.spy.jwebkit.AjaxServlet;
+import net.spy.jwebkit.SAXAble;
 
 import net.spy.photo.PhotoSessionData;
 
@@ -28,6 +29,13 @@ public abstract class PhotoAjaxServlet extends AjaxServlet {
 			throw new ServletException("No photoSession in session.");
 		}
 		return(sessionData);
+	}
+
+	/** 
+	 * Default saxable - returns null.
+	 */
+	protected SAXAble getResults(HttpServletRequest request) throws Exception {
+		return(null);
 	}
 
 }

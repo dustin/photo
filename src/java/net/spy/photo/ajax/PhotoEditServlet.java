@@ -3,6 +3,7 @@
 
 package net.spy.photo.ajax;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,13 +11,14 @@ import java.util.Iterator;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import net.spy.jwebkit.SAXAble;
-import net.spy.jwebkit.struts.AjaxAction;
+import net.spy.jwebkit.StringElement;
 
 import net.spy.SpyObject;
 import net.spy.db.Saver;
@@ -25,6 +27,8 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
+import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.impl.SavablePhotoImageData;
 
 /**
  * Post a comment.
@@ -60,7 +64,10 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 		getLogger().info("Mappings:  " + handlers);
 	}
 
-	protected SAXAble getResults(HttpServletRequest request) throws Exception {
+	protected void processRequest(
+		HttpServletRequest request, HttpServletResponse response)
+		throws Exception {
+
 		String idString=request.getParameter("imgId");
 		if(idString == null) {
 			throw new NullPointerException("imgId");
@@ -88,20 +95,22 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 
 		// Look up and invoke the handler
 		Handler h=handlers.get(pathInfo);
-		return(h.handle(id, user, request));
+		Object rv=h.handle(id, user, request);
+		if(rv instanceof SAXAble) {
+			sendXml((SAXAble)rv, response);
+		} else {
+			sendPlain(String.valueOf(rv), response);
+		}
 	}
 
-	/** 
-	 * Interface for PhotoEditing handlers.
-	 */
 	public static abstract class Handler extends SpyObject {
-		public abstract SAXAble handle(int id, User user,
+		public abstract Object handle(int id, User user,
 			HttpServletRequest request) throws Exception;
 	}
 
 	@AjaxHandler(path="/comment",role="")
 	public static class AddCommentHandler extends Handler {
-		public SAXAble handle(int id, User user, HttpServletRequest request)
+		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 
 			String commentString=request.getParameter("comment");
@@ -122,6 +131,54 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 			getLogger().info(user + " Posting comment for image "
 				+ id + ":  " + comment);
 			return(null);
+		}
+	}
+
+	public static abstract class ValueEditor extends Handler {
+		public Object handle(int id, User user, HttpServletRequest request)
+			throws Exception {
+			String value=request.getParameter("value");
+			if(value == null || value.length()==0) {
+				throw new NullPointerException("value");
+			}
+
+			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			SavablePhotoImageData savable=new SavablePhotoImageData(
+				pidf.getObject(id));
+
+			update(savable, value);
+			getLogger().info("Updated " + savable + " with " + value);
+
+			pidf.store(savable);
+
+			return(value);
+		}
+
+		protected abstract void update(SavablePhotoImageData savable,
+			String value) throws Exception;
+	}
+
+	@AjaxHandler(path="/descr")
+	public static class DescrHandler extends ValueEditor {
+		public void update(SavablePhotoImageData savable, String value)
+			throws Exception {
+			savable.setDescr(value);
+		}
+	}
+
+	@AjaxHandler(path="/keywords")
+	public static class KeywordsHandler extends ValueEditor {
+		public void update(SavablePhotoImageData savable, String value)
+			throws Exception {
+			savable.setKeywords(value);
+		}
+	}
+
+	@AjaxHandler(path="/taken")
+	public static class TakenHandler extends ValueEditor {
+		public void update(SavablePhotoImageData savable, String value)
+			throws Exception {
+			savable.setTaken(value);
 		}
 	}
 
