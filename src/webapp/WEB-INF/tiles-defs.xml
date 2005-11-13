@@ -115,11 +115,6 @@
 	</definition>
 
 	<!-- Admin pages -->
-	<definition name="admin.display" extends="pageLayout">
-		<put name="title" type="string" value="Admin Display"/>
-		<put name="body" value="/content/admin/_display.jsp"/>
-	</definition>
-
 	<definition name="admin.catlist" extends="pageLayout">
 		<put name="title" type="string" value="Category Administration"/>
 		<put name="body" value="/content/admin/_categories.jsp"/>

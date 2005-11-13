@@ -160,12 +160,7 @@
 		name="displayForm"
 		scope="request"
 		type="net.spy.photo.struts.GetImageDataAction">
-		<forward name="next" path="/displaySwitch.do"/>
-	</action>
-
-	<action path="/displaySwitch" type="net.spy.photo.struts.AdminSwitchAction">
-		<forward name="subadmin" path="admin.display"/>
-		<forward name="noadmin" path="top.display"/>
+		<forward name="next" path="top.display"/>
 	</action>
 
 	<action path="/refreshDisplay" type="net.spy.photo.struts.SetDisplayRefresh">
