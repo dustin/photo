@@ -140,7 +140,7 @@
 
 			Element.show("addindicator");
 			var postBody=$H({imgId: imgid, comment: comment}).toQueryString();
-			new Ajax.Request('<c:url value="/ajax/postComment.do"/>', {
+			new Ajax.Request('<c:url value="/ajax/photo/comment"/>', {
 				method: 'post',
 				postBody: postBody,
 				onComplete: function(req) {

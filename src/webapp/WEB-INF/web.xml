@@ -47,6 +47,7 @@
 	<servlet>
 		<servlet-name>PhotoServlet</servlet-name>
 		<servlet-class>net.spy.photo.PhotoServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet>
@@ -58,6 +59,13 @@
 	<servlet>
 		<servlet-name>XMLRPCServlet</servlet-name>
 		<servlet-class>net.spy.rpc.XMLRPC</servlet-class>
+	</servlet>
+
+	<!-- AJAX mappings -->
+	<servlet>
+		<servlet-name>ajaxphotoedit</servlet-name>
+		<servlet-class>net.spy.photo.ajax.PhotoEditServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<!-- The action servlet -->
@@ -90,6 +98,11 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ajaxphotoedit</servlet-name>
+		<url-pattern>/ajax/photo/*</url-pattern>
+	</servlet-mapping>
 
 	<!-- Normal mapping -->
 	<servlet-mapping>
