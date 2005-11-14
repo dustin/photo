@@ -3,25 +3,17 @@
 
 package net.spy.photo.ajax;
 
-import java.io.IOException;
-import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-
-import net.spy.jwebkit.SAXAble;
-import net.spy.jwebkit.StringElement;
-
 import net.spy.SpyObject;
 import net.spy.db.Saver;
+import net.spy.jwebkit.SAXAble;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.Comment;

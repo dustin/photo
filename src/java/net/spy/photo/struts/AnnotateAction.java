@@ -7,11 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.DynaActionForm;
-
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageDataFactory;
@@ -22,6 +17,11 @@ import net.spy.photo.User;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.impl.PhotoRegionImpl;
 import net.spy.photo.impl.SavablePhotoImageData;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
 
 /**
  * Action that submits an annotated region.

@@ -3,23 +3,20 @@
 
 package net.spy.photo.ajax;
 
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import net.spy.jwebkit.SAXAble;
 import net.spy.jwebkit.MapElement;
-
-import net.spy.photo.PhotoSessionData;
-import net.spy.photo.User;
+import net.spy.jwebkit.SAXAble;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.User;
 
 /**
  * Get the categories available to the current user.

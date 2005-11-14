@@ -6,9 +6,8 @@ package net.spy.photo;
 import java.io.File;
 import java.io.FileInputStream;
 
-import net.spy.photo.impl.PhotoDimensionsImpl;
-
 import junit.framework.TestCase;
+import net.spy.photo.impl.PhotoDimensionsImpl;
 
 public class PhotoImageTest extends TestCase {
 

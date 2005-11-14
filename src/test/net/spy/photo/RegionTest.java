@@ -6,7 +6,6 @@ package net.spy.photo;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import net.spy.photo.impl.PhotoRegionImpl;
 
 /**

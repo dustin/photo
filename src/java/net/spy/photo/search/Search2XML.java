@@ -11,16 +11,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import net.spy.SpyObject;
+import net.spy.photo.Keyword;
+import net.spy.photo.PhotoImageData;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.sun.org.apache.xerces.internal.dom.DOMImplementationImpl;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-
-import net.spy.SpyObject;
-import net.spy.photo.Keyword;
-import net.spy.photo.PhotoImageData;
 
 /**
  * Convert photo search results to XML.

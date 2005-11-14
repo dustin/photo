@@ -7,10 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImageDataFactory;
@@ -18,6 +14,10 @@ import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
 import net.spy.photo.impl.SavablePhotoImageData;
 import net.spy.photo.log.PhotoLogUploadEntry;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * The action performed when an image is uploaded.

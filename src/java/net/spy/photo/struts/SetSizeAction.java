@@ -6,13 +6,13 @@ package net.spy.photo.struts;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.impl.PhotoDimensionsImpl;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
-
-import net.spy.photo.PhotoSessionData;
-import net.spy.photo.impl.PhotoDimensionsImpl;
 
 /**
  * Action to set the size of an image.

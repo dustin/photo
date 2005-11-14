@@ -12,15 +12,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoACLEntry;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSecurity;
 import net.spy.photo.User;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Action used to begin editing a new user.

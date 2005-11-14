@@ -11,10 +11,10 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import net.spy.photo.PhotoUtil;
+
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
-
-import net.spy.photo.PhotoUtil;
 
 /**
  * Upload an image.

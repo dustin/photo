@@ -7,14 +7,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.spy.photo.Persistent;
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.User;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
-
-import net.spy.photo.Persistent;
-import net.spy.photo.PhotoSessionData;
-import net.spy.photo.User;
 
 /**
  * Struts action for a user with admin role to become another user.

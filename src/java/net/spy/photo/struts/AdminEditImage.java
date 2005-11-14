@@ -6,12 +6,12 @@ package net.spy.photo.struts;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.impl.SavablePhotoImageData;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.impl.SavablePhotoImageData;
 
 /**
  * Edit images.

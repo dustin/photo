@@ -5,13 +5,13 @@ package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoUtil;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
-
-import net.spy.photo.PhotoImage;
-import net.spy.photo.PhotoUtil;
 
 /**
  * Form to receive image uploads.
