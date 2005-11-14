@@ -98,20 +98,8 @@ a:hover {
     font-size: small;
     border-style: solid none none none;
     border-width: 1px;
-    text-align: center;
+    text-align: left;
 	height: 7em;
-}
-
-#footer .leftstuff {
-	width: 59%;
-	float: left;
-	text-align: left;
-}
-
-#footer .rightstuff {
-	width: 40%;
-	text-align: right;
-	float: right;
 }
 
 

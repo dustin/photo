@@ -29,6 +29,27 @@
 	<div id="navbar">
 		<ul>
 			<li><photo:link url="/index.do" message="page.links.home"/></li>
+			<li>
+				<form method="post" action="<c:url value='/search.do'/>">
+					<input type="hidden" name="maxret" value="6"/>
+					<input type="hidden" name="fieldjoin" value="and"/>
+					<input type="hidden" name="keyjoin" value="and"/>
+					<input type="hidden" name="order" value="a.ts"/>
+					<input type="hidden" name="sdirection" value="desc"/>
+					<input type="hidden" name="field" value="keywords"/>
+					<input type="hidden" name="action" value="next"/>
+					<input id="tsInp" name="what" size="20" value="Search"
+						onfocus="$(tsInp).value='';" onblur="$(tsInp).value='Search'"
+						style="font-size: x-small;" autocomplete="off"/>
+				</form>
+				<div id="ts" class="kcSuggestions"
+					style="display:none; width: 200px; position: fixed; font-size: small;">
+				</div>
+				<script type="text/javascript">
+					new Ajax.Autocompleter('tsInp','ts',
+						'<c:url value="/matchKeyword.do"/>', { tokens: ' '} );
+				</script>
+			</li>
 			<li>Photos
 				<ul>
 					<li><photo:link url="/searchForm.do"
@@ -90,27 +111,23 @@
 			<tiles:insert attribute='body'/>
 	</div>
 	<div id="footer"> <!-- Footer -->
-		<div class="leftstuff">
-			<div>
-				Logged in as
-				<photo:link url="/credform.do">
-					<c:out value="${photoSession.user.realname}"/>
-				</photo:link>
-				<photo:admin>
-					<photo:link url="/adminify.do?action=unsetadmin">(admin)</photo:link>
-				</photo:admin>
-			</div>
-			<div>
-				<photo:sessionInfo/>
-			</div>
-			<div class="footerfineprint">
-				<fmt:message key="page.content.footer"/><br/>
-				Build 
-				<fmt:message key="build.dtstamp"/> (<fmt:message key="tla.long.version"/>)
-			</div> <!-- footerfineprint -->
-		</div><div class="rightstuff">
-				<tiles:insert page='/templates/quicksearch.jsp' />
-		</div> <!-- /rightstuff -->
+		<div>
+			Logged in as
+			<photo:link url="/credform.do">
+				<c:out value="${photoSession.user.realname}"/>
+			</photo:link>
+			<photo:admin>
+				<photo:link url="/adminify.do?action=unsetadmin">(admin)</photo:link>
+			</photo:admin>
+		</div>
+		<div>
+			<photo:sessionInfo/>
+		</div>
+		<div class="footerfineprint">
+			<fmt:message key="page.content.footer"/><br/>
+			Build 
+			<fmt:message key="build.dtstamp"/> (<fmt:message key="tla.long.version"/>)
+		</div> <!-- footerfineprint -->
 	</div> <!-- /Footer -->
 
 	<div id="sflogo">
