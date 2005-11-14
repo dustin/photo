@@ -50,13 +50,13 @@
 				<script type="text/javascript">
 					var searchText="Search this Album";
 					function focusSearch() {
-						if($(tsInp).value == searchText) {
-							$(tsInp).value='';
+						if($("tsInp").value == searchText) {
+							$("tsInp").value='';
 						}
 					}
 					function blurSearch() {
-						if($(tsInp).value == '') {
-							$(tsInp).value=searchText;
+						if($("tsInp").value == '') {
+							$("tsInp").value=searchText;
 						}
 					}
 					blurSearch();
