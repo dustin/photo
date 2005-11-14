@@ -31,6 +31,7 @@
 			<li><photo:link url="/index.do" message="page.links.home"/></li>
 			<li>
 				<form method="post" action="<c:url value='/search.do'/>">
+					<div>
 					<input type="hidden" name="maxret" value="6"/>
 					<input type="hidden" name="fieldjoin" value="and"/>
 					<input type="hidden" name="keyjoin" value="and"/>
@@ -41,6 +42,7 @@
 					<input id="tsInp" name="what" size="20" value="Search"
 						onfocus="$(tsInp).value='';" onblur="$(tsInp).value='Search'"
 						style="font-size: x-small;" autocomplete="off"/>
+					</div>
 				</form>
 				<div id="ts" class="kcSuggestions"
 					style="display:none; width: 200px; position: fixed; font-size: small;">
