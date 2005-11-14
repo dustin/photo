@@ -22,6 +22,7 @@ import net.spy.photo.Format;
 import net.spy.photo.ImageServer;
 import net.spy.photo.ImageServerFactory;
 import net.spy.photo.Keyword;
+import net.spy.photo.KeywordFactory;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
@@ -283,8 +284,9 @@ public class SavablePhotoImageData extends AbstractSavable
 	public void setKeywords(String kw) throws Exception {
 		keywords.clear();
 		StringTokenizer st=new StringTokenizer(kw);
+		KeywordFactory kf=KeywordFactory.getInstance();
 		while(st.hasMoreTokens()) {
-			keywords.add(Keyword.getKeyword(st.nextToken(), true));
+			keywords.add(kf.getKeyword(st.nextToken(), true));
 		}
 
 		// XXX: Remove any keywords from any annotations that aren't in the
@@ -316,8 +318,9 @@ public class SavablePhotoImageData extends AbstractSavable
 			width, height, title, u);
 
 		StringTokenizer st=new StringTokenizer(kw);
+		KeywordFactory kf=KeywordFactory.getInstance();
 		while(st.hasMoreTokens()) {
-			nar.addKeyword(Keyword.getKeyword(st.nextToken(), true));
+			nar.addKeyword(kf.getKeyword(st.nextToken(), true));
 		}
 
 		annotations.add(nar);

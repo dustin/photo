@@ -13,6 +13,7 @@ import net.spy.SpyObject;
 import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
 import net.spy.photo.Keyword;
+import net.spy.photo.KeywordFactory;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImageData;
@@ -79,6 +80,7 @@ public class DBImageDataSource extends SpyObject
 
 	private void loadKeywords(Map imgs) throws Exception {
 		// Load the keywords for the images
+		KeywordFactory kf=KeywordFactory.getInstance();
 		GetAlbumKeywords gkdb = new GetAlbumKeywords(PhotoConfig.getInstance());
 		ResultSet rs = gkdb.executeQuery();
 		while(rs.next()) {
@@ -88,7 +90,7 @@ public class DBImageDataSource extends SpyObject
 			if(pidi == null) {
 				throw new Exception("Invalid keymap entry to " + photoid);
 			}
-			pidi.addKeyword(Keyword.getKeyword(keywordid));
+			pidi.addKeyword(kf.getObject(keywordid));
 		}
 		rs.close();
 		gkdb.close();
@@ -115,6 +117,7 @@ public class DBImageDataSource extends SpyObject
 		gar.close();
 
 		// We now need to load all of the keywords for all of the annotations
+		KeywordFactory kf=KeywordFactory.getInstance();
 		GetAllRegionKeywords gark = new GetAllRegionKeywords(PhotoConfig
 			.getInstance());
 		rs = gark.executeQuery();
@@ -126,7 +129,7 @@ public class DBImageDataSource extends SpyObject
 			if(ad == null) {
 				throw new Exception("Invalid annotation/keymap entry to " + aid);
 			}
-			ad.addKeyword(Keyword.getKeyword(kid));
+			ad.addKeyword(kf.getObject(kid));
 		}
 		gark.close();
 	}
@@ -167,8 +170,8 @@ public class DBImageDataSource extends SpyObject
 			super.addAnnotation(r);
 		}
 
-		public void addKeyword(Keyword k) {
-			super.addKeyword(k);
+		public void addKeyword(Keyword keyword) {
+			super.addKeyword(keyword);
 		}
 
 		protected Object writeReplace() throws ObjectStreamException {

@@ -20,6 +20,7 @@ import net.spy.SpyObject;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.Keyword;
+import net.spy.photo.KeywordFactory;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoSessionData;
@@ -316,10 +317,11 @@ public class Search extends SpyObject {
 		}
 		// Flip through the keywords
 		boolean missingKw = false;
+		KeywordFactory kf=KeywordFactory.getInstance();
 		StringTokenizer st = new StringTokenizer(kw);
 		while(st.hasMoreTokens()) {
 			String kwstring = st.nextToken();
-			Keyword k = Keyword.getKeyword(kwstring);
+			Keyword k = kf.getKeyword(kwstring);
 			if(k != null) {
 				keywords.add(k);
 			} else {
