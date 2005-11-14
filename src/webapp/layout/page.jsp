@@ -39,8 +39,8 @@
 					<input type="hidden" name="sdirection" value="desc"/>
 					<input type="hidden" name="field" value="keywords"/>
 					<input type="hidden" name="action" value="next"/>
-					<input id="tsInp" name="what" size="20" value="Search"
-						onfocus="$(tsInp).value='';" onblur="$(tsInp).value='Search'"
+					<input id="tsInp" name="what" size="20"
+						onfocus="focusSearch();" onblur="blurSearch();"
 						style="font-size: x-small;" autocomplete="off"/>
 					</div>
 				</form>
@@ -48,6 +48,18 @@
 					style="display:none; width: 200px; position: fixed; font-size: small;">
 				</div>
 				<script type="text/javascript">
+					var searchText="Search this Album";
+					function focusSearch() {
+						if($(tsInp).value == searchText) {
+							$(tsInp).value='';
+						}
+					}
+					function blurSearch() {
+						if($(tsInp).value == '') {
+							$(tsInp).value=searchText;
+						}
+					}
+					blurSearch();
 					new Ajax.Autocompleter('tsInp','ts',
 						'<c:url value="/matchKeyword.do"/>', { tokens: ' '} );
 				</script>
