@@ -29,58 +29,55 @@
 	<div id="navbar">
 		<ul>
 			<li><photo:link url="/index.do" message="page.links.home"/></li>
-			<logic:present role="guest">
-				<li><photo:link url="/credform.do"
-					message="index.links.login"/></li>
-			</logic:present>
-			<logic:notPresent role="guest">
-				<li><photo:link url="/logout.do" message="page.links.logout"/></li>
-			</logic:notPresent>
-			<li><photo:link url="/searchForm.do"
-				message="index.links.advsearch"/></li>
-			<li><photo:link url="/listcomments.do"
-				message="index.links.comments"/></li>
-			<li><photo:link url="/galleryList.do"
-				message="index.links.listgalleries"/></li>
-			<li><photo:link url="/catview.do"
-				message="index.links.catview"/></li>
-			<logic:notPresent role="guest">
-				<li><photo:link url="/addform.do"
-					message="index.links.addform"/></li>
-				<li><photo:link url="/saveGalleryForm.do"
-					message="index.links.savegallery"/></li>
-				<li><photo:link url="/sessions.do" message="page.links.sessions"/></li>
-			</logic:notPresent>
-			<li><photo:link url="/newUserForm.do"
-				message="index.links.newuser"/></li>
-			<li><photo:link url="/sizeForm.do" message="page.links.size"/></li>
-			<photo:admin>
-			<li>Admin Menu</li>
+			<li>Photos
 				<ul>
-					<li>
-						<photo:link url="/admin/reporting.do"
-							message="index.links.admin.reporting"/>
-					</li>
-					<li>
-						<photo:link url="/admin/userList.do"
-							message="index.links.admin.user"/>
-					</li>
-					<li>
-						<photo:link url="/admin/catList.do"
-							message="index.links.admin.cat"/>
-					</li>
-					<li>
-						<photo:link url="/admin/newprofile.do"
-							message="index.links.admin.newprofile"/>
-					</li>
-					<li>
-						<photo:link url="/admin/properties.do"
-							message="index.links.admin.properties"/>
-					</li>
-					<li>
-						<photo:link url="/adminify.do?action=unsetadmin"
-							message="index.links.admin.droppriv"/>
-					</li>
+					<li><photo:link url="/searchForm.do"
+						message="index.links.advsearch"/></li>
+					<li><photo:link url="/listcomments.do"
+						message="index.links.comments"/></li>
+					<li><photo:link url="/catview.do"
+						message="index.links.catview"/></li>
+					<li><photo:link url="/galleryList.do"
+						message="index.links.listgalleries"/></li>
+					<logic:notPresent role="guest">
+						<li><photo:link url="/addform.do"
+							message="index.links.addform"/></li>
+						<li><photo:link url="/saveGalleryForm.do"
+							message="index.links.savegallery"/></li>
+						</logic:notPresent>
+				</ul>
+			</li>
+			<li>Accounts
+				<ul>
+					<logic:present role="guest">
+						<li><photo:link url="/credform.do"
+							message="index.links.login"/></li>
+					</logic:present>
+					<logic:notPresent role="guest">
+						<li><photo:link url="/logout.do" message="page.links.logout"/></li>
+					</logic:notPresent>
+					<li><photo:link url="/sizeForm.do" message="page.links.size"/></li>
+					<li><photo:link url="/newUserForm.do"
+						message="index.links.newuser"/></li>
+					<li><photo:link url="/sessions.do"
+						message="page.links.sessions"/></li>
+				</ul>
+			</li>
+			<photo:admin>
+			<li>Admin
+				<ul>
+					<li><photo:link url="/admin/reporting.do"
+							message="index.links.admin.reporting"/></li>
+					<li><photo:link url="/admin/userList.do"
+							message="index.links.admin.user"/></li>
+					<li><photo:link url="/admin/catList.do"
+							message="index.links.admin.cat"/></li>
+					<li><photo:link url="/admin/newprofile.do"
+							message="index.links.admin.newprofile"/></li>
+					<li><photo:link url="/admin/properties.do"
+							message="index.links.admin.properties"/></li>
+					<li><photo:link url="/adminify.do?action=unsetadmin"
+							message="index.links.admin.droppriv"/></li>
 				</ul>
 			</li>
 	</photo:admin>
