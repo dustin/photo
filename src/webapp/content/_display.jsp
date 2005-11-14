@@ -187,8 +187,8 @@
 			<html:textarea styleId="comment" property="comment" cols="50" rows="2"/>
 			<br/>
 			<html:submit>Add Comment</html:submit>
-			<photo:imgsrc alt="indicator" id="addindicator"
-				url="/images/indicator.gif"/>
+			<img src="<c:url value='/images/indicator.gif'/>"
+				alt="indicator" id="addindicator" style="display: none"/>
 		</html:form>
 	</logic:notPresent>
 </div>
