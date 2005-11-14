@@ -6,6 +6,8 @@
 body {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	text-align: center;
+	margin: 0;
+	padding: 0;
 }
 
 h1,h2,h3,h4,h5,th {
@@ -21,67 +23,104 @@ h1 { font-size: large; }
 
 h2 { font-size: medium; }
 
-#pagetitle {
-	font-size: xx-large;
-	font-weight: bold;
-	border-style: outset;
-	border-width: 5px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 5px;
-	width: 33%;
+a:hover {
+	background: #cccccc;
+	color: inherit;
 }
 
-#pagebody {
+#navbar {
+	color: black;
+	background: white;
+	position: fixed;
+    width: 150px;
+    float: left;
+    font-size: smaller;
+    border-right: solid 1px;
+    border-bottom: solid 1px;
 	text-align: left;
-	border-style: solid;
-	border-width: 1px;
-	/* XXX:  This definitely needs to be dynamic */
-	width: 810px;
-	margin-left: auto;
-	margin-right: auto;
-	padding-bottom: 10px;
-	padding-left: 1px;
-	padding-right: 1px;
 }
 
-.sectionheader {
-	font-size: large;
-	font-weight: bold;
+#navbar a {
+    border: none;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#navbar a:visited {
+    font-weight: normal;
+}
+
+#navbar a:hover {
+    text-decoration: underline;
+}
+
+#navbar ul {
+    padding: 0;
+    margin: 2px;
+    list-style: none;
+}
+
+#navbar ul ul {
+    margin: 0 1em;
+    font-size: smaller;
+}
+
+#navbar li {
+    margin: 0 0 1em 0;
+}
+
+#navbar ul > li > ul > li {
+    margin-bottom: 0;
+}
+
+#content {
+	color: black;
+	background: white;
+	margin-left: 151px;
+	padding: 5px;
+	text-align: left;
+}
+
+.metaInfo {
+	margin-top: 1em;
+	font-size: x-small;
+	color: #aaa;
 }
 
 #footer {
-	border-style: none solid solid solid;
-	font-size: x-small;
-	border-width: 1px;
-	/* XXX:  This definitely needs to be dynamic */
-	width: 810px;
-	margin-left: auto;
-	margin-right: auto;
+	margin-left: 151px;
+	color: black;
+	background: white;
+    clear: both;
+    padding-top: 2px;
+    font-size: small;
+    border-style: solid none none none;
+    border-width: 1px;
+    text-align: center;
 	height: 7em;
-	padding-left: 1px;
-	padding-right: 1px;
 }
+
+#footer .leftstuff {
+	width: 59%;
+	float: left;
+	text-align: left;
+}
+
+#footer .rightstuff {
+	width: 40%;
+	text-align: right;
+	float: right;
+}
+
 
 .footerfineprint {
 	font-size: smaller;
+	color: #999;
 }
 
 #sflogo {
 	text-align: center;
 	padding-top: 1em;
-}
-
-.leftstuff {
-	float: left;
-	width: 59%;
-	text-align: left;
-}
-
-.rightstuff {
-	float: left;
-	width: 40%;
-	text-align: right;
 }
 
 .centered {
@@ -103,6 +142,7 @@ h2 { font-size: medium; }
 }
 
 .commentblock {
+	border-color: white;
 	height: 150px;
 	margin-bottom: 1px;
 	padding: 0.5em;
@@ -111,12 +151,16 @@ h2 { font-size: medium; }
 }
 
 .comments {
+	color: black;
+	background: #ccf;
 	margin-left: 2em;
 	margin-right: 2em;
 	font-size: smaller;
 }
 
 .commentimage {
+	background: #ccf;
+	color: black;
 	text-align: center;
 	padding-right: 1em;
 	float: left;
@@ -130,14 +174,10 @@ h2 { font-size: medium; }
 }
 
 .commentheader {
+	color: black;
+	background: #999;
 	font-size: smaller;
 }
-
-/*
-.commentbody {
-	border-style: none;
-}
-*/
 
 .searchmatches {
 	font-weight: bold;
@@ -176,12 +216,15 @@ fieldset {
 }
 
 fieldset legend {
+	color: black;
+	background: #ccf;
 	border: solid 1px;
 	font-size: smaller;
 }
 
 /* This is the UI indicator of image regions being selected.  */
 #zoomBox {
+	background: red;
 	position: absolute;
 	left: 0px;
 	right: 0px;
@@ -228,13 +271,27 @@ img.annotated {
 }
 */
 
+input {
+	background: white;
+	color: black;
+}
+
 input[type="submit"], input[type="reset"], input[type="button"] {
+	color: black;
+	background: white;
+	border-color: purple;
 	border-style: outset;
 	border-width: 2px;
 	-moz-border-radius: 2em;
 }
 
 /* Magic error stuff */
+
+.errors {
+	background: inherit;
+	color: #f00;
+	font-weight: bold;
+}
 
 .errormagic a:hover .hiddenmagic {
 	display: block;

@@ -15,13 +15,9 @@
 	<head>
 		<title><tiles:insert attribute='title'/></title>
 		<photo:stylesheet url="/css/layout.css"/>
-		<photo:stylesheet url="/css/colors.css"/>
 		<photo:javascript url="/js/debug.js"/>
 		<photo:javascript url="/js/prototype.js"/>
 		<photo:javascript url="/js/s/scriptaculous.js"/>
-		<c:if test="${slideshowMode eq 1}">
-			<photo:stylesheet url="/css/slideshow.css"/>
-		</c:if>
 		<style type="text/css">
 			body {
 				background-image: url(<%= props.getProperty("background_img", "") %>);
@@ -30,9 +26,68 @@
 </head>
 <body>
 
-	<div id="pagetitle"><tiles:insert attribute='title'/></div>
+	<div id="navbar">
+		<ul>
+			<li><photo:link url="/index.do" message="page.links.home"/></li>
+			<logic:present role="guest">
+				<li><photo:link url="/credform.do"
+					message="index.links.login"/></li>
+			</logic:present>
+			<logic:notPresent role="guest">
+				<li><photo:link url="/logout.do" message="page.links.logout"/></li>
+			</logic:notPresent>
+			<li><photo:link url="/searchForm.do"
+				message="index.links.advsearch"/></li>
+			<li><photo:link url="/listcomments.do"
+				message="index.links.comments"/></li>
+			<li><photo:link url="/galleryList.do"
+				message="index.links.listgalleries"/></li>
+			<li><photo:link url="/catview.do"
+				message="index.links.catview"/></li>
+			<logic:notPresent role="guest">
+				<li><photo:link url="/addform.do"
+					message="index.links.addform"/></li>
+				<li><photo:link url="/saveGalleryForm.do"
+					message="index.links.savegallery"/></li>
+				<li><photo:link url="/sessions.do" message="page.links.sessions"/></li>
+			</logic:notPresent>
+			<li><photo:link url="/newUserForm.do"
+				message="index.links.newuser"/></li>
+			<li><photo:link url="/sizeForm.do" message="page.links.size"/></li>
+			<photo:admin>
+			<li>Admin Menu</li>
+				<ul>
+					<li>
+						<photo:link url="/admin/reporting.do"
+							message="index.links.admin.reporting"/>
+					</li>
+					<li>
+						<photo:link url="/admin/userList.do"
+							message="index.links.admin.user"/>
+					</li>
+					<li>
+						<photo:link url="/admin/catList.do"
+							message="index.links.admin.cat"/>
+					</li>
+					<li>
+						<photo:link url="/admin/newprofile.do"
+							message="index.links.admin.newprofile"/>
+					</li>
+					<li>
+						<photo:link url="/admin/properties.do"
+							message="index.links.admin.properties"/>
+					</li>
+					<li>
+						<photo:link url="/adminify.do?action=unsetadmin"
+							message="index.links.admin.droppriv"/>
+					</li>
+				</ul>
+			</li>
+	</photo:admin>
+		</ul>
+	</div>
 
-	<div id="pagebody">
+	<div id="content">
 			<tiles:insert attribute='body'/>
 	</div>
 	<div id="footer"> <!-- Footer -->
@@ -56,12 +111,6 @@
 			</div> <!-- footerfineprint -->
 		</div><div class="rightstuff">
 				<tiles:insert page='/templates/quicksearch.jsp' />
-				<photo:link url="/index.do" message="page.links.home"/>
-				| <photo:link url="/sizeForm.do" message="page.links.size"/>
-				<logic:notPresent role="guest">
-					| <photo:link url="/sessions.do" message="page.links.sessions"/>
-					| <photo:link url="/logout.do" message="page.links.logout"/>
-				</logic:notPresent>
 		</div> <!-- /rightstuff -->
 	</div> <!-- /Footer -->
 

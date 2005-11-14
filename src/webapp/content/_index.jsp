@@ -5,104 +5,28 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
-<table style="width: 100%">
-	<tr valign="top">
-		<td style="width: 50%">
-			<div class="sectionheader">Options</div>
-			<ul>
-				<logic:present role="guest">
-					<li><photo:link url="/credform.do"
-						message="index.links.login"/></li>
-				</logic:present>
-				<li><photo:link url="/searchForm.do"
-					message="index.links.advsearch"/></li>
-				<li><photo:link url="/listcomments.do"
-					message="index.links.comments"/></li>
-				<li><photo:link url="/galleryList.do"
-					message="index.links.listgalleries"/></li>
-				<li><photo:link url="/catview.do"
-					message="index.links.catview"/></li>
-				<li><photo:link url="/newUserForm.do"
-					message="index.links.newuser"/></li>
-				<logic:notPresent role="guest">
-					<li><photo:link url="/addform.do"
-						message="index.links.addform"/></li>
-					<li><photo:link url="/saveGalleryForm.do"
-						message="index.links.savegallery"/></li>
-					<li><photo:link url="/logout.do"
-						message="index.links.logout"/></li>
-				</logic:notPresent>
-			</ul>
-		</td>
-		<td style="width: 50%">
-			<div class="sectionheader">Canned Searches</div>
+<h2>Canned Searches</h2>
+<ul>
+	<c:forEach var="i" items="${searches}">
+		<li>
+			<c:set var="su">
+				<c:url value="/savedSearch.do">
+					<c:param name="searchId" value="${i.id}"/>
+				</c:url>
+			</c:set>
+			<c:out escapeXml="false" value='<a href="${su}">${i.name}</a>'/>
+		</li>
+	</c:forEach>
+</ul>
 
-			<ul>
-				<c:forEach var="i" items="${searches}">
-					<li>
-						<c:set var="su">
-							<c:url value="/savedSearch.do">
-								<c:param name="searchId" value="${i.id}"/>
-							</c:url>
-						</c:set>
-						<c:out escapeXml="false" value='<a href="${su}">${i.name}</a>'/>
-					</li>
-				</c:forEach>
-			</ul>
-		</td>
-	</tr>
+<h2>Photo of the [Unit of Time]</h2>
+<div id="photoOfTheUnitOfTime">
+	<photo:imgLink id='<%= props.getProperty("photo_of_uot", "1") %>'
+		alt="Image of the [Unit of Time]" showThumbnail='true'/>
+</div>
 
-	<tr valign="top">
-		<td style="width: 50%">
-			<div class="sectionheader">Photo of the [Unit of Time]</div>
-
-			<div class="centered">
-				<photo:imgLink id='<%= props.getProperty("photo_of_uot", "1") %>'
-					alt="Image of the [Unit of Time]" showThumbnail='true'/>
-			</div>
-		</td>
-		<td style="width: 50%">
-			<div class="sectionheader">Credits</div>
-			<fmt:message key="index.content.credits"/>
-		</td>
-	</tr>
-	<photo:admin>
-		<tr>
-			<td style="width: 50%">
-				<div class="sectionheader">Admin Menu</div>
-
-				<ul>
-					<li>
-						<photo:link url="/admin/reporting.do"
-							message="index.links.admin.reporting"/>
-					</li>
-					<li>
-						<photo:link url="/admin/userList.do"
-							message="index.links.admin.user"/>
-					</li>
-					<li>
-						<photo:link url="/admin/catList.do"
-							message="index.links.admin.cat"/>
-					</li>
-					<li>
-						<photo:link url="/admin/newprofile.do"
-							message="index.links.admin.newprofile"/>
-					</li>
-					<li>
-						<photo:link url="/admin/properties.do"
-							message="index.links.admin.properties"/>
-					</li>
-					<li>
-						<photo:link url="/adminify.do?action=unsetadmin"
-							message="index.links.admin.droppriv"/>
-					</li>
-				</ul>
-			</td>
-			<td style="width: 50%">
-			</td>
-	</tr>
-	</photo:admin>
-</table>
+<h2>Credits</h2>
+<fmt:message key="index.content.credits"/>
 
 <div class="metaInfo">
 	<photo:metaInfo>

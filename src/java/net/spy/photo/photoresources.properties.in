@@ -5,10 +5,10 @@ index.title=My Photo Album
 ###### Regular pages
 
 # Page template
-page.links.home=[Home]
-page.links.size=[Size]
-page.links.sessions=[Who's On]
-page.links.logout=[Logout]
+page.links.home=Home
+page.links.size=Size
+page.links.sessions=Who's On
+page.links.logout=Logout
 
 page.content.footer=Copyright &copy; 1997-2005 Dustin Sallings of \
 	<a href="http://www.spy.net/">SPY Internetworking</a>. \
