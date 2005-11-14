@@ -114,6 +114,13 @@
 		<put name="body" value="/content/_sizeform.jsp"/>
 	</definition>
 
+	<definition name="top.kwCloud" extends="pageLayout">
+		<put name="title" type="string" value="Keyword Cloud"/>
+		<put name="body" value="/content/_kwCloud.jsp"/>
+	</definition>
+
+	<definition name="top.kwSuggest" path="/content/_kwSuggest.jsp"/>
+
 	<!-- Admin pages -->
 	<definition name="admin.catlist" extends="pageLayout">
 		<put name="title" type="string" value="Category Administration"/>
@@ -154,8 +161,6 @@
 		<put name="title" type="string" value="Create a Profile"/>
 		<put name="body" value="/content/admin/_newprofile.jsp"/>
 	</definition>
-
-	<definition name="top.kwSuggest" path="/content/_kwSuggest.jsp"/>
 
 </tiles-definitions>
 

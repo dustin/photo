@@ -357,6 +357,12 @@
 		<forward name="next" path="top.kwSuggest"/>
 	</action>
 
+	<action path="/kwCloud"
+		type="net.spy.photo.struts.KeywordCloudAction"
+		name="emptyForm">
+		<forward name="next" path="top.kwCloud"/>
+	</action>
+
 	<!-- ***************************************************************** -->
 	<!-- Admin stuff -->
 	<!-- ***************************************************************** -->

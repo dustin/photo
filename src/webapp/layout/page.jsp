@@ -39,6 +39,8 @@
 						message="index.links.catview"/></li>
 					<li><photo:link url="/galleryList.do"
 						message="index.links.listgalleries"/></li>
+					<li><photo:link url="/kwCloud.do"
+						message="index.links.kwcloud"/></li>
 					<logic:notPresent role="guest">
 						<li><photo:link url="/addform.do"
 							message="index.links.addform"/></li>

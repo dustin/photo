@@ -340,3 +340,35 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 .kcSuggestions img {
 	padding-right: 3px;
 }
+
+.cloudcontainer {
+	padding: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+.cloud {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.cloud0 {
+	color: blue;
+    font-size: 200%;
+}
+.cloud1 {
+	color: #22f;
+    font-size: 150%;
+}
+.cloud2 {
+	color: #44f;
+    font-size: 100%;
+}
+.cloud3 {
+	color: #77f;
+    font-size: 70%;
+}
+.cloud4 {
+	color: #aaf;
+    font-size: 60%;
+}
