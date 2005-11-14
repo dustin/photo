@@ -351,6 +351,12 @@
 		<forward name="next" path="/reverseSearch.do"/>
 	</action>
 
+	<action path="/matchKeyword"
+		type="net.spy.photo.struts.KeywordCompletionAction"
+		name="emptyForm">
+		<forward name="next" path="top.kwSuggest"/>
+	</action>
+
 	<!-- ***************************************************************** -->
 	<!-- Admin stuff -->
 	<!-- ***************************************************************** -->

@@ -15,8 +15,6 @@ import net.spy.jwebkit.MapElement;
 import net.spy.jwebkit.SAXAble;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
-import net.spy.photo.PhotoSessionData;
-import net.spy.photo.User;
 
 /**
  * Get the categories available to the current user.
@@ -35,16 +33,13 @@ public class Categories extends PhotoAjaxServlet {
 	}
 	
 	protected SAXAble getResults(HttpServletRequest request) throws Exception {
-		PhotoSessionData ses=getSessionData(request);
-		User user=ses.getUser();
-
 		String pathInfo=request.getPathInfo();
 		int access=types.get(pathInfo);
 
 		CategoryFactory cf=CategoryFactory.getInstance();
 
 		Map rv=new TreeMap();
-		for(Category cat : cf.getCatList(user.getId(), access)) {
+		for(Category cat : cf.getCatList(getUser(request).getId(), access)) {
 			rv.put(cat.getName(), cat.getId());
 		}
 

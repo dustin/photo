@@ -22,10 +22,11 @@ import net.spy.photo.CategoryFactory;
 import net.spy.photo.Keyword;
 import net.spy.photo.KeywordFactory;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
+import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.sp.InsertSearch;
 import net.spy.photo.struts.SearchForm;
 import net.spy.util.Base64;
@@ -193,8 +194,15 @@ public class Search extends SpyObject {
 		return (out);
 	}
 
+	public SearchResults performSearch(SearchForm form, User user) throws Exception {
+		PhotoConfig conf=PhotoConfig.getInstance();
+		PhotoDimensions dims=new PhotoDimensionsImpl(
+			conf.get("optimal_image_size", "800x600"));
+		return(performSearch(form, user, dims));
+	}
+
 	public SearchResults performSearch(
-		SearchForm form, PhotoSessionData sessionData) throws Exception {
+		SearchForm form, User user, PhotoDimensions dims) throws Exception {
 
 		// Get the search index
 		SearchIndex index = SearchIndex.getInstance();
@@ -224,7 +232,7 @@ public class Search extends SpyObject {
 				al.add(new Integer(atmp[i]));
 			}
 			// Get rid of anything that's not valid for the current user
-			al.retainAll(getValidCats(sessionData.getUser()));
+			al.retainAll(getValidCats(user));
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Retaining images with cats " + al);
 			}
@@ -233,7 +241,7 @@ public class Search extends SpyObject {
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Getting images for all categories");
 			}
-			rset.addAll(index.getForCats(getValidCats(sessionData.getUser())));
+			rset.addAll(index.getForCats(getValidCats(user)));
 		}
 		if(getLogger().isDebugEnabled()) {
 			getLogger().debug("Starting with " + rset.size() + " images");
@@ -264,7 +272,7 @@ public class Search extends SpyObject {
 
 		// Populate the results
 		SearchResults results = new SearchResults();
-		results.setMaxSize(sessionData.getOptimalDimensions());
+		results.setMaxSize(dims);
 		int resultId = 0;
 		for(Iterator i = rset.iterator(); i.hasNext();) {
 			PhotoImageData r = (PhotoImageData)i.next();

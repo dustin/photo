@@ -155,6 +155,8 @@
 		<put name="body" value="/content/admin/_newprofile.jsp"/>
 	</definition>
 
+	<definition name="top.kwSuggest" path="/content/_kwSuggest.jsp"/>
+
 </tiles-definitions>
 
 <!-- arch-tag: 5E58C4AC-5D6F-11D9-B3E3-000A957659CC -->

@@ -43,7 +43,7 @@ public class ExportServlet extends JWHttpServlet {
 			SearchForm sf=new SearchForm();
 			sf.setSdirection("desc");
 			Search ps=Search.getInstance();
-			SearchResults psr=ps.performSearch(sf, sessionData);
+			SearchResults psr=ps.performSearch(sf, sessionData.getUser());
 
 			res.setContentType("text/xml");
 			ServletOutputStream sos=res.getOutputStream();

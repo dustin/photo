@@ -1,5 +1,6 @@
 <%@ page import="net.spy.photo.Category" %>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
@@ -13,7 +14,7 @@
 <div>
 
 <html:form action="/search.do">
-	<div>
+	<p>
 	<html:errors/>
 	<html:hidden property="maxret" value="6"/>
 	<html:hidden property="fieldjoin" value="and"/>
@@ -28,12 +29,20 @@
 			<fmt:message key="forms.search.simple.field.info"/></html:option>
 	</html:select>
 	<fmt:message key="forms.search.simple.contains"/>
-	<html:text property="what"/><br/>
-	<html:submit>
-		<fmt:message key="forms.search.simple.submit"/>
-	</html:submit>
-	</div>
+	<input type="text" id="kcInput1" name="what" autocomplete="off"/>
+	</p>
+	<div id="kc1" class="kcSuggestions"
+		style="display:none; width: 250px;"></div>
+	<p>
+		<html:submit>
+			<fmt:message key="forms.search.simple.submit"/>
+		</html:submit>
+	</p>
 </html:form>
+<script type="text/javascript">
+	new Ajax.Autocompleter('kcInput1','kc1',
+		'<c:url value="/matchKeyword.do"/>', { tokens: ' '} );
+</script>
 
 </div>
 
@@ -92,8 +101,11 @@
 			</html:option>
 		</html:select>
 
-		<html:text property="what"/><br/>
+		<input type="text" id="kcInput2" name="what" autocomplete="off"/>
 		</fieldset>
+
+		<div id="kc2" class="kcSuggestions"
+			style="display:none; width:250px;"></div>
 
 		<fieldset>
 			<legend><fmt:message key="forms.search.adv.takenconst"/></legend>
@@ -166,17 +178,20 @@
 			</html:select>
 		</fieldset>
 
-		<br/>
-
-		<html:submit>
-			<fmt:message key="forms.search.adv.submit"/>
-		</html:submit>
-		<html:reset>
-			<fmt:message key="forms.search.adv.reset"/>
-		</html:reset>
-	</div>
+		<p>
+			<html:submit>
+				<fmt:message key="forms.search.adv.submit"/>
+			</html:submit>
+			<html:reset>
+				<fmt:message key="forms.search.adv.reset"/>
+			</html:reset>
+		</p>
 
 </html:form>
+<script type="text/javascript">
+	new Ajax.Autocompleter('kcInput2','kc2',
+		'<c:url value="/matchKeyword.do"/>', { tokens: ' '} );
+</script>
 
 </div>
 <%-- arch-tag: B66C0DDF-5D6F-11D9-B3D0-000A957659CC --%>

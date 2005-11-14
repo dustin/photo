@@ -41,7 +41,7 @@ public class SearchAction extends PhotoAction {
 		// Perform the search
 		Search ps=Search.getInstance();
 		SearchResults results=null;
-		results=ps.performSearch(sf, sessionData);
+		results=ps.performSearch(sf, sessionData.getUser(), sessionData.getOptimalDimensions());
 		sessionData.setResults(results);
 		sessionData.setEncodedSearch(ps.encodeSearch(sf));
 

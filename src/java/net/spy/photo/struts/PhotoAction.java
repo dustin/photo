@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import net.spy.jwebkit.struts.JWebAction;
 import net.spy.photo.PhotoSessionData;
+import net.spy.photo.User;
 
 /**
  * Superclass for all PhotoAction classes.
@@ -39,4 +40,10 @@ public abstract class PhotoAction extends JWebAction {
 		return(sessionData);
 	}
 
+	/**
+	 * Get the current user.
+	 */
+	protected User getUser(HttpServletRequest request) throws ServletException {
+		return(getSessionData(request).getUser());
+	}
 }

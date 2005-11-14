@@ -123,6 +123,7 @@ a:hover {
 #sflogo {
 	text-align: center;
 	padding-top: 1em;
+	position: relative;
 }
 
 .centered {
@@ -313,4 +314,29 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 	width: 95%;
 	text-decoration: none;
 	display: none;
+}
+
+.selected {
+	background-color: #ff9;
+}
+
+.kcSuggestions {
+	text-align: left;
+	margin: 0;
+	padding: 0;
+	border: 1px solid black;
+	background-color: white;
+	font-size: x-small;
+	width: 250px;
+	z-index: 10;
+}
+
+.kcSuggestions ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.kcSuggestions img {
+	padding-right: 3px;
 }

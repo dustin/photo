@@ -47,6 +47,8 @@ display.comment=Submit a comment:
 comment.form.error.imageId=Image ID
 comment.form.error.comment=Comment
 
+kwmatch.count={0,choice,1#one match|2#{0,number} matches}
+
 ###### Forms
 
 # Login form
