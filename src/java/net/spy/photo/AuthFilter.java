@@ -57,7 +57,7 @@ public class AuthFilter extends SpyObject implements Filter {
 		boolean isguest=true;
 		if(psd != null) {
 			User pu=psd.getUser();
-			if(!pu.isInRole("guest")) {
+			if(pu.isInRole(User.AUTHENTICATED)) {
 				isguest=false;
 			}
 		}

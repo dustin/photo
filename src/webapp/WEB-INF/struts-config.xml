@@ -16,12 +16,6 @@
 			<form-property initial="false" name="persist" type="java.lang.Boolean"/>
 		</form-bean>
 
-		<form-bean name="adminifyForm"
-			type="org.apache.struts.validator.DynaValidatorForm">
-
-			<form-property name="action" type="java.lang.String"/>
-		</form-bean>
-
    <form-bean name="displayForm"
 			type="org.apache.struts.validator.DynaValidatorForm">
 
@@ -144,8 +138,6 @@
 		scope="request"
 		name="loginForm">
 		<forward name="next" path="/index.do" redirect="true" />
-		<forward name="setadmin" path="/adminify.do?action=setadmin"
-			redirect="true" />
 	</action>
 
 	<!-- Logout -->
@@ -210,14 +202,6 @@
     name="annotateForm">
 		<forward name="next" path="/display.do" />
   </action>
-
-	<!-- Enable/disable administrative access. -->
-	<action path="/adminify"
-		type="net.spy.photo.struts.AdminifyAction"
-		scope="request"
-		name="adminifyForm">
-		<forward name="next" path="/index.do"/>
-	</action>
 
 	<!-- Set the optimal image size. -->
 	<action path="/setviewsize"

@@ -29,7 +29,7 @@
 			<td align="left" width="30%">
 					<photo:imgLink id="0" relative="prev"
 						searchId='<%= "" + searchIdS %>'>
-						<photo:imgsrc alt="previous" url="/images/prev.png"/>
+						<img src="<c:url value='/images/prev.png'/>" alt="previous"/>
 					</photo:imgLink>
 			</td>
 
@@ -39,14 +39,14 @@
 
 			<td align="right" width="30%">
 					<photo:link url='<%= "/display.do?search_id=" + searchIdS %>'>
-						<photo:imgsrc alt="pause" url="/images/pause.png"/>
+						<img src="<c:url value='/images/pause.png'/>" alt="pause"/>
 					</photo:link>
 					<photo:link url='<%= "/refreshDisplay.do?search_id=" + searchIdS %>'>
-						<photo:imgsrc alt="slideshow" url="/images/play.png"/>
+						<img src="<c:url value='/images/play.png'/>" alt="slideshow"/>
 					</photo:link>
 					<photo:imgLink id="<%= 0 %>" relative="next"
 							searchId="<%= "" + searchIdS %>">
-						<photo:imgsrc alt="next" url="/images/next.png"/>
+						<img src="<c:url value='/images/next.png'/>" alt="next"/>
 					</photo:imgLink>
 			</td>
 		</tr>
@@ -91,7 +91,7 @@
 
 	</div>
 
-<logic:notPresent role="guest">
+<logic:present role="authenticated">
 	[<photo:link url="/annotateForm.do" id="<%= String.valueOf(image.getId()) %>">
 			Annotate
 	</photo:link>] | 
@@ -101,7 +101,7 @@
 	[<photo:link url="/addToGallery.do" id="<%= String.valueOf(image.getId()) %>">
 		Add to Gallery
 	</photo:link>] | 
-</logic:notPresent>
+</logic:present>
 [<photo:imgLink id='<%= String.valueOf(image.getId()) %>'>
 	Linkable image
 </photo:imgLink>] |
@@ -136,7 +136,7 @@
 
 <div>
 
-	<logic:notPresent role="guest">
+	<logic:present role="authenticated">
 	<script type="text/javascript">
 		function submitComment() {
 
@@ -187,7 +187,7 @@
 			<img src="<c:url value='/images/indicator.gif'/>"
 				alt="indicator" id="addindicator" style="display: none"/>
 		</html:form>
-	</logic:notPresent>
+	</logic:present>
 </div>
 <map name="annotationMap">
 	<logic:iterate id="region"

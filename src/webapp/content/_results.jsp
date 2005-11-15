@@ -23,7 +23,7 @@
 
 <table width="100%">
 <tr>
-<photo:canAdd>
+<logic:present role="canadd">
 	<% if(sessionData.getEncodedSearch() != null) { %>
 	<td valign="top" class="leftAligned">
 		<form method="POST" action="savesearch.do">
@@ -36,7 +36,7 @@
 		</form>
 	</td>
 	<% } %>
-</photo:canAdd>
+</logic:present>
 
 	<td valign="top" class="rightAligned">
 		<div class="rightAligned search_matches">

@@ -8,6 +8,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import net.spy.photo.User;
+
 /**
  * Annotation for defining sub-servlet access.
  */
@@ -21,12 +23,7 @@ public @interface AjaxHandler {
 	String path();
 
 	/** 
-	 * If true, guest is allowed to make this request.
-	 */
-	boolean guest() default false;
-
-	/** 
 	 * Role required for this request.
 	 */
-	String role() default "admin";
+	String role() default User.ADMIN;
 }

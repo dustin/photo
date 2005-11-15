@@ -99,6 +99,7 @@ public class UserFactory extends GenFactory<User> {
 		ResultSet rs=db.executeQuery();
 		while(rs.next()) {
 			User pu=new DBUser(rs);
+			((DBUser)pu).addRole(User.AUTHENTICATED);
 
 			// Add it to the list so we can initialize the ACLs.
 			users.put(pu.getName(), pu);
@@ -113,8 +114,10 @@ public class UserFactory extends GenFactory<User> {
 		if(defaultUser==null) {
 			throw new PhotoUserException("Default user not found.");
 		}
-		// Add the ``guest'' role to the default user.
-		((DBUser)defaultUser).addRole("guest");
+		// Add the ``guest'' role to the default user, and remove
+		// ``authenticated''
+		((DBUser)defaultUser).addRole(User.GUEST);
+		((DBUser)defaultUser).removeRole(User.AUTHENTICATED);
 
 		// Initialize all the ACLs for all the users
 		initACLs(idMap, defaultUser);

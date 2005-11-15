@@ -22,18 +22,12 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public static final String SES_ATTR="photoSession";
 
-	public static final int NOADMIN=0;
-	public static final int ADMIN=1;
-	public static final int SUBADMIN=2;
-
 	private User user=null;
 
 	private String encodedSearch=null;
 	private PhotoDimensions optimalDimensions=null;
 
 	private Map<String, Cursor> cursors=null;
-
-	private int adminType=NOADMIN;
 
 	// Keep track of how many images have been served up to this user.
 	private int imagesSeen=0;
@@ -71,7 +65,6 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public void setUser(User to) {
 		this.user=to;
-		unSetAdmin();
 	}
 
 	/**
@@ -131,71 +124,6 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public void setEncodedSearch(String to) {
 		this.encodedSearch=to;
-	}
-
-	/**
-	 * Check to see if a specific flag is set.
-	 *
-	 * @return true if the flag is set.
-	 */
-	public boolean checkAdminFlag(int flag) {
-		return( (adminType & flag) == flag);
-	}
-
-	/**
-	 * Get all the admin bits.
-	 */
-	public int getAdmin() {
-		return(adminType);
-	}
-
-	/**
-	 * Set all the admin bits.
-	 */
-	public void setAdmin(int to) throws PhotoException {
-		// Check access
-
-		switch(to) {
-			case ADMIN:
-				if(!getUser().isInRole("admin")) {
-					throw new PhotoException(
-						"Requested admin for non-admin user.");
-				}
-				break;
-			case SUBADMIN:
-				if(!getUser().isInRole("subadmin")) {
-					throw new PhotoException(
-						"Requested subadmin for non-admin user.");
-				}
-				break;
-			case NOADMIN:
-				// Anyone can revoke admin privs
-				adminType=NOADMIN;
-				break;
-			default:
-				throw new PhotoException("Invalid admin type.");
-		}
-
-		// If we made it this far, adminify
-		adminType=to;
-	}
-
-	/**
-	 * Set the default administrative privilege for this user.
-	 */
-	public void setAdmin() throws PhotoException {
-		if(getUser().isInRole("admin")) {
-			setAdmin(ADMIN);
-		} else if(getUser().isInRole("subadmin")) {
-			setAdmin(SUBADMIN);
-		}
-	}
-
-	/**
-	 * Safely revoke administrative privs.
-	 */
-	public void unSetAdmin() {
-		adminType=NOADMIN;
 	}
 
 	/**

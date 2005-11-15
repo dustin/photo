@@ -198,6 +198,11 @@ public class DBUser extends AbstractSavable
 
 	public void canAdd(boolean to) {
 		this.canadd=to;
+		if(canadd) {
+			addRole(User.CANADD);
+		} else {
+			removeRole(User.CANADD);
+		}
 	}
 
 	/**

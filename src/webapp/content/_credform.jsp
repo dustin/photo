@@ -25,10 +25,6 @@
 			<td><fmt:message key="forms.login.persist"/>:</td>
 			<td><html:checkbox property="persist"/></td>
 		</tr>
-		<tr>
-			<td><fmt:message key="forms.login.setadmin"/>:</td>
-			<td><html:checkbox property="admin"/></td>
-		</tr>
 	</table>
 	<html:submit>
 		<fmt:message key="forms.login.authbutton"/>
@@ -65,8 +61,6 @@
 
 <h1>Other Services</h1>
 
-<a href="adminify.do?action=setadmin">Request Administrative Privileges</a>
-<br/>
 <photo:link url="/changePwForm.do">Change Password</photo:link>
 
 </div>

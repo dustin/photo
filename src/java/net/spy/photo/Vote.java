@@ -81,7 +81,7 @@ public class Vote extends SpyObject implements java.io.Serializable {
 		if(voteId!=-1) {
 			throw new Exception("You can only save *new* votes.");
 		}
-		if(user.getName().equals("guest")) {
+		if(user.isInRole(User.GUEST)) {
 			throw new Exception("Guest is not allowed to vote.");
 		}
 		SpyDB db=new SpyDB(PhotoConfig.getInstance());

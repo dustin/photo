@@ -105,17 +105,8 @@ public class LoginAction extends PhotoAction {
 			response.addCookie(c);
 		}
 
-		// Find out of the user wanted to upgrade to admin privs after 
-		bol=(Boolean)lf.get("admin");
-		if(bol.booleanValue()) {
-			getLogger().info(user + " logged in as admin");
-			rv=mapping.findForward("setadmin");
-		} else {
-			rv=mapping.findForward("next");
-		}
-
 		// Go ahead and say it's alright.
-		return(rv);
+		return(mapping.findForward("next"));
 	}
 
 }

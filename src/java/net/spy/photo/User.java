@@ -14,6 +14,27 @@ import net.spy.factory.Instance;
  */
 public interface User extends Principal, Instance {
 
+	/** 
+	 * The guest role that unauthenticated users have.
+	 */
+	static final String GUEST="guest";
+	/** 
+	 * The role authenticated users have.
+	 */
+	static final String AUTHENTICATED="authenticated";
+	/** 
+	 * Role that indicates the user may add.
+	 */
+	static final String CANADD="canadd";
+	/** 
+	 * The admin role.
+	 */
+	static final String ADMIN="admin";
+	/** 
+	 * The subadmin role.
+	 */
+	static final String SUBADMIN="subadmin";
+
 	/**
 	 * Get the user's E-mail address.
 	 */

@@ -31,13 +31,11 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 
 	private Map<String, Handler> handlers=null;
 	private Map<String, String> roles=null;
-	private Map<String, Boolean> guestAllowed=null;
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		handlers=new HashMap<String, Handler>();
 		roles=new HashMap<String, String>();
-		guestAllowed=new HashMap<String, Boolean>();
 		Class inner[]=getClass().getClasses();
 		getLogger().info("Found " + inner.length + " inner classes.");
 		for(Class c : inner) {
@@ -49,7 +47,6 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 					if(!ah.role().equals("")) {
 						roles.put(ah.path(), ah.role());
 					}
-					guestAllowed.put(ah.path(), ah.guest());
 				} catch(Exception e) {
 					getLogger().warn("Error instantiating " + c, e);
 				}
@@ -87,11 +84,6 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 					+ " does not meet the role requirement:  " + role);
 			}
 		}
-		if(!guestAllowed.get(pathInfo)) {
-			if(user.getRoles().contains("guest")) {
-				throw new Exception("Guest access not allowed");
-			}
-		}
 
 		// Now invoke the handler
 		Object rv=h.handle(id, user, request);
@@ -107,7 +99,7 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 			HttpServletRequest request) throws Exception;
 	}
 
-	@AjaxHandler(path="/comment",role="")
+	@AjaxHandler(path="/comment",role=User.AUTHENTICATED)
 	public static class AddCommentHandler extends Handler {
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {

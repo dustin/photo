@@ -37,7 +37,6 @@ index.links.admin.user=User Admin
 index.links.admin.cat=Category Admin
 index.links.admin.newprofile=New Profile
 index.links.admin.properties=Edit Properties
-index.links.admin.droppriv=Drop Privileges
 
 index.content.credits=All pages herein were created using vi.  For more \
 	information on the vi web page publishing system, type \
@@ -162,8 +161,6 @@ error.adminuserform.email=Email field empty
 error.adminuserform.email.inv=Invalid email address
 error.adminuserform.catAclView=View ACL not provided
 error.adminuserform.catAclAdd=Add ACL not provided
-error.adminuserform.adminStatus=Admin Status field not provided
-error.adminuserform.adminStatus.inv=Admin Status field invalid
 
 # Admin category form
 error.admincatform.catId=Category ID field not supplied

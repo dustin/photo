@@ -10,26 +10,6 @@
 	<jspversion>1.1</jspversion>
 	<shortname>photo</shortname>
 
-	<!-- A conditional blocked based on whether the user has the admin flag -->
-	<tag>
-		<name>admin</name>
-		<tagclass>net.spy.photo.taglib.AdminCheck</tagclass>
-		<attribute>
-			<name>negate</name>
-			<required>false</required>
-		</attribute>
-	</tag>
-
-	<!-- A conditional blocked based on whether the can add. -->
-	<tag>
-		<name>canAdd</name>
-		<tagclass>net.spy.photo.taglib.AddCheck</tagclass>
-		<attribute>
-			<name>negate</name>
-			<required>false</required>
-		</attribute>
-	</tag>
-
 	<!-- Meta info fetcher. -->
 	<tag>
 		<name>metaInfo</name>
@@ -182,39 +162,6 @@
 		<attribute>
 			<name>url</name>
 			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-
-	<!-- Create a relative image src to an image within this webapp -->
-	<tag>
-		<name>imgsrc</name>
-		<tagclass>net.spy.photo.taglib.ImgSrcTag</tagclass>
-		<attribute>
-			<name>url</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>alt</name>
-			<required>true</required>
-		</attribute>
-		<attribute>
-			<name>id</name>
-			<required>false</required>
-		</attribute>
-		<attribute>
-			<name>styleClass</name>
-			<required>false</required>
-		</attribute>
-		<attribute>
-			<name>width</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>height</name>
-			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
