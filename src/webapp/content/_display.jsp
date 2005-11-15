@@ -177,9 +177,6 @@
 					}
 				});
 		}
-		Event.observe(window, 'load', function() {
-				Element.hide("addindicator");
-			}, false);
 	</script>
 		<fmt:message key="display.comment"/><br/>
 		<html:form action="/addcomment" onsubmit="submitComment(); return false;"
