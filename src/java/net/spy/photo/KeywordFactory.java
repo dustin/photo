@@ -110,16 +110,16 @@ public class KeywordFactory extends GenFactory<Keyword> {
 	}
 
 	/**
-	 * Get all of the keywords applicable to the given user.
+	 * Get all keywords applicable to the given user within the given search.
 	 * 
 	 * @param u the given user
+	 * @param sf the search form for finding images to extract keywords
 	 * @return a map of 
 	 * @throws Exception
 	 */
-	public Collection<KeywordMatch> getKeywordsForUser(User u) throws Exception {
+	public Collection<KeywordMatch> getKeywordsForUser(User u, SearchForm sf)
+		throws Exception {
 		Map<String, KeywordMatch> rv=new TreeMap<String, KeywordMatch>();
-		SearchForm sf=new SearchForm();
-		sf.setSdirection("desc");
 		for(PhotoImageData pid : Search.getInstance().performSearch(sf, u)) {
 			for(Keyword kw : pid.getKeywords()) {
 				KeywordMatch km=rv.get(kw.getKeyword());
@@ -131,6 +131,20 @@ public class KeywordFactory extends GenFactory<Keyword> {
 			}
 		}
 		return(rv.values());
+	}
+
+	/**
+	 * Get all of the keywords applicable to the given user.
+	 * 
+	 * @param u the given user
+	 * @return a map of 
+	 * @throws Exception
+	 */
+	public Collection<KeywordMatch> getKeywordsForUser(User u)
+		throws Exception {
+		SearchForm sf=new SearchForm();
+		sf.setSdirection("desc");
+		return(getKeywordsForUser(u, new SearchForm()));
 	}
 
 	/**

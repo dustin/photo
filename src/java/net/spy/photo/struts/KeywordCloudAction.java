@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeSet;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +24,31 @@ public class KeywordCloudAction extends PhotoAction {
 
 	private static final int MAX_RESULTS=100;
 
+	private SearchForm getSearchForm(HttpServletRequest req) throws Exception {
+		SearchForm sf=new SearchForm();
+		if(req.getParameter("recent") != null
+			|| req.getParameter("from") != null
+			|| req.getParameter("to") != null) {
+			String dateFrom=null;
+			String dateTo=null;
+			if(req.getParameter("recent")!= null) {
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+				Calendar cal=Calendar.getInstance();
+				cal.add(Calendar.DAY_OF_MONTH, -30);
+				dateFrom=sdf.format(cal.getTime());
+			} else {
+				dateFrom=req.getParameter("from");
+				dateTo=req.getParameter("to");
+			}
+			sf=new SearchForm();
+			sf.setStart(dateFrom);
+			sf.setEnd(dateTo);
+			sf.setOrder("a.ts");
+		}
+		sf.setSdirection("desc");
+		return(sf);
+	}
+
 	@Override
 	protected ActionForward spyExecute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -29,7 +56,7 @@ public class KeywordCloudAction extends PhotoAction {
 			new TreeSet<KeywordFactory.KeywordMatch>(
 					KeywordFactory.KEYWORMATCH_BY_FREQUENCY);
 		ts.addAll(KeywordFactory.getInstance().getKeywordsForUser(
-			getUser(req)));
+			getUser(req), getSearchForm(req)));
 		// Make sure we don't return too many results
 		if(ts.size() > MAX_RESULTS) {
 			Collection smaller=new ArrayList();
