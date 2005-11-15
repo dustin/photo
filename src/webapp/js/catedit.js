@@ -42,7 +42,11 @@ function setupCategoryEditor(el, url, webappurl) {
 						var op=document.createElement("option");
 						op.value=getData(cat, "value");
 						op.text=getData(cat, "key");
-						field.add(op, null);
+						if(window.ActiveXObject) {
+							field.options.add(op);
+						} else {
+							field.appendChild(op);
+						}
 
 						if(op.text == text) {
 							field.selectedIndex=idx;
