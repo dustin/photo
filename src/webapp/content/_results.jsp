@@ -69,8 +69,10 @@
 			pattern="yyyy-MM-dd HH:mm:ss"/>
 				by <c:out value="${image.addedBy.name}"/>
 	</div>
-	<div id="<c:out value='d${image.id}'/>" class="search_result_descr"
-		><c:out value="${image.descr}"/></div>
+	<div class="search_result_descr">
+		<div id="<c:out value='d${image.id}'/>"><c:out
+			value="${image.descr}"/></div>
+	</div>
 </div>
 
 <logic:present role="admin">

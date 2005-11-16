@@ -194,6 +194,9 @@ a:hover {
 
 .search_result_descr {
 	clear: left;
+}
+
+.search_result_descr div {
 	padding: 20px 20px 20px 20px;
 }
 
