@@ -3,6 +3,8 @@
 
 package net.spy.photo.struts;
 
+import java.util.Arrays;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
@@ -38,6 +40,66 @@ public class SearchForm extends PhotoForm {
 	 */
 	public SearchForm() {
 		super();
+	}
+
+	private int hc(String s) {
+		return(s == null ? 137 : s.hashCode());
+	}
+
+	public int hashCode() {
+		return(Arrays.hashCode(cats)
+			^ hc(field)
+			^ hc(keyjoin)
+			^ hc(what)
+
+			^ hc(tstart)
+			^ hc(tend)
+
+			^ hc(start)
+			^ hc(end)
+
+			^ hc(order)
+			^ hc(sdirection)
+			^ hc(maxret)
+
+			^ hc(filter)
+
+			^ hc(action));
+	}
+
+	private boolean eq(String s1, String s2) {
+		return(s1 == null ? s2 == null : s1.equals(s2));
+	}
+
+	public boolean equals(Object o) {
+		boolean rv=false;
+		if(o instanceof SearchForm) {
+			SearchForm sf=(SearchForm)o;
+			rv=true;
+			if(cats != null) {
+				rv &= Arrays.equals(cats, sf.cats);
+			} else {
+				rv &= (sf.cats == null);
+			}
+			rv &= eq(field, sf.field);
+			rv &= eq(keyjoin, sf.keyjoin);
+			rv &= eq(what, sf.what);
+
+			rv &= eq(tstart, sf.tstart);
+			rv &= eq(tend, sf.tend);
+
+			rv &= eq(start, sf.start);
+			rv &= eq(end, sf.end);
+
+			rv &= eq(order, sf.order);
+			rv &= eq(sdirection, sf.sdirection);
+			rv &= eq(maxret, sf.maxret);
+
+			rv &= eq(filter, sf.filter);
+
+			rv &= eq(action, sf.action);
+		}
+		return(rv);
 	}
 
 	/**
