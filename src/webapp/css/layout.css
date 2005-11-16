@@ -168,12 +168,33 @@ a:hover {
 	font-size: smaller;
 }
 
-.searchmatches {
-	font-weight: bold;
+#search_matches {
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
-.imgDescr {
-	margin: 20px;
+.search_result {
+	background: #eee;
+	margin-bottom: 4px;
+	margin-left: 0;
+}
+
+.search_result_image {
+	width: 220px;
+	height: 150px;
+	padding: 5px;
+	float: left;
+	text-align: right;
+}
+
+.search_result_info {
+	margin-left: 240px;
+}
+
+.search_result_descr {
+	clear: left;
+	padding: 20px 20px 20px 20px;
 }
 
 #imgDisplay {
@@ -254,11 +275,6 @@ a.annotation:hover {
 img.annotated {
   border-width: 0;
 }
-
-/*
-.searchresults {
-}
-*/
 
 input {
 	background: white;

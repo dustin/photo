@@ -7,6 +7,7 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<html:xhtml/>
 <photo:javascript url="/js/catedit.js"/>
 
 <%
@@ -19,52 +20,40 @@
 	}
 %>
 
-<div>
-
-<table width="100%">
-<tr>
+<div id="searchheader">
 <logic:present role="canadd">
 	<% if(sessionData.getEncodedSearch() != null) { %>
-	<td valign="top" class="leftAligned">
-		<form method="POST" action="savesearch.do">
+		<form method="post" action="savesearch.do">
 			<div>
-			<input type="hidden" name="search"
-				value="<%= sessionData.getEncodedSearch() %>"/>
-			Save search as:  <input name="name"/>
-			<html:submit>Save</html:submit>
-		</div>
+				<input type="hidden" name="search"
+					value="<%= sessionData.getEncodedSearch() %>"/>
+				Save search as:  <input name="name"/>
+				<html:submit>Save</html:submit>
+			</div>
 		</form>
-	</td>
 	<% } %>
 </logic:present>
 
-	<td valign="top" class="rightAligned">
-		<div class="rightAligned search_matches">
-			Search matched <%= results.size() %> entries.
-		</div>
-	</td>
-</tr>
-</table>
-
+	<div id="search_matches">
+		Search matched <%= results.size() %> entries.
+	</div>
 </div>
 
-<div class="search_results">
-
-<table>
+<div id="search_results">
 
 <logic:iterate id="image" collection="<%= results %>"
 	type="net.spy.photo.search.SearchResult"
 	length="<%= String.valueOf(results.getMaxRet()) %>">
 
-<tr>
-	<td style="width: 25%" class="centered">
+<div class="search_result">
+	<div class="search_result_image">
 		<photo:imgLink id="<%= image.getId() %>"
 			searchId="<%= image.getSearchId() %>"
 			width="<%= String.valueOf(image.getTnDims().getWidth()) %>"
 			height="<%= String.valueOf(image.getTnDims().getHeight()) %>"
 			showThumbnail="true"/>
-	</td>
-	<td style="width: 25%; background: #eFeFef;" class="leftAligned" valign="top">
+	</div>
+	<div class="search_result_info">
 		ID: <c:out value="${image.id}"/><br/>
 		Keywords: <span id="<c:out value='kw${image.id}'/>"><c:forEach
 			var="kw" items="${image.keywords}"> <c:out value="${kw.keyword}"
@@ -79,14 +68,10 @@
 		Added: <fmt:formatDate value="${image.timestamp}"
 			pattern="yyyy-MM-dd HH:mm:ss"/>
 				by <c:out value="${image.addedBy.name}"/>
-	</td>
-</tr>
-<tr>
-	<td colspan="2" style="width: 25%; background: #eFeFef;" valign="top">
-		<div id="<c:out value='d${image.id}'/>" class="imgDescr"
-			><c:out value="${image.descr}"/></div>
-	</td>
-</tr>
+	</div>
+	<div id="<c:out value='d${image.id}'/>" class="search_result_descr"
+		><c:out value="${image.descr}"/></div>
+</div>
 
 <logic:present role="admin">
 	<script type="text/javascript">
@@ -104,8 +89,6 @@
 </logic:present>
 
 </logic:iterate>
-
-</table>
 
 </div>
 
