@@ -1,17 +1,18 @@
 // arch-tag: 6387A516-052C-4A11-BE8E-8232A0F18874
 package net.spy.photo.struts;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeSet;
-import java.util.Calendar;
-import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.KeywordFactory;
+import net.spy.photo.search.KeywordMatch;
+import net.spy.photo.search.Search;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -52,10 +53,9 @@ public class KeywordCloudAction extends PhotoAction {
 	@Override
 	protected ActionForward spyExecute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
-		Collection<KeywordFactory.KeywordMatch> ts=
-			new TreeSet<KeywordFactory.KeywordMatch>(
-					KeywordFactory.KEYWORMATCH_BY_FREQUENCY);
-		ts.addAll(KeywordFactory.getInstance().getKeywordsForUser(
+		Collection<KeywordMatch> ts=
+			new TreeSet<KeywordMatch>(KeywordMatch.BY_FREQUENCY);
+		ts.addAll(Search.getInstance().getKeywordsForUser(
 			getUser(req), getSearchForm(req)));
 		// Make sure we don't return too many results
 		if(ts.size() > MAX_RESULTS) {
@@ -68,16 +68,16 @@ public class KeywordCloudAction extends PhotoAction {
 		}
 
 		int sum=0;
-		for(KeywordFactory.KeywordMatch km : ts) {
+		for(KeywordMatch km : ts) {
 			sum+= km.getCount();
 		}
-		Collection<KeywordFactory.KeywordMatch> buckets[]=new Collection[5];
+		Collection<KeywordMatch> buckets[]=new Collection[5];
 		for(int i=0; i<buckets.length; i++) {
 			buckets[i]=new ArrayList();
 		}
 		int each=sum/buckets.length;
 		int current=0;
-		for(KeywordFactory.KeywordMatch km : ts) {
+		for(KeywordMatch km : ts) {
 			if(sumOf(buckets[current]) + km.getCount() > each) {
 				current++;
 			}
@@ -87,13 +87,12 @@ public class KeywordCloudAction extends PhotoAction {
 			buckets[current].add(km);
 		}
 
-		Collection<KeywordFactory.KeywordMatch> sorted=
-			new TreeSet(KeywordFactory.KEYWORDMATCH_BY_KEYWORD);
+		Collection<KeywordMatch> sorted=new TreeSet(KeywordMatch.BY_KEYWORD);
 		sorted.addAll(ts);
 
 		Collection rv=new ArrayList(sorted.size());
 
-		for(KeywordFactory.KeywordMatch km : sorted) {
+		for(KeywordMatch km : sorted) {
 			for(int i=0; i<buckets.length; i++) {
 				if(buckets[i].contains(km)) {
 					rv.add(new KW(km, i));
@@ -106,9 +105,9 @@ public class KeywordCloudAction extends PhotoAction {
 		return(mapping.findForward("next"));
 	}
 
-	private int sumOf(Collection<KeywordFactory.KeywordMatch> collection) {
+	private int sumOf(Collection<KeywordMatch> collection) {
 		int sum=0;
-		for(KeywordFactory.KeywordMatch km : collection) {
+		for(KeywordMatch km : collection) {
 			sum+=km.getCount();
 		}
 		return(sum);
@@ -116,8 +115,8 @@ public class KeywordCloudAction extends PhotoAction {
 
 	public static class KW {
 		private int bucket=0;
-		private KeywordFactory.KeywordMatch kwmatch=null;
-		public KW(KeywordFactory.KeywordMatch k, int b) {
+		private KeywordMatch kwmatch=null;
+		public KW(KeywordMatch k, int b) {
 			super();
 			bucket=b;
 			kwmatch=k;
@@ -125,7 +124,7 @@ public class KeywordCloudAction extends PhotoAction {
 		public int getBucket() {
 			return bucket;
 		}
-		public KeywordFactory.KeywordMatch getKwmatch() {
+		public KeywordMatch getKwmatch() {
 			return kwmatch;
 		}
 		

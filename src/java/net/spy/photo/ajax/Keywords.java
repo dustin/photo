@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.spy.jwebkit.CollectionElement;
 import net.spy.jwebkit.SAXAble;
-import net.spy.photo.KeywordFactory;
+import net.spy.photo.search.KeywordMatch;
+import net.spy.photo.search.Search;
 
 /**
  * Get the keywords for the current user.
@@ -25,23 +26,23 @@ public class Keywords extends PhotoAjaxServlet {
 	public void init(ServletConfig conf) throws ServletException {
 		super.init(conf);
 		paths=new HashMap<String, Comparator>();
-		paths.put("/", KeywordFactory.KEYWORDMATCH_BY_KEYWORD);
-		paths.put("/alph", KeywordFactory.KEYWORDMATCH_BY_KEYWORD);
-		paths.put("/freq", KeywordFactory.KEYWORMATCH_BY_FREQUENCY);
+		paths.put("/", KeywordMatch.BY_KEYWORD);
+		paths.put("/alph", KeywordMatch.BY_KEYWORD);
+		paths.put("/freq", KeywordMatch.BY_FREQUENCY);
 	}
 
 	protected SAXAble getResults(HttpServletRequest request) throws Exception {
 		Comparator comp=paths.get(request.getPathInfo());
 		if(comp == null) {
-			throw new IllegalArgumentException("Illegal path: " + request.getPathInfo()
-					+ " try one of " + paths.keySet());
+			throw new IllegalArgumentException("Illegal path: "
+					+ request.getPathInfo() + " try one of " + paths.keySet());
 		}
 		TreeSet ts=new TreeSet(comp);
-		ts.addAll(KeywordFactory.getInstance().getKeywordsForUser(getUser(request)));
+		ts.addAll(Search.getInstance().getKeywordsForUser(getUser(request)));
 		String prefixMatch=request.getParameter("keyword");
 		if(prefixMatch != null) {
-			for(Iterator<KeywordFactory.KeywordMatch> i=ts.iterator(); i.hasNext();) {
-				KeywordFactory.KeywordMatch km=i.next();
+			for(Iterator<KeywordMatch> i=ts.iterator(); i.hasNext();) {
+				KeywordMatch km=i.next();
 				if(!km.getKeyword().getKeyword().startsWith(prefixMatch)) {
 					i.remove();
 				}

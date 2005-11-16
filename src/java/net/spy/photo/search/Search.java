@@ -10,8 +10,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.servlet.ServletException;
@@ -31,17 +33,15 @@ import net.spy.photo.sp.InsertSearch;
 import net.spy.photo.struts.SearchForm;
 import net.spy.util.Base64;
 
+
 /**
  * Perform searches.
  */
 public class Search extends SpyObject {
 
 	private static final String CHARSET = "UTF-8";
-
 	private static final int BY_TS = 1;
-
 	private static final int BY_TAKEN = 2;
-
 	private static Search instance = null;
 
 	/**
@@ -194,15 +194,39 @@ public class Search extends SpyObject {
 		return (out);
 	}
 
-	public SearchResults performSearch(SearchForm form, User user) throws Exception {
+	/**
+	 * Perform a search with the default dimensions.
+	 * 
+	 * @param f the search form
+	 * @param u the user
+	 */
+	public SearchResults performSearch(SearchForm f, User u) throws Exception {
 		PhotoConfig conf=PhotoConfig.getInstance();
 		PhotoDimensions dims=new PhotoDimensionsImpl(
 			conf.get("optimal_image_size", "800x600"));
-		return(performSearch(form, user, dims));
+		return(performSearch(f, u, dims));
 	}
 
+	/**
+	 * Perform a search.
+	 * 
+	 * @param form the search form
+	 * @param user the user requesting the search
+	 * @param dims the maximum dimensions for any given entry
+	 */
 	public SearchResults performSearch(
 		SearchForm form, User user, PhotoDimensions dims) throws Exception {
+		SearchCache sc=SearchCache.getInstance();
+		SearchResults rv=sc.get(form, user, dims);
+		if(rv == null) {
+			rv=realPerformSearch(form, user, dims);
+			sc.store(form, user, dims, rv);
+		}
+		return(rv);
+	}
+	
+	private SearchResults realPerformSearch(SearchForm form, User user,
+			PhotoDimensions dims) throws Exception {
 
 		// Get the search index
 		SearchIndex index = SearchIndex.getInstance();
@@ -281,6 +305,44 @@ public class Search extends SpyObject {
 		}
 
 		return (results);
+	}
+
+	/**
+	 * Get all keywords applicable to the given user within the given search.
+	 * 
+	 * @param u the given user
+	 * @param sf the search form for finding images to extract keywords
+	 * @return a map of 
+	 * @throws Exception
+	 */
+	public Collection<KeywordMatch> getKeywordsForUser(User u, SearchForm sf)
+		throws Exception {
+		Map<String, KeywordMatch> rv=new TreeMap<String, KeywordMatch>();
+		for(PhotoImageData pid : performSearch(sf, u)) {
+			for(Keyword kw : pid.getKeywords()) {
+				KeywordMatch km=rv.get(kw.getKeyword());
+				if(km == null) {
+					km=new KeywordMatch(kw, pid.getId());
+					rv.put(kw.getKeyword(), km);
+				}
+				km.increment();
+			}
+		}
+		return(rv.values());
+	}
+
+	/**
+	 * Get all of the keywords applicable to the given user.
+	 * 
+	 * @param u the given user
+	 * @return a map of 
+	 * @throws Exception
+	 */
+	public Collection<KeywordMatch> getKeywordsForUser(User u)
+		throws Exception {
+		SearchForm sf=new SearchForm();
+		sf.setSdirection("desc");
+		return(getKeywordsForUser(u, new SearchForm()));
 	}
 
 	// In the case of dates, we do an explicit OR between the two date range

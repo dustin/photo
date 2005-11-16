@@ -37,11 +37,8 @@ public class SearchIndex extends SpyObject {
 
 	// Indexes
 	private Map<Keyword, Set<PhotoImageData>> byKeyword = null;
-
 	private Map<Integer, Set<PhotoImageData>> byCategory = null;
-
 	private SortedMap<Date, Set<PhotoImageData>> byTaken = null;
-
 	private SortedMap<Date, Set<PhotoImageData>> byTs = null;
 
 	/**
@@ -100,6 +97,7 @@ public class SearchIndex extends SpyObject {
 			add(byTs, pid.getTimestamp(), pid);
 		}
 		getLogger().info("Updated indices");
+		SearchCache.getInstance().clear();
 		/*
 		 * getLogger().info("byKeyword: " + byKeyword);
 		 * getLogger().info("byCategory: " + byCategory);
@@ -107,6 +105,7 @@ public class SearchIndex extends SpyObject {
 		 * byTs);
 		 */
 	}
+
 
 	/**
 	 * Get the set of images for the given category ID.

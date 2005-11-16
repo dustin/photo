@@ -70,8 +70,6 @@ public class LoginAction extends PhotoAction {
 		HttpServletRequest request,HttpServletResponse response)
 		throws Exception {
 
-		ActionForward rv=null;
-
 		DynaActionForm lf=(DynaActionForm)form;
 
 		PhotoSessionData sessionData=getSessionData(request);

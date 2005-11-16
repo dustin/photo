@@ -24,7 +24,7 @@ import net.spy.photo.sp.GetAllRoles;
 import net.spy.photo.sp.GetAllUsers;
 
 /**
- * Represents a user in the photo system.
+ * Instantiate and lookup Users.
  */
 public class UserFactory extends GenFactory<User> {
 

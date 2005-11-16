@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 
 import net.spy.db.TransactionPipeline;
 import net.spy.photo.search.SavedSearch;
+import net.spy.photo.search.SearchCache;
 
 /**
  * All persistent objects will be available through this class.
@@ -84,6 +85,10 @@ public class Persistent extends HttpServlet {
 		PhotoProperties.getInstance();
 		log("Properties initialization complete");
 
+		log("Initializing search cache");
+		SearchCache.getInstance();
+		log("Search cache initialization complete");
+
 		log("Initialization complete");
 	}
 
@@ -94,6 +99,9 @@ public class Persistent extends HttpServlet {
 		log("Shutting down transaction pipeline");
 		pipeline.shutdown();
 		log("pipeline shut down");
+		log("Shutting down search cache.");
+		SearchCache.getInstance().shutdown();
+		log("Search cache shutdown complete");
 		log("Calling super destroy.");
 		super.destroy();
 	}

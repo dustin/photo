@@ -9,7 +9,8 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.KeywordFactory;
+import net.spy.photo.search.KeywordMatch;
+import net.spy.photo.search.Search;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -24,14 +25,14 @@ public class KeywordCompletionAction extends PhotoAction {
 
 	protected ActionForward spyExecute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
-		Collection ts=new TreeSet(KeywordFactory.KEYWORMATCH_BY_FREQUENCY);
-		ts.addAll(KeywordFactory.getInstance().getKeywordsForUser(
+		Collection ts=new TreeSet(KeywordMatch.BY_FREQUENCY);
+		ts.addAll(Search.getInstance().getKeywordsForUser(
 			getUser(req)));
 		String prefixMatch=req.getParameter("what");
 		if(prefixMatch != null) {
-			for(Iterator<KeywordFactory.KeywordMatch> i=ts.iterator();
+			for(Iterator<KeywordMatch> i=ts.iterator();
 				i.hasNext();) {
-				KeywordFactory.KeywordMatch km=i.next();
+				KeywordMatch km=i.next();
 				if(!km.getKeyword().getKeyword().startsWith(prefixMatch)) {
 					i.remove();
 				}

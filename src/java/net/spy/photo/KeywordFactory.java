@@ -2,42 +2,23 @@
 
 package net.spy.photo;
 
-import java.util.Comparator;
 import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import net.spy.db.Saver;
 import net.spy.factory.CacheEntry;
 import net.spy.factory.GenFactory;
 import net.spy.factory.HashCacheEntry;
-import net.spy.jwebkit.SAXAble;
-import net.spy.jwebkit.XMLUtils;
 import net.spy.photo.impl.KeywordImpl;
-import net.spy.photo.search.Search;
 import net.spy.photo.sp.GetKeywords;
-import net.spy.photo.struts.SearchForm;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 public class KeywordFactory extends GenFactory<Keyword> {
 
 	private static final String CACHE_KEY="keywords";
 	private static final int CACHE_TIME=3600000;
-
-	/**
-	 * KeywordMatch sorter by keyword (alphabetically).
-	 */
-	public static final Comparator<KeywordMatch> KEYWORDMATCH_BY_KEYWORD=new KWMByKeyword();
-
-	/**
-	 * KeywordMatch sorter by frequency (most frequent first).
-	 */
-	public static final Comparator<KeywordMatch> KEYWORMATCH_BY_FREQUENCY=new KWMByFreq();
 
 	private static KeywordFactory instance=null;
 
@@ -107,108 +88,6 @@ public class KeywordFactory extends GenFactory<Keyword> {
 			getCache().cacheInstance(rv);
 		}
 		return(rv);
-	}
-
-	/**
-	 * Get all keywords applicable to the given user within the given search.
-	 * 
-	 * @param u the given user
-	 * @param sf the search form for finding images to extract keywords
-	 * @return a map of 
-	 * @throws Exception
-	 */
-	public Collection<KeywordMatch> getKeywordsForUser(User u, SearchForm sf)
-		throws Exception {
-		Map<String, KeywordMatch> rv=new TreeMap<String, KeywordMatch>();
-		for(PhotoImageData pid : Search.getInstance().performSearch(sf, u)) {
-			for(Keyword kw : pid.getKeywords()) {
-				KeywordMatch km=rv.get(kw.getKeyword());
-				if(km == null) {
-					km=new KeywordMatch(kw, pid.getId());
-					rv.put(kw.getKeyword(), km);
-				}
-				km.increment();
-			}
-		}
-		return(rv.values());
-	}
-
-	/**
-	 * Get all of the keywords applicable to the given user.
-	 * 
-	 * @param u the given user
-	 * @return a map of 
-	 * @throws Exception
-	 */
-	public Collection<KeywordMatch> getKeywordsForUser(User u)
-		throws Exception {
-		SearchForm sf=new SearchForm();
-		sf.setSdirection("desc");
-		return(getKeywordsForUser(u, new SearchForm()));
-	}
-
-	/**
-	 * A keyword match from getKeywordsForUser().
-	 */
-	public static class KeywordMatch implements SAXAble {
-		private Keyword keyword=null;
-		private int count=0;
-		private int imgId=0;
-		public KeywordMatch(Keyword kw, int img) {
-			super();
-			keyword=kw;
-			imgId=img;
-		}
-		public void increment() {
-			count++;
-		}
-		public int getCount() {
-			return count;
-		}
-		public int getImgId() {
-			return imgId;
-		}
-		public Keyword getKeyword() {
-			return keyword;
-		}
-		public void writeXml(ContentHandler handler) throws SAXException {
-			XMLUtils x=XMLUtils.getInstance();
-			x.startElement(handler, "kwmatch");
-			x.doElement(handler, "id", String.valueOf(keyword.getId()));
-			x.doElement(handler, "word", keyword.getKeyword());
-			x.doElement(handler, "count", String.valueOf(count));
-			x.doElement(handler, "img", String.valueOf(imgId));
-			x.endElement(handler, "kwmatch");
-		}
-	}
-
-	private static class KWMByKeyword implements Comparator<KeywordMatch> {
-
-		public int compare(KeywordMatch k1, KeywordMatch k2) {
-			return(k1.getKeyword().getKeyword().compareTo(k2.getKeyword().getKeyword()));
-		}
-		
-	}
-
-	private static class KWMByFreq extends KWMByKeyword {
-
-		public int compare(KeywordMatch k1, KeywordMatch k2) {
-			int f1=k1.getCount();
-			int f2=k2.getCount();
-			int rv=0;
-			if(f1 > f2) {
-				rv=-1;
-			} else if(f1 < f2) {
-				rv=1;
-			} else {
-				rv=0;
-			}
-			if(rv == 0) {
-				rv=super.compare(k1, k2);
-			}
-			return(rv);
-		}
-		
 	}
 
 	protected CacheEntry<Keyword> getNewCacheEntry() {
