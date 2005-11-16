@@ -38,6 +38,7 @@ public class SearchCache extends SpyThread {
 			instance=new SearchCache();
 			instance.cache=new HashMap();
 			instance.refQueue=new ReferenceQueue<CacheEntry>();
+			instance.start();
 		}
 		return(instance);
 	}
