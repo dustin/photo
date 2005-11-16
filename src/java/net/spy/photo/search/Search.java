@@ -342,7 +342,7 @@ public class Search extends SpyObject {
 		throws Exception {
 		SearchForm sf=new SearchForm();
 		sf.setSdirection("desc");
-		return(getKeywordsForUser(u, new SearchForm()));
+		return(getKeywordsForUser(u, sf));
 	}
 
 	// In the case of dates, we do an explicit OR between the two date range
