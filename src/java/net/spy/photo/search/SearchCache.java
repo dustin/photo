@@ -2,10 +2,13 @@
 
 package net.spy.photo.search;
 
+import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.ReferenceQueue;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observer;
+import java.util.Observable;
 
 import net.spy.SpyThread;
 import net.spy.photo.PhotoDimensions;
@@ -15,7 +18,7 @@ import net.spy.photo.struts.SearchForm;
 /**
  * Cache for searches.
  */
-public class SearchCache extends SpyThread {
+public class SearchCache extends SpyThread implements Observer {
 
 	private static SearchCache instance=null;
 
@@ -25,8 +28,9 @@ public class SearchCache extends SpyThread {
 	private int stores=0;
 	private int maxsize=0;
 
-	private Map<CacheKey, SoftReference<CacheEntry>> cache=null;
-	private ReferenceQueue<CacheEntry> refQueue=null;
+	private Map<CacheKey, SoftReference<SearchResults>> cache=null;
+	private Map<SoftReference<SearchResults>, CacheKey> keyMap=null;
+	private ReferenceQueue<SearchResults> refQueue=null;
 	private boolean running=true;
 
 	private SearchCache() {
@@ -37,8 +41,12 @@ public class SearchCache extends SpyThread {
 		if(instance == null) {
 			instance=new SearchCache();
 			instance.cache=new HashMap();
-			instance.refQueue=new ReferenceQueue<CacheEntry>();
+			instance.keyMap=new HashMap();
+			instance.refQueue=new ReferenceQueue<SearchResults>();
 			instance.start();
+
+			// Register to receive updates when the search index updates
+			SearchIndex.getInstance().addObserver(instance);
 		}
 		return(instance);
 	}
@@ -48,6 +56,14 @@ public class SearchCache extends SpyThread {
 	 */
 	public synchronized void clear() {
 		cache.clear();
+		keyMap.clear();
+	}
+
+	/** 
+	 * Receive updates indicating the search indexes have been updated.
+	 */
+	public void update(Observable o, Object arg) {
+		clear();
 	}
 
 	/**
@@ -59,13 +75,13 @@ public class SearchCache extends SpyThread {
 	 */
 	public synchronized SearchResults get(SearchForm f, User u,
 		PhotoDimensions d) {
-		SoftReference<CacheEntry> sr=cache.get(new CacheKey(u, d, f));
+		SoftReference<SearchResults> sr=cache.get(new CacheKey(u, d, f));
 		SearchResults rv=null;
 		if(sr != null) {
-			CacheEntry ce=sr.get();
-			if(ce != null) {
+			rv=sr.get();
+			if(rv != null) {
 				hits++;
-				rv=(SearchResults)ce.data.clone();
+				rv=(SearchResults)rv.clone();
 			}
 		} else {
 			misses++;
@@ -84,8 +100,9 @@ public class SearchCache extends SpyThread {
 	public synchronized void store(SearchForm f, User u, PhotoDimensions d,
 			SearchResults r) {
 		CacheKey ck=new CacheKey(u, d, f);
-		cache.put(ck, new SoftReference(
-			new CacheEntry(ck, (SearchResults)r.clone()), refQueue));
+		SoftReference ref=new SoftReference(r.clone(), refQueue);
+		cache.put(ck, ref);
+		keyMap.put(ref, ck);
 		stores++;
 		if(cache.size() > maxsize) {
 			maxsize++;
@@ -104,14 +121,10 @@ public class SearchCache extends SpyThread {
 	public void run() {
 		while(running) {
 			try {
-				SoftReference<CacheEntry> rce=
-					(SoftReference<CacheEntry>)refQueue.remove();
-				CacheEntry entry=rce.get();
-				if(entry != null) {
-					dequeued++;
-					synchronized(this) {
-						cache.remove(entry.key);
-					}
+				Reference rce=refQueue.remove();
+				dequeued++;
+				synchronized(this) {
+					cache.remove(keyMap.remove(rce));
 				}
 			} catch(InterruptedException e) {
 				getLogger().info("Interrupted");
@@ -122,7 +135,8 @@ public class SearchCache extends SpyThread {
 	public synchronized String toString() {
 		return(super.toString() + " - stores: " + stores + ", hits: " + hits
 				+ ", misses: " + misses + ", dequeued: " + dequeued
-				+ ", maxsize: " + maxsize + ", current: " + cache.size());
+				+ ", maxsize: " + maxsize
+				+ ", current: " + cache.size() + "/" + keyMap.size());
 	}
 
 	private static class CacheKey {
@@ -139,24 +153,14 @@ public class SearchCache extends SpyThread {
 
 		public boolean equals(Object o) {
 			CacheKey ck=(CacheKey)o;
-			return(uid == ck.uid && dims.equals(ck.dims) && form.equals(ck.form));
+			return(uid == ck.uid && dims.equals(ck.dims)
+				&& form.equals(ck.form));
 		}
 
 		public int hashCode() {
 			return(uid ^ dims.hashCode() ^ form.hashCode());
 		}
 		
-	}
-
-	private static class CacheEntry {
-		private CacheKey key=null;
-		private SearchResults data=null;
-
-		public CacheEntry(CacheKey k, SearchResults v) {
-			super();
-			key=k;
-			data=v;
-		}
 	}
 
 }

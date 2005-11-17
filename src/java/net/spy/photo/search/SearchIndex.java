@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Observable;
 
 import net.spy.SpyObject;
 import net.spy.photo.Keyword;
@@ -21,7 +22,7 @@ import net.spy.photo.PhotoImageData;
 /**
  * Search data indexer.
  */
-public class SearchIndex extends SpyObject {
+public class SearchIndex extends Observable {
 
 	/**
 	 * Operator for ``and'' joins.
@@ -96,14 +97,7 @@ public class SearchIndex extends SpyObject {
 			add(byTaken, pid.getTaken(), pid);
 			add(byTs, pid.getTimestamp(), pid);
 		}
-		getLogger().info("Updated indices");
-		SearchCache.getInstance().clear();
-		/*
-		 * getLogger().info("byKeyword: " + byKeyword);
-		 * getLogger().info("byCategory: " + byCategory);
-		 * getLogger().info("byTaken: " + byTaken); getLogger().info("byTs: " +
-		 * byTs);
-		 */
+		notifyObservers();
 	}
 
 
@@ -120,7 +114,8 @@ public class SearchIndex extends SpyObject {
 	 * @param cats
 	 *            a Collection of Integer objects.
 	 */
-	public synchronized Set<PhotoImageData> getForCats(Collection<Integer> cats) {
+	public synchronized Set<PhotoImageData>
+		getForCats(Collection<Integer> cats) {
 		return (getCombined(byCategory, cats, OP_OR));
 	}
 
@@ -131,13 +126,13 @@ public class SearchIndex extends SpyObject {
 		return (byKeyword.get(k));
 	}
 
-	private void checkOp(int operator) {
-		if(operator == OP_AND) {
+	private void checkOp(int op) {
+		if(op == OP_AND) {
 			// OK
-		} else if(operator == OP_OR) {
+		} else if(op == OP_OR) {
 			// OK
 		} else {
-			throw new IllegalArgumentException("Invalid operator:  " + operator);
+			throw new IllegalArgumentException("Invalid operator:  " + op);
 		}
 	}
 
@@ -226,7 +221,8 @@ public class SearchIndex extends SpyObject {
 	 *            ending date (or null if there is no ending date).
 	 * @return the Set of images.
 	 */
-	public synchronized Set<PhotoImageData> getForTimestamp(Date from, Date to) {
+	public synchronized Set<PhotoImageData>
+		getForTimestamp(Date from, Date to) {
 		return (getDateRangeSet(byTs, from, to));
 	}
 
