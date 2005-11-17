@@ -3,17 +3,14 @@
 package net.spy.photo.search;
 
 import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.lang.ref.ReferenceQueue;
+import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observer;
 import java.util.Observable;
+import java.util.Observer;
 
 import net.spy.SpyThread;
-import net.spy.photo.PhotoDimensions;
-import net.spy.photo.User;
-import net.spy.photo.struts.SearchForm;
 
 /**
  * Cache for searches.
@@ -28,8 +25,8 @@ public class SearchCache extends SpyThread implements Observer {
 	private int stores=0;
 	private int maxsize=0;
 
-	private Map<CacheKey, SoftReference<SearchResults>> cache=null;
-	private Map<SoftReference<SearchResults>, CacheKey> keyMap=null;
+	private Map<Object, SoftReference> cache=null;
+	private Map<SoftReference, Object> keyMap=null;
 	private ReferenceQueue<SearchResults> refQueue=null;
 	private boolean running=true;
 
@@ -73,15 +70,13 @@ public class SearchCache extends SpyThread implements Observer {
 	 * @param u the user
 	 * @param d the requested dimensions
 	 */
-	public synchronized SearchResults get(SearchForm f, User u,
-		PhotoDimensions d) {
-		SoftReference<SearchResults> sr=cache.get(new CacheKey(u, d, f));
-		SearchResults rv=null;
+	public synchronized Object get(Object key) {
+		SoftReference<SearchResults> sr=cache.get(key);
+		Object rv=null;
 		if(sr != null) {
 			rv=sr.get();
 			if(rv != null) {
 				hits++;
-				rv=(SearchResults)rv.clone();
 			}
 		} else {
 			misses++;
@@ -90,19 +85,15 @@ public class SearchCache extends SpyThread implements Observer {
 	}
 
 	/**
-	 * Store an entry in the search cache.
+	 * Store an object in the search cache.
 	 * 
-	 * @param f the search form
-	 * @param u the user
-	 * @param d the dimensions
-	 * @param r the results to store
+	 * @param key the cache key
+	 * @param o the value to cache
 	 */
-	public synchronized void store(SearchForm f, User u, PhotoDimensions d,
-			SearchResults r) {
-		CacheKey ck=new CacheKey(u, d, f);
-		SoftReference ref=new SoftReference(r.clone(), refQueue);
-		cache.put(ck, ref);
-		keyMap.put(ref, ck);
+	public synchronized void store(Object key, Object o) {
+		SoftReference ref=new SoftReference(o, refQueue);
+		cache.put(key, ref);
+		keyMap.put(ref, key);
 		stores++;
 		if(cache.size() > maxsize) {
 			maxsize++;
@@ -137,30 +128,6 @@ public class SearchCache extends SpyThread implements Observer {
 				+ ", misses: " + misses + ", dequeued: " + dequeued
 				+ ", maxsize: " + maxsize
 				+ ", current: " + cache.size() + "/" + keyMap.size());
-	}
-
-	private static class CacheKey {
-		private int uid=0;
-		private String dims=null;
-		private SearchForm form=null;
-
-		public CacheKey(User u, PhotoDimensions d, SearchForm f) {
-			super();
-			uid=u.getId();
-			dims=d.getWidth() + "x" + d.getHeight();
-			form=f;
-		}
-
-		public boolean equals(Object o) {
-			CacheKey ck=(CacheKey)o;
-			return(uid == ck.uid && dims.equals(ck.dims)
-				&& form.equals(ck.form));
-		}
-
-		public int hashCode() {
-			return(uid ^ dims.hashCode() ^ form.hashCode());
-		}
-		
 	}
 
 }

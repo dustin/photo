@@ -10,12 +10,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Observable;
 
-import net.spy.SpyObject;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoImageData;
 

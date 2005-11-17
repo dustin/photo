@@ -6,6 +6,7 @@ package net.spy.photo.search;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
@@ -43,6 +44,8 @@ public class Search extends SpyObject {
 	private static final int BY_TS = 1;
 	private static final int BY_TAKEN = 2;
 	private static Search instance = null;
+
+	private static enum CacheType { RESULTS, KEYWORDS };
 
 	/**
 	 * Get a Search instance.
@@ -217,10 +220,13 @@ public class Search extends SpyObject {
 	public SearchResults performSearch(
 		SearchForm form, User user, PhotoDimensions dims) throws Exception {
 		SearchCache sc=SearchCache.getInstance();
-		SearchResults rv=sc.get(form, user, dims);
+		CacheKey ck=new CacheKey(CacheType.RESULTS, user, dims, form);
+		SearchResults rv=(SearchResults)sc.get(ck);
 		if(rv == null) {
 			rv=realPerformSearch(form, user, dims);
-			sc.store(form, user, dims, rv);
+			sc.store(ck, rv);
+		} else {
+			rv=(SearchResults)rv.clone();
 		}
 		return(rv);
 	}
@@ -317,6 +323,18 @@ public class Search extends SpyObject {
 	 */
 	public Collection<KeywordMatch> getKeywordsForUser(User u, SearchForm sf)
 		throws Exception {
+		SearchCache sc=SearchCache.getInstance();
+		CacheKey ck=new CacheKey(CacheType.KEYWORDS, u, null, sf);
+		Collection<KeywordMatch> rv=(Collection<KeywordMatch>)sc.get(ck);
+		if(rv == null) {
+			rv=realGetKeywordsForUser(u, sf);
+			sc.store(ck, rv);
+		}
+		return(rv);
+	}
+
+	private Collection<KeywordMatch> realGetKeywordsForUser(User u, SearchForm sf)
+		throws Exception {
 		Map<String, KeywordMatch> rv=new TreeMap<String, KeywordMatch>();
 		for(PhotoImageData pid : performSearch(sf, u)) {
 			for(Keyword kw : pid.getKeywords()) {
@@ -328,7 +346,7 @@ public class Search extends SpyObject {
 				km.increment();
 			}
 		}
-		return(rv.values());
+		return(Collections.unmodifiableCollection(rv.values()));
 	}
 
 	/**
@@ -551,4 +569,37 @@ public class Search extends SpyObject {
 		}
 	}
 
+	private static class CacheKey {
+		private CacheType type=null;
+		private int uid=0;
+		private String dims=null;
+		private SearchForm form=null;
+
+		public CacheKey(CacheType t, User u, PhotoDimensions d, SearchForm f) {
+			super();
+			type=t;
+			uid=u.getId();
+			if(d == null) {
+				dims="";
+			} else {
+				dims=d.getWidth() + "x" + d.getHeight();
+			}
+			form=f;
+		}
+
+		public boolean equals(Object o) {
+			boolean rv=false;
+			if(o instanceof CacheKey) {
+				CacheKey ck=(CacheKey)o;
+				rv=(type == ck.type && uid == ck.uid && dims.equals(ck.dims)
+						&& form.equals(ck.form));
+			}
+			return(rv);
+		}
+
+		public int hashCode() {
+			return(type.hashCode() ^ uid ^ dims.hashCode() ^ form.hashCode());
+		}
+		
+	}
 }
