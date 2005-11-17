@@ -85,7 +85,7 @@ public class SearchCache extends SpyThread {
 			SearchResults r) {
 		CacheKey ck=new CacheKey(u, d, f);
 		cache.put(ck, new SoftReference(
-			new CacheEntry(ck, (SearchResults)r.clone())));
+			new CacheEntry(ck, (SearchResults)r.clone()), refQueue));
 		stores++;
 		if(cache.size() > maxsize) {
 			maxsize++;
