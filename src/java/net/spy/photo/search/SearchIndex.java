@@ -10,18 +10,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Observable;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import net.spy.SpyObject;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoImageData;
 
 /**
  * Search data indexer.
  */
-public class SearchIndex extends Observable {
+public class SearchIndex extends SpyObject {
 
 	/**
 	 * Operator for ``and'' joins.
@@ -96,9 +96,8 @@ public class SearchIndex extends Observable {
 			add(byTaken, pid.getTaken(), pid);
 			add(byTs, pid.getTimestamp(), pid);
 		}
-		notifyObservers();
+		SearchCache.getInstance().clear();
 	}
-
 
 	/**
 	 * Get the set of images for the given category ID.

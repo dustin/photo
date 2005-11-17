@@ -7,15 +7,13 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 
 import net.spy.SpyThread;
 
 /**
  * Cache for searches.
  */
-public class SearchCache extends SpyThread implements Observer {
+public class SearchCache extends SpyThread {
 
 	private static SearchCache instance=null;
 
@@ -41,9 +39,6 @@ public class SearchCache extends SpyThread implements Observer {
 			instance.keyMap=new HashMap();
 			instance.refQueue=new ReferenceQueue<SearchResults>();
 			instance.start();
-
-			// Register to receive updates when the search index updates
-			SearchIndex.getInstance().addObserver(instance);
 		}
 		return(instance);
 	}
@@ -54,13 +49,6 @@ public class SearchCache extends SpyThread implements Observer {
 	public synchronized void clear() {
 		cache.clear();
 		keyMap.clear();
-	}
-
-	/** 
-	 * Receive updates indicating the search indexes have been updated.
-	 */
-	public void update(Observable o, Object arg) {
-		clear();
 	}
 
 	/**
