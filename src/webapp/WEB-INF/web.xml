@@ -61,6 +61,11 @@
 		<servlet-class>net.spy.rpc.XMLRPC</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>rss</servlet-name>
+		<servlet-class>net.spy.photo.RSSServlet</servlet-class>
+	</servlet>
+
 	<!-- AJAX mappings -->
 	<servlet>
 		<servlet-name>ajaxphotoedit</servlet-name>
@@ -108,6 +113,11 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>rss</servlet-name>
+		<url-pattern>/rss/*</url-pattern>
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>ajaxphotoedit</servlet-name>
