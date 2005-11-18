@@ -224,7 +224,7 @@ public class Search extends SpyObject {
 		SearchResults rv=(SearchResults)sc.get(ck);
 		if(rv == null) {
 			rv=realPerformSearch(form, user, dims);
-			sc.store(ck, rv);
+			sc.store(ck, rv.clone());
 		} else {
 			rv=(SearchResults)rv.clone();
 		}
