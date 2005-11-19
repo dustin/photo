@@ -1,5 +1,6 @@
 <%@ page import="net.spy.photo.Category" %>
 <%@ page import="net.spy.photo.CategoryFactory" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-bean' prefix='bean' %>
@@ -9,21 +10,23 @@
 
 <h1>Category Administration</h1>
 
-<html:form action="/admcatedit">
-	<div>
-		<html:select property="catId">
-			<html:option value="-1">New Category</html:option>
-			<logic:iterate id="cat" type="net.spy.photo.Category"
-				collection="<%= CategoryFactory.getInstance().getAdminCatList() %>">
+<p>
+	<a href="<c:url value='/admcatedit.do'><c:param name='catId' value='-1'/></c:url>">
+		Create a New Category</a>
+</p>
 
-				<html:option value="<%= "" + cat.getId() %>"><%= cat.getName() %>
-				</html:option>
-			</logic:iterate>
-		</html:select>
-	</div>
+<ul>
+	<logic:iterate id="cat" type="net.spy.photo.Category"
+		collection="<%= CategoryFactory.getInstance().getAdminCatList() %>">
 
-	<div>
-		<html:submit>Edit</html:submit>
-	</div>
-</html:form>
+		<c:set var="u"><c:url value="/admcatedit.do">
+			<c:param name="catId"><%= String.valueOf(cat.getId()) %></c:param>
+		</c:url></c:set>
+
+		<li>
+			<a href="<c:out value='${u}'/>"><%= cat.getName() %></a>
+		</li>
+	</logic:iterate>
+</ul>
+
 <%-- arch-tag: C6C09115-5D6F-11D9-BE9B-000A957659CC --%>
