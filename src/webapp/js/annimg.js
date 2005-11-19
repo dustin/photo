@@ -48,6 +48,8 @@ var aI = {
         }
         a.title = areas[j].getAttribute('title');
         var s = document.createElement('span');
+		Element.setOpacity(s, 0.3);
+		Element.setOpacity(a, 0.3);
         s.appendChild(document.createTextNode(''));
         a.appendChild(s);
         
@@ -131,4 +133,4 @@ var aI = {
   }
 }
 
-aI.addEvent(window,"load",aI.init);
+Event.observe(window, 'load', aI.init, false);

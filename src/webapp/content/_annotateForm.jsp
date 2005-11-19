@@ -28,7 +28,7 @@
 
 	function showHighlight(event) {
 		// Find the image
-		var imageDiv=document.getElementById("hlimage");
+		var imageDiv=$("hlimage");
 		var theImage=imageDiv.getElementsByTagName("img")[0];
 		boxOb.imgX=theImage.offsetLeft;
 		boxOb.imgY=theImage.offsetTop;
@@ -49,7 +49,7 @@
 		boxOb.boxY2=Math.min(boxOb.imgY2,
 			Math.max(boxOb.imgY, event.clientY + window.scrollY));
 
-		var boxDiv=document.getElementById("zoomBox");
+		var boxDiv=$("zoomBox");
 		boxDiv.style.left=Math.min(boxOb.boxX1, boxOb.boxX2) + "px;";
 		boxDiv.style.top=Math.min(boxOb.boxY1, boxOb.boxY2) + "px;";
 		boxDiv.style.width=Math.abs(boxOb.boxX1 - boxOb.boxX2) + "px;";
@@ -60,23 +60,25 @@
 		document.removeEventListener("mousemove", movingHighlight, true);
 		document.removeEventListener("mouseup", setupTag, true);
 
-		document.annotateForm.x.value=
-			Math.min(boxOb.boxX1, boxOb.boxX2) - boxOb.imgX;
-		document.annotateForm.y.value=
-			Math.min(boxOb.boxY1, boxOb.boxY2) - boxOb.imgY;
-		document.annotateForm.w.value=Math.abs(boxOb.boxX1 - boxOb.boxX2);
-		document.annotateForm.h.value=Math.abs(boxOb.boxY1 - boxOb.boxY2);
-		var formDiv=document.getElementById("annotateFormDiv");
+		$('x').value=Math.min(boxOb.boxX1, boxOb.boxX2) - boxOb.imgX;
+		$('y').value=Math.min(boxOb.boxY1, boxOb.boxY2) - boxOb.imgY;
+		$('w').value=Math.abs(boxOb.boxX1 - boxOb.boxX2);
+		$('h').value=Math.abs(boxOb.boxY1 - boxOb.boxY2);
+		var formDiv=$("annotateFormDiv");
 		formDiv.style.display="block";
 
 		event.preventDefault();
 	}
 
 	function clearSelection() {
-		var boxDiv=document.getElementById("zoomBox");
+		var boxDiv=$("zoomBox");
 		boxDiv.style.width="0px;";
 		boxDiv.style.height="0px;";
 	}
+
+	Event.observe(window, 'load', function() {
+		Element.setOpacity('zoomBox', 0.5);
+	}, false);
 // ]]>
 </script>
 
@@ -94,10 +96,10 @@
 					<input type="hidden" name="imageId" value="<%= image.getId() %>"/>
 					<input type="hidden" name="imgDims"
 						value='<%= request.getAttribute("displayDims") %>'/>
-					x: <input name="x" size="3"/>
-					y: <input name="y" size="3"/>
-					w: <input name="w" size="3"/>
-					h: <input name="h" size="3"/>
+					x: <input id="x" name="x" size="3"/>
+					y: <input id="y" name="y" size="3"/>
+					w: <input id="w" name="w" size="3"/>
+					h: <input id="h" name="h" size="3"/>
 				</div>
 				<div>
 					keywords: <input name="keywords"/>

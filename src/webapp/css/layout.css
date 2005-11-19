@@ -87,6 +87,7 @@ a:hover {
 	margin-top: 1em;
 	font-size: x-small;
 	color: #aaa;
+	background: inherit;
 }
 
 #footer {
@@ -104,6 +105,7 @@ a:hover {
 .footerfineprint {
 	font-size: smaller;
 	color: #999;
+	background: inherit;
 }
 
 #sflogo {
@@ -175,6 +177,7 @@ a:hover {
 }
 
 .search_result {
+	color: inherit;
 	background: #eee;
 	margin-bottom: 4px;
 	margin-left: 0;
@@ -241,13 +244,14 @@ fieldset legend {
 
 /* This is the UI indicator of image regions being selected.  */
 #zoomBox {
+	color: black;
 	background: red;
 	position: absolute;
+	z-index: 10;
 	left: 0px;
 	right: 0px;
 	width: 0px;
 	height: 0px;
-	-moz-opacity: 0.5;
 }
 
 #hlimage {
@@ -267,17 +271,12 @@ a.annotation {
 a.annotation span {
   display: block;
   background: white;
+  color: black;
   width: 100%;
   height: 100%;
-  opacity: 0.3;
-  -moz-opacity: 0.3;
-  filter:alpha(opacity=30);
 }
 a.annotation:hover {
   border-color: yellow;
-  opacity: 0.3;
-  -moz-opacity: 0.3;
-  filter:alpha(opacity=30);
 }
 img.annotated {
   border-width: 0;
@@ -327,6 +326,7 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 
 .selected {
 	background-color: #ff9;
+	color: inherit;
 }
 
 .kcSuggestions {
@@ -335,6 +335,7 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 	padding: 0;
 	border: 1px solid black;
 	background-color: white;
+	color: inherit;
 	font-size: x-small;
 	width: 250px;
 	z-index: 10;
@@ -351,9 +352,7 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 }
 
 .cloudcontainer {
-	padding: 10px;
-	padding-left: 30px;
-	padding-right: 30px;
+	padding: 10px 30px 10px 30px;
 }
 
 .cloud {
@@ -362,22 +361,27 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 }
 
 .cloud0 {
+	background: inherit;
 	color: blue;
     font-size: 200%;
 }
 .cloud1 {
+	background: inherit;
 	color: #22f;
     font-size: 150%;
 }
 .cloud2 {
+	background: inherit;
 	color: #44f;
     font-size: 100%;
 }
 .cloud3 {
+	background: inherit;
 	color: #77f;
     font-size: 70%;
 }
 .cloud4 {
+	background: inherit;
 	color: #aaf;
     font-size: 60%;
 }
