@@ -204,6 +204,10 @@ a:hover {
 	text-align: center;
 }
 
+#imgDescr {
+	padding: 1em;
+}
+
 .reportResults {
 	border-width: 2px;
 	border-style: outset;

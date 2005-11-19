@@ -9,6 +9,8 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<html:xhtml/>
+
 <photo:javascript url="/js/annimg.js"/>
 <photo:javascript url="/js/catedit.js"/>
 
@@ -181,15 +183,18 @@
 		<fmt:message key="display.comment"/><br/>
 		<html:form action="/addcomment" onsubmit="submitComment(); return false;"
 			styleId="commentForm">
-			<html:textarea styleId="comment" property="comment" cols="50" rows="2"/>
-			<br/>
-			<html:submit>Add Comment</html:submit>
+			<div>
+				<html:textarea styleId="comment" property="comment" cols="50" rows="2"/>
+			</div>
+			<div>
+				<html:submit>Add Comment</html:submit>
 			<img src="<c:url value='/images/indicator.gif'/>"
 				alt="indicator" id="addindicator" style="display: none"/>
+			</div>
 		</html:form>
 	</logic:present>
 </div>
-<map name="annotationMap">
+<map id="annotationMap" name="annotationMap">
 	<logic:iterate id="region"
 		type="net.spy.photo.AnnotatedRegion"
 		collection="<%= image.getAnnotations() %>">

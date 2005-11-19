@@ -5,6 +5,7 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<html:xhtml/>
 
 <%
 	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
@@ -12,7 +13,8 @@
 	String searchIdS=(String)request.getParameter("search_id");
 %>
 
-<script language="JavaScript">
+<script type="text/javascript">
+// <![CDATA[
 	var boxOb=new Object();
 	boxOb.boxX1=0;
 	boxOb.boxY1=0;
@@ -75,6 +77,7 @@
 		boxDiv.style.width="0px;";
 		boxDiv.style.height="0px;";
 	}
+// ]]>
 </script>
 
 
@@ -85,18 +88,26 @@
 
 		<div id="zoomBox"></div>
 		<div id="annotateFormDiv" style="display: none;">
-			<html:form method="POST" action="/annotate"
+			<html:form method="post" action="/annotate"
 				onsubmit="clearSelection(); return true;">
-				<input type="hidden" name="imageId" value="<%= image.getId() %>"/>
-				<input type="hidden" name="imgDims"
-					value='<%= request.getAttribute("displayDims") %>'/>
-				x: <input name="x" size="3"/>
-				y: <input name="y" size="3"/>
-				w: <input name="w" size="3"/>
-				h: <input name="h" size="3"/><br/>
-				keywords: <input name="keywords"/><br/>
-				description: <input name="title"><br/>
-				<input type="submit" value="Save"/>
+				<div>
+					<input type="hidden" name="imageId" value="<%= image.getId() %>"/>
+					<input type="hidden" name="imgDims"
+						value='<%= request.getAttribute("displayDims") %>'/>
+					x: <input name="x" size="3"/>
+					y: <input name="y" size="3"/>
+					w: <input name="w" size="3"/>
+					h: <input name="h" size="3"/>
+				</div>
+				<div>
+					keywords: <input name="keywords"/>
+				</div>
+				<div>
+					description: <input name="title"/>
+				</div>
+				<div>
+					<input type="submit" value="Save"/>
+				</div>
 			</html:form>
 		</div>
 
@@ -112,7 +123,7 @@
       <c:out value="${image.timestamp}"/>
     by <c:out value="${image.addedBy.realName}"/><br />
     <b>Info</b>:
-    <div class="imgDescr"><c:out value="${image.descr}"/></div>
+    <div id="imgDescr"><c:out value="${image.descr}"/></div>
 
 	</div>
 
