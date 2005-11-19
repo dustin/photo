@@ -49,11 +49,15 @@
 		boxOb.boxY2=Math.min(boxOb.imgY2,
 			Math.max(boxOb.imgY, event.clientY + window.scrollY));
 
-		var boxDiv=$("zoomBox");
-		boxDiv.style.left=Math.min(boxOb.boxX1, boxOb.boxX2) + "px;";
-		boxDiv.style.top=Math.min(boxOb.boxY1, boxOb.boxY2) + "px;";
-		boxDiv.style.width=Math.abs(boxOb.boxX1 - boxOb.boxX2) + "px;";
-		boxDiv.style.height=Math.abs(boxOb.boxY1 - boxOb.boxY2) + "px;";
+		// Update the box display
+		var boxStyle=$("zoomBox").style;
+		boxStyle.position='absolute';
+		boxStyle.left=Math.min(boxOb.boxX1, boxOb.boxX2) + "px";
+		boxStyle.top=Math.min(boxOb.boxY1, boxOb.boxY2) + "px";
+		boxStyle.width=Math.abs(boxOb.boxX1 - boxOb.boxX2) + "px";
+		boxStyle.height=Math.abs(boxOb.boxY1 - boxOb.boxY2) + "px";
+
+		event.preventDefault();
 	}
 
 	function setupTag(event) {
