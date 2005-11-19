@@ -5,22 +5,27 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-bean' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
-<p>
+<html:xhtml/>
 
-<div class="sectionheader">User Administration</div>
+<h1>User Administration</h1>
 
 <html:form action="/admuseredit">
 	<html:errors/>
-	<html:select property="userId">
-		<html:option value="-1">New User</html:option>
-		<logic:iterate id="user" type="net.spy.photo.User"
-			collection="<%= UserFactory.getInstance().getAllUsers() %>">
 
-			<html:option value="<%= "" + user.getId() %>"><%= user.getName() %>
-			</html:option>
-		</logic:iterate>
-	</html:select>
+	<div>
+		<html:select property="userId">
+			<html:option value="-1">New User</html:option>
+			<logic:iterate id="user" type="net.spy.photo.User"
+				collection="<%= UserFactory.getInstance().getAllUsers() %>">
 
-	<html:submit>Edit</html:submit>
+				<html:option value="<%= "" + user.getId() %>"><%= user.getName() %>
+				</html:option>
+			</logic:iterate>
+		</html:select>
+	</div>
+
+	<div>
+		<html:submit>Edit</html:submit>
+	</div>
 </html:form>
 <%-- arch-tag: CBE44BFF-5D6F-11D9-BB67-000A957659CC --%>

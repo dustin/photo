@@ -7,9 +7,9 @@
 <jsp:useBean id="adminUserForm" scope="session"
 	class="net.spy.photo.struts.AdminUserForm"/>
 
-<p>
+<html:xhtml/>
 
-<div class="sectionheader">User Administration</div>
+<h1>User Administration</h1>
 
 <html:form action="/admusersave">
 	<html:errors/>
@@ -69,7 +69,9 @@
 		</logic:iterate>
 	</table>
 
-	<html:submit>Save</html:submit>
+	<div>
+		<html:submit>Save</html:submit>
+	</div>
 </html:form>
 <div>
 	<% String uid=adminUserForm.getUserId();

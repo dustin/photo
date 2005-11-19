@@ -3,13 +3,15 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<html:xhtml/>
+
 <%
   // Find the results
 	PhotoSessionData sessionData=
 		(PhotoSessionData)session.getAttribute("photoSession");
 %>
 
-<div class="sectionheader">Gallery List</div>
+<h1>Gallery List</h1>
 
 <ul>
 <logic:iterate id="g" type="net.spy.photo.Gallery"

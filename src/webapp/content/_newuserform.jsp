@@ -12,7 +12,7 @@
 		</div>
 
 
-		<div align="center" class="centered">
+		<div class="centered">
 		<html:errors/>
 
 		<table class="leftAligned">

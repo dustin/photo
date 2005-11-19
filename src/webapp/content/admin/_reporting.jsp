@@ -3,9 +3,9 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-bean' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
-<p>
+<html:xhtml/>
 
-<div class="sectionheader">Reporting</div>
+<h1>Reporting</h1>
 
 <ul>
 	<li><photo:link url="/report/userCatXd.do"
@@ -21,4 +21,5 @@
 	<li><photo:link url="/report/mostActiveUsers.do"
 		message="reporting.links.mostActiveUsers"/></li>
 </ul>
+
 <%-- arch-tag: CB429078-5D6F-11D9-80C7-000A957659CC --%>

@@ -3,6 +3,8 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<html:xhtml/>
+
 <%
 	// Find the comments
 	PhotoSessionData sessionData=
@@ -60,13 +62,13 @@
 
     %>
       <%= remaining %> comments remaining.
-      <p>
       <html:form action="nextcomments.do">
-        <html:hidden property="startOffset" value="<%= nextOffsetS %>"/>
-        <html:hidden property="whichCursor" value="comments"/>
-        <html:submit>Next <%= nextWhu %></html:submit>
+				<p>
+        	<html:hidden property="startOffset" value="<%= nextOffsetS %>"/>
+        	<html:hidden property="whichCursor" value="comments"/>
+        	<html:submit>Next <%= nextWhu %></html:submit>
+				</p>
       </html:form>
-      </p>
     <%
   }
 %>

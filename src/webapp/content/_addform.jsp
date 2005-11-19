@@ -5,6 +5,8 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-bean' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<html:xhtml/>
+
 <%
 	// Check to see if there was already an add here.
 	Integer idInteger=(Integer)request.getAttribute("net.spy.photo.UploadID");
@@ -22,9 +24,7 @@
 </p>
 <% } %>
 
-<p>
-
-<div class="sectionheader">Add a Photo</div>
+<h1>Add a Photo</h1>
 
 <html:form action="upload.do" enctype="multipart/form-data">
 
@@ -33,7 +33,7 @@
 	<table border="0" width="100%">
 
 	<tr>
-		<td align="left" width="50%">
+		<td align="left">
 			<table border="0">
 			<tr>
 				<td>Category:</td>
@@ -51,7 +51,7 @@
 			</table>
 		</td>
 
-		<td align="right" width="50%">
+		<td align="right">
 			<table border="0">
 				<tr>
 					<td>Date Taken:</td>
@@ -73,20 +73,19 @@
 
 	</table>
 
-	<center>
+	<div class="centered">
 		<table>
 			<tr>
 			<td align="left">
-			Short Description:<br/>
-			<html:textarea property="info" cols="60" rows="5"/>
-			</tr>
+				Short Description:<br/>
+				<html:textarea property="info" cols="60" rows="5"/>
 			</td>
+			</tr>
 		</table>
 		<html:submit>Add Image</html:submit>
 		<html:reset>Clear</html:reset>
-	</center>
+	</div>
 
 </html:form>
 
-</p>
 <%-- arch-tag: A2410B18-5D6F-11D9-AF66-000A957659CC --%>

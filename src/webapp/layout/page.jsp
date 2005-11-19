@@ -41,7 +41,7 @@
 					<input type="hidden" name="action" value="next"/>
 					<input id="tsInp" name="what" size="20"
 						onfocus="focusSearch();" onblur="blurSearch();"
-						style="font-size: x-small;" autocomplete="off"/>
+						style="font-size: x-small;"/>
 					</div>
 				</form>
 				<div id="ts" class="kcSuggestions"

@@ -5,19 +5,21 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-bean' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
-<p>
+<html:xhtml/>
 
-<div class="sectionheader">Category Administration</div>
+<h1>Category Administration</h1>
 
 <html:form action="/admcatsave">
 	<html:errors/>
 
-	<table border="1">
-		<tr>
-			<td>Name</td>
-			<td><html:text property="name"/></td>
-		</tr>
-	</table>
+	<fieldset>
+		<legend>Name</legend>
+			<label for="name">Name</label>
+			<html:text styleId="name" property="name"/>
+	</fieldset>
+
+	<fieldset>
+		<legend>Permissions</legend>
 
 	<table border="1">
 		<tr>
@@ -43,6 +45,10 @@
 		</logic:iterate>
 	</table>
 
-	<html:submit>Save</html:submit>
+	</fieldset>
+
+	<div>
+		<html:submit>Save</html:submit>
+	</div>
 </html:form>
 <%-- arch-tag: C7F1ECA8-5D6F-11D9-826B-000A957659CC --%>

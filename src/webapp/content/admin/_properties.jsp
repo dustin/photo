@@ -5,9 +5,9 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-bean' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
-<p>
+<html:xhtml/>
 
-<div class="sectionheader">Property Editor</div>
+<h1>Property Editor</h1>
 
 <html:form action="/admin/saveProperties.do">
 	<html:errors/>
@@ -32,9 +32,8 @@
 			</tr>
 		</logic:iterate>
 	</table>
-	<br/>
-	<html:submit>Save Properties</html:submit>
+	<div>
+		<html:submit>Save Properties</html:submit>
+	</div>
 </html:form>
-
-</p>
 <%-- arch-tag: C9E35953-5D6F-11D9-BF9D-000A957659CC --%>

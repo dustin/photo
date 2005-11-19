@@ -11,9 +11,9 @@
 			<c:param name="what" value="${k.kwmatch.keyword.keyword}"/>
 		</c:url>
 	</c:set>
-	<a href="<c:out escapeXml='false' value='${u}'/>"
+	<a href="<c:out value='${u}'/>"
 		class="cloud <c:out value='cloud${k.bucket}'/>"
-		title="<c:out value='${k.kwmatch.count} matches for ${k.kwmatch.keyword.keyword}'/>"/>
+		title="<c:out value='${k.kwmatch.count} matches for ${k.kwmatch.keyword.keyword}'/>">
 			<c:out value="${k.kwmatch.keyword.keyword}"/></a>
 </c:forEach>
 </div>

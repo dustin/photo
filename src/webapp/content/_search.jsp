@@ -29,7 +29,7 @@
 			<fmt:message key="forms.search.simple.field.info"/></html:option>
 	</html:select>
 	<fmt:message key="forms.search.simple.contains"/>
-	<input type="text" id="kcInput1" name="what" autocomplete="off"/>
+	<input type="text" id="kcInput1" name="what"/>
 	</p>
 	<div id="kc1" class="kcSuggestions"
 		style="display:none; width: 250px;"></div>
@@ -101,7 +101,7 @@
 			</html:option>
 		</html:select>
 
-		<input type="text" id="kcInput2" name="what" autocomplete="off"/>
+		<input type="text" id="kcInput2" name="what"/>
 		</fieldset>
 
 		<div id="kc2" class="kcSuggestions"

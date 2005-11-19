@@ -4,7 +4,7 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
-<p>
+<html:xhtml/>
 
 <h1><c:out value="${reportName}"/></h1>
 
@@ -27,9 +27,7 @@
 					<c:when test="${columnNames[cst.index] eq 'image_id'}">
 						<bean:define type="java.lang.String"
 							id="imgId"><c:out value="${col}"/></bean:define>
-						<photo:imgLink id='<%= imgId %>'>
-							<c:out value="${col}"/>
-						</photo:imgLink>
+						<photo:imgLink id='<%= imgId %>' showThumbnail="true"/>
 					</c:when>
 					<%-- Special case for user ID --%>
 					<c:when test="${columnNames[cst.index] eq 'user_id'}">
@@ -74,7 +72,9 @@
 	<c:if test="${st.last}">
 	
 			</table>
-			<html:submit>Report</html:submit>
+			<div>
+				<html:submit>Report</html:submit>
+			</div>
 		</form>
 	</c:if>
 </c:forEach>

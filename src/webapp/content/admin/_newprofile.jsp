@@ -4,6 +4,8 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-bean' prefix='bean' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<html:xhtml/>
+
 <%
 	String lastProfile=(String)request.getAttribute("net.spy.photo.ProfileId");
 %>
@@ -17,13 +19,17 @@
 
 <% } %>
 
-<p>
-
-<div class="sectionheader">New Profile</div>
+<h1>New Profile</h1>
 
 <html:form action="/admnewprofile">
 
-	Profile description: <html:text property="name"/><br/>
+	<fieldset>
+		<legend>Description</legend>
+		Profile description: <html:text property="name"/>
+	</fieldset>
+
+	<fieldset>
+		<legend>Permissions</legend>
 
 	<table border="1">
 
@@ -45,8 +51,10 @@
 
 	</table>
 
-	<html:submit>Create Profile</html:submit>
-</html:form>
+	</fieldset>
 
-</p>
+	<div>
+		<html:submit>Create Profile</html:submit>
+	</div>
+</html:form>
 <%-- arch-tag: C9245172-5D6F-11D9-A347-000A957659CC --%>

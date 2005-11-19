@@ -1,7 +1,10 @@
 <%@ page import="net.spy.photo.*" %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-bean' prefix='bean' %>
+<%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
+
+<html:xhtml/>
 
 <%
 	// Find the results
@@ -13,7 +16,7 @@
 	Gallery g=Gallery.getGallery(user, galleryId);
 %>
 
-<div class="sectionheader"><%= g.getName() %></div>
+<h1><%= g.getName() %></h1>
 
 <logic:iterate id="pid" type="net.spy.photo.PhotoImageData"
 	collection="<%= g.getImages() %>">
