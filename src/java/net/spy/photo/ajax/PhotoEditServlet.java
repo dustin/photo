@@ -19,9 +19,14 @@ import net.spy.photo.CategoryFactory;
 import net.spy.photo.Comment;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoRegion;
 import net.spy.photo.PhotoSessionData;
+import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
+import net.spy.photo.impl.PhotoDimensionsImpl;
+import net.spy.photo.impl.PhotoRegionImpl;
 import net.spy.photo.impl.SavablePhotoImageData;
 
 /**
@@ -97,6 +102,22 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 	public static abstract class Handler extends SpyObject {
 		public abstract Object handle(int id, User user,
 			HttpServletRequest request) throws Exception;
+		protected String getStringParam(HttpServletRequest request, String n,
+			int minLength) {
+
+			String rv=request.getParameter(n);
+			if(rv == null) {
+				throw new NullPointerException(n);
+			}
+			if(rv.length() < minLength) {
+				throw new IllegalArgumentException(n + ":  " + minLength
+					+ " chars required.");
+			}
+			return(rv);
+		}
+		protected int getIntParam(HttpServletRequest request, String n) {
+			return(Integer.parseInt(getStringParam(request, n, 1)));
+		}
 	}
 
 	@AjaxHandler(path="/comment",role=User.AUTHENTICATED)
@@ -104,10 +125,7 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 
-			String commentString=request.getParameter("comment");
-			if(commentString == null || commentString.length()==0) {
-				throw new NullPointerException("comment");
-			}
+			String commentString=getStringParam(request, "comment", 1);
 
 			// Construct the comment.
 			Comment comment=new Comment();
@@ -121,6 +139,43 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 
 			getLogger().info(user + " Posting comment for image "
 				+ id + ":  " + comment);
+			return(null);
+		}
+	}
+
+	@AjaxHandler(path="/annotation",role=User.AUTHENTICATED)
+	public static class AddAnnotationHandler extends Handler {
+		public Object handle(int id, User user, HttpServletRequest request)
+			throws Exception {
+
+			String title=getStringParam(request, "title", 1);
+			String keywords=getStringParam(request, "keywords", 0);
+
+			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			SavablePhotoImageData savable=new SavablePhotoImageData(
+				pidf.getObject(id));
+
+			PhotoDimensions displaySize=
+				new PhotoDimensionsImpl(getStringParam(request, "imgDims", 1));
+			float scaleFactor=PhotoUtil.getScaleFactor(displaySize,
+				savable.getDimensions());
+
+			PhotoRegion specifiedRegion=new PhotoRegionImpl(
+				getIntParam(request, "x"), getIntParam(request, "y"),
+				getIntParam(request, "w"), getIntParam(request, "h"));
+
+			// The scaled region
+			PhotoRegion newRegion=PhotoUtil.scaleRegion(specifiedRegion,
+				scaleFactor);
+
+			// Add it and save it.
+			savable.addAnnotation(
+				newRegion.getX(), newRegion.getY(),
+				newRegion.getWidth(), newRegion.getHeight(),
+				keywords, title, user);
+
+			pidf.store(savable);
+
 			return(null);
 		}
 	}

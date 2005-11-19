@@ -14,6 +14,7 @@
 %>
 
 <script type="text/javascript">
+var url='<c:url value="/ajax/photo/annotation"/>';
 // <![CDATA[
 	var boxOb=new Object();
 	boxOb.boxX1=0;
@@ -80,6 +81,59 @@
 		boxDiv.style.height="0px;";
 	}
 
+	function submitAnnotation() {
+		if($F('annTitle') == '') {
+			alert("You need at least a description to annotate.");
+			return(false);
+		}
+		var x=$F("x");
+		var y=$F("y");
+		var width=$F("w");
+		var height=$F("h");
+
+		clearSelection();
+		new Ajax.Request(url, {
+			method: 'post',
+			postBody: Form.serialize('annForm'),
+			onComplete: function(req) {
+			},
+			onFailure: function(req) {
+				alert("Failed to add annotation: " + req.responseText);
+			},
+			onSuccess: function(req) {
+				var h=document.createElement("div");
+				h.className="commentheader";
+				h.appendChild(document.createTextNode("You just added the following at "
+					+ x + "," + y + " @ " + width + "x" + height));
+				var b=document.createElement("div");
+				b.className="commentbody";
+				b.appendChild(document.createTextNode('Keywords:	'));
+				var i=document.createElement("i");
+				i.appendChild(document.createTextNode($F('annKeywords')));
+				b.appendChild(i);
+				b.appendChild(document.createElement("br"));
+				b.appendChild(document.createTextNode('Title: ' + $F('annTitle')));
+				$('comments').appendChild(h);
+				$('comments').appendChild(b);
+			}
+			});
+	}
+
+	Ajax.Responders.register({
+		onCreate: function() {
+			if(Ajax.activeRequestCount>0) {
+		Form.disable("annForm");
+		Element.show("indicator");
+			}
+		},
+		onComplete: function() {
+			if(Ajax.activeRequestCount==0) {
+				Form.enable("annForm");
+				Element.hide("indicator");
+			}
+		}
+		});
+
 	Event.observe(window, 'load', function() {
 		Element.setOpacity('zoomBox', 0.5);
 	}, false);
@@ -94,10 +148,10 @@
 
 		<div id="zoomBox"></div>
 		<div id="annotateFormDiv" style="display: none;">
-			<html:form method="post" action="/annotate"
-				onsubmit="clearSelection(); return true;">
+			<html:form method="post" action="/annotate" styleId="annForm"
+				onsubmit="submitAnnotation(); return false;">
 				<div>
-					<input type="hidden" name="imageId" value="<%= image.getId() %>"/>
+					<input type="hidden" name="imgId" value="<%= image.getId() %>"/>
 					<input type="hidden" name="imgDims"
 						value='<%= request.getAttribute("displayDims") %>'/>
 					x: <input id="x" name="x" size="3"/>
@@ -106,13 +160,15 @@
 					h: <input id="h" name="h" size="3"/>
 				</div>
 				<div>
-					keywords: <input name="keywords"/>
+					keywords: <input id="annKeywords" name="keywords"/>
 				</div>
 				<div>
-					description: <input name="title"/>
+					description: <input id="annTitle" name="title"/>
 				</div>
 				<div>
 					<input type="submit" value="Save"/>
+					<img src="<c:url value='/images/indicator.gif'/>"
+						alt="indicator" id="indicator" style="display: none"/>
 				</div>
 			</html:form>
 		</div>
@@ -120,20 +176,20 @@
 	<div>
 		<b>Category</b>: <q><c:out value="${image.catName}"/></q>
 		<b>Keywords</b>:
-      <i><c:forEach var="kw" items="${image.keywords}">
-        <c:out value="${kw.keyword}"/>
-      </c:forEach></i><br/>
-		    <b>Size</b>:  <c:out value="${image.dimensions}"/>
-      (<c:out value="${image.size}"/> bytes)<br />
-    <b>Taken</b>:  <c:out value="${image.taken}"/> <b>Added</b>:
-      <c:out value="${image.timestamp}"/>
-    by <c:out value="${image.addedBy.realName}"/><br />
-    <b>Info</b>:
-    <div id="imgDescr"><c:out value="${image.descr}"/></div>
+			<i><c:forEach var="kw" items="${image.keywords}">
+				<c:out value="${kw.keyword}"/>
+			</c:forEach></i><br/>
+				<b>Size</b>:	<c:out value="${image.dimensions}"/>
+			(<c:out value="${image.size}"/> bytes)<br />
+		<b>Taken</b>:  <c:out value="${image.taken}"/> <b>Added</b>:
+			<c:out value="${image.timestamp}"/>
+		by <c:out value="${image.addedBy.realName}"/><br />
+		<b>Info</b>:
+		<div id="imgDescr"><c:out value="${image.descr}"/></div>
 
 	</div>
 
-	<div class="comments">
+	<div id="comments" class="comments">
 		<h1>Current Annotations</h1>
 
 		<c:forEach var="region" items="${image.annotations}">
@@ -149,7 +205,7 @@
 				Keywords:  <i><c:forEach var="kw" items="${region.keywords}">
 					<c:out value="${kw.keyword}"/>
 				</c:forEach></i><br/>
-				Title:  <c:out value="${region.title}"/>
+				Title:	<c:out value="${region.title}"/>
 			</div>
 
 		</c:forEach>

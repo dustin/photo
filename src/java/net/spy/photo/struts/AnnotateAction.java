@@ -50,7 +50,7 @@ public class AnnotateAction extends PhotoAction {
 		// Get the user
 		User user=sessionData.getUser();
 
-		Integer imageInteger=(Integer)df.get("imageId");
+		Integer imageInteger=(Integer)df.get("imgId");
 		int imageId=imageInteger.intValue();
 
 		// Check permission
