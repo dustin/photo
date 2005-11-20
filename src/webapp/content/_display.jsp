@@ -2,6 +2,7 @@
 <%@ page import="net.spy.photo.PhotoDimensions" %>
 <%@ page import="net.spy.photo.PhotoRegion" %>
 <%@ page import="net.spy.photo.PhotoUtil" %>
+<%@ page import="net.spy.photo.Keyword" %>
 <%@ page import="net.spy.photo.Comment" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
@@ -207,10 +208,23 @@
 			int ry2=scaledRegion.getHeight() + ry1;
 
 			String coords=rx1 + "," + ry1 + "," + rx2 + "," + ry2;
+			String keywords="";
+			for(Keyword k : region.getKeywords()) {
+				keywords += k.getKeyword() + " ";
+			}
 		%>
 
+		<c:set var="u">
+			<c:url value="/search.do">
+				<c:param name="what"><%= keywords %></c:param>
+				<c:param name="field" value="keywords"/>
+				<c:param name="fieldjoin" value="and"/>
+				<c:param name="sdirection" value="desc"/>
+			</c:url>
+		</c:set>
+
 		<area alt="" title="<%= region.getTitle() %>"
-			href="nohref" shape="rect" coords="<%= coords %>"/>
+			href="<c:out value='${u}'/>" shape="rect" coords="<%= coords %>"/>
 
 	</logic:iterate>
 </map>
