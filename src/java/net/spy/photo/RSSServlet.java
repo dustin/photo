@@ -3,31 +3,22 @@
 
 package net.spy.photo;
 
-import java.util.Collection;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
-import java.io.IOException;
-
-import java.net.URI;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
 import net.spy.jwebkit.rss.RSSChannel;
 import net.spy.jwebkit.rss.RSSItem;
-
-import net.spy.photo.PhotoImageData;
 import net.spy.photo.ajax.PhotoAjaxServlet;
 import net.spy.photo.search.Search;
 import net.spy.photo.search.SearchResults;
 import net.spy.photo.struts.SearchForm;
+
+import org.xml.sax.ContentHandler;
 
 /**
  * Servlet for sending RSS data from search results.
