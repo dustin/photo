@@ -28,16 +28,36 @@
 			<th>Can Add</th>
 		</tr>
 
+		<% int catId=Integer.parseInt(request.getParameter("catId")); %>
+
 		<logic:iterate id="user" type="net.spy.photo.User"
 			collection="<%= UserFactory.getInstance().getAllUsers() %>">
 
+			<%
+				String className="";
+				String wclassName="";
+				String rclassName="";
+				if(user.canAdd(catId)) {
+					className="writeaccess";
+				} else if(user.canView(catId)) {
+					className="readaccess";
+				}
+				if(user.canAdd(catId)) {
+					wclassName="writeaccess";
+				}
+				if(user.canView(catId)) {
+					rclassName="readaccess";
+				}
+			%>
+
 			<tr>
-				<td><%= user.getName() %> (<%= user.getRealname() %>)</td>
-				<td>
+				<td class="<%= className %>"><%= user.getName() %>
+					(<%= user.getRealname() %>)</td>
+				<td class="<%= rclassName %>">
 					<html:multibox property="catAclView"
 						value="<%= "" + user.getId() %>"/>
 				</td>
-				<td>
+				<td class="<%= wclassName %>">
 					<html:multibox property="catAclAdd"
 						value="<%= "" + user.getId() %>"/>
 				</td>
@@ -48,6 +68,7 @@
 	</fieldset>
 
 	<div>
+		<html:hidden property="catId"/>
 		<html:submit>Save</html:submit>
 	</div>
 </html:form>

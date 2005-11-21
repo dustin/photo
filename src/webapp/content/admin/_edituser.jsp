@@ -1,3 +1,5 @@
+<%@ page import="net.spy.photo.User" %>
+<%@ page import="net.spy.photo.UserFactory" %>
 <%@ page import="net.spy.photo.Category" %>
 <%@ page import="net.spy.photo.CategoryFactory" %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
@@ -54,15 +56,35 @@
 			<th>Can Add</th>
 		</tr>
 
+		<% User user=UserFactory.getInstance().getObject(
+			Integer.parseInt(request.getParameter("userId"))); %>
+
 		<logic:iterate id="cat" type="net.spy.photo.Category"
 			collection="<%= CategoryFactory.getInstance().getAdminCatList() %>">
 
+			<%
+				String className="";
+				String wclassName="";
+				String rclassName="";
+				if(user.canAdd(cat.getId())) {
+					className="writeaccess";
+				} else if(user.canView(cat.getId())) {
+					className="readaccess";
+				}
+				if(user.canAdd(cat.getId())) {
+					wclassName="writeaccess";
+				}
+				if(user.canView(cat.getId())) {
+					rclassName="readaccess";
+				}
+			%>
+
 			<tr>
-				<td><%= cat.getName() %></td>
-				<td>
+				<td class="<%= className %>"><%= cat.getName() %></td>
+				<td class="<%= rclassName %>">
 					<html:multibox property="catAclView" value="<%= "" + cat.getId() %>"/>
 				</td>
-				<td>
+				<td class="<%= wclassName %>">
 					<html:multibox property="catAclAdd" value="<%= "" + cat.getId() %>"/>
 				</td>
 			</tr>
@@ -70,6 +92,7 @@
 	</table>
 
 	<div>
+		<html:hidden property="userId"/>
 		<html:submit>Save</html:submit>
 	</div>
 </html:form>

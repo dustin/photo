@@ -385,3 +385,12 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 	color: #aaf;
     font-size: 60%;
 }
+
+.readaccess {
+	color: black;
+	background-color: #7f7;
+}
+.writeaccess {
+	color: black;
+	background-color: #f77;
+}
