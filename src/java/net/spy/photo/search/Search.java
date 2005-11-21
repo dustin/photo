@@ -395,6 +395,7 @@ public class Search extends SpyObject {
 
 		// Lookup the keywords
 		ArrayList<Keyword> keywords = new ArrayList<Keyword>();
+		ArrayList<Keyword> antiKeywords = new ArrayList<Keyword>();
 		if(kw == null) {
 			kw = "";
 		}
@@ -408,15 +409,23 @@ public class Search extends SpyObject {
 		KeywordFactory kf=KeywordFactory.getInstance();
 		StringTokenizer st = new StringTokenizer(kw);
 		while(st.hasMoreTokens()) {
+			ArrayList<Keyword> addTo=keywords;
 			String kwstring = st.nextToken();
+			if(kwstring.startsWith("-")) {
+				kwstring=kwstring.substring(1);
+				addTo=antiKeywords;
+			}
 			Keyword k = kf.getKeyword(kwstring);
 			if(k != null) {
-				keywords.add(k);
+				addTo.add(k);
 			} else {
 				getLogger().debug("Unknown keyword:  " + kwstring);
 				missingKw = true;
 			}
 		}
+
+		SearchIndex index = SearchIndex.getInstance();
+
 		if(joinop == SearchIndex.OP_AND && missingKw) {
 			// If the joinop is AND and an invalid keyword was requested, just
 			// clear the set, we're done
@@ -428,13 +437,24 @@ public class Search extends SpyObject {
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Got images with keywords " + keywords);
 			}
-			SearchIndex index = SearchIndex.getInstance();
 			Set keyset = index.getForKeywords(keywords, joinop);
 			rset.retainAll(keyset);
 		}
+		if(antiKeywords.size() > 0) {
+			// Remove any images that match our ``anti-keywords'' by performing
+			// a relative complement of the current result set the union of all
+			// of the images matching the anti-keywords
+			if(getLogger().isDebugEnabled()) {
+				getLogger().debug("Removing images with keywords "
+					+ antiKeywords);
+			}
+			Set keyset = index.getForKeywords(antiKeywords, SearchIndex.OP_OR);
+			rset.removeAll(keyset);
+		}
 	}
 
-	private void processInfo(Set<PhotoImageData> rset, String kw, String keyjoin) {
+	private void processInfo(Set<PhotoImageData> rset, String kw,
+		String keyjoin) {
 		// Find all of the words
 		ArrayList<String> words = new ArrayList<String>();
 		StringTokenizer st = new StringTokenizer(kw.toLowerCase());
