@@ -3,6 +3,7 @@
 
 package net.spy.photo.struts;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.StringTokenizer;
@@ -10,6 +11,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.spy.db.savables.CollectionSavable;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.Keyword;
@@ -65,6 +67,7 @@ public class AdminBulkKWUpdate extends PhotoAction {
 
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 
+		ArrayList savables=new ArrayList(results.size());
 		for(PhotoImageData pid : results) {
 			SavablePhotoImageData savable=new SavablePhotoImageData(
 				pidf.getObject(pid.getId()));
@@ -80,10 +83,10 @@ public class AdminBulkKWUpdate extends PhotoAction {
 
 			savable.setKeywords(kw);
 
-			pidf.store(savable, false);
+			savables.add(savable);
 		}
 
-		pidf.recache();
+		pidf.store(new CollectionSavable(savables));
 
 		request.setAttribute("updated", new Integer(results.size()));
 
