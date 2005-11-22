@@ -40,7 +40,4 @@ function setupCategoryEditor(el, url, webappurl) {
 				});
 		}
 	});
-	Event.stopObserving(editor.element, 'click', editor.onclickListener);
-	editor.onclickListener=editor.enterEditMode.bindAsEventListener(editor);
-	Event.observe(editor.element, 'click', editor.onclickListener);
 }
