@@ -132,6 +132,11 @@
 		<put name="body" value="/content/admin/_editcat.jsp"/>
 	</definition>
 
+	<definition name="admin.bulkkw" extends="pageLayout">
+		<put name="title" type="string" value="Bulk Keyword Fixups"/>
+		<put name="body" value="/content/admin/_bulkKeywordForm.jsp"/>
+	</definition>
+
 	<definition name="admin.userlist" extends="pageLayout">
 		<put name="title" type="string" value="User Administration"/>
 		<put name="body" value="/content/admin/_users.jsp"/>

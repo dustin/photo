@@ -64,12 +64,21 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	}
 
 	/** 
+	 * Store a savable and optionally recache the instances.
+	 */
+	public void store(Savable ob, boolean recache) throws Exception {
+		Saver s=new Saver(PhotoConfig.getInstance());
+		s.save(ob);
+		if(recache) {
+			recache();
+		}
+	}
+
+	/** 
 	 * Store a savable and recache the instances.
 	 */
 	public void store(Savable ob) throws Exception {
-		Saver s=new Saver(PhotoConfig.getInstance());
-		s.save(ob);
-		recache();
+		store(ob, true);
 	}
 
 }

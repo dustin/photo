@@ -114,6 +114,12 @@
 			type="net.spy.photo.struts.AdminCategoryForm"/>
 		<form-bean name="adminNewProfileForm"
 			type="net.spy.photo.struts.AdminNewProfileForm"/>
+
+		<form-bean name="bulkKwForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="match" type="java.lang.String"/>
+			<form-property name="modify" type="java.lang.String"/>
+		</form-bean>
   </form-beans>
 
   <action-mappings>
@@ -396,6 +402,15 @@
 		<forward name="next" path="/index.do"/>
 	</action>
 
+	<action path="/admin/bulkkwsave"
+		name="bulkKwForm"
+		input="admin.bulkkw"
+		roles="admin"
+		scope="request"
+		type="net.spy.photo.struts.AdminBulkKWUpdate">
+		<forward name="next" path="/admin/bulkkw.do"/>
+	</action>
+
 	<!-- REPORTING -->
 
 	<action path="/report/userCat"
@@ -520,6 +535,7 @@
 	<action path="/admin/reporting" roles="admin" forward="admin.reporting"/>
 	<action path="/admin/properties" roles="admin" forward="admin.properties"/>
 	<action path="/admin/newprofile" roles="admin" forward="admin.newprofile"/>
+	<action path="/admin/bulkkw" roles="admin" forward="admin.bulkkw"/>
 
   </action-mappings>
 

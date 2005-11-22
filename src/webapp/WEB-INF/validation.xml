@@ -191,6 +191,25 @@
 				</field>
 			</form>
 
+			<form name="bulkKwForm">
+				<field property="match" depends="required,minlength">
+					<arg0 key="Keyword Match" resource="false"/>
+					<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+					<var>
+						<var-name>minlength</var-name>
+						<var-value>1</var-value>
+					</var>
+				</field>
+				<field property="modify" depends="required,minlength">
+					<arg0 key="Replacement" resource="false"/>
+					<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+					<var>
+						<var-name>minlength</var-name>
+						<var-value>1</var-value>
+					</var>
+				</field>
+			</form>
+
     </formset>
 
 </form-validation>

@@ -109,6 +109,8 @@
 							message="index.links.admin.user"/></li>
 					<li><photo:link url="/admin/catList.do"
 							message="index.links.admin.cat"/></li>
+					<li><photo:link url="/admin/bulkkw.do"
+							message="index.links.admin.bulkkw"/></li>
 					<li><photo:link url="/admin/newprofile.do"
 							message="index.links.admin.newprofile"/></li>
 					<li><photo:link url="/admin/properties.do"
