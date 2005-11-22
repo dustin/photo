@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import net.spy.db.AbstractSavable;
@@ -283,11 +282,9 @@ public class SavablePhotoImageData extends AbstractSavable
 	 */
 	public void setKeywords(String kw) throws Exception {
 		keywords.clear();
-		StringTokenizer st=new StringTokenizer(kw);
 		KeywordFactory kf=KeywordFactory.getInstance();
-		while(st.hasMoreTokens()) {
-			keywords.add(kf.getKeyword(st.nextToken(), true));
-		}
+		KeywordFactory.Keywords kws=kf.getKeywords(kw, true);
+		keywords.addAll(kws.getPositive());
 
 		// XXX: Remove any keywords from any annotations that aren't in the
 		// keywords set
@@ -317,10 +314,10 @@ public class SavablePhotoImageData extends AbstractSavable
 		NewAnnotatedRegion nar=new NewAnnotatedRegion(newId, x, y,
 			width, height, title, u);
 
-		StringTokenizer st=new StringTokenizer(kw);
 		KeywordFactory kf=KeywordFactory.getInstance();
-		while(st.hasMoreTokens()) {
-			nar.addKeyword(kf.getKeyword(st.nextToken(), true));
+		KeywordFactory.Keywords kws=kf.getKeywords(kw, true);
+		for(Keyword k : kws.getPositive()) {
+			nar.addKeyword(k);
 		}
 
 		annotations.add(nar);
