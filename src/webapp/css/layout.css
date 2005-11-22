@@ -394,3 +394,11 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 	color: black;
 	background-color: #f77;
 }
+
+.message {
+	margin-left: 2em;
+	margin-right: 2em;
+	margin-bottom: 1em;
+	font-size: smaller;
+	border: solid 1px black;
+}

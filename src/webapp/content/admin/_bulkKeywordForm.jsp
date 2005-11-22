@@ -9,9 +9,14 @@
 <h1>Bulk Keyword Fixups</h1>
 
 <c:if test="${not empty updated}">
-	<div class="message">
+	<div id="message" class="message">
 		Updated <fmt:formatNumber value="${updated}"/> images.
 	</div>
+	<script type="text/javascript">
+		Event.observe(window, 'load', function() {
+			new Effect.Highlight($("message"));
+			}, false);
+	</script>
 </c:if>
 
 <html:errors/>
