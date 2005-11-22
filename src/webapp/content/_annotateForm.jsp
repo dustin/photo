@@ -148,7 +148,7 @@ var url='<c:url value="/ajax/photo/annotation"/>';
 
 		<div id="zoomBox"></div>
 		<div id="annotateFormDiv" style="display: none;">
-			<html:form method="post" action="/annotate" styleId="annForm"
+			<form method="post" action="#" id="annForm"
 				onsubmit="submitAnnotation(); return false;">
 				<div>
 					<input type="hidden" name="imgId" value="<%= image.getId() %>"/>
@@ -170,7 +170,7 @@ var url='<c:url value="/ajax/photo/annotation"/>';
 					<img src="<c:url value='/images/indicator.gif'/>"
 						alt="indicator" id="indicator" style="display: none"/>
 				</div>
-			</html:form>
+			</form>
 		</div>
 
 	<div>

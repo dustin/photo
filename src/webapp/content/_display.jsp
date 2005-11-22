@@ -189,6 +189,7 @@
 			</div>
 			<div>
 				<html:submit>Add Comment</html:submit>
+				<input type="hidden" name="imageId" value="<%= image.getId() %>"/>
 			<img src="<c:url value='/images/indicator.gif'/>"
 				alt="indicator" id="addindicator" style="display: none"/>
 			</div>
