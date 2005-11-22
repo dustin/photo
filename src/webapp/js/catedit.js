@@ -10,22 +10,6 @@ function getData(el, which) {
 function setupCategoryEditor(el, url, webappurl) {
 	var editor=new Ajax.InPlaceEditor(el, url);
 	Object.extend(editor, {
-		// Overrode this to prevent some javascript errors when trying to
-		// grab the new form element
-		enterEditMode: function(evt) {
-			this.editing = true;
-			this.onEnterEditMode();
-			if (this.options.externalControl) {
-				Element.hide(this.options.externalControl);
-			}
-			Element.hide(this.element);
-			this.createForm();
-			this.element.parentNode.insertBefore(this.form, this.element);
-			if (evt) {
-				Event.stop(evt);
-			}
-			return false;
-		},
 		createEditField: function() {
 			var text=this.getText();
 
