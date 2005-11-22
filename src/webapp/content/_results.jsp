@@ -7,6 +7,27 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<script type="text/javascript">
+	function showSavedSearchForm() {
+		Element.hide($('savesearchtext'));
+		Element.show($('savesearch'));
+	}
+
+	Event.observe(window, 'load', function() {
+		Element.hide($('savesearch'));
+		var link=document.createElement("a");
+		link.title="Click here to save this search";
+		link.appendChild(document.createTextNode("Save this Search"));
+		if(window.ActiveXObject) {
+			link.href="javascript:showSavedSearchForm()";
+		} else {
+			link.href="#";
+			link.setAttribute("onclick", "showSavedSearchForm(); return false;");
+		}
+		$('savesearchtext').appendChild(link);
+		}, false);
+</script>
+
 <html:xhtml/>
 <photo:javascript url="/js/catedit.js"/>
 
@@ -23,14 +44,17 @@
 <div id="searchheader">
 <logic:present role="canadd">
 	<% if(sessionData.getEncodedSearch() != null) { %>
-		<form method="post" action="savesearch.do">
-			<div>
-				<input type="hidden" name="search"
-					value="<%= sessionData.getEncodedSearch() %>"/>
-				Save search as:  <input name="name"/>
-				<html:submit>Save</html:submit>
-			</div>
-		</form>
+		<div id="savesearchtext"></div>
+		<div id="savesearch">
+			<form method="post" action="savesearch.do">
+				<div>
+					<input type="hidden" name="search"
+						value="<%= sessionData.getEncodedSearch() %>"/>
+					Save search as:  <input name="name"/>
+					<html:submit>Save</html:submit>
+				</div>
+			</form>
+		</div>
 	<% } %>
 </logic:present>
 
