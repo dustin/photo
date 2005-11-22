@@ -5,7 +5,10 @@ package net.spy.photo;
 import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import net.spy.db.Saver;
@@ -90,8 +93,76 @@ public class KeywordFactory extends GenFactory<Keyword> {
 		return(rv);
 	}
 
+	/**
+	 * Parse the keyword string to a set of keywords.
+	 * 
+	 * @param s the input string
+	 * @param create true if missing keywords should be created
+	 * @return the Keywords instance
+	 * @throws Exception if we can't get keywords
+	 */
+	public Keywords getKeywords(String s, boolean create) throws Exception {
+		Set positive=new HashSet<Keyword>();
+		Set negative=new HashSet<Keyword>();
+		Set missing=new HashSet<String>();
+
+		StringTokenizer st = new StringTokenizer(s);
+		while(st.hasMoreTokens()) {
+			Collection<Keyword> addTo=positive;
+			String kwstring = st.nextToken();
+			if(kwstring.startsWith("-")) {
+				kwstring=kwstring.substring(1);
+				addTo=negative;
+			}
+			Keyword k = getKeyword(kwstring, create);
+			if(k == null) {
+				missing.add(kwstring);
+			} else {
+				addTo.add(k);
+			}
+		}
+		return(new Keywords(positive, negative, missing));
+	}
+
 	protected CacheEntry<Keyword> getNewCacheEntry() {
 		return(new KeywordCacheEntry());
+	}
+
+	/**
+	 * Result set from a keyword string parsing.
+	 */
+	public static class Keywords extends Object {
+		private Set<Keyword> positive=null;
+		private Set<Keyword> negative=null;
+		private Set<String> missing=null;
+
+		public Keywords(Set<Keyword>p, Set<Keyword>n, Set<String> m) {
+			super();
+			positive=p;
+			negative=n;
+			missing=m;
+		}
+
+		/**
+		 * Get the set of negative keywords.
+		 */
+		public Set<Keyword> getNegative() {
+			return negative;
+		}
+
+		/**
+		 * Get the set of positive keywords.
+		 */
+		public Set<Keyword> getPositive() {
+			return positive;
+		}
+
+		/**
+		 * Get the set of missing keyword strings.
+		 */
+		public Set<String> getMissing() {
+			return(missing);
+		}
 	}
 
 	private static class KeywordCacheEntry extends HashCacheEntry<Keyword> {

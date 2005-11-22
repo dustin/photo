@@ -6,16 +6,15 @@ package net.spy.photo.struts;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.spy.db.savables.CollectionSavable;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.Keyword;
 import net.spy.photo.KeywordFactory;
+import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.impl.SavablePhotoImageData;
 import net.spy.photo.search.Search;
 import net.spy.photo.search.SearchResults;
@@ -41,29 +40,15 @@ public class AdminBulkKWUpdate extends PhotoAction {
 		sf.setWhat((String)lf.get("match"));
 		sf.setField("keywords");
 
-		Collection<Keyword> toAdd=new HashSet<Keyword>();
-		Collection<Keyword> toRemove=new HashSet<Keyword>();
-
 		KeywordFactory kf=KeywordFactory.getInstance();
-		StringTokenizer st = new StringTokenizer((String)lf.get("modify"));
-		while(st.hasMoreTokens()) {
-			Collection<Keyword> addTo=toAdd;
-			String kwstring = st.nextToken();
-			if(kwstring.startsWith("-")) {
-				kwstring=kwstring.substring(1);
-				addTo=toRemove;
-			}
-			Keyword k = kf.getKeyword(kwstring, true);
-			if(k != null) {
-				addTo.add(k);
-			}
-		}
+		KeywordFactory.Keywords kws=kf.getKeywords((String)lf.get("modify"), true);
 
 		SearchResults results=Search.getInstance().performSearch(sf,
 			getUser(request));
 
 		getLogger().info("Updating " + results.size()
-			+ " images by adding " + toAdd + " and removing " + toRemove);
+			+ " images by adding " + kws.getPositive() + " and removing "
+			+ kws.getNegative());
 
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 
@@ -73,8 +58,8 @@ public class AdminBulkKWUpdate extends PhotoAction {
 				pidf.getObject(pid.getId()));
 
 			Collection<Keyword> kw=new HashSet<Keyword>(pid.getKeywords());
-			kw.addAll(toAdd);
-			kw.removeAll(toRemove);
+			kw.addAll(kws.getPositive());
+			kw.removeAll(kws.getNegative());
 
 			assert kw.size() > 0 : "Trying to set keywords to the null set.";
 

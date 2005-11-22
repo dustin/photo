@@ -393,62 +393,48 @@ public class Search extends SpyObject {
 	private void processKeywords(
 		Set<PhotoImageData> rset, String kw, String keyjoin) throws Exception {
 
-		// Lookup the keywords
-		ArrayList<Keyword> keywords = new ArrayList<Keyword>();
-		ArrayList<Keyword> antiKeywords = new ArrayList<Keyword>();
 		if(kw == null) {
 			kw = "";
 		}
 		// Figure out the operation
-		int joinop = SearchIndex.OP_AND;
+		SearchIndex.OP joinop = SearchIndex.OP.AND;
 		if("or".equals(keyjoin)) {
-			joinop = SearchIndex.OP_OR;
+			joinop = SearchIndex.OP.OR;
 		}
 		// Flip through the keywords
 		boolean missingKw = false;
 		KeywordFactory kf=KeywordFactory.getInstance();
-		StringTokenizer st = new StringTokenizer(kw);
-		while(st.hasMoreTokens()) {
-			ArrayList<Keyword> addTo=keywords;
-			String kwstring = st.nextToken();
-			if(kwstring.startsWith("-")) {
-				kwstring=kwstring.substring(1);
-				addTo=antiKeywords;
-			}
-			Keyword k = kf.getKeyword(kwstring);
-			if(k != null) {
-				addTo.add(k);
-			} else {
-				getLogger().debug("Unknown keyword:  " + kwstring);
-				missingKw = true;
-			}
+		KeywordFactory.Keywords kws=kf.getKeywords(kw, false);
+		if(kws.getMissing().size() > 0) {
+			getLogger().debug("Unknown keywords:  " + kws.getMissing());
+			missingKw=true;
 		}
 
 		SearchIndex index = SearchIndex.getInstance();
 
-		if(joinop == SearchIndex.OP_AND && missingKw) {
+		if(joinop == SearchIndex.OP.AND && missingKw) {
 			// If the joinop is AND and an invalid keyword was requested, just
 			// clear the set, we're done
 			getLogger().debug("ANDing an unknown keyword");
 			rset.clear();
-		} else if(keywords.size() > 0) {
+		} else if(kws.getPositive().size() > 0) {
 			// Remove everything that doesn't match our keywords (unless we
 			// don't have any)
 			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Got images with keywords " + keywords);
+				getLogger().debug("Got images with keywords " + kws.getPositive());
 			}
-			Set keyset = index.getForKeywords(keywords, joinop);
+			Set keyset = index.getForKeywords(kws.getPositive(), joinop);
 			rset.retainAll(keyset);
 		}
-		if(antiKeywords.size() > 0) {
+		if(kws.getNegative().size() > 0) {
 			// Remove any images that match our ``anti-keywords'' by performing
 			// a relative complement of the current result set the union of all
 			// of the images matching the anti-keywords
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Removing images with keywords "
-					+ antiKeywords);
+					+ kws.getNegative());
 			}
-			Set keyset = index.getForKeywords(antiKeywords, SearchIndex.OP_OR);
+			Set keyset = index.getForKeywords(kws.getNegative(), SearchIndex.OP.OR);
 			rset.removeAll(keyset);
 		}
 	}
@@ -462,9 +448,9 @@ public class Search extends SpyObject {
 			words.add(st.nextToken());
 		}
 		// Figure out the operation
-		int joinop = SearchIndex.OP_AND;
+		SearchIndex.OP joinop = SearchIndex.OP.AND;
 		if("or".equals(keyjoin)) {
-			joinop = SearchIndex.OP_OR;
+			joinop = SearchIndex.OP.OR;
 		}
 
 		for(Iterator ri = rset.iterator(); ri.hasNext();) {
@@ -481,7 +467,7 @@ public class Search extends SpyObject {
 				}
 			}
 			if(matchedone) {
-				if(joinop == SearchIndex.OP_AND && !matchedall) {
+				if(joinop == SearchIndex.OP.AND && !matchedall) {
 					// And requires all to match, but we didn't match all
 					ri.remove();
 				}

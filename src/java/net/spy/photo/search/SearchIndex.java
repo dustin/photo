@@ -24,14 +24,9 @@ import net.spy.photo.PhotoImageData;
 public class SearchIndex extends SpyObject {
 
 	/**
-	 * Operator for ``and'' joins.
+	 * Operators for join operations.
 	 */
-	public static final int OP_AND = 1;
-
-	/**
-	 * Operator for ``or'' joins.
-	 */
-	public static final int OP_OR = 2;
+	public static enum OP { AND, OR };
 
 	private static SearchIndex instance = null;
 
@@ -114,7 +109,7 @@ public class SearchIndex extends SpyObject {
 	 */
 	public synchronized Set<PhotoImageData>
 		getForCats(Collection<Integer> cats) {
-		return (getCombined(byCategory, cats, OP_OR));
+		return (getCombined(byCategory, cats, OP.OR));
 	}
 
 	/**
@@ -124,22 +119,10 @@ public class SearchIndex extends SpyObject {
 		return (byKeyword.get(k));
 	}
 
-	private void checkOp(int op) {
-		if(op == OP_AND) {
-			// OK
-		} else if(op == OP_OR) {
-			// OK
-		} else {
-			throw new IllegalArgumentException("Invalid operator:  " + op);
-		}
-	}
-
 	@SuppressWarnings("unchecked")
 	private Set<PhotoImageData> getCombined(
 		Map<? extends Object, Set<PhotoImageData>> m,
-		Collection<? extends Object> c, int operator) {
-		// Validate the operator
-		checkOp(operator);
+		Collection<? extends Object> c, OP operator) {
 
 		Set<PhotoImageData> rv = new HashSet<PhotoImageData>();
 		if(c.size() > 0) {
@@ -155,7 +138,7 @@ public class SearchIndex extends SpyObject {
 				if(stmp == null) {
 					stmp = Collections.EMPTY_LIST;
 				}
-				if(operator == OP_AND) {
+				if(operator == OP.AND) {
 					rv.retainAll(stmp);
 				} else {
 					rv.addAll(stmp);
@@ -176,7 +159,7 @@ public class SearchIndex extends SpyObject {
 	 * @return the set
 	 */
 	public synchronized Set<PhotoImageData> getForKeywords(
-		Collection<Keyword> c, int operator) {
+		Collection<Keyword> c, OP operator) {
 		return (getCombined(byKeyword, c, operator));
 	}
 
