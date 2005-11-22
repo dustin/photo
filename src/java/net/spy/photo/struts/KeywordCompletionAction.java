@@ -54,9 +54,14 @@ public class KeywordCompletionAction extends PhotoAction {
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 
 		User user=getUser(req);
+		String prefix="";
 		String match=req.getParameter("what");
 		if(match == null) {
 			match="";
+		}
+		if(match.length() > 0 && match.startsWith("-")) {
+			prefix="-";
+			match=match.substring(1);
 		}
 		SearchCache sc=SearchCache.getInstance();
 		CacheKey ck=new CacheKey(user.getId(), match);
@@ -66,6 +71,7 @@ public class KeywordCompletionAction extends PhotoAction {
 			sc.store(ck, kws);
 		}
 		req.setAttribute("keywords", kws);
+		req.setAttribute("kwprefix", prefix);
 		return(mapping.findForward("next"));
 	}
 

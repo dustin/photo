@@ -8,7 +8,7 @@
 		<c:param name="scale" value="50x50"/></c:url></c:set>
 	<li><span
 		class="informal"><img alt="img" src='<c:out value="${u}"/>'/></span><c:out
-		value="${k.keyword.keyword}"/><span
+		value="${kwprefix}${k.keyword.keyword}"/><span
 		class="informal"> (<fmt:message key="kwmatch.count">
 			<fmt:param value="${k.count}"/></fmt:message>)</span></li>
 </c:forEach>
