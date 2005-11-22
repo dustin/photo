@@ -1,11 +1,6 @@
 // Category editor
 // arch-tag: B30EAD50-4EBB-455F-80CD-CAD01F261756
 
-function getData(el, which) {
-	stuff=el.getElementsByTagName(which);
-	return stuff[0].firstChild.nodeValue;
-}
-
 // Set up a category editor
 function setupCategoryEditor(el, url, webappurl) {
 	var editor=new Ajax.InPlaceEditor(el, url);
@@ -22,6 +17,10 @@ function setupCategoryEditor(el, url, webappurl) {
 			new Ajax.Request(webappurl + 'ajax/cats/write', {
 				onSuccess: function(req) {
 					var cats=req.responseXML.getElementsByTagName("cat");
+					var getData=function (el, which) {
+						stuff=el.getElementsByTagName(which);
+						return stuff[0].firstChild.nodeValue;
+					};
 					$A(cats).each( function(cat, idx) {
 						var op=document.createElement("option");
 						op.value=getData(cat, "value");
