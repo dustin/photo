@@ -3,6 +3,7 @@
 package net.spy.photo;
 
 import java.sql.ResultSet;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,8 +26,14 @@ public class KeywordFactory extends GenFactory<Keyword> {
 
 	private static KeywordFactory instance=null;
 
+	private Set<String> ignoredKeywords=null;
+
 	protected KeywordFactory() {
 		super(CACHE_KEY, CACHE_TIME);
+		ignoredKeywords=new HashSet<String>();
+		ignoredKeywords.addAll(Arrays.asList(new String[]{
+				"of", "the", "a", "for", "to", "in", 
+			}));
 	}
 
 	public static synchronized KeywordFactory getInstance() {
@@ -79,16 +86,20 @@ public class KeywordFactory extends GenFactory<Keyword> {
 			throw new NullPointerException("There is no null keyword.");
 		}
 		kw=kw.trim().toLowerCase();
-		KeywordCacheEntry c=(KeywordCacheEntry)getCache();
-		Keyword rv=c.getByWord(kw);
-		if(rv == null && create) {
-			// If this didn't match an existing keyword, make a new one
-			rv=new KeywordImpl(kw);
-			// Save it
-			Saver s=new Saver(PhotoConfig.getInstance());
-			s.save((KeywordImpl)rv);
-			// Cache it
-			getCache().cacheInstance(rv);
+		Keyword rv=null;
+		// Skip ignored keywords
+		if(!ignoredKeywords.contains(kw)) {
+			KeywordCacheEntry c=(KeywordCacheEntry)getCache();
+			rv=c.getByWord(kw);
+			if(rv == null && create) {
+				// If this didn't match an existing keyword, make a new one
+				rv=new KeywordImpl(kw);
+				// Save it
+				Saver s=new Saver(PhotoConfig.getInstance());
+				s.save((KeywordImpl)rv);
+				// Cache it
+				getCache().cacheInstance(rv);
+			}
 		}
 		return(rv);
 	}
@@ -114,11 +125,14 @@ public class KeywordFactory extends GenFactory<Keyword> {
 				kwstring=kwstring.substring(1);
 				addTo=negative;
 			}
-			Keyword k = getKeyword(kwstring, create);
-			if(k == null) {
-				missing.add(kwstring);
-			} else {
-				addTo.add(k);
+			// Skip ignored keywords
+			if(!ignoredKeywords.contains(kwstring)) {
+				Keyword k = getKeyword(kwstring, create);
+				if(k == null) {
+					missing.add(kwstring);
+				} else {
+					addTo.add(k);
+				}
 			}
 		}
 		return(new Keywords(positive, negative, missing));
