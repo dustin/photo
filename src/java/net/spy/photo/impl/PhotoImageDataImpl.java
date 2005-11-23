@@ -21,6 +21,8 @@ import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
+import net.spy.photo.Vote;
+import net.spy.photo.Votes;
 
 /**
  * This class represents, and retreives all useful data for a given image.
@@ -31,6 +33,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	private int id=-1;
 	private Collection<AnnotatedRegion> annotations=null;
 	private Collection<Keyword> keywords=null;
+	private Votes votes=null;
 	private String descr=null;
 	private String catName=null;
 	private int catId=-1;
@@ -53,6 +56,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 		super();
 		keywords=new TreeSet<Keyword>();
 		annotations=new HashSet<AnnotatedRegion>();
+		votes=new Votes();
 	}
 
 	/**
@@ -116,6 +120,20 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 */
 	protected void addAnnotation(AnnotatedRegion a) {
 		annotations.add(a);
+	}
+
+	/**
+	 * Add a vote for this image.
+	 */
+	protected void addVote(Vote v) {
+		votes.add(v);
+	}
+
+	/**
+	 * Get the votes for this image.
+	 */
+	public Votes getVotes() {
+		return(votes);
 	}
 
 	/**

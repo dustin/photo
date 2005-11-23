@@ -1,0 +1,26 @@
+#
+# Copyright (c) 2005 Dustin Sallings <dustin@spy.net>
+# arch-tag: 3F86EAD6-55EA-47DE-A083-D7807E4833D1
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Update a vote record
+
+@implements
+VoteManipulator
+
+@sql
+update votes set
+		vote = ?, remote_addr = ?, ts = ?
+	where
+		wwwuser_id = ? and photo_id = ?
+
+@params
+vote required INTEGER the vote
+remote_addr required VARCHAR the IP address of the voter
+ts required TIMESTAMP the timestamp this vote occurred
+user_id required INTEGER The user adding this vote
+photo_id required INTEGER the photo receiving the vote

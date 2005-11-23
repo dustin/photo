@@ -18,10 +18,13 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataSource;
+import net.spy.photo.PhotoSecurity;
 import net.spy.photo.UserFactory;
+import net.spy.photo.Vote;
 import net.spy.photo.sp.GetAlbumKeywords;
 import net.spy.photo.sp.GetAllRegionKeywords;
 import net.spy.photo.sp.GetAllRegions;
+import net.spy.photo.sp.GetAllVotes;
 import net.spy.photo.sp.GetPhotoInfo;
 
 /**
@@ -65,6 +68,8 @@ public class DBImageDataSource extends SpyObject
 
 		loadKeywords(rv);
 		loadAnnotations(rv);
+		loadVotes(rv);
+		
 
 		// Add all of the image annotation keywords to the image keywords
 		for(PhotoImageData imgd : rv.values()) {
@@ -76,6 +81,22 @@ public class DBImageDataSource extends SpyObject
 		}
 
 		return (rv.values());
+	}
+
+	private void loadVotes(HashMap rv) throws Exception {
+		PhotoSecurity security=Persistent.getSecurity();
+		GetAllVotes db=new GetAllVotes(PhotoConfig.getInstance());
+		ResultSet rs=db.executeQuery();
+
+		while(rs.next()) {
+			int photoId=rs.getInt("photo_id");
+			Vote v=new Vote(security, rs);
+			getLogger().info("Loading " + v);
+			((ImgData)rv.get(photoId)).addVote(v);
+		}
+
+		rs.close();
+		db.close();
 	}
 
 	private void loadKeywords(Map imgs) throws Exception {

@@ -29,6 +29,7 @@ import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
+import net.spy.photo.Votes;
 import net.spy.photo.sp.DeleteAnnotations;
 import net.spy.photo.sp.DeleteAnnotationsMap;
 import net.spy.photo.sp.DeleteKeywordMap;
@@ -46,6 +47,7 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	private Collection<AnnotatedRegion> annotations=null;
 	private Collection<Keyword> keywords=null;
+	private Votes votes=null;
 	private String descr=null;
 	private int catId=-1;
 	private int size=-1;
@@ -98,6 +100,7 @@ public class SavablePhotoImageData extends AbstractSavable
 
 		this.keywords=proto.getKeywords();
 		this.annotations=proto.getAnnotations();
+		this.votes=proto.getVotes();
 		this.descr=proto.getDescr();
 		this.catId=proto.getCatId();
 		this.size=proto.getSize();
@@ -336,6 +339,10 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public Collection<AnnotatedRegion> getAnnotations() {
 		return(annotations);
+	}
+
+	public Votes getVotes() {
+		return(votes);
 	}
 
 	public void setDescr(String to) {

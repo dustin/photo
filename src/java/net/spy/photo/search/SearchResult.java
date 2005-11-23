@@ -13,6 +13,7 @@ import net.spy.photo.Keyword;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.User;
+import net.spy.photo.Votes;
 
 /**
  * A search result.
@@ -46,6 +47,10 @@ public class SearchResult extends Object
 
 	public Collection<Keyword> getKeywords() {
 		return(imgData.getKeywords());
+	}
+
+	public Votes getVotes() {
+		return(imgData.getVotes());
 	}
 
 	public String getDescr() {

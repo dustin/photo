@@ -20,11 +20,13 @@ import net.spy.photo.Comment;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoRegion;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
+import net.spy.photo.Vote;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.impl.PhotoRegionImpl;
 import net.spy.photo.impl.SavablePhotoImageData;
@@ -140,6 +142,45 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 			getLogger().info(user + " Posting comment for image "
 				+ id + ":  " + comment);
 			return(null);
+		}
+	}
+
+	@AjaxHandler(path="/vote",role=User.AUTHENTICATED)
+	public static class AddVoteHandler extends Handler {
+		public Object handle(int id, User user, HttpServletRequest request)
+			throws Exception {
+
+			int voteValue=getIntParam(request, "vote");
+
+			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			PhotoImageData img=pidf.getObject(id);
+
+			// First, try to find a current vote to update
+			Vote vote=img.getVotes().getVote(user.getId());
+			// If we don't have one, make a new one.
+			if(vote == null) {
+				vote=new Vote();
+			}
+			
+			vote.setUser(user);
+			vote.setPhotoId(id);
+			vote.setRemoteAddr(request.getRemoteAddr());
+			vote.setVote(voteValue);
+
+			Saver s=new Saver(PhotoConfig.getInstance());
+			s.save(vote);
+
+			// Recache to get the votes up-to-date
+			pidf.recache();
+
+			// Get the image again and check out the newly calculated averages
+			img=pidf.getObject(id);
+
+			getLogger().info(user + " Posting vote for image " + id
+				+ ":  " + vote + " new votes:  " + img.getVotes());
+			// JSON response
+			return("{\"avg\": " + img.getVotes().getAverage()
+				+ ", \"size\": " + img.getVotes().getSize() + "}");
 		}
 	}
 

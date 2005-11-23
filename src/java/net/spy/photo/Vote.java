@@ -3,19 +3,27 @@
 
 package net.spy.photo;
 
-import java.sql.PreparedStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Date;
 
-import net.spy.SpyObject;
-import net.spy.db.SpyDB;
+import net.spy.db.AbstractSavable;
+import net.spy.db.SaveContext;
+import net.spy.db.SaveException;
+import net.spy.photo.sp.GetGeneratedKey;
+import net.spy.photo.sp.InsertVote;
+import net.spy.photo.sp.UpdateVote;
+import net.spy.photo.sp.VoteManipulator;
 
 /**
  * Votes on photos.
  */
-public class Vote extends SpyObject implements java.io.Serializable {
+public class Vote extends AbstractSavable implements java.io.Serializable {
+
+	public static final int MIN_VOTE = 0;
+	public static final int MAX_VOTE = 10;
 
 	private int voteId=-1;
 
@@ -25,91 +33,68 @@ public class Vote extends SpyObject implements java.io.Serializable {
 	private int vote=0;
 	private String remoteAddr=null;
 	private Timestamp timestamp=null;
-	private String timestampString=null;
 
 	/**
 	 * Get an instance of Vote.
 	 */
 	public Vote() {
 		super();
-		timestamp=new Timestamp(System.currentTimeMillis());
-		timestampString=timestamp.toString();
+		setNew(true);
 	}
 
 	// Get a vote from a result row
-	private Vote(PhotoSecurity sec, ResultSet rs) throws Exception {
+	public Vote(PhotoSecurity sec, ResultSet rs) throws Exception {
 		super();
 
 		voteId=rs.getInt("vote_id");
 		photoId=rs.getInt("photo_id");
 		vote=rs.getInt("vote");
-		timestampString=rs.getString("ts");
+		timestamp=rs.getTimestamp("ts");
 		remoteAddr=rs.getString("remote_addr");
 		user=sec.getUser(rs.getInt("wwwuser_id"));
-	}
-
-	/**
-	 * Get a Collection of Vote objects for all of the comments on a
-	 * given image.
-	 */
-	public static Collection<Vote> getVotesForPhoto(int imageId)
-		throws Exception {
-
-		PhotoSecurity security=new PhotoSecurity();
-		ArrayList<Vote> al=new ArrayList<Vote>();
-		SpyDB db=new SpyDB(PhotoConfig.getInstance());
-		PreparedStatement pst=db.prepareStatement(
-			"select * from votes where photo_id=? order by ts desc");
-		pst.setInt(1, imageId);
-		ResultSet rs=pst.executeQuery();
-
-		while(rs.next()) {
-			al.add(new Vote(security, rs));
-		}
-
-		rs.close();
-		pst.close();
-		db.close();
-
-		return(al);
+		setNew(false);
+		setModified(false);
 	}
 
 	/**
 	 * Save a new vote.
 	 */
-	public void save() throws Exception {
-		if(voteId!=-1) {
-			throw new Exception("You can only save *new* votes.");
-		}
+	public void save(Connection conn, SaveContext ctx)
+		throws SaveException, SQLException {
+
 		if(!user.isInRole(User.AUTHENTICATED)) {
-			throw new Exception("Guest is not allowed to vote.");
+			throw new SaveException("Guest is not allowed to vote.");
 		}
-		SpyDB db=new SpyDB(PhotoConfig.getInstance());
-		PreparedStatement pst=db.prepareStatement(
-			"insert into votes(wwwuser_id,photo_id,vote,remote_addr,ts)\n"
-			+ " values(?,?,?,?,?)");
-		pst.setInt(1, user.getId());
-		pst.setInt(2, photoId);
-		pst.setInt(3, vote);
-		pst.setString(4, remoteAddr);
-		pst.setTimestamp(5, timestamp);
-
-		int updated=pst.executeUpdate();
-		if(updated!=1) {
-			throw new Exception("No rows updated?");
-		}
-		pst.close();
-
-		ResultSet rs=db.executeQuery(
-			"select currval('votes_vote_id_seq')");
-		if(!rs.next()) {
-			getLogger().warn("Couldn't get vote ID");
-			voteId=-2;
+		VoteManipulator vm=null;
+		if(isNew()) {
+			vm=new InsertVote(conn);
 		} else {
-			voteId=rs.getInt(1);
+			vm=new UpdateVote(conn);
 		}
-		rs.close();
-		db.close();
+		vm.setUserId(user.getId());
+		vm.setPhotoId(photoId);
+		vm.setVote(vote);
+		vm.setRemoteAddr(remoteAddr);
+		vm.setTs(timestamp);
+
+		int updated=vm.executeUpdate();
+		if(updated!=1) {
+			throw new SaveException("No rows inserted/updated?");
+		}
+		vm.close();
+
+		if(isNew()) {
+			GetGeneratedKey ggk=new GetGeneratedKey(conn);
+			ggk.setSeq("votes_vote_id_seq");
+			ResultSet rs=ggk.executeQuery();
+			if(!rs.next()) {
+				throw new SaveException("Couldn't get new vote ID.");
+			} else {
+				voteId=rs.getInt(1);
+			}
+			rs.close();
+			ggk.close();
+		}
 	}
 
 	/**
@@ -151,11 +136,13 @@ public class Vote extends SpyObject implements java.io.Serializable {
 	 * Set the actual note.
 	 */
 	public void setVote(int to) {
-		if(to<0) {
-			to=0;
-		} else if(to>10) {
-			to=10;
+		if(to<MIN_VOTE) {
+			to=MIN_VOTE;
+		} else if(to>MAX_VOTE) {
+			to=MAX_VOTE;
 		}
+		setModified(true);
+		timestamp=new Timestamp(System.currentTimeMillis());
 		this.vote=to;
 	}
 
@@ -183,8 +170,8 @@ public class Vote extends SpyObject implements java.io.Serializable {
 	/**
 	 * Get the timestamp of when this entry was created.
 	 */
-	public String getTimestamp() {
-		return(timestampString);
+	public Date getTimestamp() {
+		return(timestamp);
 	}
 
 	/**
@@ -203,32 +190,6 @@ public class Vote extends SpyObject implements java.io.Serializable {
 		sb.append(":  ");
 		sb.append(getVote());
 		return(sb.toString());
-	}
-
-	/**
-	 * Testing and what not.
-	 */
-	public static void main(String args[]) throws Exception {
-		if(args.length==2) {
-			PhotoSecurity sec=new PhotoSecurity();
-			User me=sec.getUser("dustin");
-			System.out.println("Got user:  " + me);
-
-			Vote vote=new Vote();
-			vote.setUser(me);
-			vote.setRemoteAddr("192.168.1.139");
-			vote.setPhotoId(Integer.parseInt(args[0]));
-			vote.setVote(Integer.parseInt(args[1]));
-
-			vote.save();
-			System.out.println(vote);
-		} else {
-			int img=Integer.parseInt(args[0]);
-			for(Vote v : Vote.getVotesForPhoto(img)) {
-				System.out.println(v);
-				System.out.println("--");
-			}
-		}
 	}
 
 }

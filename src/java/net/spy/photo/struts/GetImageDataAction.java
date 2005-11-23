@@ -26,6 +26,7 @@ public class GetImageDataAction extends PhotoAction {
 
 	private static final String ATTRIBUTE="image";
 	private static final String DIM_ATTR="displayDims";
+	private static final String MY_RATING="myrating";
 
 	/**
 	 * Get an instance of GetImageDataAction.
@@ -98,6 +99,9 @@ public class GetImageDataAction extends PhotoAction {
 		request.setAttribute(DIM_ATTR,
 			PhotoUtil.scaleTo(image.getDimensions(),
 			sessionData.getOptimalDimensions()));
+
+		request.setAttribute(MY_RATING, image.getVotes().getVote(
+			sessionData.getUser().getId()));
 
 		ActionForward rv=mapping.findForward("next");
 		return(rv);

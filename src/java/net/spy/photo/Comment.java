@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import net.spy.db.AbstractSavable;
@@ -32,7 +33,6 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	private String note=null;
 	private String remoteAddr=null;
 	private Timestamp timestamp=null;
-	private String timestampString=null;
 
 	/**
 	 * Get an instance of Comment.
@@ -40,7 +40,6 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	public Comment() {
 		super();
 		timestamp=new Timestamp(System.currentTimeMillis());
-		timestampString=timestamp.toString();
 		setNew(true);
 		setModified(false);
 	}
@@ -52,7 +51,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 		commentId=rs.getInt("comment_id");
 		photoId=rs.getInt("photo_id");
 		note=rs.getString("note");
-		timestampString=rs.getString("ts");
+		timestamp=rs.getTimestamp("ts");
 		remoteAddr=rs.getString("remote_addr");
 		user=sec.getUser(rs.getInt("user_id"));
 
@@ -239,8 +238,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Get the timestamp of when this entry was created.
 	 */
-	public String getTimestamp() {
-		return(timestampString);
+	public Date getTimestamp() {
+		return(timestamp);
 	}
 
 	/**

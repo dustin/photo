@@ -402,3 +402,9 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 	font-size: smaller;
 	border: solid 1px black;
 }
+
+.ratingstar {
+	width: 10px;
+	height: 10px;
+	background: url(/photodemo/images/star_rating.gif) left top;
+}

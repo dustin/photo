@@ -113,6 +113,26 @@
 [<photo:imgLink id="<%= "" + image.getId() %>">Full Size Image</photo:imgLink>]
 --%>
 
+<div id="ratings">
+	<h1>Votes</h1>
+
+	<div id="yourvote">
+		<c:if test="${not empty myrating}">
+			On <fmt:formatDate value="${myrating.timestamp}"
+				pattern="EEE, d MMM yyyy HH:mm"/>, you rated this image
+			<c:out value="${myrating.vote}"/>/10.
+		</c:if>
+	</div>
+	<div>
+		<span id="avgvote">
+			Average vote is <fmt:formatNumber value="${image.votes.average}"/> of
+			<fmt:formatNumber value="${image.votes.size}"/> votes.
+		</span>
+		<span id="stars"></span>
+		<img src="<c:url value='/images/indicator.gif'/>"
+			alt="indicator" id="rateindicator" style="display: none"/>
+	</div>
+</div>
 
 <div id="comments" class="comments">
 
@@ -140,10 +160,49 @@
 <div>
 
 	<logic:present role="authenticated">
-	<script type="text/javascript">
-		function submitComment() {
 
-			var imgid=<%= image.getId() %>;
+	<script type="text/javascript">
+		var rateAvg='<c:out value="${image.votes.average}"/>';
+		var rateSize='<c:out value="${image.votes.size}"/>';
+		var baseUrl='<c:url value="/"/>';
+		var imgid='<c:out value="${image.id}"/>';
+		var starSrcs=new Array();
+		// <![CDATA[
+
+		function clearThing(el) {
+			while(el.hasChildNodes()) {
+				el.removeChild(el.firstChild);
+			}
+		}
+
+		function rateImage(rating) {
+			Element.show("rateindicator");
+			new Ajax.Request(baseUrl + 'ajax/photo/vote', {
+				method: 'post',
+				postBody: $H({imgId: imgid, vote: rating}).toQueryString(),
+				onComplete: function(req) {
+					Element.hide("rateindicator");
+				},
+				onFailure: function(req) {
+					alert("Failed to save vote.");
+				},
+				onSuccess: function(req) {
+					clearThing($('yourvote'));
+					$('yourvote').appendChild(document.createTextNode("You just voted "
+						+ rating + "/10"));
+					// Get the json response and update the UI with the new ratings
+					var json=eval('(' + req.responseText + ')');
+					rateAvg=json.avg;
+					calculateStarSrcs();
+					restoreStars();
+					clearThing($('avgvote'));
+					$('avgvote').appendChild(document.createTextNode("Average vote is "
+						+ json.avg + " of " + json.size + " votes"));
+				}
+				});
+		}
+
+		function submitComment() {
 			var comment=$F("comment");
 			if(comment == "") {
 				alert("You'll need to actually type in a comment to post it.");
@@ -154,7 +213,7 @@
 
 			Element.show("addindicator");
 			var postBody=$H({imgId: imgid, comment: comment}).toQueryString();
-			new Ajax.Request('<c:url value="/ajax/photo/comment"/>', {
+			new Ajax.Request(baseUrl + 'ajax/photo/comment', {
 				method: 'post',
 				postBody: postBody,
 				onComplete: function(req) {
@@ -180,7 +239,59 @@
 					}
 				});
 		}
+
+		function bindStarCall(f, v) {
+			var i=v + '';
+			return function() { f(i); return(false); };
+		}
+
+		function hoverStars(max) {
+			var empty=$('starempty').src;
+			var partial=$('starpartial').src;
+			for(var i=0; i<=10; i++) {
+				var s=empty;
+				if(i <= max) {
+					s=partial;
+				}
+				$('star' + i).src=s;
+			}
+		}
+
+		function restoreStars() {
+			for(var i=0; i<=10; i++) {
+				$('star' + i).src=starSrcs[i];
+			}
+		}
+
+		function calculateStarSrcs() {
+			starSrcs=new Array();
+			for(var i=0; i<=10; i++) {
+				var starProto=$('starfull');
+				if(i > rateAvg) {
+					starProto=$('starempty');
+				}
+				starSrcs.push(starProto.src);
+			}
+		}
+
+		function createStars() {
+			calculateStarSrcs();
+			clearThing($('stars'));
+			for(var i=0; i<=10; i++) {
+				var newStar=document.createElement("img");
+				newStar.src=starSrcs[i];
+				newStar.id='star' + i;
+				newStar.onclick = bindStarCall(rateImage, i);
+				newStar.onmouseover = bindStarCall(hoverStars, i);
+				newStar.onmouseout = restoreStars;
+				$('stars').appendChild(newStar);
+			}
+		}
+		// Set up the rating bar
+		Event.observe(window, 'load', createStars, false);
+		// ]]>
 	</script>
+
 		<fmt:message key="display.comment"/><br/>
 		<html:form action="/addcomment" onsubmit="submitComment(); return false;"
 			styleId="commentForm">
@@ -229,4 +340,9 @@
 
 	</logic:iterate>
 </map>
+<div style="display: none;">
+	<img src="<c:url value='/images/star_empty.gif'/>" alt="star" id="starempty"/>
+	<img src="<c:url value='/images/star_partial.gif'/>" alt="star" id="starpartial"/>
+	<img src="<c:url value='/images/star_full.gif'/>" alt="star" id="starfull"/>
+</div>
 <%-- arch-tag: AC919514-5D6F-11D9-ACF8-000A957659CC --%>

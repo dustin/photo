@@ -19,9 +19,14 @@ public interface PhotoImageData extends Instance {
 	Collection<AnnotatedRegion> getAnnotations();
 
 	/** 
-	 * Get the keywords for this image (space separated).
+	 * Get the keywords for this image.
 	 */
 	Collection<Keyword> getKeywords();
+
+	/** 
+	 * get the votes for this image.
+	 */
+	Votes getVotes();
 
 	/** 
 	 * Get the description of this image.
