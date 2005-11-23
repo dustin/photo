@@ -159,8 +159,6 @@
 
 <div>
 
-	<logic:present role="authenticated">
-
 	<script type="text/javascript">
 		var rateAvg='<c:out value="${image.votes.average}"/>';
 		var rateSize='<c:out value="${image.votes.size}"/>';
@@ -174,6 +172,37 @@
 				el.removeChild(el.firstChild);
 			}
 		}
+
+		function calculateStarSrcs() {
+			starSrcs=new Array();
+			for(var i=0; i<=10; i++) {
+				var starProto=$('starfull');
+				if(i > rateAvg) {
+					starProto=$('starempty');
+				}
+				starSrcs.push(starProto.src);
+			}
+		}
+
+		function createStarsForShow() {
+			calculateStarSrcs();
+			clearThing($('stars'));
+			for(var i=0; i<=10; i++) {
+				var newStar=document.createElement("img");
+				newStar.src=starSrcs[i];
+				newStar.id='star' + i;
+				$('stars').appendChild(newStar);
+			}
+		}
+		// Set up the rating bar
+		Event.observe(window, 'load', createStarsForShow, false);
+		// ]]>
+	</script>
+
+	<logic:present role="authenticated">
+
+	<script type="text/javascript">
+		// <![CDATA[
 
 		function rateImage(rating) {
 			Element.show("rateindicator");
@@ -263,18 +292,7 @@
 			}
 		}
 
-		function calculateStarSrcs() {
-			starSrcs=new Array();
-			for(var i=0; i<=10; i++) {
-				var starProto=$('starfull');
-				if(i > rateAvg) {
-					starProto=$('starempty');
-				}
-				starSrcs.push(starProto.src);
-			}
-		}
-
-		function createStars() {
+		function createStarsForEdit() {
 			calculateStarSrcs();
 			clearThing($('stars'));
 			for(var i=0; i<=10; i++) {
@@ -287,8 +305,10 @@
 				$('stars').appendChild(newStar);
 			}
 		}
+
 		// Set up the rating bar
-		Event.observe(window, 'load', createStars, false);
+		Event.observe(window, 'load', createStarsForEdit, false);
+
 		// ]]>
 	</script>
 
