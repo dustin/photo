@@ -135,7 +135,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 		if(!isNew()) {
 			throw new SaveException("You can only save *new* comments.");
 		}
-		if(user.getName().equals("guest")) {
+		if(!user.getRoles().contains(User.AUTHENTICATED)) {
 			throw new SaveException("Guest is not allowed to comment.");
 		}
 

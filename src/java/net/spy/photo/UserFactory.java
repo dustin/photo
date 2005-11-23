@@ -114,9 +114,7 @@ public class UserFactory extends GenFactory<User> {
 		if(defaultUser==null) {
 			throw new PhotoUserException("Default user not found.");
 		}
-		// Add the ``guest'' role to the default user, and remove
-		// ``authenticated''
-		((DBUser)defaultUser).addRole(User.GUEST);
+		// remove ``authenticated''from the default user
 		((DBUser)defaultUser).removeRole(User.AUTHENTICATED);
 
 		// Initialize all the ACLs for all the users

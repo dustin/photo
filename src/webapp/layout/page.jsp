@@ -86,10 +86,10 @@
 			</li>
 			<li>Accounts
 				<ul>
-					<logic:present role="guest">
+					<logic:notPresent role="authenticated">
 						<li><photo:link url="/credform.do"
 							message="index.links.login"/></li>
-					</logic:present>
+					</logic:notPresent>
 					<logic:present role="authenticated">
 						<li><photo:link url="/logout.do" message="page.links.logout"/></li>
 					</logic:present>

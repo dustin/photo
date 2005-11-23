@@ -15,10 +15,6 @@ import net.spy.factory.Instance;
 public interface User extends Principal, Instance {
 
 	/** 
-	 * The guest role that unauthenticated users have.
-	 */
-	static final String GUEST="guest";
-	/** 
 	 * The role authenticated users have.
 	 */
 	static final String AUTHENTICATED="authenticated";

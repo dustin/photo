@@ -23,13 +23,6 @@ import net.spy.photo.struts.LoginAction;
  */
 public class AuthFilter extends SpyObject implements Filter {
 
-	/**
-	 * Get an instance of AuthFilter.
-	 */
-	public AuthFilter() {
-		super();
-	}
-
 	/** 
 	 * Perform initialization.
 	 */

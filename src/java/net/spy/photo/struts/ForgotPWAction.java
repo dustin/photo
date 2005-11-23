@@ -24,13 +24,6 @@ import org.apache.struts.action.DynaActionForm;
 public class ForgotPWAction extends PhotoAction {
 
 	/**
-	 * Get an instance of ForgotPWAction.
-	 */
-	public ForgotPWAction() {
-		super();
-	}
-
-	/**
 	 * Process the forgotten password request.
 	 */
 	public ActionForward spyExecute(ActionMapping mapping,
@@ -46,7 +39,7 @@ public class ForgotPWAction extends PhotoAction {
 		User ur=uf.getUser((String)fpf.get("username"));
 
 		// Verify the user doesn't end up being guest.
-		if(ur.getRoles().contains(User.GUEST)) {
+		if(!ur.getRoles().contains(User.AUTHENTICATED)) {
 			throw new ServletException("Can't set a password for guest");
 		}
 
