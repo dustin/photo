@@ -403,8 +403,13 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 	border: solid 1px black;
 }
 
-.ratingstar {
-	width: 10px;
-	height: 10px;
-	background: url(/photodemo/images/star_rating.gif) left top;
+#ratings {
+	margin-left: 2em;
+	margin-right: 2em;
+	font-size: smaller;
+}
+
+#ratings h2 {
+	color: black;
+	background: #ccf;
 }

@@ -114,7 +114,7 @@
 --%>
 
 <div id="ratings">
-	<h1>Votes</h1>
+	<h2>Votes</h2>
 
 	<div id="yourvote">
 		<c:if test="${not empty myrating}">
@@ -136,7 +136,7 @@
 
 <div id="comments" class="comments">
 
-	<h1>Comments</h1>
+	<h2>Comments</h2>
 
 	<div id="commentanchor"></div>
 
