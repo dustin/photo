@@ -26,8 +26,8 @@ public class PhotoImageTest extends TestCase {
 		byte data[] = getFileData("skate.jpg");
 		PhotoImage pi = new PhotoImage(data);
 		assertSame(data, pi.getData());
-		assertEquals(Format.FORMAT_JPEG, pi.getFormat());
-		assertEquals(Format.FORMAT_ID_JPEG, pi.getFormat().getId());
+		assertEquals(Format.JPEG, pi.getFormat());
+		assertEquals(Format.JPEG.getId(), pi.getFormat().getId());
 		assertEquals("image/jpeg", pi.getFormat().getMime());
 		assertEquals("jpg", pi.getFormat().getExtension());
 		assertEquals(13579, pi.size());
@@ -40,8 +40,8 @@ public class PhotoImageTest extends TestCase {
 	public void testPNG() throws Exception {
 		byte data[] = getFileData("spyvspy2.png");
 		PhotoImage pi = new PhotoImage(data);
-		assertEquals(Format.FORMAT_PNG, pi.getFormat());
-		assertEquals(Format.FORMAT_ID_PNG, pi.getFormat().getId());
+		assertEquals(Format.PNG, pi.getFormat());
+		assertEquals(Format.PNG.getId(), pi.getFormat().getId());
 		assertEquals("image/png", pi.getFormat().getMime());
 		assertEquals("png", pi.getFormat().getExtension());
 		assertEquals(33441, pi.size());
@@ -54,8 +54,8 @@ public class PhotoImageTest extends TestCase {
 	public void testGIF() throws Exception {
 		byte data[] = getFileData("sflogo.gif");
 		PhotoImage pi = new PhotoImage(data);
-		assertEquals(Format.FORMAT_GIF, pi.getFormat());
-		assertEquals(Format.FORMAT_ID_GIF, pi.getFormat().getId());
+		assertEquals(Format.GIF, pi.getFormat());
+		assertEquals(Format.GIF.getId(), pi.getFormat().getId());
 		assertEquals("image/gif", pi.getFormat().getMime());
 		assertEquals("gif", pi.getFormat().getExtension());
 		assertEquals(1968, pi.size());
@@ -107,14 +107,14 @@ public class PhotoImageTest extends TestCase {
 			Format f=Format.getFormat(19925);
 			fail("Shouldn't be able to get format 19925, got " + f);
 		} catch(IllegalArgumentException e) {
-			assertEquals("Invalid format id: 19925", e.getMessage());
+			assertEquals("Invalid format id:  19925", e.getMessage());
 		}
 	}
 	
 	public void testUnknownFormat() {
-		Format f=Format.getFormat(Format.FORMAT_ID_UNKNOWN);
+		Format f=Format.getFormat(Format.UNKNOWN.getId());
 		assertEquals("image/unknown", f.getMime());
 		assertEquals("unk", f.getExtension());
-		assertEquals(Format.FORMAT_ID_UNKNOWN, f.getId());
+		assertEquals(Format.UNKNOWN.getId(), f.getId());
 	}
 }

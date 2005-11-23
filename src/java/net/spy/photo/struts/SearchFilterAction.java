@@ -80,9 +80,9 @@ public class SearchFilterAction extends PhotoAction {
 			if(filter instanceof SortingFilter) {
 				SortingFilter sfil=(SortingFilter)filter;
 				// Get the sorting direction
-				int dir=SortingFilter.SORT_FORWARD;
+				SortingFilter.Sort dir=SortingFilter.Sort.FORWARD;
 				if("desc".equals(sf.getSdirection())) {
-					dir=SortingFilter.SORT_REVERSE;
+					dir=SortingFilter.Sort.REVERSE;
 				}
 				results=sfil.filter(results, dir);
 			} else {

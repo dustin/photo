@@ -12,14 +12,9 @@ import net.spy.photo.search.SearchResults;
 public abstract class SortingFilter extends Filter {
 
 	/**
-	 * Sort in chronological order.
+	 * Sort directions.
 	 */
-	public static final int SORT_FORWARD=1;
-
-	/**
-	 * Sort in reverse chronological order.
-	 */
-	public static final int SORT_REVERSE=2;
+	public static enum Sort { FORWARD, REVERSE };
 
 	/**
 	 * Get an instance of SortingFilter.
@@ -32,13 +27,13 @@ public abstract class SortingFilter extends Filter {
 	 * Filter the results and use the FORWARD sort direction.
 	 */
 	public final SearchResults filter(SearchResults in) throws PhotoException {
-		return(filter(in, SORT_FORWARD));
+		return(filter(in, Sort.FORWARD));
 	}
 
 	/**
 	 * Filter a result set.
 	 */
-	public abstract SearchResults filter(SearchResults in, int direction)
+	public abstract SearchResults filter(SearchResults in, Sort direction)
 		throws PhotoException;
 
 }

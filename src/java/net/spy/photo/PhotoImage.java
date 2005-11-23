@@ -23,7 +23,8 @@ public class PhotoImage extends Object
 	private int width=-1;
 	private int height=-1;
 
-	private int format=Format.FORMAT_ID_UNKNOWN;
+	private int format=Format.UNKNOWN.getId();
+	private transient Format fmt=Format.UNKNOWN;
 
 	/**
 	 * Get an empty PhotoImage object.
@@ -146,29 +147,30 @@ public class PhotoImage extends Object
         		throw new PhotoException("imageData is too small to be an image");
         }
 		if(isJpeg()) {
-			format=Format.FORMAT_ID_JPEG;
+			fmt=Format.JPEG;
 		} else if(isPng()) {
-			format=Format.FORMAT_ID_PNG;
+			fmt=Format.PNG;
 		} else if(isGif()) {
-			format=Format.FORMAT_ID_GIF;
+			fmt=Format.GIF;
 		} else {
 			throw new PhotoException("Cannot determine format ("
                 + "imageData is " + imageData.length + " bytes)");
 		}
+		format=fmt.getId();
 	}
 
 	// Calculate the width and height of the image.
 	private void calcDim() throws PhotoException {
 		determineFormat();
 
-		switch(format) {
-			case Format.FORMAT_ID_JPEG:
+		switch(fmt) {
+			case JPEG:
 				calcDimJpeg();
 				break;
-			case Format.FORMAT_ID_PNG:
+			case PNG:
 				calcDimPng();
 				break;
-			case Format.FORMAT_ID_GIF:
+			case GIF:
 				calcDimGif();
 				break;
 			default:

@@ -6,35 +6,24 @@ package net.spy.photo;
 /**
  * Format object.
  */
-public class Format extends Object {
+public enum Format {
 
-	public static final int FORMAT_ID_UNKNOWN=0;
-	public static final int FORMAT_ID_JPEG=1;
-	public static final int FORMAT_ID_PNG=2;
-	public static final int FORMAT_ID_GIF=3;
+	UNKNOWN (0, "unk", "image/unknown"),
+	JPEG    (1, "jpg", "image/jpeg"),
+	PNG     (2, "png", "image/png"),
+	GIF     (3, "gif", "image/gif");
 
-	public static final Format FORMAT_UNKNOWN=new Format(FORMAT_ID_UNKNOWN);
-	public static final Format FORMAT_JPEG=new Format(FORMAT_ID_JPEG);
-	public static final Format FORMAT_PNG=new Format(FORMAT_ID_PNG);
-	public static final Format FORMAT_GIF=new Format(FORMAT_ID_GIF);
-
-	private int id=0;
-
-	// Format definitions from above
-	private static String formatMime[]={
-		"image/unknown",
-		"image/jpeg",
-		"image/png",
-		"image/gif"
-	};
-	private static String formatExt[]={ "unk", "jpg", "png", "gif" };
+	private final int id;
+	private final String ext;
+	private final String type;
 
 	/**
 	 * Get an instance of Format.
 	 */
-	private Format(int i) {
-		super();
+	private Format(int i, String e, String m) {
 		this.id=i;
+		this.ext=e;
+		this.type=m;
 	}
 
 	/** 
@@ -42,45 +31,33 @@ public class Format extends Object {
 	 */
 	public static Format getFormat(int i) {
 		Format rv=null;
-		switch(i) {
-			case FORMAT_ID_UNKNOWN:
-				rv=FORMAT_UNKNOWN;
-				break;
-			case FORMAT_ID_JPEG:
-				rv=FORMAT_JPEG;
-				break;
-			case FORMAT_ID_PNG:
-				rv=FORMAT_PNG;
-				break;
-			case FORMAT_ID_GIF:
-				rv=FORMAT_GIF;
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid format id: " + i);
+		for(Format f : values()) {
+			if(f.getId() == i) {
+				rv=f;
+			}
+		}
+		if(rv == null) {
+			throw new IllegalArgumentException("Invalid format id:  " + i);
 		}
 		return(rv);
 	}
 
 	public String toString() {
-		StringBuffer sb=new StringBuffer(40);
-		sb.append("{Format ");
-		sb.append(formatMime[id]);
-		sb.append("}");
-		return(sb.toString());
+		return("{Format " + type + "}");
 	}
 
 	/**
 	 * Get the name of the format of this image.
 	 */
 	public String getMime() {
-		return(formatMime[id]);
+		return(type);
 	}
 
 	/** 
 	 * Get the extension to be used for this format.
 	 */
 	public String getExtension() {
-		return(formatExt[id]);
+		return(ext);
 	}
 
 	/** 

@@ -56,7 +56,7 @@ public abstract class DateFilter extends SortingFilter {
 	/**
 	 * Filter the set.
 	 */
-	public SearchResults filter(SearchResults in, int direction)
+	public SearchResults filter(SearchResults in, SortingFilter.Sort direction)
 		throws PhotoException {
 
 		// Get a base copy of the result set.
@@ -68,7 +68,7 @@ public abstract class DateFilter extends SortingFilter {
 
 		// This is where the month groups go
 		TreeMap<Date, Collection<PhotoImageData>> months = null;
-		if(direction == SORT_REVERSE) {
+		if(direction == SortingFilter.Sort.REVERSE) {
 			months = new TreeMap<Date, Collection<PhotoImageData>>(Collections
 				.reverseOrder());
 		} else {
