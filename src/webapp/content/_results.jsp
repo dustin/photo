@@ -8,22 +8,17 @@
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <script type="text/javascript">
-	function showSavedSearchForm() {
-		Element.hide($('savesearchtext'));
-		Element.show($('savesearch'));
-	}
-
 	Event.observe(window, 'load', function() {
 		Element.hide($('savesearch'));
 		var link=document.createElement("a");
 		link.title="Click here to save this search";
 		link.appendChild(document.createTextNode("Save this Search"));
-		if(window.ActiveXObject) {
-			link.href="javascript:showSavedSearchForm()";
-		} else {
-			link.href="#";
-			link.setAttribute("onclick", "showSavedSearchForm(); return false;");
-		}
+		link.href="#";
+		link.onclick=function() {
+			Element.hide($('savesearchtext'));
+			Element.show($('savesearch'));
+			return false;
+			};
 		$('savesearchtext').appendChild(link);
 		}, false);
 </script>
