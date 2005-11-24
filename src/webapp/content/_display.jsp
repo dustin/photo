@@ -114,7 +114,7 @@
 --%>
 
 <div id="ratings">
-	<h2>Votes</h2>
+	<h2>Rating</h2>
 
 	<div id="yourvote">
 		<c:if test="${not empty myrating}">
@@ -125,8 +125,8 @@
 	</div>
 	<div>
 		<span id="avgvote">
-			Average vote is <fmt:formatNumber value="${image.votes.average}"/>
-			of <fmt:formatNumber value="${image.votes.size}"/> votes.
+			Average rating is <fmt:formatNumber value="${image.votes.average}"/>
+			with <fmt:formatNumber value="${image.votes.size}"/> votes.
 		</span>
 		<span id="stars"></span>
 		<img src="<c:url value='/images/indicator.gif'/>"
