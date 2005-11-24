@@ -120,12 +120,12 @@
 		<c:if test="${not empty myrating}">
 			On <fmt:formatDate value="${myrating.timestamp}"
 				pattern="EEE, d MMM yyyy HH:mm"/>, you rated this image
-			<c:out value="${myrating.vote / 2}"/>/5.
+			<c:out value="${myrating.vote}"/>/5.
 		</c:if>
 	</div>
 	<div>
 		<span id="avgvote">
-			Average vote is <fmt:formatNumber value="${image.votes.average / 2.0}"/>
+			Average vote is <fmt:formatNumber value="${image.votes.average}"/>
 			of <fmt:formatNumber value="${image.votes.size}"/> votes.
 		</span>
 		<span id="stars"></span>
@@ -160,7 +160,7 @@
 <div>
 
 	<script type="text/javascript">
-		var rateAvg='<c:out value="${image.votes.average / 2.0}"/>';
+		var rateAvg='<c:out value="${image.votes.average}"/>';
 		var rateSize='<c:out value="${image.votes.size}"/>';
 		var baseUrl='<c:url value="/"/>';
 		var imgid='<c:out value="${image.id}"/>';
@@ -220,10 +220,10 @@
 				onSuccess: function(req) {
 					clearThing($('yourvote'));
 					$('yourvote').appendChild(document.createTextNode("You just voted "
-						+ (rating/2) + "/5"));
+						+ rating + "/5"));
 					// Get the json response and update the UI with the new ratings
 					var json=eval('(' + req.responseText + ')');
-					rateAvg=json.avg / 2.0;
+					rateAvg=json.avg;
 					calculateStarSrcs();
 					restoreStars();
 					clearThing($('avgvote'));
@@ -299,7 +299,7 @@
 				var newStar=document.createElement("img");
 				newStar.src=starSrcs[i];
 				newStar.id='star' + i;
-				newStar.onclick = bindStarCall(rateImage, (i+1)*2);
+				newStar.onclick = bindStarCall(rateImage, i+1);
 				newStar.onmouseover = bindStarCall(hoverStars, i);
 				newStar.onmouseout = restoreStars;
 				$('stars').appendChild(newStar);

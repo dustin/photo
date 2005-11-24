@@ -22,8 +22,8 @@ import net.spy.photo.sp.VoteManipulator;
  */
 public class Vote extends AbstractSavable implements java.io.Serializable {
 
-	public static final int MIN_VOTE = 0;
-	public static final int MAX_VOTE = 10;
+	public static final int MIN_VOTE = 1;
+	public static final int MAX_VOTE = 5;
 
 	private int voteId=-1;
 

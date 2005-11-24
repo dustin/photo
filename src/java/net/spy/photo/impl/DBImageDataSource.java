@@ -91,7 +91,6 @@ public class DBImageDataSource extends SpyObject
 		while(rs.next()) {
 			int photoId=rs.getInt("photo_id");
 			Vote v=new Vote(security, rs);
-			getLogger().info("Loading " + v);
 			((ImgData)rv.get(photoId)).addVote(v);
 		}
 
