@@ -8,9 +8,15 @@ Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 """
 
 import os
+import sets
 import urllib
 import urllib2
 import xml.sax
+import unittest
+import exceptions
+
+import saxkit
+
 try:
     import cookielib
     cookieJar = cookielib.CookieJar()
@@ -25,20 +31,34 @@ except ImportError:
 urlopener=openerFactory(cookieProcessor)
 """Abstracted URL opener that will handle cookies."""
 
-class Photo(object):
+class Photo(saxkit.ElementHandler):
     """Object representing an individual photo entry from the xml dump"""
 
-    def __init__(self, d, kwmap):
-        for col in ['id', 'size', 'width', 'height', 'tnwidth', 'tnheight']:
-            try:
-                self.__dict__[col]=int(d[col])
-            except ValueError, e:
-                print "Problem parsing", col, "from", d
-                raise e
-        for col in ['addedby', 'taken', 'ts', 'keywords', 'descr', 'extension']:
-            self.__dict__[col]=d[col]
+    def __init__(self):
+        saxkit.ElementHandler.__init__(self)
+        def r(n):
+            self.parsers[(None, n)]=saxkit.SimpleValueParser()
+        self.ints=['id', 'size', 'width', 'height', 'tnwidth', 'tnheight']
+        self.strings=['cat', 'addedby', 'taken', 'ts', 'descr', 'extension']
 
-        self.keywordStrings=[kwmap[k] for k in self.keywords]
+        for t in self.ints + self.strings:
+            r(t)
+        self.parsers[(None, 'keywords')]=KeywordParser()
+        self.parsers[(None, 'annotations')]=saxkit.SimpleListParser(Annotation)
+        self.annotations=[]
+
+    def addChild(self, name, val):
+        if isinstance(val, saxkit.SimpleValueParser):
+            if name[1] in self.ints:
+                self.__dict__[name[1]]=int(val.getValue())
+            else:
+                self.__dict__[name[1]]=val.getValue()
+        elif name == (None, 'keywords'):
+            self.keywords=sets.ImmutableSet(val.keywords)
+        elif name == (None, 'annotations'):
+            self.annotations=val.getValues()
+        else:
+            self.__dict__[name[1]]=val
 
     def dims(self):
         return "%dx%d" % (self.width, self.height)
@@ -48,87 +68,85 @@ class Photo(object):
         return [int(x) for x in self.taken.split('-')]
 
     def __repr__(self):
-        return "<Photo id=%d, dims=%s, kws=%s>" \
-            % (self.id, self.dims(), repr(self.keywordStrings))
+        return "<Photo id=%d, dims=%s, kws=%s, annotations=%s>" \
+            % (self.id, self.dims(), repr(self.keywords),
+            repr(self.annotations))
 
-class StaticIndexHandler(xml.sax.handler.ContentHandler):
-    """Sax handler for pulling out photo entries and putting them in a dict"""
-
-    SEC_NONE=0
-    SEC_KEYWORDS=1
-    SEC_ALBUM=2
+class KeywordParser(saxkit.ElementHandler):
 
     def __init__(self):
-        xml.sax.handler.ContentHandler.__init__(self)
-        self.current = None
-        self.lastwasspace = False
-        self.el = None
-        self.keywords={}
-        self.section=StaticIndexHandler.SEC_NONE
+        saxkit.ElementHandler.__init__(self)
+        self.keywords=[]
 
-    def startElement(self, name, attrs):
-        if name == 'photoexport':
-            self.section=StaticIndexHandler.SEC_NONE
-        elif name == 'album':
-            self.section=StaticIndexHandler.SEC_ALBUM
-        if name == 'keywordmap':
-            self.section=StaticIndexHandler.SEC_KEYWORDS
-        elif name == 'photo':
-            self.current = {}
-        elif name == 'keywords':
-            self.current['keywords']=[]
-        elif name == 'keyword':
-            id=int(attrs['id'])
-            if self.section == StaticIndexHandler.SEC_KEYWORDS:
-                self.keywords[id] = attrs['word']
+    def addChild(self, name, val):
+        self.keywords.append(val[(None, 'word')])
+
+    def getParser(self, name):
+        return saxkit.SimpleValueParser()
+
+class Annotation(saxkit.ElementHandler):
+
+    def __init__(self):
+        saxkit.ElementHandler.__init__(self)
+
+        def r(n):
+            self.parsers[(None, n)]=saxkit.SimpleValueParser()
+
+        self.ints = ['x', 'y', 'width', 'height']
+        strings = ['title', 'addedby', 'ts']
+
+        for k in self.ints + strings:
+            r(k)
+
+        self.parsers[(None, 'keywords')]=KeywordParser()
+
+    def addChild(self, name, val):
+        if isinstance(val, saxkit.SimpleValueParser):
+            if name[1] in self.ints:
+                self.__dict__[name[1]]=int(val.getValue())
             else:
-                self.current['keywords'].append(id)
+                self.__dict__[name[1]]=val.getValue()
+        elif name == (None, 'keywords'):
+            self.keywords=sets.ImmutableSet(val.keywords)
         else:
-            self.el=str(name)
-        if self.current is not None and self.el is not None:
-            self.current[self.el]=None
+            self.__dict__[name[1]]=val
 
-    def endElement(self, name):
-        if name == 'photo':
-            # Finished a photo, store it
-            photo=Photo(self.current, self.keywords)
-            self.gotPhoto(photo)
+    def __repr__(self):
+        return "<Annotation %dx%d @ %d,%d title=%s>" \
+            % (self.width, self.height, self.x, self.y, `self.title`)
 
-            # Reset the current entry
-            self.current = None
-            self.el = None
-        elif name == 'album':
-            self.section = StaticIndexHandler.SEC_NONE
-        elif name == 'keywordmap':
-            self.section = StaticIndexHandler.SEC_NONE
+class AlbumParser(saxkit.ElementHandler):
+    """AlbumParser receives Photo instances when they're parsed."""
+    def getParser(self, name):
+        assert name == (None, 'photo')
+        return Photo()
 
-    def characters(self, content):
-        if content[-1] == ' ':
-            self.lastwasspace=True
-        else:
-            self.lastwasspace=False
-        if self.el is not None and self.current is not None:
-            # Grab the content.  If this looks a little weird, it's because of
-            # how I deal with line wrapping and stuff.
-            if self.current[self.el] is None:
-                self.current[self.el]=content.strip()
-            else:
-                x = content.strip()
-                if x != '':
-                    pad = ""
-                    # If there's whitespace on either end of the incoming
-                    # content, or the previous content ended in a space,
-                    # include the pad.
-                    if content[0]==' ' or content[-1]==' ' or self.lastwasspace:
-                        pad=' '
-                    self.current[self.el] += pad + x
+    def addChild(self, name, val):
+        assert name == (None, 'photo')
+        self.gotPhoto(val)
 
     def gotPhoto(self, photo):
-        raise NotImplemented
+        """Invoked whenever the AlbumParser finished parsing a photo."""
+        raise exceptions.NotImplementedError()
 
-def parseIndex(path, handler):
+class ExportParser(saxkit.ElementHandler):
+
+    def __init__(self, albumParser=AlbumParser()):
+        saxkit.ElementHandler.__init__(self)
+        self.albumParser=albumParser
+
+    def getParser(self, name):
+        assert name == (None, 'album')
+        return self.albumParser
+
+def parseIndex(path, handler=AlbumParser()):
     """Parse the index at the given path."""
-    d=xml.sax.parse(path, handler)
+
+    baseh=saxkit.StackedHandler((None, u'photoexport'), ExportParser(handler))
+    parser=xml.sax.make_parser()
+    parser.setFeature(xml.sax.handler.feature_namespaces, True)
+    parser.setContentHandler(baseh)
+    d=parser.parse(path)
 
 def authenticate(baseurl, username, password):
     if baseurl[-1] != '/':
@@ -168,3 +186,58 @@ def fetchImage(baseurl, id, size=None, thumbnail=False):
     req=urllib2.Request(imgurl)
     rv=urlopener.open(req)
     return rv
+
+class ParseTest(unittest.TestCase):
+
+    def setUp(self):
+        class P(AlbumParser):
+            photos={}
+            def gotPhoto(self, p):
+                self.photos[p.id]=p
+
+        p=P()
+        parseIndex("exporttest.xml", p)
+        self.photos=p.photos
+
+    def testCount(self):
+        self.assertEquals(len(self.photos), 12)
+
+    def testAddedBy(self):
+        for v in self.photos.values():
+            self.assertEquals(v.addedby, "demouser")
+
+    def testCats(self):
+        self.assertEquals(self.photos[1].cat, "Public")
+        self.assertEquals(self.photos[2].cat, "Private")
+
+    def testKeywords(self):
+        expected=sets.ImmutableSet(['license', 'mom', 'plate', 'your'])
+        self.assertEquals(self.photos[1].keywords, expected)
+
+        expected=sets.ImmutableSet(['dustin', 'christmas'])
+        self.assertEquals(self.photos[2].keywords, expected)
+
+    def testAnnotations(self):
+        self.assertEquals(len(self.photos[1].annotations), 2)
+        self.assertEquals(len(self.photos[2].annotations), 0)
+
+        for a in self.photos[1].annotations:
+            if a.x == 762:
+                expected=sets.ImmutableSet(['license', 'mom', 'plate', 'your'])
+                self.assertEquals(a.keywords, expected)
+                self.assertEquals(a.y, 462)
+                self.assertEquals(a.addedby, 'demouser')
+                self.assertEquals(a.ts, '2005-05-31T00:47:21')
+                self.assertEquals(a.title, 'We were behind your mom in SF.')
+            elif a.x == 90:
+                expected=sets.ImmutableSet(['license', 'plate'])
+                self.assertEquals(a.keywords, expected)
+                self.assertEquals(a.y, 478)
+                self.assertEquals(a.addedby, 'demouser')
+                self.assertEquals(a.ts, '2005-05-31T00:47:52')
+                self.assertEquals(a.title, 'This plate is boring.')
+            else:
+                self.fail("Unexpected x in annotation:  " + a.x)
+
+if __name__ == '__main__':
+    unittest.main()

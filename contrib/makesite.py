@@ -167,16 +167,16 @@ def makePageForPhoto(dir, photo):
         {'id': photo.id,
             'shortpath': shortpath,
             'taken': photo.taken,
-            'keywords': ' '.join(photo.keywordStrings),
+            'keywords': ' '.join(photo.keywords),
             'descr': photo.descr,
             'year': y,
             'month': m})
 
-class MyHandler(libphoto.StaticIndexHandler):
+class MyHandler(libphoto.AlbumParser):
     """Sax handler for pulling out photo entries and putting them in a dict"""
 
     def __init__(self, album):
-        libphoto.StaticIndexHandler.__init__(self)
+        libphoto.AlbumParser.__init__(self)
         self.album=album
 
     def gotPhoto(self, photo):
@@ -325,7 +325,7 @@ def writeSearchIndex(idx):
     kwmap={}
     # Index all of the keywords
     for photo in allPhotos:
-        for kw in photo.keywordStrings:
+        for kw in photo.keywords:
             if kwmap.has_key(kw):
                 kwmap[kw].append(photo.id)
             else:

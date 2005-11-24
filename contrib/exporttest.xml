@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<photoexport>
+  <album>
+    <photo>
+      <id>12</id>
+      <addedby>demouser</addedby>
+      <cat>Private</cat>
+      <taken>2005-11-23</taken>
+      <ts>2005-11-23T16:19:41</ts>
+      <descr>Some random images testing the new uploader.</descr>
+      <size>1020090</size>
+      <width>1600</width>
+      <height>1200</height>
+      <tnwidth>194</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="dance"/>
+        <keyword word="test"/>
+      </keywords>
+    </photo>
+    <photo>
+      <id>11</id>
+      <addedby>demouser</addedby>
+      <cat>Private</cat>
+      <taken>2005-11-23</taken>
+      <ts>2005-11-23T16:19:30</ts>
+      <descr>Some random images testing the new uploader.</descr>
+      <size>16196</size>
+      <width>240</width>
+      <height>180</height>
+      <tnwidth>194</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="dance"/>
+        <keyword word="test"/>
+      </keywords>
+    </photo>
+    <photo>
+      <id>10</id>
+      <addedby>demouser</addedby>
+      <cat>Private</cat>
+      <taken>2005-11-23</taken>
+      <ts>2005-11-23T16:19:30</ts>
+      <descr>Some random images testing the new uploader.</descr>
+      <size>1181734</size>
+      <width>1600</width>
+      <height>1200</height>
+      <tnwidth>194</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="dance"/>
+        <keyword word="test"/>
+      </keywords>
+    </photo>
+    <photo>
+      <id>9</id>
+      <addedby>demouser</addedby>
+      <cat>Private</cat>
+      <taken>2005-11-23</taken>
+      <ts>2005-11-23T16:19:22</ts>
+      <descr>Some random images testing the new uploader.</descr>
+      <size>12056</size>
+      <width>240</width>
+      <height>180</height>
+      <tnwidth>194</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="dance"/>
+        <keyword word="test"/>
+      </keywords>
+    </photo>
+    <photo>
+      <id>8</id>
+      <addedby>demouser</addedby>
+      <cat>Private</cat>
+      <taken>2005-11-23</taken>
+      <ts>2005-11-23T16:19:22</ts>
+      <descr>Some random images testing the new uploader.</descr>
+      <size>970614</size>
+      <width>1600</width>
+      <height>1200</height>
+      <tnwidth>194</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="dance"/>
+        <keyword word="test"/>
+      </keywords>
+    </photo>
+    <photo>
+      <id>7</id>
+      <addedby>demouser</addedby>
+      <cat>Private</cat>
+      <taken>2005-11-23</taken>
+      <ts>2005-11-23T16:19:16</ts>
+      <descr>Some random images testing the new uploader.</descr>
+      <size>11349</size>
+      <width>240</width>
+      <height>180</height>
+      <tnwidth>194</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="dance"/>
+        <keyword word="test"/>
+      </keywords>
+    </photo>
+    <photo>
+      <id>6</id>
+      <addedby>demouser</addedby>
+      <cat>Public</cat>
+      <taken>2005-11-23</taken>
+      <ts>2005-11-23T16:17:56</ts>
+      <descr>Some random images testing the new uploader.</descr>
+      <size>8143</size>
+      <width>154</width>
+      <height>164</height>
+      <tnwidth>137</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="2wire"/>
+        <keyword word="test"/>
+      </keywords>
+    </photo>
+    <photo>
+      <id>5</id>
+      <addedby>demouser</addedby>
+      <cat>Public</cat>
+      <taken>2005-11-23</taken>
+      <ts>2005-11-23T16:17:55</ts>
+      <descr>Some random images testing the new uploader.</descr>
+      <size>8143</size>
+      <width>154</width>
+      <height>164</height>
+      <tnwidth>137</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="2wire"/>
+        <keyword word="test"/>
+      </keywords>
+    </photo>
+    <photo>
+      <id>4</id>
+      <addedby>demouser</addedby>
+      <cat>Public</cat>
+      <taken>2005-11-23</taken>
+      <ts>2005-11-23T16:17:54</ts>
+      <descr>Some random images testing the new uploader.</descr>
+      <size>33121</size>
+      <width>533</width>
+      <height>219</height>
+      <tnwidth>220</tnwidth>
+      <tnheight>90</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="2wire"/>
+        <keyword word="test"/>
+      </keywords>
+    </photo>
+    <photo>
+      <id>1</id>
+      <addedby>demouser</addedby>
+      <cat>Public</cat>
+      <taken>2004-03-28</taken>
+      <ts>2004-03-28T23:00:07</ts>
+      <descr>Your mom's car.</descr>
+      <size>636796</size>
+      <width>1600</width>
+      <height>1200</height>
+      <tnwidth>194</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="license"/>
+        <keyword word="mom"/>
+        <keyword word="plate"/>
+        <keyword word="your"/>
+      </keywords>
+      <annotations>
+        <annotation>
+          <x>762</x>
+          <y>462</y>
+          <width>264</width>
+          <height>144</height>
+          <title>We were behind your mom in SF.</title>
+          <addedby>demouser</addedby>
+          <ts>2005-05-31T00:47:21</ts>
+          <keywords>
+            <keyword word="license"/>
+            <keyword word="mom"/>
+            <keyword word="plate"/>
+            <keyword word="your"/>
+          </keywords>
+        </annotation>
+        <annotation>
+          <x>90</x>
+          <y>478</y>
+          <width>94</width>
+          <height>54</height>
+          <title>This plate is boring.</title>
+          <addedby>demouser</addedby>
+          <ts>2005-05-31T00:47:52</ts>
+          <keywords>
+            <keyword word="license"/>
+            <keyword word="plate"/>
+          </keywords>
+        </annotation>
+      </annotations>
+    </photo>
+    <photo>
+      <id>2</id>
+      <addedby>demouser</addedby>
+      <cat>Private</cat>
+      <taken>2003-12-25</taken>
+      <ts>2004-03-28T23:03:27</ts>
+      <descr>Me at Christmas.</descr>
+      <size>546150</size>
+      <width>1200</width>
+      <height>1600</height>
+      <tnwidth>109</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="christmas"/>
+        <keyword word="dustin"/>
+      </keywords>
+    </photo>
+    <photo>
+      <id>3</id>
+      <addedby>demouser</addedby>
+      <cat>Private</cat>
+      <taken>2003-11-17</taken>
+      <ts>2004-03-28T23:05:53</ts>
+      <descr>Me in an ichat session.</descr>
+      <size>731467</size>
+      <width>1600</width>
+      <height>1200</height>
+      <tnwidth>194</tnwidth>
+      <tnheight>146</tnheight>
+      <extension>jpg</extension>
+      <keywords>
+        <keyword word="dustin"/>
+        <keyword word="ichat"/>
+      </keywords>
+    </photo>
+  </album>
+</photoexport>
+<!-- arch-tag: 91EFFBC5-2E7F-48F5-AE61-838D02A34B25 -->
