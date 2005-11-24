@@ -120,13 +120,13 @@
 		<c:if test="${not empty myrating}">
 			On <fmt:formatDate value="${myrating.timestamp}"
 				pattern="EEE, d MMM yyyy HH:mm"/>, you rated this image
-			<c:out value="${myrating.vote}"/>/10.
+			<c:out value="${myrating.vote / 2}"/>/5.
 		</c:if>
 	</div>
 	<div>
 		<span id="avgvote">
-			Average vote is <fmt:formatNumber value="${image.votes.average}"/> of
-			<fmt:formatNumber value="${image.votes.size}"/> votes.
+			Average vote is <fmt:formatNumber value="${image.votes.average / 2.0}"/>
+			of <fmt:formatNumber value="${image.votes.size}"/> votes.
 		</span>
 		<span id="stars"></span>
 		<img src="<c:url value='/images/indicator.gif'/>"
@@ -160,7 +160,7 @@
 <div>
 
 	<script type="text/javascript">
-		var rateAvg='<c:out value="${image.votes.average}"/>';
+		var rateAvg='<c:out value="${image.votes.average / 2.0}"/>';
 		var rateSize='<c:out value="${image.votes.size}"/>';
 		var baseUrl='<c:url value="/"/>';
 		var imgid='<c:out value="${image.id}"/>';
@@ -175,10 +175,12 @@
 
 		function calculateStarSrcs() {
 			starSrcs=new Array();
-			for(var i=0; i<=10; i++) {
-				var starProto=$('starfull');
-				if(i > rateAvg) {
-					starProto=$('starempty');
+			for(var i=0; i<5; i++) {
+				var starProto=$('starempty');
+				if((i+1) <= rateAvg) {
+					starProto=$('starfull');
+				} else if((i+1) - rateAvg <= 0.5) {
+					starProto=$('starhalf');
 				}
 				starSrcs.push(starProto.src);
 			}
@@ -187,12 +189,12 @@
 		function createStarsForShow() {
 			calculateStarSrcs();
 			clearThing($('stars'));
-			for(var i=0; i<=10; i++) {
+			$A(starSrcs).each(function(src, i) {
 				var newStar=document.createElement("img");
-				newStar.src=starSrcs[i];
+				newStar.src=src;
 				newStar.id='star' + i;
 				$('stars').appendChild(newStar);
-			}
+				});
 		}
 		// Set up the rating bar
 		Event.observe(window, 'load', createStarsForShow, false);
@@ -218,15 +220,15 @@
 				onSuccess: function(req) {
 					clearThing($('yourvote'));
 					$('yourvote').appendChild(document.createTextNode("You just voted "
-						+ rating + "/10"));
+						+ (rating/2) + "/5"));
 					// Get the json response and update the UI with the new ratings
 					var json=eval('(' + req.responseText + ')');
-					rateAvg=json.avg;
+					rateAvg=json.avg / 2.0;
 					calculateStarSrcs();
 					restoreStars();
 					clearThing($('avgvote'));
 					$('avgvote').appendChild(document.createTextNode("Average vote is "
-						+ json.avg + " of " + json.size + " votes"));
+						+ rateAvg + " of " + json.size + " votes"));
 				}
 				});
 		}
@@ -277,33 +279,31 @@
 		function hoverStars(max) {
 			var empty=$('starempty').src;
 			var partial=$('starpartial').src;
-			for(var i=0; i<=10; i++) {
+			$A(starSrcs).each(function(s, i) {
 				var s=empty;
 				if(i <= max) {
 					s=partial;
 				}
 				$('star' + i).src=s;
-			}
+				});
 		}
 
 		function restoreStars() {
-			for(var i=0; i<=10; i++) {
-				$('star' + i).src=starSrcs[i];
-			}
+			$A(starSrcs).each(function(src, i) { $('star' + i).src=src; });
 		}
 
 		function createStarsForEdit() {
 			calculateStarSrcs();
 			clearThing($('stars'));
-			for(var i=0; i<=10; i++) {
+			$A(starSrcs).each(function(src, i) {
 				var newStar=document.createElement("img");
 				newStar.src=starSrcs[i];
 				newStar.id='star' + i;
-				newStar.onclick = bindStarCall(rateImage, i);
+				newStar.onclick = bindStarCall(rateImage, (i+1)*2);
 				newStar.onmouseover = bindStarCall(hoverStars, i);
 				newStar.onmouseout = restoreStars;
 				$('stars').appendChild(newStar);
-			}
+				});
 		}
 
 		// Set up the rating bar
@@ -364,5 +364,6 @@
 	<img src="<c:url value='/images/star_empty.gif'/>" alt="star" id="starempty"/>
 	<img src="<c:url value='/images/star_partial.gif'/>" alt="star" id="starpartial"/>
 	<img src="<c:url value='/images/star_full.gif'/>" alt="star" id="starfull"/>
+	<img src="<c:url value='/images/star_half.gif'/>" alt="star" id="starhalf"/>
 </div>
 <%-- arch-tag: AC919514-5D6F-11D9-ACF8-000A957659CC --%>
