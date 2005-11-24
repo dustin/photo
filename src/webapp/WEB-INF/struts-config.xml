@@ -122,6 +122,11 @@
 		</form-bean>
   </form-beans>
 
+	<global-forwards type="org.apache.struts.action.ActionForward">
+		<forward name="notfound" path="error.404"/>
+		<forward name="forbidden" path="error.403"/>
+	</global-forwards>
+
   <action-mappings>
 
 	<!-- Login -->

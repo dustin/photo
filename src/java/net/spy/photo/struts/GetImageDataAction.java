@@ -47,14 +47,14 @@ public class GetImageDataAction extends PhotoAction {
 		return(rv);
 	}
 
-	private PhotoImageData getImageById(int id, HttpServletRequest req)
-		throws Exception {
-
-		// Check access
-		PhotoSessionData sessionData=getSessionData(req);
-		Persistent.getSecurity().checkAccess(sessionData.getUser(), id);
-		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-		PhotoImageData rv= pidf.getObject(id);
+	private PhotoImageData getImageById(int id, HttpServletRequest req) {
+		PhotoImageData rv=null;
+		try {
+			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			rv=pidf.getObject(id);
+		} catch(PhotoImageDataFactory.NoSuchPhotoException e) {
+			getLogger().info("Requested missing photo", e);
+		}
 		return(rv);
 	}
 
@@ -92,18 +92,34 @@ public class GetImageDataAction extends PhotoAction {
 		} else {
 			image=getImageById(imageId.intValue(), request);
 		}
-		request.setAttribute(ATTRIBUTE, image);
-
-		PhotoSessionData sessionData=getSessionData(request);
-		// We will need the display dimensions for some tasks
-		request.setAttribute(DIM_ATTR,
-			PhotoUtil.scaleTo(image.getDimensions(),
-			sessionData.getOptimalDimensions()));
-
-		request.setAttribute(MY_RATING, image.getVotes().getVote(
-			sessionData.getUser().getId()));
 
 		ActionForward rv=mapping.findForward("next");
+
+		if(image == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			rv=mapping.findForward("notfound");
+		} else {
+
+			// Check access
+			PhotoSessionData sessionData=getSessionData(request);
+			boolean hasAccess=Persistent.getSecurity().testAccess(
+				sessionData.getUser(), image.getId());
+
+			if(!hasAccess) {
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				rv=mapping.findForward("forbidden");
+			} else {
+				request.setAttribute(ATTRIBUTE, image);
+
+				// We will need the display dimensions for some tasks
+				request.setAttribute(DIM_ATTR,
+					PhotoUtil.scaleTo(image.getDimensions(),
+					sessionData.getOptimalDimensions()));
+
+				request.setAttribute(MY_RATING, image.getVotes().getVote(
+					sessionData.getUser().getId()));
+			}
+		}
 		return(rv);
 	}
 

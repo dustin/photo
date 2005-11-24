@@ -17,6 +17,20 @@
 		<put name="body" value="/content/_index.jsp"/>
 	</definition>
 
+	<!-- errors -->
+	<definition name="errorLayout" path="/layout/error.jsp">
+		<put name="title" type="string" value="Error"/>
+		<put name="errormessage" type="string"  value="Generic Error"/>
+	</definition>
+
+	<definition name="error.404" extends="errorLayout">
+		<put name="errormessage" type="string" value="Error - No Such Image"/>
+	</definition>
+
+	<definition name="error.403" extends="errorLayout">
+		<put name="errormessage" type="string" value="Error - Permission Denied"/>
+	</definition>
+
 	<!-- Regular top-level pages -->
 	<definition name="top.display" extends="pageLayout">
 		<put name="title" type="string" value="Image Display"/>

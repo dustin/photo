@@ -60,7 +60,7 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	 * Handle a missing image.
 	 */
 	protected PhotoImageData handleNullLookup(int id) {
-		throw new RuntimeException("No such PhotoImage:  " + id);
+		throw new NoSuchPhotoException(id);
 	}
 
 	/** 
@@ -79,6 +79,12 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	 */
 	public void store(Savable ob) throws Exception {
 		store(ob, true);
+	}
+
+	public static class NoSuchPhotoException extends RuntimeException {
+		public NoSuchPhotoException(int id) {
+			super("No such photo:  " + id);
+		}
 	}
 
 }

@@ -82,14 +82,12 @@ public class PhotoSecurity extends SpyObject {
 		return(userFactory.getUser(spec));
 	}
 
-	/**
-	 * The preferred way to check a user's access to an image.
+	/** 
+	 * Test to see if a user has access to an image (but don't throw an
+	 * exception).
 	 */
-	public void checkAccess(User user, int imageId) throws
-		Exception {
-
+	public boolean testAccess(User user, int imageId) {
 		boolean ok=false;
-
 		try {
 			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 			PhotoImageData pid=pidf.getObject(imageId);
@@ -104,8 +102,14 @@ public class PhotoSecurity extends SpyObject {
 			getLogger().warn("Problem validating user " + user
 				+ "'s access to image " + imageId, e);
 		}
+		return(ok);
+	}
 
-		if(!ok) {
+	/**
+	 * The preferred way to check a user's access to an image.
+	 */
+	public void checkAccess(User user, int imageId) throws Exception {
+		if(!testAccess(user, imageId)) {
 			throw new Exception("Access to image " + imageId
 				+ " is not allowed by user " + user);
 		}
