@@ -104,6 +104,8 @@ public class CategoryFactory extends GenFactory<Category> {
 		Saver saver=new Saver(PhotoConfig.getInstance());
 		saver.save((Savable)inst);
 		recache();
+		// Also recache the users
+		UserFactory.getInstance().recache();
 	}
 
 	/** 

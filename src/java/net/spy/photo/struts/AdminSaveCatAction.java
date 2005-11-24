@@ -19,13 +19,6 @@ import org.apache.struts.action.ActionMapping;
 public class AdminSaveCatAction extends PhotoAction {
 
 	/**
-	 * Get an instance of AdminSaveCatAction.
-	 */
-	public AdminSaveCatAction() {
-		super();
-	}
-
-	/**
 	 * Perform the action.
 	 */
 	public ActionForward spyExecute(ActionMapping mapping,

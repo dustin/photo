@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.spy.db.SpyDB;
 import net.spy.photo.MutableUser;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoUserException;
+import net.spy.photo.NoSuchPhotoUserException;
 import net.spy.photo.UserFactory;
 
 import org.apache.struts.action.ActionForm;
@@ -22,13 +22,6 @@ import org.apache.struts.action.ActionMapping;
  * Action used to save a new user
  */
 public class AdminSaveUserAction extends PhotoAction {
-
-	/**
-	 * Get an instance of AdminSaveUserAction.
-	 */
-	public AdminSaveUserAction() {
-		super();
-	}
 
 	/**
 	 * Perform the action.
@@ -47,8 +40,8 @@ public class AdminSaveUserAction extends PhotoAction {
 		MutableUser user=null;
 		try {
 			user=uf.getMutable(Integer.parseInt(auf.getUserId()));
-		} catch(PhotoUserException e) {
-			e.printStackTrace();
+		} catch(NoSuchPhotoUserException e) {
+			getLogger().debug("This must be a new user", e);
 		}
 		if(user==null) {
 			user=uf.createNew();

@@ -66,16 +66,18 @@
 				String className="";
 				String wclassName="";
 				String rclassName="";
-				if(user.canAdd(cat.getId())) {
-					className="writeaccess";
-				} else if(user.canView(cat.getId())) {
-					className="readaccess";
-				}
-				if(user.canAdd(cat.getId())) {
-					wclassName="writeaccess";
-				}
-				if(user.canView(cat.getId())) {
-					rclassName="readaccess";
+				if(user != null) {
+					if(user.canAdd(cat.getId())) {
+						className="writeaccess";
+					} else if(user.canView(cat.getId())) {
+						className="readaccess";
+					}
+					if(user.canAdd(cat.getId())) {
+						wclassName="writeaccess";
+					}
+					if(user.canView(cat.getId())) {
+						rclassName="readaccess";
+					}
 				}
 			%>
 
