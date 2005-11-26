@@ -12,6 +12,15 @@ arch-tag: 573A7126-5D6F-11D9-901C-000A957659CC
 			<extension>jsp</extension>
 		</init>
 	</listener>
+	<login-config>
+		<auth-method>basic</auth-method>
+	</login-config>
+	<authenticator>
+		<type>net.spy.photo.ResinAuthenticator</type>
+		<init>
+			<password-digest>none</password-digest>
+		</init>
+	</authenticator>
 	<session-config>
 		<file-store>WEB-INF/tmp/sessions</file-store>
 		<always-save-session/>

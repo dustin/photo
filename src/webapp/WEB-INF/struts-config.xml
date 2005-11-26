@@ -247,6 +247,18 @@
 		<forward name="next" path="top.searchResults" />
 	</action>
 
+	<!-- Search to RSS -->
+	<action path="/rss"
+		type="net.spy.photo.struts.SearchAction"
+		scope="request" name="searchForm">
+		<forward name="next" path="/rss"/>
+	</action>
+	<action path="/auth/rss"
+		type="net.spy.photo.struts.SearchAction"
+		scope="request" name="searchForm">
+		<forward name="next" path="/rss"/>
+	</action>
+
 	<!-- Search result cursor movement -->
 	<action    path="/listcomments"
 		type="net.spy.photo.struts.ListCommentsAction">

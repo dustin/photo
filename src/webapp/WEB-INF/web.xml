@@ -119,6 +119,16 @@
 		<url-pattern>/rss/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- Authenticated RSS -->
+	<servlet-mapping>
+		<servlet-name>rss</servlet-name>
+		<url-pattern>/auth/rss/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PhotoServlet</servlet-name>
+		<url-pattern>/auth/PhotoServlet</url-pattern>
+	</servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>ajaxphotoedit</servlet-name>
 		<url-pattern>/ajax/photo/*</url-pattern>
@@ -182,6 +192,20 @@
 		<taglib-location>/WEB-INF/tlds/photo.tld</taglib-location>
 	</taglib>
 
+	<!-- Authorization section (HTTP auth) -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Authenticated section</web-resource-name>
+			<url-pattern>/auth/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>authenticated</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<!-- stuff that should never be fetched -->
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Templates</web-resource-name>
@@ -197,6 +221,16 @@
 	<security-role>
 		<description>Nobody ever directly accesses this stuff.</description>
 		<role-name>denied</role-name>
+	</security-role>
+
+	<security-role>
+		<description>Any authenticated user.</description>
+		<role-name>authenticated</role-name>
+	</security-role>
+
+	<security-role>
+		<description>Administrative user.</description>
+		<role-name>admin</role-name>
 	</security-role>
 
 </web-app>

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,10 +35,16 @@ public class RSSServlet extends PhotoAjaxServlet {
 	protected void processRequest(
 		HttpServletRequest req, HttpServletResponse res) throws Exception {
 
-		SearchForm sf=new SearchForm();
-		sf.setSdirection("desc");
-		Search ps=Search.getInstance();
-		SearchResults sr=ps.performSearch(sf, getUser(req));
+		HttpSession ses=req.getSession(false);
+		PhotoSessionData sessionData=(PhotoSessionData)ses.getAttribute(
+			PhotoSessionData.SES_ATTR);
+		SearchResults sr=sessionData.getResults();
+		if(sr == null) {
+			throw new ServletException("No results.");
+		}
+
+		boolean authenticated=sessionData.getUser().isInRole(
+			User.AUTHENTICATED);
 
 		URI myself=new URI(req.getRequestURL().toString());
 		String base=new URI(myself.getScheme(), myself.getUserInfo(),
@@ -45,18 +53,20 @@ public class RSSServlet extends PhotoAjaxServlet {
 
 		res.setHeader("Content-type", "text/xml");
 		ContentHandler handler=getContentHandler(res);
-		new SearchResultsRSSAdaptor(sr, base).writeXml(handler);
+		new SearchResultsRSSAdaptor(sr, base, authenticated).writeXml(handler);
 		handler.endDocument();
 	}
 
 	private static class SearchResultsRSSAdaptor extends RSSChannel {
 		private SearchResults results=null;
 		private String base=null;
-		private SearchResultsRSSAdaptor(SearchResults sr, String b) {
+		private boolean authenticated=false;
+		private SearchResultsRSSAdaptor(SearchResults sr, String b, boolean a) {
 			super("PhotoServlet RSS Feed", b,
 				"Experimental RSS feed from Dustin's PhotoServlet");
 			base=b;
 			results=sr;
+			authenticated=a;
 		}
 
 		protected Collection<? extends RSSItem> getItems() {
@@ -67,7 +77,7 @@ public class RSSServlet extends PhotoAjaxServlet {
 				if(c.size() > CHANNEL_SIZE) {
 					break;
 				}
-				c.add(new PhotoImageDataWrapper(pid, base));
+				c.add(new PhotoImageDataWrapper(pid, base, authenticated));
 			}
 			return(c);
 		}
@@ -76,10 +86,12 @@ public class RSSServlet extends PhotoAjaxServlet {
 	private static class PhotoImageDataWrapper implements RSSItem {
 		private PhotoImageData pid=null;
 		private String base=null;
-		public PhotoImageDataWrapper(PhotoImageData p, String b) {
+		private boolean authenticated=false;
+		public PhotoImageDataWrapper(PhotoImageData p, String b, boolean a) {
 			super();
 			pid=p;
 			base=b;
+			authenticated=a;
 		}
 
 		public String getTitle() {
@@ -95,10 +107,15 @@ public class RSSServlet extends PhotoAjaxServlet {
 		}
 
 		public String getDescription() {
-			return("<img src=\""
-				+ base + "PhotoServlet?id=" + pid.getId()
-					+ "&thumbnail=1"
-				+ "\"/><br/>" + pid.getDescr());
+			String urlpre=base;
+			if(authenticated) {
+				urlpre = base + "auth/";
+			}
+			return("<p><img src=\"" + urlpre + "PhotoServlet?id=" + pid.getId()
+				+ "&thumbnail=1"
+				+ "\"/><br/>" + pid.getDescr() + "</p>"
+				+ "<p>Added " + pid.getTimestamp()
+				+ " by " + pid.getAddedBy().getRealname());
 		}
 
 		public Date getPubDate() {
