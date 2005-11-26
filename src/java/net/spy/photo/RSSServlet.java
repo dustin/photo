@@ -27,7 +27,7 @@ import org.xml.sax.ContentHandler;
  */
 public class RSSServlet extends PhotoAjaxServlet {
 
-	private static final int CHANNEL_SIZE=25;
+	private static final int CHANNEL_SIZE=50;
 
 	/** 
 	 * Handle the RSS request.
@@ -74,7 +74,7 @@ public class RSSServlet extends PhotoAjaxServlet {
 				new ArrayList<PhotoImageDataWrapper>(CHANNEL_SIZE);
 			for(PhotoImageData pid : results) {
 				// Just get the first CHANNEL_SIZE
-				if(c.size() > CHANNEL_SIZE) {
+				if(c.size() >= CHANNEL_SIZE) {
 					break;
 				}
 				c.add(new PhotoImageDataWrapper(pid, base, authenticated));

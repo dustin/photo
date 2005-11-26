@@ -1,5 +1,6 @@
 <%@ page import="net.spy.photo.*" %>
 <%@ page import="net.spy.photo.search.*" %>
+<%@ page import="net.spy.util.Base64" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 
@@ -29,7 +30,7 @@
 <%
 	// Find the results
 	PhotoSessionData sessionData=
-		(PhotoSessionData)session.getAttribute("photoSession");
+		(PhotoSessionData)session.getAttribute(PhotoSessionData.SES_ATTR);
 	SearchResults results=sessionData.getResults();
 	if(results==null) {
 		throw new ServletException("There are no search results!");
@@ -38,23 +39,32 @@
 
 <div id="searchheader">
 <logic:present role="canadd">
-	<% if(sessionData.getEncodedSearch() != null) { %>
-		<div id="savesearchtext"></div>
-		<div id="savesearch">
-			<form method="post" action="savesearch.do">
-				<div>
-					<input type="hidden" name="search"
-						value="<%= sessionData.getEncodedSearch() %>"/>
-					Save search as:  <input name="name"/>
-					<html:submit>Save</html:submit>
-				</div>
-			</form>
-		</div>
-	<% } %>
-</logic:present>
+	<div id="savesearchtext"></div>
+	<div id="savesearch">
+		<form method="post" action="savesearch.do">
+			<div>
+				<input type="hidden" name="search"
+					value="<%= Base64.getInstance().encode(
+						sessionData.getEncodedSearch().getBytes()) %>"/>
+				Save search as:  <input name="name"/>
+				<html:submit>Save</html:submit>
+			</div>
+		</form>
+	</div>
 
 	<div id="search_matches">
 		Search matched <%= results.size() %> entries.
+		<c:set var="encoded"><%= sessionData.getEncodedSearch() %></c:set>
+		<c:set var="baserss">
+			<logic:present role="authenticated">
+				<c:url value="/auth/rss.do"/>
+			</logic:present>
+			<logic:notPresent role="authenticated">
+				<c:url value="/rss.do"/>
+			</logic:notPresent>
+		</c:set>
+		<a href="<c:out value='${baserss}?${encoded}'/>"><img alt="XML"
+			src="<c:url value='/images/xml.png'/>"/></a>
 	</div>
 </div>
 

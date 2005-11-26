@@ -2,12 +2,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+<%@ page import="net.spy.photo.PhotoSessionData" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-tiles" prefix="tiles" %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
+
+<%
+	// Get the session data to know if we need to offer RSS feeds.
+  PhotoSessionData sessionData=
+	    (PhotoSessionData)session.getAttribute(PhotoSessionData.SES_ATTR);
+%>
 
 <jsp:useBean id="props" class="net.spy.photo.PhotoProperties" />
 
@@ -23,6 +30,20 @@
 				background-image: url(<%= props.getProperty("background_img", "") %>);
 			}
 		</style>
+		<% if(sessionData.getEncodedSearch() != null) { %>
+			<c:set var="encoded"><%= sessionData.getEncodedSearch() %></c:set>
+			<c:set var="baserss">
+				<logic:present role="authenticated">
+					<c:url value="/auth/rss.do"/>
+				</logic:present>
+				<logic:notPresent role="authenticated">
+					<c:url value="/rss.do"/>
+				</logic:notPresent>
+			</c:set>
+			<link rel="alternate" type="application/rss+xml"
+				title="PhotoServlet Search Results Feed"
+				href="<c:out value='${baserss}?${encoded}'/>"/>
+		<% } %>
 </head>
 <body>
 

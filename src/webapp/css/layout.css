@@ -172,6 +172,7 @@ a:hover {
 
 #search_matches {
 	position: absolute;
+	text-align: right;
 	top: 0;
 	right: 0;
 }

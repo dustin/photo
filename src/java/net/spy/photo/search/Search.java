@@ -192,9 +192,7 @@ public class Search extends SpyObject {
 			}
 		}
 
-		Base64 base64 = new Base64();
-		String out = base64.encode(sb.toString().getBytes());
-		return (out);
+		return(sb.toString());
 	}
 
 	/**
