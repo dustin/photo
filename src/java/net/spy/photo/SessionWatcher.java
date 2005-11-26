@@ -68,18 +68,22 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 		ArrayList<PhotoSessionData> al=new ArrayList<PhotoSessionData>();
 
 		for(HttpSession session : getSessions()) {
-			if(session.getAttribute(PhotoSessionData.SES_ATTR) != null) {
-				PhotoSessionData sessionData=(PhotoSessionData)
-					session.getAttribute(PhotoSessionData.SES_ATTR);
+			try {
+				if(session.getAttribute(PhotoSessionData.SES_ATTR) != null) {
+					PhotoSessionData sessionData=(PhotoSessionData)
+						session.getAttribute(PhotoSessionData.SES_ATTR);
 
-				// XXX:  I guess it's theoretically possible for some of
-				// this stuff to be null.
-				if(sessionData.getUser().getName().equals(username)) {
-					al.add(sessionData);
-				} // Found a match
-			} else {
-				getStaticLogger().warn(
-					"Found a session without a photoSession");
+					// XXX:  I guess it's theoretically possible for some of
+					// this stuff to be null.
+					if(sessionData.getUser().getName().equals(username)) {
+						al.add(sessionData);
+					} // Found a match
+				} else {
+					getStaticLogger().warn(
+						"Found a session without a photoSession");
+				}
+			} catch(IllegalStateException e) {
+				getStaticLogger().warn("Found invalid session", e);
 			}
 		} // Flipping through the sessions
 
