@@ -65,18 +65,6 @@
 				</field>
 			</form>
 
-			<form name="displayForm">
-				<field property="id" depends="integer">
-					<arg0 key="Image ID" resource="false"/>
-				</field>
-				<field property="image_id" depends="integer">
-					<arg0 key="Image ID" resource="false"/>
-				</field>
-				<field property="search_id" depends="integer">
-					<arg0 key="Search ID" resource="false"/>
-				</field>
-			</form>
-
 			<form name="loginForm">
 				<field property="username" depends="required">
 					<arg0 key="Username" resource="false"/>

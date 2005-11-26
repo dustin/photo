@@ -103,8 +103,20 @@ public class LoginAction extends PhotoAction {
 			response.addCookie(c);
 		}
 
+		ActionForward rv=null;
+		String r=request.getParameter("return");
+		if(r != null) {
+			String next=r;
+			if(r.equals("refer")) {
+				next=request.getHeader("Referer");
+			}
+			response.sendRedirect(next);
+		} else {
+			rv=mapping.findForward("next");
+		}
+
 		// Go ahead and say it's alright.
-		return(mapping.findForward("next"));
+		return(rv);
 	}
 
 }
