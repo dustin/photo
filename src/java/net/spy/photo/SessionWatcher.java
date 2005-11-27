@@ -51,7 +51,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	 * Get the total number of sessions currently in this engine.
 	 */
 	public static int totalSessions() {
-		return(getSessions().size());
+		return(SessionStorage.getInstance().getSessions().size());
 	}
 
 	private static Logger getStaticLogger() {
@@ -67,7 +67,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 		String username) {
 		ArrayList<PhotoSessionData> al=new ArrayList<PhotoSessionData>();
 
-		for(HttpSession session : getSessions()) {
+		for(HttpSession session : SessionStorage.getInstance().getSessions()) {
 			try {
 				if(session.getAttribute(PhotoSessionData.SES_ATTR) != null) {
 					PhotoSessionData sessionData=(PhotoSessionData)
@@ -104,16 +104,20 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	public static Collection<HttpSession> listSessions() {
 		ArrayList<HttpSession> al=new ArrayList<HttpSession>();
 
-		for(HttpSession session : getSessions()) {
-			PhotoSessionData sessionData=(PhotoSessionData)
-				session.getAttribute(PhotoSessionData.SES_ATTR);
+		for(HttpSession session : SessionStorage.getInstance().getSessions()) {
+			try {
+				PhotoSessionData sessionData=(PhotoSessionData)
+					session.getAttribute(PhotoSessionData.SES_ATTR);
 
-			if(sessionData!=null) {
-				// Add the session to the result List
-				al.add(session);
-			} else {
-				getStaticLogger().warn(
-					"Found a session without a photoSession");
+				if(sessionData!=null) {
+					// Add the session to the result List
+					al.add(session);
+				} else {
+					getStaticLogger().warn(
+						"Found a session without a photoSession");
+				}
+			} catch(IllegalStateException e) {
+				getStaticLogger().warn("Found invalid session", e);
 			}
 		}
 
@@ -127,7 +131,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	public static PhotoSessionData getSessionData(String id) {
 		PhotoSessionData rv=null;
 
-		HttpSession session=getSession(id);
+		HttpSession session=SessionStorage.getInstance().getSession(id);
 		if(session != null) {
 			rv=(PhotoSessionData)
 				session.getAttribute(PhotoSessionData.SES_ATTR);
