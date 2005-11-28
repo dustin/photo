@@ -84,6 +84,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 				}
 			} catch(IllegalStateException e) {
 				getStaticLogger().warn("Found invalid session", e);
+				SessionStorage.getInstance().removeSession(session);
 			}
 		} // Flipping through the sessions
 
@@ -118,6 +119,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 				}
 			} catch(IllegalStateException e) {
 				getStaticLogger().warn("Found invalid session", e);
+				SessionStorage.getInstance().removeSession(session);
 			}
 		}
 
