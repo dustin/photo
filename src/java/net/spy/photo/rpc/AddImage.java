@@ -22,6 +22,8 @@ import net.spy.photo.log.PhotoLogUploadEntry;
  */
 public class AddImage extends RPCMethod {
 
+	private static final long RECACHE_DELAY=120000;
+
 	/**
 	 * Get an instance of AddImage.
 	 */
@@ -94,7 +96,7 @@ public class AddImage extends RPCMethod {
 		savable.setAddedBy(user);
 
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-		pidf.store(savable);
+		pidf.store(savable, true, RECACHE_DELAY);
 
 		// Log it.
 		// XXX  I really would like a way to get to the actual remote IP

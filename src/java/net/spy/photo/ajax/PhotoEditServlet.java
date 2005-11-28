@@ -36,6 +36,8 @@ import net.spy.photo.impl.SavablePhotoImageData;
  */
 public class PhotoEditServlet extends PhotoAjaxServlet {
 
+	private static final long RECACHE_DELAY=30000;
+
 	private Map<String, Handler> handlers=null;
 	private Map<String, String> roles=null;
 
@@ -236,7 +238,7 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 			update(savable, value);
 			getLogger().info("Updated " + savable + " with " + value);
 
-			pidf.store(savable);
+			pidf.store(savable, true, RECACHE_DELAY);
 
 			return(value);
 		}
@@ -290,7 +292,7 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 			SavablePhotoImageData savable=new SavablePhotoImageData(
 				pidf.getObject(id));
 			savable.setCatId(catId);
-			pidf.store(savable);
+			pidf.store(savable, true, RECACHE_DELAY);
 
 			return(cat.getName());
 		}
