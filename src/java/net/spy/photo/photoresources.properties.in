@@ -18,8 +18,7 @@ page.content.footer=Copyright &copy; 1997-2005 Dustin Sallings of \
 	used without permission.
 
 # Meta info
-index.metainfo= This database contains about {0} images \
-	and has displayed about {1}.
+index.metainfo= This database contains {0} images and has displayed about {1}.
 
 # Index
 index.links.login=Login

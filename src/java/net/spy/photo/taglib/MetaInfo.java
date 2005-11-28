@@ -10,6 +10,7 @@ import javax.servlet.jsp.JspException;
 import net.spy.cache.SpyCache;
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoImageDataFactory;
 
 /**
  * Meta information about the site.
@@ -50,14 +51,14 @@ public class MetaInfo extends PhotoTag {
 	 * Get the meta info and shove it into the webpage.
 	 */
 	public int doStartTag() throws JspException {
+		int totalImages=
+			PhotoImageDataFactory.getInstance().getObjects().size();
 		int totalShown=0;
-		int totalImages=0;
 
 		try {
 			totalShown=getCount(
 				"select count(*) from photo_logs\n"
 					+ " where log_type=get_log_type('ImgView')");
-			totalImages=getCount("select count(*) from album");
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new JspException("Problem loading meta info " + e);
