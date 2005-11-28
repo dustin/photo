@@ -22,6 +22,7 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	private static PhotoImageDataFactory instance=null;
 
 	private PhotoImageDataSource source=null;
+	private long lastRefresh=0l;
 
 	/**
 	 * Get an instance of PhotoImageDataFactory.
@@ -70,7 +71,28 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		Saver s=new Saver(PhotoConfig.getInstance());
 		s.save(ob);
 		if(recache) {
-			recache();
+			recache(System.currentTimeMillis());
+		}
+	}
+
+	/** 
+	 * Request a recache to get data as of this date.
+	 */
+	public synchronized void recache(long when) {
+		if(when > lastRefresh) {
+			getLogger().info("Recaching images in 1s");
+			// Wait a second for a recache to allow requests to build up.  This
+			// makes the whole application faster by reducing the number of
+			// recaches when performing lots of operations interactively.
+			try {
+				Thread.sleep(1000);
+				lastRefresh=System.currentTimeMillis();
+				recache();
+			} catch(InterruptedException e) {
+				getLogger().warn("Interrupted", e);
+			}
+		} else {
+			getLogger().info("Avoiding unncecessary recache.");
 		}
 	}
 

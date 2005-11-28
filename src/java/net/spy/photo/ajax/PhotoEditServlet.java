@@ -171,7 +171,7 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 			s.save(vote);
 
 			// Recache to get the votes up-to-date
-			pidf.recache();
+			pidf.recache(System.currentTimeMillis());
 
 			// Get the image again and check out the newly calculated averages
 			img=pidf.getObject(id);
