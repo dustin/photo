@@ -51,6 +51,7 @@
 			</div>
 		</form>
 	</div>
+</logic:present>
 
 	<div id="search_matches">
 		Search matched <%= results.size() %> entries.
