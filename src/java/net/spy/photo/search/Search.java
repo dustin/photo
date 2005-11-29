@@ -32,7 +32,6 @@ import net.spy.photo.User;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.sp.InsertSearch;
 import net.spy.photo.struts.SearchForm;
-import net.spy.util.Base64;
 
 
 /**

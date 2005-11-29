@@ -9,16 +9,14 @@ import java.util.Collection;
 import java.util.Date;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.spy.jwebkit.rss.RSSChannel;
 import net.spy.jwebkit.rss.RSSItem;
 import net.spy.photo.ajax.PhotoAjaxServlet;
-import net.spy.photo.search.Search;
 import net.spy.photo.search.SearchResults;
-import net.spy.photo.struts.SearchForm;
 
 import org.xml.sax.ContentHandler;
 
