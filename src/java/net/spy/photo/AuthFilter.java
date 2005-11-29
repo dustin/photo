@@ -73,11 +73,18 @@ public class AuthFilter extends SpyObject implements Filter {
 		}
 
 		// The wrapped request providing standard looking auth stuff
-		ServletRequest wrappedRequest=new AuthedServletRequest(
-			hreq, psd.getUser());
+		ServletRequest wrappedRequest=hreq;
+		if(hreq.getUserPrincipal() == null) {
+			wrappedRequest=new AuthedServletRequest(hreq, psd.getUser());
+		}
 
 		// Moving right along.
 		chain.doFilter(wrappedRequest, response);
+
+		// Don't allow guest sessions to hang around longer than necessary.
+		if(isguest && psd.getImagesSeen() == 0) {
+			session.invalidate();
+		}
 	}
 
 }
