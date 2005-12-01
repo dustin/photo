@@ -31,36 +31,6 @@ def mymkdir(path):
     if not os.path.isdir(path):
         os.mkdir(path)
 
-def makeStylesheet():
-    f=file("style.css", "w")
-    f.write("""
-body,td,th {
-    font-family: Arial, Helvetica, sans-serif;
-    background: white;
-    color: black;
-}
-
-#imgView {
-    text-align: center;
-}
-
-#imgView dl {
-    text-align: left;
-    width: 66%;
-}
-
-#footer {
-    border-top: solid 1px;
-    width: 50%;
-    font-size: smaller;
-}
-
-img {
-    border: none;
-}
-    """)
-    f.close()
-
 def header(title):
     return """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -71,7 +41,7 @@ def header(title):
 def makeIndex(idx, years):
     f=file("index.html", "w")
     f.write(header("Photos") + 
-        """<link rel="stylesheet" href="style.css" />
+        """<link rel="stylesheet" href="offline.css" />
         </head>
         <body>
         <a href="search.html">Search</a>
@@ -93,7 +63,7 @@ def makeIndex(idx, years):
 def makeYearPage(idx, year):
     f=file("pages/%04d.html" % (year,), "w")
     f.write(header("Photos from " + `year`)
-        + """<link rel="stylesheet" href="../style.css" />
+        + """<link rel="stylesheet" href="../offline.css" />
         </head>
         <body>
         <h1>Months: in """ + `year` + """</h1><ul>\n""")
@@ -116,7 +86,7 @@ def makeYearPage(idx, year):
 def makeMonthPage(y, m, photos):
     f=file("pages/%04d/%02d.html" % (y, m), "w")
     f.write(header("Photos from %02d %04d" % (m, y))
-        + """<link rel="stylesheet" href="../../style.css" />
+        + """<link rel="stylesheet" href="../../offline.css" />
         </head>
         <body>
         <div class="monthList">\n""")
@@ -138,7 +108,7 @@ def makePageForPhoto(dir, photo):
     f=file(dir + "/" + `photo.id` + ".html", "w")
 
     f.write(header("Image " + `photo.id`))
-    f.write("""<link rel="stylesheet" href="../../../style.css" />
+    f.write("""<link rel="stylesheet" href="../../../offline.css" />
 </head>
  <body>
  <div class="idPage">
@@ -389,7 +359,6 @@ def writePages(idx):
     years.sort()
 
     makeIndex(idx, years)
-    makeStylesheet()
     
     for y in years:
         makeYearPage(idx, y)
@@ -404,6 +373,8 @@ def writePages(idx):
 
     copyContrib("search.html")
     copyContrib("searchfun.js")
+    copyContrib("prototype.js")
+    copyContrib("offline.css")
 
 def go():
 

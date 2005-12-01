@@ -206,6 +206,15 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 					<include>**/*.properties</include>
 				</includes>
 			</resource>
+			<resource>
+				<directory>${basedir}/contrib</directory>
+				<includes>
+					<include>searchfun.js</include>
+					<include>search.html</include>
+					<include>prototype.js</include>
+					<include>offline.css</include>
+				</includes>
+			</resource>
 		</resources>
 	</build>
 

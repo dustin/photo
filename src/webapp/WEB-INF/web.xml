@@ -66,6 +66,11 @@
 		<servlet-class>net.spy.photo.RSSServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>zip</servlet-name>
+		<servlet-class>net.spy.photo.ZipExportServlet</servlet-class>
+	</servlet>
+
 	<!-- AJAX mappings -->
 	<servlet>
 		<servlet-name>ajaxphotoedit</servlet-name>
@@ -124,9 +129,15 @@
 		<servlet-name>rss</servlet-name>
 		<url-pattern>/auth/rss/*</url-pattern>
 	</servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>PhotoServlet</servlet-name>
 		<url-pattern>/auth/PhotoServlet</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>zip</servlet-name>
+		<url-pattern>/zip</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

@@ -8,7 +8,7 @@
 <html>
 	<head>
 		<title>Testing</title>
-		<link rel="stylesheet" href="style.css"/>
+		<link rel="stylesheet" href="offline.css"/>
 		<style type="text/css">
 			#keywordmatches {
 				display: none;
@@ -30,8 +30,16 @@
 
 	<body>
 
-		<script language="JavaScript" src="searchdata.js"></script>
-		<script language="JavaScript" src="searchfun.js"></script>
+		<script type="text/javascript" src="prototype.js"></script>
+		<script type="text/javascript" src="searchdata.js"></script>
+		<script type="text/javascript" src="searchfun.js"></script>
+
+		<script type="text/javascript">
+			Event.observe(window, 'load', function() {
+				$('keywords').setAttribute('autocomplete','off');
+				$('keywords').focus();
+				});
+		</script>
 
 		<form name="bigform" method="POST" action=""
 			onsubmit="search(); return false;">

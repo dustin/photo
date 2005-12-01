@@ -1,0 +1,60 @@
+/* Offline site CSS */
+/* arch-tag: D8578C6A-2B53-44F4-B6B9-88FA6BFED9CF */
+
+body,td,th {
+    font-family: "Verdana", sans-serif;
+    background: white;
+    color: black;
+}
+
+h1 {
+	background: #99f;
+	color: white;
+}
+
+a {
+	color: green;
+}
+
+.hidden {
+	display: none;
+}
+
+.displayed {
+	display: block;
+}
+
+#imgView {
+    text-align: center;
+}
+
+#imgView dl {
+    text-align: left;
+    width: 66%;
+}
+
+#footer {
+    border-top: solid 1px;
+    width: 50%;
+    font-size: smaller;
+}
+
+img {
+    border: none;
+}
+
+fieldset, select, input {
+	color: #33c;
+	font-size: large;
+}
+
+fieldset label {
+	float: left;
+	width: 180px;
+	text-align: right;
+}
+
+fieldset div {
+	margin-left: 190px;
+	margin-bottom: 3px;
+}
