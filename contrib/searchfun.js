@@ -67,15 +67,34 @@ function setResults(h) {
 	div.innerHTML=h;
 }
 
+function sortImages(imgs) {
+	var newestFirst=($F('sdir') == 'newfirst');
+	imgs.sort(function(a, b) {
+		var rv=0;
+		if(photloc[a] == photloc[b]) {
+			rv=0;
+		} else if(photloc[a] > photloc[b]) {
+			rv=1;
+		} else {
+			rv=-1;
+		}
+		if(newestFirst) {
+			rv = -rv;
+		}
+		return(rv);
+		});
+	return imgs;
+}
+
+function getLoc(img) {
+	return(photloc[img].substring(0, 7));
+}
+
 // Show the results based on the currently selected keywords
 function showResults() {
 	// Maximum number of images to show
 	var total = imgsPerPage;
-	var tmpimgs=getImageIds(kws);
-	if(newestFirst) {
-		tmpimgs.reverse();
-	}
-	// h = tmpimgs.join(" ") + "<br>\n";
+	var tmpimgs=sortImages(getImageIds(kws));
 	var h = "Found " + tmpimgs.length + " images:<br/>"
 	var nextbutton='<br/><input type="button" value="next page" '
 				+ 'onclick="pageNum++; showResults();"/>';
@@ -90,8 +109,8 @@ function showResults() {
 	for(var i=pageNum * imgsPerPage; i<tmpimgs.length; i++) {
 		var img=tmpimgs[i]
 		if(total > 0) {
-			h += '<a href="pages/' + photloc[img] + "/" + img + '.html">';
-			h += '<img src="pages/' + photloc[img] + '/' + img + '_tn.jpg"/> ';
+			h += '<a href="pages/' + getLoc(img) + "/" + img + '.html">';
+			h += '<img src="pages/' + getLoc(img) + '/' + img + '_tn.jpg"/> ';
 			h += '</a>';
 		} else if(total == 0) {
 			h += nextbutton;
@@ -106,13 +125,6 @@ function search() {
 
 	var ppagefield=document.getElementById("perpage");
 	imgsPerPage = parseInt(ppagefield.value);
-
-	var sdirfield=document.getElementById("sdir");
-	if(sdirfield.value == 'newfirst') {
-		newestFirst = true;
-	} else {
-		newestFirst = false;
-	}
 
 	var kwfield=document.getElementById("keywords");
 	var mykws=kwfield.value.split(" ");
@@ -209,7 +221,7 @@ function keyUp(inp) {
 	updateKwInfo(inp.value);
 }
 
-onload = function() {
+Event.observe(window, 'load', function() {
 	// Build a map of the keywords to their IDs
 	for(var i=0; i<keywords.length; i++) {
 		kwmap[keywords[i]]=i;
@@ -218,5 +230,5 @@ onload = function() {
 	if(kwfield.value != '') {
 		search();
 	}
-}
+});
 // arch-tag: D29A5E2E-5D6E-11D9-8752-000A957659CC

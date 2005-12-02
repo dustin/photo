@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,10 +17,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +30,7 @@ import javax.servlet.http.HttpSession;
 
 import net.spy.jwebkit.JWHttpServlet;
 import net.spy.photo.search.SearchResults;
+import net.spy.util.SpyToker;
 import net.spy.util.SpyUtil;
 
 /**
@@ -34,7 +38,22 @@ import net.spy.util.SpyUtil;
  */
 public class ZipExportServlet extends JWHttpServlet {
 
-	private static final String DATE_FMT="yyyy/MM";
+	private static final String PATH_FMT="yyyy/MM";
+	private static final String DATE_FMT="yyyy/MM/dd";
+
+	private String pageHTML=null;
+
+	public void init(ServletConfig cf) throws ServletException {
+		super.init(cf);
+		try {
+			InputStream is=getClass().getClassLoader().getResourceAsStream(
+				"image.html");
+			pageHTML=SpyUtil.getReaderAsString(new InputStreamReader(is));
+			is.close();
+		} catch (IOException e) {
+			throw new ServletException("Can't initialize HTML pages", e);
+		}
+	}
 
 	protected void doGetOrPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
@@ -91,7 +110,7 @@ public class ZipExportServlet extends JWHttpServlet {
 	private void addImages(Collection<PhotoImageData> sr, PhotoDimensions dims,
 			ZipOutputStream zos) throws Exception {
 
-		SimpleDateFormat sdf=new SimpleDateFormat(DATE_FMT);
+		SimpleDateFormat sdf=new SimpleDateFormat(PATH_FMT);
 		CRC32 crc=new CRC32();
 
 		getLogger().info("Adding " + sr.size() + " images");
@@ -123,8 +142,38 @@ public class ZipExportServlet extends JWHttpServlet {
 			zos.write(tdata);
 			zos.closeEntry();
 
+			addImageHTML(zos, pid);
+
 			zos.flush();
 		}
+	}
+
+	private void addImageHTML(ZipOutputStream zos, PhotoImageData pid)
+		throws Exception {
+		Map<String, String> stuff=new HashMap<String, String>();
+		// XXX:  Fixme
+		stuff.put("URL", "http://bleu.west.spy.net/photo/");
+		stuff.put("ID", String.valueOf(pid.getId()));
+		Collection<String> keywords=new ArrayList<String>();
+		for(Keyword k : pid.getKeywords()) {
+			keywords.add(k.getKeyword());
+		}
+		stuff.put("KEYWORDS", SpyUtil.join(keywords, " "));
+		stuff.put("DESCR", pid.getDescr());
+		stuff.put("YEAR", new SimpleDateFormat("yyyy").format(pid.getTaken()));
+		stuff.put("MONTH", new SimpleDateFormat("MM").format(pid.getTaken()));
+		stuff.put("TAKEN",
+				new SimpleDateFormat("EEE, MMM d, yyyy").format(pid.getTaken()));
+
+		SpyToker st=new SpyToker();
+		String out=st.tokenizeString(pageHTML, stuff);
+
+		SimpleDateFormat sdf=new SimpleDateFormat(PATH_FMT);
+		ZipEntry ze=new ZipEntry("pages/" + sdf.format(pid.getTaken()) + "/"
+				+ pid.getId() + ".html");
+		zos.putNextEntry(ze);
+		zos.write(out.getBytes());
+		zos.closeEntry();
 	}
 
 	private void addIndexes(Collection<PhotoImageData> sr, ZipOutputStream zos)
@@ -141,8 +190,8 @@ public class ZipExportServlet extends JWHttpServlet {
 		
 		bw.write("var photloc=new Object();\n");
 
-		final Map<String, ArrayList<String>> kws=
-			new HashMap<String, ArrayList<String>>();
+		final Map<String, TreeSet<Integer>> kws=
+			new HashMap<String, TreeSet<Integer>>();
 		for(PhotoImageData pid : sr) {
 			getLogger().info("Processing image " + pid.getId());
 			bw.write("photloc[" + pid.getId() + "]='"
@@ -150,12 +199,12 @@ public class ZipExportServlet extends JWHttpServlet {
 
 			for(Keyword kw : pid.getKeywords()) {
 				String kwstring="\"" + kw.getKeyword() + "\"";
-				ArrayList al=kws.get(kwstring);
+				TreeSet<Integer> al=kws.get(kwstring);
 				if(al == null) {
-					al=new ArrayList();
+					al=new TreeSet<Integer>();
 					kws.put(kwstring, al);
 				}
-				al.add(String.valueOf(pid.getId()));
+				al.add(pid.getId());
 			}
 		}
 
