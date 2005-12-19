@@ -51,7 +51,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	 * Get the total number of sessions currently in this engine.
 	 */
 	public static int totalSessions() {
-		return(SessionStorage.getInstance().getSessions().size());
+		return(listSessions().size());
 	}
 
 	private static Logger getStaticLogger() {
@@ -67,7 +67,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 		String username) {
 		ArrayList<PhotoSessionData> al=new ArrayList<PhotoSessionData>();
 
-		for(HttpSession session : SessionStorage.getInstance().getSessions()) {
+		for(HttpSession session : listSessions()) {
 			try {
 				if(session.getAttribute(PhotoSessionData.SES_ATTR) != null) {
 					PhotoSessionData sessionData=(PhotoSessionData)
@@ -111,8 +111,14 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 					session.getAttribute(PhotoSessionData.SES_ATTR);
 
 				if(sessionData!=null) {
-					// Add the session to the result List
-					al.add(session);
+					// Only include sessions that are either authenticated or have
+					// displayed images.  This helps avoid having inflated lists
+					// from monitoring and what-not.
+					if(sessionData.getUser().isInRole(User.AUTHENTICATED)
+							|| sessionData.getImagesSeen() > 0) {
+						// Add the session to the result List
+						al.add(session);
+					}
 				} else {
 					getStaticLogger().warn(
 						"Found a session without a photoSession");

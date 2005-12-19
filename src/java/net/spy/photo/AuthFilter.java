@@ -81,17 +81,6 @@ public class AuthFilter extends SpyObject implements Filter {
 		// Moving right along.
 		chain.doFilter(wrappedRequest, response);
 
-		// Don't allow guest sessions to hang around longer than necessary.
-		psd=(PhotoSessionData)session.getAttribute(PhotoSessionData.SES_ATTR);
-		if(psd != null) {
-			User pu=psd.getUser();
-			if(pu.isInRole(User.AUTHENTICATED)) {
-				isguest=false;
-			}
-		}
-		if(isguest && psd.getImagesSeen() == 0) {
-			session.invalidate();
-		}
 	}
 
 }
