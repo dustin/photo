@@ -322,6 +322,8 @@ public class DBUser extends AbstractSavable
 				ins.executeUpdate();
 			}
 			ins.close();
+		} else {
+			getLogger().info("ACL was not modified...not updating.");
 		}
 
 		setSaved();

@@ -4,10 +4,10 @@
 package net.spy.photo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 
 import net.spy.SpyObject;
 
@@ -16,7 +16,7 @@ import net.spy.SpyObject;
  */
 public class PhotoACL extends SpyObject implements Serializable {
 
-	private List<PhotoACLEntry> acl=null;
+	private Map<Integer, PhotoACLEntry> acl=null;
 	private boolean modified=false;
 
 	/**
@@ -24,7 +24,7 @@ public class PhotoACL extends SpyObject implements Serializable {
 	 */
 	public PhotoACL() {
 		super();
-		acl=new ArrayList<PhotoACLEntry>();
+		acl=new HashMap<Integer, PhotoACLEntry>();
 	}
 
 	/** 
@@ -32,8 +32,8 @@ public class PhotoACL extends SpyObject implements Serializable {
 	 */
 	public PhotoACL copy() {
 		PhotoACL rv=new PhotoACL();
-		for(PhotoACLEntry e : acl) {
-			rv.acl.add(e.copy());
+		for(Map.Entry<Integer, PhotoACLEntry> e: acl.entrySet()) {
+			rv.acl.put(e.getKey(), e.getValue().copy());
 		}
 		return(rv);
 	}
@@ -43,7 +43,7 @@ public class PhotoACL extends SpyObject implements Serializable {
 	 * @return an unmodifiable iterator of the ACL entries.
 	 */
 	public Iterator<PhotoACLEntry> iterator() {
-		return(Collections.unmodifiableCollection(acl).iterator());
+		return(Collections.unmodifiableCollection(acl.values()).iterator());
 	}
 
 	/** 
@@ -52,7 +52,7 @@ public class PhotoACL extends SpyObject implements Serializable {
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);
 		sb.append("{PhotoACL entries=");
-		sb.append(acl);
+		sb.append(acl.values());
 		sb.append("}");
 		return(sb.toString());
 	}
@@ -65,19 +65,12 @@ public class PhotoACL extends SpyObject implements Serializable {
 	 * @return the entry, or null if one doesn't exist and create is false
 	 */
 	public PhotoACLEntry getEntry(int what, boolean create) {
-		PhotoACLEntry rv=null;
-
-		for(PhotoACLEntry ae : acl) {
-			if(ae.getWhat() == what) {
-				rv=ae;
-				break;
-			}
-		}
+		PhotoACLEntry rv=acl.get(what);
 
 		if(rv == null && create) {
 			rv=new PhotoACLEntry(what);
 			setModified(true);
-			acl.add(rv);
+			acl.put(what, rv);
 		}
 
 		return(rv);
