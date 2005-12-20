@@ -47,11 +47,32 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	 */
 	public PhotoImage getImage(int imageId, PhotoDimensions dim)
 		throws PhotoException {
+		return(getImage(imageId, dim, true));
+	}
+
+	/**
+	 * Get an image from the server with the option to bypass the cache for full
+	 * size images.
+	 * 
+	 * @param imageId the image ID
+	 * @param dim the dimensions at which you want the image
+	 * @param withCache if true, use the cache, otherwise get it directly
+	 */
+	public PhotoImage getImage(int imageId, PhotoDimensions dim, boolean withCache)
+		throws PhotoException {
 		PhotoImage imageData=null;
 		try {
-
 			if(dim==null) {
-				imageData=fetchImage(imageId);
+				String key = "photo_" + imageId;
+				if(withCache) {
+					imageData = cache.getImage(key);
+				}
+				if(imageData == null) {
+					imageData=fetchImageFromDB(imageId);
+					if(withCache) {
+						cache.putImage(key, imageData);
+					}
+				}
 			} else {
 				imageData=fetchScaledImage(imageId, dim);
 			}
@@ -75,7 +96,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 		pi=cache.getImage(key);
 		if(pi==null) {
 			// Not in cache, get it
-			pi=fetchImage(imageId);
+			pi=getImage(imageId, null);
 
 			if(pi.equals(dim) || PhotoUtil.smallerThan(pi, dim)) {
 				getLogger().debug("Requested scaled size for " + imageId
@@ -135,44 +156,27 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 		return(scaler.scaleImage(in, dim));
 	}
 
-	// Fetch an image
-	private PhotoImage fetchImage(int imageId) throws Exception {
-		String key=null;
-		PhotoImage pi=null;
-
-		key = "photo_" + imageId;
-
-		pi=cache.getImage(key);
-
-		if(pi==null) {
-			// Average image is 512k.  Create a buffer of that size to start.
-			StringBuffer sdata=new StringBuffer(512*1024);
-
-			try {
-				SpyDB db=new SpyDB(PhotoConfig.getInstance());
-				String query="select * from image_store where id = ?\n"
-					+ " order by line";
-				PreparedStatement st = db.prepareStatement(query);
-				st.setInt(1, imageId);
-				ResultSet rs = st.executeQuery();
-
-				while(rs.next()) {
-					sdata.append(rs.getString("data"));
-				}
-				rs.close();
-				db.close();
-
-			} catch(Exception e) {
-				getLogger().warn("Problem getting image", e);
-				throw new Exception("Problem getting image", e);
-			}
-
-			// If we got an exception, throw it
-			Base64 base64 = new Base64();
-			byte data[]=base64.decode(sdata.toString());
-			pi=new PhotoImage(data);
-			cache.putImage(key, pi);
+	// Fetch an image from the DB
+	private PhotoImage fetchImageFromDB(int imageId) throws Exception {
+		// Average image is 512k.  Create a buffer of that size to start.
+		StringBuffer sdata=new StringBuffer(512*1024);
+		
+		SpyDB db=new SpyDB(PhotoConfig.getInstance());
+		String query="select data from image_store where id = ?\n"
+			+ " order by line";
+		PreparedStatement st = db.prepareStatement(query);
+		st.setInt(1, imageId);
+		ResultSet rs = st.executeQuery();
+		
+		while(rs.next()) {
+			sdata.append(rs.getString("data"));
 		}
+		rs.close();
+		db.close();
+		
+		Base64 base64 = new Base64();
+		byte data[]=base64.decode(sdata.toString());
+		PhotoImage pi=new PhotoImage(data);
 
 		return(pi);
 	}

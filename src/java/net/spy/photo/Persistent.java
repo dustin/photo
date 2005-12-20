@@ -3,10 +3,11 @@
 
 package net.spy.photo;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
+import net.spy.SpyObject;
 import net.spy.db.TransactionPipeline;
 import net.spy.photo.search.SavedSearch;
 import net.spy.photo.search.SearchCache;
@@ -14,96 +15,82 @@ import net.spy.photo.search.SearchCache;
 /**
  * All persistent objects will be available through this class.
  */
-public class Persistent extends HttpServlet {
+public class Persistent extends SpyObject implements ServletContextListener {
 
 	private static PhotoSecurity security = null;
 	private static TransactionPipeline pipeline = null;
 
-	/**
-	 * Get all of the persistent objects.
-	 */
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
+
+	public void contextInitialized(ServletContextEvent contextEvent) {
+		ServletContext context=contextEvent.getServletContext();
 
 		// This is pasted from PhotoServlet...I'm not sure which occurs
 		// first and I'm being a bit lazy right now.  I think this will end
 		// up being the permanent home.
 		PhotoConfig conf = PhotoConfig.getInstance();
 		// See if we need to provide a new configuration location
-		String confpath=config.getInitParameter("configFile");
+		String confpath=context.getInitParameter("net.spy.photo.config");
 		if(confpath!=null) {
 			// If it's in the WEB-INF, translate it to a filesystem path
 			if(confpath.startsWith("/WEB-INF")) {
-				confpath=config.getServletContext().getRealPath(confpath);
+				confpath=context.getRealPath(confpath);
 			}
 			// Set the path
 			conf.setStaticConfigLocation(confpath);
 			// Get a new config for the changes to take effect
 			conf=PhotoConfig.getInstance();
+		} else {
+			throw new RuntimeException("Couldn't find photo config path");
 		}
 
 		try {
 			initStuff();
 		} catch(Exception e) {
-			throw new ServletException("Problem initting stuff", e);
+			throw new RuntimeException("Problem initting stuff", e);
 		}
 	}
 
 	private void initStuff() throws Exception {
 		// initialize the category list early on, because it's simple DB
 		// access and will look for no further data.
-		log("Initializing categories.");
+		getLogger().info("Initializing categories.");
 		CategoryFactory.getInstance().getAdminCatList();
 
 		// Security stuff
-		log("Initing security");
+		getLogger().info("Initing security");
 		security = new PhotoSecurity();
 		// Make sure we have initialized the guest user (and the
 		// database and all that)
-		log("Looking up guest.");
+		getLogger().info("Looking up guest.");
 		security.getUser("guest");
-		log("Finished security");
+		getLogger().info("Finished security");
 
-		log("Initializing TransactionPipeline");
+		getLogger().info("Initializing TransactionPipeline");
 		pipeline=new TransactionPipeline();
-		log("got TransactionPipeline");
+		getLogger().info("got TransactionPipeline");
 
-		log("Initializing image cache");
+		getLogger().info("Initializing image cache");
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 		pidf.recache();
-		log("Image cache initialization complete");
+		getLogger().info("Image cache initialization complete");
 
-		log("Initializing image server");
+		getLogger().info("Initializing image server");
 		ImageServerFactory.getImageServer();
-		log("Image server initialization complete");
+		getLogger().info("Image server initialization complete");
 
-		log("Initializing searches cache");
+		getLogger().info("Initializing searches cache");
 		SavedSearch.getSearches();
-		log("Saved searches initialization complete");
+		getLogger().info("Saved searches initialization complete");
 
-		log("Initializing properties cache");
+		getLogger().info("Initializing properties cache");
 		PhotoProperties.getInstance();
-		log("Properties initialization complete");
+		getLogger().info("Properties initialization complete");
 
-		log("Initializing search cache");
+		getLogger().info("Initializing search cache");
 		SearchCache.getInstance();
-		log("Search cache initialization complete");
+		getLogger().info("Search cache initialization complete");
 
-		log("Initialization complete");
-	}
-
-	/**
-	 * Shut everything down.
-	 */
-	public void destroy() {
-		log("Shutting down transaction pipeline");
-		pipeline.shutdown();
-		log("pipeline shut down");
-		log("Shutting down search cache.");
-		SearchCache.getInstance().shutdown();
-		log("Search cache shutdown complete");
-		log("Calling super destroy.");
-		super.destroy();
+		getLogger().info("Initialization complete");
 	}
 
 	/**
@@ -120,29 +107,19 @@ public class Persistent extends HttpServlet {
 	 * Get the TransactionPipeline object for this instance.
 	 */
 	public static TransactionPipeline getPipeline() {
-		verifyInitialized();
 		return(pipeline);
 	}
 
-	private static void verifyInitialized() {
-		if(security==null || pipeline==null) {
-			throw new NotInitializedException();
-		}
+	public void contextDestroyed(ServletContextEvent contextEvent) {
+		getLogger().info("Shutting down transaction pipeline");
+		pipeline.shutdown();
+		getLogger().info("pipeline shut down");
+		getLogger().info("Shutting down search cache.");
+		SearchCache.getInstance().shutdown();
+		getLogger().info("Search cache shutdown complete");
+		getLogger().info("Shutting down outstanding cache validations");
+		CacheValidator.getInstance().cancelProcessing();
+		getLogger().info("Cache validations shut down.");
 	}
-
-	/**
-	 * This exception is thrown whenever methods are called from the
-	 * Persistent servlet when it has not been initialized.
-	 */
-	public static class NotInitializedException extends RuntimeException {
-
-		/**
-		 * Get a new NotInitializedException with the default message.
-		 */
-		public NotInitializedException() {
-			super("Persistent servlet was not properly initialized.  "
-				+ "Container configuration problem?");
-		}
-	} // inner class for reporting initialization failures.
 
 }

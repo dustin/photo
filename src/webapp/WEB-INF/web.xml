@@ -10,6 +10,10 @@
 		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
 		<param-value>net.spy.photo.photoresources</param-value>
 	</context-param>
+	<context-param>
+		<param-name>net.spy.photo.config</param-name>
+		<param-value>/WEB-INF/photo.conf</param-value>
+	</context-param>
 
 	<!-- Auth filter -->
 	<filter>
@@ -26,17 +30,10 @@
 	<listener>
 		<listener-class>net.spy.photo.SessionWatcher</listener-class>
 	</listener>
-
-	<!-- Persistent objects -->
-	<servlet>
-		<servlet-name>Persistent</servlet-name>
-		<servlet-class>net.spy.photo.Persistent</servlet-class>
-		<init-param>
-			<param-name>configFile</param-name>
-			<param-value>/WEB-INF/photo.conf</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+	<!-- Persistent startup/shutdown stuff -->
+	<listener>
+		<listener-class>net.spy.photo.Persistent</listener-class>
+	</listener>
 
 	<servlet>
 		<servlet-name>debug</servlet-name>
@@ -86,6 +83,11 @@
 		<servlet-name>ajaxkeywords</servlet-name>
 		<servlet-class>net.spy.photo.ajax.Keywords</servlet-class>
 		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>validationcontrol</servlet-name>
+		<servlet-class>net.spy.photo.ajax.ValidationControlServlet</servlet-class>
 	</servlet>
 
 	<!-- The action servlet -->
@@ -151,6 +153,11 @@
 	<servlet-mapping>
 		<servlet-name>ajaxkeywords</servlet-name>
 		<url-pattern>/ajax/keywords/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>validationcontrol</servlet-name>
+		<url-pattern>/ajax/validation/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Normal mapping -->
