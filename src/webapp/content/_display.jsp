@@ -167,12 +167,6 @@
 		var starSrcs=new Array();
 		// <![CDATA[
 
-		function clearThing(el) {
-			while(el.hasChildNodes()) {
-				el.removeChild(el.firstChild);
-			}
-		}
-
 		function calculateStarSrcs() {
 			starSrcs=new Array();
 			for(var i=0; i<5; i++) {

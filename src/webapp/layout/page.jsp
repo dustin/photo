@@ -22,7 +22,7 @@
 	<head>
 		<title><tiles:insert attribute='title'/></title>
 		<photo:stylesheet url="/css/layout.css"/>
-		<photo:javascript url="/js/debug.js"/>
+		<photo:javascript url="/js/photo.js"/>
 		<photo:javascript url="/js/prototype.js"/>
 		<photo:javascript url="/js/s/scriptaculous.js"/>
 		<style type="text/css">
@@ -136,6 +136,8 @@
 							message="index.links.admin.newprofile"/></li>
 					<li><photo:link url="/admin/properties.do"
 							message="index.links.admin.properties"/></li>
+					<li><photo:link url="/admin/cacheValidation.do"
+							message="index.links.admin.cacheValidation"/></li>
 				</ul>
 			</li>
 			</logic:present>

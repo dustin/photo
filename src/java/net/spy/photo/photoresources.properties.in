@@ -35,6 +35,7 @@ index.links.admin.reporting=Reporting
 index.links.admin.user=User Admin
 index.links.admin.cat=Category Admin
 index.links.admin.bulkkw=Bulk Keyword Fixups
+index.links.admin.cacheValidation=Cache Validation
 index.links.admin.newprofile=New Profile
 index.links.admin.properties=Edit Properties
 

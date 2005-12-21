@@ -1,5 +1,20 @@
 // arch-tag: E0F65786-D0CF-4884-8C4C-516FC278F612
 
+function clearThing(el) {
+	while(el.hasChildNodes()) {
+		el.removeChild(el.firstChild);
+	}
+}
+
+function getElementText(el, name, index) {
+	var els=el.getElementsByTagName(name);
+	var rv="";
+	if(els.length > 0) {
+		rv=els[0].firstChild.nodeValue;
+	}
+	return rv;
+}
+
 function closeDebug() {
 	Element.hide(debug.box);
 }
