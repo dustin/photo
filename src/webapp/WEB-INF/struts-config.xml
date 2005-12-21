@@ -553,7 +553,8 @@
 	<action path="/admin/properties" roles="admin" forward="admin.properties"/>
 	<action path="/admin/newprofile" roles="admin" forward="admin.newprofile"/>
 	<action path="/admin/bulkkw" roles="admin" forward="admin.bulkkw"/>
-	<action path="/admin/cacheValidation" forward="admin.cacheValidation"/>
+	<action path="/admin/cacheValidation" roles="admin"
+		forward="admin.cacheValidation"/>
 
   </action-mappings>
 

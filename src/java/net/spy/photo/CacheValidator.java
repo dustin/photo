@@ -85,6 +85,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 	 */
 	public synchronized void cancelProcessing() {
 		if(isRunning()) {
+			runThread.stopRequested=true;
 			runThread.interrupt();
 		}
 	}
@@ -133,6 +134,8 @@ public class CacheValidator extends SpyObject implements SAXAble {
 		private int todo=0;
 		private int done=0;
 
+		boolean stopRequested=false;
+
 		public RunThread(Collection<Operation> ops, User u) {
 			super("CacheValidatorThread");
 			setDaemon(true);
@@ -169,7 +172,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 					}
 				}
 				done++;
-				if(interrupted()) {
+				if(interrupted() || stopRequested) {
 					break;
 				}
 			}
