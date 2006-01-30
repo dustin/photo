@@ -6,6 +6,7 @@ package net.spy.photo.search;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
@@ -95,6 +96,10 @@ public class SearchResult extends Object
 
 	public Format getFormat() {
 		return(imgData.getFormat());
+	}
+
+	public Map getMetaData() throws Exception {
+		return(imgData.getMetaData());
 	}
 
 }

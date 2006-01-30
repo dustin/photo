@@ -84,6 +84,11 @@
 		<servlet-class>net.spy.photo.ajax.Keywords</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>ajaxexif</servlet-name>
+		<servlet-class>net.spy.photo.ajax.EXIFServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
 	<servlet>
 		<servlet-name>validationcontrol</servlet-name>
@@ -153,6 +158,10 @@
 	<servlet-mapping>
 		<servlet-name>ajaxkeywords</servlet-name>
 		<url-pattern>/ajax/keywords/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ajaxexif</servlet-name>
+		<url-pattern>/ajax/exif/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

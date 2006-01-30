@@ -7,9 +7,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeSet;
 
 import net.spy.db.AbstractSavable;
@@ -453,6 +455,10 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public Format getFormat() {
 		return(format);
+	}
+
+	public Map getMetaData() {
+		return(Collections.EMPTY_MAP);
 	}
 
 	// New annotated region implementation

@@ -5,6 +5,7 @@ package net.spy.photo;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import net.spy.factory.Instance;
 
@@ -77,5 +78,11 @@ public interface PhotoImageData extends Instance {
 	 * Get the format of this image.
 	 */
 	Format getFormat();
+	
+	/**
+	 * Get the metadata for this photo.
+	 * @throws Exception 
+	 */
+	Map getMetaData() throws Exception;
 
 }

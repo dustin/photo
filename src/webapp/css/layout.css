@@ -414,3 +414,19 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 	color: black;
 	background: #ccf;
 }
+
+table.metadata {
+	font-size: small;
+	border: solid 1px;
+	margin-left: 1em;
+	border-collapse: collapse;
+}
+
+table.metadata th {
+	border: solid 1px;
+	background-color: #ccc;
+}
+
+table.metadata td {
+	border: solid 1px;
+}

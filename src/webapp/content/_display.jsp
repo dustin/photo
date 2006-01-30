@@ -78,6 +78,25 @@
 		by <c:out value="${image.addedBy.realName}"/><br />
 		<b>Info</b>:
 		<div id="imgDescr" class="imgDescr"><c:out value="${image.descr}"/></div>
+		<b><span style="display: none" id="metalabel" id="metalabel">Meta</span>
+			<a id="metalink" href="#">Get Meta Data</a>
+			<img src="<c:url value='/images/indicator.gif'/>"
+				alt="indicator" id="metaindicator" style="display: none"/>
+			</b>
+		<div id="meta" style="display: none">
+			<table class="metadata">
+				<thead>
+					<tr>
+						<th>Attribute</th><th>Value</th>
+					</tr>
+				</thead>
+				<tbody id="metadata">
+					<tr>
+						<td></td><td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		<logic:present role="admin">
 			<script type="text/javascript">
 				new Ajax.InPlaceEditor('imgDescr',
@@ -164,6 +183,7 @@
 		var rateSize='<c:out value="${image.votes.size}"/>';
 		var baseUrl='<c:url value="/"/>';
 		var imgid='<c:out value="${image.id}"/>';
+		var exifUrl='<c:url value="/ajax/exif/${image.id}"/>';
 		var starSrcs=new Array();
 		// <![CDATA[
 
@@ -190,8 +210,59 @@
 				$('stars').appendChild(newStar);
 				});
 		}
+
+		// Load the meta data
+		function loadMeta() {
+			Element.show("metaindicator");
+			new Ajax.Request(exifUrl, {
+				method: 'get',
+				onComplete: function(req) {
+					Element.hide("metaindicator");
+				},
+				onFailure: function(req) {
+					alert("Failed to save vote.");
+				},
+				onSuccess: function(req) {
+					var xml=req.responseXML;
+					Element.show("metalabel");
+					Element.show("meta");
+					Element.hide("metalink");
+					clearThing($('metadata'));
+
+					var d=$('metadata');
+
+					var tags=xml.getElementsByTagName("tag");
+					for(var i=0; i<tags.length; i++) {
+						var tag=tags[i];
+						var tr=document.createElement("tr");
+
+						var td1=document.createElement("td");
+						td1.appendChild(document.createTextNode(
+							getElementText(tag, "key", 0)));
+						var td2=document.createElement("td");
+						td2.appendChild(document.createTextNode(
+							getElementText(tag, "value", 0)));
+
+						tr.appendChild(td1);
+						tr.appendChild(td2);
+
+						d.appendChild(tr);
+					}
+
+				}
+				});
+		}
+
 		// Set up the rating bar
 		Event.observe(window, 'load', createStarsForShow, false);
+
+		// Set up the meta loader
+		Event.observe(window, 'load', function() {
+			$('metalink').onclick=function() {
+				loadMeta();
+				return false;
+			};
+			}, false);
 		// ]]>
 	</script>
 
