@@ -78,8 +78,7 @@
 		by <c:out value="${image.addedBy.realName}"/><br />
 		<b>Info</b>:
 		<div id="imgDescr" class="imgDescr"><c:out value="${image.descr}"/></div>
-		<b><span style="display: none" id="metalabel" id="metalabel">Meta</span>
-			<a id="metalink" href="#">Get Meta Data</a>
+		<b><a id="metalink" href="#">Toggle Meta Data</a>
 			<img src="<c:url value='/images/indicator.gif'/>"
 				alt="indicator" id="metaindicator" style="display: none"/>
 			</b>
@@ -184,6 +183,7 @@
 		var baseUrl='<c:url value="/"/>';
 		var imgid='<c:out value="${image.id}"/>';
 		var exifUrl='<c:url value="/ajax/exif/${image.id}"/>';
+		var exifFetched=false;
 		var starSrcs=new Array();
 		// <![CDATA[
 
@@ -224,9 +224,7 @@
 				},
 				onSuccess: function(req) {
 					var xml=req.responseXML;
-					Element.show("metalabel");
 					Element.show("meta");
-					Element.hide("metalink");
 					clearThing($('metadata'));
 
 					var d=$('metadata');
@@ -259,7 +257,12 @@
 		// Set up the meta loader
 		Event.observe(window, 'load', function() {
 			$('metalink').onclick=function() {
-				loadMeta();
+				if(exifFetched == false) {
+					loadMeta();
+					exifFetched=true;
+				} else {
+					Element.toggle('meta');
+				}
 				return false;
 			};
 			}, false);
