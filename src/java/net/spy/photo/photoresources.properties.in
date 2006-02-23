@@ -190,3 +190,5 @@ reporting.links.topImages=Top images
 reporting.links.topImagesXd=Top images (last 30 days)
 reporting.links.mostActiveUsers=Most Active Users
 reporting.links.mostActiveUsersXd=Most Active Users (last 30 days)
+reporting.links.recentVotes=Recent Votes
+reporting.links.mostVoted=Most Voted-On Images

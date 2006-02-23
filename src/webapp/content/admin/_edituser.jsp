@@ -110,4 +110,10 @@
 	%>
 	<photo:link url='<%= theUrl %>'>Recent photos this user has seen</photo:link>
 </div>
+<div>
+	<%
+		theUrl="/report/userRecentVotes.do?p.i.user_id=" + uid;
+	%>
+	<photo:link url='<%= theUrl %>'>Recent photos this user voted on</photo:link>
+</div>
 <%-- arch-tag: C890F4CC-5D6F-11D9-951D-000A957659CC --%>

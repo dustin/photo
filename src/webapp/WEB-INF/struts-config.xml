@@ -478,6 +478,42 @@
 		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
+	<action path="/report/userRecentVotes"
+		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Recent Votes for User"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.UserVotes"/>
+
+		<forward name="next" path="admin.reportDisplay"/>
+	</action>
+
+	<action path="/report/recentVotes"
+		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Recent Votes"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.RecentVotes"/>
+
+		<forward name="next" path="admin.reportDisplay"/>
+	</action>
+
+	<action path="/report/mostVoted"
+		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Most voted-on Images"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.MostVoted"/>
+
+		<forward name="next" path="admin.reportDisplay"/>
+	</action>
+
 	<action path="/report/topImages"
 		className="net.spy.jwebkit.struts.DBSPMapping"
 		roles="admin"

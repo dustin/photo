@@ -20,6 +20,10 @@
 		message="reporting.links.mostActiveUsersXd"/></li>
 	<li><photo:link url="/report/mostActiveUsers.do"
 		message="reporting.links.mostActiveUsers"/></li>
+	<li><photo:link url="/report/recentVotes.do"
+		message="reporting.links.recentVotes"/></li>
+	<li><photo:link url="/report/mostVoted.do"
+		message="reporting.links.mostVoted"/></li>
 </ul>
 
 <%-- arch-tag: CB429078-5D6F-11D9-80C7-000A957659CC --%>
