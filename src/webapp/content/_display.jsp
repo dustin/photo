@@ -220,7 +220,7 @@
 					Element.hide("metaindicator");
 				},
 				onFailure: function(req) {
-					alert("Failed to save vote.");
+					alert("Failed to load meta data.");
 				},
 				onSuccess: function(req) {
 					var xml=req.responseXML;
