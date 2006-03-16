@@ -15,6 +15,10 @@
 			<zipfileset dir="${maven.build.dir}/docs" prefix="doc/api"
 				includes="**"/>
 			<zipfileset dir="${basedir}" prefix="" includes="contrib/*"/>
+			<zipfileset dir="${basedir}" prefix="" includes="etc/photo.sql"/>
+			<zipfileset dir="${basedir}" prefix="" includes="etc/photo.conf"/>
+			<zipfileset dir="${basedir}" prefix="" includes="etc/jpeglicense.txt"/>
+			<zipfileset dir="${basedir}" prefix="" includes="etc/resin.conf"/>
 			<zipfileset dir="${maven.build.dir}" prefix="" includes="photo.war"/>
 			<zipfileset dir="${basedir}" prefix="" includes="doc/HOWTO"/>
 		</zip>
