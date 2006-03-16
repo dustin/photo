@@ -10,7 +10,7 @@
 	xmlns:deploy="deploy">
 
 	<goal name="dist" prereqs="war,javadoc">
-		<zip zipfile="${maven.build.dir}/photoservlet-${short.version}.zip"
+		<zip zipfile="${maven.build.dir}/photoservlet-${tla.short.version}.zip"
 			basedir="${maven.build.dir}" excludes="**">
 			<zipfileset dir="${maven.build.dir}/docs" prefix="doc/api"
 				includes="**"/>
