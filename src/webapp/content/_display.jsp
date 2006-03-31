@@ -58,7 +58,7 @@
 
 	<div id="imgDisplay">
 		<photo:imgSrc id='<%= image.getId() %>' showOptimal="true"
-			class="annotated"
+			styleClass="annotated"
 			usemap="#annotationMap"/>
 	</div>
 

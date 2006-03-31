@@ -113,7 +113,7 @@ public class ImageLink extends PhotoTag {
 	/** 
 	 * Set the class name.
 	 */
-	public void setClass(String to) {
+	public void setStyleClass(String to) {
 		this.className=to;
 	}
 
