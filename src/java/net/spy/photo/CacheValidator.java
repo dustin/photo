@@ -53,7 +53,8 @@ public class CacheValidator extends SpyObject implements SAXAble {
 	 * @param user the user who will be processing the operations
 	 * @exception IllegalStateException if the processing is already running
 	 */
-	public synchronized void process(Collection operations, User user) {
+	public synchronized void process(Collection<Operation> operations,
+			User user) {
 		if(isRunning()) {
 			throw new IllegalStateException(
 					"Can't begin processing while already processing");
@@ -67,7 +68,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 	 * Process all validators.
 	 */
 	public void process(User user) {
-		Collection ops=new ArrayList();
+		Collection<Operation> ops=new ArrayList<Operation>();
 		ops.add(new ValidateCacheAndDB());
 		ops.add(new RecacheThumbnailsAndSizes());
 		process(ops, user);
@@ -207,16 +208,19 @@ public class CacheValidator extends SpyObject implements SAXAble {
 	 * Validate an individual image.
 	 */
 	public static interface Operation {
-		void process(PhotoImageData img, Collection errs) throws Exception;
+		void process(PhotoImageData img, Collection<String> errs)
+			throws Exception;
 	}
 
 	/**
 	 * Validate the cached data and the DB data are consistent.  If the cache is
 	 * empty for this record, then fill it.
 	 */
-	public static class ValidateCacheAndDB extends SpyObject implements Operation {
+	public static class ValidateCacheAndDB extends SpyObject
+		implements Operation {
 
-		public void process(PhotoImageData img, Collection errs) throws Exception {
+		public void process(PhotoImageData img,
+				Collection<String> errs) throws Exception {
 			ImageServer is=ImageServerFactory.getImageServer();
 			if(is instanceof ImageServerImpl) {
 				ImageServerImpl isi=(ImageServerImpl)is;
@@ -250,7 +254,8 @@ public class CacheValidator extends SpyObject implements SAXAble {
 			sizes.add(new PhotoDimensionsImpl("800x600"));	
 		}
 
-		public void process(PhotoImageData img, Collection errs) throws Exception {
+		public void process(PhotoImageData img,
+				Collection<String> errs) throws Exception {
 			ImageServer is=ImageServerFactory.getImageServer();
 			is.getThumbnail(img.getId());
 			for(PhotoDimensions dim : sizes) {

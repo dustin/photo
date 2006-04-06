@@ -98,7 +98,7 @@ public class SearchResult extends Object
 		return(imgData.getFormat());
 	}
 
-	public Map getMetaData() throws Exception {
+	public Map<String, Object> getMetaData() throws Exception {
 		return(imgData.getMetaData());
 	}
 

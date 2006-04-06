@@ -27,7 +27,8 @@ public class KeywordCompletionAction extends PhotoAction {
 
 	private Collection getKeywordCompletions(User user, String prefixMatch)
 		throws Exception {
-		Collection ts=new TreeSet(KeywordMatch.BY_FREQUENCY);
+		Collection<KeywordMatch> ts
+			=new TreeSet<KeywordMatch>(KeywordMatch.BY_FREQUENCY);
 		ts.addAll(Search.getInstance().getKeywordsForUser(user));
 		if(prefixMatch != null) {
 			for(Iterator<KeywordMatch> i=ts.iterator();
@@ -40,8 +41,8 @@ public class KeywordCompletionAction extends PhotoAction {
 		}
 		// Make sure we don't return too many results
 		if(ts.size() > MAX_RESULTS) {
-			Collection smaller=new ArrayList();
-			for(Iterator i=ts.iterator(); i.hasNext()
+			Collection<KeywordMatch> smaller=new ArrayList<KeywordMatch>();
+			for(Iterator<KeywordMatch> i=ts.iterator(); i.hasNext()
 				&& smaller.size() < MAX_RESULTS; ) {
 				smaller.add(i.next());
 			}

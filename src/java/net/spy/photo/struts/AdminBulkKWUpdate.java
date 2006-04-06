@@ -10,6 +10,7 @@ import java.util.HashSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.spy.db.Savable;
 import net.spy.db.savables.CollectionSavable;
 import net.spy.photo.Keyword;
 import net.spy.photo.KeywordFactory;
@@ -52,7 +53,7 @@ public class AdminBulkKWUpdate extends PhotoAction {
 
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 
-		ArrayList savables=new ArrayList(results.size());
+		ArrayList<Savable> savables=new ArrayList<Savable>(results.size());
 		for(PhotoImageData pid : results) {
 			SavablePhotoImageData savable=new SavablePhotoImageData(
 				pidf.getObject(pid.getId()));

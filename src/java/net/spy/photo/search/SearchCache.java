@@ -35,8 +35,8 @@ public class SearchCache extends SpyThread {
 	public static synchronized SearchCache getInstance() {
 		if(instance == null) {
 			instance=new SearchCache();
-			instance.cache=new HashMap();
-			instance.keyMap=new HashMap();
+			instance.cache=new HashMap<Object, SoftReference>();
+			instance.keyMap=new HashMap<SoftReference, Object>();
 			instance.refQueue=new ReferenceQueue<SearchResults>();
 			instance.start();
 		}
@@ -58,6 +58,7 @@ public class SearchCache extends SpyThread {
 	 * @param u the user
 	 * @param d the requested dimensions
 	 */
+	@SuppressWarnings("unchecked")
 	public synchronized Object get(Object key) {
 		SoftReference<SearchResults> sr=cache.get(key);
 		Object rv=null;
@@ -78,6 +79,7 @@ public class SearchCache extends SpyThread {
 	 * @param key the cache key
 	 * @param o the value to cache
 	 */
+	@SuppressWarnings("unchecked")
 	public synchronized void store(Object key, Object o) {
 		SoftReference ref=new SoftReference(o, refQueue);
 		cache.put(key, ref);

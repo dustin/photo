@@ -45,7 +45,7 @@ public class KeywordFactory extends GenFactory<Keyword> {
 
 	@Override
 	protected Collection<Keyword> getInstances() {
-		Collection rv=new TreeSet();
+		Collection<Keyword> rv=new TreeSet<Keyword>();
 		GetKeywords db=null;
 		try {
 			db=new GetKeywords(PhotoConfig.getInstance());
@@ -113,9 +113,9 @@ public class KeywordFactory extends GenFactory<Keyword> {
 	 * @throws Exception if we can't get keywords
 	 */
 	public Keywords getKeywords(String s, boolean create) throws Exception {
-		Set positive=new HashSet<Keyword>();
-		Set negative=new HashSet<Keyword>();
-		Set missing=new HashSet<String>();
+		Set<Keyword> positive=new HashSet<Keyword>();
+		Set<Keyword> negative=new HashSet<Keyword>();
+		Set<String> missing=new HashSet<String>();
 
 		StringTokenizer st = new StringTokenizer(s);
 		while(st.hasMoreTokens()) {

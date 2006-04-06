@@ -28,8 +28,8 @@ public class Votes extends SpyObject {
 	 */
 	public void add(Vote v) {
 		store.put(v.getUser().getId(), v);
-		total += (double)v.getVote();
-		average=total / (double)store.size();
+		total += v.getVote();
+		average=total / store.size();
 	}
 
 	/** 

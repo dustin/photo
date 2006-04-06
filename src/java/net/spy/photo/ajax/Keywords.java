@@ -1,6 +1,7 @@
 // arch-tag: DE6C47BD-1D7A-4594-B640-B70A14854117
 package net.spy.photo.ajax;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,13 +32,14 @@ public class Keywords extends PhotoAjaxServlet {
 		paths.put("/freq", KeywordMatch.BY_FREQUENCY);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected SAXAble getResults(HttpServletRequest request) throws Exception {
 		Comparator comp=paths.get(request.getPathInfo());
 		if(comp == null) {
 			throw new IllegalArgumentException("Illegal path: "
 					+ request.getPathInfo() + " try one of " + paths.keySet());
 		}
-		TreeSet ts=new TreeSet(comp);
+		TreeSet<KeywordMatch> ts=new TreeSet<KeywordMatch>(comp);
 		ts.addAll(Search.getInstance().getKeywordsForUser(getUser(request)));
 		String prefixMatch=request.getParameter("keyword");
 		if(prefixMatch != null) {
@@ -48,6 +50,6 @@ public class Keywords extends PhotoAjaxServlet {
 				}
 			}
 		}
-		return(new CollectionElement("keywords", ts));
+		return(new CollectionElement("keywords", (Collection)ts));
 	}
 }

@@ -30,7 +30,7 @@ public class EXIFServlet extends PhotoAjaxServlet {
 		// Get the image to get the EXIF data to display
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 		PhotoImageData img=pidf.getObject(id);
-		Map metaData=img.getMetaData();
+		Map<String, Object> metaData=img.getMetaData();
 		return new MapElement("exif", "tag", metaData);
 	}
 }

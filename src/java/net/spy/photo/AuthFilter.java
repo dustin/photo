@@ -63,6 +63,7 @@ public class AuthFilter extends SpyObject implements Filter {
 					try {
 						UserFactory uf=UserFactory.getInstance();
 						User pu=uf.getUserByPersess(cookies[i].getValue());
+						assert psd != null : "PhotoSessionData went null";
 						psd.setUser(pu);
 						getLogger().info("Logged in user via persess: " + pu);
 					} catch(PhotoUserException e) {

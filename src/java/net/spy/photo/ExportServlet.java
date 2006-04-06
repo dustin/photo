@@ -96,7 +96,7 @@ public class ExportServlet extends XMLOutputServlet {
 				// Do the collections things at the end
 				x.startElement(h, "keywords");
 				for(Keyword k : pid.getKeywords()) {
-					Map m=new HashMap();
+					Map<String, String> m=new HashMap<String, String>();
 					m.put("word", k.getKeyword());
 					x.doElement(h, "keyword", null, m);
 				}
@@ -120,7 +120,7 @@ public class ExportServlet extends XMLOutputServlet {
 
 						x.startElement(h, "keywords");
 						for(Keyword k : ar.getKeywords()) {
-							Map m=new HashMap();
+							Map<String, String> m=new HashMap<String, String>();
 							m.put("word", k.getKeyword());
 							x.doElement(h, "keyword", null, m);
 						}

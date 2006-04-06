@@ -318,6 +318,7 @@ public class Search extends SpyObject {
 	 * @return a map of 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public Collection<KeywordMatch> getKeywordsForUser(User u, SearchForm sf)
 		throws Exception {
 		SearchCache sc=SearchCache.getInstance();

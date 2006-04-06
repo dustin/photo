@@ -50,7 +50,7 @@ public class KeywordCloudAction extends PhotoAction {
 		return(sf);
 	}
 
-	@Override
+	@SuppressWarnings("unchecked")
 	protected ActionForward spyExecute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 		Collection<KeywordMatch> ts=
@@ -59,8 +59,8 @@ public class KeywordCloudAction extends PhotoAction {
 			getUser(req), getSearchForm(req)));
 		// Make sure we don't return too many results
 		if(ts.size() > MAX_RESULTS) {
-			Collection smaller=new ArrayList();
-			for(Iterator i=ts.iterator(); i.hasNext()
+			Collection<KeywordMatch> smaller=new ArrayList<KeywordMatch>();
+			for(Iterator<KeywordMatch> i=ts.iterator(); i.hasNext()
 				&& smaller.size() < MAX_RESULTS; ) {
 				smaller.add(i.next());
 			}
@@ -73,7 +73,7 @@ public class KeywordCloudAction extends PhotoAction {
 		}
 		Collection<KeywordMatch> buckets[]=new Collection[5];
 		for(int i=0; i<buckets.length; i++) {
-			buckets[i]=new ArrayList();
+			buckets[i]=new ArrayList<KeywordMatch>();
 		}
 		int each=sum/buckets.length;
 		int current=0;
@@ -87,10 +87,11 @@ public class KeywordCloudAction extends PhotoAction {
 			buckets[current].add(km);
 		}
 
-		Collection<KeywordMatch> sorted=new TreeSet(KeywordMatch.BY_KEYWORD);
+		Collection<KeywordMatch> sorted
+			=new TreeSet<KeywordMatch>(KeywordMatch.BY_KEYWORD);
 		sorted.addAll(ts);
 
-		Collection rv=new ArrayList(sorted.size());
+		Collection<KW> rv=new ArrayList<KW>(sorted.size());
 
 		for(KeywordMatch km : sorted) {
 			for(int i=0; i<buckets.length; i++) {

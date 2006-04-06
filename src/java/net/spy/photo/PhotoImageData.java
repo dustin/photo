@@ -83,6 +83,6 @@ public interface PhotoImageData extends Instance {
 	 * Get the metadata for this photo.
 	 * @throws Exception 
 	 */
-	Map getMetaData() throws Exception;
+	Map<String, Object> getMetaData() throws Exception;
 
 }

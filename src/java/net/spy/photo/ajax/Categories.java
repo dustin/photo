@@ -38,7 +38,7 @@ public class Categories extends PhotoAjaxServlet {
 
 		CategoryFactory cf=CategoryFactory.getInstance();
 
-		Map rv=new TreeMap();
+		Map<String, Object> rv=new TreeMap<String, Object>();
 		for(Category cat : cf.getCatList(getUser(request).getId(), access)) {
 			rv.put(cat.getName(), cat.getId());
 		}

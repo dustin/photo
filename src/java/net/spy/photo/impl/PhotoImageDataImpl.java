@@ -50,7 +50,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	private String catName=null;
 	private int catId=-1;
 	private int size=-1;
-	Map metaData=null;
+	Map<String, Object> metaData=null;
 
 	// Dimensions of the full size image.
 	private PhotoDimensions dimensions=null;
@@ -308,12 +308,13 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 * @return the MetaData, or null if MetaData can't be found for this image
 	 * @throws Exception if there's a problem processing this image
 	 */
-	public Map getMetaData() throws Exception {
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getMetaData() throws Exception {
 		// Memoize the meta data
 		if(metaData==null) {
 			metaData=Collections.EMPTY_MAP;
 			if(format == Format.JPEG) {
-				metaData=new TreeMap();
+				metaData=new TreeMap<String, Object>();
 				PhotoImageHelper p=new PhotoImageHelper(getId());
 				PhotoImage image=p.getImage();
 				ByteArrayInputStream bis=new ByteArrayInputStream(image.getData());

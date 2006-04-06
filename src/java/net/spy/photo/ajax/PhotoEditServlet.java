@@ -41,6 +41,7 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 	private Map<String, Handler> handlers=null;
 	private Map<String, String> roles=null;
 
+	@SuppressWarnings("unchecked")
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		handlers=new HashMap<String, Handler>();

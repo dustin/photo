@@ -29,6 +29,7 @@ public class PhotoServlet extends JWHttpServlet {
 		HttpSession ses=req.getSession(false);
 		PhotoSessionData sessionData=(PhotoSessionData)ses.getAttribute(
 			PhotoSessionData.SES_ATTR);
+		assert sessionData != null : "Session data went null";
 
 		String stmp=req.getParameter("id");
 		if(stmp==null) {
@@ -74,9 +75,7 @@ public class PhotoServlet extends JWHttpServlet {
 					throw new ServletException("Error serving image", e);
 				}
 				// Mark it in the session
-				if(sessionData != null) {
-					sessionData.sawImage(imgId);
-				}
+				sessionData.sawImage(imgId);
 			}
 		} catch(PhotoImageDataFactory.NoSuchPhotoException e) {
 			getLogger().warn(sessionData.getUser()

@@ -90,6 +90,7 @@ public class GetImageDataAction extends PhotoAction {
 		if(searchId != null) {
 			image=getImageBySearchId(searchId.intValue(), request);
 		} else {
+			assert imageId != null : "No search ID or image ID";
 			image=getImageById(imageId.intValue(), request);
 		}
 

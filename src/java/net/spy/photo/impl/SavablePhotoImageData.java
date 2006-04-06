@@ -457,7 +457,8 @@ public class SavablePhotoImageData extends AbstractSavable
 		return(format);
 	}
 
-	public Map getMetaData() {
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getMetaData() {
 		return(Collections.EMPTY_MAP);
 	}
 
