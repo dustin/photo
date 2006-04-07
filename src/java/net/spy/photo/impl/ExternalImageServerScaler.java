@@ -6,7 +6,6 @@ package net.spy.photo.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
@@ -14,6 +13,7 @@ import net.spy.photo.ImageServerScaler;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoUtil;
+import net.spy.util.CloseUtil;
 
 /**
  * Get an image scaler that scales via an external program.
@@ -62,7 +62,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 		PhotoDimensions newSize=PhotoUtil.scaleTo(imageSize, dim);
 
 		FileInputStream fin=null;
-
+		FileOutputStream f=null;
 		try {
 			// Need these for the process.
 			InputStream stderr=null;
@@ -76,10 +76,11 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 			}
 
 			// Write the image data to a temporary file.
-			FileOutputStream f = new FileOutputStream(tmpfilename);
+			f = new FileOutputStream(tmpfilename);
 			f.write(in.getData());
 			f.flush();
-			f.close();
+			CloseUtil.close(f);
+			f=null;
 
 			String command=tmp + " -geometry "
 				+ newSize.getWidth() + "x" + newSize.getHeight()
@@ -118,17 +119,11 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 			getLogger().warn("Error scaling image", e);
 			throw e;
 		} finally {
-			try {
-				if(fin != null) {
-					fin.close();
-				}
-				File f = new File(tmpfilename);
-				f.delete();
-				f = new File(thumbfilename);
-				f.delete();
-			} catch(IOException e2) {
-				// No need to do anything, that's just cleanup.
-			}
+			CloseUtil.close(fin);
+			File theFile = new File(tmpfilename);
+			theFile.delete();
+			theFile = new File(thumbfilename);
+			theFile.delete();
 		}
 		return(new PhotoImage(b));
 	}

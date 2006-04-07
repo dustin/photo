@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import net.spy.photo.PhotoUtil;
+import net.spy.util.CloseUtil;
 
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
@@ -79,8 +80,11 @@ public class UploadImage extends Object {
 	private static byte[] readData(File file) throws IOException {
 		byte rv[]=new byte[(int)file.length()];
 		FileInputStream fis=new FileInputStream(file);
-		fis.read(rv);
-		fis.close();
+		try {
+			fis.read(rv);
+		} finally {
+			CloseUtil.close(fis);
+		}
 		return(rv);
 	}
 

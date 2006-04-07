@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpSession;
 
 import net.spy.jwebkit.JWHttpServlet;
 import net.spy.photo.search.SearchResults;
+import net.spy.util.CloseUtil;
 import net.spy.util.SpyToker;
 import net.spy.util.SpyUtil;
 
@@ -48,8 +50,11 @@ public class ZipExportServlet extends JWHttpServlet {
 		try {
 			InputStream is=getClass().getClassLoader().getResourceAsStream(
 				"image.html");
-			pageHTML=SpyUtil.getReaderAsString(new InputStreamReader(is));
-			is.close();
+			try {
+				pageHTML=SpyUtil.getReaderAsString(new InputStreamReader(is));
+			} finally {
+				CloseUtil.close(is);
+			}
 		} catch (IOException e) {
 			throw new ServletException("Can't initialize HTML pages", e);
 		}
@@ -69,12 +74,16 @@ public class ZipExportServlet extends JWHttpServlet {
 		res.setContentType("application/zip");
 		res.setHeader("Content-Disposition",
 				"attachment; filename=photoexport.zip");
-		ZipOutputStream zos=new ZipOutputStream(res.getOutputStream());
-		zos.setComment("Photoservlet export for "
-				+ sessionData.getUser().getRealname() + " on " + new Date());
-
-		Collection<PhotoImageData> images=new ArrayList<PhotoImageData>(sr);
+		OutputStream os=null;
+		ZipOutputStream zos=null;
 		try {
+			os=res.getOutputStream();
+			zos=new ZipOutputStream(res.getOutputStream());
+			zos.setComment("Photoservlet export for "
+					+ sessionData.getUser().getRealname() + " on "
+					+ new Date());
+
+			Collection<PhotoImageData> images=new ArrayList<PhotoImageData>(sr);
 			addIndexes(images, zos);
 			addStatic(zos);
 			addImages(images, sessionData.getOptimalDimensions(), zos);
@@ -82,9 +91,10 @@ public class ZipExportServlet extends JWHttpServlet {
 			throw e;
 		} catch(Exception e) {
 			throw new ServletException("Problem making zip file", e);
+		} finally {
+			CloseUtil.close(zos);
+			CloseUtil.close(os);
 		}
-
-		zos.close();
 	}
 
 	private void addStatic(ZipOutputStream zos) throws Exception {
@@ -94,17 +104,23 @@ public class ZipExportServlet extends JWHttpServlet {
 		addFile(zos, "offline.css");
 	}
 
-	private void addFile(ZipOutputStream zos, String filename) throws Exception {
+	private void addFile(ZipOutputStream zos, String filename)
+		throws Exception {
 		ZipEntry ze=new ZipEntry(filename);
 		zos.putNextEntry(ze);
-		InputStream is=getClass().getClassLoader().getResourceAsStream(filename);
-        int bytesRead = 0;
-        byte buffer[] = new byte[1024];
-        while ((bytesRead = is.read(buffer)) >= 0) {
-            zos.write(buffer, 0, bytesRead);
-        }
-        zos.closeEntry();
-        is.close();
+		InputStream is=getClass().getClassLoader().getResourceAsStream(
+				filename);
+		try {
+			int bytesRead = 0;
+			byte buffer[] = new byte[1024];
+			while ((bytesRead = is.read(buffer)) >= 0) {
+				zos.write(buffer, 0, bytesRead);
+			}
+		} finally {
+			CloseUtil.close(is);
+	        zos.closeEntry();
+		}
+
 	}
 
 	private void addImages(Collection<PhotoImageData> sr, PhotoDimensions dims,

@@ -16,6 +16,7 @@ import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageHelper;
+import net.spy.util.CloseUtil;
 
 /**
  * This is the base class for migration utilities.
@@ -108,11 +109,12 @@ public abstract class PhotoMigration extends SpyObject {
 		Connection conn=db.getConn();
 
 		InputStream is=u.openStream();
-
-		SQLRunner sr=new SQLRunner(conn);
-		sr.runScript(is, autocommit, errok);
-
-		is.close();
+		try {
+			SQLRunner sr=new SQLRunner(conn);
+			sr.runScript(is, autocommit, errok);
+		} finally {
+			CloseUtil.close(is);
+		}
 	}
 
 	/**

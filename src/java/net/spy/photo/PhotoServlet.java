@@ -4,6 +4,7 @@
 package net.spy.photo;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import net.spy.jwebkit.JWHttpServlet;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.log.PhotoLogImageEntry;
+import net.spy.util.CloseUtil;
 
 /**
  * Serve up images.
@@ -96,7 +98,12 @@ public class PhotoServlet extends JWHttpServlet {
 
 		res.setContentType(image.getFormat().getMime());
 		res.setContentLength(image.size());
-		res.getOutputStream().write(image.getData());
+		OutputStream os=res.getOutputStream();
+		try {
+			os.write(image.getData());
+		} finally {
+			CloseUtil.close(os);
+		}
 
 		// Log it
 		Persistent.getPipeline().addTransaction(new PhotoLogImageEntry(

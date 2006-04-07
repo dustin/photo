@@ -31,9 +31,9 @@
 	</classpathentry>
 	<classpathentry kind="var" path="MAVEN_REPO/postgresql/jars/postgresql-7.4.1-jdbc3.jar">
 	</classpathentry>
-	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/spy-2.1.105.jar">
+	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/spy-2.1.116.jar">
 	</classpathentry>
-	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/jwebkit-2.1.37.jar">
+	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/jwebkit-2.1.38.jar">
 	</classpathentry>
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/spyxmlrpc-2.1.jar">
 	</classpathentry>

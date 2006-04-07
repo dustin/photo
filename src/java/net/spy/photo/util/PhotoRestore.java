@@ -12,6 +12,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
+import net.spy.util.CloseUtil;
+
 /**
  * Restore image backups.
  */
@@ -67,15 +69,21 @@ public class PhotoRestore extends Object {
 	public static void main(String args[]) throws Exception {
 		PhotoRestore pr=new PhotoRestore();
 
-		for(int i=0; i<args.length; i++) {
+		for(String fn : args) {
 			// Get the stream
 
-			FileInputStream fis=new FileInputStream(args[i]);
-			GZIPInputStream gis=new GZIPInputStream(fis);
+			FileInputStream fis=null;
+			GZIPInputStream gis=null;
+			try {
+				fis=new FileInputStream(fn);
+				gis=new GZIPInputStream(fis);
 
-			BackupEntry be = pr.restore(gis);
-			System.out.println("Restored " + be);
-			gis.close();
+				BackupEntry be = pr.restore(gis);
+				System.out.println("Restored " + be);
+			} finally {
+				CloseUtil.close(gis);
+				CloseUtil.close(fis);
+			}
 		}
 	}
 }
