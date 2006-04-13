@@ -3,17 +3,14 @@
 
 package net.spy.photo.ajax;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.security.Principal;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import net.spy.SpyObject;
 import net.spy.db.Saver;
-import net.spy.jwebkit.SAXAble;
+import net.spy.jwebkit.AjaxHandler;
+import net.spy.jwebkit.AjaxInPlaceEditServlet;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.Comment;
@@ -23,7 +20,6 @@ import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoRegion;
-import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
 import net.spy.photo.Vote;
@@ -34,99 +30,53 @@ import net.spy.photo.impl.SavablePhotoImageData;
 /**
  * Post a comment.
  */
-public class PhotoEditServlet extends PhotoAjaxServlet {
+public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 
 	private static final long RECACHE_DELAY=30000;
 
-	private Map<String, Handler> handlers=null;
-	private Map<String, String> roles=null;
-
-	@SuppressWarnings("unchecked")
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		handlers=new HashMap<String, Handler>();
-		roles=new HashMap<String, String>();
-		Class inner[]=getClass().getClasses();
-		getLogger().info("Found " + inner.length + " inner classes.");
-		for(Class c : inner) {
-			AjaxHandler ah=(AjaxHandler)c.getAnnotation(AjaxHandler.class);
-			getLogger().info("Inner " + c + " has annotation " + ah);
-			if(ah != null) {
-				try {
-					handlers.put(ah.path(), (Handler)c.newInstance());
-					if(!ah.role().equals("")) {
-						roles.put(ah.path(), ah.role());
-					}
-				} catch(Exception e) {
-					getLogger().warn("Error instantiating " + c, e);
-				}
-			}
-		}
-		getLogger().info("Mappings:  " + handlers);
-	}
-
-	protected void processRequest(
-		HttpServletRequest request, HttpServletResponse response)
-		throws Exception {
-
-		String idString=request.getParameter("imgId");
+	// Convenience method to get the image ID, or throw an NPE.
+	private static int getImageId(HttpServletRequest req) {
+		String idString=req.getParameter("imgId");
 		if(idString == null) {
 			throw new NullPointerException("imgId");
 		}
-		int id=Integer.parseInt(idString);
+		return Integer.parseInt(idString);
+	}
 
-		// Look up the handler
-		String pathInfo=request.getPathInfo();
-		Handler h=handlers.get(pathInfo);
-		if(h == null) {
-			throw new Exception("No handler for " + pathInfo);
-		}
-
-		PhotoSessionData ses=getSessionData(request);
-		User user=ses.getUser();
-
+	/**
+	 * Validate the user has access to see this image.
+	 */
+	protected void checkRequest(Principal u, HttpServletRequest req)
+		throws ServletException {
 		// Check the access
-		Persistent.getSecurity().checkAccess(user, id);
-		String role=roles.get(pathInfo);
-		if(role != null) {
-			if(!user.getRoles().contains(role)) {
-				throw new Exception(user
-					+ " does not meet the role requirement:  " + role);
-			}
-		}
-
-		// Now invoke the handler
-		Object rv=h.handle(id, user, request);
-		if(rv instanceof SAXAble) {
-			sendXml((SAXAble)rv, response);
-		} else {
-			sendPlain(String.valueOf(rv), response);
+		try {
+			Persistent.getSecurity().checkAccess((User)u, getImageId(req));
+		} catch(Exception e) {
+			throw new ServletException("Permission denied", e);
 		}
 	}
 
-	public static abstract class Handler extends SpyObject {
-		public abstract Object handle(int id, User user,
-			HttpServletRequest request) throws Exception;
-		protected String getStringParam(HttpServletRequest request, String n,
-			int minLength) {
+	/**
+	 * Default role is User.ADMIN.
+	 */
+	protected String getDefaultRole() {
+		return User.ADMIN;
+	}
 
-			String rv=request.getParameter(n);
-			if(rv == null) {
-				throw new NullPointerException(n);
-			}
-			if(rv.length() < minLength) {
-				throw new IllegalArgumentException(n + ":  " + minLength
-					+ " chars required.");
-			}
-			return(rv);
+	/**
+	 * Base handler for all of the AJAXy things that work with images..
+	 */
+	public abstract static class BaseHandler extends Handler {
+		public Object handle(Principal u, HttpServletRequest req)
+			throws Exception {
+			return handle(getImageId(req), (User)u, req);
 		}
-		protected int getIntParam(HttpServletRequest request, String n) {
-			return(Integer.parseInt(getStringParam(request, n, 1)));
-		}
+		public abstract Object handle(int id, User user, HttpServletRequest req)
+			throws Exception;
 	}
 
 	@AjaxHandler(path="/comment",role=User.AUTHENTICATED)
-	public static class AddCommentHandler extends Handler {
+	public static class AddCommentHandler extends BaseHandler {
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 
@@ -149,7 +99,7 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 	}
 
 	@AjaxHandler(path="/vote",role=User.AUTHENTICATED)
-	public static class AddVoteHandler extends Handler {
+	public static class AddVoteHandler extends BaseHandler {
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 
@@ -188,7 +138,7 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 	}
 
 	@AjaxHandler(path="/annotation",role=User.AUTHENTICATED)
-	public static class AddAnnotationHandler extends Handler {
+	public static class AddAnnotationHandler extends BaseHandler {
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 
@@ -224,7 +174,10 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 		}
 	}
 
-	public static abstract class ValueEditor extends Handler {
+	/**
+	 * Base class for all image value editors.
+	 */
+	public static abstract class ValueEditor extends BaseHandler {
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 			String value=request.getParameter("value");
@@ -273,13 +226,13 @@ public class PhotoEditServlet extends PhotoAjaxServlet {
 	}
 
 	@AjaxHandler(path="/cat")
-	public static class CatHandler extends Handler {
+	public static class CatHandler extends BaseHandler {
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
-			String value=request.getParameter("value");
-			if(value == null || value.length()==0) {
-				throw new NullPointerException("value");
-			}
+			// This one is a bit more complicated because it receives a cat ID
+			// and needs to return the name of that cat.
+
+			String value=getStringParam(request, "value", 1);
 			int catId=Integer.parseInt(value);
 
 			if(!user.canAdd(catId)) {
