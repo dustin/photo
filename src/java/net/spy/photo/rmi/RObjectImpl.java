@@ -3,6 +3,8 @@
 
 package net.spy.photo.rmi;
 
+import java.io.Serializable;
+
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -36,7 +38,8 @@ public class RObjectImpl extends UnicastRemoteObject implements RObject {
 	/**
 	 * @see RObject
 	 */
-    public void storeObject(String name, Object o) throws RemoteException {
+    public void storeObject(String name, Serializable o)
+		throws RemoteException {
 		diskCache.put(name, o);
 	}
 

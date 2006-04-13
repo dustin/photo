@@ -3,6 +3,8 @@
 
 package net.spy.photo.rmi;
 
+import java.io.Serializable;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -20,7 +22,7 @@ public interface RObject extends Remote {
 	 *
 	 * @throws RemoteException when something breaks
 	 */
-    void storeObject(String name, Object o) throws RemoteException; 
+    void storeObject(String name, Serializable o) throws RemoteException; 
 
 	/**
 	 * Fetch an object from the object server.

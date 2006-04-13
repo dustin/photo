@@ -3,6 +3,8 @@
 
 package net.spy.photo.rmi;
 
+import java.io.Serializable;
+
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -62,7 +64,7 @@ public class RHash extends SpyObject {
 	 */
 	public void put(String name, Object o) {
 		try {
-			obj.storeObject(name, o);
+			obj.storeObject(name, (Serializable)o);
 		} catch(RemoteException e) {
 			getLogger().warn(
 				"Exception while trying to store object named "
