@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import net.spy.db.Saver;
+import net.spy.factory.CacheRefresher;
 import net.spy.jwebkit.AjaxHandler;
 import net.spy.jwebkit.AjaxInPlaceEditServlet;
 import net.spy.photo.Category;
@@ -124,7 +125,9 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 			s.save(vote);
 
 			// Recache to get the votes up-to-date
-			pidf.recache(System.currentTimeMillis());
+			CacheRefresher.getInstance().recache(pidf,
+					System.currentTimeMillis(),
+					PhotoImageDataFactory.RECACHE_DELAY);
 
 			// Get the image again and check out the newly calculated averages
 			img=pidf.getObject(id);

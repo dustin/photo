@@ -4,11 +4,10 @@
 package net.spy.photo;
 
 import java.util.Collection;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import net.spy.db.Savable;
 import net.spy.db.Saver;
+import net.spy.factory.CacheRefresher;
 import net.spy.factory.GenFactory;
 import net.spy.photo.impl.DBImageDataSource;
 import net.spy.photo.search.SearchIndex;
@@ -21,14 +20,14 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	private static final String CACHE_KEY="image_data";
 	private static final long CACHE_TIME=86400000;
 
-	private static final long RECACHE_DELAY=15000;
+	/**
+	 * Default delay for deferred recache.
+	 */
+	public static final long RECACHE_DELAY=15000;
 
 	private static PhotoImageDataFactory instance=null;
 
 	private PhotoImageDataSource source=null;
-	private Timer refreshTimer=null;
-	private TimerTask nextRefresh=null;
-	private long lastRefresh=0l;
 
 	/**
 	 * Get an instance of PhotoImageDataFactory.
@@ -36,7 +35,6 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	private PhotoImageDataFactory() {
 		super(CACHE_KEY, CACHE_TIME);
 		source=new DBImageDataSource();
-		refreshTimer=new Timer("PhotoImageDataFactory refresher", true);
 	}
 
 	/** 
@@ -79,7 +77,8 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		Saver s=new Saver(PhotoConfig.getInstance());
 		s.save(ob);
 		if(recache) {
-			recache(System.currentTimeMillis(), recacheDelay);
+			CacheRefresher.getInstance().recache(this,
+					System.currentTimeMillis(), recacheDelay);
 		}
 	}
 
@@ -95,41 +94,6 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	 */
 	public void store(Savable ob) throws Exception {
 		store(ob, true);
-	}
-
-
-	private synchronized void performRecache(long when) {
-		if(when > lastRefresh) {
-			lastRefresh=System.currentTimeMillis();
-			recache();
-		} else {
-			getLogger().info("Avoiding unncecessary recache.");
-		}
-	}
-
-	/** 
-	 * Request a recache to get data as of this date.
-	 */
-	public synchronized void recache(final long when, long delay) {
-		if(nextRefresh != null) {
-			boolean canceled=nextRefresh.cancel();
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug(canceled?"Cancelled":"Did not cancel"
-					+ " next refresh, scheduling a future one.");
-			}
-			nextRefresh=null;
-		}
-		nextRefresh=new TimerTask() {
-			public void run() { performRecache(when); }
-		};
-		refreshTimer.schedule(nextRefresh, delay);
-	}
-
-	/** 
-	 * Recache with the default delay.
-	 */
-	public void recache(final long when) {
-		recache(when, RECACHE_DELAY);
 	}
 
 	public static class NoSuchPhotoException extends RuntimeException {

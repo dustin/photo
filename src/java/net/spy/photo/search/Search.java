@@ -44,7 +44,7 @@ public class Search extends SpyObject {
 	private static final int BY_TAKEN = 2;
 	private static Search instance = null;
 
-	private static enum CacheType { RESULTS, KEYWORDS };
+	private static enum CacheType { RESULTS, KEYWORDS }
 
 	/**
 	 * Get a Search instance.

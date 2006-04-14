@@ -26,7 +26,7 @@ public class SearchIndex extends SpyObject {
 	/**
 	 * Operators for join operations.
 	 */
-	public static enum OP { AND, OR };
+	public static enum OP { AND, OR }
 
 	private static SearchIndex instance = null;
 

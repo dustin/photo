@@ -14,7 +14,7 @@ public abstract class SortingFilter extends Filter {
 	/**
 	 * Sort directions.
 	 */
-	public static enum Sort { FORWARD, REVERSE };
+	public static enum Sort { FORWARD, REVERSE }
 
 	/**
 	 * Get an instance of SortingFilter.

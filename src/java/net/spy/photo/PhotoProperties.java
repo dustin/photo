@@ -101,10 +101,10 @@ public class PhotoProperties extends Properties implements Savable {
 	public boolean isNew() {
 		return(isNew);
 	}
-	public Collection getPreSavables(SaveContext context) {
+	public Collection<Savable> getPreSavables(SaveContext context) {
 		return(null);
 	}
-	public Collection getPostSavables(SaveContext context) {
+	public Collection<Savable> getPostSavables(SaveContext context) {
 		return(null);
 	}
 	public void save(Connection conn, SaveContext context)
