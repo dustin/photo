@@ -4,6 +4,8 @@
 package net.spy.photo;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -47,12 +49,10 @@ public class PhotoImageScaler extends SpyObject {
 	public PhotoImage getScaledImage(PhotoDimensions dim, int quality)
 		throws Exception {
 
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Scaling " + pi + " to " + dim);
-		}
+		getLogger().debug("Scaling %s to %s", pi, dim);
 
 		// Get the original image.
-		BufferedImage bi=ImageIO.read(new ByteArrayInputStream(pi.getData()));
+		Image image=Toolkit.getDefaultToolkit().createImage(pi.getData());
 
 		// Make the dimensions have the proper aspect ratio
 		PhotoDimensions sdim=PhotoUtil.scaleTo(pi, dim);
@@ -61,7 +61,7 @@ public class PhotoImageScaler extends SpyObject {
 		BufferedImage img=new BufferedImage(sdim.getWidth(), sdim.getHeight(),
 				BufferedImage.TYPE_INT_RGB);
 		Graphics2D g=img.createGraphics();
-		g.drawImage(bi, 0, 0, sdim.getWidth(), sdim.getHeight(), null);
+		g.drawImage(image, 0, 0, sdim.getWidth(), sdim.getHeight(), null);
 
 		// Write it out
 		ByteArrayOutputStream os=new ByteArrayOutputStream();

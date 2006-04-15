@@ -23,14 +23,20 @@ public class PhotoImageTest extends TestCase {
 		return rv;
 	}
 
-	public void testScaling() throws Exception {
-		byte data[] = getFileData("skate.jpg");
+	private void scaleTest(String n, int w, int h) throws Exception {
+		byte data[] = getFileData(n);
 		PhotoImage pi = new PhotoImage(data);
 		PhotoImageScaler scaler=new PhotoImageScaler(pi);
 		PhotoImage scaled=scaler.getScaledImage(
 				new PhotoDimensionsImpl("50x50"), 90);
-		assertEquals(50, scaled.getWidth());
-		assertEquals(43, scaled.getHeight());
+		assertEquals(w, scaled.getWidth());
+		assertEquals(h, scaled.getHeight());
+	}
+
+	public void testScaling() throws Exception {
+		scaleTest("skate.jpg", 50, 43);
+		scaleTest("spyvspy2.png", 45, 50);
+		scaleTest("sflogo.gif", 50, 17);
 	}
 
 	public void testJpeg() throws Exception {
