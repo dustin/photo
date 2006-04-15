@@ -85,8 +85,7 @@ public class PhotoImageTest extends TestCase {
 	private void badData(byte data[]) {
 		try {
 			PhotoImage pi=new PhotoImage(data);
-			fail("Shouldn't be allowed to make a PhotoImage out of bad data, got "
-				+ pi);
+			fail("Made a PhotoImage out of bad data, got " + pi);
 		} catch(PhotoException e) {
 			assertNotNull(e.getMessage());
 		} catch(IllegalArgumentException e) {
@@ -98,7 +97,8 @@ public class PhotoImageTest extends TestCase {
 		badData(null); // null data is always bad
 		badData(new byte[0]); // as is empty data
 		badData(new byte[40]); // smaller than the smallest
-		badData(getFileData("test.random")); // big enough for anything, but nothing
+		// big enough for anything, but nothing
+		badData(getFileData("test.random"));
 	}
 
 	private void equalityTest(String name) throws Exception {
@@ -108,7 +108,8 @@ public class PhotoImageTest extends TestCase {
 		assertFalse(pi1.equals(pi2));
 		assertFalse(pi1.hashCode() == pi2.hashCode());
 		// But by dimensions, equality does work.  This is a little weird...
-		PhotoDimensions pd=new PhotoDimensionsImpl(pi1.getWidth(), pi2.getHeight());
+		PhotoDimensions pd=new PhotoDimensionsImpl(
+				pi1.getWidth(), pi2.getHeight());
 		assertEquals(pi1, pd);
 		assertEquals(pi2, pd);
 	}
