@@ -457,9 +457,8 @@ public class SavablePhotoImageData extends AbstractSavable
 		return(format);
 	}
 
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getMetaData() {
-		return(Collections.EMPTY_MAP);
+		return(Collections.emptyMap());
 	}
 
 	// New annotated region implementation

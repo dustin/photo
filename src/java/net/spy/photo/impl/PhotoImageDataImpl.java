@@ -308,11 +308,10 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 * @return the MetaData, or null if MetaData can't be found for this image
 	 * @throws Exception if there's a problem processing this image
 	 */
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getMetaData() throws Exception {
 		// Memoize the meta data
 		if(metaData==null) {
-			metaData=Collections.EMPTY_MAP;
+			metaData=Collections.emptyMap();
 			if(format == Format.JPEG) {
 				metaData=new TreeMap<String, Object>();
 				PhotoImageHelper p=new PhotoImageHelper(getId());

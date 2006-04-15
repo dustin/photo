@@ -22,11 +22,11 @@ import net.spy.photo.search.Search;
  */
 public class Keywords extends PhotoAjaxServlet {
 
-	private Map<String, Comparator> paths=null;
+	private Map<String, Comparator<KeywordMatch>> paths=null;
 
 	public void init(ServletConfig conf) throws ServletException {
 		super.init(conf);
-		paths=new HashMap<String, Comparator>();
+		paths=new HashMap<String, Comparator<KeywordMatch>>();
 		paths.put("/", KeywordMatch.BY_KEYWORD);
 		paths.put("/alph", KeywordMatch.BY_KEYWORD);
 		paths.put("/freq", KeywordMatch.BY_FREQUENCY);
@@ -34,7 +34,7 @@ public class Keywords extends PhotoAjaxServlet {
 
 	@SuppressWarnings("unchecked")
 	protected SAXAble getResults(HttpServletRequest request) throws Exception {
-		Comparator comp=paths.get(request.getPathInfo());
+		Comparator<KeywordMatch> comp=paths.get(request.getPathInfo());
 		if(comp == null) {
 			throw new IllegalArgumentException("Illegal path: "
 					+ request.getPathInfo() + " try one of " + paths.keySet());
