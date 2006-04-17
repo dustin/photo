@@ -127,7 +127,7 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 		<dependency>
 			<groupId>spy</groupId>
 			<artifactId>spy</artifactId>
-			<version>2.1.127</version>
+			<version>2.1.133</version>
 			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>
