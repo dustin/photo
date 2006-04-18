@@ -97,7 +97,5 @@ public class PhotoLogEntry extends AbstractSavable {
 		ipl.setTimestamp(new java.sql.Timestamp(timestamp));
 
 		ipl.executeUpdate();
-
-		setSaved();
 	}
 }

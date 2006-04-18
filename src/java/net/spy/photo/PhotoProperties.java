@@ -15,6 +15,7 @@ import net.spy.cache.SpyCache;
 import net.spy.db.Savable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
+import net.spy.db.TransactionListener;
 import net.spy.photo.sp.DeleteAllProperties;
 import net.spy.photo.sp.GetProperties;
 import net.spy.photo.sp.InsertProperty;
@@ -22,12 +23,11 @@ import net.spy.photo.sp.InsertProperty;
 /**
  * Persistent configuration stuff that can be changed dynamically.
  */
-public class PhotoProperties extends Properties implements Savable {
+public class PhotoProperties extends Properties
+	implements Savable, TransactionListener {
 
-		
 	private boolean isNew=false;
 	private boolean isModified=false;
-
 
 	/**
 	 * Get an instance of PhotoProperties (defaulted by the PhotoConfig).
@@ -129,10 +129,12 @@ public class PhotoProperties extends Properties implements Savable {
 		}
 
 		ip.close();
+	}
+	// End Savable implementation
 
+	public void transactionCommited() {
 		isModified=false;
 		isNew=false;
 	}
-	// End Savable implementation
 
 }

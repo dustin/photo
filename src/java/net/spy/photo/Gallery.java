@@ -223,8 +223,6 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 					"Expected to affect one row, affected " + affected);
 			}
 		}
-
-		setSaved();
 	}
 
 	/**

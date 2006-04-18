@@ -162,8 +162,6 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 		}
 		rs.close();
 		ggk.close();
-
-		setSaved();
 	}
 
 	// End savable implementation

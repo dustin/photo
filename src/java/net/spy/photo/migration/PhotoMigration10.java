@@ -95,7 +95,6 @@ public class PhotoMigration10 extends PhotoMigration {
 			uf.setId(photoId);
 			uf.setFormatId(formatId);
 			uf.executeUpdate();
-			setSaved();
 		}
 	}
 

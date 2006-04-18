@@ -158,8 +158,6 @@ public class DBCategory extends AbstractSavable implements MutableCategory {
 		}
 		iacl.close();
 		iacl=null;
-
-		setSaved();
 	}
 
 	// End savable implementation

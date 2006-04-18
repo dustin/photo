@@ -235,8 +235,6 @@ public class Profile extends AbstractSavable implements Serializable {
 			ins.executeUpdate();
 		}
 		ins.close();
-
-		setSaved();
 	}
 
 }

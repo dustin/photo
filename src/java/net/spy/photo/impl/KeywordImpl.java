@@ -130,7 +130,6 @@ public class KeywordImpl extends AbstractSavable implements Keyword, Comparable<
 			throw new SaveException("Expected to update 1 row, updated " + aff);
 		}
 		db.close();
-		setSaved();
 	}
 
 }
