@@ -3,18 +3,11 @@
 
 package net.spy.photo;
 
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
 
 import net.spy.SpyObject;
 
@@ -49,7 +42,9 @@ public class PhotoImageScaler extends SpyObject {
 	public PhotoImage getScaledImage(PhotoDimensions dim, int quality)
 		throws Exception {
 
-		getLogger().debug("Scaling %s to %s", pi, dim);
+		if(getLogger().isDebugEnabled()) {
+			getLogger().debug("Scaling " + pi + " to " + dim);
+		}
 
 		// Get the original image.
 		Image image=Toolkit.getDefaultToolkit().createImage(pi.getData());
@@ -58,21 +53,13 @@ public class PhotoImageScaler extends SpyObject {
 		PhotoDimensions sdim=PhotoUtil.scaleTo(pi, dim);
 
 		// Scale it
-		BufferedImage img=new BufferedImage(sdim.getWidth(), sdim.getHeight(),
-				BufferedImage.TYPE_INT_RGB);
-		Graphics2D g=img.createGraphics();
-		g.drawImage(image, 0, 0, sdim.getWidth(), sdim.getHeight(), null);
+		Image img=image.getScaledInstance(sdim.getWidth(), sdim.getHeight(),
+			Image.SCALE_DEFAULT);
 
 		// Write it out
 		ByteArrayOutputStream os=new ByteArrayOutputStream();
-		IIOImage toWrite=new IIOImage(img, null, null);
-		ImageWriter iw=ImageIO.getImageWritersByFormatName("jpg").next();
-		ImageWriteParam param=iw.getDefaultWriteParam();
-		param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-		param.setCompressionQuality(quality/100.0f);
-		iw.setOutput(ImageIO.createImageOutputStream(os));
-		iw.prepareWriteSequence(null);
-		iw.writeToSequence(toWrite, param);
+		JpegEncoder jpg=new JpegEncoder(img, quality, os);
+		jpg.compress();
 
 		PhotoImage ri=new PhotoImage(os.toByteArray());
 

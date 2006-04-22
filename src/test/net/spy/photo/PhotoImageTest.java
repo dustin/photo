@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import junit.framework.TestCase;
-
 import net.spy.photo.impl.PhotoDimensionsImpl;
 
 public class PhotoImageTest extends TestCase {
@@ -21,22 +20,6 @@ public class PhotoImageTest extends TestCase {
 		fis.read(rv);
 		fis.close();
 		return rv;
-	}
-
-	private void scaleTest(String n, int w, int h) throws Exception {
-		byte data[] = getFileData(n);
-		PhotoImage pi = new PhotoImage(data);
-		PhotoImageScaler scaler=new PhotoImageScaler(pi);
-		PhotoImage scaled=scaler.getScaledImage(
-				new PhotoDimensionsImpl("50x50"), 90);
-		assertEquals(w, scaled.getWidth());
-		assertEquals(h, scaled.getHeight());
-	}
-
-	public void testScaling() throws Exception {
-		scaleTest("skate.jpg", 50, 43);
-		scaleTest("spyvspy2.png", 45, 50);
-		scaleTest("sflogo.gif", 50, 17);
 	}
 
 	public void testJpeg() throws Exception {
