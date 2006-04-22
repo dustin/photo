@@ -178,7 +178,7 @@ public class PhotoStorerThread extends LoopingThread {
 			db=new GetImagesToFlush(PhotoConfig.getInstance());
 			ResultSet rs=db.executeQuery();
 			while(rs.next()) {
-				ids.add(rs.getInt("aid"));
+				ids.add(rs.getInt("image_id"));
 			}
 			rs.close();
 		} catch(Exception e) {
