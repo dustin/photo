@@ -1,0 +1,19 @@
+#
+# Copyright (c) 2005 Dustin Sallings <dustin@spy.net>
+# arch-tag: 15838506-A615-42A1-82B5-EB64565FA550
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Find all of the images in the DB that need to be stored.
+
+@sql
+select distinct a.id as image_id
+	from album a left outer join image_store s using (id)
+	where s.id is null
+
+@results
+image_id INTEGER The ID of an image that needs to be stored.
+

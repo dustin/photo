@@ -70,7 +70,7 @@ public class PhotoImageHelper extends SpyObject {
 				getLogger().debug("Grabbing " + key + " from image server");
 			}
 
-			ImageServer server=ImageServerFactory.getImageServer();
+			ImageServer server=Persistent.getImageServer();
 			rv=server.getImage(imageId, dim);
 
 			// If it's small enough, cache it.

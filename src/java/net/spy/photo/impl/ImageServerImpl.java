@@ -11,12 +11,13 @@ import net.spy.db.SpyDB;
 import net.spy.photo.ImageCache;
 import net.spy.photo.ImageServer;
 import net.spy.photo.ImageServerScaler;
+import net.spy.photo.Instantiator;
+import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoUtil;
-import net.spy.photo.util.PhotoStorerThread;
 import net.spy.util.Base64;
 
 /**
@@ -27,7 +28,6 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	private PhotoConfig conf = null;
 	private ImageCache cache=null;
 	private ImageServerScaler scaler=null;
-	private static PhotoStorerThread storer=null;
 
 	/**
 	 * Get a ImageServerImpl using the given config.
@@ -36,10 +36,10 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 		super();
 		conf=PhotoConfig.getInstance();
 		// Initialize the cache and scaler
-		cache=initCache();
-		scaler=initScaler();
-		// Make sure the storer thread gets started immediately.
-		checkStorerThread();
+		cache=new Instantiator<ImageCache>("imagecacheimpl",
+				"net.spy.photo.LocalImageCacheImpl").getInstance();
+		scaler=new Instantiator<ImageServerScaler>("scaler_class",
+			"net.spy.photo.JavaImageServerScaler").getInstance();
 	}
 
 	/**
@@ -137,18 +137,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 			throw new PhotoException("Error storing image", e);
 		}
 
-		// Let the storer thread know to wake up and start storing images.
-		checkStorerThread();
-		synchronized(storer) {
-			storer.notifyAll();
-		}
-	}
-
-	private static synchronized void checkStorerThread() {
-		if(storer==null || !(storer.isAlive())) {
-			storer=new PhotoStorerThread();
-			storer.start();
-		}
+		Persistent.getStorerThread().addedImage();
 	}
 
 	private PhotoImage scaleImage(
@@ -179,24 +168,6 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 		PhotoImage pi=new PhotoImage(data);
 
 		return(pi);
-	}
-
-	// Get a cache object server
-	private ImageCache initCache() throws Exception {
-		String classname=conf.get("imagecacheimpl",
-			"net.spy.photo.LocalImageCacheImpl");
-		getLogger().info("Initializing image cache:  " + classname);
-		Class c=Class.forName(classname);
-		return((ImageCache)c.newInstance());
-	}
-	private ImageServerScaler initScaler() throws Exception {
-		String classname=conf.get("scaler_class",
-			"net.spy.photo.JavaImageServerScaler");
-		getLogger().info("Initializing image scaler:  " + classname);
-		Class c=Class.forName(classname);
-		ImageServerScaler iss=(ImageServerScaler)c.newInstance();
-		iss.setConfig(conf);
-		return(iss);
 	}
 
 }

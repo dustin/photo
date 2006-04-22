@@ -32,5 +32,3 @@ public interface ImageServer {
 	void storeImage(int imageId, PhotoImage image) throws PhotoException;
 
 }
-
-

@@ -11,6 +11,7 @@ import net.spy.SpyObject;
 import net.spy.db.TransactionPipeline;
 import net.spy.photo.search.SavedSearch;
 import net.spy.photo.search.SearchCache;
+import net.spy.photo.util.PhotoStorerThread;
 
 /**
  * All persistent objects will be available through this class.
@@ -19,7 +20,8 @@ public class Persistent extends SpyObject implements ServletContextListener {
 
 	private static PhotoSecurity security = null;
 	private static TransactionPipeline pipeline = null;
-
+	private static ImageServer imageServer=null;
+	private static PhotoStorerThread storer=null;
 
 	public void contextInitialized(ServletContextEvent contextEvent) {
 		ServletContext context=contextEvent.getServletContext();
@@ -75,7 +77,8 @@ public class Persistent extends SpyObject implements ServletContextListener {
 		getLogger().info("Image cache initialization complete");
 
 		getLogger().info("Initializing image server");
-		ImageServerFactory.getImageServer();
+		imageServer=new Instantiator<ImageServer>("imageserverimpl",
+			"net.spy.photo.impl.ImageServerImpl").getInstance();
 		getLogger().info("Image server initialization complete");
 
 		getLogger().info("Initializing searches cache");
@@ -89,6 +92,11 @@ public class Persistent extends SpyObject implements ServletContextListener {
 		getLogger().info("Initializing search cache");
 		SearchCache.getInstance();
 		getLogger().info("Search cache initialization complete");
+
+		getLogger().info("Initializing the photo storer thread.");
+		storer=new PhotoStorerThread();
+		storer.start();
+		getLogger().info("PhotoStorerThread initialization complete.");
 
 		getLogger().info("Initialization complete");
 	}
@@ -110,10 +118,27 @@ public class Persistent extends SpyObject implements ServletContextListener {
 		return(pipeline);
 	}
 
+	/**
+	 * Get the ImageServer instance.
+	 */
+	public static ImageServer getImageServer() {
+		return(imageServer);
+	}
+
+	/**
+	 * Get the photo storer thread.
+	 */
+	public static PhotoStorerThread getStorerThread() {
+		return(storer);
+	}
+
 	public void contextDestroyed(ServletContextEvent contextEvent) {
 		getLogger().info("Shutting down transaction pipeline");
 		pipeline.shutdown();
 		getLogger().info("pipeline shut down");
+		getLogger().info("Shutting down the storer thread.");
+		storer.requestStop();
+		getLogger().info("Storer thread shutdown complete.");
 		getLogger().info("Shutting down search cache.");
 		SearchCache.getInstance().shutdown();
 		getLogger().info("Search cache shutdown complete");

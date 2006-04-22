@@ -7,14 +7,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import net.spy.SpyThread;
+import net.spy.db.DBSPLike;
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageHelper;
+import net.spy.photo.sp.GetImagesToFlush;
 import net.spy.util.Base64;
+import net.spy.util.CloseUtil;
+import net.spy.util.LoopingThread;
 
 /**
  * Store images in the DB.	Uploaded images go directly into the cache and
@@ -23,10 +25,12 @@ import net.spy.util.Base64;
  * is cleared.	It's quite important to make sure the images make it into
  * the database for long-term storage, however.
  */
-public class PhotoStorerThread extends SpyThread {
+public class PhotoStorerThread extends LoopingThread {
 
 	// chunks should be divisible by 57
 	private static final int CHUNK_SIZE=2052;
+
+	private int added=0;
 
 	/**
 	 * Get a PhotoStorerThread.
@@ -34,6 +38,15 @@ public class PhotoStorerThread extends SpyThread {
 	public PhotoStorerThread() {
 		super("storer_thread");
 		this.setDaemon(true);
+		setMsPerLoop(86400000);
+	}
+
+	/**
+	 * Invoked when a new image is added.
+	 */
+	public synchronized void addedImage() {
+		added++;
+		notifyAll();
 	}
 
 	// Takes an imageId, pulls in the image from cache, and goes about
@@ -82,8 +95,8 @@ public class PhotoStorerThread extends SpyThread {
 			pst.setInt(1, imageId);
 
 			// Get the encoded data
-			for(Iterator it=al.iterator(); it.hasNext(); ) {
-				String tmp = base64.encode((byte[])it.next());
+			for(byte b[] : al) {
+				String tmp = base64.encode(b);
 				tmp=tmp.trim();
 				if(sdata.length() < CHUNK_SIZE) {
 					sdata.append(tmp);
@@ -158,36 +171,33 @@ public class PhotoStorerThread extends SpyThread {
 	// Returns the number of things found to flush
 	private int doFlush() {
 		getLogger().info("Flushing");
-		SpyDB db = new SpyDB(PhotoConfig.getInstance());
+		GetImagesToFlush db = null;
 		int rv=0;
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<Integer> ids = new ArrayList<Integer>();
 		try {
-			// See what's not been stored.
-			String query="select distinct s.id as sid, a.id as aid\n"
-				+ " from album a left outer join image_store s using (id)\n"
-				+ " where s.id is null";
-			ResultSet rs=db.executeQuery(query);
+			db=new GetImagesToFlush(PhotoConfig.getInstance());
+			ResultSet rs=db.executeQuery();
 			while(rs.next()) {
-				al.add(rs.getString("aid"));
+				ids.add(rs.getInt("aid"));
 			}
 			rs.close();
-			db.close();
 		} catch(Exception e) {
 			// Do nothing, we'll try again later.
-			e.printStackTrace();
+			getLogger().warn("Exception while loading images to flush", e);
+		} finally {
+			CloseUtil.close((DBSPLike)db);
 		}
 
-		// Got the vector, now store the actual images.  This is done so
+		// Got the IDs, now store the actual images.  This is done so
 		// that we don't hold the database connection open while we're
 		// making the list *and* getting another database connection to act
 		// on it.
-		for(Iterator i=al.iterator(); i.hasNext(); ) {
-			String stmp = (String)i.next();
+		for(int i : ids) {
 			try {
-				storeImage(Integer.valueOf(stmp).intValue());
+				storeImage(i);
 				rv++;
 			} catch(Exception e) {
-				e.printStackTrace();
+				getLogger().warn("Exception while storing images", e);
 				// Return 0 so we won't try again *right now*, but we will
 				// in a bit.
 				rv=0;
@@ -201,35 +211,22 @@ public class PhotoStorerThread extends SpyThread {
 	}
 
 	/**
-	 * Sit around and flush.
+	 * Run through as many flushes as we see fit.
 	 */
-	public void run() {
-		getLogger().info("Starting storer thread loop");
-		// Do a flush at the beginning, just in case stuff has been
-		// building up.
+	protected void runLoop() {
 		try {
-			synchronized(this) {
-				wait(300*1000);
-			}
-			doFlush();
-		} catch(Exception e1) {
-			// Don't care, all these can fail, we'll just keep trying.
+			// After a wait finishes, sleep another five minutes, just
+			sleep(300000);
+		} catch(InterruptedException e) {
+			getLogger().warn("Interrupted while sleeping.", e);
 		}
-		for(;;) {
-			try {
-				// Wait up to 1 day to perform a scan.
-				synchronized(this) {
-					wait(86400*1000);
-				}
-				// After a wait finishes, sleep another five minutes, just
-				sleep(300000);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-			// Loop immediately as often as it flushes.
+		// Loop immediately as often as it flushes.
+		try {
 			while(doFlush()>0) {
 				getLogger().debug("doFlush() returned > 0, flushing again.");
 			} // Flush loop
-		} // Forever loop
+		} catch(Throwable t) {
+			getLogger().warn("Exception while flushing", t);
+		}
 	}
 }

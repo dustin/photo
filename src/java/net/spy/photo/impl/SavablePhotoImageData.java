@@ -21,9 +21,9 @@ import net.spy.db.SpyDB;
 import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
 import net.spy.photo.ImageServer;
-import net.spy.photo.ImageServerFactory;
 import net.spy.photo.Keyword;
 import net.spy.photo.KeywordFactory;
+import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
@@ -147,7 +147,7 @@ public class SavablePhotoImageData extends AbstractSavable
 
 		// Get the photo cached
 		try {
-			ImageServer server=ImageServerFactory.getImageServer();
+			ImageServer server=Persistent.getImageServer();
 			server.storeImage(id, imageData);
 		} catch(Exception e) {
 			throw new SaveException("Cannot cache photo", e);

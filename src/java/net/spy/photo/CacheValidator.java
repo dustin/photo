@@ -221,7 +221,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 
 		public void process(PhotoImageData img,
 				Collection<String> errs) throws Exception {
-			ImageServer is=ImageServerFactory.getImageServer();
+			ImageServer is=Persistent.getImageServer();
 			if(is instanceof ImageServerImpl) {
 				ImageServerImpl isi=(ImageServerImpl)is;
 				PhotoImage fromDB=isi.getImage(img.getId(), null, false);
@@ -256,7 +256,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 
 		public void process(PhotoImageData img,
 				Collection<String> errs) throws Exception {
-			ImageServer is=ImageServerFactory.getImageServer();
+			ImageServer is=Persistent.getImageServer();
 			is.getThumbnail(img.getId());
 			for(PhotoDimensions dim : sizes) {
 				is.getImage(img.getId(), dim);
