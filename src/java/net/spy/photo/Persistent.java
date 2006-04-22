@@ -8,6 +8,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import net.spy.SpyObject;
+import net.spy.SpyThread;
 import net.spy.db.TransactionPipeline;
 import net.spy.photo.search.SavedSearch;
 import net.spy.photo.search.SearchCache;
@@ -45,69 +46,28 @@ public class Persistent extends SpyObject implements ServletContextListener {
 			throw new RuntimeException("Couldn't find photo config path");
 		}
 
+		// The initialization occurs in a different thread so all of those
+		// threads can belong to the same thread group.
+		ThreadGroup tg=new ThreadGroup(context.getServletContextName()
+				+ " threads");
+		tg.setDaemon(true);
+		Init i=new Init(tg);
+		i.start();
 		try {
-			initStuff();
-		} catch(Exception e) {
+			i.join();
+		} catch (InterruptedException e) {
 			throw new RuntimeException("Problem initting stuff", e);
 		}
-	}
-
-	private void initStuff() throws Exception {
-		// initialize the category list early on, because it's simple DB
-		// access and will look for no further data.
-		getLogger().info("Initializing categories.");
-		CategoryFactory.getInstance().getAdminCatList();
-
-		// Security stuff
-		getLogger().info("Initing security");
-		security = new PhotoSecurity();
-		// Make sure we have initialized the guest user (and the
-		// database and all that)
-		getLogger().info("Looking up guest.");
-		security.getUser("guest");
-		getLogger().info("Finished security");
-
-		getLogger().info("Initializing TransactionPipeline");
-		pipeline=new TransactionPipeline();
-		getLogger().info("got TransactionPipeline");
-
-		getLogger().info("Initializing image cache");
-		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-		pidf.recache();
-		getLogger().info("Image cache initialization complete");
-
-		getLogger().info("Initializing image server");
-		imageServer=new Instantiator<ImageServer>("imageserverimpl",
-			"net.spy.photo.impl.ImageServerImpl").getInstance();
-		getLogger().info("Image server initialization complete");
-
-		getLogger().info("Initializing searches cache");
-		SavedSearch.getSearches();
-		getLogger().info("Saved searches initialization complete");
-
-		getLogger().info("Initializing properties cache");
-		PhotoProperties.getInstance();
-		getLogger().info("Properties initialization complete");
-
-		getLogger().info("Initializing search cache");
-		SearchCache.getInstance();
-		getLogger().info("Search cache initialization complete");
-
-		getLogger().info("Initializing the photo storer thread.");
-		storer=new PhotoStorerThread();
-		storer.start();
-		getLogger().info("PhotoStorerThread initialization complete.");
-
-		getLogger().info("Initialization complete");
+		if(i.getInitException() != null) {
+			throw new RuntimeException("Problem initting stuff",
+					i.getInitException());
+		}
 	}
 
 	/**
 	 * Get the PhotoSecurity object for this instance.
 	 */
 	public static PhotoSecurity getSecurity() {
-		if(security==null) {
-			security=new PhotoSecurity();
-		}
 		return(security);
 	}
 
@@ -133,18 +93,99 @@ public class Persistent extends SpyObject implements ServletContextListener {
 	}
 
 	public void contextDestroyed(ServletContextEvent contextEvent) {
-		getLogger().info("Shutting down transaction pipeline");
-		pipeline.shutdown();
-		getLogger().info("pipeline shut down");
-		getLogger().info("Shutting down the storer thread.");
-		storer.requestStop();
-		getLogger().info("Storer thread shutdown complete.");
-		getLogger().info("Shutting down search cache.");
-		SearchCache.getInstance().shutdown();
-		getLogger().info("Search cache shutdown complete");
-		getLogger().info("Shutting down outstanding cache validations");
-		CacheValidator.getInstance().cancelProcessing();
-		getLogger().info("Cache validations shut down.");
+		if(pipeline != null) {
+			getLogger().info("Shutting down transaction pipeline");
+			pipeline.shutdown();
+			getLogger().info("pipeline shut down");
+		}
+		if(storer != null) {
+			getLogger().info("Shutting down the storer thread.");
+			storer.requestStop();
+			getLogger().info("Storer thread shutdown complete.");
+		}
+		if(SearchCache.getInstance() != null) {
+			getLogger().info("Shutting down search cache.");
+			SearchCache.getInstance().shutdown();
+			getLogger().info("Search cache shutdown complete");
+		}
+		if(CacheValidator.getInstance() != null
+				&& CacheValidator.getInstance().isRunning()) {
+			getLogger().info("Shutting down outstanding cache validations");
+			CacheValidator.getInstance().cancelProcessing();
+			getLogger().info("Cache validations shut down.");
+		}
+	}
+
+
+	private static class Init extends SpyThread {
+
+		private Throwable initException;
+
+		public Init(ThreadGroup tg) {
+			super(tg, "Initializer initializer");
+			setDaemon(true);
+		}
+
+		public Throwable getInitException() {
+			return initException;
+		}
+
+		public void run() {
+			try {
+				initStuff();
+			} catch(Throwable t) {
+				initException=t;
+			}
+		}
+
+		private void initStuff() throws Exception {
+			// initialize the category list early on, because it's simple DB
+			// access and will look for no further data.
+			getLogger().info("Initializing categories.");
+			CategoryFactory.getInstance().getAdminCatList();
+
+			// Security stuff
+			getLogger().info("Initing security");
+			security = new PhotoSecurity();
+			// Make sure we have initialized the guest user (and the
+			// database and all that)
+			getLogger().info("Looking up guest.");
+			security.getUser("guest");
+			getLogger().info("Finished security");
+
+			getLogger().info("Initializing TransactionPipeline");
+			pipeline=new TransactionPipeline(getThreadGroup(), null);
+			getLogger().info("got TransactionPipeline");
+
+			getLogger().info("Initializing search cache");
+			SearchCache.setup();
+			getLogger().info("Search cache initialization complete");
+
+			getLogger().info("Initializing image cache");
+			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			pidf.recache();
+			getLogger().info("Image cache initialization complete");
+
+			getLogger().info("Initializing image server");
+			imageServer=new Instantiator<ImageServer>("imageserverimpl",
+			"net.spy.photo.impl.ImageServerImpl").getInstance();
+			getLogger().info("Image server initialization complete");
+
+			getLogger().info("Initializing searches cache");
+			SavedSearch.getSearches();
+			getLogger().info("Saved searches initialization complete");
+
+			getLogger().info("Initializing properties cache");
+			PhotoProperties.getInstance();
+			getLogger().info("Properties initialization complete");
+
+			getLogger().info("Initializing the photo storer thread.");
+			storer=new PhotoStorerThread();
+			storer.start();
+			getLogger().info("PhotoStorerThread initialization complete.");
+
+			getLogger().info("Initialization complete");
+		}
 	}
 
 }

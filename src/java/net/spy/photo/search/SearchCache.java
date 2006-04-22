@@ -32,14 +32,17 @@ public class SearchCache extends SpyThread {
 		super("SearchCache");
 	}
 
-	public static synchronized SearchCache getInstance() {
-		if(instance == null) {
-			instance=new SearchCache();
-			instance.cache=new HashMap<Object, SoftReference>();
-			instance.keyMap=new HashMap<SoftReference, Object>();
-			instance.refQueue=new ReferenceQueue<SearchResults>();
-			instance.start();
-		}
+	public static synchronized void setup() {
+		assert instance == null : "Already running";
+		instance=new SearchCache();
+		instance.cache=new HashMap<Object, SoftReference>();
+		instance.keyMap=new HashMap<SoftReference, Object>();
+		instance.refQueue=new ReferenceQueue<SearchResults>();
+		instance.start();
+	}
+
+	public static SearchCache getInstance() {
+		assert instance != null : "SearchCache not set up.";
 		return(instance);
 	}
 
