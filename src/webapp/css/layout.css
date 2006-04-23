@@ -430,3 +430,21 @@ table.metadata th {
 table.metadata td {
 	border: solid 1px;
 }
+
+.exc {
+	color: red;
+}
+
+.excstack {
+	display: none;
+}
+
+.exc:hover + .excstack {
+	display: block;
+	position: absolute;
+	background: #cfc;
+	border: solid blue 1px;
+	margin-left: 20px;
+	font-size: smaller;
+	padding-left: 2em;
+}

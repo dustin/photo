@@ -591,6 +591,8 @@
 	<action path="/admin/bulkkw" roles="admin" forward="admin.bulkkw"/>
 	<action path="/admin/cacheValidation" roles="admin"
 		forward="admin.cacheValidation"/>
+	<action path="/admin/storerControl" roles="admin"
+		forward="admin.storerControl"/>
 
   </action-mappings>
 

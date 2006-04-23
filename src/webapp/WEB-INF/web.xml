@@ -95,6 +95,11 @@
 		<servlet-class>net.spy.photo.ajax.ValidationControlServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>storercontrol</servlet-name>
+		<servlet-class>net.spy.photo.ajax.PhotoStorerControlServlet</servlet-class>
+	</servlet>
+
 	<!-- The action servlet -->
 	<servlet>
 		<servlet-name>action</servlet-name>
@@ -167,6 +172,10 @@
 	<servlet-mapping>
 		<servlet-name>validationcontrol</servlet-name>
 		<url-pattern>/ajax/validation/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>storercontrol</servlet-name>
+		<url-pattern>/ajax/storer/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Normal mapping -->

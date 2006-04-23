@@ -156,6 +156,11 @@
 		<put name="body" value="/content/admin/_cacheValidation.jsp"/>
 	</definition>
 
+	<definition name="admin.storerControl" extends="pageLayout">
+		<put name="title" type="string" value="Storer Control"/>
+		<put name="body" value="/content/admin/_storerControl.jsp"/>
+	</definition>
+
 	<definition name="admin.userlist" extends="pageLayout">
 		<put name="title" type="string" value="User Administration"/>
 		<put name="body" value="/content/admin/_users.jsp"/>

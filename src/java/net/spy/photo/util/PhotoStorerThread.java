@@ -11,8 +11,14 @@ import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
 import net.spy.db.DBSPLike;
 import net.spy.db.SpyDB;
+import net.spy.jwebkit.SAXAble;
+import net.spy.jwebkit.ThrowableElement;
+import net.spy.jwebkit.XMLUtils;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageDataFactory;
@@ -30,7 +36,7 @@ import net.spy.util.RingBuffer;
  * is cleared.	It's quite important to make sure the images make it into
  * the database for long-term storage, however.
  */
-public class PhotoStorerThread extends LoopingThread {
+public class PhotoStorerThread extends LoopingThread implements SAXAble {
 
 	// chunks should be divisible by 57
 	private static final int CHUNK_SIZE=2052;
@@ -40,6 +46,7 @@ public class PhotoStorerThread extends LoopingThread {
 	private AtomicBoolean flushPending=new AtomicBoolean(false);
 	private int totalExceptions=0;
 	private RingBuffer<Throwable> lastExceptions=null;
+	private boolean flushing=false;
 
 	private int flushes;
 
@@ -118,11 +125,35 @@ public class PhotoStorerThread extends LoopingThread {
 	}
 
 	public String toString() {
+		Throwable recentException=null;
+		for(Throwable t : lastExceptions) {
+			recentException=t;
+		}
 		return super.toString() + " - " + flushes + " flushes, "
 			+ added + " adds, " + addNotifications + " add notifications, "
 			+ totalExceptions + " total exceptions"
-			+ (totalExceptions > 0 ? " - latest exception: "
-					+ lastExceptions.iterator().next() : "");
+			+ (recentException != null ? " - latest exception: "
+					+ recentException : "");
+	}
+
+
+	/**
+	 * XMLificate.
+	 */
+	public void writeXml(ContentHandler h) throws SAXException {
+		XMLUtils x=XMLUtils.getInstance();
+		x.startElement(h, "storer");
+		x.doElement(h, "flushes", String.valueOf(flushes));
+		x.doElement(h, "added", String.valueOf(added));
+		x.doElement(h, "notifications", String.valueOf(addNotifications));
+		x.doElement(h, "totalExceptions", String.valueOf(totalExceptions));
+		x.doElement(h, "flushing", String.valueOf(flushing));
+		x.startElement(h, "exceptions");
+		for(Throwable t : lastExceptions) {
+			new ThrowableElement(t).writeXml(h);
+		}
+		x.endElement(h, "exceptions");
+		x.endElement(h, "storer");
 	}
 
 	// Takes an imageId, pulls in the image from cache, and goes about
@@ -251,7 +282,11 @@ public class PhotoStorerThread extends LoopingThread {
 	// Returns the number of records found in the DB needing to be stored.
 	private int doFlush() {
 		getLogger().info("Flushing");
+		if(flushing) {
+			getLogger().warn("Failed to clear previous flushing state");
+		}
 		flushes++;
+		flushing=true;
 		GetImagesToFlush db = null;
 		ArrayList<Integer> ids = new ArrayList<Integer>();
 		try {
@@ -287,6 +322,7 @@ public class PhotoStorerThread extends LoopingThread {
 		}
 
 		getLogger().info("Flush complete:  " + ids.size() + " found.");
+		flushing=false;
 
 		// Return the number of flushable elements found.
 		return ids.size();
@@ -315,6 +351,7 @@ public class PhotoStorerThread extends LoopingThread {
 	 * Run through as many flushes as we see fit.
 	 */
 	protected void runLoop() {
+		getLogger().info("Beginning flush loop.");
 		// Loop immediately until there's nothing left to flush.
 		try {
 			// Continue to go as long as addNotifications reports stuff.
@@ -325,8 +362,15 @@ public class PhotoStorerThread extends LoopingThread {
 				// normal case.  If we don't make some, there'll be an exception
 				// and we'll keep running until it goes away.
 				Thread.sleep(PhotoImageDataFactory.RECACHE_DELAY + 5000);
-				int found=doFlush();
-				assert found > 0 : "Found nothing to flush in a normal loop";
+				// Execute a flush.  We expect it to find at least one record
+				// because a flush was pending when we entered here.  However,
+				// there are two circumstances under which there would be
+				// nothing to flush once it got here:
+				// 1) The flush was requested before startingUp completed.
+				// 2) A manual flush was requested.
+				if(doFlush() == 0) {
+					getLogger().warn("doFlush() found no images to flush");
+				}
 			} // Flush loop
 		} catch(Throwable t) {
 			recordException(t);

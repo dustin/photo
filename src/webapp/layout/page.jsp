@@ -138,6 +138,8 @@
 							message="index.links.admin.properties"/></li>
 					<li><photo:link url="/admin/cacheValidation.do"
 							message="index.links.admin.cacheValidation"/></li>
+					<li><photo:link url="/admin/storerControl.do"
+							message="index.links.admin.storerControl"/></li>
 				</ul>
 			</li>
 			</logic:present>
