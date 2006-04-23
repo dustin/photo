@@ -7,16 +7,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.spy.db.DBSPLike;
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.sp.GetImagesToFlush;
 import net.spy.util.Base64;
 import net.spy.util.CloseUtil;
 import net.spy.util.LoopingThread;
+import net.spy.util.RingBuffer;
 
 /**
  * Store images in the DB.	Uploaded images go directly into the cache and
@@ -31,6 +36,12 @@ public class PhotoStorerThread extends LoopingThread {
 	private static final int CHUNK_SIZE=2052;
 
 	private int added=0;
+	private int addNotifications=0;
+	private AtomicBoolean flushPending=new AtomicBoolean(false);
+	private int totalExceptions=0;
+	private RingBuffer<Throwable> lastExceptions=null;
+
+	private int flushes;
 
 	/**
 	 * Get a PhotoStorerThread.
@@ -38,15 +49,80 @@ public class PhotoStorerThread extends LoopingThread {
 	public PhotoStorerThread() {
 		super("storer_thread");
 		this.setDaemon(true);
+		lastExceptions=new RingBuffer<Throwable>(10);
 		setMsPerLoop(86400000);
+	}
+
+	private void recordException(Throwable t) {
+		totalExceptions++;
+		lastExceptions.add(t);
 	}
 
 	/**
 	 * Invoked when a new image is added.
 	 */
 	public synchronized void addedImage() {
-		added++;
+		addNotifications++;
+		performFlush();
+	}
+
+	/**
+	 * 
+	 */
+	public synchronized void performFlush() {
+		flushPending.set(true);
 		notifyAll();
+	}
+
+	/**
+	 * Get the total number of images added.
+	 */
+	public int getAdded() {
+		return added;
+	}
+
+	/**
+	 * Get the total number of flushes performed.
+	 */
+	public int getFlushes() {
+		return flushes;
+	}
+
+	/**
+	 * Is a flush currently pending?
+	 */
+	public boolean getFlushPending() {
+		return flushPending.get();
+	}
+
+	/**
+	 * Get the number of images that have been requested to be added.
+	 */
+	public int getAddNotifications() {
+		return addNotifications;
+	}
+
+	/**
+	 * Get a snapshot of the last ten exceptions that occurred during
+	 * processing.
+	 */
+	public Collection<Throwable> getLastExceptions() {
+		return new ArrayList<Throwable>(lastExceptions);
+	}
+
+	/**
+	 * Get the total number of exceptions that has occurred during flushing.
+	 */
+	public int getTotalExceptions() {
+		return totalExceptions;
+	}
+
+	public String toString() {
+		return super.toString() + " - " + flushes + " flushes, "
+			+ added + " adds, " + addNotifications + " add notifications, "
+			+ totalExceptions + " total exceptions"
+			+ (totalExceptions > 0 ? " - latest exception: "
+					+ lastExceptions.iterator().next() : "");
 	}
 
 	// Takes an imageId, pulls in the image from cache, and goes about
@@ -168,11 +244,15 @@ public class PhotoStorerThread extends LoopingThread {
 
 	// Get a list of images that have been added, but not yet added into
 	// the database.
-	// Returns the number of things found to flush
+	//
+	// If decrement is true, this also decrements the addNotifications counter
+	// so we can make sure we've done a run for each addition.
+	//
+	// Returns the number of records found in the DB needing to be stored.
 	private int doFlush() {
 		getLogger().info("Flushing");
+		flushes++;
 		GetImagesToFlush db = null;
-		int rv=0;
 		ArrayList<Integer> ids = new ArrayList<Integer>();
 		try {
 			db=new GetImagesToFlush(PhotoConfig.getInstance());
@@ -184,6 +264,7 @@ public class PhotoStorerThread extends LoopingThread {
 		} catch(Exception e) {
 			// Do nothing, we'll try again later.
 			getLogger().warn("Exception while loading images to flush", e);
+			recordException(e);
 		} finally {
 			CloseUtil.close((DBSPLike)db);
 		}
@@ -195,38 +276,62 @@ public class PhotoStorerThread extends LoopingThread {
 		for(int i : ids) {
 			try {
 				storeImage(i);
-				rv++;
+				added++;
 			} catch(Exception e) {
 				getLogger().warn("Exception while storing images", e);
-				// Return 0 so we won't try again *right now*, but we will
-				// in a bit.
-				rv=0;
+				recordException(e);
+				// In the case of an exception, make sure we perform another
+				// flush
+				flushPending.set(true);
 			}
 		}
 
-		getLogger().info("Flush complete:  " + rv + " stored.");
+		getLogger().info("Flush complete:  " + ids.size() + " found.");
 
-		// Return the number we found.
-		return(rv);
+		// Return the number of flushable elements found.
+		return ids.size();
+	}
+
+	/**
+	 * When starting up, run an initial flush to catch up with anything that
+	 * may not have ben flushed from a previous run.
+	 */
+	protected void startingUp() {
+		try {
+			// Sleep for at least one minute, at most five.
+			long sleepTime = new Random().nextInt(240000) + 60000;
+			getLogger().info(
+					"Starting up...performing initial flush in %d seconds",
+					(sleepTime / 1000));
+			Thread.sleep(sleepTime);
+			doFlush();
+		} catch (Throwable t) {
+			getLogger().warn("Initial run had an exception", t);
+			recordException(t);
+		}		
 	}
 
 	/**
 	 * Run through as many flushes as we see fit.
 	 */
 	protected void runLoop() {
+		// Loop immediately until there's nothing left to flush.
 		try {
-			// After a wait finishes, sleep another five minutes, just
-			sleep(300000);
-		} catch(InterruptedException e) {
-			getLogger().warn("Interrupted while sleeping.", e);
-		}
-		// Loop immediately as often as it flushes.
-		try {
-			while(doFlush()>0) {
-				getLogger().debug("doFlush() returned > 0, flushing again.");
+			// Continue to go as long as addNotifications reports stuff.
+			while(flushPending.getAndSet(false)) {
+				// Sleep a bit before each flush to present it from looping
+				// out of control.  This also gives us enough time to get the
+				// recaching done before trying to pull image data in the
+				// normal case.  If we don't make some, there'll be an exception
+				// and we'll keep running until it goes away.
+				Thread.sleep(PhotoImageDataFactory.RECACHE_DELAY + 5000);
+				int found=doFlush();
+				assert found > 0 : "Found nothing to flush in a normal loop";
 			} // Flush loop
 		} catch(Throwable t) {
+			recordException(t);
 			getLogger().warn("Exception while flushing", t);
 		}
+		getLogger().info("Completed flush loop.");
 	}
 }
