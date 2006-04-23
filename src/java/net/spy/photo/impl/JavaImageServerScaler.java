@@ -4,6 +4,7 @@
 package net.spy.photo.impl;
 
 import net.spy.photo.ImageServerScaler;
+import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageScaler;
@@ -27,7 +28,8 @@ public class JavaImageServerScaler extends ImageServerScaler {
 		throws Exception {
 
 		PhotoImageScaler pis=new PhotoImageScaler(in);
-		return(pis.getScaledImage(dim, 70));
+		return(pis.getScaledImage(dim,
+				PhotoConfig.getInstance().getInt("jpeg_quality", 85)));
 	}
 
 }
