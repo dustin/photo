@@ -29,7 +29,7 @@ public class JavaImageServerScaler extends ImageServerScaler {
 
 		PhotoImageScaler pis=new PhotoImageScaler(in);
 		return(pis.getScaledImage(dim,
-				PhotoConfig.getInstance().getInt("jpeg_quality", 85)));
+				PhotoConfig.getInstance().getInt("jpeg_quality", 70)));
 	}
 
 }
