@@ -20,6 +20,7 @@ import java.util.TreeSet;
 import javax.servlet.ServletException;
 
 import net.spy.SpyObject;
+import net.spy.db.DBSPLike;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.Keyword;
@@ -32,6 +33,7 @@ import net.spy.photo.User;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.sp.InsertSearch;
 import net.spy.photo.struts.SearchForm;
+import net.spy.util.CloseUtil;
 
 
 /**
@@ -76,8 +78,9 @@ public class Search extends SpyObject {
 			throw new Exception("No permission to save searches.");
 		}
 
+		InsertSearch is=null;
 		try {
-			InsertSearch is = new InsertSearch(PhotoConfig.getInstance());
+			is = new InsertSearch(PhotoConfig.getInstance());
 			is.setName(name);
 			is.setAddedBy(user.getId());
 			is.setSearchData(search);
@@ -88,6 +91,8 @@ public class Search extends SpyObject {
 			is.close();
 		} catch(Exception e) {
 			getLogger().error("Error saving search", e);
+		} finally {
+			CloseUtil.close((DBSPLike)is);
 		}
 	}
 
@@ -102,92 +107,38 @@ public class Search extends SpyObject {
 		return (rv);
 	}
 
+	private void addParam(StringBuilder sb, String name, String val) {
+		if(val != null) {
+			sb.append(name);
+			sb.append('=');
+			sb.append(urlEncode(val));
+			sb.append('&');
+		}
+	}
+
 	/**
 	 * Encode the search from a SearchForm.
 	 */
 	public String encodeSearch(SearchForm form) {
-		StringBuffer sb = new StringBuffer(512);
+		StringBuilder sb = new StringBuilder(512);
 
-		if(form.getField() != null) {
-			sb.append("field");
-			sb.append('=');
-			sb.append(urlEncode(form.getField()));
-			sb.append('&');
-		}
-		if(form.getKeyjoin() != null) {
-			sb.append("keyjoin");
-			sb.append('=');
-			sb.append(urlEncode(form.getKeyjoin()));
-			sb.append('&');
-		}
-		if(form.getWhat() != null) {
-			sb.append("what");
-			sb.append('=');
-			sb.append(urlEncode(form.getWhat()));
-			sb.append('&');
-		}
-		if(form.getTstart() != null) {
-			sb.append("tstart");
-			sb.append('=');
-			sb.append(urlEncode(form.getTstart()));
-			sb.append('&');
-		}
-		if(form.getTend() != null) {
-			sb.append("tend");
-			sb.append('=');
-			sb.append(urlEncode(form.getTend()));
-			sb.append('&');
-		}
-		if(form.getStart() != null) {
-			sb.append("start");
-			sb.append('=');
-			sb.append(urlEncode(form.getStart()));
-			sb.append('&');
-		}
-		if(form.getEnd() != null) {
-			sb.append("end");
-			sb.append('=');
-			sb.append(urlEncode(form.getEnd()));
-			sb.append('&');
-		}
-		if(form.getOrder() != null) {
-			sb.append("order");
-			sb.append('=');
-			sb.append(urlEncode(form.getOrder()));
-			sb.append('&');
-		}
-		if(form.getSdirection() != null) {
-			sb.append("sdirection");
-			sb.append('=');
-			sb.append(urlEncode(form.getSdirection()));
-			sb.append('&');
-		}
-		if(form.getMaxret() != null) {
-			sb.append("maxret");
-			sb.append('=');
-			sb.append(urlEncode(form.getMaxret()));
-			sb.append('&');
-		}
-		if(form.getFilter() != null) {
-			sb.append("filter");
-			sb.append('=');
-			sb.append(urlEncode(form.getFilter()));
-			sb.append('&');
-		}
-		if(form.getAction() != null) {
-			sb.append("action");
-			sb.append('=');
-			sb.append(urlEncode(form.getAction()));
-			sb.append('&');
-		}
+		addParam(sb, "field", form.getField());
+		addParam(sb, "keyjoin", form.getKeyjoin());
+		addParam(sb, "what", form.getWhat());
+		addParam(sb, "tstart", form.getTstart());
+		addParam(sb, "tend", form.getTend());
+		addParam(sb, "start", form.getStart());
+		addParam(sb, "end", form.getEnd());
+		addParam(sb, "order", form.getOrder());
+		addParam(sb, "sdirection", form.getSdirection());
+		addParam(sb, "maxret", form.getMaxret());
+		addParam(sb, "filter", form.getFilter());
+		addParam(sb, "action", form.getAction());
 
 		if(form.getCat() != null) {
 			String cats[] = form.getCat();
 			for(int i = 0; i < cats.length; i++) {
-				sb.append("cat");
-				sb.append('=');
-				sb.append(urlEncode(cats[i]));
-				sb.append('&');
+				addParam(sb, "cat", cats[i]);
 			}
 		}
 
@@ -241,7 +192,7 @@ public class Search extends SpyObject {
 		if("a.ts".equals(form.getOrder())) {
 			comp = new TimestampComparator();
 		} else {
-			comp = new TakenComprator();
+			comp = new TakenComparator();
 		}
 		if("desc".equals(form.getSdirection())) {
 			comp = new ReverseComparator<PhotoImageData>(comp);
@@ -260,19 +211,13 @@ public class Search extends SpyObject {
 			}
 			// Get rid of anything that's not valid for the current user
 			al.retainAll(getValidCats(user));
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Retaining images with cats " + al);
-			}
+			getLogger().debug("Retaining images with cats %s", al);
 			rset.addAll(index.getForCats(al));
 		} else {
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Getting images for all categories");
-			}
+			getLogger().debug("Getting images for all categories");
 			rset.addAll(index.getForCats(getValidCats(user)));
 		}
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Starting with " + rset.size() + " images");
-		}
+		getLogger().debug("Starting with %d images", rset.size());
 
 		// Check to see if there's a field entry
 		if("keywords".equals(form.getField())) {
@@ -285,24 +230,19 @@ public class Search extends SpyObject {
 				throw new ServletException("Invalid field:  " + form.getField());
 			}
 		}
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("After keywords:  " + rset.size() + " images");
-		}
+		getLogger().debug("After keywords:  %d images", rset.size());
 
 		// Check for any of the date entries
 		processDates(
 			rset, form.getStart(), form.getEnd(), form.getTstart(), form
 				.getTend());
-		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("After dates:  " + rset.size() + " images");
-		}
+		getLogger().debug("After dates:  %d images", rset.size());
 
 		// Populate the results
 		SearchResults results = new SearchResults();
 		results.setMaxSize(dims);
 		int resultId = 0;
-		for(Iterator i = rset.iterator(); i.hasNext();) {
-			PhotoImageData r = (PhotoImageData)i.next();
+		for(PhotoImageData r : rset) {
 			results.add(new SearchResult(r, resultId));
 			resultId++;
 		}
@@ -331,8 +271,8 @@ public class Search extends SpyObject {
 		return(rv);
 	}
 
-	private Collection<KeywordMatch> realGetKeywordsForUser(User u, SearchForm sf)
-		throws Exception {
+	private Collection<KeywordMatch> realGetKeywordsForUser(User u,
+			SearchForm sf) throws Exception {
 		Map<String, KeywordMatch> rv=new TreeMap<String, KeywordMatch>();
 		for(PhotoImageData pid : performSearch(sf, u)) {
 			for(Keyword kw : pid.getKeywords()) {
@@ -373,17 +313,15 @@ public class Search extends SpyObject {
 		if(aset != null || tset != null) {
 			Set<PhotoImageData> combined = new HashSet<PhotoImageData>();
 			if(aset != null) {
-				getLogger().debug("Got set by added date:  " + aset.size());
+				getLogger().debug("Got set by added date: %d ", aset.size());
 				combined.addAll(aset);
 			}
 			if(tset != null) {
-				getLogger().debug("Got set by taken date:  " + tset.size());
+				getLogger().debug("Got set by taken date:  %d", tset.size());
 				combined.addAll(tset);
 			}
 
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Total images by date:  " + combined.size());
-			}
+			getLogger().debug("Total images by date:  %d", combined.size());
 			rset.retainAll(combined);
 		}
 	}
@@ -404,7 +342,7 @@ public class Search extends SpyObject {
 		KeywordFactory kf=KeywordFactory.getInstance();
 		KeywordFactory.Keywords kws=kf.getKeywords(kw, false);
 		if(kws.getMissing().size() > 0) {
-			getLogger().debug("Unknown keywords:  " + kws.getMissing());
+			getLogger().debug("Unknown keywords:  %s", kws.getMissing());
 			missingKw=true;
 		}
 
@@ -418,9 +356,7 @@ public class Search extends SpyObject {
 		} else if(kws.getPositive().size() > 0) {
 			// Remove everything that doesn't match our keywords (unless we
 			// don't have any)
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Got images with keywords " + kws.getPositive());
-			}
+			getLogger().debug("Got images with keywords %s", kws.getPositive());
 			Set keyset = index.getForKeywords(kws.getPositive(), joinop);
 			rset.retainAll(keyset);
 		}
@@ -428,11 +364,10 @@ public class Search extends SpyObject {
 			// Remove any images that match our ``anti-keywords'' by performing
 			// a relative complement of the current result set the union of all
 			// of the images matching the anti-keywords
-			if(getLogger().isDebugEnabled()) {
-				getLogger().debug("Removing images with keywords "
-					+ kws.getNegative());
-			}
-			Set keyset = index.getForKeywords(kws.getNegative(), SearchIndex.OP.OR);
+			getLogger().debug("Removing images with keywords %s",
+					kws.getNegative());
+			Set keyset = index.getForKeywords(kws.getNegative(),
+					SearchIndex.OP.OR);
 			rset.removeAll(keyset);
 		}
 	}
@@ -451,13 +386,12 @@ public class Search extends SpyObject {
 			joinop = SearchIndex.OP.OR;
 		}
 
-		for(Iterator ri = rset.iterator(); ri.hasNext();) {
-			PhotoImageData pid = (PhotoImageData)ri.next();
+		for(Iterator<PhotoImageData> ri = rset.iterator(); ri.hasNext();) {
+			PhotoImageData pid = ri.next();
 			String info = pid.getDescr().toLowerCase();
 			boolean matchedone = false;
 			boolean matchedall = true;
-			for(Iterator i = words.iterator(); i.hasNext();) {
-				String word = (String)i.next();
+			for(String word : words) {
 				if(info.indexOf(word) >= 0) {
 					matchedone = true;
 				} else {
@@ -505,8 +439,8 @@ public class Search extends SpyObject {
 		// Flip through all of the categories and get them as Integers
 		Collection<Integer> validCats = new ArrayList<Integer>(16);
 		CategoryFactory cf = CategoryFactory.getInstance();
-		for(Category cat : cf
-			.getCatList(u.getId(), CategoryFactory.ACCESS_READ)) {
+		for(Category cat :
+			cf.getCatList(u.getId(), CategoryFactory.ACCESS_READ)) {
 			validCats.add(cat.getId());
 		}
 		return (validCats);
@@ -545,8 +479,8 @@ public class Search extends SpyObject {
 		}
 	}
 
-	private static class TakenComprator extends PIDComparator {
-		public TakenComprator() {
+	private static class TakenComparator extends PIDComparator {
+		public TakenComparator() {
 			super();
 		}
 
