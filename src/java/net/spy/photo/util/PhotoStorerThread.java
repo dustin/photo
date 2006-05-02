@@ -39,7 +39,7 @@ import net.spy.util.RingBuffer;
 public class PhotoStorerThread extends LoopingThread implements SAXAble {
 
 	// chunks should be divisible by 57
-	private static final int CHUNK_SIZE=2052;
+	public static final int CHUNK_SIZE=2052;
 
 	private int added=0;
 	private int addNotifications=0;
@@ -163,30 +163,8 @@ public class PhotoStorerThread extends LoopingThread implements SAXAble {
 		PhotoImageHelper p = new PhotoImageHelper(imageId);
 		SpyDB pdb = new SpyDB(PhotoConfig.getInstance());
 		PhotoImage pi = p.getImage();
-		getLogger().info("Storer: Got image for " + imageId + " " 
-			+ pi.size() + " bytes of data to store.");
-		// This is an awkward way of doing this.
-		ArrayList<byte[]> al=new ArrayList<byte[]>();
-		byte data[]=pi.getData();
-
-		// i will be incremented inside the loop
-		for(int i=0; i<data.length; ) {
-			// How much we have left
-			int max=data.length-i;
-
-			// Make sure we don't get more than 2k at a time.
-			if(max>CHUNK_SIZE) {
-				max=CHUNK_SIZE;
-			}
-
-			// Get the thing to store.
-			byte b[]=new byte[max];
-			for(int j=0; j<max; j++) {
-				b[j]=data[i++];
-			}
-
-			al.add(b);
-		}
+		getLogger().info("Storer: Got image for %d, %d bytes of data", imageId,
+				pi.size());
 
 		Connection db=null;
 		try {
@@ -197,34 +175,19 @@ public class PhotoStorerThread extends LoopingThread implements SAXAble {
 				"insert into image_store (id, line, data) values(?,?,?)");
 
 			Base64 base64=new Base64();
-			StringBuffer sdata = new StringBuffer();
 
 			pst.setInt(1, imageId);
 
 			// Get the encoded data
-			for(byte b[] : al) {
-				String tmp = base64.encode(b);
-				tmp=tmp.trim();
-				if(sdata.length() < CHUNK_SIZE) {
-					sdata.append(tmp);
-					sdata.append("\n");
-				} else {
-					pst.setInt(2, n++);
-					pst.setString(3, sdata.toString());
-					pst.executeUpdate();
-					sdata=new StringBuffer(tmp);
-				}
+			for(byte b[] : new ByteChunker(pi.getData(), CHUNK_SIZE)) {
+				pst.setInt(2, n++);
+				pst.setString(3, base64.encode(b));
+				int aff=pst.executeUpdate();
+				assert aff == 1 : "Expected to update 1 record, updated " + aff;
 			}
 
-			// OK, this is sick, but another one right now for the spare.
-			if(sdata.length() > 0) {
-				getLogger().debug("Storer:  Storing spare.");
-				pst.setInt(2, n++);
-				pst.setString(3, sdata.toString());
-				pst.executeUpdate();
-			}
-			getLogger().debug("Storer:  Stored " + n + " lines of data for "
-				+ imageId + ".");
+			getLogger().debug("Storer:  Stored %d lines of data for %d.",
+					n, imageId);
 			pst.close();
 			pst=null;
 			PreparedStatement pst2=db.prepareStatement(
