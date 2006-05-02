@@ -42,11 +42,10 @@ import net.spy.util.CloseUtil;
 public class Search extends SpyObject {
 
 	private static final String CHARSET = "UTF-8";
-	private static final int BY_TS = 1;
-	private static final int BY_TAKEN = 2;
 	private static Search instance = null;
 
 	private static enum CacheType { RESULTS, KEYWORDS }
+	private static enum SortOrder { BY_TS, BY_TAKEN }
 
 	/**
 	 * Get a Search instance.
@@ -135,10 +134,10 @@ public class Search extends SpyObject {
 		addParam(sb, "filter", form.getFilter());
 		addParam(sb, "action", form.getAction());
 
-		if(form.getCat() != null) {
-			String cats[] = form.getCat();
-			for(int i = 0; i < cats.length; i++) {
-				addParam(sb, "cat", cats[i]);
+		String cats[]=form.getCat();
+		if(cats != null) {
+			for(String cat : cats) {
+				addParam(sb, "cat", cat);
 			}
 		}
 
@@ -206,8 +205,8 @@ public class Search extends SpyObject {
 		String atmp[] = form.getCat();
 		if(atmp != null && atmp.length > 0) {
 			ArrayList<Integer> al = new ArrayList<Integer>(atmp.length);
-			for(int i = 0; i < atmp.length; i++) {
-				al.add(new Integer(atmp[i]));
+			for(String s : atmp) {
+				al.add(new Integer(s));
 			}
 			// Get rid of anything that's not valid for the current user
 			al.retainAll(getValidCats(user));
@@ -233,9 +232,8 @@ public class Search extends SpyObject {
 		getLogger().debug("After keywords:  %d images", rset.size());
 
 		// Check for any of the date entries
-		processDates(
-			rset, form.getStart(), form.getEnd(), form.getTstart(), form
-				.getTend());
+		processDates(rset, form.getStart(), form.getEnd(),
+				form.getTstart(), form.getTend());
 		getLogger().debug("After dates:  %d images", rset.size());
 
 		// Populate the results
@@ -243,8 +241,7 @@ public class Search extends SpyObject {
 		results.setMaxSize(dims);
 		int resultId = 0;
 		for(PhotoImageData r : rset) {
-			results.add(new SearchResult(r, resultId));
-			resultId++;
+			results.add(new SearchResult(r, resultId++));
 		}
 
 		return (results);
@@ -255,8 +252,7 @@ public class Search extends SpyObject {
 	 * 
 	 * @param u the given user
 	 * @param sf the search form for finding images to extract keywords
-	 * @return a map of 
-	 * @throws Exception
+	 * @return all of the keywords available to the given user
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<KeywordMatch> getKeywordsForUser(User u, SearchForm sf)
@@ -306,8 +302,10 @@ public class Search extends SpyObject {
 	private void processDates(
 		Set<PhotoImageData> rset, String astart, String aend, String tstart,
 		String tend) throws Exception {
-		Collection<PhotoImageData> aset = processRange(BY_TS, astart, aend);
-		Collection<PhotoImageData> tset = processRange(BY_TAKEN, tstart, tend);
+		Collection<PhotoImageData> aset = processRange(SortOrder.BY_TS,
+				astart, aend);
+		Collection<PhotoImageData> tset = processRange(SortOrder.BY_TAKEN,
+				tstart, tend);
 
 		// Only process dates if one of them was not null
 		if(aset != null || tset != null) {
@@ -411,7 +409,7 @@ public class Search extends SpyObject {
 	}
 
 	private Collection<PhotoImageData> processRange(
-		int which, String start, String end) throws Exception {
+		SortOrder which, String start, String end) throws Exception {
 
 		SearchIndex index = SearchIndex.getInstance();
 		Date s = PhotoUtil.parseDate(start);
@@ -448,9 +446,6 @@ public class Search extends SpyObject {
 
 	private static abstract class PIDComparator
 		implements Comparator<PhotoImageData> {
-		public PIDComparator() {
-			super();
-		}
 
 		public boolean equals(Object ob) {
 			return (ob.getClass() == getClass());
@@ -470,20 +465,12 @@ public class Search extends SpyObject {
 	}
 
 	private static class TimestampComparator extends PIDComparator {
-		public TimestampComparator() {
-			super();
-		}
-
 		public int doCompare(PhotoImageData pid1, PhotoImageData pid2) {
 			return (pid1.getTimestamp().compareTo(pid2.getTimestamp()));
 		}
 	}
 
 	private static class TakenComparator extends PIDComparator {
-		public TakenComparator() {
-			super();
-		}
-
 		public int doCompare(PhotoImageData pid1, PhotoImageData pid2) {
 			return (pid1.getTaken().compareTo(pid2.getTaken()));
 		}
