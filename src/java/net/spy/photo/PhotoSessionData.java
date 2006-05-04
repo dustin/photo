@@ -71,8 +71,9 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	/**
 	 * Get the search results that are currently being accessed.
 	 */
+	@SuppressWarnings("unchecked")
 	public SearchResults getResults() {
-		return((SearchResults)getCursor("searchResults"));
+		return (SearchResults)getCursor("searchResults");
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 *
 	 * @return the Cursor or null if no such cursor exists
 	 */
-	public Cursor<?> getCursor(String name) {
+	public Cursor getCursor(String name) {
 		assert cursors.containsKey(name)
 			: "No cursor named " + name + " in session";
 		return(cursors.get(name));
@@ -112,7 +113,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public Cursor<GroupedComments> getComments() {
-		return (Cursor<GroupedComments>)getCursor("comments");
+		return getCursor("comments");
 	}
 
 	/**
