@@ -51,7 +51,7 @@ public class SetDisplayRefresh extends PhotoAction {
 		String searchId=request.getParameter("search_id");
 		if(searchId != null) {
 			int sid=Integer.parseInt(searchId);
-			if( (sid+1) < results.size()) {
+			if( (sid+1) < results.getSize()) {
 				String loc="/refreshDisplay.do?search_id=" + (sid+1);
 				String aLoc=PhotoUtil.getRelativeUri(request, loc);
 				getLogger().info("Refreshing to:  " + aLoc);

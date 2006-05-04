@@ -3,13 +3,11 @@
 
 package net.spy.photo;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Represents a group of comments for an individual image.
  */
-public class GroupedComments extends ArrayList<Comment> implements Serializable {
+public class GroupedComments extends Cursor<Comment> {
 
 	private int imageId=-1;
 	private boolean hasMore=false;
@@ -35,7 +33,7 @@ public class GroupedComments extends ArrayList<Comment> implements Serializable 
 	/**
 	 * Return true if there are more comments available.
 	 */
-	public boolean hasMore() {
+	public boolean getMoreAvailable() {
 		return(hasMore);
 	}
 
@@ -48,9 +46,9 @@ public class GroupedComments extends ArrayList<Comment> implements Serializable 
 			throw new Error(comment.getPhotoId() + " != " + imageId);
 		}
 
-		if(size() < maxComments) {
+		if(getSize() < maxComments) {
 			add(comment);
-		} else if(size() == maxComments) {
+		} else if(getSize() == maxComments) {
 			hasMore=true;
 		}
 	}

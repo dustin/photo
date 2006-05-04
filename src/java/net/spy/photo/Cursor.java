@@ -6,198 +6,236 @@ package net.spy.photo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.List;
 
-import net.spy.log.Logger;
-import net.spy.log.LoggerFactory;
+import net.spy.SpyObject;
 
 /**
  * An object that will be cursor through other objects.
  */
-public class Cursor<T> extends ArrayList<T> implements Serializable, Enumeration {
+public class Cursor<T> extends SpyObject
+	implements Cloneable, Serializable, Iterable<T> {
 
-	private int current=0;
-	private int maxret=10;
+    private int pageSize=10;
+    private List<T> results=null;
+    private int pageStart=0;
+    private boolean overflowed=false;
 
-	private Logger logger=null;
+    protected Cursor() {
+        this(0);
+    }
+
+    /**
+     * Get an instance of Cursor to hold the given number of elements.
+     */
+    public Cursor(int size) {
+        super();
+        results=new ArrayList<T>(size);
+    }
+
+    /**
+     * Get an instance of Cursor over the given objects.
+     */
+    public Cursor(Collection<T> c) {
+        super();
+        results=new ArrayList<T>(c);
+    }
 
 	/**
-	 * Get an empty Cursor object.
+	 * Clone this result set.
 	 */
-	public Cursor() {
-		super();
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	/**
-	 * Get Cursor object with the specified initial capacity.
-	 */
-	public Cursor(int capacity) {
-		super(capacity);
-	}
+     * Add an object to these results.
+     */
+    public boolean add(T o) {
+    	return results.add(o);
+    }
 
-	/**
-	 * Get a new cursor on the given enumeration.
-	 */
-	public Cursor(Collection<T> c) {
-		super(c);
-	}
+    /** 
+     * Get the number of objects.
+     */
+    public int getSize() {
+        return(results.size());
+    }
 
-	/**
-	 * Set the search result we're lookin' at.
-	 */
-	public void set(int to) {
-		if(to>size()) {
-			current=size();
-		} else {
-			current=to;
-		}
-	}
+    /**
+     * Get the object at the given offset in the search results.
+     * 
+     * @param which the offset object to get
+     * @return the object at the given index
+     */
+    public T get(int which) {
+    	return(results.get(which));
+    }
 
-	/**
-	 * Return the iterator from the current position (not the beginning).
-	 */
-	public Iterator<T> iterator() {
-		return(new CursorIterator());
-	}
+    /** 
+     * Get the full list of objects (mutable).
+     * 
+     * @return an unmodifiable list of results.
+     */
+    public List<T> getAllObjects() {
+        return(results);
+    }
 
-	/**
-	 * Set the maximum number of results for size.
-	 */
-	public void setMaxRet(int to) {
-		this.maxret=to;
-	}
+    /**
+     * Get an iterator over the current page of objects in this cursor.
+     */
+    public Iterator<T> iterator() {
+    	return getPage().iterator();
+    }
 
-	/**
-	 * Get the requested maximum number of results per page.
-	 */
-	public int getMaxRet() {
-		return(maxret);
-	}
+    /** 
+     * Get the current page of objects.
+     * 
+     * @return a sublist of just the entries for the current page.
+     */
+    public List<T> getPage() {
+        int pageEnd=getPageEnd();
+        getLogger().debug("Getting from %d to %d", pageStart, pageEnd);
+        List<T> rv=results.subList(pageStart, pageEnd);
+        return(rv);
+    }
 
-	/**
-	 * String representation of the search results.
-	 */
-	public String toString() {
-		StringBuffer sb=new StringBuffer(128);
+    /** 
+     * Set the page start to the given value.
+     * 
+     * @param to the given value
+     */
+    public void setPageStart(int to) {
+        pageStart=to;
+    }
 
-		sb.append("{Cursor:  pos=");
-		sb.append(current);
-		sb.append(", n=");
-		sb.append(size());
-		sb.append(", maxret=");
-		sb.append(maxret);
-		sb.append("}");
+    /** 
+     * Get the current starting page.
+     */
+    public int getPageStart() {
+        return(pageStart);
+    }
 
-		return(sb.toString());
-	}
+    /** 
+     * Set the current page number.
+     */
+    public void setPageNumber(int pageNumber) {
+        pageStart = pageSize * pageNumber;
+    }
 
-	/**
-	 * Get the current entry.
-	 */
-	public Object get() {
-		return(get(current));
-	}
+    /** 
+     * Get the current page number.
+     */
+    public int getPageNumber() {
+        int rv=pageStart / pageSize;
+        return(rv);
+    }
 
-	/**
-	 * Get the next result, or null if we're done
-	 */
-	public T next() throws NoSuchElementException {
-		T r=null;
+    // get the end of the current page
+    private int getPageEnd() {
+        int rv=getNextPageStart();
+        if(rv == -1) {
+            rv = results.size();
+        }
+        return(rv);
+    }
 
-		if(current<size()) {
-			r=get(current);
-			current++;
-		} else {
-			throw new NoSuchElementException();
-		}
-		return(r);
-	}
+    /** 
+     * Get the starting position for the next page.
+     * 
+     * @return the starting value for the next page...-1 if there are no
+     * more pages.
+     */
+    public int getNextPageStart() {
+        int rv=-1;
+        
+        // If the current page does not exceed the size, we have another page
+        // test:
+        //  size() == 11
+        //  pageSize == 10
+        //    pageStart == 0 (pageStart + pageSize == 10), next page is 11
+        //    pageStart == 10 (pageStart + pageSize == 20), no next page
+        int tmp=pageStart + pageSize;
+        if( tmp <= results.size()) {
+            rv = tmp;
+        }
+        
+        return(rv);
+    }
+    
+    /** 
+     * Get the number of pages of results.
+     */
+    public int getNumPages() {
+        int rv=results.size() / pageSize;
+        if(results.size() % pageSize != 0) {
+            rv++;
+        }
+        return(rv);
+    }
+    
+    /** 
+     * Find out if there are more pages of results.
+     * 
+     * @return true if there are more pages
+     */
+    public boolean hasMorePages() {
+        return(getNextPageStart() != -1);
+    }
+    
+    /** 
+     * Get the number of results remaining.
+     */
+    public int getNumRemaining() {
+        int rv=0; 
+        int tmp = getNextPageStart();
+        if(tmp > 0) {
+            rv = results.size() - getNextPageStart();
+        }
+        getLogger().debug("Number remaining is %d", rv);
+        return(rv);
+    }
 
-	/**
-	 * Get the next element.
-	 */
-	public T nextElement() {
-		T rv=next();
-		if(rv==null) {
-			throw new NoSuchElementException("You seek too much.");
-		}
-		return(rv);
-	}
+    /** 
+     * Get the page size.
+     */
+    public int getPageSize() {
+        return(pageSize);
+    }
 
-	/**
-	 * Return true if there are more elements.
-	 */
-	public boolean hasMoreElements() {
-		return(nRemaining() > 0);
-	}
-
-	/**
-	 * Get the previous result, or null if we're at the beginning
-	 */
-	public T prev() {
-		T r=null;
-
-		if(current>0) {
-			current--;
-			r=get(current);
-		}
-		return(r);
-	}
+    /** 
+     * Set the page size.
+     */
+    public void setPageSize(int to) {
+        this.pageSize=to;
+    }
 
 	/** 
-	 * Get a Logger instance for this class.
+	 * Get the size of the next page (if applicable).
 	 */
-	protected Logger getLogger() {
-		if(logger==null) {
-			logger=LoggerFactory.getLogger(getClass());
-		}
-		return(logger);
+	public int getNextPageSize() {
+		assert hasMorePages() : "No more pages.";
+		int remaining=getNumRemaining();
+		return remaining > pageSize ? pageSize : remaining;
 	}
 
-	/**
-	 * Find out how many results are remaining.
-	 */
-	public int nRemaining() {
-		return(size()-current);
-	}
+    /** 
+     * Find out if this search has overflowed (returned too many results).
+     *
+     * I don't like having boolean gets use the word ``get'' but jstl does.
+     * 
+     * @return true if the results represent an overflowed search
+     */
+    public boolean getOverflowed() {
+        return(overflowed);
+    }
 
-	/**
-	 * Find out which one we're on.
-	 */
-	public int current() {
-		return(current);
-	}
+    /** 
+     * Mark this result set as overflowed.
+     */
+    public void setOverflowed(boolean to) {
+        this.overflowed=to;
+    }
 
-	// Inner class to iterate a cursor
-	private class CursorIterator extends Object implements Iterator<T> {
-
-		// Get a cursor iterator in a given cursor
-		private CursorIterator() {
-			super();
-		}
-
-		/**
-		 * Get the next object.
-		 */
-		public T next() {
-			return(nextElement());
-		}
-
-		/**
-		 * True if there are elements remaining.
-		 */
-		public boolean hasNext() {
-			return(hasMoreElements());
-		}
-
-		/**
-		 * Not implemented.
-		 */
-		public void remove() {
-			throw new UnsupportedOperationException("Not implemented.");
-		}
-
-	}
 }

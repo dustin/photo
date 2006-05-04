@@ -60,23 +60,21 @@ public abstract class DateFilter extends SortingFilter {
 		throws PhotoException {
 
 		// Get a base copy of the result set.
-		SearchResults rv=new SearchResults(in.size());
+		SearchResults rv=new SearchResults(in.getSize());
 		rv.setMaxSize(in.getMaxSize());
-		rv.setMaxRet(in.getMaxRet());
+		rv.setPageSize(in.getPageSize());
 
 		// Do the actual processing
 
 		// This is where the month groups go
 		TreeMap<Date, Collection<PhotoImageData>> months = null;
 		if(direction == SortingFilter.Sort.REVERSE) {
-			months = new TreeMap<Date, Collection<PhotoImageData>>(Collections
-				.reverseOrder());
+			months = new TreeMap<Date, Collection<PhotoImageData>>(
+					Collections.reverseOrder());
 		} else {
 			months = new TreeMap<Date, Collection<PhotoImageData>>();
 		}
-		for(; in.hasMoreElements();) {
-			PhotoImageData pid=in.nextElement();
-
+		for(PhotoImageData pid : in.getAllObjects()) {
 			Date dtmp=pid.getTaken();
 
 			// Truncate the date appropriately

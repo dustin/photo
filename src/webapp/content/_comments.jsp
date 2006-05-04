@@ -1,75 +1,66 @@
-<%@ page import="net.spy.photo.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
 <html:xhtml/>
 
-<%
-	// Find the comments
-	PhotoSessionData sessionData=
-		(PhotoSessionData)session.getAttribute("photoSession");
-	Cursor allcomments=sessionData.getComments();
-	if(allcomments==null) {
-		throw new ServletException("There is no comment cursor!");
-	}
-%>
-
 <div class="comments">
-	<logic:iterate id="comments" collection="<%= allcomments %>"
-		type="net.spy.photo.GroupedComments"
-		length="6">
-
+	<c:forEach var="commentList" items="${photoSession.comments.page}">
 		<div class="commentblock">
+
 			<div class="commentimage">
-				<photo:imgLink showThumbnail="true" id="<%= comments.getPhotoId() %>"/>
+				<c:set var="dUrl">
+					<c:url value="/display.do">
+						<c:param name="id" value="${commentList.photoId}"/>
+					</c:url>
+				</c:set>
+				<c:set var="iUrl">
+					<c:url value="/PhotoServlet">
+						<c:param name="id" value="${commentList.photoId}"/>
+						<c:param name="thumbnail" value="1"/>
+					</c:url>
+				</c:set>
+				<a href="<c:out value='${dUrl}'/>">
+					<img src="<c:out value='${iUrl}'/>"/></a>
 			</div>
-			<logic:iterate id="comment"
-				type="net.spy.photo.Comment"
-				collection="<%= comments %>">
+
+			<c:forEach var="comment" items="${commentList.allObjects}">
 				<div class="commentheader">
-					At <%= comment.getTimestamp() %>
-						<%= comment.getUser().getRealname() %>
-						said the following:
+					At <c:out value="${comment.timestamp}"/>
+						<c:out value="${comment.user.realname}"/> said the following:
 				</div>
 				<div class="commentbody">
-					<%= comment.getNote() %>
+					<c:out value="${comment.note}"/>
 				</div>
-			</logic:iterate>
-			<% if(comments.hasMore()) { %>
+			</c:forEach>
+
+			<c:if test="${commentList.moreAvailable}">
 				<div class="commentmore">
-					<photo:imgLink id="<%= comments.getPhotoId() %>">
+					<a href="<c:out value='${dUrl}'/>">
 						More comments available on the image page.
-					</photo:imgLink>
+					</a>
 				</div>
-			<% } %>
+			</c:if>
+
 		</div>
-
-	</logic:iterate>
-
+	</c:forEach>
 </div>
 
-<%
-  // Figure out if there are any more.
-  if(allcomments.hasMoreElements()) {
-    int nextOffset=allcomments.current();
-    String nextOffsetS="" + nextOffset;
-    int remaining=allcomments.nRemaining();
-    int nextWhu=allcomments.getMaxRet();
-    if(remaining<nextWhu) {
-      nextWhu=remaining;
-    }
+<c:if test="${photoSession.comments.numRemaining > 0}">
+	<div>
+	<html:form action="nextcomments.do">
+		<div>
+			<input type="hidden" name="startOffset"
+				value="<c:out value='${photoSession.comments.pageNumber + 1}'/>"/>
+			<input type="hidden" name="whichCursor" value="comments"/>
+			<html:submit>
+				<c:out value="Next ${photoSession.comments.nextPageSize}"/>
+			</html:submit>
+		</div>
+	</html:form>
+	</div>
+</c:if>
 
-    %>
-      <%= remaining %> comments remaining.
-      <html:form action="nextcomments.do">
-				<p>
-        	<html:hidden property="startOffset" value="<%= nextOffsetS %>"/>
-        	<html:hidden property="whichCursor" value="comments"/>
-        	<html:submit>Next <%= nextWhu %></html:submit>
-				</p>
-      </html:form>
-    <%
-  }
-%>
 <%-- arch-tag: AB06DECA-5D6F-11D9-AD6F-000A957659CC --%>

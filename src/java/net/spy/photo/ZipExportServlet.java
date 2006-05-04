@@ -83,7 +83,8 @@ public class ZipExportServlet extends JWHttpServlet {
 					+ sessionData.getUser().getRealname() + " on "
 					+ new Date());
 
-			Collection<PhotoImageData> images=new ArrayList<PhotoImageData>(sr);
+			Collection<PhotoImageData> images=new ArrayList<PhotoImageData>(
+					sr.getAllObjects());
 			addIndexes(images, zos);
 			addStatic(zos);
 			addImages(images, sessionData.getOptimalDimensions(), zos);

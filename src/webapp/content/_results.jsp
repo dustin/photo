@@ -1,6 +1,3 @@
-<%@ page import="net.spy.photo.*" %>
-<%@ page import="net.spy.photo.search.*" %>
-<%@ page import="net.spy.util.Base64" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 
@@ -27,16 +24,6 @@
 <html:xhtml/>
 <photo:javascript url="/js/catedit.js"/>
 
-<%
-	// Find the results
-	PhotoSessionData sessionData=
-		(PhotoSessionData)session.getAttribute(PhotoSessionData.SES_ATTR);
-	SearchResults results=sessionData.getResults();
-	if(results==null) {
-		throw new ServletException("There are no search results!");
-	}
-%>
-
 <div id="searchheader">
 <logic:present role="canadd">
 	<div id="savesearchtext"></div>
@@ -44,8 +31,7 @@
 		<form method="post" action="savesearch.do">
 			<div>
 				<input type="hidden" name="search"
-					value="<%= Base64.getInstance().encode(
-						sessionData.getEncodedSearch().getBytes()) %>"/>
+					value="<c:out value="${photoSession.encodedSearchB64}"/>"/>
 				Save search as:  <input name="name"/>
 				<html:submit>Save</html:submit>
 			</div>
@@ -54,8 +40,8 @@
 </logic:present>
 
 	<div id="search_matches">
-		Search matched <%= results.size() %> entries.
-		<c:set var="encoded"><%= sessionData.getEncodedSearch() %></c:set>
+		Search matched <c:out value="${photoSession.results.size}"/> entries.
+		<c:set var="encoded"><c:out value="${photoSession.encodedSearch}"/></c:set>
 		<c:set var="baserss">
 			<logic:present role="authenticated">
 				<c:url value="/auth/rss.do"/>
@@ -71,82 +57,81 @@
 
 <div id="search_results">
 
-<logic:iterate id="image" collection="<%= results %>"
-	type="net.spy.photo.search.SearchResult"
-	length="<%= String.valueOf(results.getMaxRet()) %>">
+<c:forEach var="img" items="${photoSession.results.page}">
 
 <div class="search_result">
 	<div class="search_result_image">
-		<photo:imgLink id="<%= image.getId() %>"
-			searchId="<%= image.getSearchId() %>"
-			width="<%= String.valueOf(image.getTnDims().getWidth()) %>"
-			height="<%= String.valueOf(image.getTnDims().getHeight()) %>"
-			showThumbnail="true"/>
+		<c:set var="dUrl">
+			<c:url value="/display.do">
+				<c:param name="search_id" value="${img.searchId}"/>
+			</c:url>
+		</c:set>
+		<c:set var="iUrl">
+			<c:url value="/PhotoServlet">
+				<c:param name="id" value="${img.id}"/>
+				<c:param name="thumbnail" value="1"/>
+			</c:url>
+		</c:set>
+		<a href="<c:out value='${dUrl}'/>">
+			<img src="<c:out value='${iUrl}'/>"
+				width="<c:out value='${img.tnDims.width}'/>"
+				height="<c:out value='${img.tnDims.height}'/>"/>
+		</a>
 	</div>
 	<div class="search_result_info">
-		ID: <c:out value="${image.id}"/><br/>
-		Keywords: <span id="<c:out value='kw${image.id}'/>"><c:forEach
-			var="kw" items="${image.keywords}"> <c:out value="${kw.keyword}"
+		ID: <c:out value="${img.id}"/><br/>
+		Keywords: <span id="<c:out value='kw${img.id}'/>"><c:forEach
+			var="kw" items="${img.keywords}"> <c:out value="${kw.keyword}"
 			/></c:forEach></span><br/>
-		Category: <span id="<c:out value='c${image.id}'/>"
-			><c:out value="${image.catName}"/></span><br/>
-		Size: <c:out value="${image.dimensions}"/><br/>
+		Category: <span id="<c:out value='c${img.id}'/>"
+			><c:out value="${img.catName}"/></span><br/>
+		Size: <c:out value="${img.dimensions}"/><br/>
 		Taken:
-			<span id="<c:out value='tk${image.id}'/>"
-				><fmt:formatDate value="${image.taken}" pattern="yyyy-MM-dd"
+			<span id="<c:out value='tk${img.id}'/>"
+				><fmt:formatDate value="${img.taken}" pattern="yyyy-MM-dd"
 				/></span><br/>
-		Added: <fmt:formatDate value="${image.timestamp}"
+		Added: <fmt:formatDate value="${img.timestamp}"
 			pattern="yyyy-MM-dd HH:mm:ss"/>
-				by <c:out value="${image.addedBy.name}"/>
+				by <c:out value="${img.addedBy.name}"/>
 	</div>
 	<div class="search_result_descr">
-		<div id="<c:out value='d${image.id}'/>"><c:out
-			value="${image.descr}"/></div>
+		<div id="<c:out value='d${img.id}'/>"><c:out
+			value="${img.descr}"/></div>
 	</div>
 </div>
 
 <logic:present role="admin">
 	<script type="text/javascript">
-		new Ajax.InPlaceEditor("<c:out value='kw${image.id}'/>",
-			'<c:url value="/ajax/photo/keywords?imgId=${image.id}"/>');
-		new Ajax.InPlaceEditor("<c:out value='tk${image.id}'/>",
-			'<c:url value="/ajax/photo/taken?imgId=${image.id}"/>');
-		new Ajax.InPlaceEditor("<c:out value='d${image.id}'/>",
-			'<c:url value="/ajax/photo/descr?imgId=${image.id}"/>',
+		new Ajax.InPlaceEditor("<c:out value='kw${img.id}'/>",
+			'<c:url value="/ajax/photo/keywords?imgId=${img.id}"/>');
+		new Ajax.InPlaceEditor("<c:out value='tk${img.id}'/>",
+			'<c:url value="/ajax/photo/taken?imgId=${img.id}"/>');
+		new Ajax.InPlaceEditor("<c:out value='d${img.id}'/>",
+			'<c:url value="/ajax/photo/descr?imgId=${img.id}"/>',
 			{rows:4, cols:60});
-		setupCategoryEditor("<c:out value='c${image.id}'/>",
-			'<c:url value="/ajax/photo/cat?imgId=${image.id}"/>',
+		setupCategoryEditor("<c:out value='c${img.id}'/>",
+			'<c:url value="/ajax/photo/cat?imgId=${img.id}"/>',
 			'<c:url value="/"/>');
 	</script>
 </logic:present>
 
-</logic:iterate>
+</c:forEach>
 
 </div>
 
-<%
-  // Figure out if there are any more.
-  if(results.hasMoreElements()) {
-    int nextOffset=results.current();
-    String nextOffsetS="" + nextOffset;
-    int remaining=results.nRemaining();
-    int nextWhu=results.getMaxRet();
-    if(remaining<nextWhu) {
-      nextWhu=remaining;
-    }
+<c:if test="${photoSession.results.numRemaining > 0}">
+	<div>
+	<html:form action="nextresults.do">
+		<div>
+			<input type="hidden" name="startOffset"
+				value="<c:out value='${photoSession.results.pageNumber + 1}'/>"/>
+			<input type="hidden" name="whichCursor" value="results"/>
+			<html:submit>
+				<c:out value="Next ${photoSession.results.nextPageSize}"/>
+			</html:submit>
+		</div>
+	</html:form>
+	</div>
+</c:if>
 
-    %>
-      <%= remaining %> results remaining.
-      <div>
-      <html:form action="nextresults.do">
-				<div>
-        <html:hidden property="startOffset" value="<%= nextOffsetS %>"/>
-        <html:hidden property="whichCursor" value="results"/>
-        <html:submit>Next <%= nextWhu %></html:submit>
-				</div>
-      </html:form>
-      </div>
-    <%
-  }
-%>
 <%-- arch-tag: B2A859AA-5D6F-11D9-BEFD-000A957659CC --%>

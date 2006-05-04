@@ -42,7 +42,8 @@ public class GetGalleryAction extends PhotoAction {
 		User user=sessionData.getUser();
 
 		Gallery g=Gallery.getGallery(user, ggf.getId());
-		sessionData.setCursor("gallery", new Cursor<PhotoImageData>(g.getImages()));
+		sessionData.setCursor("gallery",
+				new Cursor<PhotoImageData>(g.getImages()));
 
 		return(mapping.findForward("next"));
 	}

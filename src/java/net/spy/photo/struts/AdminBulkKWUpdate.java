@@ -47,13 +47,13 @@ public class AdminBulkKWUpdate extends PhotoAction {
 		SearchResults results=Search.getInstance().performSearch(sf,
 			getUser(request));
 
-		getLogger().info("Updating " + results.size()
+		getLogger().info("Updating " + results.getSize()
 			+ " images by adding " + kws.getPositive() + " and removing "
 			+ kws.getNegative());
 
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 
-		ArrayList<Savable> savables=new ArrayList<Savable>(results.size());
+		ArrayList<Savable> savables=new ArrayList<Savable>(results.getSize());
 		for(PhotoImageData pid : results) {
 			SavablePhotoImageData savable=new SavablePhotoImageData(
 				pidf.getObject(pid.getId()));
@@ -74,7 +74,7 @@ public class AdminBulkKWUpdate extends PhotoAction {
 
 		pidf.store(new CollectionSavable(savables));
 
-		request.setAttribute("updated", new Integer(results.size()));
+		request.setAttribute("updated", new Integer(results.getSize()));
 
 		return(mapping.findForward("next"));
 	}

@@ -159,7 +159,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 		}
 
 		private void runValidation(SearchResults sr) {
-			todo=sr.size();
+			todo=sr.getSize();
 			done=0;
 			for(PhotoImageData pid : sr) {
 				for(Operation op : operations) {

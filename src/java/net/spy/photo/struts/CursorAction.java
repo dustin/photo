@@ -55,7 +55,7 @@ public class CursorAction extends PhotoAction {
 			}
 
 			// And set the offset.
-			c.set(offset.intValue());
+			c.setPageNumber(offset.intValue());
 			getLogger().debug("CursorAction sought to " + offset
 				+ ", yielding " + c);
 		}

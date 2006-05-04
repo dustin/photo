@@ -10,6 +10,7 @@ import java.util.Map;
 
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.search.SearchResults;
+import net.spy.util.Base64;
 import net.spy.util.RingBuffer;
 
 /**
@@ -86,7 +87,9 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 *
 	 * @return the Cursor or null if no such cursor exists
 	 */
-	public Cursor getCursor(String name) {
+	public Cursor<?> getCursor(String name) {
+		assert cursors.containsKey(name)
+			: "No cursor named " + name + " in session";
 		return(cursors.get(name));
 	}
 
@@ -107,8 +110,16 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	/**
 	 * Get the comments list.
 	 */
-	public Cursor getComments() {
-		return(getCursor("comments"));
+	@SuppressWarnings("unchecked")
+	public Cursor<GroupedComments> getComments() {
+		return (Cursor<GroupedComments>)getCursor("comments");
+	}
+
+	/**
+	 * Get the galleries for the current user.
+	 */
+	public Cursor<Gallery> getGalleries() throws Exception {
+		return Gallery.getGalleries(user);
 	}
 
 	/**
@@ -117,6 +128,13 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public String getEncodedSearch() {
 		return(encodedSearch);
+	}
+
+	/**
+	 * Get the base64 representation of the encoded search.
+	 */
+	public String getEncodedSearchB64() {
+		return(Base64.getInstance().encode(encodedSearch.getBytes()));
 	}
 
 	/**

@@ -138,7 +138,7 @@ public class DisplayLink extends PhotoTag {
 			}
 
 			// Figure out the maximum number of results.
-			int maxIndex=results.size();
+			int maxIndex=results.getSize();
 
 			// Since this is a search offset, figure out whether it's
 			// relative the the actual value or not.

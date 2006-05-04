@@ -32,7 +32,7 @@ public class SearchResults extends Cursor<PhotoImageData> {
 	 * Add a search result to the list.
 	 */
 	public boolean add(PhotoImageData d) {
-		return(super.add(new SearchResult(d, size())));
+		return(super.add(new SearchResult(d, getSize())));
 	}
 
 	/**

@@ -67,7 +67,7 @@ public class ViewSessionAction extends PhotoAction {
 		// Set the viewing size
 		results.setMaxSize(sessionData.getOptimalDimensions());
 		// Hard code this for now
-		results.setMaxRet(5);
+		results.setPageSize(5);
 		sessionData.setResults(results);
 		// Clear out the encoded search
 		sessionData.setEncodedSearch(null);

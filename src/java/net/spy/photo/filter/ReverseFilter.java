@@ -24,9 +24,9 @@ public class ReverseFilter extends Filter {
 	 * Reverse the current order of the given search results.
 	 */
 	public SearchResults filter(SearchResults in) throws PhotoException {
-		Collections.reverse(in);
+		Collections.reverse(in.getAllObjects());
 		// Seek back to the beginning
-		in.set(0);
+		in.setPageNumber(0);
 		return(in);
 	}
 
