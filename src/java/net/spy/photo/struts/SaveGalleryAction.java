@@ -45,7 +45,7 @@ public class SaveGalleryAction extends PhotoAction {
 			throw new ServletException(
 				"No gallery in session, nothing to save!");
 		}
-		if(g.size() == 0) {
+		if(g.getSize() == 0) {
 			throw new ServletException(
 				"Sorry, I won't save an empty gallery.");
 		}

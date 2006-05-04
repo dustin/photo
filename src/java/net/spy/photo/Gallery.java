@@ -320,7 +320,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * Return the number of images in this gallery.
 	 */
-	public int size() {
+	public int getSize() {
 		return(images.size());
 	}
 
