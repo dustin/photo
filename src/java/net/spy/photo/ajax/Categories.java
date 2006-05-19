@@ -11,8 +11,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.jwebkit.MapElement;
-import net.spy.jwebkit.SAXAble;
+import net.spy.jwebkit.xml.MapElement;
+import net.spy.jwebkit.xml.SAXAble;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 

@@ -6,8 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.jwebkit.MapElement;
-import net.spy.jwebkit.SAXAble;
+import net.spy.jwebkit.xml.MapElement;
+import net.spy.jwebkit.xml.SAXAble;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;

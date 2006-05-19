@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.spy.jwebkit.SAXAble;
-import net.spy.jwebkit.XMLOutputServlet;
-import net.spy.jwebkit.XMLUtils;
+import net.spy.jwebkit.xml.SAXAble;
+import net.spy.jwebkit.xml.XMLOutputServlet;
+import net.spy.jwebkit.xml.XMLUtils;
 import net.spy.photo.search.Search;
 import net.spy.photo.search.SearchResults;
 import net.spy.photo.struts.SearchForm;

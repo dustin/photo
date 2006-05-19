@@ -5,7 +5,7 @@ package net.spy.photo.ajax;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.jwebkit.SAXAble;
+import net.spy.jwebkit.xml.SAXAble;
 import net.spy.photo.CacheValidator;
 import net.spy.photo.User;
 

@@ -16,9 +16,9 @@ import org.xml.sax.SAXException;
 
 import net.spy.db.DBSPLike;
 import net.spy.db.SpyDB;
-import net.spy.jwebkit.SAXAble;
-import net.spy.jwebkit.ThrowableElement;
-import net.spy.jwebkit.XMLUtils;
+import net.spy.jwebkit.xml.SAXAble;
+import net.spy.jwebkit.xml.ThrowableElement;
+import net.spy.jwebkit.xml.XMLUtils;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageDataFactory;

@@ -13,8 +13,8 @@ import org.xml.sax.SAXException;
 
 import net.spy.SpyObject;
 import net.spy.SpyThread;
-import net.spy.jwebkit.SAXAble;
-import net.spy.jwebkit.XMLUtils;
+import net.spy.jwebkit.xml.SAXAble;
+import net.spy.jwebkit.xml.XMLUtils;
 import net.spy.photo.impl.ImageServerImpl;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.search.Search;

@@ -4,8 +4,8 @@ package net.spy.photo.search;
 
 import java.util.Comparator;
 
-import net.spy.jwebkit.SAXAble;
-import net.spy.jwebkit.XMLUtils;
+import net.spy.jwebkit.xml.SAXAble;
+import net.spy.jwebkit.xml.XMLUtils;
 import net.spy.photo.Keyword;
 
 import org.xml.sax.ContentHandler;
