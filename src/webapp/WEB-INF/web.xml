@@ -43,6 +43,10 @@
 		<filter-name>basicAuth</filter-name>
 		<url-pattern>/auth/*</url-pattern>
 	</filter-mapping>
+	<filter-mapping>
+		<filter-name>basicAuth</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
 
 	<!-- Watch the sessions -->
 	<listener>
@@ -116,6 +120,15 @@
 	<servlet>
 		<servlet-name>storercontrol</servlet-name>
 		<servlet-class>net.spy.photo.ajax.PhotoStorerControlServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>apiCategory</servlet-name>
+		<servlet-class>net.spy.photo.rest.GetCategories</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>apiNewPhoto</servlet-name>
+		<servlet-class>net.spy.photo.rest.UploadImage</servlet-class>
 	</servlet>
 
 	<!-- The action servlet -->
@@ -217,6 +230,16 @@
 	<servlet-mapping>
 		<servlet-name>XMLRPCServlet</servlet-name>
 		<url-pattern>/RPC2</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>apiCategory</servlet-name>
+		<url-pattern>/api/cat</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>apiNewPhoto</servlet-name>
+		<url-pattern>/api/photo/new</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

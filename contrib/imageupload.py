@@ -3,55 +3,70 @@
 # arch-tag: C504C8CD-5D6E-11D9-9483-000A957659CC
 
 from sys import argv
-import xmlrpclib
-import time
+import urllib
+import urllib2
+import httplib
+import base64
 
 class ImageUpload:
 
-	def __init__(self, url='http://bleu.west.spy.net/photo/RPC2'):
-		self.url=url
+    def __init__(self, url='http://bleu.west.spy.net/photo/api/photo/new'):
+        self.url=url
 
-	def addImage(self, username=None, password=None, keywords=None,
-		info=None, category=None, taken=None, image=None):
+        class EH(urllib2.HTTPDefaultErrorHandler):
+            def http_error_default(self, req, fp, code, msg, hdrs):
+                if code == 202:
+                    return urllib.addinfourl(fp, hdrs, req.get_full_url())
+                else:
+                    urllib2.HTTPDefaultErrorHandler.http_error_default(
+                        self, req, fp, code, msg, hdrs)
 
-		server=xmlrpclib.Server(self.url)
-		rv=server.addImage.addImage({
-			'username':username,
-			'password':password,
-			'keywords':keywords,
-			'info':info,
-			'category':category,
-			'taken':xmlrpclib.DateTime(taken),
-			'image':xmlrpclib.Binary(image)
-			});
+        self.opener=urllib2.build_opener(EH())
 
-		return(rv)
+    def addImage(self, username=None, password=None, keywords=None,
+        info=None, category=None, taken=None, image=None):
+
+        args=urllib.urlencode({ 
+            'keywords':keywords,
+            'info':info,
+            'category':category,
+            'taken':taken,
+            });
+
+        req=urllib2.Request(self.url + "?" + args, image,
+            {'Content-type': 'application/octet-stream',
+             'Authorization': 'Basic ' + 
+                base64.encodestring(username + ':' + password).strip() })
+        response=self.opener.open(req)
+        data=response.read()
+        response.close()
+
+        return(data)
 
 
 if __name__ == '__main__':
-	if len(argv) < 8:
-		theroof="Usage:  " + argv[0] + " url username password keywords info " \
-			+ "category taken filename ... "
-		raise theroof
-	url=argv[1]
-	username=argv[2]
-	password=argv[3]
-	keywords=argv[4]
-	info=argv[5]
-	category=argv[6]
-	taken=argv[7]
+    if len(argv) < 8:
+        theroof="Usage:  " + argv[0] + " url username password keywords info " \
+            + "category taken filename ... "
+        raise theroof
+    url=argv[1]
+    username=argv[2]
+    password=argv[3]
+    keywords=argv[4]
+    info=argv[5]
+    category=argv[6]
+    taken=argv[7]
 
-	# Rest of the arguments are images
-	for filename in argv[8:]:
+    # Rest of the arguments are images
+    uploader=ImageUpload(url)
 
-		f=open(filename)
-		imageData=f.read()
-		f.close()
+    for filename in argv[8:]:
+        f=open(filename)
+        imageData=f.read()
+        f.close()
 
-		print "Image data is " + str(len(imageData)) + " bytes"
+        print "Image data is " + str(len(imageData)) + " bytes"
+        rv=uploader.addImage(username, password, keywords, info, category,
+            taken, imageData)
 
-		uploader=ImageUpload(url)
-		rv=uploader.addImage(username, password, keywords, info, category,
-			taken, imageData)
-
-		print "Added image " + `rv`
+        print "Added image", rv
