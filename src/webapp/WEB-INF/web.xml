@@ -21,9 +21,27 @@
 		<filter-class>net.spy.photo.AuthFilter</filter-class>
 	</filter>
 
+	<filter>
+		<filter-name>basicAuth</filter-name>
+		<filter-class>net.spy.jwebkit.auth.BasicAuthFilter</filter-class>
+		<init-param>
+			<param-name>realm</param-name>
+			<param-value>photo authentication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>authAdaptor</param-name>
+			<param-value>net.spy.photo.PhotoAuthAdaptor</param-value>
+		</init-param>
+	</filter>
+
 	<filter-mapping>
 		<filter-name>persessCheck</filter-name>
 		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>basicAuth</filter-name>
+		<url-pattern>/auth/*</url-pattern>
 	</filter-mapping>
 
 	<!-- Watch the sessions -->
@@ -37,7 +55,7 @@
 
 	<servlet>
 		<servlet-name>debug</servlet-name>
-		<servlet-class>net.spy.jwebkit.DebugServlet</servlet-class>
+		<servlet-class>net.spy.jwebkit.debug.DebugServlet</servlet-class>
 	</servlet>
 
 	<!-- The main image servlet -->
@@ -227,19 +245,6 @@
 		<taglib-uri>/tlds/photo.tld</taglib-uri>
 		<taglib-location>/WEB-INF/tlds/photo.tld</taglib-location>
 	</taglib>
-
-	<!-- Authorization section (HTTP auth) -->
-	<security-constraint>
-		<web-resource-collection>
-			<web-resource-name>Authenticated section</web-resource-name>
-			<url-pattern>/auth/*</url-pattern>
-			<http-method>GET</http-method>
-			<http-method>POST</http-method>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>authenticated</role-name>
-		</auth-constraint>
-	</security-constraint>
 
 	<!-- stuff that should never be fetched -->
 	<security-constraint>

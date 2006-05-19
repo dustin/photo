@@ -25,12 +25,10 @@
 	</goal>
 
 	<preGoal name="war:init">
-		<!--
 		<xmlvalidate failonerror="yes">
 			<fileset dir="${maven.src.dir}"
 				includes="**/*.xml" excludes="**/resin-web.xml"/>
 		</xmlvalidate>
-		-->
 	</preGoal>
 
 	<!-- Build info -->
