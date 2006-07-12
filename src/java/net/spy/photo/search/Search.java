@@ -177,10 +177,11 @@ public class Search extends SpyObject {
 		}
 		return(rv);
 	}
-	
+
 	private SearchResults realPerformSearch(SearchForm form, User user,
 			PhotoDimensions dims) throws Exception {
 
+		long start=System.currentTimeMillis();
 		// Get the search index
 		SearchIndex index = SearchIndex.getInstance();
 
@@ -243,6 +244,9 @@ public class Search extends SpyObject {
 		for(PhotoImageData r : rset) {
 			results.add(new SearchResult(r, resultId++));
 		}
+
+		getLogger().info("Completed search for %s in %dms", user,
+				(System.currentTimeMillis() - start));
 
 		return (results);
 	}

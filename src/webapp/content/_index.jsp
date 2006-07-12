@@ -15,6 +15,9 @@
 				</c:url>
 			</c:set>
 			<c:out escapeXml="false" value='<a href="${su}">${i.name}</a>'/>
+			<span class="searchcardinality">
+				Total of <c:out value="${i.count}"/> images.
+			</span>
 		</li>
 	</c:forEach>
 </ul>

@@ -13,10 +13,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.beanutils.PropertyUtils;
+
 import net.spy.cache.SpyCache;
+import net.spy.jwebkit.RequestUtil;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
 import net.spy.photo.sp.GetSearches;
+import net.spy.photo.struts.SearchForm;
 import net.spy.util.Base64;
 
 /**
@@ -157,6 +161,33 @@ public class SavedSearch extends Object {
 			SavedSearch s=(SavedSearch)i.next();
 			System.out.println("\t" + s.getName() + " - " + s.getSearch());
 		}
+	}
+
+	/**
+	 * Get a SearchForm object representing this saved search.
+	 */
+	public SearchForm getSearchForm() throws Exception {
+		SearchForm sf=new SearchForm();
+		Map m=RequestUtil.parseQueryString(getSearch(), CHARSET);
+
+		// Stuff that should be copied directly.
+		String straightCopy[]={
+				"field", "keyjoin", "what", "what", "tstart", "tend", "start",
+				"end", "order", "sdirection", "maxret", "filter", "action"
+		};
+		for(int i=0; i<straightCopy.length; i++) {
+			String vs[]=(String[])m.get(straightCopy[i]);
+			if(vs != null) {
+				String v=vs[0];
+				PropertyUtils.setProperty(sf, straightCopy[i], v);
+			}
+		}
+		String vs[]=(String[])m.get("cats");
+		if(vs != null) {
+			PropertyUtils.setProperty(sf, "cats", vs);
+		}
+
+		return(sf);
 	}
 
 }

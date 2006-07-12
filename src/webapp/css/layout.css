@@ -448,3 +448,17 @@ table.metadata td {
 	font-size: smaller;
 	padding-left: 2em;
 }
+
+.searchcardinality {
+  display: none;
+}
+
+a:hover + .searchcardinality {
+  display: block;
+  position: absolute;
+  border: solid 1px black;
+  background: white;
+  left: 220px;
+  z-index: 100;
+  font-size: x-small;
+}
