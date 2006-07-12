@@ -1,0 +1,31 @@
+#
+# Copyright (c) 2006 Dustin Sallings <dustin@spy.net>
+# arch-tag: 66BC30C0-FFF1-4A10-A4C0-88BC7A443291
+#
+
+@package
+net.spy.photo.sp.reporting
+
+@description
+Find out who has logged in recently.
+
+@sql
+select u.username, l.remote_addr, a.user_agent, l.ts
+  from wwwusers u
+    join photo_logs l on (u.id = l.wwwuser_id)
+    join user_agent a on (l.user_agent = a.user_agent_id)
+  where log_type = 1
+  order by ts desc
+  limit ?
+
+@params
+limit required INTEGER The number of results to return
+
+@defaults
+limit 100
+
+@results
+username VARCHAR The user who logged in.
+remote_addr The IP address of the user.
+user_agent The browser the user was using.
+ts When the login occurred.

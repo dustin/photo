@@ -442,6 +442,30 @@
 		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
+	<action path="/report/logins"
+		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Recent Logins"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.RecentLogins"/>
+
+		<forward name="next" path="admin.reportDisplay"/>
+	</action>
+
+	<action path="/report/userLogins"
+		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Recent Logins for a User"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.RecentLoginsForUser"/>
+
+		<forward name="next" path="admin.reportDisplay"/>
+	</action>
+
 	<action path="/report/userCatXd"
 		className="net.spy.jwebkit.struts.DBSPMapping"
 		roles="admin"
