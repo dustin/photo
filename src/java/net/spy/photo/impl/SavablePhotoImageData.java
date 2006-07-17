@@ -87,6 +87,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		this.size=data.size();
 		this.format=data.getFormat();
 		this.timestamp=new Date();
+		this.votes=new Votes();
 
 		keywords=new TreeSet<Keyword>();
 		annotations=new HashSet<AnnotatedRegion>();
