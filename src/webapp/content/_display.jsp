@@ -70,7 +70,8 @@
 			<i><span id="imgKeywords"><c:forEach
 				var="kw" items="${image.keywords}"> <c:out value="${kw.keyword}"
 					/></c:forEach></span></i><br/>
-		<b>Size</b>:  <c:out value="${image.dimensions}"/>
+		<b>Size</b>:  <c:out
+			value="${image.dimensions.width}x${image.dimensions.height}"/>
 			(<c:out value="${image.size}"/> bytes)<br />
 		<b>Taken</b>:  <span id="imgTaken"><c:out value="${image.taken}"/></span>
 		<b>Added</b>:

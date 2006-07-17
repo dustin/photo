@@ -85,7 +85,8 @@
 			/></c:forEach></span><br/>
 		Category: <span id="<c:out value='c${img.id}'/>"
 			><c:out value="${img.catName}"/></span><br/>
-		Size: <c:out value="${img.dimensions}"/><br/>
+		Size: <c:out value="${img.dimensions.width}x${img.dimensions.height}"
+			/><br/>
 		Taken:
 			<span id="<c:out value='tk${img.id}'/>"
 				><fmt:formatDate value="${img.taken}" pattern="yyyy-MM-dd"
