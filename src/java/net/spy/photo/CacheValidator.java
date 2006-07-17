@@ -86,6 +86,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 	 */
 	public synchronized void cancelProcessing() {
 		if(isRunning()) {
+			getLogger().info("Cancelling cache validation.");
 			runThread.stopRequested=true;
 			runThread.interrupt();
 		}
@@ -148,20 +149,30 @@ public class CacheValidator extends SpyObject implements SAXAble {
 		public void run() {
 			SearchForm sf=new SearchForm();
 			Search ps=Search.getInstance();
+			SearchResults psr=null;
 			try {
-				SearchResults psr=ps.performSearch(sf, user);
-				runValidation(psr);
-			} catch (Exception e) {
+				psr=ps.performSearch(sf, user);
+			} catch (Throwable e) {
 				getLogger().warn(
 					"Could not perform search for cache validation", e);
 				errs.add("Could not perform search for cache validation " + e);
+			}
+			if(psr != null) {
+				try {
+					getLogger().info("Beginning validation of %d images",
+							psr.getSize());
+					runValidation(psr);
+				} catch(Throwable t) {
+					getLogger().warn("Error performing cache validation", t);
+					errs.add("Error performing cache validation: " + t);
+				}
 			}
 		}
 
 		private void runValidation(SearchResults sr) {
 			todo=sr.getSize();
 			done=0;
-			for(PhotoImageData pid : sr) {
+			for(PhotoImageData pid : sr.getAllObjects()) {
 				for(Operation op : operations) {
 					try {
 						op.process(pid, errs);
@@ -173,7 +184,9 @@ public class CacheValidator extends SpyObject implements SAXAble {
 					}
 				}
 				done++;
-				if(interrupted() || stopRequested) {
+				if(stopRequested) {
+					getLogger().info(
+							"User requested cache validation to stop.");
 					break;
 				}
 			}
