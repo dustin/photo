@@ -454,6 +454,18 @@
 		<forward name="next" path="admin.reportDisplay"/>
 	</action>
 
+	<action path="/report/failedLogins"
+		className="net.spy.jwebkit.struts.DBSPMapping"
+		roles="admin"
+		type="net.spy.photo.struts.AdminReportAction">
+
+		<set-property property="reportName" value="Recent Failed Logins"/>
+		<set-property property="spt"
+			value="net.spy.photo.sp.reporting.RecentFailedLogins"/>
+
+		<forward name="next" path="admin.reportDisplay"/>
+	</action>
+
 	<action path="/report/userLogins"
 		className="net.spy.jwebkit.struts.DBSPMapping"
 		roles="admin"

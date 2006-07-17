@@ -10,6 +10,8 @@
 <ul>
 	<li><photo:link url="/report/logins.do"
 		message="reporting.links.logins"/></li>
+	<li><photo:link url="/report/failedLogins.do"
+		message="reporting.links.failedlogins"/></li>
 	<li><photo:link url="/report/userCatXd.do"
 		message="reporting.links.userCatXd"/></li>
 	<li><photo:link url="/report/userCat.do"
