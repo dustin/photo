@@ -365,7 +365,6 @@ public class SavablePhotoImageData extends AbstractSavable
 	}
 
 	public int getCatId() {
-		getLogger().info("Returning cat as %d", catId);
 		return(catId);
 	}
 
