@@ -78,13 +78,13 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		throws Exception {
 		Saver s=new Saver(PhotoConfig.getInstance());
 		s.save(ob);
-		if(ob instanceof PhotoImageData) {
-			long start=System.currentTimeMillis();
-			getCache().cacheInstance((PhotoImageData)ob);
-			SearchIndex.getInstance().update(getObjects());
-			getLogger().info("Updated in place and recached in %dms",
-					System.currentTimeMillis() - start);
-		}
+		assert ob instanceof PhotoImageData
+			: "PhotoImageDataFactory.store got a " + ob.getClass();
+		long start=System.currentTimeMillis();
+		getCache().cacheInstance((PhotoImageData)ob);
+		SearchIndex.getInstance().update(getObjects());
+		getLogger().info("Updated in place and recached in %dms",
+				System.currentTimeMillis() - start);
 		if(recache) {
 			CacheRefresher.getInstance().recache(this,
 					System.currentTimeMillis(), recacheDelay);
