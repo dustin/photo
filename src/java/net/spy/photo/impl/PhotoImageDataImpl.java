@@ -286,7 +286,9 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 * Set the timestamp this image was acquired.
 	 */
 	protected void setTimestamp(Date to) {
-		this.timestamp=to;
+		// Make sure this is exactly a java.util.Date.  You can compare a Date
+		// to a timestamp, but you can't compare a timetamp to a date.  yay
+		this.timestamp=new Date(to.getTime());
 	}
 
 	/** 
