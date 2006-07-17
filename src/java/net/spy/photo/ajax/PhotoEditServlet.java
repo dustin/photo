@@ -251,6 +251,9 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 			savable.setCatId(catId);
 			pidf.store(savable, true, RECACHE_DELAY);
 
+			getLogger().info("%s changed the category of %s to %s",
+					user, id, cat);
+
 			return(cat.getName());
 		}
 	}

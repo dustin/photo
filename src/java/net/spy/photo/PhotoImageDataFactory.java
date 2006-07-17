@@ -21,9 +21,11 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	private static final long CACHE_TIME=86400000;
 
 	/**
-	 * Default delay for deferred recache.
+	 * Default delay for deferred recache.  This is a bit of a long time as it
+	 * serves only as a safety net should a but be discovered in the hot cache
+	 * refresh code.
 	 */
-	public static final long RECACHE_DELAY=15000;
+	public static final long RECACHE_DELAY=300000;
 
 	private static PhotoImageDataFactory instance=null;
 
@@ -76,6 +78,13 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		throws Exception {
 		Saver s=new Saver(PhotoConfig.getInstance());
 		s.save(ob);
+		if(ob instanceof PhotoImageData) {
+			long start=System.currentTimeMillis();
+			getCache().cacheInstance((PhotoImageData)ob);
+			SearchIndex.getInstance().update(getObjects());
+			getLogger().info("Updated in place and recached in %dms",
+					System.currentTimeMillis() - start);
+		}
 		if(recache) {
 			CacheRefresher.getInstance().recache(this,
 					System.currentTimeMillis(), recacheDelay);

@@ -19,6 +19,7 @@ import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 import net.spy.db.SpyDB;
 import net.spy.photo.AnnotatedRegion;
+import net.spy.photo.CategoryFactory;
 import net.spy.photo.Format;
 import net.spy.photo.ImageServer;
 import net.spy.photo.Keyword;
@@ -357,11 +358,13 @@ public class SavablePhotoImageData extends AbstractSavable
 	}
 
 	public void setCatId(int to) {
+		catName=CategoryFactory.getInstance().getObject(to).getName();
 		this.catId=to;
 		modify();
 	}
 
 	public int getCatId() {
+		getLogger().info("Returning cat as %d", catId);
 		return(catId);
 	}
 
@@ -399,11 +402,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public User getAddedBy() {
 		return(addedBy);
-	}
-
-	public void setCatName(String to) {
-		this.catName=to;
-		modify();
 	}
 
 	public String getCatName() {
