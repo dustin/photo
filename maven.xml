@@ -50,7 +50,7 @@
 		<mkdir dir="${maven.build.dir}/wars/lazy-wars"/>
 
 		<j:set var="wars" value="photo" />
-		<j:set var="lazywars" value="seanphoto,jasonphoto,photodemo"/>
+		<j:set var="lazywars" value="jasonphoto,photodemo,tphoto"/>
 		<j:set var="buildwars" value="${wars},${lazywars}"/>
 		<u:tokenize var="buildwars" delim=",">${buildwars}</u:tokenize>
 		<j:forEach items="${buildwars}" var="war">
