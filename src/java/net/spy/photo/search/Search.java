@@ -69,7 +69,6 @@ public class Search extends SpyObject {
 	 */
 	public void saveSearch(String name, String search, User user)
 		throws Exception {
-	  getLogger().error("Saving search", new Exception("From here"));
 		if(user == null || name == null || search == null) {
 			throw new Exception("Weird, invalid stuff.");
 		}
