@@ -42,10 +42,12 @@ public class SaveSearchAction extends PhotoAction {
 
 		// Get the PhotoSearch object which manages the search save.
 		Search search=Search.getInstance();
-		search.saveSearch(
-			(String)ssf.get("name"),
-			(String)ssf.get("search"),
+		String name=(String)ssf.get("name");
+		search.saveSearch(name, (String)ssf.get("search"),
 			sessionData.getUser());
+
+		addMessage(request, MessageType.success,
+				"Successfully saved search <q>" + name + "</q>");
 
 		// If we made it this far, we were successful.
 		return(mapping.findForward("next"));

@@ -462,3 +462,17 @@ a:hover + .searchcardinality {
   z-index: 100;
   font-size: x-small;
 }
+
+#messages {
+	border: solid 1px blue;
+	margin-top: 1em;
+	font-size: smaller;
+}
+
+#messages p {
+	padding: 0;
+	padding-left: 20px;
+	margin: 0;
+	background: #eef;
+	border-bottom: dotted 1px blue;
+}

@@ -147,6 +147,24 @@
 	</div>
 
 	<div id="content">
+			<!-- messages -->
+			<c:if test="${!empty photo_messages}">
+				<div id="messages">
+					<c:forEach var="msg" items="${photo_messages}">
+						<p class="<c:out value='${msg.type}'/>">
+							<img alt="<c:out value='${msg.type}'/>"
+								src="<c:url value='/images/icon_${msg.type}.gif'/>"/>
+							<c:out escapeXml="false" value="${msg.text}" />
+						</p>
+					</c:forEach>
+				</div>
+				<c:remove var="photo_messages" scope="session"/>
+				<script type="text/javascript">
+					Event.observe(window, 'load', function() {
+							new Effect.Highlight("messages");
+						}, false);
+				</script>
+			</c:if>
 			<tiles:insert attribute='body'/>
 	</div>
 	<div id="footer"> <!-- Footer -->

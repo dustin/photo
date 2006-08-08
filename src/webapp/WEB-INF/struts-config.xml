@@ -296,7 +296,7 @@
 		type="net.spy.photo.struts.SaveSearchAction"
 		scope="request"
 		name="saveSearchForm">
-		<forward name="next" path="top.savedSearch"/>
+		<forward name="next" redirect="true" path="/nextresults.do"/>
 	</action>
 
 	<!-- New user self-creation -->

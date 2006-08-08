@@ -84,6 +84,10 @@ public class LoginAction extends PhotoAction {
 			PhotoLogEntry ple=new PhotoLogEntry(user.getId(), "Login", request);
 			Persistent.getPipeline().addTransaction(ple,
 				PhotoConfig.getInstance());
+
+			addMessage(request, MessageType.success,
+					"Successfully logged in as <q>" + user.getRealname()
+					+ "</q>");
 		} else {
 			PhotoLogEntry ple=new PhotoLogEntry(
 				user.getId(), "AuthFail", request);

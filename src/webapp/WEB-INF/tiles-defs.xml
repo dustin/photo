@@ -98,11 +98,6 @@
 		<put name="body" value="/content/_results.jsp"/>
 	</definition>
 
-	<definition name="top.savedSearch" extends="pageLayout">
-		<put name="title" type="string" value="Search Saved"/>
-		<put name="body" value="/content/_savedsearch.jsp"/>
-	</definition>
-
 	<definition name="top.saveGallery" extends="pageLayout">
 		<put name="title" type="string" value="Save a Gallery"/>
 		<put name="body" value="/content/_savegallery.jsp"/>
