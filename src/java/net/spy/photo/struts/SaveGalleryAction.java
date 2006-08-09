@@ -60,6 +60,9 @@ public class SaveGalleryAction extends PhotoAction {
 		// Throw it away, freeing us up to create a new gallery.
 		session.removeAttribute("newGallery");
 
+		addMessage(request, MessageType.success,
+				"Added gallery " + sgf.getName());
+
 		return(mapping.findForward("next"));
 	}
 

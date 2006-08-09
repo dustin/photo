@@ -93,6 +93,10 @@ public class NewUserAction extends PhotoAction {
 		pst.close();
 		db.close();
 
+		addMessage(request, MessageType.success,
+				"Added user " + sessionData.getUser().getRealname()
+				+ " and logged you in.");
+
 		return(mapping.findForward("next"));
 	}
 

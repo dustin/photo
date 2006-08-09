@@ -68,6 +68,8 @@ public class AdminSaveProperties extends PhotoAction {
 		SpyCache sc=SpyCache.getInstance();
 		sc.uncache("photo_props");
 
+		addMessage(request, MessageType.success, "Saved properties.");
+
 		return(mapping.findForward("next"));
 	}
 

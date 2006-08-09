@@ -55,6 +55,9 @@ public class ChangePWAction extends PhotoAction {
 		user.setPassword(newpw);
 		uf.persist(user);
 
+		addMessage(request, MessageType.success,
+				"Your password has been changed");
+
 		return(mapping.findForward("next"));
 	}
 

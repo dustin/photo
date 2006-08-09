@@ -47,6 +47,9 @@ public class SetUidAction extends PhotoAction {
 		sessionData.setUser(thatUser);
 		getLogger().info("User " + thisUser + " has become " + thatUser);
 
+		addMessage(request, MessageType.success,
+				"Set current user to " + thatUser.getRealname());
+
 		return(mapping.findForward("next"));
 	}
 
