@@ -20,6 +20,7 @@ import java.util.TreeSet;
 import javax.servlet.ServletException;
 
 import net.spy.SpyObject;
+import net.spy.cache.SpyCache;
 import net.spy.db.DBSPLike;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
@@ -85,7 +86,12 @@ public class Search extends SpyObject {
 			is.setSearchData(search);
 			is.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
 
-			is.executeUpdate();
+			int affected=is.executeUpdate();
+			assert affected == 1 : "Expected to affect 1 record, affected "
+				+ affected;
+
+			// Clear the saved search cache so stuff shows up immediately
+			SpyCache.getInstance().uncache(SavedSearch.CACHE_KEY);
 		} catch(Exception e) {
 			getLogger().error("Error saving search", e);
 		} finally {

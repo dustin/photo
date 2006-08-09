@@ -30,7 +30,7 @@ public class SavedSearch extends Object {
 
 	private static final String CHARSET="UTF-8";
 
-	private static final String CACHE_KEY="net.spy.photo.searches";
+	static final String CACHE_KEY="net.spy.photo.searches";
 	private static final long CACHE_TIME=900000;
 
 	private int id=0;
@@ -94,7 +94,9 @@ public class SavedSearch extends Object {
 		return(URLEncoder.encode(search, CHARSET));
 	}
 
-	private static Map<Integer, SavedSearch> initSearchesMap() throws PhotoException {
+	private static Map<Integer, SavedSearch> initSearchesMap()
+		throws PhotoException {
+
 		Map<Integer, SavedSearch> rv=null;
 		try {
 			GetSearches db=new GetSearches(PhotoConfig.getInstance());
@@ -115,7 +117,9 @@ public class SavedSearch extends Object {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Map<Integer, SavedSearch> getSearchesMap() throws PhotoException {
+	private static Map<Integer, SavedSearch> getSearchesMap()
+		throws PhotoException {
+
 		SpyCache sc=SpyCache.getInstance();
 		Map rv=(Map)sc.get(CACHE_KEY);
 		if(rv == null) {
@@ -131,8 +135,7 @@ public class SavedSearch extends Object {
 	public static Collection<SavedSearch> getSearches() throws PhotoException {
 		TreeMap<String, SavedSearch> tm=new TreeMap<String, SavedSearch>();
 		Map<Integer, SavedSearch> m=getSearchesMap();
-		for(Iterator i=m.values().iterator();i.hasNext();) {
-			SavedSearch ss=(SavedSearch)i.next();
+		for(SavedSearch ss : m.values()) {
 			tm.put(ss.name, ss);
 		}
 		return(tm.values());
