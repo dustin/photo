@@ -442,6 +442,7 @@ grant all on properties to nobody;
 -- Add the photo of the unit of time property
 insert into properties(name, value) values('photo_of_uot', '1');
 insert into properties(name, value) values('background_img', '');
+insert into properties(name, value) values('album_name', 'My Photo Album');
 
 -- Show the profile users along with the profiles that created them
 create view user_byprofiles as

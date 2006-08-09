@@ -8,12 +8,13 @@
 
 	<!-- The page layout -->
 	<definition name="pageLayout" path="/layout/page.jsp">
-		<put name="title" type="string" value="My Photo Album"/>
+		<put name="title" type="string" value=""/>
 		<put name="body" value=""/>
 	</definition>
 
 	<!-- The index -->
 	<definition name="index" extends="pageLayout">
+		<put name="title" type="string" value="Home"/>
 		<put name="body" value="/content/_index.jsp"/>
 	</definition>
 

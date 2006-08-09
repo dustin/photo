@@ -20,7 +20,10 @@
 
 <html:html xhtml="true">
 	<head>
-		<title><tiles:insert attribute='title'/></title>
+		<title>
+			<%= props.getProperty("album_name", "My Photo Album") %>
+			- <tiles:insert attribute='title'/>
+		</title>
 		<photo:stylesheet url="/css/layout.css"/>
 		<photo:javascript url="/js/photo.js"/>
 		<photo:javascript url="/js/prototype.js"/>
