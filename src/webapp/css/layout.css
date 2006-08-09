@@ -463,6 +463,11 @@ a:hover + .searchcardinality {
   font-size: x-small;
 }
 
+a.deletelink:hover {
+	background: white;
+	color: inherit;
+}
+
 #messages {
 	border: solid 1px blue;
 	margin-top: 1em;

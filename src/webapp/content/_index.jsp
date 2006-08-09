@@ -5,15 +5,48 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<logic:present role="admin">
+<script type="text/javascript">
+	var deleteBase='<c:url value="/deleteSearch.do"/>';
+	// <![CDATA[
+	function deleteSearch(searchId) {
+		if(confirm("You sure you want to delete this search, B?")) {
+			Element.show("search_del_indicator_" + searchId);
+			new Ajax.Request(deleteBase, {
+				method: 'post',
+				postBody: $H({searchId: searchId}).toQueryString(),
+				onFailure: function(req) {
+					alert("Failed to delete.  :(");
+				},
+				onSuccess: function(req) {
+					new Effect.Fade("search_" + searchId);
+				},
+				});
+		}
+		return false;
+	}
+	// ]]>
+</script>
+</logic:present>
+
 <h2>Canned Searches</h2>
-<ul>
+<ul id="savedsearches">
 	<c:forEach var="i" items="${searches}">
-		<li>
+		<li class="savedsearch" id="search_<c:out value='${i.id}'/>">
 			<c:set var="su">
 				<c:url value="/savedSearch.do">
 					<c:param name="searchId" value="${i.id}"/>
 				</c:url>
 			</c:set>
+			<logic:present role="admin">
+				<a class="deletelink" href="#" title="Delete this search"
+					onclick="return deleteSearch(<c:out value='${i.id}'/>);">
+					<img src="<c:url value='/images/trash.gif'/>" alt="delete"/>
+				</a>
+				<img src="<c:url value='/images/indicator.gif'/>"
+					alt="indicator" style="display: none"
+					id="search_del_indicator_<c:out value='${i.id}'/>"/>
+			</logic:present>
 			<c:out escapeXml="false" value='<a href="${su}">${i.name}</a>'/>
 			<span class="searchcardinality">
 				Total of <c:out value="${i.count}"/> images.

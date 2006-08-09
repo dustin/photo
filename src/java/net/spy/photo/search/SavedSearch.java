@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -151,19 +150,6 @@ public class SavedSearch extends Object {
 			throw new PhotoException("No such saved search:  " + id);
 		}
 		return(ss);
-	}
-
-	/**
-	 * Test.
-	 */
-	public static void main(String argv[]) throws Exception {
-		Collection c=getSearches();
-
-		System.out.println("Saved searches:");
-		for(Iterator i=c.iterator(); i.hasNext(); ) {
-			SavedSearch s=(SavedSearch)i.next();
-			System.out.println("\t" + s.getName() + " - " + s.getSearch());
-		}
 	}
 
 	/**

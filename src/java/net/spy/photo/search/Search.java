@@ -32,6 +32,7 @@ import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
 import net.spy.photo.impl.PhotoDimensionsImpl;
+import net.spy.photo.sp.DeleteSearch;
 import net.spy.photo.sp.InsertSearch;
 import net.spy.photo.struts.SearchForm;
 import net.spy.util.CloseUtil;
@@ -78,9 +79,8 @@ public class Search extends SpyObject {
 			throw new Exception("No permission to save searches.");
 		}
 
-		InsertSearch is=null;
+		InsertSearch is=new InsertSearch(PhotoConfig.getInstance());
 		try {
-			is = new InsertSearch(PhotoConfig.getInstance());
 			is.setName(name);
 			is.setAddedBy(user.getId());
 			is.setSearchData(search);
@@ -96,6 +96,28 @@ public class Search extends SpyObject {
 			getLogger().error("Error saving search", e);
 		} finally {
 			CloseUtil.close((DBSPLike)is);
+		}
+	}
+
+	/**
+	 * Delete the search with the given ID.
+	 * 
+	 * @param searchId the ID of the search to delete
+	 */
+	public void deleteSearch(int searchId, User user) throws Exception {
+		if(!user.isInRole(User.ADMIN)) {
+			throw new Exception("User is not an admin.");
+		}
+		DeleteSearch ds=new DeleteSearch(PhotoConfig.getInstance());
+		try {
+			ds.setSearchId(searchId);
+			int affected=ds.executeUpdate();
+			assert affected == 1 : "Expected to delete 1 row, deleted "
+				+ affected;
+			// Clear the saved search cache so stuff shows up immediately
+			SpyCache.getInstance().uncache(SavedSearch.CACHE_KEY);
+		} finally {
+			CloseUtil.close((DBSPLike)ds);
 		}
 	}
 

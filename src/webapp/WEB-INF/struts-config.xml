@@ -223,12 +223,17 @@
 
 	<action path="/savedSearch"
 		type="net.spy.photo.struts.GetSavedSearchAction"
-		input="/index.do"
+		input="/index.do" scope="request"
 		name="savedSearchForm">
 
 		<!-- Send it on to the search class -->
 		<forward name="next" path="/int/search.do" />
 	</action>
+
+	<action path="/deleteSearch"
+		type="net.spy.photo.struts.DeleteSearchAction"
+		roles="admin" scope="request"
+		name="savedSearchForm"/>
 
 	<!-- Search result cursor movement -->
 	<action    path="/nextresults"
