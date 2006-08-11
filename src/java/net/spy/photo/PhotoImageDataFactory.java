@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import net.spy.db.Savable;
 import net.spy.db.Saver;
+import net.spy.db.savables.CollectionSavable;
 import net.spy.factory.CacheRefresher;
 import net.spy.factory.GenFactory;
 import net.spy.photo.impl.DBImageDataSource;
@@ -78,11 +79,20 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		throws Exception {
 		Saver s=new Saver(PhotoConfig.getInstance());
 		s.save(ob);
-		assert ob instanceof PhotoImageData
-			: "PhotoImageDataFactory.store got a " + ob.getClass();
 		long start=System.currentTimeMillis();
-		getCache().cacheInstance((PhotoImageData)ob);
-		SearchIndex.getInstance().update(getObjects());
+		if(ob instanceof PhotoImageData) {
+			getCache().cacheInstance((PhotoImageData)ob);
+			SearchIndex.getInstance().update(getObjects());
+		} else if(ob instanceof CollectionSavable) {
+			// XXX: Horrible abstraction leak.
+			CollectionSavable cs=(CollectionSavable)ob;
+			for(Savable pid : cs.getPostSavables(null)) {
+				getCache().cacheInstance((PhotoImageData)pid);
+			}
+			SearchIndex.getInstance().update(getObjects());
+		} else {
+			assert false : "Unexpected savable type: " + ob.getClass();
+		}
 		getLogger().info("Updated in place and recached in %dms",
 				System.currentTimeMillis() - start);
 		if(recache) {
