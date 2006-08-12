@@ -49,9 +49,8 @@
 		<mkdir dir="${maven.build.dir}/wars/wars"/>
 		<mkdir dir="${maven.build.dir}/wars/lazy-wars"/>
 
-		<j:set var="wars" value="photo" />
-		<j:set var="lazywars" value="jasonphoto,photodemo,tphoto"/>
-		<j:set var="buildwars" value="${wars},${lazywars}"/>
+		<j:set var="wars" value="photo,jasonphoto,photodemo,tphoto" />
+		<j:set var="buildwars" value="${wars}"/>
 		<u:tokenize var="buildwars" delim=",">${buildwars}</u:tokenize>
 		<j:forEach items="${buildwars}" var="war">
 			Building ${war}.war
@@ -82,11 +81,6 @@
 		<j:forEach items="${wars}" var="war">
 			<move file="${maven.build.dir}/wars/${war}.war"
 				tofile="${maven.build.dir}/wars/wars/${war}.war"/>
-		</j:forEach>
-		<u:tokenize var="lazywars" delim=",">${lazywars}</u:tokenize>
-		<j:forEach items="${lazywars}" var="war">
-			<move file="${maven.build.dir}/wars/${war}.war"
-				tofile="${maven.build.dir}/wars/lazy-wars/${war}.war"/>
 		</j:forEach>
 	</goal>
 

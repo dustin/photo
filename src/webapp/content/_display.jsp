@@ -76,7 +76,7 @@
 		<b>Taken</b>:  <span id="imgTaken"><c:out value="${image.taken}"/></span>
 		<b>Added</b>:
 			<c:out value="${image.timestamp}"/>
-		by <c:out value="${image.addedBy.realName}"/><br />
+		by <c:out value="${image.addedBy.realname}"/><br />
 		<b>Info</b>:
 		<div id="imgDescr" class="imgDescr"><c:out value="${image.descr}"/></div>
 		<b><a id="metalink" href="#">Toggle Meta Data</a>

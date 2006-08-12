@@ -183,7 +183,7 @@ var url='<c:url value="/ajax/photo/annotation"/>';
 			(<c:out value="${image.size}"/> bytes)<br />
 		<b>Taken</b>:  <c:out value="${image.taken}"/> <b>Added</b>:
 			<c:out value="${image.timestamp}"/>
-		by <c:out value="${image.addedBy.realName}"/><br />
+		by <c:out value="${image.addedBy.realname}"/><br />
 		<b>Info</b>:
 		<div id="imgDescr"><c:out value="${image.descr}"/></div>
 
