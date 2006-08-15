@@ -121,7 +121,9 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>7.4.1-jdbc3</version>
+			<!--
 			<properties><war.bundle>true</war.bundle></properties>
+			-->
 		</dependency>
 
 		<dependency>
