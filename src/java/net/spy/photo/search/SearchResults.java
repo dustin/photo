@@ -29,13 +29,6 @@ public class SearchResults extends Cursor<PhotoImageData> {
 	}
 
 	/**
-	 * Add a search result to the list.
-	 */
-	public boolean add(PhotoImageData d) {
-		return(super.add(new SearchResult(d, getSize())));
-	}
-
-	/**
 	 * Set the maximum image size to be represented.
 	 */
 	public void setMaxSize(PhotoDimensions to) {

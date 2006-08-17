@@ -266,9 +266,8 @@ public class Search extends SpyObject {
 		// Populate the results
 		SearchResults results = new SearchResults();
 		results.setMaxSize(dims);
-		int resultId = 0;
 		for(PhotoImageData r : rset) {
-			results.add(new SearchResult(r, resultId++));
+			results.add(r);
 		}
 
 		getLogger().info("Completed search for %s in %dms", user,

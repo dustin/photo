@@ -3,6 +3,7 @@
 
 package net.spy.photo;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import net.spy.util.RingBuffer;
 /**
  * Session data goes here.
  */
-public class PhotoSessionData extends Object implements java.io.Serializable {
+public class PhotoSessionData extends Object implements Serializable {
 
 	/** 
 	 * The session attribute name.

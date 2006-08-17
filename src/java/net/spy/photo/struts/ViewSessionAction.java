@@ -3,23 +3,20 @@
 
 package net.spy.photo.struts;
 
-import java.util.Iterator;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.PhotoSessionData;
-import net.spy.photo.SessionWatcher;
-import net.spy.photo.search.SearchResult;
-import net.spy.photo.search.SearchResults;
-import net.spy.util.Base64;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
+
+import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.SessionWatcher;
+import net.spy.photo.search.SearchResults;
+import net.spy.util.Base64;
 
 /**
  * Turn a session into search results.
@@ -54,14 +51,10 @@ public class ViewSessionAction extends PhotoAction {
 
 		// Grab the images from the session
 		SearchResults results=new SearchResults();
-		int sid=0;
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-		for(Iterator i=otherData.getImageSeenCollection().iterator();
-			i.hasNext(); sid++) {
-
-			Integer id=(Integer)i.next();
-			PhotoImageData pid=pidf.getObject(id.intValue());
-			results.add(new SearchResult(pid, sid));
+		for(Integer id : otherData.getImageSeenCollection()) {
+			PhotoImageData pid=pidf.getObject(id);
+			results.add(pid);
 		}
 
 		// Set the viewing size
