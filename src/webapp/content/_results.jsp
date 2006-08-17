@@ -63,7 +63,7 @@
 	<div class="search_result_image">
 		<c:set var="dUrl">
 			<c:url value="/display.do">
-				<c:param name="search_id" value="${img.searchId}"/>
+				<c:param name="id" value="${img.id}"/>
 			</c:url>
 		</c:set>
 		<c:set var="iUrl">

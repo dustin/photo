@@ -1,3 +1,4 @@
+<%@ page import="net.spy.photo.PhotoSessionData" %>
 <%@ page import="net.spy.photo.PhotoImageData" %>
 <%@ page import="net.spy.photo.PhotoDimensions" %>
 <%@ page import="net.spy.photo.PhotoRegion" %>
@@ -17,21 +18,22 @@
 
 <%
 	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
+	PhotoSessionData sessionData=(PhotoSessionData)
+		session.getAttribute(PhotoSessionData.SES_ATTR);
+	int searchPos=sessionData.getResultPos(image.getId());
 	// Need to know the new dims for the rest of the page
 	float scaleFactor=PhotoUtil.getScaleFactor(image.getDimensions(),
 		(PhotoDimensions)request.getAttribute("displayDims"));
-
-	String searchIdS=(String)request.getParameter("search_id");
 %>
 
-<% if(searchIdS == null) { %>
+<% if(searchPos == -1) { %>
 	<div class="displayBrief"><c:out value="${image.descr}"/></div>
 <% } else { %>
 	<table width="100%">
 		<tr valign="top">
 			<td align="left" width="30%">
-					<photo:imgLink id="0" relative="prev"
-						searchId='<%= "" + searchIdS %>'>
+					<photo:imgLink id="<%= String.valueOf(image.getId()) %>"
+						relative="prev">
 						<img src="<c:url value='/images/prev.png'/>" alt="previous"/>
 					</photo:imgLink>
 			</td>
@@ -41,14 +43,14 @@
 			</td>
 
 			<td align="right" width="30%">
-					<photo:link url='<%= "/display.do?search_id=" + searchIdS %>'>
+					<photo:link url='<%= "/display.do?id=" + image.getId() %>'>
 						<img src="<c:url value='/images/pause.png'/>" alt="pause"/>
 					</photo:link>
-					<photo:link url='<%= "/refreshDisplay.do?search_id=" + searchIdS %>'>
+					<photo:link url='<%= "/refreshDisplay.do?id=" + image.getId() %>'>
 						<img src="<c:url value='/images/play.png'/>" alt="slideshow"/>
 					</photo:link>
-					<photo:imgLink id="<%= 0 %>" relative="next"
-							searchId="<%= "" + searchIdS %>">
+					<photo:imgLink id="<%= String.valueOf(image.getId()) %>"
+						relative="next">
 						<img src="<c:url value='/images/next.png'/>" alt="next"/>
 					</photo:imgLink>
 			</td>
@@ -124,9 +126,6 @@
 		Add to Gallery
 	</photo:link>] | 
 </logic:present>
-[<photo:imgLink id='<%= String.valueOf(image.getId()) %>'>
-	Linkable image
-</photo:imgLink>] |
 [<photo:link url='<%= "/PhotoServlet/" + image.getId() + ".jpg?id=" + image.getId() %>'>Full Size Image</photo:link>]
 <%--
 [<photo:imgLink id="<%= "" + image.getId() %>">Full Size Image</photo:imgLink>]

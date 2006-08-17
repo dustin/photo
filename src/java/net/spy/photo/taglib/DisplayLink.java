@@ -11,7 +11,6 @@ import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUtil;
-import net.spy.photo.search.SearchResults;
 
 /**
  * Taglib to link to an image.
@@ -19,7 +18,6 @@ import net.spy.photo.search.SearchResults;
 public class DisplayLink extends PhotoTag {
 
 	private int id=-1;
-	private int searchId=-1;
 	private boolean showThumbnail=false;
 	private String altText=null;
 	private String width=null;
@@ -64,22 +62,6 @@ public class DisplayLink extends PhotoTag {
 	}
 
 	/**
-	 * Set the search ID.
-	 */
-	public void setSearchId(String to) {
-		if(to!=null) {
-			searchId=Integer.parseInt(to);
-		}
-	}
-
-	/**
-	 * Set the search ID.
-	 */
-	public void setSearchId(int to) {
-		searchId=to;
-	}
-
-	/**
 	 * If ``true'' show a thumbnail.
 	 */
 	public void setShowThumbnail(String to) {
@@ -119,7 +101,7 @@ public class DisplayLink extends PhotoTag {
         boolean process=true;
 
 		// This variable is the full HREF that will be rendered
-		StringBuffer href=new StringBuffer();
+		StringBuilder href=new StringBuilder();
 
 		HttpServletRequest req=(HttpServletRequest)pageContext.getRequest();
 		// This is just the URL inside the HREF.
@@ -127,50 +109,27 @@ public class DisplayLink extends PhotoTag {
 		url.append(PhotoUtil.getRelativeUri(req, "/display.do?"));
 
 		href.append("<a href=\"");
-		// Figure out whether to link to the search ID or the real ID.
-		if(searchId>=0) {
-			url.append("search_id=");
+		PhotoSessionData sesData=getSessionData();
+		int searchPos=sesData.getResultPos(id);
 
-			PhotoSessionData sessionData=getSessionData();
-			SearchResults results=sessionData.getResults();
-			if(results==null) {
-				throw new JspException("No search results found.");
-			}
-
-			// Figure out the maximum number of results.
-			int maxIndex=results.getSize();
-
-			// Since this is a search offset, figure out whether it's
-			// relative the the actual value or not.
-			if(relative==null) {
-				// Nothing
-			} else if(relative.equals("prev")) {
-				if(searchId == 0) {
-					process=false; // Don't process
-				} else {
-					searchId--;
-				}
-			} else if(relative.equals("next")) {
-				if( (searchId+1) >=maxIndex) {
-					process=false; // Don't process
-				} else {
-					searchId++;
-				}
-			} else {
-				throw new JspException("Invalid relative type:  " + relative);
-			}
-
-			url.append(searchId);
-
-		} else {
-			// This is meant to be a relative link, but didn't get a search ID.
-			if(relative!=null) {
-				process=false;
-			}
+		if(relative==null) {
 			// real ID.
-			url.append("id=");
-			url.append(id);
+		} else if(relative.equals("prev")) {
+			id=sesData.getResultIdByPosition(searchPos-1);
+			if(id == -1) {
+				process=false; // Don't process
+			}
+		} else if(relative.equals("next")) {
+			id=sesData.getResultIdByPosition(searchPos+1);
+			if(id == -1) {
+				process=false; // Don't process
+			}
+		} else {
+			throw new JspException("Invalid relative type:  " + relative);
 		}
+
+		url.append("id=");
+		url.append(id);
 
 		// Need the response to rewrite the URL
 		HttpServletResponse res=(HttpServletResponse)pageContext.getResponse();

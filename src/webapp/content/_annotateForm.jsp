@@ -9,8 +9,6 @@
 
 <%
 	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
-
-	String searchIdS=(String)request.getParameter("search_id");
 %>
 
 <script type="text/javascript">

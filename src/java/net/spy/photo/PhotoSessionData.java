@@ -28,6 +28,7 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	private String encodedSearch=null;
 	private PhotoDimensions optimalDimensions=null;
 
+	private HashMap<Integer, Integer> searchResults=null;
 	private Map<String, Cursor> cursors=null;
 
 	// Keep track of how many images have been served up to this user.
@@ -81,6 +82,39 @@ public class PhotoSessionData extends Object implements java.io.Serializable {
 	 */
 	public void setResults(SearchResults results) {
 		setCursor("searchResults", results);
+		searchResults=new HashMap<Integer, Integer>(results.getSize());
+		int pos=0;
+		for(PhotoImageData sr : results.getAllObjects()) {
+			searchResults.put(sr.getId(), pos++);
+		}
+	}
+
+	/**
+	 * Get the position of the search result with the given ID.
+	 * 
+	 * @param id the ID of the image
+	 * @return the position within the current search result
+	 */
+	public int getResultPos(int id) {
+		int rv=-1;
+		if(searchResults != null && searchResults.containsKey(id)) {
+			rv=searchResults.get(id);
+		}
+		return rv;
+	}
+
+	/**
+	 * Get the ID of a result by its position.
+	 * @param pos the position of the item
+	 * @return the id of the image at that position
+	 */
+	public int getResultIdByPosition(int pos) {
+		int rv=-1;
+		SearchResults res=getResults();
+		if(pos >= 0 && pos < res.getSize()) {
+			rv=res.get(pos).getId();
+		}
+		return rv;
 	}
 
 	/**
