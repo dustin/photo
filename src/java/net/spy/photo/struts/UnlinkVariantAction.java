@@ -24,7 +24,7 @@ public class UnlinkVariantAction extends PhotoAction {
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 		SavablePhotoImageData savable=new SavablePhotoImageData(
 				pidf.getObject((Integer)df.get("origId")));
-		savable.getVariants().remove(
+		savable.removeVariant(
 				pidf.getObject((Integer)df.get("variantId")));
 		pidf.store(savable);
 		ServletOutputStream os=res.getOutputStream();

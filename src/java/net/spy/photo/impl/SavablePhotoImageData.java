@@ -110,7 +110,8 @@ public class SavablePhotoImageData extends AbstractSavable
 		super();
 
 		this.keywords=proto.getKeywords();
-		this.variants=proto.getVariants();
+		this.variants=new HashSet<PhotoImageData>(proto.getVariants());
+		getLogger().info("New savable image has %d variants", variants.size());
 		this.annotations=proto.getAnnotations();
 		this.votes=proto.getVotes();
 		this.descr=proto.getDescr();
@@ -177,9 +178,11 @@ public class SavablePhotoImageData extends AbstractSavable
 
 			iv=new InsertVariant(conn);
 			iv.setOriginalId(id);
+			getLogger().info("Saving %d variants", variants.size());
 			for(PhotoImageData pid : variants) {
 				iv.setVariantId(pid.getId());
 				int aff=iv.executeUpdate();
+				getLogger().info("Saved variant %d -> %d", id, pid.getId());
 				assert aff == 1;
 			}
 		} finally {
@@ -279,6 +282,8 @@ public class SavablePhotoImageData extends AbstractSavable
 
 		// Insert a new keyword map
 		saveAnnotations(conn);
+		// Also save the variants.
+		saveVariants(conn);
 	}
 
 	public void save(Connection conn, SaveContext ctx)
@@ -489,6 +494,18 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public Collection<PhotoImageData> getVariants() {
 		return variants;
+	}
+
+	public void addVariant(PhotoImageData v) {
+		getLogger().info("Adding variant:  %s", v);
+		variants.add(v);
+		modify();
+	}
+
+	public void removeVariant(PhotoImageData v) {
+		getLogger().info("Removing variant:  %s", v);
+		variants.remove(v);
+		modify();
 	}
 
 	public Map<String, Object> getMetaData() {
