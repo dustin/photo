@@ -104,7 +104,7 @@ var lastShownExceptionCount=-1;
 
 <p>
 	This page shows you statistics on the asynchronous image storer and allows
-	you to issue manual runs of the storer in case you doubt it's awesomeness.
+	you to issue manual runs of the storer in case you doubt its awesomeness.
 </p>
 
 <h2>Status</h2>
