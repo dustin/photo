@@ -11,10 +11,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeSet;
 
 import net.spy.db.AbstractSavable;
+import net.spy.db.DBSPLike;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 import net.spy.db.SpyDB;
@@ -36,11 +38,14 @@ import net.spy.photo.Votes;
 import net.spy.photo.sp.DeleteAnnotations;
 import net.spy.photo.sp.DeleteAnnotationsMap;
 import net.spy.photo.sp.DeleteKeywordMap;
+import net.spy.photo.sp.DeleteVariants;
 import net.spy.photo.sp.InsertAnnotation;
 import net.spy.photo.sp.InsertAnnotationKeyword;
 import net.spy.photo.sp.InsertImage;
 import net.spy.photo.sp.InsertKeywordMap;
+import net.spy.photo.sp.InsertVariant;
 import net.spy.photo.sp.UpdateImage;
+import net.spy.util.CloseUtil;
 
 /**
  * Savable implementation of PhotoImageData.
@@ -50,6 +55,7 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	private Collection<AnnotatedRegion> annotations=null;
 	private Collection<Keyword> keywords=null;
+	private Collection<PhotoImageData> variants=null;
 	private Votes votes=null;
 	private String descr=null;
 	private int catId=-1;
@@ -91,6 +97,7 @@ public class SavablePhotoImageData extends AbstractSavable
 
 		keywords=new TreeSet<Keyword>();
 		annotations=new HashSet<AnnotatedRegion>();
+		variants=new LinkedList<PhotoImageData>();
 
 		id=getNewImageId();
 		setNew(true);
@@ -103,6 +110,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		super();
 
 		this.keywords=proto.getKeywords();
+		this.variants=proto.getVariants();
 		this.annotations=proto.getAnnotations();
 		this.votes=proto.getVotes();
 		this.descr=proto.getDescr();
@@ -146,6 +154,7 @@ public class SavablePhotoImageData extends AbstractSavable
 
 		saveKeywords(conn);
 		saveAnnotations(conn);
+		saveVariants(conn);
 
 		// Get the photo cached
 		try {
@@ -153,6 +162,29 @@ public class SavablePhotoImageData extends AbstractSavable
 			server.storeImage(id, imageData);
 		} catch(Exception e) {
 			throw new SaveException("Cannot cache photo", e);
+		}
+	}
+
+	private void saveVariants(Connection conn) throws SQLException {
+		DeleteVariants dv=null;
+		InsertVariant iv=null;
+		try {
+			dv=new DeleteVariants(conn);
+			dv.setOriginalId(id);
+			dv.executeUpdate();
+			CloseUtil.close((DBSPLike)dv);
+			dv=null;
+
+			iv=new InsertVariant(conn);
+			iv.setOriginalId(id);
+			for(PhotoImageData pid : variants) {
+				iv.setVariantId(pid.getId());
+				int aff=iv.executeUpdate();
+				assert aff == 1;
+			}
+		} finally {
+			CloseUtil.close((DBSPLike)dv);
+			CloseUtil.close((DBSPLike)iv);
 		}
 	}
 
@@ -453,6 +485,10 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public Format getFormat() {
 		return(format);
+	}
+
+	public Collection<PhotoImageData> getVariants() {
+		return variants;
 	}
 
 	public Map<String, Object> getMetaData() {

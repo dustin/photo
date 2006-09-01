@@ -65,7 +65,7 @@ public interface PhotoImageData extends Instance {
 	String getCatName();
 
 	/** 
-	 * Get the date this image was taken/created (yyyy-MM-dd).
+	 * Get the date this image was taken/created.
 	 */
 	Date getTaken();
 
@@ -84,5 +84,10 @@ public interface PhotoImageData extends Instance {
 	 * @throws Exception 
 	 */
 	Map<String, Object> getMetaData() throws Exception;
+
+	/**
+	 * Get all of the variations of this image.
+	 */
+	Collection<PhotoImageData> getVariants();
 
 }

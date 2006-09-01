@@ -444,6 +444,17 @@ insert into properties(name, value) values('photo_of_uot', '1');
 insert into properties(name, value) values('background_img', '');
 insert into properties(name, value) values('album_name', 'My Photo Album');
 
+-- Bidirectional map of related photos
+create table photo_variations (
+	original_id integer not null,
+	variant_id integer not null,
+	foreign key(original_id) references album(id) on delete cascade,
+	foreign key(variant_id) references album(id) on delete cascade
+);
+grant all on photo_variations to nobody;
+create unique index photo_variations_uniq
+	on photo_variations(original_id, variant_id);
+
 -- Show the profile users along with the profiles that created them
 create view user_byprofiles as
 	select	wwwusers.id as user_id, wwwusers.username, wwwusers.realname,

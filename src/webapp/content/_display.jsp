@@ -26,6 +26,91 @@
 		(PhotoDimensions)request.getAttribute("displayDims"));
 %>
 
+<logic:present role="admin">
+<script type="text/javascript">
+	var createBase='<c:url value="/createVariant.do"/>';
+	var deleteBase='<c:url value="/deleteVariant.do"/>';
+	var imgBase='<c:url value="/PhotoServlet"/>';
+	var displayBase='<c:url value="/display.do"/>';
+	var trashUrl='<c:url value="/images/trash.gif"/>';
+	var indicatorUrl='<c:url value="/images/indicator.gif"/>';
+	var origId='<c:out value="${image.id}"/>';
+	// <![CDATA[
+	function deleteVariant(varId) {
+		if(confirm("You sure you want to unassociate this variant?")) {
+			Element.show("variant_del_indicator_" + varId);
+			new Ajax.Request(deleteBase, {
+				method: 'post',
+				postBody: $H({origId: origId, variantId: varId}).toQueryString(),
+				onFailure: function(req) {
+					alert("Failed to delete.	:(");
+					Element.hide("variant_del_indicator_" + varId);
+				},
+				onSuccess: function(req) {
+					new Effect.Fade("variant_" + varId);
+				},
+				});
+		} 
+		return false;
+	}			
+
+	function displayNewVariant(newId) {
+		var div=document.createElement("div");
+		div.className="variantlink";
+		div.id="variant_" + newId;
+
+		var trashImg=document.createElement("img");
+		trashImg.src=trashUrl;
+
+		var delLink=document.createElement("a");
+		delLink.href="#";
+		delLink.title="Unassociate this variant";
+		delLink.onclick=function() { deleteVariant(newId); return false; };
+		delLink.appendChild(trashImg);
+
+		div.appendChild(delLink);
+
+		var indicatorImg=document.createElement("img");
+		indicatorImg.src=indicatorUrl;
+		indicatorImg.id="variant_del_indicator_" + newId;
+
+		div.appendChild(indicatorImg);
+
+		var img=document.createElement("img");
+		img.src=imgBase + "?id=" + newId + "&thumbnail=1";;
+
+		var a=document.createElement("a");
+		a.href=displayBase + "?id=" + newId;
+		a.appendChild(img);
+
+		div.appendChild(a);
+
+		$("variants").appendChild(div);
+
+		Element.hide("variant_del_indicator_" + newId);
+	}
+
+	function submitVariant() {
+		var newId=$F("newVariantId");
+		Element.show("addingVariantIndicator");
+		new Ajax.Request(createBase, {
+			method: 'post',
+			postBody: $H({origId: origId, variantId: newId}).toQueryString(),
+			onFailure: function(req) {
+				alert("Failed to add variant.	:(");
+			},
+			onSuccess: function(req) {
+				displayNewVariant(newId);
+			},
+			onComplete: function(req) {
+				Element.hide("addingVariantIndicator");
+			},
+			});
+	}
+	// ]]>
+</script> 
+</logic:present>
+
 <% if(searchPos == -1) { %>
 	<div class="displayBrief"><c:out value="${image.descr}"/></div>
 <% } else { %>
@@ -72,7 +157,7 @@
 			<i><span id="imgKeywords"><c:forEach
 				var="kw" items="${image.keywords}"> <c:out value="${kw.keyword}"
 					/></c:forEach></span></i><br/>
-		<b>Size</b>:  <c:out
+		<b>Size</b>:	<c:out
 			value="${image.dimensions.width}x${image.dimensions.height}"/>
 			(<c:out value="${image.size}"/> bytes)<br />
 		<b>Taken</b>:  <span id="imgTaken"><c:out value="${image.taken}"/></span>
@@ -151,6 +236,54 @@
 			alt="indicator" id="rateindicator" style="display: none"/>
 	</div>
 </div>
+
+<c:if test="${not empty image.variants}">
+	<h2>Variants</h2>
+</c:if>
+<div id="variants">
+	<c:forEach var="img" items="${image.variants}">
+		<c:set var="dUrl">
+			<c:url value="/display.do">
+				<c:param name="id" value="${img.id}"/>
+			</c:url>
+		</c:set>
+		<c:set var="iUrl">
+			<c:url value="/PhotoServlet">
+				<c:param name="id" value="${img.id}"/>
+				<c:param name="thumbnail" value="1"/>
+			</c:url>
+		</c:set>
+		<div class="variantlink" id="variant_<c:out value='${img.id}'/>">
+			<logic:present role="admin">
+				<a class="deletelink" href="#" title="Unassociate this variant"
+					onclick="return deleteVariant(<c:out value='${img.id}'/>);">
+					<img src="<c:url value='/images/trash.gif'/>" alt="delete"/>
+				</a>
+				<img src="<c:url value='/images/indicator.gif'/>"
+					alt="indicator" style="display: none"
+					id="variant_del_indicator_<c:out value='${img.id}'/>"/>
+			</logic:present>
+			<a href="<c:out value='${dUrl}'/>">
+				<img src="<c:out value='${iUrl}'/>" alt="variant"
+					width="<c:out value='${img.tnDims.width}'/>"
+					height="<c:out value='${img.tnDims.height}'/>"/>
+			</a>
+		</div>
+	</c:forEach>
+</div> <!-- variants -->
+
+<logic:present role="admin">
+	<form action="#" onsubmit="submitVariant(); return false;">
+		<p>
+			<label for="newVariantId">New Variant ID</label>
+			<input type="text" id="newVariantId" name="newVariantId"/>
+			<input type="submit" value="Link"/>
+			<img src="<c:url value='/images/indicator.gif'/>"
+				alt="indicator" style="display: none"
+				id="addingVariantIndicator"/>
+		</p>
+	</form>
+</logic:present>
 
 <div id="comments" class="comments">
 

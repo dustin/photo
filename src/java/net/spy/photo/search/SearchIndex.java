@@ -36,6 +36,9 @@ public class SearchIndex extends SpyObject {
 	private SortedMap<Date, Set<PhotoImageData>> byTaken = null;
 	private SortedMap<Date, Set<PhotoImageData>> byTs = null;
 
+	// All images that can be classified as a variant of another image.
+	private Set<PhotoImageData> variants=null;
+
 	/**
 	 * Get an instance of SearchIndex.
 	 */
@@ -85,12 +88,18 @@ public class SearchIndex extends SpyObject {
 		byCategory = new HashMap<Integer, Set<PhotoImageData>>();
 		byTaken = new TreeMap<Date, Set<PhotoImageData>>();
 		byTs = new TreeMap<Date, Set<PhotoImageData>>();
+		variants = new HashSet<PhotoImageData>();
+		long start=System.currentTimeMillis();
 		for(PhotoImageData pid : vals) {
 			add(byKeyword, pid.getKeywords(), pid);
 			add(byCategory, pid.getCatId(), pid);
 			add(byTaken, pid.getTaken(), pid);
 			add(byTs, pid.getTimestamp(), pid);
+			variants.addAll(pid.getVariants());
 		}
+		getLogger().info("Indexed %d images (%d are variants) in %sms",
+				vals.size(), variants.size(),
+				(System.currentTimeMillis() - start));
 		SearchCache.getInstance().clear();
 	}
 

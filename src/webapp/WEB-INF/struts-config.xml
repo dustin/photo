@@ -40,6 +40,13 @@
 			<form-property name="searchId" type="java.lang.Integer"/>
 		</form-bean>
 
+    <form-bean name="variantForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+
+			<form-property name="origId" type="java.lang.Integer"/>
+			<form-property name="variantId" type="java.lang.Integer"/>
+		</form-bean>
+
     <form-bean name="saveSearchForm"
 			type="org.apache.struts.validator.DynaValidatorForm">
 
@@ -233,6 +240,15 @@
 		type="net.spy.photo.struts.DeleteSearchAction"
 		roles="admin" scope="request"
 		name="savedSearchForm"/>
+
+	<action path="/createVariant"
+		type="net.spy.photo.struts.LinkVariantAction"
+		roles="admin" scope="request"
+		name="variantForm"/>
+	<action path="/deleteVariant"
+		type="net.spy.photo.struts.UnlinkVariantAction"
+		roles="admin" scope="request"
+		name="variantForm"/>
 
 	<!-- Search result cursor movement -->
 	<action    path="/nextresults"

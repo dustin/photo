@@ -481,3 +481,7 @@ a.deletelink:hover {
 	background: #eef;
 	border-bottom: dotted 1px blue;
 }
+
+.variantlink {
+	display: inline;
+}

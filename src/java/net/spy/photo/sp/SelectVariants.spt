@@ -1,0 +1,17 @@
+#
+# Copyright (c) 2006 Dustin Sallings <dustin@spy.net>
+# arch-tag: AAB6370A-0C3A-4529-95FC-6E0B1A22D285
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get all variants.
+
+@sql
+select original_id, variant_id from photo_variations
+
+@results
+original_id INTEGER The ID of the original image
+variant_id INTEGER The ID of the variation

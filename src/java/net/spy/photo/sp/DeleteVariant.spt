@@ -1,0 +1,17 @@
+#
+# Copyright (c) 2006 Dustin Sallings <dustin@spy.net>
+# arch-tag: 1765E36C-E595-4049-9E31-6CDFA7655959
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Remove a specific variant of an image.
+
+@sql
+delete from photo_variations where original_id = ? and variant_id = ?
+
+@params
+original_id required INTEGER The original image ID.
+variant_id required INTEGER The ID of the variation.

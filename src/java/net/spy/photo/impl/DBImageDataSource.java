@@ -7,9 +7,11 @@ import java.io.ObjectStreamException;
 import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import net.spy.SpyObject;
+import net.spy.db.DBSPLike;
 import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
 import net.spy.photo.Keyword;
@@ -26,6 +28,8 @@ import net.spy.photo.sp.GetAllRegionKeywords;
 import net.spy.photo.sp.GetAllRegions;
 import net.spy.photo.sp.GetAllVotes;
 import net.spy.photo.sp.GetPhotoInfo;
+import net.spy.photo.sp.SelectVariants;
+import net.spy.util.CloseUtil;
 
 /**
  * A PhotoImageDataSource implementation that gets images from the DB.
@@ -69,7 +73,7 @@ public class DBImageDataSource extends SpyObject
 		loadKeywords(rv);
 		loadAnnotations(rv);
 		loadVotes(rv);
-		
+		loadVariants(rv);
 
 		// Add all of the image annotation keywords to the image keywords
 		for(PhotoImageData imgd : rv.values()) {
@@ -81,6 +85,21 @@ public class DBImageDataSource extends SpyObject
 		}
 
 		return (rv.values());
+	}
+
+	private void loadVariants(HashMap<Integer, PhotoImageData> rv)
+		throws Exception {
+		SelectVariants sv=new SelectVariants(PhotoConfig.getInstance());
+		try {
+			ResultSet rs=sv.executeQuery();
+			while(rs.next()) {
+				((ImgData)rv.get(rs.getInt("original_id")))
+					.addVariant(rv.get(rs.getInt("variant_id")));
+			}
+			rs.close();
+		} finally {
+			CloseUtil.close((DBSPLike)sv);
+		}
 	}
 
 	private void loadVotes(HashMap rv) throws Exception {
@@ -155,6 +174,7 @@ public class DBImageDataSource extends SpyObject
 	}
 
 	private static final class ImgData extends PhotoImageDataImpl {
+		private Collection<PhotoImageData> variants=null;
 		public ImgData(ResultSet rs) throws Exception {
 			super();
 			setId(rs.getInt("id"));
@@ -179,6 +199,9 @@ public class DBImageDataSource extends SpyObject
 			// Look up the user
 			setAddedBy(Persistent.getSecurity().getUser(rs.getInt("addedby")));
 
+			// Add variant id storage
+			variants=new LinkedList<PhotoImageData>();
+
 			if(w >= 0 && h >= 0) {
 				setDimensions(new PhotoDimensionsImpl(w, h));
 			}
@@ -192,6 +215,15 @@ public class DBImageDataSource extends SpyObject
 
 		public void addKeyword(Keyword keyword) {
 			super.addKeyword(keyword);
+		}
+
+		public void addVariant(PhotoImageData which) {
+			assert which != null : "Attempted to add a null variant.";
+			variants.add(which);
+		}
+
+		public Collection<PhotoImageData> getVariants() {
+			return variants;
 		}
 
 		protected Object writeReplace() throws ObjectStreamException {
