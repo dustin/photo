@@ -92,6 +92,14 @@
 
 	function submitVariant() {
 		var newId=$F("newVariantId");
+		if(newId == "") {
+			alert("Can't link to nothing.");
+			return false;
+		}
+		if(newId == origId) {
+			alert("Can't link to myself.");
+			return false;
+		}
 		Element.show("addingVariantIndicator");
 		new Ajax.Request(createBase, {
 			method: 'post',
@@ -100,7 +108,12 @@
 				alert("Failed to add variant.	:(");
 			},
 			onSuccess: function(req) {
-				displayNewVariant(newId);
+				var existingEl=$("variant_" + newId);
+				if( existingEl != null ) {
+					new Effect.Highlight(existingEl);
+				} else {
+					displayNewVariant(newId);
+				}
 			},
 			onComplete: function(req) {
 				Element.hide("addingVariantIndicator");

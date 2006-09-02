@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -97,7 +96,7 @@ public class SavablePhotoImageData extends AbstractSavable
 
 		keywords=new TreeSet<Keyword>();
 		annotations=new HashSet<AnnotatedRegion>();
-		variants=new LinkedList<PhotoImageData>();
+		variants=new HashSet<PhotoImageData>();
 
 		id=getNewImageId();
 		setNew(true);
@@ -443,6 +442,33 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public String getCatName() {
 		return(catName);
+	}
+
+	/** 
+	 * Get the hash code for this object.
+	 * 
+	 * @return the id
+	 */
+	public int hashCode() {
+		return(id);
+	}
+
+	/**
+	 * True if the given object is a PhotoImageData object representing the
+	 * same image.
+	 */
+	public boolean equals(Object o) {
+		boolean rv=false;
+
+		if(o instanceof PhotoImageData) {
+			PhotoImageData pid=(PhotoImageData)o;
+
+			if(id == pid.getId()) {
+				rv=true;
+			}
+		}
+
+		return(rv);
 	}
 
 	/** 
