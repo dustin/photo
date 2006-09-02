@@ -110,7 +110,12 @@
 			onSuccess: function(req) {
 				var existingEl=$("variant_" + newId);
 				if( existingEl != null ) {
-					new Effect.Highlight(existingEl);
+					Element.hide("variant_del_indicator_" + newId);
+					Element.show(existingEl);
+					// XXX:  I don't know the difference between a duplicate add and an
+					// add-remove-add.  Ideally, I wouldn't want to pulsate if it'd been
+					// previously removed during this page view.
+					new Effect.Pulsate(existingEl);
 				} else {
 					displayNewVariant(newId);
 				}
