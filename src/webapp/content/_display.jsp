@@ -48,7 +48,7 @@
 				},
 				onSuccess: function(req) {
 					new Effect.Fade("variant_" + varId);
-				},
+				}
 				});
 		} 
 		return false;
@@ -104,7 +104,7 @@
 			},
 			onComplete: function(req) {
 				Element.hide("addingVariantIndicator");
-			},
+			}
 			});
 	}
 	// ]]>
