@@ -11,12 +11,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.xml.sax.ContentHandler;
-
-import net.spy.jwebkit.xml.XMLUtils;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.User;
+import net.spy.xml.XMLUtils;
+
+import org.xml.sax.ContentHandler;
 
 /**
  * Get the available categories for the current user.

@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.spy.jwebkit.AjaxServlet;
-import net.spy.jwebkit.xml.SAXAble;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
+import net.spy.xml.SAXAble;
 
 /**
  * Base class for photo ajax requests.

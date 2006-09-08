@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.beanutils.PropertyUtils;
-
 import net.spy.cache.SpyCache;
 import net.spy.jwebkit.RequestUtil;
 import net.spy.photo.PhotoConfig;
@@ -21,6 +19,8 @@ import net.spy.photo.PhotoException;
 import net.spy.photo.sp.GetSearches;
 import net.spy.photo.struts.SearchForm;
 import net.spy.util.Base64;
+
+import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  * Represents a saved search entry.

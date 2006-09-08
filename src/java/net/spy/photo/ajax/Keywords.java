@@ -12,10 +12,10 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.jwebkit.xml.CollectionElement;
-import net.spy.jwebkit.xml.SAXAble;
 import net.spy.photo.search.KeywordMatch;
 import net.spy.photo.search.Search;
+import net.spy.xml.CollectionElement;
+import net.spy.xml.SAXAble;
 
 /**
  * Get the keywords for the current user.

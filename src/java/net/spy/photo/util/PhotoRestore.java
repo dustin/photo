@@ -7,12 +7,12 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
+import net.spy.util.CloseUtil;
+
 import org.apache.xerces.parsers.DOMParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
-
-import net.spy.util.CloseUtil;
 
 /**
  * Restore image backups.

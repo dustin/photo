@@ -6,13 +6,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.jwebkit.xml.MapElement;
-import net.spy.jwebkit.xml.SAXAble;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
+import net.spy.xml.MapElement;
+import net.spy.xml.SAXAble;
 
 /**
  * Get the EXIF data for an image by path.

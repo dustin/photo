@@ -11,10 +11,10 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.jwebkit.xml.MapElement;
-import net.spy.jwebkit.xml.SAXAble;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
+import net.spy.xml.MapElement;
+import net.spy.xml.SAXAble;
 
 /**
  * Get the categories available to the current user.

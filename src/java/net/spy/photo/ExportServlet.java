@@ -13,12 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.spy.jwebkit.xml.SAXAble;
 import net.spy.jwebkit.xml.XMLOutputServlet;
-import net.spy.jwebkit.xml.XMLUtils;
 import net.spy.photo.search.Search;
 import net.spy.photo.search.SearchResults;
 import net.spy.photo.struts.SearchForm;
+import net.spy.xml.SAXAble;
+import net.spy.xml.XMLUtils;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;

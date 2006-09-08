@@ -16,11 +16,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import com.drew.imaging.jpeg.JpegMetadataReader;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
-
 import net.spy.SpyObject;
 import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
@@ -35,6 +30,11 @@ import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
 import net.spy.photo.Vote;
 import net.spy.photo.Votes;
+
+import com.drew.imaging.jpeg.JpegMetadataReader;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
 
 /**
  * This class represents, and retreives all useful data for a given image.

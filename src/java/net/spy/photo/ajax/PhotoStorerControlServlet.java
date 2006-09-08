@@ -5,10 +5,10 @@ package net.spy.photo.ajax;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.jwebkit.xml.SAXAble;
 import net.spy.photo.Persistent;
 import net.spy.photo.User;
 import net.spy.photo.util.PhotoStorerThread;
+import net.spy.xml.SAXAble;
 
 /**
  * Get stats on and control the photo storer thread.

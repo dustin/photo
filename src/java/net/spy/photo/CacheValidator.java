@@ -8,19 +8,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
 import net.spy.SpyObject;
 import net.spy.SpyThread;
-import net.spy.jwebkit.xml.SAXAble;
-import net.spy.jwebkit.xml.XMLUtils;
 import net.spy.photo.impl.ImageServerImpl;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.search.Search;
 import net.spy.photo.search.SearchResults;
 import net.spy.photo.struts.SearchForm;
 import net.spy.util.RingBuffer;
+import net.spy.xml.SAXAble;
+import net.spy.xml.XMLUtils;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  * Cache validation and build-out utility.

@@ -11,14 +11,8 @@ import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
 import net.spy.db.DBSPLike;
 import net.spy.db.SpyDB;
-import net.spy.jwebkit.xml.SAXAble;
-import net.spy.jwebkit.xml.ThrowableElement;
-import net.spy.jwebkit.xml.XMLUtils;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageDataFactory;
@@ -28,6 +22,12 @@ import net.spy.util.Base64;
 import net.spy.util.CloseUtil;
 import net.spy.util.LoopingThread;
 import net.spy.util.RingBuffer;
+import net.spy.xml.SAXAble;
+import net.spy.xml.ThrowableElement;
+import net.spy.xml.XMLUtils;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  * Store images in the DB.	Uploaded images go directly into the cache and

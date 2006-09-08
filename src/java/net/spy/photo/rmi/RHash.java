@@ -4,7 +4,6 @@
 package net.spy.photo.rmi;
 
 import java.io.Serializable;
-
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;

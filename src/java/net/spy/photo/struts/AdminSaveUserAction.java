@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.spy.db.SpyDB;
 import net.spy.photo.MutableUser;
-import net.spy.photo.PhotoConfig;
 import net.spy.photo.NoSuchPhotoUserException;
+import net.spy.photo.PhotoConfig;
 import net.spy.photo.UserFactory;
 
 import org.apache.struts.action.ActionForm;
