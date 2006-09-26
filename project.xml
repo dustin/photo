@@ -80,6 +80,15 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 			</properties>
 		</dependency>
 		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.2</version>
+			<url>http://jakarta.apache.org/commons/io/</url>
+			<properties>
+				<war.bundle>true</war.bundle>
+			</properties>
+		</dependency>
+		<dependency>
 			<groupId>antlr</groupId>
 			<artifactId>antlr</artifactId>
 			<version>2.7.6</version>
