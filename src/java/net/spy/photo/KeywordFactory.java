@@ -5,17 +5,13 @@ package net.spy.photo;
 import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import net.spy.db.Saver;
-import net.spy.factory.CacheEntry;
 import net.spy.factory.GenFactory;
-import net.spy.factory.HashCacheEntry;
 import net.spy.photo.impl.KeywordImpl;
 import net.spy.photo.sp.GetKeywords;
 
@@ -89,8 +85,7 @@ public class KeywordFactory extends GenFactory<Keyword> {
 		Keyword rv=null;
 		// Skip ignored keywords
 		if(!ignoredKeywords.contains(kw)) {
-			KeywordCacheEntry c=(KeywordCacheEntry)getCache();
-			rv=c.getByWord(kw);
+			rv=getObject(Keyword.BYWORD, kw);
 			if(rv == null && create) {
 				// If this didn't match an existing keyword, make a new one
 				rv=new KeywordImpl(kw);
@@ -138,10 +133,6 @@ public class KeywordFactory extends GenFactory<Keyword> {
 		return(new Keywords(positive, negative, missing));
 	}
 
-	protected CacheEntry<Keyword> getNewCacheEntry() {
-		return(new KeywordCacheEntry());
-	}
-
 	/**
 	 * Result set from a keyword string parsing.
 	 */
@@ -179,18 +170,4 @@ public class KeywordFactory extends GenFactory<Keyword> {
 		}
 	}
 
-	private static class KeywordCacheEntry extends HashCacheEntry<Keyword> {
-		private Map<String, Keyword> byWord=null;
-		public KeywordCacheEntry() {
-			super();
-			byWord=new HashMap<String, Keyword>();
-		}
-		public void cacheInstance(Keyword k) {
-			super.cacheInstance(k);
-			byWord.put(k.getKeyword(), k);
-		}
-		public Keyword getByWord(String k) {
-			return(byWord.get(k));
-		}
-	}
 }

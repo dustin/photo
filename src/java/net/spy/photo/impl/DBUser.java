@@ -18,6 +18,7 @@ import java.util.Set;
 import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
+import net.spy.factory.CacheKey;
 import net.spy.photo.MutableUser;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoACL;
@@ -116,6 +117,7 @@ public class DBUser extends AbstractSavable
 	/** 
 	 * The principal name (username).
 	 */
+	@CacheKey(name=BY_USERNAME)
 	public String getName() {
 		return(name);
 	}
@@ -123,6 +125,7 @@ public class DBUser extends AbstractSavable
 	/**
 	 * Get the user's E-mail address.
 	 */
+	@CacheKey(name=BY_EMAIL)
 	public String getEmail() {
 		return(email);
 	}
@@ -138,6 +141,7 @@ public class DBUser extends AbstractSavable
 	/** 
 	 * Get the persistent session ID.
 	 */
+	@CacheKey(name=BY_PERSESS)
 	public String getPersess() {
 		return(persess);
 	}

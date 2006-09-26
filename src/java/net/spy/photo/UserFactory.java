@@ -15,9 +15,7 @@ import java.util.TreeSet;
 
 import net.spy.db.Savable;
 import net.spy.db.Saver;
-import net.spy.factory.CacheEntry;
 import net.spy.factory.GenFactory;
-import net.spy.factory.HashCacheEntry;
 import net.spy.photo.impl.DBUser;
 import net.spy.photo.sp.GetAllACLs;
 import net.spy.photo.sp.GetAllRoles;
@@ -137,10 +135,6 @@ public class UserFactory extends GenFactory<User> {
 		return(users.values());
 	}
 
-	protected CacheEntry<User> getNewCacheEntry() {
-		return(new UserCacheEntry());
-	}
-
 	protected Collection<User> getInstances() {
 		Collection<User> rv=null;
 		try {
@@ -166,11 +160,10 @@ public class UserFactory extends GenFactory<User> {
 			throw new NoSuchPhotoUserException("There is no null user.");
 		}
 
-		UserCacheEntry m=(UserCacheEntry)getCache();
-		User rv=m.getByUsername(spec.toLowerCase());
+		User rv=getObject(User.BY_USERNAME, spec.toLowerCase());
 		if(rv==null) {
 			// If that fails, try it by email address
-			rv=m.getByEmail(spec.toLowerCase());
+			rv=getObject(User.BY_EMAIL, spec.toLowerCase());
 			if(rv == null) {
 				throw new NoSuchPhotoUserException("No such user:  " + spec);
 			}
@@ -184,8 +177,9 @@ public class UserFactory extends GenFactory<User> {
 	 */
 	public User getUserByPersess(String persess) throws PhotoUserException {
 
-		UserCacheEntry m=(UserCacheEntry)getCache();
-		User rv=m.getByPersess(persess);
+		assert persess!=null;
+
+		User rv=getObject(User.BY_PERSESS, persess);
 		if(rv==null) {
 			throw new NoSuchPhotoUserException("No such session:  " + persess);
 		}
@@ -253,37 +247,4 @@ public class UserFactory extends GenFactory<User> {
 		}
 	}
 
-	private static class UserCacheEntry extends HashCacheEntry<User> {
-		public Map<String, User> byUsername=null;
-		public Map<String, User> byEmail=null;
-		public Map<String, User> byPersess=null;
-
-		public UserCacheEntry() {
-			super();
-			byUsername=new HashMap<String, User>();
-			byEmail=new HashMap<String, User>();
-			byPersess=new HashMap<String, User>();
-		}
-
-		public void cacheInstance(User u) {
-			super.cacheInstance(u);
-			byUsername.put(u.getName(), u);
-			byEmail.put(u.getEmail(), u);
-			if(u.getPersess() != null) {
-				byPersess.put(u.getPersess(), u);
-			}
-		}
-
-		public User getByUsername(String username) {
-			return(byUsername.get(username));
-		}
-
-		public User getByEmail(String email) {
-			return(byEmail.get(email));
-		}
-
-		public User getByPersess(String persess) {
-			return(byPersess.get(persess));
-		}
-	}
 }

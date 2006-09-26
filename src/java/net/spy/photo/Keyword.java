@@ -10,6 +10,11 @@ import net.spy.factory.Instance;
 public interface Keyword extends Instance {
 
 	/**
+	 * Cache key by word.
+	 */
+	public static final String BYWORD="word";
+
+	/**
 	 * Get the keyword value.
 	 */
 	String getKeyword();

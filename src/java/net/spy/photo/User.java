@@ -14,6 +14,10 @@ import net.spy.factory.Instance;
  */
 public interface User extends Principal, Instance {
 
+	public static final String BY_EMAIL="email";
+	public static final String BY_USERNAME="username";
+	public static final String BY_PERSESS="persess";
+
 	/** 
 	 * The role authenticated users have.
 	 */

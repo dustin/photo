@@ -11,6 +11,7 @@ import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 import net.spy.db.SpyDB;
+import net.spy.factory.CacheKey;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.sp.InsertKeyword;
@@ -107,6 +108,7 @@ public class KeywordImpl extends AbstractSavable implements Keyword, Comparable<
 	/**
 	 * Get the keyword.
 	 */
+	@CacheKey(name=BYWORD)
 	public String getKeyword() {
 		return(keyword);
 	}
