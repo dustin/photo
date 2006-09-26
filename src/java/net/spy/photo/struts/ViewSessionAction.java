@@ -63,7 +63,7 @@ public class ViewSessionAction extends PhotoAction {
 		results.setPageSize(5);
 		sessionData.setResults(results);
 		// Clear out the encoded search
-		sessionData.setEncodedSearch(null);
+		sessionData.setEncodedSearch("");
 
 		// next
 		return(mapping.findForward("next"));
