@@ -5,8 +5,9 @@ package net.spy.photo.search;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import net.spy.SpyThread;
 
@@ -17,14 +18,14 @@ public class SearchCache extends SpyThread {
 
 	private static SearchCache instance=null;
 
-	private int hits=0;
-	private int misses=0;
-	private int dequeued=0;
-	private int stores=0;
-	private int maxsize=0;
+	private AtomicInteger hits=new AtomicInteger(0);
+	private AtomicInteger misses=new AtomicInteger(0);
+	private AtomicInteger dequeued=new AtomicInteger(0);
+	private AtomicInteger stores=new AtomicInteger(0);
+	private AtomicInteger maxsize=new AtomicInteger(0);
 
-	private Map<Object, SoftReference> cache=null;
-	private Map<SoftReference, Object> keyMap=null;
+	private ConcurrentMap<Object, SoftReference> cache=null;
+	private ConcurrentMap<SoftReference, Object> keyMap=null;
 	private ReferenceQueue<SearchResults> refQueue=null;
 	private boolean running=true;
 
@@ -32,11 +33,11 @@ public class SearchCache extends SpyThread {
 		super("SearchCache");
 	}
 
-	public static synchronized void setup() {
+	public static void setup() {
 		assert instance == null : "Already running";
 		instance=new SearchCache();
-		instance.cache=new HashMap<Object, SoftReference>();
-		instance.keyMap=new HashMap<SoftReference, Object>();
+		instance.cache=new ConcurrentHashMap<Object, SoftReference>();
+		instance.keyMap=new ConcurrentHashMap<SoftReference, Object>();
 		instance.refQueue=new ReferenceQueue<SearchResults>();
 		instance.start();
 	}
@@ -49,9 +50,9 @@ public class SearchCache extends SpyThread {
 	/**
 	 * Clear the cache.
 	 */
-	public synchronized void clear() {
-		cache.clear();
+	public void clear() {
 		keyMap.clear();
+		cache.clear();
 	}
 
 	/**
@@ -62,17 +63,13 @@ public class SearchCache extends SpyThread {
 	 * @param d the requested dimensions
 	 */
 	@SuppressWarnings("unchecked")
-	public synchronized Object get(Object key) {
+	public Object get(Object key) {
 		SoftReference<SearchResults> sr=cache.get(key);
 		Object rv=null;
 		if(sr != null) {
 			rv=sr.get();
-			if(rv != null) {
-				hits++;
-			}
-		} else {
-			misses++;
 		}
+		(rv == null ? misses : hits).incrementAndGet();
 		return(rv);
 	}
 
@@ -83,40 +80,40 @@ public class SearchCache extends SpyThread {
 	 * @param o the value to cache
 	 */
 	@SuppressWarnings("unchecked")
-	public synchronized void store(Object key, Object o) {
+	public void store(Object key, Object o) {
 		SoftReference ref=new SoftReference(o, refQueue);
-		cache.put(key, ref);
 		keyMap.put(ref, key);
-		stores++;
-		if(cache.size() > maxsize) {
-			maxsize++;
+		cache.put(key, ref);
+		stores.incrementAndGet();
+		int prevSize=maxsize.get();
+		int cacheSize=cache.size();
+		if(cacheSize > prevSize) {
+			maxsize.compareAndSet(prevSize, cacheSize);
 		}
 	}
 
 	/**
 	 * Shut down this cache.
 	 */
-	public synchronized void shutdown() {
-		cache.clear();
+	public void shutdown() {
 		running=false;
 		interrupt();
+		cache.clear();
 	}
 
 	public void run() {
 		while(running) {
 			try {
 				Reference rce=refQueue.remove();
-				dequeued++;
-				synchronized(this) {
-					cache.remove(keyMap.remove(rce));
-				}
+				dequeued.incrementAndGet();
+				cache.remove(keyMap.remove(rce));
 			} catch(InterruptedException e) {
 				getLogger().info("Interrupted");
 			}
 		}
 	}
 
-	public synchronized String toString() {
+	public String toString() {
 		return(super.toString() + " - stores: " + stores + ", hits: " + hits
 				+ ", misses: " + misses + ", dequeued: " + dequeued
 				+ ", maxsize: " + maxsize

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.SpyObject;
 import net.spy.photo.Keyword;
@@ -28,7 +29,8 @@ public class SearchIndex extends SpyObject {
 	 */
 	public static enum OP { AND, OR }
 
-	private static SearchIndex instance = null;
+	private static AtomicReference<SearchIndex> instanceRef = 
+		new AtomicReference<SearchIndex>(null);
 
 	// Indexes
 	private Map<Keyword, Set<PhotoImageData>> byKeyword = null;
@@ -42,18 +44,41 @@ public class SearchIndex extends SpyObject {
 	/**
 	 * Get an instance of SearchIndex.
 	 */
-	private SearchIndex() {
+	private SearchIndex(Collection<PhotoImageData> vals) {
 		super();
+		byKeyword = new HashMap<Keyword, Set<PhotoImageData>>();
+		byCategory = new HashMap<Integer, Set<PhotoImageData>>();
+		byTaken = new TreeMap<Date, Set<PhotoImageData>>();
+		byTs = new TreeMap<Date, Set<PhotoImageData>>();
+		variants = new HashSet<PhotoImageData>();
+		long start=System.currentTimeMillis();
+		for(PhotoImageData pid : vals) {
+			add(byKeyword, pid.getKeywords(), pid);
+			add(byCategory, pid.getCatId(), pid);
+			add(byTaken, pid.getTaken(), pid);
+			add(byTs, pid.getTimestamp(), pid);
+			variants.addAll(pid.getVariants());
+		}
+		getLogger().info("Indexed %d images (%d are variants) in %sms",
+				vals.size(), variants.size(),
+				(System.currentTimeMillis() - start));
+	}
+
+	/**
+	 * Update the indexes with a collection of PhotoImageData instances.
+	 */
+	public static void update(Collection<PhotoImageData> vals) {
+		instanceRef.set(new SearchIndex(vals));
+		SearchCache.getInstance().clear();
 	}
 
 	/**
 	 * Get the SearchIndex instance.
 	 */
-	public static synchronized SearchIndex getInstance() {
-		if(instance == null) {
-			instance = new SearchIndex();
-		}
-		return (instance);
+	public static SearchIndex getInstance() {
+		SearchIndex rv=instanceRef.get();
+		assert rv != null;
+		return rv;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -81,32 +106,9 @@ public class SearchIndex extends SpyObject {
 	}
 
 	/**
-	 * Update the indexes with a collection of PhotoImageData instances.
-	 */
-	public synchronized void update(Collection<PhotoImageData> vals) {
-		byKeyword = new HashMap<Keyword, Set<PhotoImageData>>();
-		byCategory = new HashMap<Integer, Set<PhotoImageData>>();
-		byTaken = new TreeMap<Date, Set<PhotoImageData>>();
-		byTs = new TreeMap<Date, Set<PhotoImageData>>();
-		variants = new HashSet<PhotoImageData>();
-		long start=System.currentTimeMillis();
-		for(PhotoImageData pid : vals) {
-			add(byKeyword, pid.getKeywords(), pid);
-			add(byCategory, pid.getCatId(), pid);
-			add(byTaken, pid.getTaken(), pid);
-			add(byTs, pid.getTimestamp(), pid);
-			variants.addAll(pid.getVariants());
-		}
-		getLogger().info("Indexed %d images (%d are variants) in %sms",
-				vals.size(), variants.size(),
-				(System.currentTimeMillis() - start));
-		SearchCache.getInstance().clear();
-	}
-
-	/**
 	 * Get the set of images for the given category ID.
 	 */
-	public synchronized Set<PhotoImageData> getForCat(int i) {
+	public Set<PhotoImageData> getForCat(int i) {
 		return (byCategory.get(i));
 	}
 
@@ -116,7 +118,7 @@ public class SearchIndex extends SpyObject {
 	 * @param cats
 	 *            a Collection of Integer objects.
 	 */
-	public synchronized Set<PhotoImageData>
+	public Set<PhotoImageData>
 		getForCats(Collection<Integer> cats) {
 		return (getCombined(byCategory, cats, OP.OR));
 	}
@@ -124,7 +126,7 @@ public class SearchIndex extends SpyObject {
 	/**
 	 * Get the set of images for the given keyword.
 	 */
-	public synchronized Set<PhotoImageData> getForKeyword(Keyword k) {
+	public Set<PhotoImageData> getForKeyword(Keyword k) {
 		return (byKeyword.get(k));
 	}
 
@@ -167,7 +169,7 @@ public class SearchIndex extends SpyObject {
 	 *            the join operator AND or OR
 	 * @return the set
 	 */
-	public synchronized Set<PhotoImageData> getForKeywords(
+	public Set<PhotoImageData> getForKeywords(
 		Collection<Keyword> c, OP operator) {
 		return (getCombined(byKeyword, c, operator));
 	}
@@ -198,7 +200,7 @@ public class SearchIndex extends SpyObject {
 	 *            ending date (or null if there is no ending date).
 	 * @return the Set of images.
 	 */
-	public synchronized Set<PhotoImageData> getForTaken(Date from, Date to) {
+	public Set<PhotoImageData> getForTaken(Date from, Date to) {
 		return (getDateRangeSet(byTaken, from, to));
 	}
 
@@ -211,8 +213,7 @@ public class SearchIndex extends SpyObject {
 	 *            ending date (or null if there is no ending date).
 	 * @return the Set of images.
 	 */
-	public synchronized Set<PhotoImageData>
-		getForTimestamp(Date from, Date to) {
+	public Set<PhotoImageData> getForTimestamp(Date from, Date to) {
 		return (getDateRangeSet(byTs, from, to));
 	}
 

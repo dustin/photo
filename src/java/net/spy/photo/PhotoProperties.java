@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import net.spy.cache.SpyCache;
+import net.spy.cache.SimpleCache;
 import net.spy.db.Savable;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
@@ -44,7 +44,7 @@ public class PhotoProperties extends Properties
 	/**
 	 * Get the singleton instance of PhotoProperties.
 	 */
-	public static synchronized PhotoProperties getInstance()
+	public static PhotoProperties getInstance()
 		throws SQLException {
 
 		// XXX:  use a real singleton here
@@ -53,7 +53,7 @@ public class PhotoProperties extends Properties
 
 	@SuppressWarnings("unchecked")
 	private void init() throws SQLException {
-		SpyCache sc=SpyCache.getInstance();
+		SimpleCache sc=SimpleCache.getInstance();
 
 		String key="photo_props";
 

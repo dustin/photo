@@ -12,15 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import net.spy.cache.SpyCache;
+import org.apache.commons.beanutils.PropertyUtils;
+
+import net.spy.cache.SimpleCache;
 import net.spy.jwebkit.RequestUtil;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
 import net.spy.photo.sp.GetSearches;
 import net.spy.photo.struts.SearchForm;
 import net.spy.util.Base64;
-
-import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  * Represents a saved search entry.
@@ -119,7 +119,7 @@ public class SavedSearch extends Object {
 	private static Map<Integer, SavedSearch> getSearchesMap()
 		throws PhotoException {
 
-		SpyCache sc=SpyCache.getInstance();
+		SimpleCache sc=SimpleCache.getInstance();
 		Map rv=(Map)sc.get(CACHE_KEY);
 		if(rv == null) {
 			rv=initSearchesMap();

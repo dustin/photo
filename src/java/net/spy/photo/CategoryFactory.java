@@ -12,13 +12,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicReference;
 
+import net.spy.db.DBSPLike;
 import net.spy.db.Savable;
 import net.spy.db.Saver;
 import net.spy.factory.GenFactory;
 import net.spy.photo.impl.DBCategory;
 import net.spy.photo.sp.GetAllACLs;
 import net.spy.photo.sp.GetAllCategories;
+import net.spy.util.CloseUtil;
 
 /**
  * Category access.
@@ -37,7 +40,8 @@ public class CategoryFactory extends GenFactory<Category> {
 	private static final String CACHE_KEY="photo_cat_map";
 	private static final long CACHE_TIME=86400000;
 
-	private static CategoryFactory instance=null;
+	private static AtomicReference<CategoryFactory> instanceRef=
+		new AtomicReference<CategoryFactory>(null);
 
 	private CategoryComparator comparator=null;
 
@@ -52,18 +56,21 @@ public class CategoryFactory extends GenFactory<Category> {
 	/** 
 	 * Get the singleton instance of CategoryFactory.
 	 */
-	public static synchronized CategoryFactory getInstance() {
-		if(instance == null) {
-			instance=new CategoryFactory();
+	public static CategoryFactory getInstance() {
+		CategoryFactory rv=instanceRef.get();
+		if(rv == null) {
+			rv=new CategoryFactory();
+			instanceRef.compareAndSet(null, rv);
 		}
-		return(instance);
+		return(rv);
 	}
 
 	protected Collection<Category> getInstances() {
 		Map<Integer, Category> rv=new HashMap<Integer, Category>();
 
+		GetAllCategories db=null;
 		try {
-			GetAllCategories db=new GetAllCategories(PhotoConfig.getInstance());
+			db=new GetAllCategories(PhotoConfig.getInstance());
 
 			ResultSet rs=db.executeQuery();
 			while(rs.next()) {
@@ -71,13 +78,16 @@ public class CategoryFactory extends GenFactory<Category> {
 				rv.put(cat.getId(), cat);
 			}
 
-			db.close();
+			CloseUtil.close((DBSPLike)db);
+			db=null;
 
 			// Load all of the ACLs for the categories
 			loadACLs(rv);
 
 		} catch(SQLException e) {
 			throw new RuntimeException("Could not load categories", e);
+		} finally {
+			CloseUtil.close((DBSPLike)db);
 		}
 
 		return(rv.values());
@@ -141,25 +151,29 @@ public class CategoryFactory extends GenFactory<Category> {
 
 		GetAllACLs db=new GetAllACLs(PhotoConfig.getInstance());
 
-		ResultSet rs=db.executeQuery();
-		while(rs.next()) {
-			Integer catId=new Integer(rs.getInt("cat"));
+		try {
+			ResultSet rs=db.executeQuery();
+			while(rs.next()) {
+				Integer catId=new Integer(rs.getInt("cat"));
 
-			Category cat=cats.get(catId);
-			if(cat == null) {
-				throw new RuntimeException("Invalid cat acl mapping " + catId);
-			}
+				Category cat=cats.get(catId);
+				if(cat == null) {
+					throw new RuntimeException(
+							"Invalid cat acl mapping " + catId);
+				}
 
-			int uid=rs.getInt("userid");
-			if(rs.getBoolean("canview")) {
-				cat.getACL().addViewEntry(uid);
+				int uid=rs.getInt("userid");
+				if(rs.getBoolean("canview")) {
+					cat.getACL().addViewEntry(uid);
+				}
+				if(rs.getBoolean("canadd")) {
+					cat.getACL().addAddEntry(uid);
+				}
 			}
-			if(rs.getBoolean("canadd")) {
-				cat.getACL().addAddEntry(uid);
-			}
+			rs.close();
+		} finally {
+			CloseUtil.close((DBSPLike)db);
 		}
-		rs.close();
-		db.close();
 	}
 
 	private SortedSet<Category> getInternalCatList(int uid, int access)

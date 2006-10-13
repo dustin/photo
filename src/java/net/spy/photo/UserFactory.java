@@ -12,7 +12,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicReference;
 
+import net.spy.db.DBSPLike;
 import net.spy.db.Savable;
 import net.spy.db.Saver;
 import net.spy.factory.GenFactory;
@@ -20,6 +22,7 @@ import net.spy.photo.impl.DBUser;
 import net.spy.photo.sp.GetAllACLs;
 import net.spy.photo.sp.GetAllRoles;
 import net.spy.photo.sp.GetAllUsers;
+import net.spy.util.CloseUtil;
 
 /**
  * Instantiate and lookup Users.
@@ -29,7 +32,8 @@ public class UserFactory extends GenFactory<User> {
 	private static final String CACHE_KEY="net.spy.photo.DBUser";
 	private static final int CACHE_TIME=3600000; // one hour
 
-	private static UserFactory instance=null;
+	private static AtomicReference<UserFactory> instanceRef=
+		new AtomicReference<UserFactory>(null);
 
 	private Comparator<User> userComparator=null;
 
@@ -44,36 +48,40 @@ public class UserFactory extends GenFactory<User> {
 	/** 
 	 * Get the singleton instance of UserFactory.
 	 */
-	public static synchronized UserFactory getInstance() {
-		if(instance == null) {
-			instance=new UserFactory();
+	public static UserFactory getInstance() {
+		UserFactory rv=instanceRef.get();
+		if(rv == null) {
+			rv=new UserFactory();
+			instanceRef.compareAndSet(null, rv);
 		}
-		return(instance);
+		return(rv);
 	}
 
 	private void initACLs(Map<Integer, User> idMap, User defaultUser)
 		throws Exception {
 
 		GetAllACLs db=new GetAllACLs(PhotoConfig.getInstance());
-
-		ResultSet rs=db.executeQuery();
-		while(rs.next()) {
-			int userId=rs.getInt("userid");
-			User pu=idMap.get(userId);
-			if(pu == null) {
-				throw new PhotoUserException("Invalid user in acl map: "
-					+ userId);
+		try {
+			ResultSet rs=db.executeQuery();
+			while(rs.next()) {
+				int userId=rs.getInt("userid");
+				User pu=idMap.get(userId);
+				if(pu == null) {
+					throw new PhotoUserException("Invalid user in acl map: "
+							+ userId);
+				}
+				int cat=rs.getInt("cat");
+				if(rs.getBoolean("canview")) {
+					pu.getACL().addViewEntry(cat);
+				}
+				if(rs.getBoolean("canadd")) {
+					pu.getACL().addAddEntry(cat);
+				}
 			}
-			int cat=rs.getInt("cat");
-			if(rs.getBoolean("canview")) {
-				pu.getACL().addViewEntry(cat);
-			}
-			if(rs.getBoolean("canadd")) {
-				pu.getACL().addAddEntry(cat);
-			}
+			rs.close();
+		} finally {
+			CloseUtil.close((DBSPLike)db);
 		}
-		rs.close();
-		db.close();
 		// Add all of the permissions of the default user to all other users
 		for(User u : idMap.values()) {
 			for(Iterator<PhotoACLEntry> i=u.getACL().iterator(); i.hasNext();) {
@@ -94,17 +102,20 @@ public class UserFactory extends GenFactory<User> {
 		Map<Integer, User> idMap=new HashMap<Integer, User>();
 
 		GetAllUsers db=new GetAllUsers(conf);
-		ResultSet rs=db.executeQuery();
-		while(rs.next()) {
-			User pu=new DBUser(rs);
-			((DBUser)pu).addRole(User.AUTHENTICATED);
+		try {
+			ResultSet rs=db.executeQuery();
+			while(rs.next()) {
+				User pu=new DBUser(rs);
+				((DBUser)pu).addRole(User.AUTHENTICATED);
 
-			// Add it to the list so we can initialize the ACLs.
-			users.put(pu.getName(), pu);
-			idMap.put(pu.getId(), pu);
+				// Add it to the list so we can initialize the ACLs.
+				users.put(pu.getName(), pu);
+				idMap.put(pu.getId(), pu);
+			}
+			rs.close();
+		} finally {
+			CloseUtil.close((DBSPLike)db);
 		}
-		rs.close();
-		db.close();
 
 		// Find the default user so we can initialize the ACLs.
 		String defUsername=conf.get("default_user", "guest");
@@ -119,18 +130,21 @@ public class UserFactory extends GenFactory<User> {
 		initACLs(idMap, defaultUser);
 
 		GetAllRoles db2=new GetAllRoles(conf);
-		rs=db2.executeQuery();
-		while(rs.next()) {
-			Integer id=new Integer(rs.getInt("userid"));
-			String r=rs.getString("groupname");
-			User pu=idMap.get(id);
-			if(pu == null) {
-				throw new PhotoException("Invalid user in role map: " + id);
+		try {
+			ResultSet rs=db2.executeQuery();
+			while(rs.next()) {
+				Integer id=new Integer(rs.getInt("userid"));
+				String r=rs.getString("groupname");
+				User pu=idMap.get(id);
+				if(pu == null) {
+					throw new PhotoException("Invalid user in role map: " + id);
+				}
+				((DBUser)pu).addRole(r);
 			}
-			((DBUser)pu).addRole(r);
+			rs.close();
+		} finally {
+			CloseUtil.close((DBSPLike)db2);
 		}
-		rs.close();
-		db2.close();
 
 		return(users.values());
 	}

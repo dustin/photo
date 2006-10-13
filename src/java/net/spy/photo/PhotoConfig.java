@@ -4,6 +4,7 @@
 package net.spy.photo;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.util.SpyConfig;
 
@@ -15,7 +16,8 @@ public class PhotoConfig extends SpyConfig {
 	// If provided, this configuration will be used.
 	private static File staticConfigLocation=null;
 
-	private static PhotoConfig instance=null;
+	private static AtomicReference<PhotoConfig> instanceRef=
+		new AtomicReference<PhotoConfig>(null);
 
 	// Places to look for config files.
 	private File configs[]={
@@ -43,15 +45,17 @@ public class PhotoConfig extends SpyConfig {
 	/** 
 	 * Get a PhotoConfig instance.
 	 */
-	public static synchronized PhotoConfig getInstance() {
-		if(instance == null) {
-			instance=new PhotoConfig();
+	public static PhotoConfig getInstance() {
+		PhotoConfig rv=instanceRef.get();
+		if(rv == null) {
+			rv=new PhotoConfig();
+			instanceRef.compareAndSet(null, rv);
 		}
-		return(instance);
+		return(rv);
 	}
 
-	private static synchronized void killInstance() {
-		instance=null;
+	private static void killInstance() {
+		instanceRef.set(null);
 	}
 
 	/**

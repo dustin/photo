@@ -16,11 +16,12 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.servlet.ServletException;
 
 import net.spy.SpyObject;
-import net.spy.cache.SpyCache;
+import net.spy.cache.SimpleCache;
 import net.spy.db.DBSPLike;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
@@ -44,7 +45,8 @@ import net.spy.util.CloseUtil;
 public class Search extends SpyObject {
 
 	private static final String CHARSET = "UTF-8";
-	private static Search instance = null;
+	private static AtomicReference<Search> instanceRef = 
+		new AtomicReference<Search>(null);
 
 	private static enum CacheType { RESULTS, KEYWORDS }
 	private static enum SortOrder { BY_TS, BY_TAKEN }
@@ -52,18 +54,20 @@ public class Search extends SpyObject {
 	/**
 	 * Get a Search instance.
 	 */
-	private Search() {
+	protected Search() {
 		super();
 	}
 
 	/**
 	 * Get an instance of search.
 	 */
-	public static synchronized Search getInstance() {
-		if(instance == null) {
-			instance = new Search();
+	public static Search getInstance() {
+		Search rv=instanceRef.get();
+		if(rv == null) {
+			rv = new Search();
+			instanceRef.set(rv);
 		}
-		return (instance);
+		return (rv);
 	}
 
 	/**
@@ -91,7 +95,7 @@ public class Search extends SpyObject {
 				+ affected;
 
 			// Clear the saved search cache so stuff shows up immediately
-			SpyCache.getInstance().uncache(SavedSearch.CACHE_KEY);
+			SimpleCache.getInstance().remove(SavedSearch.CACHE_KEY);
 		} catch(Exception e) {
 			getLogger().error("Error saving search", e);
 		} finally {
@@ -115,7 +119,7 @@ public class Search extends SpyObject {
 			assert affected == 1 : "Expected to delete 1 row, deleted "
 				+ affected;
 			// Clear the saved search cache so stuff shows up immediately
-			SpyCache.getInstance().uncache(SavedSearch.CACHE_KEY);
+			SimpleCache.getInstance().remove(SavedSearch.CACHE_KEY);
 		} finally {
 			CloseUtil.close((DBSPLike)ds);
 		}

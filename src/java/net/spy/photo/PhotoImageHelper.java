@@ -6,7 +6,7 @@ package net.spy.photo;
 import java.lang.ref.SoftReference;
 
 import net.spy.SpyObject;
-import net.spy.cache.SpyCache;
+import net.spy.cache.SimpleCache;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 
 /**
@@ -48,7 +48,7 @@ public class PhotoImageHelper extends SpyObject {
 		throws Exception {
 
 		PhotoImage rv=null;
-		SpyCache cache=SpyCache.getInstance();
+		SimpleCache cache=SimpleCache.getInstance();
 
 		StringBuffer keyb=new StringBuffer(64);
 		keyb.append("img_");
@@ -104,7 +104,7 @@ public class PhotoImageHelper extends SpyObject {
 	 */
 	public PhotoDimensions getThumbnailSize() throws Exception {
 		PhotoDimensions rv=null;
-		SpyCache cache=SpyCache.getInstance();
+		SimpleCache cache=SimpleCache.getInstance();
 		String key="ph_thumbnail_size_" + imageId;
 		rv=(PhotoDimensions)cache.get(key);
 		if(rv == null) {

@@ -10,14 +10,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.cache.SpyCache;
-import net.spy.db.Saver;
-import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoProperties;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import net.spy.cache.SimpleCache;
+import net.spy.db.Saver;
+import net.spy.photo.PhotoConfig;
+import net.spy.photo.PhotoProperties;
 
 /**
  * Save the properties.
@@ -65,8 +65,8 @@ public class AdminSaveProperties extends PhotoAction {
 		System.err.println("Saved new properties:  " + props);
 
 		// Clear the cache to make the values immediately available
-		SpyCache sc=SpyCache.getInstance();
-		sc.uncache("photo_props");
+		SimpleCache sc=SimpleCache.getInstance();
+		sc.remove("photo_props");
 
 		addMessage(request, MessageType.success, "Saved properties.");
 

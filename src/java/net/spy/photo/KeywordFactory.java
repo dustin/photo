@@ -9,18 +9,22 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicReference;
 
+import net.spy.db.DBSPLike;
 import net.spy.db.Saver;
 import net.spy.factory.GenFactory;
 import net.spy.photo.impl.KeywordImpl;
 import net.spy.photo.sp.GetKeywords;
+import net.spy.util.CloseUtil;
 
 public class KeywordFactory extends GenFactory<Keyword> {
 
 	private static final String CACHE_KEY="keywords";
 	private static final int CACHE_TIME=3600000;
 
-	private static KeywordFactory instance=null;
+	private static AtomicReference<KeywordFactory> instanceRef=
+		new AtomicReference<KeywordFactory>(null);
 
 	private Set<String> ignoredKeywords=null;
 
@@ -32,11 +36,13 @@ public class KeywordFactory extends GenFactory<Keyword> {
 			}));
 	}
 
-	public static synchronized KeywordFactory getInstance() {
-		if(instance == null) {
-			instance=new KeywordFactory();
+	public static KeywordFactory getInstance() {
+		KeywordFactory rv=instanceRef.get();
+		if(rv == null) {
+			rv=new KeywordFactory();
+			instanceRef.compareAndSet(null, rv);
 		}
-		return(instance);
+		return(rv);
 	}
 
 	@Override
@@ -55,9 +61,7 @@ public class KeywordFactory extends GenFactory<Keyword> {
 		} catch(Exception e) {
 			throw new RuntimeException("Couldn't initialize keywords", e);
 		} finally {
-			if(db != null) {
-				db.close();
-			}
+			CloseUtil.close((DBSPLike)db);
 		}
 		return(rv);
 	}

@@ -4,6 +4,7 @@
 package net.spy.photo;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.db.Savable;
 import net.spy.db.Saver;
@@ -28,7 +29,8 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	 */
 	public static final long RECACHE_DELAY=300000;
 
-	private static PhotoImageDataFactory instance=null;
+	private static AtomicReference<PhotoImageDataFactory> instanceRef=
+		new AtomicReference<PhotoImageDataFactory>(null);
 
 	private PhotoImageDataSource source=null;
 
@@ -43,11 +45,18 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	/** 
 	 * Get an instance of the PhotoImageDataFactory.
 	 */
-	public static synchronized PhotoImageDataFactory getInstance() {
-		if(instance == null) {
-			instance=new PhotoImageDataFactory();
+	public static PhotoImageDataFactory getInstance() {
+		PhotoImageDataFactory rv=instanceRef.get();
+		if(rv == null) {
+			synchronized(PhotoImageDataFactory.class) {
+				rv=new PhotoImageDataFactory();
+				if(! instanceRef.compareAndSet(null, rv)) {
+					rv=instanceRef.get();
+					assert rv != null;
+				}
+			}
 		}
-		return(instance);
+		return rv;
 	}
 
 	/** 
@@ -60,8 +69,7 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		getLogger().info("Loaded " + images.size() + " images from "
 			+ source.getClass().getName());
 		// Update the index cache
-		SearchIndex si=SearchIndex.getInstance();
-		si.update(images);
+		SearchIndex.update(images);
 		return(images);
 	}
 
@@ -82,14 +90,14 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		long start=System.currentTimeMillis();
 		if(ob instanceof PhotoImageData) {
 			getCache().cacheInstance((PhotoImageData)ob);
-			SearchIndex.getInstance().update(getObjects());
+			SearchIndex.update(getObjects());
 		} else if(ob instanceof CollectionSavable) {
 			// XXX: Horrible abstraction leak.
 			CollectionSavable cs=(CollectionSavable)ob;
 			for(Savable pid : cs.getPostSavables(null)) {
 				getCache().cacheInstance((PhotoImageData)pid);
 			}
-			SearchIndex.getInstance().update(getObjects());
+			SearchIndex.update(getObjects());
 		} else {
 			assert false : "Unexpected savable type: " + ob.getClass();
 		}

@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 
 import javax.servlet.jsp.JspException;
 
-import net.spy.cache.SpyCache;
+import net.spy.cache.SimpleCache;
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImageDataFactory;
@@ -27,7 +27,7 @@ public class MetaInfo extends PhotoTag {
 	private int getCount(String query) throws Exception {
 		String key="photo.metainfo." + query;
 
-		SpyCache cache=SpyCache.getInstance();
+		SimpleCache cache=SimpleCache.getInstance();
 
 		int rv=-1;
 
