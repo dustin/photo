@@ -303,7 +303,8 @@ public class Search extends SpyObject {
 	private Collection<KeywordMatch> realGetKeywordsForUser(User u,
 			SearchForm sf) throws Exception {
 		Map<String, KeywordMatch> rv=new TreeMap<String, KeywordMatch>();
-		for(PhotoImageData pid : performSearch(sf, u).getAllObjects()) {
+		ParallelSearch ps=ParallelSearch.getInstance();
+		for(PhotoImageData pid : ps.performSearch(sf, u).getAllObjects()) {
 			for(Keyword kw : pid.getKeywords()) {
 				KeywordMatch km=rv.get(kw.getKeyword());
 				if(km == null) {

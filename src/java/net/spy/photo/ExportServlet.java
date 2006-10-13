@@ -13,15 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
 import net.spy.jwebkit.xml.XMLOutputServlet;
-import net.spy.photo.search.Search;
+import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SearchResults;
 import net.spy.photo.struts.SearchForm;
 import net.spy.xml.SAXAble;
 import net.spy.xml.XMLUtils;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 /**
  * Export data from the photo album.
@@ -48,7 +48,7 @@ public class ExportServlet extends XMLOutputServlet {
 
 			SearchForm sf=new SearchForm();
 			sf.setSdirection("desc");
-			Search ps=Search.getInstance();
+			ParallelSearch ps=ParallelSearch.getInstance();
 			SearchResults psr=ps.performSearch(sf, sessionData.getUser());
 
 			sendXml(new SearchResultsXML(psr), res);

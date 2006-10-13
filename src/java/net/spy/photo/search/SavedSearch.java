@@ -179,4 +179,16 @@ public class SavedSearch extends Object {
 		return(sf);
 	}
 
+	public int hashCode() {
+		return id;
+	}
+
+	public boolean equals(Object o) {
+		boolean rv=false;
+		if(o instanceof SavedSearch) {
+			SavedSearch ss=(SavedSearch)o;
+			rv=(ss.getId() == id);
+		}
+		return rv;
+	}
 }

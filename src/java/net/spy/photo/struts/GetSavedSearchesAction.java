@@ -5,17 +5,22 @@ package net.spy.photo.struts;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.User;
-import net.spy.photo.search.SavedSearch;
-import net.spy.photo.search.Search;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import net.spy.photo.User;
+import net.spy.photo.search.ParallelSearch;
+import net.spy.photo.search.SavedSearch;
+import net.spy.photo.search.SearchResults;
 
 /**
  * Load a saved search and overwrite the search form with that search.
@@ -42,11 +47,18 @@ public class GetSavedSearchesAction extends PhotoAction {
 
 		Collection<CardinalSavedSearch> searches=
 			new ArrayList<CardinalSavedSearch>();
-		Search s=Search.getInstance();
+
+		Map<SavedSearch, Future<SearchResults>> futureSearches=
+			new HashMap<SavedSearch, Future<SearchResults>>();
+		ParallelSearch ps=ParallelSearch.getInstance();
 		for(SavedSearch ss : SavedSearch.getSearches()) {
-			int size=s.performSearch(ss.getSearchForm(), u).getSize();
+			futureSearches.put(ss, ps.futureSearch(ss.getSearchForm(), u));
+		}
+		for(Map.Entry<SavedSearch, Future<SearchResults>> me
+				: futureSearches.entrySet()) {
+			int size=me.getValue().get(10, TimeUnit.SECONDS).getSize();
 			if(size > 0) {
-				searches.add(new CardinalSavedSearch(ss, size));
+				searches.add(new CardinalSavedSearch(me.getKey(), size));
 			}
 		}
 

@@ -6,13 +6,14 @@ package net.spy.photo.struts;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.PhotoSessionData;
-import net.spy.photo.search.Search;
-import net.spy.photo.search.SearchResults;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import net.spy.photo.PhotoSessionData;
+import net.spy.photo.search.ParallelSearch;
+import net.spy.photo.search.Search;
+import net.spy.photo.search.SearchResults;
 
 /**
  * Perform a search.
@@ -39,12 +40,12 @@ public class SearchAction extends PhotoAction {
 		SearchForm sf=(SearchForm)form;
 
 		// Perform the search
-		Search ps=Search.getInstance();
+		ParallelSearch ps=ParallelSearch.getInstance();
 		SearchResults results=null;
 		results=ps.performSearch(sf, sessionData.getUser(),
 			sessionData.getOptimalDimensions());
 		sessionData.setResults(results);
-		sessionData.setEncodedSearch(ps.encodeSearch(sf));
+		sessionData.setEncodedSearch(Search.getInstance().encodeSearch(sf));
 
 		String f=sf.getAction();
 		if(f==null) {

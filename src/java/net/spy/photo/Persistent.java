@@ -10,6 +10,7 @@ import javax.servlet.ServletContextListener;
 import net.spy.SpyObject;
 import net.spy.SpyThread;
 import net.spy.db.TransactionPipeline;
+import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SavedSearch;
 import net.spy.photo.search.SearchCache;
 import net.spy.photo.util.PhotoStorerThread;
@@ -45,6 +46,8 @@ public class Persistent extends SpyObject implements ServletContextListener {
 		} else {
 			throw new RuntimeException("Couldn't find photo config path");
 		}
+
+		ParallelSearch.getInstance();
 
 		// The initialization occurs in a different thread so all of those
 		// threads can belong to the same thread group.
@@ -114,6 +117,7 @@ public class Persistent extends SpyObject implements ServletContextListener {
 			CacheValidator.getInstance().cancelProcessing();
 			getLogger().info("Cache validations shut down.");
 		}
+		ParallelSearch.setInstance(null);
 	}
 
 

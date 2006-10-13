@@ -10,6 +10,11 @@ import java.util.HashSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.DynaActionForm;
+
 import net.spy.db.Savable;
 import net.spy.db.savables.CollectionSavable;
 import net.spy.photo.Keyword;
@@ -17,13 +22,8 @@ import net.spy.photo.KeywordFactory;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.impl.SavablePhotoImageData;
-import net.spy.photo.search.Search;
+import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SearchResults;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.DynaActionForm;
 
 /**
  * Update keywords for images in bulk.
@@ -44,7 +44,7 @@ public class AdminBulkKWUpdate extends PhotoAction {
 		KeywordFactory kf=KeywordFactory.getInstance();
 		KeywordFactory.Keywords kws=kf.getKeywords((String)lf.get("modify"), true);
 
-		SearchResults results=Search.getInstance().performSearch(sf,
+		SearchResults results=ParallelSearch.getInstance().performSearch(sf,
 			getUser(request));
 
 		getLogger().info("Updating " + results.getSize()

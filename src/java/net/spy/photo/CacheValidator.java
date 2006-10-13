@@ -8,19 +8,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
 import net.spy.SpyObject;
 import net.spy.SpyThread;
 import net.spy.photo.impl.ImageServerImpl;
 import net.spy.photo.impl.PhotoDimensionsImpl;
-import net.spy.photo.search.Search;
+import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SearchResults;
 import net.spy.photo.struts.SearchForm;
 import net.spy.util.RingBuffer;
 import net.spy.xml.SAXAble;
 import net.spy.xml.XMLUtils;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 /**
  * Cache validation and build-out utility.
@@ -148,10 +148,9 @@ public class CacheValidator extends SpyObject implements SAXAble {
 
 		public void run() {
 			SearchForm sf=new SearchForm();
-			Search ps=Search.getInstance();
 			SearchResults psr=null;
 			try {
-				psr=ps.performSearch(sf, user);
+				psr=ParallelSearch.getInstance().performSearch(sf, user);
 			} catch (Throwable e) {
 				getLogger().warn(
 					"Could not perform search for cache validation", e);
