@@ -28,11 +28,15 @@ public class ParallelSearch extends SpyObject {
 		new AtomicReference<ParallelSearch>(null);
 
 	private ThreadPoolExecutor pool=null;
+	private PhotoDimensions optimalDims=null;
 
 	private ParallelSearch() {
 		super();
 		pool=new ThreadPoolExecutor(3, 10, 120, TimeUnit.SECONDS,
 				new ArrayBlockingQueue<Runnable>(25));
+		optimalDims=new PhotoDimensionsImpl(
+				PhotoConfig.getInstance().get(
+						"optimal_image_size", "800x600"));
 	}
 
 	/**
@@ -87,7 +91,7 @@ public class ParallelSearch extends SpyObject {
 	 * @return a future of search results
 	 */
 	public Future<SearchResults> futureSearch(SearchForm form, User user) {
-		return futureSearch(form, user, null);
+		return futureSearch(form, user, optimalDims);
 	}
 
 	/**
@@ -119,9 +123,6 @@ public class ParallelSearch extends SpyObject {
 	 */
 	public SearchResults performSearch(SearchForm form, User user)
 		throws InterruptedException, ExecutionException, TimeoutException {
-		PhotoConfig conf=PhotoConfig.getInstance();
-		PhotoDimensions dims=new PhotoDimensionsImpl(
-			conf.get("optimal_image_size", "800x600"));
-		return performSearch(form, user, dims);
+		return performSearch(form, user, optimalDims);
 	}
 }

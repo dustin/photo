@@ -118,9 +118,21 @@ public class SearchIndex extends SpyObject {
 	 * @param cats
 	 *            a Collection of Integer objects.
 	 */
-	public Set<PhotoImageData>
-		getForCats(Collection<Integer> cats) {
-		return (getCombined(byCategory, cats, OP.OR));
+	@SuppressWarnings("unchecked")
+	public Set<PhotoImageData> getForCats(Collection<Integer> cats) {
+		StringBuilder cacheKey=new StringBuilder();
+		cacheKey.append("orcats ");
+		for(Integer cat : cats) {
+			cacheKey.append(cat).append(",");
+		}
+		SearchCache sc=SearchCache.getInstance();
+		Set<PhotoImageData> cachedStuff=
+			(Set<PhotoImageData>)sc.get(cacheKey.toString());
+		if(cachedStuff == null) {
+			cachedStuff=getCombined(byCategory, cats, OP.OR);
+			sc.store(cacheKey.toString(), cachedStuff);
+		}
+		return cachedStuff;
 	}
 
 	/**
@@ -130,7 +142,6 @@ public class SearchIndex extends SpyObject {
 		return (byKeyword.get(k));
 	}
 
-	@SuppressWarnings("unchecked")
 	private Set<PhotoImageData> getCombined(
 		Map<? extends Object, Set<PhotoImageData>> m,
 		Collection<? extends Object> c, OP operator) {
@@ -147,7 +158,7 @@ public class SearchIndex extends SpyObject {
 			for(; i.hasNext();) {
 				Collection<PhotoImageData> stmp = m.get(i.next());
 				if(stmp == null) {
-					stmp = Collections.EMPTY_LIST;
+					stmp = Collections.emptyList();
 				}
 				if(operator == OP.AND) {
 					rv.retainAll(stmp);
