@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import net.spy.jwebkit.JWHttpServlet;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.log.PhotoLogImageEntry;
+import net.spy.stat.Stats;
 import net.spy.util.CloseUtil;
 
 /**
@@ -26,6 +27,7 @@ public class PhotoServlet extends JWHttpServlet {
 		HttpServletResponse res) throws ServletException, IOException {
 
 		String size=null;
+		long start=System.currentTimeMillis();
 
 		// Get the sessionData
 		HttpSession ses=req.getSession(false);
@@ -78,6 +80,10 @@ public class PhotoServlet extends JWHttpServlet {
 				}
 				// Mark it in the session
 				sessionData.sawImage(imgId);
+				long end=System.currentTimeMillis();
+				Stats.getComputingStat("img.all").add(end-start);
+				Stats.getComputingStat("img.size." + (pdim==null?"full":pdim))
+					.add(end-start);
 			}
 		} catch(PhotoImageDataFactory.NoSuchPhotoException e) {
 			getLogger().warn(sessionData.getUser()

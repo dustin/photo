@@ -32,10 +32,10 @@ import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
-import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.sp.DeleteSearch;
 import net.spy.photo.sp.InsertSearch;
 import net.spy.photo.struts.SearchForm;
+import net.spy.stat.Stats;
 import net.spy.util.CloseUtil;
 
 
@@ -175,19 +175,6 @@ public class Search extends SpyObject {
 	}
 
 	/**
-	 * Perform a search with the default dimensions.
-	 * 
-	 * @param f the search form
-	 * @param u the user
-	 */
-	public SearchResults performSearch(SearchForm f, User u) throws Exception {
-		PhotoConfig conf=PhotoConfig.getInstance();
-		PhotoDimensions dims=new PhotoDimensionsImpl(
-			conf.get("optimal_image_size", "800x600"));
-		return(performSearch(f, u, dims));
-	}
-
-	/**
 	 * Perform a search.
 	 * 
 	 * @param form the search form
@@ -196,22 +183,29 @@ public class Search extends SpyObject {
 	 */
 	public SearchResults performSearch(
 		SearchForm form, User user, PhotoDimensions dims) throws Exception {
+		long start=System.currentTimeMillis();
 		SearchCache sc=SearchCache.getInstance();
 		CacheKey ck=new CacheKey(CacheType.RESULTS, user, dims, form);
 		SearchResults rv=(SearchResults)sc.get(ck);
+		boolean cached=true;
 		if(rv == null) {
+			cached=false;
 			rv=realPerformSearch(form, user, dims);
 			sc.store(ck, rv.clone());
 		} else {
 			rv=(SearchResults)rv.clone();
 		}
+
+		long end=System.currentTimeMillis();
+		getLogger().info("Completed search%s for %s in %dms",
+				(cached ? " (cached)" : ""), user, (end - start));
+		Stats.getComputingStat(cached?"search.cached":"search").add(end-start);
 		return(rv);
 	}
 
 	private SearchResults realPerformSearch(SearchForm form, User user,
 			PhotoDimensions dims) throws Exception {
 
-		long start=System.currentTimeMillis();
 		// Get the search index
 		SearchIndex index = SearchIndex.getInstance();
 
@@ -273,9 +267,6 @@ public class Search extends SpyObject {
 		for(PhotoImageData r : rset) {
 			results.add(r);
 		}
-
-		getLogger().info("Completed search for %s in %dms", user,
-				(System.currentTimeMillis() - start));
 
 		return (results);
 	}

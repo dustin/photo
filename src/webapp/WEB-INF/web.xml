@@ -104,6 +104,11 @@
 		<servlet-class>net.spy.photo.ZipExportServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>stat</servlet-name>
+		<servlet-class>net.spy.photo.StatServlet</servlet-class>
+	</servlet>
+
 	<!-- AJAX mappings -->
 	<servlet>
 		<servlet-name>ajaxphotoedit</servlet-name>
@@ -195,6 +200,11 @@
 	<servlet-mapping>
 		<servlet-name>zip</servlet-name>
 		<url-pattern>/zip</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>stat</servlet-name>
+		<url-pattern>/stat</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
