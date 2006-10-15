@@ -217,12 +217,6 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 		</dependency>
 
 		<dependency>
-			<groupId>resin</groupId>
-			<artifactId>resin</artifactId>
-			<version>3.0.8</version>
-		</dependency>
-
-		<dependency>
 			<groupId>maven-plugins</groupId>
 			<artifactId>maven-cobertura-plugin</artifactId>
 			<version>1.0</version>
