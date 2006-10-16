@@ -94,11 +94,9 @@ public class UploadImage extends BaseRestServlet {
 		pidf.store(savable, true, RECACHE_DELAY);
 
 		// Log it.
-		// XXX  I really would like a way to get to the actual remote IP
-		// address.
 		Persistent.getPipeline().addTransaction(new PhotoLogUploadEntry(
-			user.getId(), savable.getId(), "127.0.0.1", "XMLRPC Image Upload"),
-			PhotoConfig.getInstance());
+			user.getId(), savable.getId(), req.getRemoteAddr(),
+			"REST Image Upload"), PhotoConfig.getInstance());
 
 		// Return the new image ID
 		res.setStatus(HttpServletResponse.SC_ACCEPTED);
