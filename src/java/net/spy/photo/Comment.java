@@ -21,6 +21,7 @@ import net.spy.photo.sp.FindRecentComments;
 import net.spy.photo.sp.GetCommentsForPhoto;
 import net.spy.photo.sp.GetGeneratedKey;
 import net.spy.photo.sp.InsertComment;
+import net.spy.stat.Stats;
 import net.spy.util.CloseUtil;
 
 /**
@@ -69,7 +70,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	public static Collection<Comment> getCommentsForPhoto(int imageId)
 		throws Exception {
 
-		PhotoSecurity security=new PhotoSecurity();
+		long start=System.currentTimeMillis();
+		PhotoSecurity security=Persistent.getSecurity();
 		ArrayList<Comment> al=new ArrayList<Comment>();
 		GetCommentsForPhoto db=
 			new GetCommentsForPhoto(PhotoConfig.getInstance());
@@ -86,6 +88,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 			CloseUtil.close((DBSPLike)db);
 		}
 
+		Stats.getComputingStat("comment.image." + imageId)
+			.add(System.currentTimeMillis() - start);
 		return(al);
 	}
 
@@ -99,7 +103,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	public static List<GroupedComments> getGroupedComments(User user)
 		throws Exception {
 
-		PhotoSecurity security=new PhotoSecurity();
+		long start=System.currentTimeMillis();
+		PhotoSecurity security=Persistent.getSecurity();
 		ArrayList<GroupedComments> al=new ArrayList<GroupedComments>();
 		FindImagesByComments db=
 			new FindImagesByComments(PhotoConfig.getInstance());
@@ -128,7 +133,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 		} finally {
 			CloseUtil.close((DBSPLike)db);
 		}
-
+		Stats.getComputingStat("comment.grouplist." + user.getName())
+			.add(System.currentTimeMillis() - start);
 		return(al);
 	}
 
@@ -142,6 +148,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	 */
 	public static List<Comment> getRecentComments(User u, int max)
 		throws Exception {
+		long start=System.currentTimeMillis();
 		List<Comment> rv=new ArrayList<Comment>();
 		FindRecentComments db=new FindRecentComments(PhotoConfig.getInstance());
 		try {
@@ -156,6 +163,8 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 		} finally {
 			CloseUtil.close((DBSPLike)db);
 		}
+		Stats.getComputingStat("comment.list." + u.getName())
+			.add(System.currentTimeMillis() - start);
 		return rv;
 	}
 

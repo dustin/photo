@@ -17,6 +17,7 @@ import net.spy.jwebkit.rss.RSSChannel;
 import net.spy.jwebkit.rss.RSSItem;
 import net.spy.photo.ajax.PhotoAjaxServlet;
 import net.spy.photo.search.SearchResults;
+import net.spy.stat.Stats;
 
 import org.xml.sax.ContentHandler;
 
@@ -51,8 +52,11 @@ public class RSSServlet extends PhotoAjaxServlet {
 
 		res.setHeader("Content-type", "text/xml");
 		ContentHandler handler=getContentHandler(res);
+		long start=System.currentTimeMillis();
 		new SearchResultsRSSAdaptor(sr, base, authenticated).writeXml(handler);
 		handler.endDocument();
+		Stats.getComputingStat("rss.search." + sessionData.getUser().getName())
+			.add(System.currentTimeMillis() - start);
 	}
 
 	private static class SearchResultsRSSAdaptor extends RSSChannel {

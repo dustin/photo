@@ -18,6 +18,7 @@ import org.xml.sax.ContentHandler;
 import net.spy.jwebkit.rss.RSSChannel;
 import net.spy.jwebkit.rss.RSSItem;
 import net.spy.photo.ajax.PhotoAjaxServlet;
+import net.spy.stat.Stats;
 
 /**
  * RSS feed of recent comments.
@@ -46,10 +47,14 @@ public class RSSCommentServlet extends PhotoAjaxServlet {
 
 		res.setHeader("Content-type", "text/xml");
 		ContentHandler handler=getContentHandler(res);
+		long start=System.currentTimeMillis();
 		new CommentsRSSAdaptor(
 				Comment.getRecentComments(sessionData.getUser(), CHANNEL_SIZE),
 				base, authenticated).writeXml(handler);
 		handler.endDocument();
+		Stats.getComputingStat("rss.comments."
+				+ sessionData.getUser().getName())
+			.add(System.currentTimeMillis() - start);
 	}
 
 	private static class CommentsRSSAdaptor extends RSSChannel {
@@ -69,10 +74,6 @@ public class RSSCommentServlet extends PhotoAjaxServlet {
 			Collection<GroupedCommentsWrapper> c=
 				new ArrayList<GroupedCommentsWrapper>(CHANNEL_SIZE);
 			for(Comment comment : comments) {
-				// Just get the first CHANNEL_SIZE
-				if(c.size() >= CHANNEL_SIZE) {
-					break;
-				}
 				c.add(new GroupedCommentsWrapper(comment, base, authenticated));
 			}
 			return(c);
