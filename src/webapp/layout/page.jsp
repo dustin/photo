@@ -47,6 +47,17 @@
 				title="PhotoServlet Search Results Feed"
 				href="<c:out value='${baserss}?${encoded}'/>"/>
 		<% } %>
+		<c:set var="basecrss">
+			<logic:present role="authenticated">
+				<c:url value="/auth/rssc"/>
+			</logic:present>
+			<logic:notPresent role="authenticated">
+				<c:url value="/rssc"/>
+			</logic:notPresent>
+		</c:set>
+		<link rel="alternate" type="application/rss+xml"
+			title="PhotoServlet Recent Comments RSS Feed"
+			href="<c:out value='${basecrss}'/>"/>
 </head>
 <body>
 

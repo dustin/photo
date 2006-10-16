@@ -100,6 +100,11 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>rsscomment</servlet-name>
+		<servlet-class>net.spy.photo.RSSCommentServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>zip</servlet-name>
 		<servlet-class>net.spy.photo.ZipExportServlet</servlet-class>
 	</servlet>
@@ -190,6 +195,17 @@
 	<servlet-mapping>
 		<servlet-name>rss</servlet-name>
 		<url-pattern>/auth/rss/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>rsscomment</servlet-name>
+		<url-pattern>/rssc</url-pattern>
+	</servlet-mapping>
+
+	<!-- Authenticated RSS -->
+	<servlet-mapping>
+		<servlet-name>rsscomment</servlet-name>
+		<url-pattern>/auth/rssc</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

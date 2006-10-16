@@ -1,0 +1,28 @@
+#
+# arch-tag: 39A9A259-1FCF-47D0-9D0A-2D10BFA7AD1C
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Get a list of comment IDs.
+
+@sql
+select c.comment_id, c.wwwuser_id as user_id, c.photo_id, c.note,
+	c.remote_addr, c.ts
+	from commentary c join album a on (c.photo_id = a.id)
+		join wwwacl acl on (a.cat = acl.cat)
+	where acl.userid = ?
+	order by ts desc
+
+@params
+user_id required INTEGER The user who wants to know.
+
+@results
+comment_id INTEGER The unique ID of this comment entry.
+photo_id INTEGER The ID of the photo.
+note VARCHAR The actual note itself.
+ts TIMESTAMP The timestamp of the comment entry.
+remote_addr VARCHAR The remote IP address of the submitter.
+user_id INTEGER The ID of submitter of the comment.

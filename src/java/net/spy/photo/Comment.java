@@ -13,12 +13,15 @@ import java.util.Date;
 import java.util.List;
 
 import net.spy.db.AbstractSavable;
+import net.spy.db.DBSPLike;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 import net.spy.photo.sp.FindImagesByComments;
+import net.spy.photo.sp.FindRecentComments;
 import net.spy.photo.sp.GetCommentsForPhoto;
 import net.spy.photo.sp.GetGeneratedKey;
 import net.spy.photo.sp.InsertComment;
+import net.spy.util.CloseUtil;
 
 /**
  * Comments on photos.
@@ -70,15 +73,18 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 		ArrayList<Comment> al=new ArrayList<Comment>();
 		GetCommentsForPhoto db=
 			new GetCommentsForPhoto(PhotoConfig.getInstance());
-		db.setPhotoId(imageId);
-		ResultSet rs=db.executeQuery();
+		try {
+			db.setPhotoId(imageId);
+			ResultSet rs=db.executeQuery();
 
-		while(rs.next()) {
-			al.add(new Comment(security, rs));
+			while(rs.next()) {
+				al.add(new Comment(security, rs));
+			}
+
+			rs.close();
+		} finally {
+			CloseUtil.close((DBSPLike)db);
 		}
-
-		rs.close();
-		db.close();
 
 		return(al);
 	}
@@ -90,37 +96,67 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	 *
 	 * @see GroupedComments
 	 */
-	public static List<GroupedComments> getAllComments(User user)
+	public static List<GroupedComments> getGroupedComments(User user)
 		throws Exception {
 
 		PhotoSecurity security=new PhotoSecurity();
 		ArrayList<GroupedComments> al=new ArrayList<GroupedComments>();
 		FindImagesByComments db=
 			new FindImagesByComments(PhotoConfig.getInstance());
-		db.setUserId(user.getId());
-		ResultSet rs=db.executeQuery();
+		try {
+			db.setUserId(user.getId());
+			ResultSet rs=db.executeQuery();
 
-		if(rs.next()) {
-			GroupedComments gc=new GroupedComments(rs.getInt("photo_id"));
-			gc.addComment(new Comment(security, rs));
-			while(rs.next()) {
-				int newid=rs.getInt("photo_id");
-				if(gc.getPhotoId()!=newid) {
-					// Add what we have so far
-					al.add(gc);
-					// Create a new one
-					gc=new GroupedComments(rs.getInt("photo_id"));
-				}
-				// Add the current entry
+			if(rs.next()) {
+				GroupedComments gc=new GroupedComments(rs.getInt("photo_id"));
 				gc.addComment(new Comment(security, rs));
+				while(rs.next()) {
+					int newid=rs.getInt("photo_id");
+					if(gc.getPhotoId()!=newid) {
+						// Add what we have so far
+						al.add(gc);
+						// Create a new one
+						gc=new GroupedComments(rs.getInt("photo_id"));
+					}
+					// Add the current entry
+					gc.addComment(new Comment(security, rs));
+				}
+				al.add(gc);
 			}
-			al.add(gc);
+
+			rs.close();
+		} finally {
+			CloseUtil.close((DBSPLike)db);
 		}
 
-		rs.close();
-		db.close();
-
 		return(al);
+	}
+
+	/**
+	 * Get the recent comments for the given user.
+	 * 
+	 * @param u the given user
+	 * @param max the maximum number of comments to return
+	 * @return the comments
+	 * @throws Exception if something goes wrong.
+	 */
+	public static List<Comment> getRecentComments(User u, int max)
+		throws Exception {
+		List<Comment> rv=new ArrayList<Comment>();
+		FindRecentComments db=new FindRecentComments(PhotoConfig.getInstance());
+		try {
+			db.setUserId(u.getId());
+			db.setMaxRows(max);
+			ResultSet rs=db.executeQuery();
+			while(rs.next()) {
+				rv.add(new Comment(Persistent.getSecurity(), rs));
+			}
+			rs.close();
+			assert rv.size() <= max : "Got too many results";
+		} finally {
+			CloseUtil.close((DBSPLike)db);
+		}
+		return rv;
 	}
 
 	// Savable implementation
@@ -244,7 +280,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	 * String me!
 	 */
 	public String toString() {
-		StringBuffer sb=new StringBuffer(128);
+		StringBuilder sb=new StringBuilder(128);
 		sb.append("Comment ");
 		sb.append(getCommentId());
 		sb.append(" from ");

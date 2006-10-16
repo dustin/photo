@@ -41,7 +41,7 @@ public class ListCommentsAction extends PhotoAction {
 		PhotoSessionData sessionData=getSessionData(request);
 		User user=sessionData.getUser();
 		Cursor comments=new Cursor<GroupedComments>(
-				Comment.getAllComments(user));
+				Comment.getGroupedComments(user));
 		sessionData.setComments(comments);
 
 		return(mapping.findForward("next"));
