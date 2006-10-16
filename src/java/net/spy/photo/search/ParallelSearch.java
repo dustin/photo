@@ -32,8 +32,8 @@ public class ParallelSearch extends SpyObject {
 
 	private ParallelSearch() {
 		super();
-		pool=new ThreadPoolExecutor(3, 10, 120, TimeUnit.SECONDS,
-				new ArrayBlockingQueue<Runnable>(25));
+		pool=new ThreadPoolExecutor(1, 2, 120, TimeUnit.SECONDS,
+				new ArrayBlockingQueue<Runnable>(50));
 		optimalDims=new PhotoDimensionsImpl(
 				PhotoConfig.getInstance().get(
 						"optimal_image_size", "800x600"));
