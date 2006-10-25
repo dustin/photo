@@ -114,12 +114,6 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 		<!-- /struts dependencies -->
 
 		<dependency>
-			<groupId>jaf</groupId>
-			<artifactId>activation</artifactId>
-			<jar>activation.jar</jar>
-			<properties><war.bundle>true</war.bundle></properties>
-		</dependency>
-		<dependency>
 			<groupId>javamail</groupId>
 			<artifactId>javamail</artifactId>
 			<jar>javamail.jar</jar>
