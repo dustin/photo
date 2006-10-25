@@ -3,14 +3,13 @@
 
 package net.spy.photo;
 
-import java.util.Properties;
-
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.naming.InitialContext;
 
 /**
  * Simple mail sender.
@@ -53,16 +52,10 @@ public class Mailer extends Object {
 	 * Send the message.
 	 */
 	public void send() throws Exception {
-		PhotoConfig conf=PhotoConfig.getInstance();
-
-		Properties mailconf=new Properties();
-		mailconf.setProperty("mail.host", conf.get("mail_server"));
-		mailconf.setProperty("mail.from", conf.get("mail_sender"));
-
 		Address addrs[]=new InternetAddress[1];
 		addrs[0]=new InternetAddress(recipient);
 
-		Session session=Session.getInstance(mailconf, null);
+		Session session=(Session)new InitialContext().lookup("java:Mail");
 		Message msg=new MimeMessage(session);
 		msg.setRecipients(Message.RecipientType.TO, addrs);
 		msg.setSubject(subject);
