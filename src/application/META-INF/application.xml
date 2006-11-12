@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE application PUBLIC
+	"-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN"
+	"http://java.sun.com/dtd/application_1_3.dtd">
+
+<application>
+  <display-name>photo</display-name>
+  <module>
+    <java>commons-collections-3.2.jar</java>
+  </module>
+  <module>
+    <java>commons-logging-1.1.jar</java>
+  </module>
+  <module>
+    <java>commons-fileupload-1.1.1.jar</java>
+  </module>
+  <module>
+    <java>antlr-2.7.6.jar</java>
+  </module>
+  <module>
+    <java>oro-2.0.8.jar</java>
+  </module>
+
+	<module>
+		<web>
+			<web-uri>photo.war</web-uri>
+			<context-root>photo</context-root>
+		</web>
+	</module>
+	<module>
+		<web>
+			<web-uri>jasonphoto.war</web-uri>
+			<context-root>jasonphoto</context-root>
+		</web>
+	</module>
+	<module>
+		<web>
+			<web-uri>tphoto.war</web-uri>
+			<context-root>tphoto</context-root>
+		</web>
+	</module>
+	<module>
+		<web>
+			<web-uri>photodemo.war</web-uri>
+			<context-root>photodemo</context-root>
+		</web>
+	</module>
+
+</application>
+
+<!-- arch-tag: E6BF06E7-B4B0-4E69-863B-F7B50AE10845 -->

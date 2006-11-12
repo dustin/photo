@@ -45,14 +45,14 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 			<artifactId>commons-collections</artifactId>
 			<version>3.2</version>
 			<url>http://jakarta.apache.org/commons/collections.html</url>
-			<properties><war.bundle>true</war.bundle></properties>
+			<properties><ear.module>true</ear.module></properties>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1</version>
 			<url>http://jakarta.apache.org/commons/logging.html</url>
-			<properties><war.bundle>true</war.bundle></properties>
+			<properties><ear.module>true</ear.module></properties>
 		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
@@ -76,7 +76,7 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 			<version>1.1.1</version>
 			<url>http://jakarta.apache.org/commons/fileupload/</url>
 			<properties>
-				<war.bundle>true</war.bundle>
+				<ear.module>true</ear.module>
 			</properties>
 		</dependency>
 		<dependency>
@@ -93,7 +93,7 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 			<artifactId>antlr</artifactId>
 			<version>2.7.6</version>
 			<properties>
-				<war.bundle>true</war.bundle>
+				<ear.module>true</ear.module>
 			</properties>
 		</dependency>
 		<dependency>
@@ -108,7 +108,7 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 			<version>2.0.8</version>
 			<url>http://jakarta.apache.org/oro/</url>
 			<properties>
-				<war.bundle>true</war.bundle>
+				<ear.module>true</ear.module>
 			</properties>
 		</dependency>
 		<!-- /struts dependencies -->

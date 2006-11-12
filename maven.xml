@@ -44,10 +44,13 @@
 			filtering="true"/>
 	</preGoal>
 
+  <preGoal name="ear:ear">
+		<attainGoal name="spy:deploy"/>
+	</preGoal>
+
 	<goal name="spy:deploy" prereqs="war">
 
-		<mkdir dir="${maven.build.dir}/wars/wars"/>
-		<mkdir dir="${maven.build.dir}/wars/lazy-wars"/>
+		<mkdir dir="${maven.build.dir}/war"/>
 
 		<j:set var="wars" value="photo,jasonphoto,photodemo,tphoto" />
 		<j:set var="buildwars" value="${wars}"/>
@@ -68,20 +71,13 @@
 				tofile="${maven.build.dir}/photo/WEB-INF/photo.conf"
 				filtering="true"/>
 
-			<jar jarfile="${maven.build.dir}/wars/${war}.war"
+			<jar jarfile="${maven.build.dir}/ear/${war}.war"
 				basedir="${maven.build.dir}/photo">
 			</jar>
 
 			<delete file="${maven.build.dir}/photo/WEB-INF/photo.conf"/>
-
 		</j:forEach>
 
-		<!-- Move them into place -->
-		<u:tokenize var="wars" delim=",">${wars}</u:tokenize>
-		<j:forEach items="${wars}" var="war">
-			<move file="${maven.build.dir}/wars/${war}.war"
-				tofile="${maven.build.dir}/wars/wars/${war}.war"/>
-		</j:forEach>
 	</goal>
 
 	<preGoal name="java:compile">
