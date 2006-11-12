@@ -5,11 +5,10 @@ package net.spy.photo;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
-import net.spy.SpyObject;
 import net.spy.SpyThread;
 import net.spy.db.TransactionPipeline;
+import net.spy.jwebkit.JWServletContextListener;
 import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SavedSearch;
 import net.spy.photo.search.SearchCache;
@@ -18,15 +17,18 @@ import net.spy.photo.util.PhotoStorerThread;
 /**
  * All persistent objects will be available through this class.
  */
-public class Persistent extends SpyObject implements ServletContextListener {
+public class Persistent extends JWServletContextListener {
 
 	private static PhotoSecurity security = null;
 	private static TransactionPipeline pipeline = null;
 	private static ImageServer imageServer=null;
 	private static PhotoStorerThread storer=null;
 
-	public void contextInitialized(ServletContextEvent contextEvent) {
+	public void ctxInit(ServletContextEvent contextEvent) throws Exception {
 		ServletContext context=contextEvent.getServletContext();
+
+		getLogger().info("Initializing photoservlet at "
+			+ getContextPath(context));
 
 		// This is pasted from PhotoServlet...I'm not sure which occurs
 		// first and I'm being a bit lazy right now.  I think this will end
@@ -56,11 +58,7 @@ public class Persistent extends SpyObject implements ServletContextListener {
 		tg.setDaemon(true);
 		Init i=new Init(tg);
 		i.start();
-		try {
-			i.join();
-		} catch (InterruptedException e) {
-			throw new RuntimeException("Problem initting stuff", e);
-		}
+		i.join();
 		if(i.getInitException() != null) {
 			throw new RuntimeException("Problem initting stuff",
 					i.getInitException());
@@ -95,7 +93,7 @@ public class Persistent extends SpyObject implements ServletContextListener {
 		return(storer);
 	}
 
-	public void contextDestroyed(ServletContextEvent contextEvent) {
+	public void ctxDestroy(ServletContextEvent contextEvent) {
 		if(pipeline != null) {
 			getLogger().info("Shutting down transaction pipeline");
 			pipeline.shutdown();
