@@ -44,10 +44,6 @@
 			filtering="true"/>
 	</preGoal>
 
-  <preGoal name="ear:ear">
-		<attainGoal name="spy:deploy"/>
-	</preGoal>
-
 	<goal name="spy:deploy" prereqs="war">
 
 		<mkdir dir="${maven.build.dir}/war"/>

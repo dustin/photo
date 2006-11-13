@@ -45,14 +45,14 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 			<artifactId>commons-collections</artifactId>
 			<version>3.2</version>
 			<url>http://jakarta.apache.org/commons/collections.html</url>
-			<properties><ear.module>true</ear.module></properties>
+			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1</version>
 			<url>http://jakarta.apache.org/commons/logging.html</url>
-			<properties><ear.module>true</ear.module></properties>
+			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
@@ -66,35 +66,27 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 			<artifactId>commons-digester</artifactId>
 			<version>1.7</version>
 			<url>http://jakarta.apache.org/commons/digester/index.html</url>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.1.1</version>
 			<url>http://jakarta.apache.org/commons/fileupload/</url>
-			<properties>
-				<ear.module>true</ear.module>
-			</properties>
+			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>1.2</version>
 			<url>http://jakarta.apache.org/commons/io/</url>
-			<properties>
-				<war.bundle>true</war.bundle>
-			</properties>
+			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>
 			<groupId>antlr</groupId>
 			<artifactId>antlr</artifactId>
 			<version>2.7.6</version>
-			<properties>
-				<ear.module>true</ear.module>
-			</properties>
+			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>
 			<groupId>commons-validator</groupId>
@@ -107,9 +99,7 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 			<artifactId>oro</artifactId>
 			<version>2.0.8</version>
 			<url>http://jakarta.apache.org/oro/</url>
-			<properties>
-				<ear.module>true</ear.module>
-			</properties>
+			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<!-- /struts dependencies -->
 
