@@ -67,7 +67,7 @@
 				tofile="${maven.build.dir}/photo/WEB-INF/photo.conf"
 				filtering="true"/>
 
-			<jar jarfile="${maven.build.dir}/ear/${war}.war"
+			<jar jarfile="${maven.build.dir}/war/${war}.war"
 				basedir="${maven.build.dir}/photo">
 			</jar>
 
