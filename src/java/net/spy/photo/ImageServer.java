@@ -29,6 +29,6 @@ public interface ImageServer {
 	/**
 	 * Store the given image.
 	 */
-	void storeImage(int imageId, PhotoImage image) throws PhotoException;
+	void storeImage(PhotoImageData pid, PhotoImage image) throws PhotoException;
 
 }

@@ -11,12 +11,19 @@ import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
 import net.spy.db.DBSPLike;
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoImageHelper;
+import net.spy.photo.observation.NewImageData;
+import net.spy.photo.observation.Observable;
+import net.spy.photo.observation.Observation;
+import net.spy.photo.observation.Observer;
 import net.spy.photo.sp.GetImagesToFlush;
 import net.spy.util.Base64;
 import net.spy.util.CloseUtil;
@@ -26,9 +33,6 @@ import net.spy.xml.SAXAble;
 import net.spy.xml.ThrowableElement;
 import net.spy.xml.XMLUtils;
 
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
 /**
  * Store images in the DB.	Uploaded images go directly into the cache and
  * are referenced in the album table.  They're usable without being stored,
@@ -36,7 +40,8 @@ import org.xml.sax.SAXException;
  * is cleared.	It's quite important to make sure the images make it into
  * the database for long-term storage, however.
  */
-public class PhotoStorerThread extends LoopingThread implements SAXAble {
+public class PhotoStorerThread extends LoopingThread
+	implements SAXAble, Observer<NewImageData> {
 
 	// chunks should be divisible by 57
 	public static final int CHUNK_SIZE=2052;
@@ -340,5 +345,15 @@ public class PhotoStorerThread extends LoopingThread implements SAXAble {
 			getLogger().warn("Exception while flushing", t);
 		}
 		getLogger().info("Completed flush loop.");
+	}
+
+	/* (non-Javadoc)
+	 * @see net.spy.photo.observation.Observer#observe(net.spy.photo.observation.Observable, net.spy.photo.observation.Observation)
+	 */
+	public void observe(Observable<NewImageData> obserable,
+			Observation<NewImageData> observation) {
+		getLogger().info("Got new image observation for ",
+				observation.getData().getPhotoImageData());
+		addedImage();
 	}
 }

@@ -11,6 +11,7 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 
 /**
@@ -59,17 +60,17 @@ public class ImageServerImpl extends Object implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public void storeImage(int imageId, PhotoImage image)
+	public void storeImage(PhotoImageData pid, PhotoImage image)
 		throws PhotoException {
 
 		ensureConnected();
-		log("Storing image " + imageId);
+		log("Storing image " + pid.getId());
 		try {
-			server.storeImage(imageId, image);
+			server.storeImage(pid, image);
 		} catch(RemoteException e) {
 			throw new PhotoException("Error saving image", e);
 		}
-		log("Stored image " + imageId);
+		log("Stored image " + pid.getId());
 	}
 
 	// Make sure the connection to the remote server is maintained.

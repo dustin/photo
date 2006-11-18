@@ -159,7 +159,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		// Get the photo cached
 		try {
 			ImageServer server=Persistent.getImageServer();
-			server.storeImage(id, imageData);
+			server.storeImage(this, imageData);
 		} catch(Exception e) {
 			throw new SaveException("Cannot cache photo", e);
 		}

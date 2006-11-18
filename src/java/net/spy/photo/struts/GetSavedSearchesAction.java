@@ -3,24 +3,24 @@
 
 package net.spy.photo.struts;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-
 import net.spy.photo.User;
 import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SavedSearch;
 import net.spy.photo.search.SearchResults;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 /**
  * Load a saved search and overwrite the search form with that search.
@@ -45,8 +45,8 @@ public class GetSavedSearchesAction extends PhotoAction {
 
 		User u=getUser(request);
 
-		Collection<CardinalSavedSearch> searches=
-			new ArrayList<CardinalSavedSearch>();
+		SortedSet<CardinalSavedSearch> searches=
+			new TreeSet<CardinalSavedSearch>();
 
 		Map<SavedSearch, Future<SearchResults>> futureSearches=
 			new HashMap<SavedSearch, Future<SearchResults>>();
@@ -70,7 +70,8 @@ public class GetSavedSearchesAction extends PhotoAction {
 	/**
 	 * Saved search with cardinality for the current user.
 	 */
-	public static class CardinalSavedSearch {
+	public static class CardinalSavedSearch
+		implements Comparable<CardinalSavedSearch>{
 		private String name=null;
 		private int id=0;
 		private int count=0;
@@ -91,6 +92,10 @@ public class GetSavedSearchesAction extends PhotoAction {
 
 		public String getName() {
 			return name;
+		}
+
+		public int compareTo(CardinalSavedSearch o) {
+			return name.compareTo(o.name);
 		}
 	}
 

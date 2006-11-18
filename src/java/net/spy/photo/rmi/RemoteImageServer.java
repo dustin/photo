@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageData;
 
 /**
  * Interface of the ImageServer.
@@ -34,7 +35,8 @@ public interface RemoteImageServer extends Remote {
 	/**
 	 * Store the image by ID.
 	 */
-	void storeImage(int imageId, PhotoImage image) throws RemoteException;
+	void storeImage(PhotoImageData pid, PhotoImage image)
+		throws RemoteException;
 
 	/**
 	 * Determine if the remote end is still listening.

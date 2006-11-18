@@ -11,6 +11,7 @@ import net.spy.photo.ImageServer;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageData;
 
 /**
  * Implementation of the remote image server.
@@ -75,12 +76,12 @@ public class RemoteImageServerImpl extends UnicastRemoteObject
 	/**
 	 * @see RemoteImageServer
 	 */
-	public void storeImage(int imageId, PhotoImage image)
+	public void storeImage(PhotoImageData pid, PhotoImage image)
 		throws RemoteException {
 		// Make sure we've calculated the width and height
 		image.getWidth();
 		try {
-			server.storeImage(imageId, image);
+			server.storeImage(pid, image);
 		} catch(PhotoException e) {
 			log("Error caching image:  " + e);
 			e.printStackTrace();

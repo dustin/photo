@@ -9,6 +9,9 @@ import javax.servlet.ServletContextEvent;
 import net.spy.SpyThread;
 import net.spy.db.TransactionPipeline;
 import net.spy.jwebkit.JWServletContextListener;
+import net.spy.photo.jms.ImageMessageConsumer;
+import net.spy.photo.jms.ImageMessagePoster;
+import net.spy.photo.observation.NewImageObservable;
 import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SavedSearch;
 import net.spy.photo.search.SearchCache;
@@ -23,6 +26,9 @@ public class Persistent extends JWServletContextListener {
 	private static TransactionPipeline pipeline = null;
 	private static ImageServer imageServer=null;
 	private static PhotoStorerThread storer=null;
+
+	private ImageMessagePoster imp=null;
+	private ImageMessageConsumer imc=null;
 
 	public void ctxInit(ServletContextEvent contextEvent) throws Exception {
 		ServletContext context=contextEvent.getServletContext();
@@ -63,6 +69,18 @@ public class Persistent extends JWServletContextListener {
 			throw new RuntimeException("Problem initting stuff",
 					i.getInitException());
 		}
+
+		// Initialize the observers
+		NewImageObservable.getInstance().addObserver(
+				Persistent.getStorerThread());
+		try {
+			imc=new ImageMessageConsumer();
+
+			imp=new ImageMessagePoster();
+			NewImageObservable.getInstance().addObserver(imp);
+		} catch(Exception e) {
+			getLogger().info("Couldn't initialize JMS queue for new images", e);
+		}
 	}
 
 	/**
@@ -93,7 +111,7 @@ public class Persistent extends JWServletContextListener {
 		return(storer);
 	}
 
-	public void ctxDestroy(ServletContextEvent contextEvent) {
+	public void ctxDestroy(ServletContextEvent contextEvent) throws Exception {
 		if(pipeline != null) {
 			getLogger().info("Shutting down transaction pipeline");
 			pipeline.shutdown();
@@ -116,6 +134,14 @@ public class Persistent extends JWServletContextListener {
 			getLogger().info("Cache validations shut down.");
 		}
 		ParallelSearch.setInstance(null);
+		NewImageObservable.getInstance().removeAllObservers();
+
+		if(imp != null) {
+			imp.close();
+		}
+		if(imc != null) {
+			imc.close();
+		}
 	}
 
 

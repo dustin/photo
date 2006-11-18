@@ -12,12 +12,13 @@ import net.spy.photo.ImageCache;
 import net.spy.photo.ImageServer;
 import net.spy.photo.ImageServerScaler;
 import net.spy.photo.Instantiator;
-import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoUtil;
+import net.spy.photo.observation.NewImageObservable;
 import net.spy.util.Base64;
 
 /**
@@ -125,19 +126,20 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public void storeImage(int imageId, PhotoImage image)
+	public void storeImage(PhotoImageData pid, PhotoImage image)
 		throws PhotoException {
 
 		// Make sure we've calculated the width and height
 		image.getWidth();
 		try {
-			cache.putImage("photo_" + imageId, image);
+			cache.putImage("photo_" + pid.getId(), image);
 		} catch(Exception e) {
 			getLogger().warn("Error caching image", e);
 			throw new PhotoException("Error storing image", e);
 		}
 
-		Persistent.getStorerThread().addedImage();
+		// Let everyone know there's a new image.
+		NewImageObservable.getInstance().newImage(pid, image);
 	}
 
 	private PhotoImage scaleImage(
