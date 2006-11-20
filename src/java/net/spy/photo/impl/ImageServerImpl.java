@@ -12,6 +12,7 @@ import net.spy.photo.ImageCache;
 import net.spy.photo.ImageServer;
 import net.spy.photo.ImageServerScaler;
 import net.spy.photo.Instantiator;
+import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
@@ -78,7 +79,8 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 				imageData=fetchScaledImage(imageId, dim);
 			}
 		} catch(Exception e) {
-			getLogger().warn("Error fetching image", e);
+			getLogger().warn("Error fetching image in %s",
+					Persistent.getContextPath(), e);
 			throw new PhotoException("Error fetching image", e);
 		}
 		// Calculate the width

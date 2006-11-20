@@ -27,14 +27,17 @@ public class Persistent extends JWServletContextListener {
 	private static ImageServer imageServer=null;
 	private static PhotoStorerThread storer=null;
 
+	private static String contextPath;
+
 	private ImageMessagePoster imp=null;
 	private ImageMessageConsumer imc=null;
 
 	public void ctxInit(ServletContextEvent contextEvent) throws Exception {
 		ServletContext context=contextEvent.getServletContext();
 
-		getLogger().info("Initializing photoservlet at "
-			+ getContextPath(context));
+		contextPath=getContextPath(context);
+
+		getLogger().info("Initializing photoservlet at " + contextPath);
 
 		// This is pasted from PhotoServlet...I'm not sure which occurs
 		// first and I'm being a bit lazy right now.  I think this will end
@@ -109,6 +112,14 @@ public class Persistent extends JWServletContextListener {
 	 */
 	public static PhotoStorerThread getStorerThread() {
 		return(storer);
+	}
+
+	/**
+	 * Get the configured context path for this instance.
+	 */
+	public static String getContextPath() {
+		assert contextPath != null;
+		return contextPath;
 	}
 
 	public void ctxDestroy(ServletContextEvent contextEvent) throws Exception {
