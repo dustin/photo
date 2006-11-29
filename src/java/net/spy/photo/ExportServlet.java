@@ -38,6 +38,7 @@ public class ExportServlet extends XMLOutputServlet {
 	/** 
 	 * Process the request.
 	 */
+	@Override
 	protected void doGetOrPost(HttpServletRequest req, HttpServletResponse res)
 		throws ServletException, IOException {
 

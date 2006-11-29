@@ -4,12 +4,9 @@
 package net.spy.photo.filter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -56,6 +53,7 @@ public abstract class DateFilter extends SortingFilter {
 	/**
 	 * Filter the set.
 	 */
+	@Override
 	public SearchResults filter(SearchResults in, SortingFilter.Sort direction)
 		throws PhotoException {
 
@@ -67,12 +65,12 @@ public abstract class DateFilter extends SortingFilter {
 		// Do the actual processing
 
 		// This is where the month groups go
-		TreeMap<Date, Collection<PhotoImageData>> months = null;
+		TreeMap<Date, List<PhotoImageData>> months = null;
 		if(direction == SortingFilter.Sort.REVERSE) {
-			months = new TreeMap<Date, Collection<PhotoImageData>>(
+			months = new TreeMap<Date, List<PhotoImageData>>(
 					Collections.reverseOrder());
 		} else {
-			months = new TreeMap<Date, Collection<PhotoImageData>>();
+			months = new TreeMap<Date, List<PhotoImageData>>();
 		}
 		for(PhotoImageData pid : in.getAllObjects()) {
 			Date dtmp=pid.getTaken();
@@ -88,7 +86,7 @@ public abstract class DateFilter extends SortingFilter {
 			*/
 
 			// Get a vector from the date
-			Collection<PhotoImageData> a=months.get(taken);
+			List<PhotoImageData> a=months.get(taken);
 			if(a==null) {
 				a=new ArrayList<PhotoImageData>(arrayGuess);
 				months.put(taken, a);
@@ -101,14 +99,10 @@ public abstract class DateFilter extends SortingFilter {
 		Random r=new Random();
 
 		// OK, now we'll flip through the keys to do one per month
-		for(Iterator i=months.entrySet().iterator(); i.hasNext(); ) {
-			// The entry
-			Map.Entry me=(Map.Entry)i.next();
-			// Grab the List
-			List l=(List)me.getValue();
+		for(List<PhotoImageData> l : months.values()) {
 
 			// Get a random object from vector
-			PhotoImageData pid=(PhotoImageData)l.get(r.nextInt(l.size()));
+			PhotoImageData pid=l.get(r.nextInt(l.size()));
 
 			// Add it to the results
 			rv.add(pid);

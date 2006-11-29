@@ -380,7 +380,8 @@ public class Search extends SpyObject {
 			// Remove everything that doesn't match our keywords (unless we
 			// don't have any)
 			getLogger().debug("Got images with keywords %s", kws.getPositive());
-			Set keyset = index.getForKeywords(kws.getPositive(), joinop);
+			Set<PhotoImageData> keyset =
+				index.getForKeywords(kws.getPositive(), joinop);
 			rset.retainAll(keyset);
 		}
 		if(kws.getNegative().size() > 0) {
@@ -389,8 +390,8 @@ public class Search extends SpyObject {
 			// of the images matching the anti-keywords
 			getLogger().debug("Removing images with keywords %s",
 					kws.getNegative());
-			Set keyset = index.getForKeywords(kws.getNegative(),
-					SearchIndex.OP.OR);
+			Set<PhotoImageData> keyset =
+				index.getForKeywords(kws.getNegative(), SearchIndex.OP.OR);
 			rset.removeAll(keyset);
 		}
 	}
@@ -469,9 +470,10 @@ public class Search extends SpyObject {
 		return (validCats);
 	}
 
-	private static abstract class PIDComparator
+	static abstract class PIDComparator
 		implements Comparator<PhotoImageData> {
 
+		@Override
 		public boolean equals(Object ob) {
 			return (ob.getClass() == getClass());
 		}
@@ -489,13 +491,15 @@ public class Search extends SpyObject {
 
 	}
 
-	private static class TimestampComparator extends PIDComparator {
+	static class TimestampComparator extends PIDComparator {
+		@Override
 		public int doCompare(PhotoImageData pid1, PhotoImageData pid2) {
 			return (pid1.getTimestamp().compareTo(pid2.getTimestamp()));
 		}
 	}
 
-	private static class TakenComparator extends PIDComparator {
+	static class TakenComparator extends PIDComparator {
+		@Override
 		public int doCompare(PhotoImageData pid1, PhotoImageData pid2) {
 			return (pid1.getTaken().compareTo(pid2.getTaken()));
 		}
@@ -510,6 +514,7 @@ public class Search extends SpyObject {
 			this.comp = c;
 		}
 
+		@Override
 		public boolean equals(Object ob) {
 			return (ob.getClass() == getClass());
 		}
@@ -537,6 +542,7 @@ public class Search extends SpyObject {
 			form=f;
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			boolean rv=false;
 			if(o instanceof CacheKey) {
@@ -547,6 +553,7 @@ public class Search extends SpyObject {
 			return(rv);
 		}
 
+		@Override
 		public int hashCode() {
 			return(type.hashCode() ^ uid ^ dims.hashCode() ^ form.hashCode());
 		}

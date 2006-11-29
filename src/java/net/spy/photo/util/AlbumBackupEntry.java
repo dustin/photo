@@ -43,6 +43,7 @@ public class AlbumBackupEntry extends BackupEntry {
 	/**
 	 * Restore this backup entry.
 	 */
+	@Override
 	public void restore() throws Exception {
 
 		Connection conn=null;

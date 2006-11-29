@@ -59,6 +59,7 @@ public class PhotoDimensionsImpl
 	 * True if the given object is a PhotoDimensions object representing
 	 * the same width and height.
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 
@@ -75,6 +76,7 @@ public class PhotoDimensionsImpl
 	/**
 	 * Get the hash code.
 	 */
+	@Override
 	public int hashCode() {
 
 		int rv=width << 16;
@@ -86,6 +88,7 @@ public class PhotoDimensionsImpl
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		// return("PhotoDimensionsImpl@" + width + "x" + height);
 		// Try a strictly functional toString for now.

@@ -58,6 +58,7 @@ public class KeywordImpl extends AbstractSavable implements Keyword, Comparable<
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);
 
@@ -74,6 +75,7 @@ public class KeywordImpl extends AbstractSavable implements Keyword, Comparable<
 	 * True if the given object is a PhotoImageData object representing the
 	 * same image.
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 
@@ -93,6 +95,7 @@ public class KeywordImpl extends AbstractSavable implements Keyword, Comparable<
 	 * 
 	 * @return the id
 	 */
+	@Override
 	public int hashCode() {
 		return(keywordId);
 	}

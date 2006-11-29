@@ -26,6 +26,7 @@ public class AuthedServletRequest extends HttpServletRequestWrapper {
 	/** 
 	 * Get the user.
 	 */
+	@Override
 	public Principal getUserPrincipal() {
 		return(user);
 	}
@@ -33,6 +34,7 @@ public class AuthedServletRequest extends HttpServletRequestWrapper {
 	/** 
 	 * Return true if the user is in the given role.
 	 */
+	@Override
 	public boolean isUserInRole(String role) {
 		boolean rv=false;
 		if(user != null) {

@@ -33,6 +33,7 @@ public class ChangePWAction extends PhotoAction {
 	/**
 	 * Process the change password request.
 	 */
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)

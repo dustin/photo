@@ -23,6 +23,7 @@ import net.spy.util.CloseUtil;
 public class PhotoServlet extends JWHttpServlet { 
 
 	// Do the work.
+	@Override
 	protected void doGetOrPost(HttpServletRequest req,
 		HttpServletResponse res) throws ServletException, IOException {
 

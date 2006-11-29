@@ -31,6 +31,7 @@ public abstract class AbstractCategory extends SpyObject implements Category {
 	 * 
 	 * @return the ID of this category
 	 */
+	@Override
 	public int hashCode() {
 		return (getId());
 	}
@@ -39,6 +40,7 @@ public abstract class AbstractCategory extends SpyObject implements Category {
 	 * Return true if the object passed as an argument is a Category object
 	 * with the same ID.
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 		if(o instanceof Category) {
@@ -79,6 +81,7 @@ public abstract class AbstractCategory extends SpyObject implements Category {
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);
 

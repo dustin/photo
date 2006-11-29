@@ -26,6 +26,7 @@ public abstract class SortingFilter extends Filter {
 	/** 
 	 * Filter the results and use the FORWARD sort direction.
 	 */
+	@Override
 	public final SearchResults filter(SearchResults in) throws PhotoException {
 		return(filter(in, Sort.FORWARD));
 	}

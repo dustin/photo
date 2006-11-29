@@ -33,6 +33,7 @@ public class CommentAction extends PhotoAction {
 	/**
 	 * Process the comment thing.
 	 */
+	@Override
 	public ActionForward spyExecute(
 		ActionMapping mapping, ActionForm form,
 		HttpServletRequest request, HttpServletResponse response) 

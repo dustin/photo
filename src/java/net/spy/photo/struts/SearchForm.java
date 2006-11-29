@@ -46,6 +46,7 @@ public class SearchForm extends PhotoForm {
 		return(s == null ? 137 : s.hashCode());
 	}
 
+	@Override
 	public int hashCode() {
 		return(Arrays.hashCode(cats)
 			^ hc(field)
@@ -71,6 +72,7 @@ public class SearchForm extends PhotoForm {
 		return(s1 == null ? s2 == null : s1.equals(s2));
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 		if(o instanceof SearchForm) {
@@ -230,6 +232,7 @@ public class SearchForm extends PhotoForm {
 	 * @param mapping The mapping used to select this instance
 	 * @param request The servlet request we are processing
 	 */
+	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		if(mapping.getPath().equals("/search")) {
 			cats=null;
@@ -254,6 +257,7 @@ public class SearchForm extends PhotoForm {
 	 * @param mapping The mapping used to select this instance
 	 * @param request The servlet request we are processing
 	 */
+	@Override
 	public ActionErrors validate(ActionMapping mapping,
 		HttpServletRequest request) {
 

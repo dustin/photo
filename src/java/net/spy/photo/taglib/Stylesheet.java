@@ -40,6 +40,7 @@ public class Stylesheet extends PhotoTag {
 	/**
 	 * Start link.
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 
 		StringBuffer sb=new StringBuffer();
@@ -61,6 +62,7 @@ public class Stylesheet extends PhotoTag {
 	/**
 	 * Reset all values.
 	 */
+	@Override
 	public void release() {
 		url=null;
 	}

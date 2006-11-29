@@ -22,6 +22,7 @@ import net.spy.photo.PhotoImageData;
 /**
  * Search data indexer.
  */
+@SuppressWarnings("unchecked")
 public class SearchIndex extends SpyObject {
 
 	/**

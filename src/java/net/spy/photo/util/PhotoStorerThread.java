@@ -129,6 +129,7 @@ public class PhotoStorerThread extends LoopingThread
 		return totalExceptions;
 	}
 
+	@Override
 	public String toString() {
 		Throwable recentException=null;
 		for(Throwable t : lastExceptions) {
@@ -300,6 +301,7 @@ public class PhotoStorerThread extends LoopingThread
 	 * When starting up, run an initial flush to catch up with anything that
 	 * may not have ben flushed from a previous run.
 	 */
+	@Override
 	protected void startingUp() {
 		try {
 			// Sleep for at least one minute, at most five.
@@ -318,6 +320,7 @@ public class PhotoStorerThread extends LoopingThread
 	/**
 	 * Run through as many flushes as we see fit.
 	 */
+	@Override
 	protected void runLoop() {
 		getLogger().info("Beginning flush loop.");
 		// Loop immediately until there's nothing left to flush.

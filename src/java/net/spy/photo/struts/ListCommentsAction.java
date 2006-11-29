@@ -31,6 +31,7 @@ public class ListCommentsAction extends PhotoAction {
 	/**
 	 * Load the comments cursor.
 	 */
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
@@ -40,7 +41,7 @@ public class ListCommentsAction extends PhotoAction {
 
 		PhotoSessionData sessionData=getSessionData(request);
 		User user=sessionData.getUser();
-		Cursor comments=new Cursor<GroupedComments>(
+		Cursor<?> comments=new Cursor<GroupedComments>(
 				Comment.getGroupedComments(user));
 		sessionData.setComments(comments);
 

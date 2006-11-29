@@ -50,6 +50,7 @@ public class DisplayLink extends PhotoTag {
 	/**
 	 * Set the id of the image to which we want to link.
 	 */
+	@Override
 	public void setId(String to) {
 		id=Integer.parseInt(to);
 	}
@@ -95,6 +96,7 @@ public class DisplayLink extends PhotoTag {
 	/**
 	 * Start link.
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 
         // If this is true at the bottom, process the link.
@@ -205,6 +207,7 @@ public class DisplayLink extends PhotoTag {
 	/**
 	 * End link.
 	 */
+	@Override
 	public int doEndTag() throws JspException {
 		try {
 			pageContext.getOut().write("</a>");
@@ -219,6 +222,7 @@ public class DisplayLink extends PhotoTag {
 	/**
 	 * Reset all values.
 	 */
+	@Override
 	public void release() {
 		id=0;
 		showThumbnail=false;

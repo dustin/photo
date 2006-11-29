@@ -26,6 +26,7 @@ public class UploadImage extends BaseRestServlet {
 
 	private static final long RECACHE_DELAY=120000;
 
+	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res)
 		throws ServletException, IOException {
 		try {

@@ -5,7 +5,6 @@ package net.spy.photo.migration;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.spy.db.Saver;
 import net.spy.photo.PhotoConfig;
@@ -45,9 +44,7 @@ public class PhotoMigration11 extends PhotoMigration {
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 
 		// Now, flip through them and set the correct value.
-		for(Iterator i=imgs.iterator(); i.hasNext(); ) {
-			IdKw idkw=(IdKw)i.next();
-
+		for(IdKw idkw : imgs) {
 			stat.start();
 
 			SavablePhotoImageData savable=new SavablePhotoImageData(
@@ -61,10 +58,12 @@ public class PhotoMigration11 extends PhotoMigration {
 		}
 	}
 
+	@Override
 	protected boolean checkMigration() throws Exception {
 		return(getRowCount("album_keywords_map") > 0);
 	}
 
+	@Override
 	protected void performMigration() throws Exception {
 		updateKeywords();
 	}
@@ -77,9 +76,9 @@ public class PhotoMigration11 extends PhotoMigration {
 		mig.migrate();
 	}
 
-	private static class IdKw {
-		private int id=0;
-		private String kw=null;
+	static class IdKw {
+		int id=0;
+		String kw=null;
 
 		public IdKw(int i, String k) {
 			super();

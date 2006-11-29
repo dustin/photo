@@ -29,6 +29,8 @@ public class MappedFilterAction extends PhotoAction {
 	/**
 	 * Perform the mapped in filter.
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
@@ -37,8 +39,8 @@ public class MappedFilterAction extends PhotoAction {
 		FilterMapping fm=(FilterMapping)mapping;
 
 		// Instantiate the filter
-		Class c=Class.forName(fm.getFilterClass());
-		Filter f=(Filter)c.newInstance();
+		Class<Filter> c=(Class<Filter>) Class.forName(fm.getFilterClass());
+		Filter f=c.newInstance();
 
 		// Get the search results
 		PhotoSessionData sessionData=getSessionData(request);

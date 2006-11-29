@@ -15,6 +15,7 @@ public class CategoryTagExtraInfo extends TagExtraInfo {
 	/**
 	 * Get the variable info
 	 */
+	@Override
 	public VariableInfo[] getVariableInfo(TagData data) {
 		return(new VariableInfo[] {
 			new VariableInfo(

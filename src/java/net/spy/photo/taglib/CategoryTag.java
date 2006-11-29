@@ -59,6 +59,7 @@ public class CategoryTag extends PhotoTag {
 	/**
 	 * Provide the variable.
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 		int access=0;
 		if(showViewable) {
@@ -73,7 +74,7 @@ public class CategoryTag extends PhotoTag {
 			pageContext.getAttribute(PhotoSessionData.SES_ATTR,
 				PageContext.SESSION_SCOPE);
 
-		Collection cats=null;
+		Collection<?> cats=null;
 		try {
 			CategoryFactory cf=CategoryFactory.getInstance();
 			cats=cf.getCatList(sessionData.getUser().getId(), access);
@@ -90,6 +91,7 @@ public class CategoryTag extends PhotoTag {
 		return(EVAL_BODY_INCLUDE);
 	}
 
+	@Override
 	public int doEndTag() throws JspException {
 		pageContext.removeAttribute("catList");
 

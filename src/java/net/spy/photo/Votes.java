@@ -55,6 +55,7 @@ public class Votes extends SpyObject {
 		return(store.size());
 	}
 
+	@Override
 	public String toString() {
 		return("{Votes: avg=" + getAverage() + " size: " + getSize() + "}");
 	}

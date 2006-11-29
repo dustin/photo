@@ -24,6 +24,7 @@ public class Keywords extends PhotoAjaxServlet {
 
 	private Map<String, Comparator<KeywordMatch>> paths=null;
 
+	@Override
 	public void init(ServletConfig conf) throws ServletException {
 		super.init(conf);
 		paths=new HashMap<String, Comparator<KeywordMatch>>();
@@ -32,6 +33,7 @@ public class Keywords extends PhotoAjaxServlet {
 		paths.put("/freq", KeywordMatch.BY_FREQUENCY);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	protected SAXAble getResults(HttpServletRequest request) throws Exception {
 		Comparator<KeywordMatch> comp=paths.get(request.getPathInfo());

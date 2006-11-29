@@ -43,15 +43,18 @@ public class PhotoRegionImpl extends SpyObject implements PhotoRegion {
 		return(height);
 	}
 
+	@Override
 	public int hashCode() {
 		return(x ^ y ^ width ^ height);
 	}
 
+	@Override
 	public String toString() {
 		return("{PhotoRegionImpl " + width + "x" + height
 			+ " at " + x + "," + y + "}");
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 		if(o instanceof PhotoRegion) {

@@ -48,6 +48,7 @@ public class GetImageDataAction extends PhotoAction {
 	/** 
 	 * Process the execute.
 	 */
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)

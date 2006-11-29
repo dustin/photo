@@ -30,7 +30,7 @@ public class PhotoSessionData extends Object implements Serializable {
 	private PhotoDimensions optimalDimensions=null;
 
 	private HashMap<Integer, Integer> searchResults=null;
-	private Map<String, Cursor> cursors=null;
+	private Map<String, Cursor<?>> cursors=null;
 
 	// Keep track of how many images have been served up to this user.
 	private int imagesSeen=0;
@@ -43,13 +43,14 @@ public class PhotoSessionData extends Object implements Serializable {
 	 */
 	public PhotoSessionData() {
 		super();
-		cursors=Collections.synchronizedMap(new HashMap<String, Cursor>());
+		cursors=Collections.synchronizedMap(new HashMap<String, Cursor<?>>());
 		imagesSeenBuf=new RingBuffer<Integer>(128);
 	}
 
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		return("{PhotoSessionData for " + user + "}");
 	}
@@ -123,7 +124,7 @@ public class PhotoSessionData extends Object implements Serializable {
 	 *
 	 * @return the Cursor or null if no such cursor exists
 	 */
-	public Cursor getCursor(String name) {
+	public Cursor<?> getCursor(String name) {
 		assert cursors.containsKey(name)
 			: "No cursor named " + name + " in session";
 		return(cursors.get(name));
@@ -132,14 +133,14 @@ public class PhotoSessionData extends Object implements Serializable {
 	/**
 	 * Set a cursor by name.
 	 */
-	public void setCursor(String name, Cursor cursor) {
+	public void setCursor(String name, Cursor<?> cursor) {
 		cursors.put(name, cursor);
 	}
 
 	/**
 	 * Set the comments list.
 	 */
-	public void setComments(Cursor comments) {
+	public void setComments(Cursor<?> comments) {
 		setCursor("comments", comments);
 	}
 
@@ -148,7 +149,7 @@ public class PhotoSessionData extends Object implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public Cursor<GroupedComments> getComments() {
-		return getCursor("comments");
+		return (Cursor<GroupedComments>)getCursor("comments");
 	}
 
 	/**

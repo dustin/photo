@@ -47,6 +47,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 	/**
 	 * Scale an image with an external command.
 	 */
+	@Override
 	public PhotoImage scaleImage(PhotoImage in, PhotoDimensions dim)
 		throws Exception {
 

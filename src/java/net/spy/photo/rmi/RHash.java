@@ -89,6 +89,7 @@ public class RHash extends SpyObject {
 		return(ret);
 	}
 
+	@Override
 	protected void finalize() throws Throwable {
 		obj = null;
 		super.finalize();

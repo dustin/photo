@@ -15,6 +15,7 @@ import net.spy.xml.SAXAble;
  */
 public class PhotoStorerControlServlet extends PhotoAjaxServlet {
 
+	@Override
 	protected SAXAble getResults(HttpServletRequest request) throws Exception {
 		User user=getUser(request);
 		if(!user.isInRole(User.ADMIN)) {

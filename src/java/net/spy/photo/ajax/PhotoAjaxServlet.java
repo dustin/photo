@@ -41,6 +41,7 @@ public abstract class PhotoAjaxServlet extends AjaxServlet {
 	/** 
 	 * Default saxable - returns null.
 	 */
+	@Override
 	protected SAXAble getResults(HttpServletRequest request) throws Exception {
 		return(null);
 	}

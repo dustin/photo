@@ -50,6 +50,7 @@ public class MetaInfo extends PhotoTag {
 	/**
 	 * Get the meta info and shove it into the webpage.
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 		int totalImages=
 			PhotoImageDataFactory.getInstance().getObjects().size();

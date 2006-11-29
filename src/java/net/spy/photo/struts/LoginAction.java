@@ -65,6 +65,7 @@ public class LoginAction extends PhotoAction {
 	/**
 	 * Process the request.
 	 */
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)

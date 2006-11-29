@@ -34,7 +34,7 @@ public class GetCategories extends RPCMethod {
 	 * @throws PhotoException
 	 *             if there's trouble getting the cat list
 	 */
-	public Vector getAddable(String username, String password)
+	public Vector<?> getAddable(String username, String password)
 		throws PhotoException {
 		// Authenticate the user
 		authenticate(username, password);

@@ -29,6 +29,7 @@ public class SetSizeAction extends PhotoAction {
 	/**
 	 * Set the optimal viewing size.
 	 */
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)

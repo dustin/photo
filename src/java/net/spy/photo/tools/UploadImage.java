@@ -52,7 +52,7 @@ public class UploadImage extends Object {
 
 		XmlRpcClient xmlrpc = new XmlRpcClient(url);
 
-		Vector<Hashtable> params = new Vector<Hashtable>();
+		Vector<Hashtable<?,?>> params = new Vector<Hashtable<?,?>>();
 		Hashtable<String, Object> paramStruct=new Hashtable<String, Object>();
 		paramStruct.put("username", username);
 		paramStruct.put("password", password);

@@ -5,7 +5,6 @@ package net.spy.photo.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -47,15 +46,15 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 		// Load the getList
 		if(getListNames != null) {
 			getList=new ArrayList<ImageCache>();
-			for(Iterator i=getListNames.iterator(); i.hasNext();) {
-				getList.add(m.get(i.next()));
+			for(String nm : getListNames) {
+				getList.add(m.get(nm));
 			}
 		}
 		// Load the putList
 		if(putListNames != null) {
 			putList=new ArrayList<ImageCache>();
-			for(Iterator i=putListNames.iterator(); i.hasNext();) {
-				putList.add(m.get(i.next()));
+			for(String nm : putListNames) {
+				putList.add(m.get(nm));
 			}
 		}
 	}
@@ -108,8 +107,7 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 	public PhotoImage getImage(String key) throws PhotoException {
 		PhotoImage rv=null;
 		if(getList != null) {
-			for(Iterator i=getList.iterator(); rv == null && i.hasNext(); ) {
-				ImageCache ic=(ImageCache)i.next();
+			for(ImageCache ic : getList) {
 				rv=ic.getImage(key);
 			}
 		}
@@ -121,8 +119,7 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 	 */
 	public void putImage(String key, PhotoImage image) throws PhotoException {
 		if(putList != null) {
-			for(Iterator i=putList.iterator(); i.hasNext(); ) {
-				ImageCache ic=(ImageCache)i.next();
+			for(ImageCache ic : putList) {
 				ic.putImage(key, image);
 			}
 		}

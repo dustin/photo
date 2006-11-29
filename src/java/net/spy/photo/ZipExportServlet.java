@@ -45,6 +45,7 @@ public class ZipExportServlet extends JWHttpServlet {
 
 	private String pageHTML=null;
 
+	@Override
 	public void init(ServletConfig cf) throws ServletException {
 		super.init(cf);
 		try {
@@ -60,6 +61,7 @@ public class ZipExportServlet extends JWHttpServlet {
 		}
 	}
 
+	@Override
 	protected void doGetOrPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 

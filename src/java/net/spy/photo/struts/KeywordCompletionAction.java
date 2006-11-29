@@ -21,6 +21,7 @@ import org.apache.struts.action.ActionMapping;
 /**
  * Backend for keyword autocompletion.
  */
+@SuppressWarnings("unchecked")
 public class KeywordCompletionAction extends PhotoAction {
 
 	private static final int MAX_RESULTS=10;
@@ -51,6 +52,7 @@ public class KeywordCompletionAction extends PhotoAction {
 		return(ts);
 	}
 
+	@Override
 	protected ActionForward spyExecute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 
@@ -76,7 +78,7 @@ public class KeywordCompletionAction extends PhotoAction {
 		return(mapping.findForward("next"));
 	}
 
-	private static class CacheKey {
+	static class CacheKey {
 
 		private int uid=0;
 		private String kw=null;
@@ -87,6 +89,7 @@ public class KeywordCompletionAction extends PhotoAction {
 			kw=w;
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			boolean rv=false;
 			if(o instanceof CacheKey) {
@@ -96,6 +99,7 @@ public class KeywordCompletionAction extends PhotoAction {
 			return(rv);
 		}
 
+		@Override
 		public int hashCode() {
 			return(uid ^ kw.hashCode());
 		}

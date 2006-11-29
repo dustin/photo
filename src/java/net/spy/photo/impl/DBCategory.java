@@ -6,7 +6,6 @@ package net.spy.photo.impl;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 
 import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
@@ -71,6 +70,7 @@ public class DBCategory extends AbstractSavable implements MutableCategory {
 	 * Return true if the object passed as an argument is a Category object
 	 * with the same ID.
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 		if(o instanceof Category) {
@@ -85,6 +85,7 @@ public class DBCategory extends AbstractSavable implements MutableCategory {
 	 * 
 	 * @return the ID of this category
 	 */
+	@Override
 	public int hashCode() {
 		return (getId());
 	}
@@ -146,9 +147,7 @@ public class DBCategory extends AbstractSavable implements MutableCategory {
 		InsertACLEntry iacl=new InsertACLEntry(conn);
 		iacl.setCatId(id);
 
-		for(Iterator i=acl.iterator(); i.hasNext(); ) {
-			PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
-
+		for(PhotoACLEntry aclEntry : acl) {
 			getLogger().info("Mapping " + aclEntry + " to cat " + id);
 
 			iacl.setUserId(aclEntry.getWhat());
@@ -194,6 +193,7 @@ public class DBCategory extends AbstractSavable implements MutableCategory {
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);
 

@@ -6,12 +6,8 @@ package net.spy.photo.util;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.zip.GZIPInputStream;
-
-import net.spy.photo.PhotoException;
-import net.spy.util.Base64;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -19,6 +15,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import net.spy.photo.PhotoException;
+import net.spy.util.Base64;
 
 /**
  * Restore image backups.
@@ -50,6 +49,7 @@ public class ParseBackup extends DefaultHandler {
 	/**
 	 * Marks the start of a document.
 	 */
+	@Override
 	public void startDocument() {
 		System.out.println("Starting!");
 		handler=new AlbumRestorable();
@@ -58,6 +58,7 @@ public class ParseBackup extends DefaultHandler {
 	/**
 	 * Marks the end of a document.
 	 */
+	@Override
 	public void endDocument() {
 		System.out.println("Done!");
 		System.out.println(handler);
@@ -66,14 +67,14 @@ public class ParseBackup extends DefaultHandler {
 	/**
 	 * Called for the beginning of a tag.
 	 */
+	@Override
 	public void startElement(String uri, String name,
 		String qName, Attributes atts) {
 
 		tagnumber++;
 		nodes.add(name);
 		prefix="";
-		for(Iterator i=nodes.iterator(); i.hasNext();) {
-			String n=(String)i.next();
+		for(String n : nodes) {
 			prefix += "/" + n;
 		}
 
@@ -96,6 +97,7 @@ public class ParseBackup extends DefaultHandler {
 	/**
 	 * Called after the end of an attribute.
 	 */
+	@Override
 	public void endElement(String uri, String name, String qName) {
 		System.out.println("Ending " + name);
 		// Get that node out of the list.
@@ -105,6 +107,7 @@ public class ParseBackup extends DefaultHandler {
 	/**
 	 * Actually capture the useful content.
 	 */
+	@Override
 	public void characters(char ch[], int start, int length)
 		throws SAXException {
 

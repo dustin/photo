@@ -89,6 +89,7 @@ public class PhotoProperties extends Properties
 	 *
 	 * @return the old value for that property
 	 */
+	@Override
 	public Object setProperty(String k, String v) {
 		isModified=true;
 		return(super.setProperty(k, v));
@@ -116,7 +117,7 @@ public class PhotoProperties extends Properties
 
 		InsertProperty ip=new InsertProperty(conn);
 
-		for(Map.Entry me : entrySet()) {
+		for(Map.Entry<Object, Object> me : entrySet()) {
 
 			ip.setName((String)me.getKey());
 			ip.setValue((String)me.getValue());

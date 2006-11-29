@@ -24,6 +24,7 @@ public class SessionInfo extends PhotoTag {
 	/**
 	 * Get the meta info and shove it into the webpage.
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 		try {
 

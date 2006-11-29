@@ -24,6 +24,7 @@ public class JavaImageServerScaler extends ImageServerScaler {
 	/**
 	 * Scale it in 100% Java.
 	 */
+	@Override
 	public PhotoImage scaleImage(PhotoImage in, PhotoDimensions dim)
 		throws Exception {
 

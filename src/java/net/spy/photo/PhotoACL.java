@@ -14,7 +14,8 @@ import net.spy.SpyObject;
 /**
  * An ACL holding a collection of operations.
  */
-public class PhotoACL extends SpyObject implements Serializable {
+public class PhotoACL extends SpyObject
+	implements Serializable, Iterable<PhotoACLEntry> {
 
 	private Map<Integer, PhotoACLEntry> acl=null;
 	private boolean modified=false;
@@ -49,6 +50,7 @@ public class PhotoACL extends SpyObject implements Serializable {
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);
 		sb.append("{PhotoACL entries=");

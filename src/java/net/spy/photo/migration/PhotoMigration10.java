@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.spy.db.AbstractSavable;
 import net.spy.db.SaveContext;
@@ -49,9 +48,7 @@ public class PhotoMigration10 extends PhotoMigration {
 		ProgressStats stat=new ProgressStats(ids.size());
 
 		// Now, flip through them and set the correct value.
-		for(Iterator i=ids.iterator(); i.hasNext(); ) {
-			Integer id=(Integer)i.next();
-
+		for(Integer id : ids) {
 			stat.start();
 			PhotoImageHelper pih=new PhotoImageHelper(id.intValue());
 			PhotoImage image=pih.getImage();
@@ -63,11 +60,13 @@ public class PhotoMigration10 extends PhotoMigration {
 		}
 	}
 
+	@Override
 	protected boolean checkMigration() throws Exception {
 		return((hasColumn("format", "format_id")
 			|| hasColumn("album", "format_id")));
 	}
 
+	@Override
 	protected void performMigration() throws Exception {
 		runSqlScript("net/spy/photo/migration/migration10.sql");
 		updateFormats();

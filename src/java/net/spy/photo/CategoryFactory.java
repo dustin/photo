@@ -65,6 +65,7 @@ public class CategoryFactory extends GenFactory<Category> {
 		return(rv);
 	}
 
+	@Override
 	protected Collection<Category> getInstances() {
 		Map<Integer, Category> rv=new HashMap<Integer, Category>();
 
@@ -121,6 +122,7 @@ public class CategoryFactory extends GenFactory<Category> {
 	/** 
 	 * Throw a RuntimeException if an invalid ID is called.
 	 */
+	@Override
 	protected Category handleNullLookup(int id) {
 		throw new RuntimeException("No such category id:  " + id);
 	}
@@ -251,12 +253,13 @@ public class CategoryFactory extends GenFactory<Category> {
 		return(rv);
 	}
 
-	private static class CategoryComparator implements Comparator<Category> {
+	static class CategoryComparator implements Comparator<Category> {
 		public int compare(Category cat1, Category cat2) {
 			int rv=cat1.getName().compareTo(cat2.getName());
 			return(rv);
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			boolean rv=false;
 			if(o == this) {

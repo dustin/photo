@@ -24,8 +24,8 @@ public class SearchCache extends SpyThread {
 	private AtomicInteger stores=new AtomicInteger(0);
 	private AtomicInteger maxsize=new AtomicInteger(0);
 
-	private ConcurrentMap<Object, SoftReference> cache=null;
-	private ConcurrentMap<SoftReference, Object> keyMap=null;
+	private ConcurrentMap<Object, SoftReference<SearchResults>> cache=null;
+	private ConcurrentMap<SoftReference<?>, Object> keyMap=null;
 	private ReferenceQueue<SearchResults> refQueue=null;
 	private boolean running=true;
 
@@ -36,8 +36,9 @@ public class SearchCache extends SpyThread {
 	public static void setup() {
 		assert instance == null : "Already running";
 		instance=new SearchCache();
-		instance.cache=new ConcurrentHashMap<Object, SoftReference>();
-		instance.keyMap=new ConcurrentHashMap<SoftReference, Object>();
+		instance.cache=
+			new ConcurrentHashMap<Object, SoftReference<SearchResults>>();
+		instance.keyMap=new ConcurrentHashMap<SoftReference<?>, Object>();
 		instance.refQueue=new ReferenceQueue<SearchResults>();
 		instance.start();
 	}
@@ -101,10 +102,11 @@ public class SearchCache extends SpyThread {
 		cache.clear();
 	}
 
+	@Override
 	public void run() {
 		while(running) {
 			try {
-				Reference rce=refQueue.remove();
+				Reference<?> rce=refQueue.remove();
 				dequeued.incrementAndGet();
 				cache.remove(keyMap.remove(rce));
 			} catch(InterruptedException e) {
@@ -113,6 +115,7 @@ public class SearchCache extends SpyThread {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return(super.toString() + " - stores: " + stores + ", hits: " + hits
 				+ ", misses: " + misses + ", dequeued: " + dequeued

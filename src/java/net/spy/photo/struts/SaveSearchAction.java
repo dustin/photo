@@ -29,6 +29,7 @@ public class SaveSearchAction extends PhotoAction {
 	/**
 	 * Process the save search.
 	 */
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)

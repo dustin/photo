@@ -36,7 +36,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 	private static final long RECACHE_DELAY=30000;
 
 	// Convenience method to get the image ID, or throw an NPE.
-	private static int getImageId(HttpServletRequest req) {
+	static int getImageId(HttpServletRequest req) {
 		String idString=req.getParameter("imgId");
 		if(idString == null) {
 			throw new NullPointerException("imgId");
@@ -47,6 +47,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 	/**
 	 * Validate the user has access to see this image.
 	 */
+	@Override
 	protected void checkRequest(Principal u, HttpServletRequest req)
 		throws ServletException {
 		// Check the access
@@ -60,6 +61,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 	/**
 	 * Default role is User.ADMIN.
 	 */
+	@Override
 	protected String getDefaultRole() {
 		return User.ADMIN;
 	}
@@ -68,6 +70,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 	 * Base handler for all of the AJAXy things that work with images..
 	 */
 	public abstract static class BaseHandler extends Handler {
+		@Override
 		public Object handle(Principal u, HttpServletRequest req)
 			throws Exception {
 			return handle(getImageId(req), (User)u, req);
@@ -78,6 +81,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 
 	@AjaxHandler(path="/comment",role=User.AUTHENTICATED)
 	public static class AddCommentHandler extends BaseHandler {
+		@Override
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 
@@ -101,6 +105,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 
 	@AjaxHandler(path="/vote",role=User.AUTHENTICATED)
 	public static class AddVoteHandler extends BaseHandler {
+		@Override
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 
@@ -142,6 +147,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 
 	@AjaxHandler(path="/annotation",role=User.AUTHENTICATED)
 	public static class AddAnnotationHandler extends BaseHandler {
+		@Override
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 
@@ -181,6 +187,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 	 * Base class for all image value editors.
 	 */
 	public static abstract class ValueEditor extends BaseHandler {
+		@Override
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 			String value=request.getParameter("value");
@@ -206,6 +213,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 
 	@AjaxHandler(path="/descr")
 	public static class DescrHandler extends ValueEditor {
+		@Override
 		public void update(SavablePhotoImageData savable, String value)
 			throws Exception {
 			savable.setDescr(value);
@@ -214,6 +222,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 
 	@AjaxHandler(path="/keywords")
 	public static class KeywordsHandler extends ValueEditor {
+		@Override
 		public void update(SavablePhotoImageData savable, String value)
 			throws Exception {
 			savable.setKeywords(value);
@@ -222,6 +231,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 
 	@AjaxHandler(path="/taken")
 	public static class TakenHandler extends ValueEditor {
+		@Override
 		public void update(SavablePhotoImageData savable, String value)
 			throws Exception {
 			savable.setTaken(value);
@@ -230,6 +240,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 
 	@AjaxHandler(path="/cat")
 	public static class CatHandler extends BaseHandler {
+		@Override
 		public Object handle(int id, User user, HttpServletRequest request)
 			throws Exception {
 			// This one is a bit more complicated because it receives a cat ID

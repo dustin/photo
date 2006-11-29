@@ -79,6 +79,7 @@ public class NewUserForm extends PhotoForm {
 	/**
 	 * Validate the input.
 	 */
+	@Override
 	public ActionErrors validate(ActionMapping mapping,
 		HttpServletRequest request) {
 

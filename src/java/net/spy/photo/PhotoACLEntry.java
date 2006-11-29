@@ -36,6 +36,7 @@ public class PhotoACLEntry extends Object implements Serializable {
 	/** 
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);
 
@@ -54,6 +55,7 @@ public class PhotoACLEntry extends Object implements Serializable {
 	 * True for PhotoACLEntry instances that reference the same ``what''
 	 * regardless of flags.
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 
@@ -68,6 +70,7 @@ public class PhotoACLEntry extends Object implements Serializable {
 	/** 
 	 * Get the hash code of this object.
 	 */
+	@Override
 	public int hashCode() {
 		return (what);
 	}

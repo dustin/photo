@@ -61,6 +61,7 @@ public class Link extends PhotoTag {
 	/**
 	 * Set the image ID to include in this link.
 	 */
+	@Override
 	public void setId(String to) {
 		this.id=to;
 	}
@@ -68,6 +69,7 @@ public class Link extends PhotoTag {
 	/**
 	 * Get the image ID to include in this link.
 	 */
+	@Override
 	public String getId() {
 		return(id);
 	}
@@ -75,6 +77,7 @@ public class Link extends PhotoTag {
 	/**
 	 * Start link.
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 
 		boolean usedMessage=false;
@@ -142,6 +145,7 @@ public class Link extends PhotoTag {
 	/**
 	 * End the link.
 	 */
+	@Override
 	public int doEndTag() throws JspException {
 		try {
 			pageContext.getOut().write("</a>");
@@ -156,6 +160,7 @@ public class Link extends PhotoTag {
 	/**
 	 * Reset all values.
 	 */
+	@Override
 	public void release() {
 		url=null;
 	}

@@ -8,12 +8,14 @@ package net.spy.photo.migration;
  */
 public class PhotoMigration03 extends PhotoMigration {
 
+	@Override
 	protected boolean checkMigration() throws Exception {
 		return( (hasColumn("user_profiles", "profile_id"))
 			&& (hasColumn("user_profile_acls", "profile_id"))
 			&& (hasColumn("user_profile_log", "profile_id")));
 	}
 
+	@Override
 	protected void performMigration() throws Exception {
 		runSqlScript("net/spy/photo/migration/migration03.sql");
 	}

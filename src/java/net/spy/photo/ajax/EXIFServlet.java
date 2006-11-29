@@ -19,6 +19,7 @@ import net.spy.xml.SAXAble;
  */
 public class EXIFServlet extends PhotoAjaxServlet {
 
+	@Override
 	protected SAXAble getResults(HttpServletRequest request) throws Exception {
 		int id=Integer.parseInt(request.getPathInfo().substring(1));
 		PhotoSessionData ses=getSessionData(request);

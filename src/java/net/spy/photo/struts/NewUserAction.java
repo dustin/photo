@@ -4,11 +4,15 @@
 package net.spy.photo.struts;
 
 import java.sql.PreparedStatement;
-import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.validator.DynaValidatorForm;
 
 import net.spy.db.SpyDB;
 import net.spy.photo.MutableUser;
@@ -17,11 +21,6 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.Profile;
 import net.spy.photo.UserFactory;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.validator.DynaValidatorForm;
 
 /**
  * Create a user from a profile.
@@ -38,6 +37,7 @@ public class NewUserAction extends PhotoAction {
 	/**
 	 * Process the request.
 	 */
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
@@ -67,8 +67,7 @@ public class NewUserAction extends PhotoAction {
 		pu.setEmail((String)nuf.get("email"));
 
 		// Populate the ACL entries.
-		for(Iterator it=p.getACLEntries().iterator(); it.hasNext();) {
-			Integer i=(Integer)it.next();
+		for(Integer i : p.getACLEntries()) {
 			pu.getACL().addViewEntry(i.intValue());
 		}
 

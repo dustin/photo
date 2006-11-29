@@ -18,6 +18,7 @@ import net.spy.photo.PhotoUtil;
  */
 public abstract class BaseRestServlet extends XMLOutputServlet {
 
+	@Override
 	protected void doGetOrPost(HttpServletRequest req, HttpServletResponse res)
 		throws ServletException, IOException {
 		throw new ServletException("Not implemented");

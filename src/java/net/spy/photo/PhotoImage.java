@@ -75,6 +75,7 @@ public class PhotoImage extends Object
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);
 
@@ -92,6 +93,7 @@ public class PhotoImage extends Object
 	 * Deal with comparisons in different ways (currently, only
 	 * PhotoDimensions and default compares work).
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 
@@ -114,6 +116,7 @@ public class PhotoImage extends Object
 	 * 
 	 * @return the system identity hash code
 	 */
+	@Override
 	public int hashCode() {
 		return(System.identityHashCode(this));
 	}

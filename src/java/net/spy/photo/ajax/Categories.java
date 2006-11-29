@@ -23,6 +23,7 @@ public class Categories extends PhotoAjaxServlet {
 
 	private Map<String, Integer> types=null;
 
+	@Override
 	public void init(ServletConfig conf) throws ServletException {
 		super.init(conf);
 		types=new HashMap<String, Integer>();
@@ -32,6 +33,7 @@ public class Categories extends PhotoAjaxServlet {
 		types.put("/read", CategoryFactory.ACCESS_READ);
 	}
 	
+	@Override
 	protected SAXAble getResults(HttpServletRequest request) throws Exception {
 		String pathInfo=request.getPathInfo();
 		int access=types.get(pathInfo);

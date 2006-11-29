@@ -129,12 +129,12 @@ public class CacheValidator extends SpyObject implements SAXAble {
 	}
 
 	public static class RunThread extends SpyThread {
-		private Collection<Operation> operations=null;
-		private Collection<String> errs=null;
-		private User user=null;
+		Collection<Operation> operations=null;
+		Collection<String> errs=null;
+		User user=null;
 
-		private int todo=0;
-		private int done=0;
+		int todo=0;
+		int done=0;
 
 		boolean stopRequested=false;
 
@@ -146,6 +146,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 			errs=Collections.synchronizedCollection(new RingBuffer<String>(10));
 		}
 
+		@Override
 		public void run() {
 			SearchForm sf=new SearchForm();
 			SearchResults psr=null;
@@ -199,7 +200,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 			return done;
 		}
 
-		public Collection getErrs() {
+		public Collection<String> getErrs() {
 			return errs;
 		}
 
@@ -211,6 +212,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 			return user;
 		}
 
+		@Override
 		public synchronized String toString() {
 			return super.toString() + " - processing " + (done+1) + " of " + todo;
 		}

@@ -44,7 +44,7 @@ public class AddImage extends RPCMethod {
 	 *  <li>image - the image itself</li>
 	 * </ul>
 	 */
-	public int addImage(Hashtable args) throws Exception {
+	public int addImage(Hashtable<?,?> args) throws Exception {
 		// Verify all the arguments.
 		checkArg(args, "username", String.class);
 		checkArg(args, "password", String.class);

@@ -45,6 +45,7 @@ public class Cursor<T> extends SpyObject
 	/**
 	 * Clone this result set.
 	 */
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}

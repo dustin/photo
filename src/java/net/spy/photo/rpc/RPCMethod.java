@@ -53,7 +53,7 @@ public abstract class RPCMethod extends Remote {
 	/**
 	 * Verify an argument in an xmlrpc struct.
 	 */
-	protected void checkArg(Hashtable args, String which, Class type)
+	protected void checkArg(Hashtable<?,?> args, String which, Class<?> type)
 		throws PhotoException {
 
 		if(args==null) {

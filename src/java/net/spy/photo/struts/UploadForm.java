@@ -96,6 +96,7 @@ public class UploadForm extends PhotoForm {
 	 * @param mapping The mapping used to select this instance
 	 * @param request The servlet request we are processing
 	 */
+	@Override
 	public ActionErrors validate(ActionMapping mapping,
 		HttpServletRequest request) {
 
@@ -182,6 +183,7 @@ public class UploadForm extends PhotoForm {
 	/**
 	 * Null the file on reset as to keep the form serializable.
 	 */
+	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
         if(picture!=null) {
             picture.destroy();

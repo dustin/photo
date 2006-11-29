@@ -33,6 +33,7 @@ public class ViewSessionAction extends PhotoAction {
 	/**
 	 * Perform the action.
 	 */
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)

@@ -30,6 +30,7 @@ public class CursorAction extends PhotoAction {
 	/**
 	 * Perform the adjustment (if any).
 	 */
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)
@@ -44,7 +45,7 @@ public class CursorAction extends PhotoAction {
 			// Get the session data
 			PhotoSessionData sessionData=getSessionData(request);
 			// Get the cursoor
-			Cursor c=null;
+			Cursor<?> c=null;
 			if(whichCursor.equals("results")) {
 				c=sessionData.getResults();
 			} else if(whichCursor.equals("comments")) {

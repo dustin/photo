@@ -31,6 +31,7 @@ public class RSSServlet extends PhotoAjaxServlet {
 	/** 
 	 * Handle the RSS request.
 	 */
+	@Override
 	protected void processRequest(
 		HttpServletRequest req, HttpServletResponse res) throws Exception {
 
@@ -59,11 +60,11 @@ public class RSSServlet extends PhotoAjaxServlet {
 			.add(System.currentTimeMillis() - start);
 	}
 
-	private static class SearchResultsRSSAdaptor extends RSSChannel {
+	static class SearchResultsRSSAdaptor extends RSSChannel {
 		private SearchResults results=null;
 		private String base=null;
 		private boolean authenticated=false;
-		private SearchResultsRSSAdaptor(SearchResults sr, String b, boolean a) {
+		SearchResultsRSSAdaptor(SearchResults sr, String b, boolean a) {
 			super("PhotoServlet RSS Feed", b,
 				"Experimental RSS feed from Dustin's PhotoServlet");
 			base=b;
@@ -71,6 +72,7 @@ public class RSSServlet extends PhotoAjaxServlet {
 			authenticated=a;
 		}
 
+		@Override
 		protected Collection<? extends RSSItem> getItems() {
 			Collection<PhotoImageDataWrapper> c=
 				new ArrayList<PhotoImageDataWrapper>(CHANNEL_SIZE);

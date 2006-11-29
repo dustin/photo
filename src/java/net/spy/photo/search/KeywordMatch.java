@@ -57,7 +57,7 @@ public class KeywordMatch implements SAXAble {
 		x.endElement(handler, "kwmatch");
 	}
 
-	private static class KWMByKeyword implements Comparator<KeywordMatch> {
+	static class KWMByKeyword implements Comparator<KeywordMatch> {
 
 		public int compare(KeywordMatch k1, KeywordMatch k2) {
 			return(k1.getKeyword().getKeyword().compareTo(k2.getKeyword().getKeyword()));
@@ -65,8 +65,9 @@ public class KeywordMatch implements SAXAble {
 		
 	}
 
-	private static class KWMByFreq extends KWMByKeyword {
+	static class KWMByFreq extends KWMByKeyword {
 
+		@Override
 		public int compare(KeywordMatch k1, KeywordMatch k2) {
 			int f1=k1.getCount();
 			int f2=k2.getCount();

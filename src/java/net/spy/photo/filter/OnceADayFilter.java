@@ -23,6 +23,7 @@ public class OnceADayFilter extends DateFilter {
 	/** 
 	 * Return the input date.
 	 */
+	@Override
 	protected Date roundDate(Date d) {
 		Calendar cal=Calendar.getInstance();
 		cal.setTime(d);

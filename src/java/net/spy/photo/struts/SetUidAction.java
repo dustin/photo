@@ -31,6 +31,7 @@ public class SetUidAction extends PhotoAction {
 	/** 
 	 * Perform this action.
 	 */
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping, ActionForm form,
 		HttpServletRequest request, HttpServletResponse response)
 		throws Exception {

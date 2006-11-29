@@ -246,6 +246,7 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		return("{Gallery name=\"" + name + "\", id=" + id
 			+ ", images:  " + images + "}");

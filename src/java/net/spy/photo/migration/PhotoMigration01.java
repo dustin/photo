@@ -6,7 +6,6 @@ package net.spy.photo.migration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
@@ -75,8 +74,7 @@ public class PhotoMigration01 extends PhotoMigration {
 			getLogger().info("Updating " + n + " images.");
 
 			// OK, now store them.
-			for(Iterator i=al.iterator(); i.hasNext(); ) {
-				int dim[]=(int [])i.next();
+			for(int dim[] : al) {
 				PreparedStatement st=db.prepareStatement(
 					"update album set width=?, height=? where id=?"
 					);
@@ -89,6 +87,7 @@ public class PhotoMigration01 extends PhotoMigration {
 		}
 	}
 
+	@Override
 	protected boolean checkMigration() throws Exception {
 		return((hasColumn("album", "tn_width"))
 				&& (hasColumn("album", "tn_height"))
@@ -96,6 +95,7 @@ public class PhotoMigration01 extends PhotoMigration {
 				&& (hasColumn("album", "height")));
 	}
 
+	@Override
 	protected void performMigration() throws Exception {
 		// Add the new columns.
 		addColumns();

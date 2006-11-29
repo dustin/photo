@@ -177,6 +177,7 @@ public class Vote extends AbstractSavable implements java.io.Serializable {
 	/**
 	 * String me!
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);
 		sb.append("Vote ");

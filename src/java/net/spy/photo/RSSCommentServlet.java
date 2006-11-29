@@ -30,6 +30,7 @@ public class RSSCommentServlet extends PhotoAjaxServlet {
 	/** 
 	 * Handle the RSS request.
 	 */
+	@Override
 	protected void processRequest(
 		HttpServletRequest req, HttpServletResponse res) throws Exception {
 
@@ -57,11 +58,11 @@ public class RSSCommentServlet extends PhotoAjaxServlet {
 			.add(System.currentTimeMillis() - start);
 	}
 
-	private static class CommentsRSSAdaptor extends RSSChannel {
+	static class CommentsRSSAdaptor extends RSSChannel {
 		private List<Comment> comments=null;
 		private String base=null;
 		private boolean authenticated=false;
-		private CommentsRSSAdaptor(List<Comment> name,
+		CommentsRSSAdaptor(List<Comment> name,
 				String b, boolean a) {
 			super("PhotoServlet Comments RSS Feed", b,
 				"Experimental Comments RSS feed from Dustin's PhotoServlet");
@@ -70,6 +71,7 @@ public class RSSCommentServlet extends PhotoAjaxServlet {
 			authenticated=a;
 		}
 
+		@Override
 		protected Collection<? extends RSSItem> getItems() {
 			Collection<GroupedCommentsWrapper> c=
 				new ArrayList<GroupedCommentsWrapper>(CHANNEL_SIZE);
@@ -80,7 +82,7 @@ public class RSSCommentServlet extends PhotoAjaxServlet {
 		}
 	}
 
-	private static class GroupedCommentsWrapper implements RSSItem {
+	static class GroupedCommentsWrapper implements RSSItem {
 		private Comment comment=null;
 		private String base=null;
 		private boolean authenticated=false;

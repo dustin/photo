@@ -149,6 +149,7 @@ public class UserFactory extends GenFactory<User> {
 		return(users.values());
 	}
 
+	@Override
 	protected Collection<User> getInstances() {
 		Collection<User> rv=null;
 		try {
@@ -246,12 +247,13 @@ public class UserFactory extends GenFactory<User> {
 		return(Collections.unmodifiableSortedSet(rv));
 	}
 
-	private static class UserComparator implements Comparator<User> {
+	static class UserComparator implements Comparator<User> {
 		public int compare(User u1, User u2) {
 			int rv=u1.getName().compareTo(u2.getName());
 			return(rv);
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			boolean rv=false;
 			if(o == this) {

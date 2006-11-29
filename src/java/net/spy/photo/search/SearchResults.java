@@ -45,6 +45,7 @@ public class SearchResults extends Cursor<PhotoImageData> {
 	/**
 	 * String representation of the search results.
 	 */
+	@Override
 	public String toString() {
 		return("Photo search results " + super.toString());
 	}

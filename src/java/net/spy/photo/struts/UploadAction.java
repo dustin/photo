@@ -31,6 +31,7 @@ public class UploadAction extends PhotoAction {
 		super();
 	}
 
+	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request,HttpServletResponse response)

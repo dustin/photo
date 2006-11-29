@@ -23,6 +23,7 @@ public class ReverseFilter extends Filter {
 	/** 
 	 * Reverse the current order of the given search results.
 	 */
+	@Override
 	public SearchResults filter(SearchResults in) throws PhotoException {
 		Collections.reverse(in.getAllObjects());
 		// Seek back to the beginning

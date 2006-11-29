@@ -47,18 +47,20 @@ public class DBImageDataSource extends SpyObject
 	/**
 	 * Get the images.
 	 */
+	@SuppressWarnings("unchecked")
 	public Collection<PhotoImageData> getImages() {
 		Collection<PhotoImageData> rv = null;
 		try {
-			rv = getFromDB();
+			// This is an annoying cast and requires the @Suppress above.
+			rv = (Collection<PhotoImageData>) getFromDB();
 		} catch(Exception e) {
 			throw new RuntimeException("Can't load images from DB", e);
 		}
 		return (rv);
 	}
 
-	private Collection<PhotoImageData> getFromDB() throws Exception {
-		HashMap<Integer, PhotoImageData> rv = new HashMap<Integer, PhotoImageData>();
+	private Collection<? extends PhotoImageData> getFromDB() throws Exception {
+		HashMap<Integer, ImgData> rv = new HashMap<Integer, ImgData>();
 
 		// Load the images
 		GetPhotoInfo db = new GetPhotoInfo(PhotoConfig.getInstance());
@@ -87,13 +89,13 @@ public class DBImageDataSource extends SpyObject
 		return (rv.values());
 	}
 
-	private void loadVariants(HashMap<Integer, PhotoImageData> rv)
+	private void loadVariants(HashMap<Integer, ImgData> rv)
 		throws Exception {
 		SelectVariants sv=new SelectVariants(PhotoConfig.getInstance());
 		try {
 			ResultSet rs=sv.executeQuery();
 			while(rs.next()) {
-				((ImgData)rv.get(rs.getInt("original_id")))
+				rv.get(rs.getInt("original_id"))
 					.addVariant(rv.get(rs.getInt("variant_id")));
 			}
 			rs.close();
@@ -102,7 +104,8 @@ public class DBImageDataSource extends SpyObject
 		}
 	}
 
-	private void loadVotes(HashMap rv) throws Exception {
+	private void loadVotes(HashMap<Integer, ImgData> rv)
+		throws Exception {
 		PhotoSecurity security=Persistent.getSecurity();
 		GetAllVotes db=new GetAllVotes(PhotoConfig.getInstance());
 		ResultSet rs=db.executeQuery();
@@ -110,14 +113,14 @@ public class DBImageDataSource extends SpyObject
 		while(rs.next()) {
 			int photoId=rs.getInt("photo_id");
 			Vote v=new Vote(security, rs);
-			((ImgData)rv.get(photoId)).addVote(v);
+			rv.get(photoId).addVote(v);
 		}
 
 		rs.close();
 		db.close();
 	}
 
-	private void loadKeywords(Map imgs) throws Exception {
+	private void loadKeywords(Map<Integer, ImgData> imgs) throws Exception {
 		// Load the keywords for the images
 		KeywordFactory kf=KeywordFactory.getInstance();
 		GetAlbumKeywords gkdb = new GetAlbumKeywords(PhotoConfig.getInstance());
@@ -125,7 +128,7 @@ public class DBImageDataSource extends SpyObject
 		while(rs.next()) {
 			int photoid = rs.getInt("album_id");
 			int keywordid = rs.getInt("word_id");
-			ImgData pidi = (ImgData)imgs.get(photoid);
+			ImgData pidi = imgs.get(photoid);
 			if(pidi == null) {
 				throw new Exception("Invalid keymap entry to " + photoid);
 			}
@@ -135,7 +138,7 @@ public class DBImageDataSource extends SpyObject
 		gkdb.close();
 	}
 
-	private void loadAnnotations(Map imgs) throws Exception {
+	private void loadAnnotations(Map<Integer, ImgData> imgs) throws Exception {
 		Map<Integer, AnnotationData> annotations =
 				new HashMap<Integer, AnnotationData>();
 
@@ -144,7 +147,7 @@ public class DBImageDataSource extends SpyObject
 		while(rs.next()) {
 			int annotationId = rs.getInt("region_id");
 			int photoid = rs.getInt("album_id");
-			ImgData pidi = (ImgData)imgs.get(photoid);
+			ImgData pidi = imgs.get(photoid);
 			if(pidi == null) {
 				throw new Exception("Invalid region map entry to " + photoid);
 			}
@@ -209,10 +212,12 @@ public class DBImageDataSource extends SpyObject
 			calculateThumbnail();
 		}
 
+		@Override
 		public void addAnnotation(AnnotatedRegion r) {
 			super.addAnnotation(r);
 		}
 
+		@Override
 		public void addKeyword(Keyword keyword) {
 			super.addKeyword(keyword);
 		}
@@ -222,10 +227,12 @@ public class DBImageDataSource extends SpyObject
 			variants.add(which);
 		}
 
+		@Override
 		public Collection<PhotoImageData> getVariants() {
 			return variants;
 		}
 
+		@Override
 		protected Object writeReplace() throws ObjectStreamException {
 			return (new PhotoImageDataImpl.SerializedForm(getId()));
 		}
@@ -247,6 +254,7 @@ public class DBImageDataSource extends SpyObject
 			setTimestamp(rs.getTimestamp("ts"));
 		}
 
+		@Override
 		public void addKeyword(Keyword k) {
 			super.addKeyword(k);
 		}

@@ -42,6 +42,7 @@ public enum Format {
 		return(rv);
 	}
 
+	@Override
 	public String toString() {
 		return("{Format " + type + "}");
 	}

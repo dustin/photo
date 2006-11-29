@@ -22,6 +22,7 @@ public class OnceAWeekFilter extends DateFilter {
 	/** 
 	 * Truncate the date to the beginning of the month.
 	 */
+	@Override
 	protected Date roundDate(Date d) {
 		Calendar cal=Calendar.getInstance();
 		cal.setTime(d);

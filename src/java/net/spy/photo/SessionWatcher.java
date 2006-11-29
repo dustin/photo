@@ -27,6 +27,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 	/**
 	 * Called when a session is created.
 	 */
+	@Override
 	public void sessionCreated(HttpSessionEvent se) {
         HttpSession session=se.getSession();
 

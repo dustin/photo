@@ -10,8 +10,8 @@ import net.spy.SpyObject;
 
 public class ByteChunker extends SpyObject implements Iterable<byte[]> {
 
-    private byte[] data=null;
-    private int chunkSize=0;
+    byte[] data=null;
+    int chunkSize=0;
 
     /** 
      * Construct a ByteChunker with the given byte array and chunk size.

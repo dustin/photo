@@ -43,6 +43,7 @@ public class ImageLink extends PhotoTag {
 	/**
 	 * Set the id of the image to which we want to link.
 	 */
+	@Override
 	public void setId(String to) {
 		id=Integer.parseInt(to);
 	}
@@ -120,6 +121,7 @@ public class ImageLink extends PhotoTag {
 	/**
 	 * Start link.
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 
 		StringBuffer href=new StringBuffer();
@@ -245,6 +247,7 @@ public class ImageLink extends PhotoTag {
 	/**
 	 * Reset all values.
 	 */
+	@Override
 	public void release() {
 		id=0;
 		showThumbnail=false;

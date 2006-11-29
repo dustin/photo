@@ -50,6 +50,7 @@ public class KeywordCloudAction extends PhotoAction {
 		return(sf);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	protected ActionForward spyExecute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {

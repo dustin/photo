@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.zip.GZIPOutputStream;
 
 import net.spy.db.SpyDB;
@@ -76,9 +75,7 @@ public class PhotoBackup extends Object {
 		}
 
 		// Flip through the IDs and back 'em up.
-		for(Iterator it=ids.iterator(); it.hasNext(); ) {
-			Integer i=(Integer)it.next();
-
+		for(Integer i : ids) {
 			// Count one.
 			bs.click();
 

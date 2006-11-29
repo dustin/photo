@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import net.spy.db.AbstractSavable;
@@ -80,6 +79,7 @@ public class DBUser extends AbstractSavable
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer(64);
 
@@ -95,6 +95,7 @@ public class DBUser extends AbstractSavable
 	 * 
 	 * @return the hashcode of the username
 	 */
+	@Override
 	public int hashCode() {
 		return(name.hashCode());
 	}
@@ -105,6 +106,7 @@ public class DBUser extends AbstractSavable
 	 * @param o the other object
 	 * @return true if o is a DBUser with the same ID
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 		if(o instanceof User) {
@@ -317,9 +319,7 @@ public class DBUser extends AbstractSavable
 			InsertACLEntry ins=new InsertACLEntry(conn);
 			ins.setUserId(getId());
 
-			for(Iterator i=acl.iterator(); i.hasNext(); ) {
-				PhotoACLEntry aclEntry=(PhotoACLEntry)i.next();
-
+			for(PhotoACLEntry aclEntry : acl) {
 				ins.setCatId(aclEntry.getWhat());
 				ins.setCanView(aclEntry.canView());
 				ins.setCanAdd(aclEntry.canAdd());

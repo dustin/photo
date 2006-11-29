@@ -24,6 +24,7 @@ public class AdminReportAction extends DBSPAction {
 	/** 
 	 * Get the PhotoConfig.
 	 */
+	@Override
 	protected SpyConfig getSpyConfig(ActionMapping mapping) {
 		return(PhotoConfig.getInstance());
 	}

@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -196,8 +195,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		InsertKeywordMap ikm=new InsertKeywordMap(conn);
 		ikm.setPhotoId(id);
 
-		for(Iterator i=keywords.iterator(); i.hasNext(); ) {
-			Keyword k=(Keyword)i.next();
+		for(Keyword k : keywords) {
 			ikm.setWordId(k.getId());
 			int aff=ikm.executeUpdate();
 			if(aff != 1) {
@@ -449,6 +447,7 @@ public class SavablePhotoImageData extends AbstractSavable
 	 * 
 	 * @return the id
 	 */
+	@Override
 	public int hashCode() {
 		return(id);
 	}
@@ -457,6 +456,7 @@ public class SavablePhotoImageData extends AbstractSavable
 	 * True if the given object is a PhotoImageData object representing the
 	 * same image.
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 
@@ -553,6 +553,7 @@ public class SavablePhotoImageData extends AbstractSavable
 			setTimestamp(new Date());
 		}
 
+		@Override
 		public void addKeyword(Keyword k) {
 			super.addKeyword(k);
 		}

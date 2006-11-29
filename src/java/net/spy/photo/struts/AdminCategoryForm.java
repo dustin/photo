@@ -62,6 +62,7 @@ public class AdminCategoryForm extends PhotoForm {
 	/**
 	 * Validate the properties.
 	 */
+	@Override
 	public ActionErrors validate(ActionMapping mapping,
 		HttpServletRequest request) {
 
@@ -104,6 +105,7 @@ public class AdminCategoryForm extends PhotoForm {
 	 * @param mapping the servlet mapping being called
 	 * @param request the request object
 	 */
+	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		catAclAdd=new String[0];
 		catAclView=new String[0];

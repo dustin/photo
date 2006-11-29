@@ -157,7 +157,8 @@ public class SavedSearch extends Object {
 	 */
 	public SearchForm getSearchForm() throws Exception {
 		SearchForm sf=new SearchForm();
-		Map m=RequestUtil.parseQueryString(getSearch(), CHARSET);
+		Map<String, String[]> m=RequestUtil.parseQueryString(
+				getSearch(), CHARSET);
 
 		// Stuff that should be copied directly.
 		String straightCopy[]={
@@ -165,13 +166,13 @@ public class SavedSearch extends Object {
 				"end", "order", "sdirection", "maxret", "filter", "action"
 		};
 		for(int i=0; i<straightCopy.length; i++) {
-			String vs[]=(String[])m.get(straightCopy[i]);
+			String vs[]=m.get(straightCopy[i]);
 			if(vs != null) {
 				String v=vs[0];
 				PropertyUtils.setProperty(sf, straightCopy[i], v);
 			}
 		}
-		String vs[]=(String[])m.get("cats");
+		String vs[]=m.get("cats");
 		if(vs != null) {
 			PropertyUtils.setProperty(sf, "cats", vs);
 		}
@@ -179,10 +180,12 @@ public class SavedSearch extends Object {
 		return(sf);
 	}
 
+	@Override
 	public int hashCode() {
 		return id;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 		if(o instanceof SavedSearch) {

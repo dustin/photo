@@ -62,6 +62,7 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	/** 
 	 * Get the instances of PhotoImageData.
 	 */
+	@Override
 	protected Collection<PhotoImageData> getInstances() {
 		// Get the source images
 		getLogger().info("Fetching images.");
@@ -76,6 +77,7 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	/** 
 	 * Handle a missing image.
 	 */
+	@Override
 	protected PhotoImageData handleNullLookup(int id) {
 		throw new NoSuchPhotoException(id);
 	}

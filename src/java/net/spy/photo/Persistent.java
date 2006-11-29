@@ -22,16 +22,17 @@ import net.spy.photo.util.PhotoStorerThread;
  */
 public class Persistent extends JWServletContextListener {
 
-	private static PhotoSecurity security = null;
-	private static TransactionPipeline pipeline = null;
-	private static ImageServer imageServer=null;
-	private static PhotoStorerThread storer=null;
+	static PhotoSecurity security = null;
+	static TransactionPipeline pipeline = null;
+	static ImageServer imageServer=null;
+	static PhotoStorerThread storer=null;
 
 	private static String contextPath;
 
 	private ImageMessagePoster imp=null;
 	private ImageMessageConsumer imc=null;
 
+	@Override
 	public void ctxInit(ServletContextEvent contextEvent) throws Exception {
 		ServletContext context=contextEvent.getServletContext();
 
@@ -122,6 +123,7 @@ public class Persistent extends JWServletContextListener {
 		return contextPath;
 	}
 
+	@Override
 	public void ctxDestroy(ServletContextEvent contextEvent) throws Exception {
 		if(pipeline != null) {
 			getLogger().info("Shutting down transaction pipeline");
@@ -169,6 +171,7 @@ public class Persistent extends JWServletContextListener {
 			return initException;
 		}
 
+		@Override
 		public void run() {
 			try {
 				initStuff();

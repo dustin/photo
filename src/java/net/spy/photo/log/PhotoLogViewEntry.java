@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.sp.GetViewersOfImage;
@@ -41,6 +40,7 @@ public class PhotoLogViewEntry extends Object {
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		return ("{PhotoLogViewEntry id=" + imageId + ", user=" + username + "}");
 	}
@@ -160,17 +160,6 @@ public class PhotoLogViewEntry extends Object {
 	 */
 	public Date getTimeStamp() {
 		return (timeStamp);
-	}
-
-	/**
-	 * Test.
-	 */
-	public static void main(String args[]) throws Exception {
-		for(Iterator i = getViewersOf(Integer.parseInt(args[0])).iterator(); i
-			.hasNext();) {
-
-			System.out.println(i.next());
-		}
 	}
 
 }

@@ -75,6 +75,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		return("{PhotoImageData id=" + id + " - " + dimensions + "}");
 	}
@@ -83,6 +84,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 * True if the given object is a PhotoImageData object representing the
 	 * same image.
 	 */
+	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 
@@ -102,6 +104,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 * 
 	 * @return the id
 	 */
+	@Override
 	public int hashCode() {
 		return(id);
 	}
@@ -310,6 +313,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 * @return the MetaData, or null if MetaData can't be found for this image
 	 * @throws Exception if there's a problem processing this image
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getMetaData() throws Exception {
 		// Memoize the meta data
 		if(metaData==null) {

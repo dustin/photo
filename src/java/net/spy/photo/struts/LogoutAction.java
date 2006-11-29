@@ -26,6 +26,7 @@ public class LogoutAction extends net.spy.jwebkit.struts.LogoutAction {
 	/**
 	 * Call super's spyExecute after clearing out the persess cookie.
 	 */
+	@Override
 	protected ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,
 		HttpServletRequest request, HttpServletResponse response)

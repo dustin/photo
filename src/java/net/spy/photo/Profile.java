@@ -101,6 +101,7 @@ public class Profile extends AbstractSavable implements Serializable {
 	/**
 	 * String me.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb=new StringBuffer(128);
 		sb.append("Profile:  ");

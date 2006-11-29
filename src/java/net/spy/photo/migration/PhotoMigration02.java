@@ -37,11 +37,13 @@ public class PhotoMigration02 extends PhotoMigration {
 		db.close();
 	}
 
+	@Override
 	protected boolean checkMigration() throws Exception {
 		return((hasColumn("wwwacl", "canadd"))
 			&& (hasColumn("wwwacl", "canview")));
 	}
 
+	@Override
 	protected void performMigration() throws Exception {
 		// Add the new columns.
 		addColumns();
