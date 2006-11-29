@@ -97,7 +97,7 @@ public class KeywordFactory extends GenFactory<Keyword> {
 				Saver s=new Saver(PhotoConfig.getInstance());
 				s.save((KeywordImpl)rv);
 				// Cache it
-				getCache().cacheInstance(rv);
+				cacheInstance(rv);
 			}
 		}
 		return(rv);

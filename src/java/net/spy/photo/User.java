@@ -7,8 +7,6 @@ package net.spy.photo;
 import java.security.Principal;
 import java.util.Collection;
 
-import net.spy.factory.Instance;
-
 /**
  * Represents a user in the photo system.
  */

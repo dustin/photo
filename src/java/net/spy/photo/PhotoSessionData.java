@@ -30,7 +30,7 @@ public class PhotoSessionData extends Object implements Serializable {
 	private PhotoDimensions optimalDimensions=null;
 
 	private HashMap<Integer, Integer> searchResults=null;
-	private Map<String, Cursor<?>> cursors=null;
+	private Map<String, Object> cursors=null;
 
 	// Keep track of how many images have been served up to this user.
 	private int imagesSeen=0;
@@ -43,7 +43,7 @@ public class PhotoSessionData extends Object implements Serializable {
 	 */
 	public PhotoSessionData() {
 		super();
-		cursors=Collections.synchronizedMap(new HashMap<String, Cursor<?>>());
+		cursors=Collections.synchronizedMap(new HashMap<String, Object>());
 		imagesSeenBuf=new RingBuffer<Integer>(128);
 	}
 
@@ -76,7 +76,9 @@ public class PhotoSessionData extends Object implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public SearchResults getResults() {
-		return (SearchResults)getCursor("searchResults");
+		Object rv=getCursor("searchResults");
+		assert rv instanceof SearchResults;
+		return (SearchResults)rv;
 	}
 
 	/**
@@ -124,10 +126,12 @@ public class PhotoSessionData extends Object implements Serializable {
 	 *
 	 * @return the Cursor or null if no such cursor exists
 	 */
-	public Cursor<?> getCursor(String name) {
+	public Object getCursor(String name) {
 		assert cursors.containsKey(name)
 			: "No cursor named " + name + " in session";
-		return(cursors.get(name));
+		Object rv=cursors.get(name);
+		assert rv instanceof Cursor;
+		return rv;
 	}
 
 	/**

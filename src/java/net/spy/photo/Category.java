@@ -3,8 +3,6 @@
 
 package net.spy.photo;
 
-import net.spy.factory.Instance;
-
 /**
  * Interface for category objects.
  */

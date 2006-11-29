@@ -120,14 +120,6 @@ public class CategoryFactory extends GenFactory<Category> {
 	}
 
 	/** 
-	 * Throw a RuntimeException if an invalid ID is called.
-	 */
-	@Override
-	protected Category handleNullLookup(int id) {
-		throw new RuntimeException("No such category id:  " + id);
-	}
-
-	/** 
 	 * Get a category by name.
 	 */
 	public Category getCategory(String name) {

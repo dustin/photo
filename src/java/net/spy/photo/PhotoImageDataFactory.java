@@ -75,14 +75,6 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	}
 
 	/** 
-	 * Handle a missing image.
-	 */
-	@Override
-	protected PhotoImageData handleNullLookup(int id) {
-		throw new NoSuchPhotoException(id);
-	}
-
-	/** 
 	 * Store a savable and optionally recache the instances.
 	 */
 	public void store(Savable ob, boolean recache, long recacheDelay)
@@ -91,7 +83,7 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		s.save(ob);
 		long start=System.currentTimeMillis();
 		if(ob instanceof PhotoImageData) {
-			getCache().cacheInstance((PhotoImageData)ob);
+			cacheInstance((PhotoImageData)ob);
 			SearchIndex.update(getObjects());
 		} else if(ob instanceof CollectionSavable) {
 			// XXX: Horrible abstraction leak.

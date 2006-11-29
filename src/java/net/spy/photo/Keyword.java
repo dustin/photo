@@ -2,8 +2,6 @@
 
 package net.spy.photo;
 
-import net.spy.factory.Instance;
-
 /**
  * Keyword interface.
  */
