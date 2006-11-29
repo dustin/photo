@@ -2,6 +2,8 @@
 
 package net.spy.photo;
 
+import net.spy.factory.CacheKey;
+
 /**
  * Keyword interface.
  */
@@ -15,6 +17,7 @@ public interface Keyword extends Instance {
 	/**
 	 * Get the keyword value.
 	 */
+	@CacheKey(name=BYWORD)
 	String getKeyword();
 
 }

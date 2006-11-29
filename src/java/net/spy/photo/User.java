@@ -7,6 +7,8 @@ package net.spy.photo;
 import java.security.Principal;
 import java.util.Collection;
 
+import net.spy.factory.CacheKey;
+
 /**
  * Represents a user in the photo system.
  */
@@ -36,17 +38,22 @@ public interface User extends Principal, Instance {
 	/**
 	 * Get the user's E-mail address.
 	 */
+	@CacheKey(name=BY_EMAIL)
 	String getEmail();
 
 	/** 
 	 * Get the persistent session ID.
 	 */
+	@CacheKey(name=BY_PERSESS)
 	String getPersess();
 
 	/**
 	 * Get the ACL list.
 	 */
 	PhotoACL getACL();
+
+	@CacheKey(name=BY_USERNAME)
+	String getName();
 
 	/**
 	 * Get a Collection of Strings describing all the roles this user has.
