@@ -34,7 +34,6 @@ public class Keywords extends PhotoAjaxServlet {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected SAXAble getResults(HttpServletRequest request) throws Exception {
 		Comparator<KeywordMatch> comp=paths.get(request.getPathInfo());
 		if(comp == null) {
@@ -52,6 +51,6 @@ public class Keywords extends PhotoAjaxServlet {
 				}
 			}
 		}
-		return(new CollectionElement("keywords", (Collection)ts));
+		return(new CollectionElement("keywords", ts));
 	}
 }

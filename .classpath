@@ -36,7 +36,7 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/spy/jars/authkit-2.2.4.jar">
   </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/spy/jars/xmlkit-2.2.1.jar">
+  <classpathentry kind="var" path="MAVEN_REPO/spy/jars/xmlkit-2.2.2.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/spy/jars/spyxmlrpc-2.1.jar">
   </classpathentry>
