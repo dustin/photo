@@ -63,7 +63,6 @@ public class SearchCache extends SpyThread {
 	 * @param u the user
 	 * @param d the requested dimensions
 	 */
-	@SuppressWarnings("unchecked")
 	public Object get(Object key) {
 		SoftReference<SearchResults> sr=cache.get(key);
 		Object rv=null;
@@ -80,6 +79,7 @@ public class SearchCache extends SpyThread {
 	 * @param key the cache key
 	 * @param o the value to cache
 	 */
+	// This is a little scary.  Not sure what kinds of things are added here.
 	@SuppressWarnings("unchecked")
 	public void store(Object key, Object o) {
 		SoftReference ref=new SoftReference(o, refQueue);

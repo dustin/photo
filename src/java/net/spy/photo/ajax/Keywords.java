@@ -41,7 +41,7 @@ public class Keywords extends PhotoAjaxServlet {
 			throw new IllegalArgumentException("Illegal path: "
 					+ request.getPathInfo() + " try one of " + paths.keySet());
 		}
-		TreeSet<KeywordMatch> ts=new TreeSet<KeywordMatch>(comp);
+		Collection<KeywordMatch> ts=new TreeSet<KeywordMatch>(comp);
 		ts.addAll(Search.getInstance().getKeywordsForUser(getUser(request)));
 		String prefixMatch=request.getParameter("keyword");
 		if(prefixMatch != null) {

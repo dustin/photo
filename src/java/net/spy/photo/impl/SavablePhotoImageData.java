@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import net.spy.db.AbstractSavable;
-import net.spy.db.DBSPLike;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 import net.spy.db.SpyDB;
@@ -171,7 +170,7 @@ public class SavablePhotoImageData extends AbstractSavable
 			dv=new DeleteVariants(conn);
 			dv.setOriginalId(id);
 			dv.executeUpdate();
-			CloseUtil.close((DBSPLike)dv);
+			CloseUtil.close(dv);
 			dv=null;
 
 			iv=new InsertVariant(conn);
@@ -184,8 +183,8 @@ public class SavablePhotoImageData extends AbstractSavable
 				assert aff == 1;
 			}
 		} finally {
-			CloseUtil.close((DBSPLike)dv);
-			CloseUtil.close((DBSPLike)iv);
+			CloseUtil.close(dv);
+			CloseUtil.close(iv);
 		}
 	}
 

@@ -313,7 +313,6 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 * @return the MetaData, or null if MetaData can't be found for this image
 	 * @throws Exception if there's a problem processing this image
 	 */
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getMetaData() throws Exception {
 		// Memoize the meta data
 		if(metaData==null) {
@@ -324,9 +323,9 @@ public abstract class PhotoImageDataImpl extends SpyObject
 				PhotoImage image=p.getImage();
 				ByteArrayInputStream bis=new ByteArrayInputStream(image.getData());
 				Metadata md=JpegMetadataReader.readMetadata(bis);
-				for(Iterator i=md.getDirectoryIterator(); i.hasNext();) {
+				for(Iterator<?> i=md.getDirectoryIterator(); i.hasNext();) {
 					Directory d=(Directory)i.next();
-					for(Iterator ti=d.getTagIterator(); ti.hasNext();) {
+					for(Iterator<?> ti=d.getTagIterator(); ti.hasNext();) {
 						Tag t=(Tag)ti.next();
 						Object o=metaData.put(t.getTagName(), t.getDescription());
 						if(o != null) {

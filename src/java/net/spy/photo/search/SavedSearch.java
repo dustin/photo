@@ -115,12 +115,12 @@ public class SavedSearch extends Object {
 		return(rv);
 	}
 
-	@SuppressWarnings("unchecked")
 	private static Map<Integer, SavedSearch> getSearchesMap()
 		throws PhotoException {
 
 		SimpleCache sc=SimpleCache.getInstance();
-		Map rv=(Map)sc.get(CACHE_KEY);
+		@SuppressWarnings("unchecked")
+		Map<Integer,SavedSearch> rv=(Map<Integer,SavedSearch>)sc.get(CACHE_KEY);
 		if(rv == null) {
 			rv=initSearchesMap();
 			sc.store(CACHE_KEY, rv, CACHE_TIME);

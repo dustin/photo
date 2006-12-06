@@ -22,7 +22,6 @@ import javax.servlet.ServletException;
 
 import net.spy.SpyObject;
 import net.spy.cache.SimpleCache;
-import net.spy.db.DBSPLike;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.Keyword;
@@ -99,7 +98,7 @@ public class Search extends SpyObject {
 		} catch(Exception e) {
 			getLogger().error("Error saving search", e);
 		} finally {
-			CloseUtil.close((DBSPLike)is);
+			CloseUtil.close(is);
 		}
 	}
 
@@ -121,7 +120,7 @@ public class Search extends SpyObject {
 			// Clear the saved search cache so stuff shows up immediately
 			SimpleCache.getInstance().remove(SavedSearch.CACHE_KEY);
 		} finally {
-			CloseUtil.close((DBSPLike)ds);
+			CloseUtil.close(ds);
 		}
 	}
 
@@ -278,11 +277,11 @@ public class Search extends SpyObject {
 	 * @param sf the search form for finding images to extract keywords
 	 * @return all of the keywords available to the given user
 	 */
-	@SuppressWarnings("unchecked")
 	public Collection<KeywordMatch> getKeywordsForUser(User u, SearchForm sf)
 		throws Exception {
 		SearchCache sc=SearchCache.getInstance();
 		CacheKey ck=new CacheKey(CacheType.KEYWORDS, u, null, sf);
+		@SuppressWarnings("unchecked")
 		Collection<KeywordMatch> rv=(Collection<KeywordMatch>)sc.get(ck);
 		if(rv == null) {
 			rv=realGetKeywordsForUser(u, sf);

@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-import net.spy.db.DBSPLike;
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
@@ -270,7 +269,7 @@ public class PhotoStorerThread extends LoopingThread
 			getLogger().warn("Exception while loading images to flush", e);
 			recordException(e);
 		} finally {
-			CloseUtil.close((DBSPLike)db);
+			CloseUtil.close(db);
 		}
 
 		// Got the IDs, now store the actual images.  This is done so

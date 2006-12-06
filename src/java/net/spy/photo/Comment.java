@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 
 import net.spy.db.AbstractSavable;
-import net.spy.db.DBSPLike;
 import net.spy.db.SaveContext;
 import net.spy.db.SaveException;
 import net.spy.photo.sp.FindImagesByComments;
@@ -85,7 +84,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 
 			rs.close();
 		} finally {
-			CloseUtil.close((DBSPLike)db);
+			CloseUtil.close(db);
 		}
 
 		Stats.getComputingStat("comment.image." + imageId)
@@ -131,7 +130,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 
 			rs.close();
 		} finally {
-			CloseUtil.close((DBSPLike)db);
+			CloseUtil.close(db);
 		}
 		Stats.getComputingStat("comment.grouplist." + user.getName())
 			.add(System.currentTimeMillis() - start);
@@ -161,7 +160,7 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 			rs.close();
 			assert rv.size() <= max : "Got too many results";
 		} finally {
-			CloseUtil.close((DBSPLike)db);
+			CloseUtil.close(db);
 		}
 		Stats.getComputingStat("comment.list." + u.getName())
 			.add(System.currentTimeMillis() - start);

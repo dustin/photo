@@ -51,13 +51,13 @@ public class PhotoProperties extends Properties
 		return(new PhotoProperties());
 	}
 
-	@SuppressWarnings("unchecked")
 	private void init() throws SQLException {
 		SimpleCache sc=SimpleCache.getInstance();
 
 		String key="photo_props";
 
-		Map m=(Map)sc.get(key);
+		@SuppressWarnings("unchecked")
+		Map<String, String> m=(Map<String,String>)sc.get(key);
 		if(m==null) {
 			m=initFromDB();
 			sc.store(key, m, 900*1000);

@@ -26,11 +26,11 @@ public class Instantiator<C> extends SpyObject {
 		inst=createInstance(name, def);
 	}
 
-	@SuppressWarnings("unchecked")
 	private C createInstance(String name, String def) throws Exception {
 		PhotoConfig conf=PhotoConfig.getInstance();
 		String className=conf.get(name, def);
 		getLogger().info("Initializing %s", className);
+		@SuppressWarnings("unchecked")
 		Class<C> c=(Class<C>) Class.forName(className);
 		C rv=c.newInstance();
 		getLogger().info("Initialization complete.");

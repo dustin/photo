@@ -59,12 +59,12 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void loadMap(Map<String, ImageCache> m, List<String> l) {
 		if(l != null) {
 			try {
 				for(String nm : l) {
 					if(!m.containsKey(nm)) {
+						@SuppressWarnings("unchecked")
 						Class<ImageCache> c=(Class<ImageCache>)Class.forName(nm);
 						ImageCache o=c.newInstance();
 						m.put(nm, o);

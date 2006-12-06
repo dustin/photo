@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import net.spy.SpyObject;
-import net.spy.db.DBSPLike;
 import net.spy.photo.AnnotatedRegion;
 import net.spy.photo.Format;
 import net.spy.photo.Keyword;
@@ -100,7 +99,7 @@ public class DBImageDataSource extends SpyObject
 			}
 			rs.close();
 		} finally {
-			CloseUtil.close((DBSPLike)sv);
+			CloseUtil.close(sv);
 		}
 	}
 

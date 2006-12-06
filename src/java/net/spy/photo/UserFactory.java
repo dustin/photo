@@ -14,7 +14,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.spy.db.DBSPLike;
 import net.spy.db.Savable;
 import net.spy.db.Saver;
 import net.spy.factory.GenFactory;
@@ -80,7 +79,7 @@ public class UserFactory extends GenFactory<User> {
 			}
 			rs.close();
 		} finally {
-			CloseUtil.close((DBSPLike)db);
+			CloseUtil.close(db);
 		}
 		// Add all of the permissions of the default user to all other users
 		for(User u : idMap.values()) {
@@ -114,7 +113,7 @@ public class UserFactory extends GenFactory<User> {
 			}
 			rs.close();
 		} finally {
-			CloseUtil.close((DBSPLike)db);
+			CloseUtil.close(db);
 		}
 
 		// Find the default user so we can initialize the ACLs.
@@ -143,7 +142,7 @@ public class UserFactory extends GenFactory<User> {
 			}
 			rs.close();
 		} finally {
-			CloseUtil.close((DBSPLike)db2);
+			CloseUtil.close(db2);
 		}
 
 		return(users.values());

@@ -11,7 +11,6 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.spy.db.DBSPLike;
 import net.spy.db.Saver;
 import net.spy.factory.GenFactory;
 import net.spy.photo.impl.KeywordImpl;
@@ -61,7 +60,7 @@ public class KeywordFactory extends GenFactory<Keyword> {
 		} catch(Exception e) {
 			throw new RuntimeException("Couldn't initialize keywords", e);
 		} finally {
-			CloseUtil.close((DBSPLike)db);
+			CloseUtil.close(db);
 		}
 		return(rv);
 	}

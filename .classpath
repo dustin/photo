@@ -30,7 +30,7 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/javamail/jars/javamail.jar">
   </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/spy/jars/spy-2.2.41.jar">
+  <classpathentry kind="var" path="MAVEN_REPO/spy/jars/spy-2.2.42.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/spy/jars/jwebkit-2.2.40.jar">
   </classpathentry>

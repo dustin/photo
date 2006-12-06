@@ -14,7 +14,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.spy.db.DBSPLike;
 import net.spy.db.Savable;
 import net.spy.db.Saver;
 import net.spy.factory.GenFactory;
@@ -79,7 +78,7 @@ public class CategoryFactory extends GenFactory<Category> {
 				rv.put(cat.getId(), cat);
 			}
 
-			CloseUtil.close((DBSPLike)db);
+			CloseUtil.close(db);
 			db=null;
 
 			// Load all of the ACLs for the categories
@@ -88,7 +87,7 @@ public class CategoryFactory extends GenFactory<Category> {
 		} catch(SQLException e) {
 			throw new RuntimeException("Could not load categories", e);
 		} finally {
-			CloseUtil.close((DBSPLike)db);
+			CloseUtil.close(db);
 		}
 
 		return(rv.values());
@@ -166,7 +165,7 @@ public class CategoryFactory extends GenFactory<Category> {
 			}
 			rs.close();
 		} finally {
-			CloseUtil.close((DBSPLike)db);
+			CloseUtil.close(db);
 		}
 	}
 
