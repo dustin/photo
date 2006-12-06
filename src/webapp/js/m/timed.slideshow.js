@@ -56,7 +56,7 @@ timedSlideShow.prototype = {
 			currentImg.style.margin="0px";
 			currentImg.style.border="0px";
 			currentImg.style.backgroundImage="url('" + data[i][0] + "')";
-			currentImg.style.backgroundPosition="center center";
+			currentImg.style.backgroundPosition="top center";
 
 			this.articleLink.appendChild(currentImg);
 			currentImg.currentOpacity = new fx.Opacity(currentImg, {duration: 400});

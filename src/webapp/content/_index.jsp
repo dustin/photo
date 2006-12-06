@@ -22,7 +22,7 @@
 			var img=imgs[i];
 			var imgid=img.getAttribute("id");
 			var detailUrl=displayBase + "?id=" + imgid;
-			var imgUrl=imgBase + "?thumbnail=1&id=" + imgid;
+			var imgUrl=imgBase + "?scale=320x240&id=" + imgid;
 			var descr=getElementText(img, 'descr', 0);
 
 			slideData.push(new Array(imgUrl, detailUrl, 'Image ' + imgid, descr));
