@@ -135,6 +135,11 @@
 		<servlet-class>net.spy.photo.ajax.EXIFServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>ajaxSlideshow</servlet-name>
+		<servlet-class>net.spy.photo.ajax.SlideshowServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
 	<servlet>
 		<servlet-name>validationcontrol</servlet-name>
@@ -238,6 +243,10 @@
 	<servlet-mapping>
 		<servlet-name>ajaxexif</servlet-name>
 		<url-pattern>/ajax/exif/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ajaxSlideshow</servlet-name>
+		<url-pattern>/ajax/slideshow</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

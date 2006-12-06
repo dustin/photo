@@ -1,0 +1,126 @@
+#photoOfTheUnitOfTime
+{
+	width: 220px;
+	height: 146px;
+	z-index:5;
+}
+
+.jdSlideshow
+{
+	overflow:hidden;
+	position: relative;
+}
+
+.jdSlideshow img
+{
+	border: 0;
+	margin: 0;
+}
+
+.jdSlideshow .slideElement
+{
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	background-repeat: no-repeat;
+}
+
+.jdSlideshow .loadingElement
+{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background-color: white;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-image: url('../../images/m/loading-bar-black.gif');
+}
+
+.jdSlideshow .slideInfoZone
+{
+	position: absolute;
+	z-index: 10;
+	width: 100%;
+	margin: 0px;
+	left: 0;
+	bottom: 0;
+	height: 40px;
+	background: #333;
+	color: #fff;
+	text-indent: 0;
+}
+
+.jdSlideshow .slideInfoZone h2
+{
+	padding: 0;
+	font-size: 80%;
+	margin: 0;
+	margin: 2px 5px;
+	font-weight: bold;
+	color: inherit;
+}
+
+.jdSlideshow .slideInfoZone p
+{
+	padding: 0;
+	font-size: 60%;
+	margin: 2px 5px;
+	color: #eee;
+}
+
+.jdSlideshow a
+{
+	font-size: 100%;
+	text-decoration: none;
+	color: inherit;
+}
+
+.jdSlideshow a.right, .jdSlideshow a.left
+{
+	position: absolute;
+	height: 100%;
+	width: 40%;
+	cursor: pointer;
+	z-index:10;
+	filter:alpha(opacity=20);
+	-moz-opacity:0.2;
+	-khtml-opacity: 0.2;
+	opacity: 0.2;
+}
+
+* html .jdSlideshow a.right, * html .jdSlideshow a.left
+{
+	filter:alpha(opacity=50);
+}
+
+.jdSlideshow a.right:hover, .jdSlideshow a.left:hover
+{
+	filter:alpha(opacity=80);
+	-moz-opacity:0.8;
+	-khtml-opacity: 0.8;
+	opacity: 0.8;
+}
+
+.jdSlideshow a.left
+{
+	left: 0;
+	top: 0;
+	background: url('../../images/m/fleche1.png') no-repeat top left;
+}
+
+* html .jdSlideshow a.left {
+	background: url('../../images/m/fleche1.gif') no-repeat top left;
+}
+
+.jdSlideshow a.right
+{
+	right: 0;
+	top: 0;
+	background: url('img/fleche2.png') no-repeat top right;
+}
+
+* html .jdSlideshow a.right {
+	background: url('../../images/m/fleche2.gif') no-repeat top right;
+}

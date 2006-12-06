@@ -25,6 +25,7 @@
 			- <tiles:insert attribute='title'/>
 		</title>
 		<photo:stylesheet url="/css/layout.css"/>
+		<photo:stylesheet url="/css/m/jd.slideshow.css"/>
 		<photo:javascript url="/js/photo.js"/>
 		<photo:javascript url="/js/prototype.js"/>
 		<photo:javascript url="/js/s/scriptaculous.js"/>

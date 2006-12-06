@@ -443,6 +443,7 @@ grant all on properties to nobody;
 insert into properties(name, value) values('photo_of_uot', '1');
 insert into properties(name, value) values('background_img', '');
 insert into properties(name, value) values('album_name', 'My Photo Album');
+insert into properties(name, value) values('idxkeywords', '');
 
 -- Bidirectional map of related photos
 create table photo_variations (

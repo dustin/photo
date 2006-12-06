@@ -5,6 +5,39 @@
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
 <%@ taglib uri='/tlds/photo.tld' prefix='photo' %>
 
+<script src="js/m/mootools.release.83.js" type="text/javascript"></script>
+<script src="js/m/timed.slideshow.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	var searchUrl='<c:url value="/ajax/slideshow"/>';
+	var displayBase='<c:url value="/display.do"/>';
+	var imgBase='<c:url value="/PhotoServlet"/>';
+	// <![CDATA[
+	// Set up the UOT slideshow
+	function setupUOT(req) {
+		var slideData=new Array();
+
+		var imgs=req.responseXML.getElementsByTagName("img");
+		for(var i=0; i<imgs.length; i++) {
+			var img=imgs[i];
+			var imgid=img.getAttribute("id");
+			var detailUrl=displayBase + "?id=" + imgid;
+			var imgUrl=imgBase + "?thumbnail=1&id=" + imgid;
+			var descr=getElementText(img, 'descr', 0);
+
+			slideData.push(new Array(imgUrl, detailUrl, 'Image ' + imgid, descr));
+		}
+	 var slideshow = new timedSlideShow($('photoOfTheUnitOfTime'), slideData);
+	}
+	// Load the Unit of Time picture
+	function loadUOTData() {
+		new Ajax.Request(searchUrl, { method: 'get', onSuccess: setupUOT });
+	}
+	// Event.observe(window, 'load', loadUOTData, false);
+	addLoadEvent(loadUOTData);
+	// ]]>
+</script>
+
 <logic:present role="admin">
 <script type="text/javascript">
 	var deleteBase='<c:url value="/deleteSearch.do"/>';
@@ -56,7 +89,7 @@
 </ul>
 
 <h2>Photo of the [Unit of Time]</h2>
-<div id="photoOfTheUnitOfTime">
+<div class="jdSlideshow" id="photoOfTheUnitOfTime">
 	<photo:imgLink id='<%= props.getProperty("photo_of_uot", "1") %>'
 		alt="Image of the [Unit of Time]" showThumbnail='true'/>
 </div>
