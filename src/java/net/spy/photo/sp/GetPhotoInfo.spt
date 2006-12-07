@@ -20,6 +20,7 @@ select
 		a.format_id,
 		a.ts,
 		a.id,
+		a.place_id,
 		c.name as catname
 	from
 		album a inner join cat c on(a.cat = c.id)
@@ -35,4 +36,5 @@ height INTEGER Height of this image
 format_id INTEGER The format ID
 ts TIMESTAMP Time this image made it into the database
 id INTEGER ID of this image
+place_id INTEGER ID of the place this image was taken
 catname VARCHAR Name of the category in which this image is

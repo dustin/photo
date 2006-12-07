@@ -20,9 +20,10 @@ insert
 			ts,
 			width,
 			height,
-			format_id
+			format_id,
+			place_id
 		)
-		values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
 @params
 image_id required INTEGER New image ID
@@ -35,4 +36,4 @@ timestamp required TIMESTAMP Time this image was added
 width required INTEGER Width (in pixels) of this image
 height required INTEGER Height (in pixels) of this image
 format_id required INTEGER ID of the format of this image
-
+place_id required INTEGER ID of the place this picture was taken

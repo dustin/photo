@@ -88,4 +88,9 @@ public interface PhotoImageData extends Instance {
 	 */
 	Collection<PhotoImageData> getVariants();
 
+	/**
+	 * Get the place this picture was taken.
+	 */
+	Place getPlace();
+
 }

@@ -22,6 +22,8 @@ import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoRegion;
 import net.spy.photo.PhotoUtil;
+import net.spy.photo.Place;
+import net.spy.photo.PlaceFactory;
 import net.spy.photo.User;
 import net.spy.photo.Vote;
 import net.spy.photo.impl.PhotoDimensionsImpl;
@@ -266,6 +268,36 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 					user, id, cat);
 
 			return(cat.getName());
+		}
+	}
+
+	@AjaxHandler(path="/place")
+	public static class PlaceHandler extends BaseHandler {
+		@Override
+		public Object handle(int id, User user, HttpServletRequest request)
+			throws Exception {
+			// This one is a bit more complicated because it receives a place ID
+			// and needs to return the name of that place.
+
+			String value=getStringParam(request, "value", 1);
+			int placeId=Integer.parseInt(value);
+			Place place=null;
+
+			if(placeId > 0) {
+				PlaceFactory cf=PlaceFactory.getInstance();
+				place=cf.getObject(placeId);
+			}
+
+			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			SavablePhotoImageData savable=new SavablePhotoImageData(
+				pidf.getObject(id));
+			savable.setPlace(place);
+			pidf.store(savable, true, RECACHE_DELAY);
+
+			getLogger().info("%s changed the place of %s to %s",
+					user, id, place);
+
+			return(place == null ? "Unknown" : place.getName());
 		}
 	}
 

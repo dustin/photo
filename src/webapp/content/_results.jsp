@@ -22,7 +22,7 @@
 </script>
 
 <html:xhtml/>
-<photo:javascript url="/js/catedit.js"/>
+<photo:javascript url="/js/extraedit.js"/>
 
 <div id="searchheader">
 <logic:present role="canadd">
@@ -91,6 +91,12 @@
 			<span id="<c:out value='tk${img.id}'/>"
 				><fmt:formatDate value="${img.taken}" pattern="yyyy-MM-dd"
 				/></span><br/>
+		Location:
+			<span id="<c:out value='place${img.id}'/>"><c:if
+				test="${empty img.place}"><em>Unknown</em></c:if><c:if
+				test="${not empty img.place}"><c:out
+				value="${img.place.name}"/></c:if></span>
+			<br/>
 		Added: <fmt:formatDate value="${img.timestamp}"
 			pattern="yyyy-MM-dd HH:mm:ss"/>
 				by <c:out value="${img.addedBy.name}"/>
@@ -113,6 +119,9 @@
 		setupCategoryEditor("<c:out value='c${img.id}'/>",
 			'<c:url value="/ajax/photo/cat?imgId=${img.id}"/>',
 			'<c:url value="/"/>');
+    setupAjaxCollectionEditor("<c:out value='place${img.id}'/>",
+      '<c:url value="/ajax/photo/place?imgId=${img.id}"/>',
+      '<c:url value="/ajax/places"/>', 'place', [[0, 'Unknown']]);
 	</script>
 </logic:present>
 

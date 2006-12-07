@@ -27,6 +27,8 @@ import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.PhotoUtil;
+import net.spy.photo.Place;
+import net.spy.photo.PlaceFactory;
 import net.spy.photo.User;
 import net.spy.photo.Vote;
 import net.spy.photo.Votes;
@@ -50,6 +52,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	private String catName=null;
 	private int catId=-1;
 	private int size=-1;
+	private int placeId=0;
 	Map<String, Object> metaData=null;
 
 	// Dimensions of the full size image.
@@ -306,6 +309,15 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 */
 	protected void setFormat(Format to) {
 		this.format=to;
+	}
+
+	public Place getPlace() {
+		return placeId > 0
+			? PlaceFactory.getInstance().getObject(placeId) : null;
+	}
+
+	protected void setPlace(Place to) {
+		placeId=to == null ? 0 : to.getId();
 	}
 
 	/**

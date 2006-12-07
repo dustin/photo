@@ -30,6 +30,7 @@ import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoUtil;
+import net.spy.photo.Place;
 import net.spy.photo.User;
 import net.spy.photo.Votes;
 import net.spy.photo.sp.DeleteAnnotations;
@@ -66,6 +67,7 @@ public class SavablePhotoImageData extends AbstractSavable
 	private int id=-1;
 	private Format format=null;
 	private PhotoImage imageData=null;
+	private Place place=null;
 
 	/**
 	 * Get a new savable photo.
@@ -122,6 +124,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		this.timestamp=proto.getTimestamp();
 		this.id=proto.getId();
 		this.format=proto.getFormat();
+		this.place=proto.getPlace();
 
 		setNew(false);
 		setModified(false);
@@ -144,6 +147,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		db.setWidth(dimensions.getWidth());
 		db.setHeight(dimensions.getHeight());
 		db.setFormatId(format.getId());
+		db.setPlaceId(place==null?null:place.getId());
 		int aff=db.executeUpdate();
 		if(aff != 1) {
 			throw new SaveException("Expected to update 1 row, updated " + aff);
@@ -251,6 +255,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		db.setCat(catId);
 		db.setTaken(new java.sql.Date(taken.getTime()));
 		db.setId(id);
+		db.setPlaceId(place==null?null:place.getId());
 		int aff=db.executeUpdate();
 		if(aff != 1) {
 			throw new SaveException("Expected to update 1 row, updated " + aff);
@@ -535,6 +540,15 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public Map<String, Object> getMetaData() {
 		return(Collections.emptyMap());
+	}
+
+	public Place getPlace() {
+		return place;
+	}
+
+	public void setPlace(Place to) {
+		place=to;
+		modify();
 	}
 
 	// New annotated region implementation

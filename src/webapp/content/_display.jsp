@@ -14,7 +14,7 @@
 <html:xhtml/>
 
 <photo:javascript url="/js/annimg.js"/>
-<photo:javascript url="/js/catedit.js"/>
+<photo:javascript url="/js/extraedit.js"/>
 
 <%
 	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
@@ -182,6 +182,9 @@
 		<b>Added</b>:
 			<c:out value="${image.timestamp}"/>
 		by <c:out value="${image.addedBy.realname}"/><br />
+		<b>Location</b>:
+		<span id="imgPlace"><c:if test="${empty image.place}"><em>Unknown</em></c:if><c:if test="${not empty image.place}"><c:out value="${image.place.name}"/></c:if></span>
+		<br />
 		<b>Info</b>:
 		<div id="imgDescr" class="imgDescr"><c:out value="${image.descr}"/></div>
 		<b><a id="metalink" href="#">Toggle Meta Data</a>
@@ -213,6 +216,9 @@
 				setupCategoryEditor('imgCat',
 					'<c:url value="/ajax/photo/cat?imgId=${imgId}"/>',
 					'<c:url value="/"/>');
+				setupAjaxCollectionEditor('imgPlace',
+					'<c:url value="/ajax/photo/place?imgId=${imgId}"/>',
+					'<c:url value="/ajax/places"/>', 'place', [[0, 'Unknown']]);
 			</script>
 		</logic:present>
 

@@ -20,6 +20,7 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataSource;
 import net.spy.photo.PhotoSecurity;
+import net.spy.photo.PlaceFactory;
 import net.spy.photo.UserFactory;
 import net.spy.photo.Vote;
 import net.spy.photo.sp.GetAlbumKeywords;
@@ -194,6 +195,10 @@ public class DBImageDataSource extends SpyObject
 			setCatName(rs.getString("catname"));
 			setTimestamp(rs.getTimestamp("ts"));
 			setTaken(rs.getDate("taken"));
+			int p=rs.getInt("place_id");
+			if(!rs.wasNull()) {
+				setPlace(PlaceFactory.getInstance().getObject(p));
+			}
 
 			// Look up the format
 			setFormat(Format.getFormat(rs.getInt("format_id")));

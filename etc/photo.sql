@@ -18,6 +18,14 @@ CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'
 	HANDLER plpgsql_call_handler
 	LANCOMPILER 'PL/pgSQL';
 
+-- Primary key allocation
+create table primary_key (
+    table_name varchar(32) not null,
+    primary_key integer not null,
+    incr_value integer not null
+);  
+create unique index idx_pk on primary_key(table_name);
+grant all on primary_key to nobody;
 
 -- The categories
 create table cat(
@@ -86,6 +94,19 @@ insert into format values(1, 'jpg', 'image/jpeg');
 insert into format values(2, 'png', 'image/png');
 insert into format values(3, 'gif', 'image/gif');
 
+-- Geotagging support
+create table place (
+	place_id integer not null,
+	name varchar(128) not null,
+    lon decimal(12, 6) not null check(lon between -180 and 180),
+    lat decimal(11, 6) not null check(lat between -90 and 90),
+	primary key(place_id)
+);
+grant all on place to nobody;
+
+-- Primary key for the above
+insert into primary_key values('place_id', 1, 1);
+
 -- Where the picture info is stored.
 
 create table album(
@@ -101,10 +122,12 @@ create table album(
 	format_id  integer default 0,
 	ts         timestamp not null,
 	id         serial,
+	place_id   integer null,
 	primary key(id),
 	foreign key(cat) references cat(id),
 	foreign key(addedby) references wwwusers(id),
-	foreign key(format_id) references format(format_id)
+	foreign key(format_id) references format(format_id),
+	foreign key(place_id) references place(place_id)
 );
 
 create index album_bycat on album(cat);

@@ -1,0 +1,19 @@
+#
+# Copyright (c) 2006 Dustin Sallings <dustin@spy.net>
+# arch-tag: EC79C587-FD31-452F-95CD-324A60BE5454
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Add a new place.
+
+@sql
+insert into place (place_id, name, lon, lat) values(?, ?, ?, ?)
+
+@params
+place_id required INTEGER The ID of this new place
+name required VARCHAR The name of this new place
+lon required DECIMAL the longitude of this new place
+lat required DECIMAL the latitude of this new place
