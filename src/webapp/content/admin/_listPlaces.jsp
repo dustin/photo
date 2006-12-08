@@ -107,7 +107,7 @@
 			<input type="text" id="namefield" name="namefield"/><br/>
 			<label for="lonfield">Longitude</label>
 			<input type="text" id="lonfield" name="lon"/><br/>
-			<label for="latfield">Longitude</label>
+			<label for="latfield">Latitude</label>
 			<input type="text" id="latfield" name="lat"/><br/>
 			<input type="submit" value="Add"/>
 		</fieldset>
