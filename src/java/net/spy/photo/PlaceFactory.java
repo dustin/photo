@@ -87,6 +87,6 @@ public class PlaceFactory extends GenFactory<Place> {
 	public void persist(MutablePlace mp) throws Exception {
 		Saver s=new Saver(PhotoConfig.getInstance());
 		s.save(mp);
-		cacheInstance(mp);
+		recache();
 	}
 }
