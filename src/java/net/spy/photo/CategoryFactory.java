@@ -14,7 +14,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.spy.db.Savable;
 import net.spy.db.Saver;
 import net.spy.factory.GenFactory;
 import net.spy.photo.impl.DBCategory;
@@ -112,7 +111,7 @@ public class CategoryFactory extends GenFactory<Category> {
 	 */
 	public void persist(MutableCategory inst) throws Exception {
 		Saver saver=new Saver(PhotoConfig.getInstance());
-		saver.save((Savable)inst);
+		saver.save(inst);
 		recache();
 		// Also recache the users
 		UserFactory.getInstance().recache();

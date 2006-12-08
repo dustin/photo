@@ -3,10 +3,12 @@
 
 package net.spy.photo;
 
+import net.spy.db.Savable;
+
 /**
  * Mutable user interface.
  */
-public interface MutableUser extends User {
+public interface MutableUser extends Mutable, User, Savable {
 
 	/** 
 	 * Set the username.

@@ -3,6 +3,7 @@
 
 package net.spy.photo;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ import net.spy.photo.sp.VoteManipulator;
 /**
  * Votes on photos.
  */
-public class Vote extends AbstractSavable implements java.io.Serializable {
+public class Vote extends AbstractSavable implements Serializable {
 
 	public static final int MIN_VOTE = 1;
 	public static final int MAX_VOTE = 5;

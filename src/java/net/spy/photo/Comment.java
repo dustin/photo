@@ -3,6 +3,7 @@
 
 package net.spy.photo;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,7 +27,7 @@ import net.spy.util.CloseUtil;
 /**
  * Comments on photos.
  */
-public class Comment extends AbstractSavable implements java.io.Serializable {
+public class Comment extends AbstractSavable implements Serializable {
 
 	private int commentId=-1;
 

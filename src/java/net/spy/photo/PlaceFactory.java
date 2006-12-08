@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.spy.db.Saver;
 import net.spy.factory.GenFactory;
 import net.spy.photo.impl.DBPlace;
 import net.spy.photo.sp.SelectAllPlaces;
@@ -56,4 +57,26 @@ public class PlaceFactory extends GenFactory<Place> {
 		return rv;
 	}
 
+	/**
+	 * Get a mutable place.
+	 * 
+	 * @param id the ID of the place
+	 * @return the MutablePlace
+	 */
+	public MutablePlace getMutable(int id) {
+		MutablePlace mp=(MutablePlace)getObject(id);
+		return mp;
+	}
+
+	/**
+	 * Persist the MutablePlace.
+	 * 
+	 * @param mp the mutable place
+	 * @throws Exception if the item can't be persisted
+	 */
+	public void persist(MutablePlace mp) throws Exception {
+		Saver s=new Saver(PhotoConfig.getInstance());
+		s.save(mp);
+		cacheInstance(mp);
+	}
 }

@@ -3,10 +3,12 @@
 
 package net.spy.photo;
 
+import net.spy.db.Savable;
+
 /**
  * Mutable place.
  */
-public interface MutablePlace extends Place {
+public interface MutablePlace extends Mutable, Place, Savable {
 
 	/**
 	 * Set the name of this place.

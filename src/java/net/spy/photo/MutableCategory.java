@@ -3,10 +3,12 @@
 
 package net.spy.photo;
 
+import net.spy.db.Savable;
+
 /**
  * Mutable category.
  */
-public interface MutableCategory extends Category {
+public interface MutableCategory extends Mutable, Category, Savable {
 
 	/** 
 	 * Set the name of this category.
