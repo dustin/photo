@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@ taglib uri='http://jakarta.apache.org/struts/tags-html' prefix='html' %>
 
 <html:xhtml/>
 
