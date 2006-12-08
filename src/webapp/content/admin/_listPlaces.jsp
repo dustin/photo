@@ -65,7 +65,9 @@
 	// ]]>
 </script>
 
-<table>
+<h1>Place Editor</h1>
+
+<table class="data">
 	<thead>
 		<tr>
 			<th>Name</th>

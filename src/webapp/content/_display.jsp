@@ -192,7 +192,7 @@
 				alt="indicator" id="metaindicator" style="display: none"/>
 			</b>
 		<div id="meta" style="display: none">
-			<table class="metadata">
+			<table class="data">
 				<thead>
 					<tr>
 						<th>Attribute</th><th>Value</th>

@@ -415,19 +415,19 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 	background: #ccf;
 }
 
-table.metadata {
+table.data {
 	font-size: small;
 	border: solid 1px;
 	margin-left: 1em;
 	border-collapse: collapse;
 }
 
-table.metadata th {
+table.data th {
 	border: solid 1px;
 	background-color: #ccc;
 }
 
-table.metadata td {
+table.data td {
 	border: solid 1px;
 }
 
