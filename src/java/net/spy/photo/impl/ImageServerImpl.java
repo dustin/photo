@@ -19,7 +19,6 @@ import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoUtil;
-import net.spy.photo.observation.NewImageObservable;
 import net.spy.util.Base64;
 
 /**
@@ -139,9 +138,6 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 			getLogger().warn("Error caching image", e);
 			throw new PhotoException("Error storing image", e);
 		}
-
-		// Let everyone know there's a new image.
-		NewImageObservable.getInstance().newImage(pid, image);
 	}
 
 	private PhotoImage scaleImage(

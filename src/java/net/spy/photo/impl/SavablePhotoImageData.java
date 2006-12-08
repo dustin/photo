@@ -333,8 +333,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 		// XXX: Remove any keywords from any annotations that aren't in the
 		// keywords set
-
-		modify();
 	}
 
 	/** 
@@ -366,13 +364,10 @@ public class SavablePhotoImageData extends AbstractSavable
 		}
 
 		annotations.add(nar);
-
-		modify();
 	}
 
 	public void setKeywords(Collection<Keyword> to) {
 		this.keywords=to;
-		modify();
 	}
 
 	public Collection<Keyword> getKeywords() {
@@ -389,7 +384,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setDescr(String to) {
 		this.descr=to;
-		modify();
 	}
 
 	public String getDescr() {
@@ -399,7 +393,6 @@ public class SavablePhotoImageData extends AbstractSavable
 	public void setCatId(int to) {
 		catName=CategoryFactory.getInstance().getObject(to).getName();
 		this.catId=to;
-		modify();
 	}
 
 	public int getCatId() {
@@ -408,7 +401,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setSize(int to) {
 		this.size=to;
-		modify();
 	}
 
 	public int getSize() {
@@ -417,7 +409,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setDimensions(PhotoDimensions to) {
 		this.dimensions=to;
-		modify();
 	}
 
 	public PhotoDimensions getDimensions() {
@@ -426,7 +417,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setTnDims(PhotoDimensions to) {
 		this.tnDims=to;
-		modify();
 	}
 
 	public PhotoDimensions getTnDims() {
@@ -435,7 +425,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setAddedBy(User to) {
 		this.addedBy=to;
-		modify();
 	}
 
 	public User getAddedBy() {
@@ -488,7 +477,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setTaken(Date to) {
 		this.taken=to;
-		modify();
 	}
 
 	public Date getTaken() {
@@ -497,7 +485,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setTimestamp(Date to) {
 		this.timestamp=to;
-		modify();
 	}
 
 	public Date getTimestamp() {
@@ -506,7 +493,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setId(int to) {
 		this.id=to;
-		modify();
 	}
 
 	public int getId() {
@@ -515,7 +501,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setFormat(Format to) {
 		this.format=to;
-		modify();
 	}
 
 	public Format getFormat() {
@@ -529,13 +514,11 @@ public class SavablePhotoImageData extends AbstractSavable
 	public void addVariant(PhotoImageData v) {
 		getLogger().info("Adding variant:  %s", v);
 		variants.add(v);
-		modify();
 	}
 
 	public void removeVariant(PhotoImageData v) {
 		getLogger().info("Removing variant:  %s", v);
 		variants.remove(v);
-		modify();
 	}
 
 	public Map<String, Object> getMetaData() {
@@ -548,7 +531,6 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setPlace(Place to) {
 		place=to;
-		modify();
 	}
 
 	// New annotated region implementation

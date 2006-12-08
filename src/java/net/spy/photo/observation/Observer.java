@@ -7,5 +7,5 @@ package net.spy.photo.observation;
  * Something that listens for an observation.
  */
 public interface Observer<T> {
-	void observe(Observable<T> obserable, Observation<T> observation);
+	void observe(Observation<T> observation);
 }

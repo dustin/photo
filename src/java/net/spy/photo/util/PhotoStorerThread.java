@@ -20,7 +20,6 @@ import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.observation.NewImageData;
-import net.spy.photo.observation.Observable;
 import net.spy.photo.observation.Observation;
 import net.spy.photo.observation.Observer;
 import net.spy.photo.sp.GetImagesToFlush;
@@ -352,8 +351,7 @@ public class PhotoStorerThread extends LoopingThread
 	/* (non-Javadoc)
 	 * @see net.spy.photo.observation.Observer#observe(net.spy.photo.observation.Observable, net.spy.photo.observation.Observation)
 	 */
-	public void observe(Observable<NewImageData> obserable,
-			Observation<NewImageData> observation) {
+	public void observe(Observation<NewImageData> observation) {
 		getLogger().info("Got new image observation for ",
 				observation.getData().getPhotoImageData());
 		addedImage();

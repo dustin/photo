@@ -136,7 +136,6 @@ public class Profile extends AbstractSavable implements Serializable {
 	 */
 	public void setDescription(String to) {
 		this.description=to;
-		setModified(true);
 	}
 
 	/**
@@ -180,7 +179,6 @@ public class Profile extends AbstractSavable implements Serializable {
 	 */
 	public void setId(int to) {
 		this.id=to;
-		setModified(true);
 	}
 
 	// Savable implementation

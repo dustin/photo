@@ -134,7 +134,6 @@ public class DBUser extends AbstractSavable
 	 */
 	public void setPersess(String to) {
 		this.persess=to;
-		setModified(true);
 	}
 
 	/** 
@@ -226,7 +225,6 @@ public class DBUser extends AbstractSavable
 	 */
 	public void setId(int to) {
 		this.id=to;
-		setModified(true);
 	}
 
 	/**
@@ -234,7 +232,6 @@ public class DBUser extends AbstractSavable
 	 */
 	public void setName(String username) {
 		this.name=username.toLowerCase();
-		setModified(true);
 	}
 
 	/**
@@ -242,7 +239,6 @@ public class DBUser extends AbstractSavable
 	 */
 	public void setRealname(String to) {
 		this.realname=to;
-		setModified(true);
 	}
 
 	/**
@@ -257,7 +253,6 @@ public class DBUser extends AbstractSavable
 	 */
 	public void setEmail(String to) {
 		this.email=to.toLowerCase();
-		setModified(true);
 	}
 
 	// Savable implementation
@@ -341,7 +336,6 @@ public class DBUser extends AbstractSavable
 			}
 		}
 		this.password=pass;
-		setModified(true);
 	}
 
 	/**

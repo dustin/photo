@@ -78,6 +78,7 @@
 
 	<preGoal name="java:compile">
 		<attainGoal name="spy:spt"/>
+		<attainGoal name="aspectj"/>
 	</preGoal>
 
 </project>

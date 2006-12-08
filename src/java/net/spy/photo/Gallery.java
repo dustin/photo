@@ -3,6 +3,7 @@
 
 package net.spy.photo;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,7 +28,7 @@ import net.spy.photo.sp.UpdateGallery;
 /**
  * A named collection of images.
  */
-public class Gallery extends AbstractSavable implements java.io.Serializable {
+public class Gallery extends AbstractSavable implements Serializable {
 
 	private int id=-1;
 	private String name=null;
@@ -231,7 +232,6 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	public void addImage(PhotoImageData pid) {
 		removeImage(pid);
 		images.add(pid);
-		setModified(true);
 	}
 
 	/**
@@ -278,7 +278,6 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	 */
 	public void setName(String to) {
 		this.name=to;
-		setModified(true);
 	}
 
 	/**
@@ -301,7 +300,6 @@ public class Gallery extends AbstractSavable implements java.io.Serializable {
 	 */
 	public void setPublic(boolean to) {
 		this.isPublic=to;
-		setModified(true);
 	}
 
 	/**

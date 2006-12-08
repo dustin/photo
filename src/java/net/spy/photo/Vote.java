@@ -141,7 +141,6 @@ public class Vote extends AbstractSavable implements java.io.Serializable {
 		} else if(to>MAX_VOTE) {
 			to=MAX_VOTE;
 		}
-		setModified(true);
 		timestamp=new Timestamp(System.currentTimeMillis());
 		this.vote=to;
 	}

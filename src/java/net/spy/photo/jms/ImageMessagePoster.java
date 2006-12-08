@@ -17,7 +17,6 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.observation.NewImageData;
-import net.spy.photo.observation.Observable;
 import net.spy.photo.observation.Observation;
 import net.spy.photo.observation.Observer;
 
@@ -58,8 +57,7 @@ public class ImageMessagePoster extends SpyObject
 		conn.close();
 	}
 
-	public void observe(Observable<NewImageData> obserable,
-			Observation<NewImageData> observation) {
+	public void observe(Observation<NewImageData> observation) {
 		PhotoImageData pid=observation.getData().getPhotoImageData();
 		PhotoImage pi=observation.getData().getPhotoImage();
 

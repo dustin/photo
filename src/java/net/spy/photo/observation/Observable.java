@@ -12,8 +12,9 @@ public interface Observable<T> {
 
 	void removeObserver(Observer<T> l);
 
-	int getObserverCount();
+	int getNumObservers();
 
 	void removeAllObservers();
 
+	void sendMessage(Observation<T> o);
 }

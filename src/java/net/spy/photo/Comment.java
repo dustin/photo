@@ -222,7 +222,6 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	 */
 	public void setUser(User to) {
 		this.user=to;
-		setModified(true);
 	}
 
 	/**
@@ -237,7 +236,6 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	 */
 	public void setPhotoId(int to) {
 		this.photoId=to;
-		setModified(true);
 	}
 
 	/**
@@ -252,7 +250,6 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	 */
 	public void setNote(String to) {
 		this.note=to;
-		setModified(true);
 	}
 
 	/**
@@ -267,7 +264,6 @@ public class Comment extends AbstractSavable implements java.io.Serializable {
 	 */
 	public void setRemoteAddr(String to) {
 		this.remoteAddr=to;
-		setModified(true);
 	}
 
 	/**

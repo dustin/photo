@@ -187,7 +187,6 @@ public class DBCategory extends AbstractSavable implements MutableCategory {
 	 */
 	public void setName(String to) {
 		this.name=to;
-		setModified(true);
 	}
 
 	/**

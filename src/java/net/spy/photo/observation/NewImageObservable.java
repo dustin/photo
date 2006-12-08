@@ -9,7 +9,7 @@ import net.spy.photo.PhotoImageData;
 /**
  * Observation sent when new images are added.
  */
-public class NewImageObservable extends BaseObservable<NewImageData> {
+public class NewImageObservable implements Observable<NewImageData> {
 
 	private static NewImageObservable instance=null;
 
