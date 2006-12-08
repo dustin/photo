@@ -15,10 +15,12 @@ public class PhotoMigration15 extends PhotoMigration {
 		super();
 	}
 
+	@Override
 	protected boolean checkMigration() throws Exception {
 		return(hasColumn("place", "place_id"));
 	}
 
+	@Override
 	protected void performMigration() throws Exception {
 		runSqlScript("net/spy/photo/migration/migration15.sql");
 	}
