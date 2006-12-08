@@ -69,6 +69,16 @@ public class PlaceFactory extends GenFactory<Place> {
 	}
 
 	/**
+	 * Create a new place.
+	 * 
+	 * @return the new place
+	 * @throws Exception if a place can't be created
+	 */
+	public MutablePlace create() throws Exception {
+		return new DBPlace();
+	}
+
+	/**
 	 * Persist the MutablePlace.
 	 * 
 	 * @param mp the mutable place

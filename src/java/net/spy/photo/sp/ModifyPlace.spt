@@ -1,19 +1,13 @@
 #
 # Copyright (c) 2006 Dustin Sallings <dustin@spy.net>
-# arch-tag: EC79C587-FD31-452F-95CD-324A60BE5454
+# arch-tag: A648BDA9-1C54-43E7-8FCA-CDD6D5051185
 #
 
 @package
 net.spy.photo.sp
 
-@implements
-ModifyPlace
-
 @description
-Add a new place.
-
-@sql
-insert into place (place_id, name, lon, lat) values(?, ?, ?, ?)
+Modify a place.
 
 @params
 place_id required INTEGER The ID of this new place

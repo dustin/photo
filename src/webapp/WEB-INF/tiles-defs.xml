@@ -137,6 +137,11 @@
 		<put name="body" value="/content/admin/_categories.jsp"/>
 	</definition>
 
+	<definition name="admin.placelist" extends="pageLayout">
+		<put name="title" type="string" value="Place Administration"/>
+		<put name="body" value="/content/admin/_listPlaces.jsp"/>
+	</definition>
+
 	<definition name="admin.editcat" extends="pageLayout">
 		<put name="title" type="string" value="Category Administration"/>
 		<put name="body" value="/content/admin/_editcat.jsp"/>

@@ -121,6 +121,11 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
+		<servlet-name>ajaxPlaceEdit</servlet-name>
+		<servlet-class>net.spy.photo.ajax.PlaceEditor</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
 		<servlet-name>ajaxcatlist</servlet-name>
 		<servlet-class>net.spy.photo.ajax.Categories</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -236,6 +241,10 @@
 	<servlet-mapping>
 		<servlet-name>ajaxphotoedit</servlet-name>
 		<url-pattern>/ajax/photo/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ajaxPlaceEdit</servlet-name>
+		<url-pattern>/ajax/place/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ajaxcatlist</servlet-name>

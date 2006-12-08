@@ -448,6 +448,13 @@
 		<forward name="next" path="/admin/bulkkw.do"/>
 	</action>
 
+	<action path="/admin/places"
+		roles="admin"
+		scope="request"
+		type="net.spy.photo.struts.ListPlacesAction">
+		<forward name="next" path="admin.placelist"/>
+	</action>
+
 	<!-- REPORTING -->
 
 	<action path="/report/userCat"
