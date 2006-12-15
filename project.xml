@@ -141,14 +141,14 @@ arch-tag: 2C07594D-D759-4449-BDF8-B8E0CA92B7A8
 		</dependency>
 		<dependency>
 			<groupId>spy</groupId>
-			<artifactId>maven-tla-plugin</artifactId>
+			<artifactId>maven-hg-plugin</artifactId>
 			<version>1.0</version>
 			<type>plugin</type>
 		</dependency>
 		<dependency>
 			<groupId>spy</groupId>
 			<artifactId>maven-spy-build-plugin</artifactId>
-			<version>1.8</version>
+			<version>1.10</version>
 			<type>plugin</type>
 		</dependency>
 
