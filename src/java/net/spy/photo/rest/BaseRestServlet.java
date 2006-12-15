@@ -1,5 +1,4 @@
 // Copyright (c) 2006  Dustin Sallings <dustin@spy.net>
-// arch-tag: 3E089944-2DBC-43C1-A51C-212462DE4DD0
 
 package net.spy.photo.rest;
 

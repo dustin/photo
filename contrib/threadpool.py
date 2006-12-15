@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 #
 # Copyright (c) 2002  Dustin Sallings <dustin@spy.net>
-# arch-tag: D8D189E2-5D6E-11D9-9776-000A957659CC
 
 import threading
 import exceptions

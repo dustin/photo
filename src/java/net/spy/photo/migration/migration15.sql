@@ -1,4 +1,3 @@
--- arch-tag: 195B4F41-049F-48F8-BD1E-85F5D6B01486
 -- Create the place table.
 create table place (
     place_id integer not null,

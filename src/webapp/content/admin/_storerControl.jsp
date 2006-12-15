@@ -128,5 +128,3 @@ var lastShownExceptionCount=-1;
 	onsubmit="storerControl('start'); return false;">
 	<div><input type="submit" value="Start"/></div>
 </form>
-
-<%-- arch-tag: 5493B3BE-F4CF-47BC-9B89-C4AE5A8E80FA --%>

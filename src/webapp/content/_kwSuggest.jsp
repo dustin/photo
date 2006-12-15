@@ -13,4 +13,3 @@
 			<fmt:param value="${k.count}"/></fmt:message>)</span></li>
 </c:forEach>
 </ul>
-<%-- arch-tag: 630C44EE-5CAE-4CEE-A091-77F329484F33 --%>

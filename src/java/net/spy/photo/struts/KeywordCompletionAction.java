@@ -1,4 +1,3 @@
-// arch-tag: 24B134D2-7821-42F9-9BAD-8B11DAEFDC84
 package net.spy.photo.struts;
 
 import java.util.ArrayList;

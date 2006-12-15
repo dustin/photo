@@ -1,4 +1,3 @@
--- arch-tag: 7EFF9D79-5D6D-11D9-A514-000A957659CC
 
 -- Creating the commentary table
 create table commentary (

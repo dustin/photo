@@ -1,4 +1,3 @@
-// arch-tag: DE6C47BD-1D7A-4594-B640-B70A14854117
 package net.spy.photo.ajax;
 
 import java.util.Collection;

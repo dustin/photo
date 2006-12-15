@@ -31,5 +31,3 @@
 
 		</logic:iterate>
 </ul>
-
-<%-- arch-tag: CBE44BFF-5D6F-11D9-BB67-000A957659CC --%>

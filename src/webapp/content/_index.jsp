@@ -112,4 +112,3 @@
 		</fmt:message>
 	</photo:metaInfo>
 </div>
-<%-- arch-tag: AE9DD2A8-5D6F-11D9-B583-000A957659CC --%>

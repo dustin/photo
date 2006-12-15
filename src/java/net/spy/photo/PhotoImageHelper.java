@@ -1,5 +1,4 @@
 // Copyright (c) 1999 Dustin Sallings
-// arch-tag: 196C8F31-5D6D-11D9-92C2-000A957659CC
 
 package net.spy.photo;
 

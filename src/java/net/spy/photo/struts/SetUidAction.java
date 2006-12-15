@@ -1,5 +1,4 @@
 // Copyright (c) 2004  2Wire, Inc.
-// arch-tag: D2264AC5-7808-11D9-87B0-000A957659CC
 
 package net.spy.photo.struts;
 

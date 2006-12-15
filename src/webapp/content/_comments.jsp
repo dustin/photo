@@ -62,5 +62,3 @@
 	</html:form>
 	</div>
 </c:if>
-
-<%-- arch-tag: AB06DECA-5D6F-11D9-AD6F-000A957659CC --%>

@@ -12,7 +12,6 @@
 // Jpeg Group's Jpeg 6a library, Copyright Thomas G. Lane.
 // See license.txt for details.
 //
-// arch-tag: E5B72F62-5D6C-11D9-B997-000A957659CC
 
 package net.spy.photo;
 

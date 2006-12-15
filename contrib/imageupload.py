@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-#
-# arch-tag: C504C8CD-5D6E-11D9-9483-000A957659CC
 
 from sys import argv
 import urllib

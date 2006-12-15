@@ -1,5 +1,3 @@
-// arch-tag: E0F65786-D0CF-4884-8C4C-516FC278F612
-
 function clearThing(el) {
 	while(el.hasChildNodes()) {
 		el.removeChild(el.firstChild);

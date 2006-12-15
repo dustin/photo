@@ -1,5 +1,4 @@
 #!/bin/sh
-# arch-tag: 290B2389-5D6F-11D9-B34E-000A957659CC
 
 JAVAHOME=/usr/java
 JAVABIN=${JAVAHOME}/bin

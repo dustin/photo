@@ -17,4 +17,3 @@
 			<c:out value="${k.kwmatch.keyword.keyword}"/></a>
 </c:forEach>
 </div>
-<%-- arch-tag: B3DBD981-E8D0-4DA5-8910-7A5744978858 --%>

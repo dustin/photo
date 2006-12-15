@@ -1,7 +1,5 @@
 -- Copyright (c) 1998  Dustin Sallings
 --
--- arch-tag: 1F2AF91E-5D6F-11D9-ABBC-000A957659CC
---
 -- Use this to bootstrap your SQL database to do cool shite with the
 -- photo album.
 

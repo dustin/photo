@@ -122,4 +122,3 @@
 	%>
 	<photo:link url='<%= theUrl %>'>Recent logins by this user</photo:link>
 </div>
-<%-- arch-tag: C890F4CC-5D6F-11D9-951D-000A957659CC --%>

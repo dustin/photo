@@ -1,5 +1,4 @@
 // Collection editor widget.
-// arch-tag: B30EAD50-4EBB-455F-80CD-CAD01F261756
 
 function setupAjaxCollectionEditor(el, url, grpUrl, groupName, extra) {
 

@@ -1,4 +1,3 @@
--- arch-tag: 82F10DD9-5D6D-11D9-8109-000A957659CC
 
 -- New table to define log types
 

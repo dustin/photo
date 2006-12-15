@@ -123,4 +123,3 @@ var baseurl='<c:url value="/ajax/validation/"/>';
 	onsubmit="validationControl('cancel'); return false;">
 	<div><input type="submit" value="Cancel"/></div>
 </form>
-<%-- arch-tag: 56FB87D7-0A6E-42D5-BE7A-C5281F7D0FB6 --%>

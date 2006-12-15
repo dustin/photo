@@ -56,4 +56,3 @@
 <% photo.close(); %>
 
 </table>
-<%-- arch-tag: A7FB4B3C-5D6F-11D9-8234-000A957659CC --%>

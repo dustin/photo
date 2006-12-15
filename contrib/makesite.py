@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# arch-tag: CEC73ED8-5D6E-11D9-BDA7-000A957659CC
 """
 Build a set of HTML files for all of the images dropped by
 net.spy.photo.tools.MakeStaticSite.

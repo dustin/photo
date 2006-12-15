@@ -57,4 +57,3 @@
 		<html:submit>Create Profile</html:submit>
 	</div>
 </html:form>
-<%-- arch-tag: C9245172-5D6F-11D9-A347-000A957659CC --%>

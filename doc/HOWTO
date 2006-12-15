@@ -235,4 +235,3 @@ ERRATA
 photo=> insert into wwwgroup values(3, 'admin');
 
 ----------------------------------------------------------------------
-# arch-tag: EA4A91DB-5D6E-11D9-8974-000A957659CC

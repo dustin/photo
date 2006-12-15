@@ -36,4 +36,3 @@
 		<html:submit>Save Properties</html:submit>
 	</div>
 </html:form>
-<%-- arch-tag: C9E35953-5D6F-11D9-BF9D-000A957659CC --%>

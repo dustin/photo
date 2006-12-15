@@ -1,4 +1,3 @@
-// arch-tag: 7E8AD7F0-8462-4D14-870F-6A953220232F
 
 package net.spy.photo.search;
 

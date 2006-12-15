@@ -113,5 +113,3 @@
 		</fieldset>
 	</form>
 </div>
-
-<%-- arch-tag: 3AE58A9B-C7A6-4712-8A84-115F8A57E58A --%>

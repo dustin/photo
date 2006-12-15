@@ -1,4 +1,3 @@
-// arch-tag: 9B7C63E8-8D4E-46B2-9D9B-2224BFD88ED3
 
 package net.spy.photo.ajax;
 

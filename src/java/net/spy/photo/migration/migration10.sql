@@ -1,4 +1,3 @@
--- arch-tag: 8B4EE58B-5D6D-11D9-BE92-000A957659CC
 
 -- Add the format table.
 create table format (

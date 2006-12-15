@@ -64,4 +64,3 @@
 <photo:link url="/changePwForm.do">Change Password</photo:link>
 
 </div>
-<%-- arch-tag: ABCEE67C-5D6F-11D9-A624-000A957659CC --%>

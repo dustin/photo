@@ -208,5 +208,3 @@ var url='<c:url value="/ajax/photo/annotation"/>';
 
 		</c:forEach>
 	</div>
-
-<%-- arch-tag: B457C4EC-800F-43F0-A299-4202692C1466 --%>

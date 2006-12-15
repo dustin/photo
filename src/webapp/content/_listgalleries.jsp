@@ -22,4 +22,3 @@
 		</li>
 	</c:forEach>
 </ul>
-<%-- arch-tag: B0678113-5D6F-11D9-B3F1-000A957659CC --%>

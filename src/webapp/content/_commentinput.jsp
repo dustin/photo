@@ -19,5 +19,3 @@
 	<br/>
 	<html:submit styleClass="reset">Add Comment</html:submit>
 </html:form>
-
-<%-- arch-tag: AA4702BC-5D6F-11D9-8719-000A957659CC --%>

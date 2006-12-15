@@ -1,5 +1,4 @@
 // Copyright (c) 1999  Dustin Sallings
-// arch-tag: 4A62330C-5D6D-11D9-AC80-000A957659CC
 
 // This class stores an entry from the wwwusers table.
 

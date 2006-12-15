@@ -1,5 +1,4 @@
 // Copyright (c) 2005  Dustin Sallings
-// arch-tag: 16A61333-5FB1-11D9-A0A7-000A957659CC
 
 // This class stores an entry from the wwwusers table.
 package net.spy.photo;

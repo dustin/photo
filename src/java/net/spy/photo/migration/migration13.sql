@@ -1,4 +1,3 @@
--- arch-tag: 169B945D-43BC-487C-8B37-FEFDAF2FF79A
 
 -- Regions
 

@@ -72,4 +72,3 @@
 		<html:submit>Save</html:submit>
 	</div>
 </html:form>
-<%-- arch-tag: C7F1ECA8-5D6F-11D9-826B-000A957659CC --%>

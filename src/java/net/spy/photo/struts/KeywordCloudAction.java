@@ -1,4 +1,3 @@
-// arch-tag: 6387A516-052C-4A11-BE8E-8232A0F18874
 package net.spy.photo.struts;
 
 import java.text.SimpleDateFormat;

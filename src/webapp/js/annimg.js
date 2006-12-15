@@ -1,6 +1,5 @@
 // I got this from the following URL:
 // http://www.kryogenix.org/code/browser/annimg/annimg.html
-// arch-tag: 6608DED9-0313-48FB-9E05-77CD90086D48
 
 var aI = {
 

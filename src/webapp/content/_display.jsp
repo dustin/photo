@@ -591,4 +591,3 @@
 	<img src="<c:url value='/images/star_full.gif'/>" alt="star" id="starfull"/>
 	<img src="<c:url value='/images/star_half.gif'/>" alt="star" id="starhalf"/>
 </div>
-<%-- arch-tag: AC919514-5D6F-11D9-ACF8-000A957659CC --%>

@@ -1,5 +1,4 @@
 // Copyright (c) 1999  Dustin Sallings
-// arch-tag: 4423AD32-5D6D-11D9-BFE1-000A957659CC
 
 package net.spy.photo.impl;
 

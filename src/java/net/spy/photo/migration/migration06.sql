@@ -1,4 +1,3 @@
--- arch-tag: 8448A125-5D6D-11D9-96F3-000A957659CC
 
 -- Galleries
 

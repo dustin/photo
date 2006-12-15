@@ -143,5 +143,3 @@
 	</html:form>
 	</div>
 </c:if>
-
-<%-- arch-tag: B2A859AA-5D6F-11D9-BEFD-000A957659CC --%>
