@@ -2,6 +2,8 @@
 
 package net.spy.photo;
 
+import java.util.Timer;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
@@ -10,6 +12,7 @@ import net.spy.db.TransactionPipeline;
 import net.spy.jwebkit.JWServletContextListener;
 import net.spy.photo.jms.ImageMessageConsumer;
 import net.spy.photo.jms.ImageMessagePoster;
+import net.spy.photo.mail.MailPoller;
 import net.spy.photo.observation.NewImageObservable;
 import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SavedSearch;
@@ -25,6 +28,7 @@ public class Persistent extends JWServletContextListener {
 	static TransactionPipeline pipeline = null;
 	static ImageServer imageServer=null;
 	static PhotoStorerThread storer=null;
+	static Timer timer=null;
 
 	private static String contextPath;
 
@@ -154,6 +158,10 @@ public class Persistent extends JWServletContextListener {
 		if(imc != null) {
 			imc.close();
 		}
+		if(timer != null) {
+			timer.cancel();
+			timer=null;
+		}
 	}
 
 
@@ -224,6 +232,16 @@ public class Persistent extends JWServletContextListener {
 			storer=new PhotoStorerThread();
 			storer.start();
 			getLogger().info("PhotoStorerThread initialization complete.");
+
+			getLogger().info("Initializing mail stuff");
+			PhotoConfig conf=PhotoConfig.getInstance();
+			String mailName=conf.get("mailJNDIName");
+			if(mailName != null) {
+				timer=new Timer();
+				timer.scheduleAtFixedRate(new MailPoller(mailName),
+						5000, 30000);
+			}
+			getLogger().info("Mail stuff initialization complete");
 
 			getLogger().info("Initialization complete");
 		}

@@ -103,9 +103,14 @@
 		<!-- /struts dependencies -->
 
 		<dependency>
+			<groupId>jaf</groupId>
+			<artifactId>activation</artifactId>
+			<jar>activation.jar</jar>
+		</dependency>
+		<dependency>
 			<groupId>javamail</groupId>
-			<artifactId>javamail</artifactId>
-			<jar>javamail.jar</jar>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
 		</dependency>
 
 		<dependency>
