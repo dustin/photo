@@ -245,7 +245,7 @@ public class MailPoller extends TimerTask {
 					break;
 				}
 				// Look for a category marker
-				int pos=s.indexOf("cat:");
+				int pos=s.toLowerCase().indexOf("cat:");
 				if(pos >= 0) {
 					catGuess=s.substring(pos+4).toLowerCase();
 				} else {
