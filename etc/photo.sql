@@ -465,6 +465,7 @@ insert into properties(name, value) values('photo_of_uot', '1');
 insert into properties(name, value) values('background_img', '');
 insert into properties(name, value) values('album_name', 'My Photo Album');
 insert into properties(name, value) values('idxkeywords', '');
+insert into properties(name, value) values('defaultmailcat', '');
 
 -- Bidirectional map of related photos
 create table photo_variations (

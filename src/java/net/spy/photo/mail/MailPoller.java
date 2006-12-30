@@ -27,6 +27,7 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoProperties;
 import net.spy.photo.User;
 import net.spy.photo.UserFactory;
 import net.spy.photo.impl.SavablePhotoImageData;
@@ -194,12 +195,14 @@ public class MailPoller extends TimerTask {
     private static class MailImage extends SpyObject {
     	private String keywords=null;
     	private String info=null;
-    	private String catGuess="";
+    	private String catGuess=null;
     	private byte[] bytes=null;
 
-    	public MailImage(String kw) {
+    	public MailImage(String kw) throws Exception {
     		super();
     		keywords=kw.trim();
+    		catGuess=PhotoProperties.getInstance().getProperty(
+    				"defaultmailcat", "");
     	}
 
     	/**
