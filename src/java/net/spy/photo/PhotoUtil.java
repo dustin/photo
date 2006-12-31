@@ -43,6 +43,11 @@ public class PhotoUtil extends Object {
 		sdf.setLenient(false);
 		rv.add(sdf);
 
+		// exif format
+		sdf=new SimpleDateFormat("yyyy:MM:dd");
+		sdf.setLenient(false);
+		rv.add(sdf);
+
 		return(rv);
 	}
 

@@ -520,7 +520,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		variants.remove(v);
 	}
 
-	public Map<String, Object> getMetaData() {
+	public Map<String, String> getMetaData() {
 		return(Collections.emptyMap());
 	}
 

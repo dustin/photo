@@ -16,6 +16,7 @@ public class PhotoUtilTest extends TestCase {
 		assertEquals(d, PhotoUtil.parseDate("2005/10/5"));
 		assertEquals(d, PhotoUtil.parseDate("10/5/2005"));
 		assertEquals(d, PhotoUtil.parseDate("10-5-2005"));
+		assertEquals(d, PhotoUtil.parseDate("2005:10:05 15:27:15"));
 
 		// Bad parses should return null
 		assertNull(PhotoUtil.parseDate("05/10/05"));

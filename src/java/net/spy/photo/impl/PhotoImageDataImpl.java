@@ -2,7 +2,6 @@
 
 package net.spy.photo.impl;
 
-import java.io.ByteArrayInputStream;
 import java.io.InvalidObjectException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
@@ -10,9 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import net.spy.SpyObject;
@@ -31,11 +28,7 @@ import net.spy.photo.PlaceFactory;
 import net.spy.photo.User;
 import net.spy.photo.Vote;
 import net.spy.photo.Votes;
-
-import com.drew.imaging.jpeg.JpegMetadataReader;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
+import net.spy.photo.util.MetaDataExtractor;
 
 /**
  * This class represents, and retreives all useful data for a given image.
@@ -52,7 +45,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	private int catId=-1;
 	private int size=-1;
 	private int placeId=0;
-	Map<String, Object> metaData=null;
+	Map<String, String> metaData=null;
 
 	// Dimensions of the full size image.
 	private PhotoDimensions dimensions=null;
@@ -324,27 +317,15 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 * @return the MetaData, or null if MetaData can't be found for this image
 	 * @throws Exception if there's a problem processing this image
 	 */
-	public Map<String, Object> getMetaData() throws Exception {
+	public Map<String, String> getMetaData() throws Exception {
 		// Memoize the meta data
 		if(metaData==null) {
 			metaData=Collections.emptyMap();
 			if(format == Format.JPEG) {
-				metaData=new TreeMap<String, Object>();
 				PhotoImageHelper p=new PhotoImageHelper(getId());
 				PhotoImage image=p.getImage();
-				ByteArrayInputStream bis=new ByteArrayInputStream(image.getData());
-				Metadata md=JpegMetadataReader.readMetadata(bis);
-				for(Iterator<?> i=md.getDirectoryIterator(); i.hasNext();) {
-					Directory d=(Directory)i.next();
-					for(Iterator<?> ti=d.getTagIterator(); ti.hasNext();) {
-						Tag t=(Tag)ti.next();
-						Object o=metaData.put(t.getTagName(), t.getDescription());
-						if(o != null) {
-							getLogger().warn("Duplicate tag on " + getId()
-									+ ":  " + t.getTagName() + " -> " + o);
-						}
-					}
-				}
+				metaData=MetaDataExtractor.getInstance().getMetaData(
+						image.getData());
 			}
 		}
 		return(metaData);
