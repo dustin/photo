@@ -15,6 +15,7 @@ import javax.naming.InitialContext;
  */
 public class Mailer extends Object {
 
+	private String mailConfig=null;
 	private String recipient=null;
 	private String subject=null;
 	private String body=null;
@@ -22,8 +23,13 @@ public class Mailer extends Object {
 	/**
 	 * Get an instance of Mailer.
 	 */
-	public Mailer() {
+	public Mailer(String conf) {
 		super();
+		mailConfig=conf;
+	}
+
+	public Mailer() {
+		this("java:Mail");
 	}
 
 	/**
@@ -54,7 +60,7 @@ public class Mailer extends Object {
 		Address addrs[]=new InternetAddress[1];
 		addrs[0]=new InternetAddress(recipient);
 
-		Session session=(Session)new InitialContext().lookup("java:Mail");
+		Session session=(Session)new InitialContext().lookup(mailConfig);
 		Message msg=new MimeMessage(session);
 		msg.setRecipients(Message.RecipientType.TO, addrs);
 		msg.setSubject(subject);
