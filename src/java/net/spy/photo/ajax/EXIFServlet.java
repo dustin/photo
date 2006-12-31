@@ -1,9 +1,6 @@
 
 package net.spy.photo.ajax;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import javax.servlet.http.HttpServletRequest;
 
 import net.spy.photo.Persistent;
@@ -31,9 +28,6 @@ public class EXIFServlet extends PhotoAjaxServlet {
 		// Get the image to get the EXIF data to display
 		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
 		PhotoImageData img=pidf.getObject(id);
-		Map<String, String> metaData=img.getMetaData();
-		return new MapElement("exif", "tag",
-			// XXX:  xmlkit update will prevent this construct
-			new TreeMap<String, Object>(metaData));
+		return new MapElement("exif", "tag", img.getMetaData());
 	}
 }
