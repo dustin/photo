@@ -24,6 +24,7 @@ import net.spy.log.LoggerFactory;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.Mailer;
+import net.spy.photo.NoSuchPhotoUserException;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
@@ -95,29 +96,27 @@ public class MailPoller extends TimerTask {
 	private void processMessage(Message m) throws Exception {
 		Address fromAddr = m.getFrom()[0];
 		assert fromAddr instanceof InternetAddress;
-		User u = UserFactory.getInstance().getUser(
-				((InternetAddress) fromAddr).getAddress());
 
 		String subj = m.getSubject();
 		String type = m.getContentType();
 		logger.info("Processing mail from %s, subject: %s, type: %s",
 				fromAddr, subj, type);
 		try {
-			if (u == null) {
-				logger.warn("Couldn't find a user from %s for subj %s",
-						fromAddr, subj);
-				reportUnknownSender(fromAddr, m);
+			User u = UserFactory.getInstance().getUser(
+					((InternetAddress) fromAddr).getAddress());
+			if (type.startsWith("multipart/")) {
+				MailImage img = new MailImage(subj);
+				processMultipart("", (MimeMultipart) m.getContent(), img);
+				storeImage(u, img);
 			} else {
-				if (type.startsWith("multipart/")) {
-					MailImage img = new MailImage(subj);
-					processMultipart("", (MimeMultipart) m.getContent(), img);
-					storeImage(u, img);
-				} else {
-					logger.info("%s/%s contained nothing interesting",
-							fromAddr, subj);
-					reportBoring(u, m);
-				}
+				logger.info("%s/%s contained nothing interesting",
+						fromAddr, subj);
+				reportBoring(u, m);
 			}
+		} catch(NoSuchPhotoUserException e) {
+			logger.warn("Couldn't find a user from %s for subj %s",
+					fromAddr, subj);
+			reportUnknownSender(fromAddr, m);
 		} finally {
 			m.setFlag(Flag.DELETED, true);
 		}
