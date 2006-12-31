@@ -23,11 +23,14 @@ public class PhotoServlet extends JWHttpServlet {
 
 	// Do the work.
 	@Override
-	protected void doGetOrPost(HttpServletRequest req,
+	protected void doGet(HttpServletRequest req,
 		HttpServletResponse res) throws ServletException, IOException {
 
 		String size=null;
 		long start=System.currentTimeMillis();
+
+		// Setup cache
+		res.addHeader("Cache-Control", "private, max-age=86400");
 
 		// Get the sessionData
 		HttpSession ses=req.getSession(false);
@@ -114,5 +117,11 @@ public class PhotoServlet extends JWHttpServlet {
 		// Log it
 		Persistent.getPipeline().addTransaction(new PhotoLogImageEntry(
 			u.getId(), imgId, pdim, req), PhotoConfig.getInstance());
+	}
+
+	@Override
+	protected void doGetOrPost(HttpServletRequest req, HttpServletResponse res)
+		throws ServletException, IOException {
+		throw new ServletException("POST not supported.");
 	}
 }
