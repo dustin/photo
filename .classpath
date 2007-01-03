@@ -20,6 +20,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/jwebkit-2.2.40.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/authkit-2.2.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/xmlkit-2.2.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/s3lib-1.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/spyxmlrpc-2.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/drewnoakes/jars/metadata-extractor-2.3.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xmlrpc/jars/xmlrpc-2.0.jar"/>
