@@ -89,7 +89,7 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 		String marker=null;
 		while(hasMore) {
 			// Keep it from fetching out of control.
-			assert numFetches < 50 : "Too many fetches in a loop";
+			assert numFetches < 1000 : "Too many fetches in a loop";
 			getLogger().info("Fetching(%d) from ``%s''", ++numFetches, marker);
 			ListBucketResponse lbr=conn.listBucket(bucket,
 					prefix, marker, null, "/", null);
