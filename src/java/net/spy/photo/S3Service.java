@@ -123,8 +123,8 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 		if(dim == null) {
 			key=id + "." + fmt.getExtension();
 		} else {
-			key=dim.getWidth() + "x" + dim.getHeight() + DELIM
-			+ id + "." + fmt.getExtension();
+			key=dim.getWidth() + "x" + dim.getHeight() + "/"
+				+ id + "." + fmt.getExtension();
 		}
 		return key;
 	}
