@@ -3,7 +3,6 @@
 package net.spy.photo;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
@@ -262,19 +261,6 @@ public class Persistent extends JWServletContextListener {
 			if(mailName != null) {
 				timer.scheduleAtFixedRate(new MailPoller(mailName),
 						5000, 30000);
-			}
-			if(S3Service.getInstance().isFunctional()) {
-				timer.schedule(new TimerTask(){
-					@Override
-					public void run() {
-						try {
-							S3Service.getInstance().sync();
-						} catch (Exception e) {
-							getLogger().warn("Problem synchronizing", e);
-						}
-					}}, 6000);
-			} else {
-				getLogger().info("S3Service is not functional.");
 			}
 			getLogger().info("Mail stuff initialization complete");
 
