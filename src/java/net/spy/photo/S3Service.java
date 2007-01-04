@@ -14,6 +14,7 @@ import net.spy.photo.observation.NewImageData;
 import net.spy.photo.observation.Observation;
 import net.spy.photo.observation.Observer;
 import net.spy.s3.AWSAuthConnection;
+import net.spy.s3.CommonPrefixEntry;
 import net.spy.s3.ListBucketResponse;
 import net.spy.s3.ListEntry;
 import net.spy.s3.QueryStringAuthGenerator;
@@ -35,6 +36,9 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 	private boolean functional=false;
 
 	private QueryStringAuthGenerator qsag;
+
+	// Safety net for fetches
+	private int numFetches=0;
 
 	/**
 	 * Get the singleton S3Service.
@@ -74,25 +78,35 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 		bucket=PhotoConfig.getInstance().get("S3Bucket");
 		assert bucket != null;
 		entries=new ConcurrentHashMap<String, Integer>();
+		recursiveFetch(null);
+		getLogger().info("Total:  %d", entries.size());
+		functional=true;
+	}
 
+	public void recursiveFetch(String prefix) throws Exception {
+		getLogger().info("Fetching with prefix ``%s''", prefix);
 		boolean hasMore=true;
-		String prefix=null;
-		int numFetches=0;
+		String marker=null;
 		while(hasMore) {
 			// Keep it from fetching out of control.
-			assert numFetches < 100 : "Too many fetches in a loop";
-			getLogger().info("Fetching(%d) from %s", ++numFetches, prefix);
+			assert numFetches < 50 : "Too many fetches in a loop";
+			getLogger().info("Fetching(%d) from ``%s''", ++numFetches, marker);
 			ListBucketResponse lbr=conn.listBucket(bucket,
-					null, prefix, null, null);
-			getLogger().info("Got %d entries", lbr.entries.size());
+					prefix, marker, null, "/", null);
+			getLogger().info("Got %d entries with %d prefixes",
+					lbr.entries.size(), lbr.commonPrefixEntries.size());
+			for(CommonPrefixEntry cpe : lbr.commonPrefixEntries) {
+				recursiveFetch(cpe.prefix);
+			}
 			hasMore=lbr.isTruncated;
+			marker=lbr.nextMarker;
+			if(lbr.isTruncated) {
+				assert lbr.nextMarker != null;
+			}
 			for(ListEntry le : lbr.entries) {
 				entries.put(le.key, (int)le.size);
 			}
 		}
-		getLogger().info("Total:  %d entries:  %s",
-				entries.size(), entries.keySet());
-		functional=true;
 	}
 
 	public void observe(Observation<NewImageData> observation) {
