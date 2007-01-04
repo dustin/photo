@@ -103,7 +103,6 @@ public class UserFactory extends GenFactory<User> {
 			ResultSet rs=db.executeQuery();
 			while(rs.next()) {
 				User pu=new DBUser(rs);
-				((DBUser)pu).addRole(User.AUTHENTICATED);
 
 				// Add it to the list so we can initialize the ACLs.
 				users.put(pu.getName(), pu);

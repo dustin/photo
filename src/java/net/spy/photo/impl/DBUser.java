@@ -69,6 +69,7 @@ public class DBUser extends AbstractSavable
 		setRealname(rs.getString("realname"));
 		canAdd(rs.getBoolean("canadd"));
 		setPersess(rs.getString("persess"));
+		addRole(AUTHENTICATED);
 
 		setNew(false);
 		setModified(false);
