@@ -3,7 +3,9 @@
 package net.spy.photo;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
@@ -126,6 +128,14 @@ public class Persistent extends JWServletContextListener {
 		return contextPath;
 	}
 
+	/**
+	 * Get the timer for scheduling stuff.
+	 */
+	public static Timer getTimer() {
+		assert timer != null;
+		return timer;
+	}
+
 	@Override
 	public void ctxDestroy(ServletContextEvent contextEvent) throws Exception {
 		if(pipeline != null) {
@@ -162,6 +172,7 @@ public class Persistent extends JWServletContextListener {
 			timer.cancel();
 			timer=null;
 		}
+		S3Service.shutdown();
 	}
 
 
@@ -233,13 +244,37 @@ public class Persistent extends JWServletContextListener {
 			storer.start();
 			getLogger().info("PhotoStorerThread initialization complete.");
 
+
+			getLogger().info("Initializing S3Service");
+			try {
+				S3Service s3s=S3Service.getInstance();
+				s3s.init();
+				NewImageObservable.getInstance().addObserver(s3s);
+			} catch(NamingException e) {
+				getLogger().info("Couldn't initialize S3 stuff", e);
+			}
+			getLogger().info("S3Service initialization complete");
+
 			getLogger().info("Initializing mail stuff");
 			PhotoConfig conf=PhotoConfig.getInstance();
 			String mailName=conf.get("mailJNDIName");
+			timer=new Timer();
 			if(mailName != null) {
-				timer=new Timer();
 				timer.scheduleAtFixedRate(new MailPoller(mailName),
 						5000, 30000);
+			}
+			if(S3Service.getInstance().isFunctional()) {
+				timer.schedule(new TimerTask(){
+					@Override
+					public void run() {
+						try {
+							S3Service.getInstance().sync();
+						} catch (Exception e) {
+							getLogger().warn("Problem synchronizing", e);
+						}
+					}}, 6000);
+			} else {
+				getLogger().info("S3Service is not functional.");
 			}
 			getLogger().info("Mail stuff initialization complete");
 

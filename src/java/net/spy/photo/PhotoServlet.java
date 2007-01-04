@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.spy.SpyObject;
 import net.spy.jwebkit.JWHttpServlet;
+import net.spy.photo.impl.BasePhotoServletFilter;
 import net.spy.photo.impl.PhotoDimensionsImpl;
-import net.spy.photo.log.PhotoLogImageEntry;
+import net.spy.photo.impl.S3PhotoServletFilter;
 import net.spy.stat.Stats;
 import net.spy.util.CloseUtil;
 
@@ -102,7 +102,7 @@ public class PhotoServlet extends JWHttpServlet {
 	private PhotoServletChain buildChain() {
 		Collection<PhotoServletFilter> filters=
 			new ArrayList<PhotoServletFilter>();
-		// XXX:  Add cool mechanism to farm out links or something.
+		filters.add(new S3PhotoServletFilter());
 		filters.add(new ImgWriter());
 		return new PhotoServletChain(filters);
 	}
@@ -113,7 +113,7 @@ public class PhotoServlet extends JWHttpServlet {
 		throw new ServletException("POST not supported.");
 	}
 
-	static class ImgWriter extends SpyObject implements PhotoServletFilter {
+	static class ImgWriter extends BasePhotoServletFilter {
 
 		public void doFilter(PhotoImageData pid, User u, PhotoDimensions dims,
 				HttpServletRequest req, HttpServletResponse res,
@@ -136,10 +136,7 @@ public class PhotoServlet extends JWHttpServlet {
 				CloseUtil.close(os);
 			}
 
-			// Log it
-			Persistent.getPipeline().addTransaction(
-					new PhotoLogImageEntry(u.getId(), imgId, dims, req),
-					PhotoConfig.getInstance());
+			logAccess(u, imgId, dims, req);
 
 			chain.doChain(pid, u, dims, req, res);
 		}
