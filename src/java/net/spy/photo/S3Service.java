@@ -26,6 +26,8 @@ import net.spy.s3.S3Object;
  */
 public class S3Service extends SpyObject implements Observer<NewImageData> {
 
+	private static final String DELIM = "^";
+
 	private static S3Service instance=null;
 
 	private String s3id=null;
@@ -92,7 +94,7 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 			assert numFetches < 1000 : "Too many fetches in a loop";
 			getLogger().info("Fetching(%d) from ``%s''", ++numFetches, marker);
 			ListBucketResponse lbr=conn.listBucket(bucket,
-					prefix, marker, null, "/", null);
+					prefix, marker, null, DELIM, null);
 			getLogger().info("Got %d entries with %d prefixes",
 					lbr.entries.size(), lbr.commonPrefixEntries.size());
 			for(CommonPrefixEntry cpe : lbr.commonPrefixEntries) {
@@ -121,7 +123,7 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 		if(dim == null) {
 			key=id + "." + fmt.getExtension();
 		} else {
-			key=dim.getWidth() + "x" + dim.getHeight() + "/"
+			key=dim.getWidth() + "x" + dim.getHeight() + DELIM
 			+ id + "." + fmt.getExtension();
 		}
 		return key;
