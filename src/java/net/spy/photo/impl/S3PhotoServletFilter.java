@@ -20,7 +20,6 @@ public class S3PhotoServletFilter extends BasePhotoServletFilter {
 			PhotoServletChain chain) throws Exception {
 
 		boolean local=req.getRemoteAddr().startsWith("192.168.");
-		local=false;
 
 		final S3Service s3s=S3Service.getInstance();
 		if(!local && s3s.contains(pid.getId(), dims, pid.getFormat())) {
