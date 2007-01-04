@@ -15,8 +15,10 @@ public class S3PhotoServletFilter extends BasePhotoServletFilter {
 			HttpServletRequest req, HttpServletResponse res,
 			PhotoServletChain chain) throws Exception {
 
+		boolean local=req.getRemoteAddr().startsWith("192.168.");
+
 		S3Service s3s=S3Service.getInstance();
-		if(s3s.contains(pid.getId(), dims, pid.getFormat())) {
+		if(!local && s3s.contains(pid.getId(), dims, pid.getFormat())) {
 			String url=s3s.makeURL(pid.getId(), dims, pid.getFormat());
 			getLogger().debug("Redirecting to %s", url);
 			res.sendRedirect(url);
