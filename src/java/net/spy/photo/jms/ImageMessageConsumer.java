@@ -22,7 +22,6 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImage;
-import net.spy.photo.S3Service;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.stat.Stats;
 
@@ -82,9 +81,9 @@ public class ImageMessageConsumer extends SpyObject
 		ImageServer is=Persistent.getImageServer();
 		is.getThumbnail(id);
 		for(PhotoDimensions dim : sizes) {
-			getLogger().info("Caching %d at %s", id, dim);
 			PhotoImage img=is.getImage(id, dim);
-			S3Service.getInstance().storeImage(id, img, dim);
+			getLogger().info("Cached %d at %s with %d bytes",
+					id, dim, img.getData().length);
 		}
 		Stats.getComputingStat(
 				"precache." + pi.getWidth() + "x" + pi.getHeight())
