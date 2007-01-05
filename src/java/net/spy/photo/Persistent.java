@@ -2,7 +2,10 @@
 
 package net.spy.photo;
 
-import java.util.Timer;
+import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
@@ -29,7 +32,7 @@ public class Persistent extends JWServletContextListener {
 	static TransactionPipeline pipeline = null;
 	static ImageServer imageServer=null;
 	static PhotoStorerThread storer=null;
-	static Timer timer=null;
+	static ScheduledExecutorService executor=null;
 
 	private static String contextPath;
 
@@ -130,9 +133,9 @@ public class Persistent extends JWServletContextListener {
 	/**
 	 * Get the timer for scheduling stuff.
 	 */
-	public static Timer getTimer() {
-		assert timer != null;
-		return timer;
+	public static ScheduledExecutorService getExecutor() {
+		assert executor != null;
+		return executor;
 	}
 
 	@Override
@@ -167,9 +170,12 @@ public class Persistent extends JWServletContextListener {
 		if(imc != null) {
 			imc.close();
 		}
-		if(timer != null) {
-			timer.cancel();
-			timer=null;
+		if(executor != null) {
+			List<Runnable> notrunning=executor.shutdownNow();
+			if(notrunning.size() > 0) {
+				getLogger().warn("Not running these tasks:  %s", notrunning);
+			}
+			executor=null;
 		}
 		S3Service.shutdown();
 	}
@@ -257,10 +263,10 @@ public class Persistent extends JWServletContextListener {
 			getLogger().info("Initializing mail stuff");
 			PhotoConfig conf=PhotoConfig.getInstance();
 			String mailName=conf.get("mailJNDIName");
-			timer=new Timer();
+			executor=new ScheduledThreadPoolExecutor(1);
 			if(mailName != null) {
-				timer.scheduleAtFixedRate(new MailPoller(mailName),
-						5000, 30000);
+				executor.scheduleWithFixedDelay(new MailPoller(mailName),
+						5, 30, TimeUnit.SECONDS);
 			}
 			getLogger().info("Mail stuff initialization complete");
 

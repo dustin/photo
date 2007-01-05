@@ -1,6 +1,6 @@
 package net.spy.photo.impl;
 
-import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,16 +28,15 @@ public class S3PhotoServletFilter extends BasePhotoServletFilter {
 			res.sendRedirect(url);
 		} else {
 			if(!local && dims != null && s3s.isFunctional()) {
-				Persistent.getTimer().schedule(new TimerTask(){
-					@Override
+				Persistent.getExecutor().schedule(new Runnable() {
 					public void run() {
 						try {
 							s3s.send(pid, dims);
 						} catch(Exception e) {
 							getLogger().warn("Problem sending missing image",
 									e);
-						}
-					}}, 5000);
+						}}},
+						5, TimeUnit.SECONDS);
 			}
 			chain.doChain(pid, u, dims, req, res);
 		}

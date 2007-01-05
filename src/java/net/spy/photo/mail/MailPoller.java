@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
-import java.util.TimerTask;
 
 import javax.mail.Address;
 import javax.mail.Folder;
@@ -20,8 +19,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import net.spy.SpyObject;
-import net.spy.log.Logger;
-import net.spy.log.LoggerFactory;
 import net.spy.photo.Category;
 import net.spy.photo.CategoryFactory;
 import net.spy.photo.Mailer;
@@ -46,11 +43,9 @@ import net.spy.util.SpyUtil;
  * The mail poller is used to periodically check the incoming mail for images
  * that may be arriving.
  */
-public class MailPoller extends TimerTask {
+public class MailPoller extends SpyObject implements Runnable {
 
 	private String jndiName = null;
-
-	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * Construct a mail poller with the given JNDI name pointing to a mail
@@ -66,17 +61,16 @@ public class MailPoller extends TimerTask {
 		assert session != null : "Retrieved null mail session from " + jndiName;
 	}
 
-	@Override
 	public void run() {
 		try {
 			poll();
 		} catch (Exception e) {
-			logger.warn("Polling error", e);
+			getLogger().warn("Polling error", e);
 		}
 	}
 
 	private void poll() throws Exception {
-		logger.debug("Polling for for mail");
+		getLogger().debug("Polling for for mail");
 		Session session = (Session) new InitialContext().lookup(jndiName);
 		Store store = session.getStore();
 		assert store != null : "Didn't get sesion store";
@@ -102,7 +96,7 @@ public class MailPoller extends TimerTask {
 
 		String subj = m.getSubject();
 		String type = m.getContentType();
-		logger.info("Processing mail from %s, subject: %s, type: %s",
+		getLogger().info("Processing mail from %s, subject: %s, type: %s",
 				fromAddr, subj, type);
 		try {
 			User u = UserFactory.getInstance().getUser(
@@ -112,12 +106,12 @@ public class MailPoller extends TimerTask {
 				processMultipart("", (MimeMultipart) m.getContent(), img);
 				storeImage(u, img);
 			} else {
-				logger.info("%s/%s contained nothing interesting",
+				getLogger().info("%s/%s contained nothing interesting",
 						fromAddr, subj);
 				reportBoring(u, m);
 			}
 		} catch(NoSuchPhotoUserException e) {
-			logger.warn("Couldn't find a user from %s for subj %s",
+			getLogger().warn("Couldn't find a user from %s for subj %s",
 					fromAddr, subj);
 			reportUnknownSender(fromAddr, m);
 		} finally {
@@ -192,24 +186,24 @@ public class MailPoller extends TimerTask {
 	private void processMultipart(String base, MimeMultipart parts,
 			MailImage img) throws Exception {
 
-		logger.debug("Mime body type:  %s", parts.getContentType());
+		getLogger().debug("Mime body type:  %s", parts.getContentType());
 
 		for (int i = 0; i < parts.getCount(); i++) {
 
 			String partString = (base.length() == 0 ? "" : ".");
 			MimeBodyPart bp = (MimeBodyPart) parts.getBodyPart(i);
-			logger.debug(" part %s%s%d:  %s", base, partString, i, bp
+			getLogger().debug(" part %s%s%d:  %s", base, partString, i, bp
 					.getContentType());
 
 			if (bp.getContentType().toLowerCase().startsWith("multipart/")) {
-				logger.debug("Multipart:  %s", bp);
+				getLogger().debug("Multipart:  %s", bp);
 				processMultipart(base + partString + i, (MimeMultipart) bp
 						.getContent(), img);
 
 			} else {
 
 				String type = bp.getContentType().toLowerCase();
-				logger.info("Processing type: %s", type);
+				getLogger().info("Processing type: %s", type);
 				if (type.startsWith("text/plain")) {
 					InputStream is = bp.getInputStream();
 					try {
@@ -226,7 +220,7 @@ public class MailPoller extends TimerTask {
 						CloseUtil.close(is);
 					}
 				} else {
-					logger.info("Not handling mime part %s%s%d:  ", base,
+					getLogger().info("Not handling mime part %s%s%d:  ", base,
 							partString, i, type);
 				}
 			} // Not a multipart type
