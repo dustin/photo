@@ -83,17 +83,16 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		long start=System.currentTimeMillis();
 		if(ob instanceof PhotoImageData) {
 			cacheInstance((PhotoImageData)ob);
-			SearchIndex.update(getObjects());
 		} else if(ob instanceof CollectionSavable) {
 			// XXX: Horrible abstraction leak.
 			CollectionSavable cs=(CollectionSavable)ob;
 			for(Savable pid : cs.getPostSavables(null)) {
-				getCache().cacheInstance((PhotoImageData)pid);
+				cacheInstance((PhotoImageData)pid);
 			}
-			SearchIndex.update(getObjects());
 		} else {
 			assert false : "Unexpected savable type: " + ob.getClass();
 		}
+		SearchIndex.update(getObjects());
 		getLogger().info("Updated in place and recached in %dms",
 				System.currentTimeMillis() - start);
 		if(recache) {
