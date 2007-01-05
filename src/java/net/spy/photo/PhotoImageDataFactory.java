@@ -68,8 +68,6 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		Collection<PhotoImageData> images=source.getImages();
 		getLogger().info("Loaded " + images.size() + " images from "
 			+ source.getClass().getName());
-		// Update the index cache
-		SearchIndex.update(images);
 		return(images);
 	}
 
