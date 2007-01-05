@@ -67,7 +67,7 @@ public class DBUser extends AbstractSavable
 		setPassword(rs.getString("password"));
 		setEmail(rs.getString("email"));
 		setRealname(rs.getString("realname"));
-		canAdd(rs.getBoolean("canadd"));
+		setCanAdd(rs.getBoolean("canadd"));
 		setPersess(rs.getString("persess"));
 		addRole(AUTHENTICATED);
 
@@ -204,20 +204,16 @@ public class DBUser extends AbstractSavable
 		return(acl.canView(cat));
 	}
 
-	public void canAdd(boolean to) {
+	/* (non-Javadoc)
+	 * @see net.spy.photo.MutableUser#setCanAdd(boolean)
+	 */
+	public void setCanAdd(boolean to) {
 		this.canadd=to;
 		if(canadd) {
 			addRole(User.CANADD);
 		} else {
 			removeRole(User.CANADD);
 		}
-	}
-
-	/**
-	 * Set the user's addability.
-	 */
-	public void setCanAdd(boolean to) {
-		this.canadd=to;
 	}
 
 	/**
