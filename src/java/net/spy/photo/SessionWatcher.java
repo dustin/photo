@@ -124,7 +124,7 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 						"Found a session without a photoSession");
 				}
 			} catch(IllegalStateException e) {
-				getStaticLogger().warn("Found invalid session", e);
+				getStaticLogger().debug("Found invalid session", e);
 				SessionStorage.getInstance().removeSession(session);
 			}
 		}
