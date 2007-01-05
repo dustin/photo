@@ -101,6 +101,19 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		}
 	}
 
+	@Override
+	public void recache() {
+		// When recaching, also update the search index.
+		long start1=System.currentTimeMillis();
+		super.recache();
+		long start2=System.currentTimeMillis();
+		SearchIndex.update(getObjects());
+		long end=System.currentTimeMillis();
+		getLogger().info(
+				"Recache completed in %dms plus %dms more for indexing",
+				start2-start1, end-start2);
+	}
+
 	/** 
 	 * Store a savable and recache the instances.
 	 */
