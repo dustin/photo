@@ -142,6 +142,11 @@ public class UserFactory extends GenFactory<User> {
 			CloseUtil.close(db2);
 		}
 
+		// Clear all the mod states.
+		for(User u : users.values()) {
+			((DBUser)u).resetModifiedState();
+		}
+
 		return(users.values());
 	}
 

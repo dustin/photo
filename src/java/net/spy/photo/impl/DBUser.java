@@ -71,6 +71,13 @@ public class DBUser extends AbstractSavable
 		setPersess(rs.getString("persess"));
 		addRole(AUTHENTICATED);
 
+		resetModifiedState();
+	}
+
+	/**
+	 * Reset the modified state after going through initialization.
+	 */
+	public void resetModifiedState() {
 		setNew(false);
 		setModified(false);
 	}
