@@ -3,6 +3,9 @@
 package net.spy.photo;
 
 import java.io.Serializable;
+import java.security.MessageDigest;
+
+import net.spy.util.SpyUtil;
 
 /**
  * Represents the image itself, yo.
@@ -302,6 +305,15 @@ public class PhotoImage extends Object
 				i+=length;
 			}
 		} // while loop
+	}
+
+	/**
+	 * Compute the md5 of this image.
+	 */
+	public String computeMd5() throws Exception {
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		md.update(imageData);
+		return SpyUtil.byteAToHexString(md.digest());
 	}
 
 	// END JPEG SUPPORT

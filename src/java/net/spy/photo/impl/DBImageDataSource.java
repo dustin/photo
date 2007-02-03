@@ -194,6 +194,7 @@ public class DBImageDataSource extends SpyObject
 			setCatName(rs.getString("catname"));
 			setTimestamp(rs.getTimestamp("ts"));
 			setTaken(rs.getDate("taken"));
+			setMd5(rs.getString("md5"));
 			int p=rs.getInt("place_id");
 			if(!rs.wasNull()) {
 				setPlace(PlaceFactory.getInstance().getObject(p));

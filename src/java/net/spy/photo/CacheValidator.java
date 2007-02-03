@@ -14,6 +14,7 @@ import net.spy.SpyObject;
 import net.spy.SpyThread;
 import net.spy.photo.impl.ImageServerImpl;
 import net.spy.photo.impl.PhotoDimensionsImpl;
+import net.spy.photo.impl.SavablePhotoImageData;
 import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SearchResults;
 import net.spy.photo.struts.SearchForm;
@@ -69,6 +70,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 	public void process(User user) {
 		Collection<Operation> ops=new ArrayList<Operation>();
 		ops.add(new ValidateCacheAndDB());
+		ops.add(new ValidateMD5s());
 		ops.add(new RecacheThumbnailsAndSizes());
 		process(ops, user);
 	}
@@ -248,6 +250,27 @@ public class CacheValidator extends SpyObject implements SAXAble {
 						+ " because server is not ImageServerImpl");
 			}
 		}
+	}
+
+	public static class ValidateMD5s extends SpyObject implements Operation {
+
+		public void process(PhotoImageData img, Collection<String> errs)
+			throws Exception {
+			PhotoImage pi=Persistent.getImageServer().getImage(
+					img.getId(), null);
+			String storedMd5=img.getMd5();
+			if(storedMd5 == null) {
+				SavablePhotoImageData s=new SavablePhotoImageData(img);
+				s.setMd5(pi.computeMd5());
+				getLogger().debug("Set md5 of %d to %s", s.getId(), s.getMd5());
+				PhotoImageDataFactory.getInstance().store(s);
+			} else {
+				if(!storedMd5.equals(img.getMd5())) {
+					errs.add("MD5 is incorrect for img " + img.getId());
+				}
+			}
+		}
+		
 	}
 
 	public static class RecacheThumbnailsAndSizes extends SpyObject

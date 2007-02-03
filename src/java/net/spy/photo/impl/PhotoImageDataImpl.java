@@ -42,6 +42,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	private Votes votes=null;
 	private String descr=null;
 	private String catName=null;
+	private String md5=null;
 	private int catId=-1;
 	private int size=-1;
 	private int placeId=0;
@@ -256,7 +257,21 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 * Set the category name.
 	 */
 	protected void setCatName(String to) {
-		this.catName=to;
+		catName=to;
+	}
+
+	/**
+	 * Set the md5 of this image data.
+	 */
+	protected void setMd5(String to) {
+		md5=to;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.spy.photo.PhotoImageData#getMd5()
+	 */
+	public String getMd5() {
+		return md5;
 	}
 
 	/** 

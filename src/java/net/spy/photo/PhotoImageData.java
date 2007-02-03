@@ -61,6 +61,11 @@ public interface PhotoImageData extends Instance {
 	 */
 	String getCatName();
 
+	/**
+	 * Get the string representation of the MD5 of an image.
+	 */
+	String getMd5();
+
 	/** 
 	 * Get the date this image was taken/created.
 	 */

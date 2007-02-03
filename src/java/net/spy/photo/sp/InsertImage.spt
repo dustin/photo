@@ -11,6 +11,7 @@ insert
 			descr,
 			cat,
 			taken,
+			md5,
 			size,
 			addedby,
 			ts,
@@ -19,13 +20,14 @@ insert
 			format_id,
 			place_id
 		)
-		values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
 @params
 image_id required INTEGER New image ID
 description required VARCHAR Description for this image entry
 cat_id required INTEGER ID of the category to contain this image
 taken required DATE Date this image was taken
+md5 required VARCHAR The md5 of the image data
 size required INTEGER Size of this image (in bytes)
 added_by required INTEGER ID of the user who added this image
 timestamp required TIMESTAMP Time this image was added

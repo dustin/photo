@@ -118,6 +118,7 @@ create table album(
 	tn_width   integer default 0,
 	tn_height  integer default 0,
 	format_id  integer default 0,
+	md5        char(32) not null,
 	ts         timestamp not null,
 	id         serial,
 	place_id   integer null,
@@ -129,6 +130,7 @@ create table album(
 );
 
 create index album_bycat on album(cat);
+create unique index idx_album_bymd5 on album(md5);
 grant all on album to nobody;
 -- implicit sequence
 grant all on album_id_seq to nobody;
@@ -137,7 +139,7 @@ grant all on album_id_seq to nobody;
 create table album_keywords_map (
 	album_id integer not null,
 	word_id integer not null,
-	foreign key(album_id) references album(id),
+	foreign key(album_id) references album(id) on delete cascade,
 	foreign key(word_id) references keywords(word_id)
 );
 create unique index album_keywords_map_byu

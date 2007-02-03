@@ -14,7 +14,8 @@ update album
 		descr=?,
 		cat=?,
 		taken=?,
-		place_id=?
+		place_id=?,
+		md5=?
 	where
 		id=?
 
@@ -23,4 +24,5 @@ descr required VARCHAR Description of an image
 cat required INTEGER Category containing the image
 taken required DATE Date the image was taken
 place_id required INTEGER the id of the location this picture was taken
+md5 required VARCHAR The md5 of the image
 id required INTEGER ID of the image

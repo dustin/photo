@@ -55,6 +55,7 @@ public class SavablePhotoImageData extends AbstractSavable
 	private Collection<PhotoImageData> variants=null;
 	private Votes votes=null;
 	private String descr=null;
+	private String md5=null;
 	private int catId=-1;
 	private int size=-1;
 	private PhotoDimensions dimensions=null;
@@ -86,12 +87,17 @@ public class SavablePhotoImageData extends AbstractSavable
 	public SavablePhotoImageData(PhotoImage data) throws PhotoException {
 		super();
 
-		this.imageData=data;
-		this.dimensions=data;
-		this.size=data.size();
-		this.format=data.getFormat();
-		this.timestamp=new Date();
-		this.votes=new Votes();
+		imageData=data;
+		dimensions=data;
+		size=data.size();
+		format=data.getFormat();
+		try {
+			md5=data.computeMd5();
+		} catch (Exception e) {
+			throw new PhotoException("Problem computing md5", e);
+		}
+		timestamp=new Date();
+		votes=new Votes();
 
 		keywords=new TreeSet<Keyword>();
 		annotations=new HashSet<AnnotatedRegion>();
@@ -124,6 +130,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		this.id=proto.getId();
 		this.format=proto.getFormat();
 		this.place=proto.getPlace();
+		this.md5=proto.getMd5();
 
 		setNew(false);
 		setModified(false);
@@ -138,6 +145,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		InsertImage db=new InsertImage(conn);
 		db.setImageId(id);
 		db.setDescription(descr);
+		db.setMd5(md5);
 		db.setCatId(catId);
 		db.setTaken(new java.sql.Date(taken.getTime()));
 		db.setSize(size);
@@ -254,6 +262,7 @@ public class SavablePhotoImageData extends AbstractSavable
 		db.setCat(catId);
 		db.setTaken(new java.sql.Date(taken.getTime()));
 		db.setId(id);
+		db.setMd5(md5);
 		db.setPlaceId(place==null?null:place.getId());
 		int aff=db.executeUpdate();
 		if(aff != 1) {
@@ -484,6 +493,14 @@ public class SavablePhotoImageData extends AbstractSavable
 
 	public void setTimestamp(Date to) {
 		this.timestamp=to;
+	}
+
+	public String getMd5() {
+		return md5;
+	}
+
+	public void setMd5(String to) {
+		md5=to;
 	}
 
 	public Date getTimestamp() {
