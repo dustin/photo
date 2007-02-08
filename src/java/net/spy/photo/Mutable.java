@@ -3,13 +3,8 @@
 package net.spy.photo;
 
 /**
- * IInterface for mutable objects.
+ * Tagging interface for mutable objects.
  */
 public interface Mutable {
-
-	/**
-	 * Note the object has been modified.
-	 */
-	void modify();
-
+	// Tagging interface
 }

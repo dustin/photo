@@ -13,7 +13,7 @@ import net.spy.photo.observation.NewImageObservable;
 public aspect StorerNotifications {
 
 	pointcut storedImage(PhotoImageData pid, PhotoImage image):
-		call(public void ImageServer.storeImage(PhotoImageData, PhotoImage))
+		execution(public void ImageServer.storeImage(PhotoImageData, PhotoImage))
 		&& args(pid, image);
 
 	after(PhotoImageData pid, PhotoImage image) returning:
