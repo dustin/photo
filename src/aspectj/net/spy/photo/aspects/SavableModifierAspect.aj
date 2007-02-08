@@ -3,7 +3,6 @@
 package net.spy.photo.aspects;
 
 import net.spy.db.AbstractSavable;
-import net.spy.photo.Mutable;
 
 /**
  * Mark savables as modified after a mutator is called.
