@@ -422,15 +422,6 @@
 		<forward name="next" path="admin.newprofile" />
 	</action>
 
-	<!-- Modify an image's data -->
-	<action path="/admeditimage"
-		name="uploadForm"
-		input="/display.do"
-		roles="admin,subadmin"
-		type="net.spy.photo.struts.AdminEditImage">
-		<forward name="next" path="/display.do"/>
-	</action>
-
 	<action path="/admin/saveProperties"
 		name="emptyForm"
 		input="admin.properties"
