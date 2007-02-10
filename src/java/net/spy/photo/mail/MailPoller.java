@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
 
 import javax.mail.Address;
 import javax.mail.Folder;
@@ -28,7 +27,6 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoProperties;
-import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
 import net.spy.photo.UserFactory;
 import net.spy.photo.impl.SavablePhotoImageData;
@@ -309,17 +307,7 @@ public class MailPoller extends SpyObject implements Runnable {
 		public void setBytes(byte[] to) {
 			bytes = to;
 			try {
-				Map<String, String> exif=MetaDataExtractor.getInstance()
-					.getMetaData(to);
-				String tsStr=exif.get("Date/Time Original");
-				if(tsStr == null) {
-					tsStr=exif.get("Date/Time");
-				}
-				if(tsStr != null) {
-					ts=PhotoUtil.parseDate(tsStr);
-					getLogger().info("Parsed exif date from %s to %s",
-						tsStr, ts);
-				}
+				ts=MetaDataExtractor.getInstance().getDateTaken(to);
 			} catch(Exception e) {
 				getLogger().info("Couldn't get metadata from mailed data", e);
 			}

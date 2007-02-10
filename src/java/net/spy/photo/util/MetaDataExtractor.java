@@ -1,6 +1,7 @@
 package net.spy.photo.util;
 
 import java.io.ByteArrayInputStream;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -11,6 +12,7 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 
 import net.spy.SpyObject;
+import net.spy.photo.PhotoUtil;
 
 /**
  * Extract metadata from an image.
@@ -53,5 +55,22 @@ public class MetaDataExtractor extends SpyObject {
 			}
 		}
 		return metaData;
+	}
+
+	/**
+	 * Parse the date from an image.
+	 */
+	public Date getDateTaken(byte[] data) throws Exception {
+		Date rv=null;
+		Map<String, String> exif=getMetaData(data);
+		String tsStr=exif.get("Date/Time Original");
+		if(tsStr == null) {
+			tsStr=exif.get("Date/Time");
+		}
+		if(tsStr != null) {
+			rv=PhotoUtil.parseDate(tsStr);
+			getLogger().info("Parsed exif date from %s to %s", tsStr, rv);
+		}
+		return rv;
 	}
 }

@@ -20,6 +20,7 @@ import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.User;
 import net.spy.photo.impl.SavablePhotoImageData;
 import net.spy.photo.log.PhotoLogUploadEntry;
+import net.spy.photo.util.MetaDataExtractor;
 
 public class UploadImage extends BaseRestServlet {
 
@@ -47,7 +48,6 @@ public class UploadImage extends BaseRestServlet {
 		String category=getStringParameter(req, "category");
 		String keywords=getStringParameter(req, "keywords");
 		String info=getStringParameter(req, "info");
-		Date taken=getDateParameter(req, "taken");
 
 		// Look up the category.
 		int catId=-1;
@@ -80,6 +80,15 @@ public class UploadImage extends BaseRestServlet {
 			toRead -= read;
 		}
 		PhotoImage photoImage=new PhotoImage(image);
+
+		// Find the date
+		Date taken=null;
+		if(req.getParameter("taken") != null) {
+			taken=getDateParameter(req, "taken");
+		} else {
+			taken=MetaDataExtractor.getInstance().getDateTaken(image);
+		}
+		assert taken != null : "Couldn't find taken date";
 
 		// Get the new image ID
 		SavablePhotoImageData savable=new SavablePhotoImageData(photoImage);

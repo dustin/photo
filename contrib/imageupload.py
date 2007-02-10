@@ -24,12 +24,16 @@ class ImageUpload:
     def addImage(self, username=None, password=None, keywords=None,
         info=None, category=None, taken=None, image=None):
 
-        args=urllib.urlencode({ 
+        argdict={ 
             'keywords':keywords,
             'info':info,
             'category':category,
-            'taken':taken,
-            });
+            }
+
+        if taken is not None:
+            argdict['taken']=taken
+
+        args=urllib.urlencode(argdict)
 
         req=urllib2.Request(self.url + "?" + args, image,
             {'Content-type': 'application/octet-stream',
@@ -54,6 +58,9 @@ if __name__ == '__main__':
     info=argv[5]
     category=argv[6]
     taken=argv[7]
+
+    if taken == '':
+        taken = None
 
     # Rest of the arguments are images
     uploader=ImageUpload(url)
