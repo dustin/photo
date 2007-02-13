@@ -29,7 +29,6 @@ public class NewImageObservable implements Observable<NewImageData> {
 	 * @param pi the actual image data
 	 */
 	public void newImage(PhotoImageData pid, PhotoImage pi) {
-		sendMessage(new ObservationImpl<NewImageData>(
-				new NewImageData(pid, pi)));
+		sendMessage(new ObservationImpl<NewImageData>(new NewImageData(pid)));
 	}
 }

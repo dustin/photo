@@ -13,7 +13,6 @@ import javax.naming.InitialContext;
 
 import net.spy.SpyObject;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.observation.NewImageData;
 import net.spy.photo.observation.Observation;
@@ -42,8 +41,7 @@ public class ImageMessagePoster extends SpyObject
 		conn.start();
 	}
 
-	private void postMessage(PhotoImageData pid, PhotoImage pi)
-		throws Exception {
+	private void postMessage(PhotoImageData pid) throws Exception {
 
 		Message msg=session.createTextMessage(String.valueOf(pid.getId()));
 		sender.send(msg);
@@ -57,10 +55,9 @@ public class ImageMessagePoster extends SpyObject
 
 	public void observe(Observation<NewImageData> observation) {
 		PhotoImageData pid=observation.getData().getPhotoImageData();
-		PhotoImage pi=observation.getData().getPhotoImage();
 
 		try {
-			postMessage(pid, pi);
+			postMessage(pid);
 		} catch (Exception e) {
 			getLogger().warn("Problem sending JMS message for new image", e);
 		}

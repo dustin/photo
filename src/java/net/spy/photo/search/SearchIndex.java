@@ -113,14 +113,13 @@ public class SearchIndex extends SpyObject {
 		addOne(m, new Integer(i), pid);
 	}
 
-	private int dateToInt(Date d) {
+	private Integer dateToInt(Date d) {
 		// Convert the millisecond time to days.
-		int rv=(int) (d.getTime() / 86400000);
-		return rv;
+		return d == null ? null : new Integer((int) (d.getTime() / 86400000));
 	}
 
 	private void add(Map m, Date d, PhotoImageData pid) {
-		addOne(m, new Integer(dateToInt(d)), pid);
+		addOne(m, dateToInt(d), pid);
 	}
 
 	/**
