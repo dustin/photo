@@ -35,8 +35,9 @@ public class SearchIndex extends SpyObject {
 	// Indexes
 	private Map<Keyword, Set<PhotoImageData>> byKeyword = null;
 	private Map<Integer, Set<PhotoImageData>> byCategory = null;
-	private SortedMap<Date, Set<PhotoImageData>> byTaken = null;
-	private SortedMap<Date, Set<PhotoImageData>> byTs = null;
+	// These are actually by date.
+	private SortedMap<Integer, Set<PhotoImageData>> byTaken = null;
+	private SortedMap<Integer, Set<PhotoImageData>> byTs = null;
 
 	// All images that can be classified as a variant of another image.
 	private Set<PhotoImageData> variants=null;
@@ -48,8 +49,8 @@ public class SearchIndex extends SpyObject {
 		super();
 		byKeyword = new HashMap<Keyword, Set<PhotoImageData>>();
 		byCategory = new HashMap<Integer, Set<PhotoImageData>>();
-		byTaken = new TreeMap<Date, Set<PhotoImageData>>();
-		byTs = new TreeMap<Date, Set<PhotoImageData>>();
+		byTaken = new TreeMap<Integer, Set<PhotoImageData>>();
+		byTs = new TreeMap<Integer, Set<PhotoImageData>>();	
 		variants = new HashSet<PhotoImageData>();
 		long start=System.currentTimeMillis();
 		for(PhotoImageData pid : vals) {
@@ -59,9 +60,20 @@ public class SearchIndex extends SpyObject {
 			add(byTs, pid.getTimestamp(), pid);
 			variants.addAll(pid.getVariants());
 		}
+		immutifyIndex(byKeyword);
+		immutifyIndex(byCategory);
+		immutifyIndex(byTaken);
+		immutifyIndex(byTs);
+		variants=new ImmutableArraySet<PhotoImageData>(variants);
 		getLogger().info("Indexed %d images (%d are variants) in %sms",
 				vals.size(), variants.size(),
 				(System.currentTimeMillis() - start));
+	}
+
+	private void immutifyIndex(Map<?, Set<PhotoImageData>> m) {
+		for(Map.Entry<?, Set<PhotoImageData>> me : m.entrySet()) {
+			me.setValue(new ImmutableArraySet<PhotoImageData>(me.getValue()));
+		}
 	}
 
 	/**
@@ -101,8 +113,14 @@ public class SearchIndex extends SpyObject {
 		addOne(m, new Integer(i), pid);
 	}
 
+	private int dateToInt(Date d) {
+		// Convert the millisecond time to days.
+		int rv=(int) (d.getTime() / 86400000);
+		return rv;
+	}
+
 	private void add(Map m, Date d, PhotoImageData pid) {
-		addOne(m, d, pid);
+		addOne(m, new Integer(dateToInt(d)), pid);
 	}
 
 	/**
@@ -186,12 +204,14 @@ public class SearchIndex extends SpyObject {
 	}
 
 	private Set<PhotoImageData> getDateRangeSet(
-		SortedMap<Date, Set<PhotoImageData>> sm, Date from, Date to) {
-		SortedMap<Date, Set<PhotoImageData>> tail = sm;
+		SortedMap<Integer, Set<PhotoImageData>> sm, Date fromD, Date toD) {
+		Integer from=dateToInt(fromD);
+		Integer to=dateToInt(toD);
+		SortedMap<Integer, Set<PhotoImageData>> tail = sm;
 		if(from != null) {
 			tail = tail.tailMap(from);
 		}
-		SortedMap<Date, Set<PhotoImageData>> rvm = tail;
+		SortedMap<Integer, Set<PhotoImageData>> rvm = tail;
 		if(to != null) {
 			rvm = tail.headMap(to);
 		}
