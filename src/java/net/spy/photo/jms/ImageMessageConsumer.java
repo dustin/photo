@@ -7,13 +7,13 @@ import java.util.Collection;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
 import javax.jms.QueueReceiver;
 import javax.jms.QueueSession;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.naming.InitialContext;
 
 import net.spy.SpyObject;
@@ -63,20 +63,19 @@ public class ImageMessageConsumer extends SpyObject
 
 	public void onMessage(Message msg) {
 		try {
-			ObjectMessage bm=(ObjectMessage)msg;
-			int id=bm.getIntProperty("imgId");
-			PhotoImage pi=(PhotoImage)bm.getObject();
+			TextMessage tm=(TextMessage)msg;
+			int id=Integer.parseInt(tm.getText());
 			getLogger().info(
-					"Processing message with id %s for image %s: %s",
-					msg.getJMSMessageID(), id, pi);
-			cacheVariations(bm.getIntProperty("imgId"), pi);
+					"Processing message with id %s for image %s",
+					msg.getJMSMessageID(), id);
+			cacheVariations(id);
 			msg.acknowledge();
 		} catch (Exception e) {
 			getLogger().warn("Error processing message", e);
 		}
 	}
 
-	private void cacheVariations(int id, PhotoImage pi) throws Exception {
+	private void cacheVariations(int id) throws Exception {
 		long start=System.currentTimeMillis();
 		ImageServer is=Persistent.getImageServer();
 		is.getThumbnail(id);
@@ -85,8 +84,7 @@ public class ImageMessageConsumer extends SpyObject
 			getLogger().info("Cached %d at %s with %d bytes",
 					id, dim, img.getData().length);
 		}
-		Stats.getComputingStat(
-				"precache." + pi.getWidth() + "x" + pi.getHeight())
+		Stats.getComputingStat("precache")
 			.add(System.currentTimeMillis() - start);
 	}
 

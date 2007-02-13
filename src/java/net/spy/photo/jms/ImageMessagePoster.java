@@ -2,7 +2,7 @@
 
 package net.spy.photo.jms;
 
-import javax.jms.ObjectMessage;
+import javax.jms.Message;
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
@@ -45,9 +45,8 @@ public class ImageMessagePoster extends SpyObject
 	private void postMessage(PhotoImageData pid, PhotoImage pi)
 		throws Exception {
 
-		ObjectMessage bm=session.createObjectMessage(pi);
-		bm.setIntProperty("imgId", pid.getId());
-		sender.send(bm);
+		Message msg=session.createTextMessage(String.valueOf(pid.getId()));
+		sender.send(msg);
 	}
 
 	public void close() throws Exception {
