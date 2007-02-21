@@ -34,7 +34,7 @@ def __parseIndex(fn):
             if p.md5 is not None and p.md5 != '':
                 self.photos.append( (p.id, p.md5, p.extension) )
     p=P()
-    libphoto.__parseIndex(fin, p)
+    libphoto.parseIndex(fin, p)
     fin.close()
     return p.photos
 
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     libphoto.authenticate(base, u, pw)
 
     __makeIndex(fn)
-    images=parseIndex(fn)
+    images=__parseIndex(fn)
     for img in images:
         d, fn=__makeFn(s, img)
         if not __imgExists(fn):
