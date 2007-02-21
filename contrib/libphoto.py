@@ -200,7 +200,7 @@ class ParseTest(unittest.TestCase):
         self.photos=p.photos
 
     def testCount(self):
-        self.assertEquals(len(self.photos), 12)
+        self.assertEquals(len(self.photos), 5)
 
     def testAddedBy(self):
         for v in self.photos.values():
@@ -216,6 +216,16 @@ class ParseTest(unittest.TestCase):
 
         expected=sets.ImmutableSet(['dustin', 'christmas'])
         self.assertEquals(self.photos[2].keywords, expected)
+
+    def testMd5s(self):
+        """Testing the md5 values."""
+        md5s={ 1: '1c3a8b16391ee76ec228549559647d52',
+            2: 'e99a953cd3f7649009ea2cc6196303e0',
+            3: 'f1613624bed606ad2bd9ca1560b156cb',
+            4: '5f6127f18854097fc450da086d3e959c',
+            5: '7aeade7396e6c6d8115c5e6847b81532' }
+        for i in self.photos.values():
+            self.assertEquals(i.md5, md5s[i.id])
 
     def testAnnotations(self):
         self.assertEquals(len(self.photos[1].annotations), 2)

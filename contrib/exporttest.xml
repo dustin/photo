@@ -2,169 +2,54 @@
 <photoexport>
   <album>
     <photo>
-      <id>12</id>
-      <addedby>demouser</addedby>
-      <cat>Private</cat>
-      <taken>2005-11-23</taken>
-      <ts>2005-11-23T16:19:41</ts>
-      <descr>Some random images testing the new uploader.</descr>
-      <size>1020090</size>
-      <width>1600</width>
-      <height>1200</height>
-      <tnwidth>194</tnwidth>
-      <tnheight>146</tnheight>
-      <extension>jpg</extension>
-      <keywords>
-        <keyword word="dance"/>
-        <keyword word="test"/>
-      </keywords>
-    </photo>
-    <photo>
-      <id>11</id>
-      <addedby>demouser</addedby>
-      <cat>Private</cat>
-      <taken>2005-11-23</taken>
-      <ts>2005-11-23T16:19:30</ts>
-      <descr>Some random images testing the new uploader.</descr>
-      <size>16196</size>
-      <width>240</width>
-      <height>180</height>
-      <tnwidth>194</tnwidth>
-      <tnheight>146</tnheight>
-      <extension>jpg</extension>
-      <keywords>
-        <keyword word="dance"/>
-        <keyword word="test"/>
-      </keywords>
-    </photo>
-    <photo>
-      <id>10</id>
-      <addedby>demouser</addedby>
-      <cat>Private</cat>
-      <taken>2005-11-23</taken>
-      <ts>2005-11-23T16:19:30</ts>
-      <descr>Some random images testing the new uploader.</descr>
-      <size>1181734</size>
-      <width>1600</width>
-      <height>1200</height>
-      <tnwidth>194</tnwidth>
-      <tnheight>146</tnheight>
-      <extension>jpg</extension>
-      <keywords>
-        <keyword word="dance"/>
-        <keyword word="test"/>
-      </keywords>
-    </photo>
-    <photo>
-      <id>9</id>
-      <addedby>demouser</addedby>
-      <cat>Private</cat>
-      <taken>2005-11-23</taken>
-      <ts>2005-11-23T16:19:22</ts>
-      <descr>Some random images testing the new uploader.</descr>
-      <size>12056</size>
-      <width>240</width>
-      <height>180</height>
-      <tnwidth>194</tnwidth>
-      <tnheight>146</tnheight>
-      <extension>jpg</extension>
-      <keywords>
-        <keyword word="dance"/>
-        <keyword word="test"/>
-      </keywords>
-    </photo>
-    <photo>
-      <id>8</id>
-      <addedby>demouser</addedby>
-      <cat>Private</cat>
-      <taken>2005-11-23</taken>
-      <ts>2005-11-23T16:19:22</ts>
-      <descr>Some random images testing the new uploader.</descr>
-      <size>970614</size>
-      <width>1600</width>
-      <height>1200</height>
-      <tnwidth>194</tnwidth>
-      <tnheight>146</tnheight>
-      <extension>jpg</extension>
-      <keywords>
-        <keyword word="dance"/>
-        <keyword word="test"/>
-      </keywords>
-    </photo>
-    <photo>
-      <id>7</id>
-      <addedby>demouser</addedby>
-      <cat>Private</cat>
-      <taken>2005-11-23</taken>
-      <ts>2005-11-23T16:19:16</ts>
-      <descr>Some random images testing the new uploader.</descr>
-      <size>11349</size>
-      <width>240</width>
-      <height>180</height>
-      <tnwidth>194</tnwidth>
-      <tnheight>146</tnheight>
-      <extension>jpg</extension>
-      <keywords>
-        <keyword word="dance"/>
-        <keyword word="test"/>
-      </keywords>
-    </photo>
-    <photo>
-      <id>6</id>
-      <addedby>demouser</addedby>
-      <cat>Public</cat>
-      <taken>2005-11-23</taken>
-      <ts>2005-11-23T16:17:56</ts>
-      <descr>Some random images testing the new uploader.</descr>
-      <size>8143</size>
-      <width>154</width>
-      <height>164</height>
-      <tnwidth>137</tnwidth>
-      <tnheight>146</tnheight>
-      <extension>jpg</extension>
-      <keywords>
-        <keyword word="2wire"/>
-        <keyword word="test"/>
-      </keywords>
-    </photo>
-    <photo>
       <id>5</id>
+      <md5>7aeade7396e6c6d8115c5e6847b81532</md5>
       <addedby>demouser</addedby>
       <cat>Public</cat>
-      <taken>2005-11-23</taken>
-      <ts>2005-11-23T16:17:55</ts>
-      <descr>Some random images testing the new uploader.</descr>
-      <size>8143</size>
-      <width>154</width>
-      <height>164</height>
-      <tnwidth>137</tnwidth>
+      <taken>2006-09-01</taken>
+      <ts>2006-09-01T00:15:21</ts>
+      <descr>Variations on your mom.</descr>
+      <size>383132</size>
+      <width>1600</width>
+      <height>1200</height>
+      <tnwidth>194</tnwidth>
       <tnheight>146</tnheight>
       <extension>jpg</extension>
       <keywords>
-        <keyword word="2wire"/>
-        <keyword word="test"/>
+        <keyword word="license"/>
+        <keyword word="mom"/>
+        <keyword word="plate"/>
+        <keyword word="sepia"/>
+        <keyword word="variant"/>
+        <keyword word="your"/>
       </keywords>
     </photo>
     <photo>
       <id>4</id>
+      <md5>5f6127f18854097fc450da086d3e959c</md5>
       <addedby>demouser</addedby>
       <cat>Public</cat>
-      <taken>2005-11-23</taken>
-      <ts>2005-11-23T16:17:54</ts>
-      <descr>Some random images testing the new uploader.</descr>
-      <size>33121</size>
-      <width>533</width>
-      <height>219</height>
-      <tnwidth>220</tnwidth>
-      <tnheight>90</tnheight>
+      <taken>2006-09-01</taken>
+      <ts>2006-09-01T00:15:19</ts>
+      <descr>Variations on your mom.</descr>
+      <size>358693</size>
+      <width>1600</width>
+      <height>1200</height>
+      <tnwidth>194</tnwidth>
+      <tnheight>146</tnheight>
       <extension>jpg</extension>
       <keywords>
-        <keyword word="2wire"/>
-        <keyword word="test"/>
+        <keyword word="bw"/>
+        <keyword word="license"/>
+        <keyword word="mom"/>
+        <keyword word="plate"/>
+        <keyword word="variant"/>
+        <keyword word="your"/>
       </keywords>
     </photo>
     <photo>
       <id>1</id>
+      <md5>1c3a8b16391ee76ec228549559647d52</md5>
       <addedby>demouser</addedby>
       <cat>Public</cat>
       <taken>2004-03-28</taken>
@@ -215,6 +100,7 @@
     </photo>
     <photo>
       <id>2</id>
+      <md5>e99a953cd3f7649009ea2cc6196303e0</md5>
       <addedby>demouser</addedby>
       <cat>Private</cat>
       <taken>2003-12-25</taken>
@@ -233,6 +119,7 @@
     </photo>
     <photo>
       <id>3</id>
+      <md5>f1613624bed606ad2bd9ca1560b156cb</md5>
       <addedby>demouser</addedby>
       <cat>Private</cat>
       <taken>2003-11-17</taken>
