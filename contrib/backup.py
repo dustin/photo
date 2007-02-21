@@ -10,6 +10,7 @@ import os
 import sys
 import md5
 import gzip
+import time
 import shutil
 import getpass
 import libphoto
@@ -71,9 +72,14 @@ def storeImage(baseurl, d, fn, img):
 
 if __name__ == '__main__':
     base, u, s, d=sys.argv[1:]
-    fn=os.path.join(d, "backup-index.xml.gz")
+    backup_name="index-%s.xml.gz" % (time.strftime("%Y%m%dT%H%M"),)
+    fn=os.path.join(d, backup_name)
 
-    libphoto.authenticate(base, u, getpass.getpass())
+    pw=os.getenv('PHOTO_PW')
+    if pw is None:
+        pw=getpass.getpass()
+
+    libphoto.authenticate(base, u, pw)
 
     makeIndex(fn)
     images=parseIndex(fn)
