@@ -15,7 +15,7 @@ import shutil
 import getpass
 import libphoto
 
-def makeIndex(fn):
+def __makeIndex(fn):
     f=libphoto.fetchIndex(base)
 
     fout=gzip.GzipFile(fn + ".tmp", "w")
@@ -26,7 +26,7 @@ def makeIndex(fn):
 
     os.rename(fn + ".tmp", fn)
 
-def parseIndex(fn):
+def __parseIndex(fn):
     fin=gzip.GzipFile(fn, "r")
     class P(libphoto.AlbumParser):
         photos=[]
@@ -34,24 +34,24 @@ def parseIndex(fn):
             if p.md5 is not None and p.md5 != '':
                 self.photos.append( (p.id, p.md5, p.extension) )
     p=P()
-    libphoto.parseIndex(fin, p)
+    libphoto.__parseIndex(fin, p)
     fin.close()
     return p.photos
 
-def makeFn(basedir, img):
+def __makeFn(basedir, img):
     imgid, imgmd5, ext=img
     d=os.path.join(basedir, imgmd5[:2])
     fn=os.path.join(d, imgmd5 + "." + `imgid` + "." + ext)
     return d, fn
 
-def validateMd5(fn, expectedMd5):
+def __validateMd5(fn, expectedMd5):
     f=open(fn, "rb")
     m=md5.md5()
     m.update(f.read())
     f.close()
     return expectedMd5 == m.hexdigest()
 
-def storeImage(baseurl, d, fn, img):
+def __storeImage(baseurl, d, fn, img):
     print "Fetching", img[0]
 
     imgid, imgmd5, ext=img
@@ -67,9 +67,12 @@ def storeImage(baseurl, d, fn, img):
     fin.close()
     fout.close()
 
-    assert validateMd5(fn + ".tmp", imgmd5), "Invalid MD5 for " + `imgid`
+    assert __validateMd5(fn + ".tmp", imgmd5), "Invalid MD5 for " + `imgid`
 
     os.rename(fn + ".tmp", fn)
+
+def __imgExists(fn):
+    return os.path.exists(fn) or os.path.exists(fn + ".gpg")
 
 if __name__ == '__main__':
     base, u, s, d=sys.argv[1:]
@@ -82,9 +85,9 @@ if __name__ == '__main__':
 
     libphoto.authenticate(base, u, pw)
 
-    makeIndex(fn)
+    __makeIndex(fn)
     images=parseIndex(fn)
     for img in images:
-        d, fn=makeFn(s, img)
-        if not os.path.exists(fn):
-            storeImage(base, d, fn, img)
+        d, fn=__makeFn(s, img)
+        if not __imgExists(fn):
+            __storeImage(base, d, fn, img)
