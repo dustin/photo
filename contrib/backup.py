@@ -31,7 +31,8 @@ def parseIndex(fn):
     class P(libphoto.AlbumParser):
         photos=[]
         def gotPhoto(self, p):
-            self.photos.append( (p.id, p.md5, p.extension) )
+            if p.md5 is not None and p.md5 != '':
+                self.photos.append( (p.id, p.md5, p.extension) )
     p=P()
     libphoto.parseIndex(fin, p)
     fin.close()
