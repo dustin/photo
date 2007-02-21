@@ -1,3 +1,5 @@
 .arch-ids/.*
 \{arch\}/.*
 ^target/$
+
+.pyc$
