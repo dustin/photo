@@ -74,9 +74,10 @@ public class ExportServlet extends XMLOutputServlet {
 			XMLUtils x=XMLUtils.getInstance();
 			x.startElement(h, "photoexport");
 			x.startElement(h, "album");
-			for(PhotoImageData pid : results) {
+			for(PhotoImageData pid : results.getAllObjects()) {
 				x.startElement(h, "photo");
 				x.doElement(h, "id", String.valueOf(pid.getId()));
+				x.doElement(h, "md5", pid.getMd5());
 				x.doElement(h, "addedby", pid.getAddedBy().getName());
 				x.doElement(h, "cat", pid.getCatName());
 				x.doElement(h, "taken", dateFormat.format(pid.getTaken()));

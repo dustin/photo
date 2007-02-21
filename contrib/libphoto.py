@@ -38,7 +38,8 @@ class Photo(saxkit.ElementHandler):
         def r(n):
             self.parsers[(None, n)]=saxkit.SimpleValueParser()
         self.ints=['id', 'size', 'width', 'height', 'tnwidth', 'tnheight']
-        self.strings=['cat', 'addedby', 'taken', 'ts', 'descr', 'extension']
+        self.strings=['md5', 'cat', 'addedby', 'taken', 'ts', 'descr',
+            'extension']
 
         for t in self.ints + self.strings:
             r(t)
