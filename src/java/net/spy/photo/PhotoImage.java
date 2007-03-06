@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * PhotoImageData interface.
+ * PhotoImage interface.
  */
-public interface PhotoImageData extends Instance {
+public interface PhotoImage extends Instance {
 
 	/** 
 	 * Get the annotated regions for this image.
@@ -90,7 +90,7 @@ public interface PhotoImageData extends Instance {
 	/**
 	 * Get all of the variations of this image.
 	 */
-	Collection<PhotoImageData> getVariants();
+	Collection<PhotoImage> getVariants();
 
 	/**
 	 * Get the place this picture was taken.

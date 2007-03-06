@@ -18,8 +18,8 @@ import net.spy.photo.Format;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.Place;
@@ -32,8 +32,8 @@ import net.spy.photo.util.MetaDataExtractor;
 /**
  * This class represents, and retreives all useful data for a given image.
  */
-public abstract class PhotoImageDataImpl extends SpyObject
-	implements Serializable, PhotoImageData {
+public abstract class PhotoImageImpl extends SpyObject
+	implements Serializable, PhotoImage {
 
 	private int id=-1;
 	private Collection<AnnotatedRegion> annotations=null;
@@ -60,7 +60,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 
 	private Format format=null;
 
-	protected PhotoImageDataImpl() throws Exception {
+	protected PhotoImageImpl() throws Exception {
 		super();
 		keywords=new TreeSet<Keyword>();
 		annotations=new HashSet<AnnotatedRegion>();
@@ -72,19 +72,19 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	 */
 	@Override
 	public String toString() {
-		return("{PhotoImageData id=" + id + " - " + dimensions + "}");
+		return("{PhotoImage id=" + id + " - " + dimensions + "}");
 	}
 
 	/**
-	 * True if the given object is a PhotoImageData object representing the
+	 * True if the given object is a PhotoImage object representing the
 	 * same image.
 	 */
 	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 
-		if(o instanceof PhotoImageData) {
-			PhotoImageData pid=(PhotoImageData)o;
+		if(o instanceof PhotoImage) {
+			PhotoImage pid=(PhotoImage)o;
 
 			if(id == pid.getId()) {
 				rv=true;
@@ -267,7 +267,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	}
 
 	/* (non-Javadoc)
-	 * @see net.spy.photo.PhotoImageData#getMd5()
+	 * @see net.spy.photo.PhotoImage#getMd5()
 	 */
 	public String getMd5() {
 		return md5;
@@ -347,7 +347,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	/**
 	 * Get all of the variants for this image.
 	 */
-	public Collection<PhotoImageData> getVariants() {
+	public Collection<PhotoImage> getVariants() {
 		return Collections.emptyList();
 	}
 
@@ -367,7 +367,7 @@ public abstract class PhotoImageDataImpl extends SpyObject
 	*/
 
 	/** 
-	 * Serialized form of a PhotoImageDataImpl.
+	 * Serialized form of a PhotoImageImpl.
 	 */
 	public static class SerializedForm implements Serializable {
 		private int imgId=0;
@@ -378,9 +378,9 @@ public abstract class PhotoImageDataImpl extends SpyObject
 		}
 
 		private Object readResolve() throws ObjectStreamException {
-			PhotoImageData rv=null;
+			PhotoImage rv=null;
 			try {
-				PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+				PhotoImageFactory pidf=PhotoImageFactory.getInstance();
 				rv=pidf.getObject(imgId);
 			} catch(Exception e) {
 				InvalidObjectException t=new InvalidObjectException(

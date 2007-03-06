@@ -10,13 +10,13 @@ import net.spy.db.Saver;
 import net.spy.db.savables.CollectionSavable;
 import net.spy.factory.CacheRefresher;
 import net.spy.factory.GenFactory;
-import net.spy.photo.impl.DBImageDataSource;
+import net.spy.photo.impl.DBImageSource;
 import net.spy.photo.search.SearchIndex;
 
 /**
  * ImageData factory.
  */
-public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
+public class PhotoImageFactory extends GenFactory<PhotoImage> {
 
 	private static final String CACHE_KEY="image_data";
 	private static final long CACHE_TIME=86400000;
@@ -28,27 +28,27 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	 */
 	public static final long RECACHE_DELAY=300000;
 
-	private static AtomicReference<PhotoImageDataFactory> instanceRef=
-		new AtomicReference<PhotoImageDataFactory>(null);
+	private static AtomicReference<PhotoImageFactory> instanceRef=
+		new AtomicReference<PhotoImageFactory>(null);
 
-	private PhotoImageDataSource source=null;
+	private PhotoImageSource source=null;
 
 	/**
-	 * Get an instance of PhotoImageDataFactory.
+	 * Get an instance of PhotoImageFactory.
 	 */
-	private PhotoImageDataFactory() {
+	private PhotoImageFactory() {
 		super(CACHE_KEY, CACHE_TIME);
-		source=new DBImageDataSource();
+		source=new DBImageSource();
 	}
 
 	/** 
-	 * Get an instance of the PhotoImageDataFactory.
+	 * Get an instance of the PhotoImageFactory.
 	 */
-	public static PhotoImageDataFactory getInstance() {
-		PhotoImageDataFactory rv=instanceRef.get();
+	public static PhotoImageFactory getInstance() {
+		PhotoImageFactory rv=instanceRef.get();
 		if(rv == null) {
-			synchronized(PhotoImageDataFactory.class) {
-				rv=new PhotoImageDataFactory();
+			synchronized(PhotoImageFactory.class) {
+				rv=new PhotoImageFactory();
 				if(! instanceRef.compareAndSet(null, rv)) {
 					rv=instanceRef.get();
 					assert rv != null;
@@ -59,13 +59,13 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 	}
 
 	/** 
-	 * Get the instances of PhotoImageData.
+	 * Get the instances of PhotoImage.
 	 */
 	@Override
-	protected Collection<PhotoImageData> getInstances() {
+	protected Collection<PhotoImage> getInstances() {
 		// Get the source images
 		getLogger().info("Fetching images.");
-		Collection<PhotoImageData> images=source.getImages();
+		Collection<PhotoImage> images=source.getImages();
 		getLogger().info("Loaded " + images.size() + " images from "
 			+ source.getClass().getName());
 		return(images);
@@ -79,13 +79,13 @@ public class PhotoImageDataFactory extends GenFactory<PhotoImageData> {
 		Saver s=new Saver(PhotoConfig.getInstance());
 		s.save(ob);
 		long start=System.currentTimeMillis();
-		if(ob instanceof PhotoImageData) {
-			cacheInstance((PhotoImageData)ob);
+		if(ob instanceof PhotoImage) {
+			cacheInstance((PhotoImage)ob);
 		} else if(ob instanceof CollectionSavable) {
 			// XXX: Horrible abstraction leak.
 			CollectionSavable cs=(CollectionSavable)ob;
 			for(Savable pid : cs.getPostSavables(null)) {
-				cacheInstance((PhotoImageData)pid);
+				cacheInstance((PhotoImage)pid);
 			}
 		} else {
 			assert false : "Unexpected savable type: " + ob.getClass();

@@ -26,7 +26,7 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoParser;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.Place;
@@ -45,14 +45,13 @@ import net.spy.photo.sp.UpdateImage;
 import net.spy.util.CloseUtil;
 
 /**
- * Savable implementation of PhotoImageData.
+ * Savable implementation of PhotoImage.
  */
-public class SavablePhotoImageData extends AbstractSavable
-	implements PhotoImageData {
+public class SavablePhotoImage extends AbstractSavable implements PhotoImage {
 
 	private Collection<AnnotatedRegion> annotations=null;
 	private Collection<Keyword> keywords=null;
-	private Collection<PhotoImageData> variants=null;
+	private Collection<PhotoImage> variants=null;
 	private Votes votes=null;
 	private String descr=null;
 	private String md5=null;
@@ -84,7 +83,7 @@ public class SavablePhotoImageData extends AbstractSavable
 	 * @param data the data for the image
 	 * @throws PhotoException If a new photo id cannot be obtained
 	 */
-	public SavablePhotoImageData(byte[] data) throws PhotoException {
+	public SavablePhotoImage(byte[] data) throws PhotoException {
 		super();
 
 		imageData=data;
@@ -98,20 +97,20 @@ public class SavablePhotoImageData extends AbstractSavable
 
 		keywords=new TreeSet<Keyword>();
 		annotations=new HashSet<AnnotatedRegion>();
-		variants=new HashSet<PhotoImageData>();
+		variants=new HashSet<PhotoImage>();
 
 		id=getNewImageId();
 		setNew(true);
 	}
 
 	/** 
-	 * Get an editable wrapper around the given PhotoImageData.
+	 * Get an editable wrapper around the given PhotoImage.
 	 */
-	public SavablePhotoImageData(PhotoImageData proto) {
+	public SavablePhotoImage(PhotoImage proto) {
 		super();
 
 		this.keywords=proto.getKeywords();
-		this.variants=new HashSet<PhotoImageData>(proto.getVariants());
+		this.variants=new HashSet<PhotoImage>(proto.getVariants());
 		getLogger().info("New savable image has %d variants", variants.size());
 		this.annotations=proto.getAnnotations();
 		this.votes=proto.getVotes();
@@ -186,7 +185,7 @@ public class SavablePhotoImageData extends AbstractSavable
 			iv=new InsertVariant(conn);
 			iv.setOriginalId(id);
 			getLogger().info("Saving %d variants", variants.size());
-			for(PhotoImageData pid : variants) {
+			for(PhotoImage pid : variants) {
 				iv.setVariantId(pid.getId());
 				int aff=iv.executeUpdate();
 				getLogger().info("Saved variant %d -> %d", id, pid.getId());
@@ -453,15 +452,15 @@ public class SavablePhotoImageData extends AbstractSavable
 	}
 
 	/**
-	 * True if the given object is a PhotoImageData object representing the
+	 * True if the given object is a PhotoImage object representing the
 	 * same image.
 	 */
 	@Override
 	public boolean equals(Object o) {
 		boolean rv=false;
 
-		if(o instanceof PhotoImageData) {
-			PhotoImageData pid=(PhotoImageData)o;
+		if(o instanceof PhotoImage) {
+			PhotoImage pid=(PhotoImage)o;
 
 			if(id == pid.getId()) {
 				rv=true;
@@ -522,16 +521,16 @@ public class SavablePhotoImageData extends AbstractSavable
 		return(format);
 	}
 
-	public Collection<PhotoImageData> getVariants() {
+	public Collection<PhotoImage> getVariants() {
 		return variants;
 	}
 
-	public void addVariant(PhotoImageData v) {
+	public void addVariant(PhotoImage v) {
 		getLogger().info("Adding variant:  %s", v);
 		variants.add(v);
 	}
 
-	public void removeVariant(PhotoImageData v) {
+	public void removeVariant(PhotoImage v) {
 		getLogger().info("Removing variant:  %s", v);
 		variants.remove(v);
 	}

@@ -16,8 +16,8 @@ import net.spy.photo.Keyword;
 import net.spy.photo.KeywordFactory;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataSource;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageSource;
 import net.spy.photo.PhotoSecurity;
 import net.spy.photo.PlaceFactory;
 import net.spy.photo.UserFactory;
@@ -31,15 +31,15 @@ import net.spy.photo.sp.SelectVariants;
 import net.spy.util.CloseUtil;
 
 /**
- * A PhotoImageDataSource implementation that gets images from the DB.
+ * A PhotoImageSource implementation that gets images from the DB.
  */
-public class DBImageDataSource extends SpyObject
-	implements PhotoImageDataSource {
+public class DBImageSource extends SpyObject
+	implements PhotoImageSource {
 
 	/**
 	 * Get an instance of DBImageDataSource.
 	 */
-	public DBImageDataSource() {
+	public DBImageSource() {
 		super();
 	}
 
@@ -47,18 +47,18 @@ public class DBImageDataSource extends SpyObject
 	 * Get the images.
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<PhotoImageData> getImages() {
-		Collection<PhotoImageData> rv = null;
+	public Collection<PhotoImage> getImages() {
+		Collection<PhotoImage> rv = null;
 		try {
 			// This is an annoying cast and requires the @Suppress above.
-			rv = (Collection<PhotoImageData>) getFromDB();
+			rv = (Collection<PhotoImage>) getFromDB();
 		} catch(Exception e) {
 			throw new RuntimeException("Can't load images from DB", e);
 		}
 		return (rv);
 	}
 
-	private Collection<? extends PhotoImageData> getFromDB() throws Exception {
+	private Collection<? extends PhotoImage> getFromDB() throws Exception {
 		HashMap<Integer, ImgData> rv = new HashMap<Integer, ImgData>();
 
 		// Load the images
@@ -77,7 +77,7 @@ public class DBImageDataSource extends SpyObject
 		loadVariants(rv);
 
 		// Add all of the image annotation keywords to the image keywords
-		for(PhotoImageData imgd : rv.values()) {
+		for(PhotoImage imgd : rv.values()) {
 			for(AnnotatedRegion ar : imgd.getAnnotations()) {
 				for(Keyword kw : ar.getKeywords()) {
 					((ImgData)imgd).addKeyword(kw);
@@ -175,8 +175,8 @@ public class DBImageDataSource extends SpyObject
 		gark.close();
 	}
 
-	private static final class ImgData extends PhotoImageDataImpl {
-		private Collection<PhotoImageData> variants=null;
+	private static final class ImgData extends PhotoImageImpl {
+		private Collection<PhotoImage> variants=null;
 		public ImgData(ResultSet rs) throws Exception {
 			super();
 			setId(rs.getInt("id"));
@@ -207,7 +207,7 @@ public class DBImageDataSource extends SpyObject
 			setAddedBy(Persistent.getSecurity().getUser(rs.getInt("addedby")));
 
 			// Add variant id storage
-			variants=new LinkedList<PhotoImageData>();
+			variants=new LinkedList<PhotoImage>();
 
 			if(w >= 0 && h >= 0) {
 				setDimensions(new PhotoDimensionsImpl(w, h));
@@ -226,19 +226,19 @@ public class DBImageDataSource extends SpyObject
 			super.addKeyword(keyword);
 		}
 
-		public void addVariant(PhotoImageData which) {
+		public void addVariant(PhotoImage which) {
 			assert which != null : "Attempted to add a null variant.";
 			variants.add(which);
 		}
 
 		@Override
-		public Collection<PhotoImageData> getVariants() {
+		public Collection<PhotoImage> getVariants() {
 			return variants;
 		}
 
 		@Override
 		protected Object writeReplace() throws ObjectStreamException {
-			return (new PhotoImageDataImpl.SerializedForm(getId()));
+			return (new PhotoImageImpl.SerializedForm(getId()));
 		}
 	}
 

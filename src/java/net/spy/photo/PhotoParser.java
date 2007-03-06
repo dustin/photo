@@ -6,7 +6,7 @@ import static net.spy.photo.PhotoUtil.getIntValue2;
 import java.security.MessageDigest;
 
 import net.spy.SpyObject;
-import net.spy.stat.CounterStat;
+import net.spy.stat.ComputingStat;
 import net.spy.stat.Stats;
 import net.spy.util.SpyUtil;
 
@@ -20,12 +20,12 @@ public class PhotoParser extends SpyObject {
 
 	private static PhotoParser instance=null;
 
-	private CounterStat parseStat=null;
+	private ComputingStat parseStat=null;
 
 	public static synchronized PhotoParser getInstance() {
 		if(instance == null) {
 			instance=new PhotoParser();
-			instance.parseStat=Stats.getCounterStat("photoparser");
+			instance.parseStat=Stats.getComputingStat("photoparser.parsed");
 		}
 		return instance;
 	}
@@ -43,7 +43,7 @@ public class PhotoParser extends SpyObject {
 			throw new PhotoException("Error computing md5", e);
 		}
 		calcDim(data, rv);
-		parseStat.increment(System.currentTimeMillis()-start);
+		parseStat.add(System.currentTimeMillis()-start);
 		return rv;
 	}
 

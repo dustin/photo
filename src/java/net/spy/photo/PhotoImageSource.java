@@ -5,10 +5,10 @@ package net.spy.photo;
 import java.util.Collection;
 
 /**
- * Source of PhotoImageData.
+ * Source of PhotoImage.
  */
-public interface PhotoImageDataSource {
+public interface PhotoImageSource {
 
-	Collection<PhotoImageData> getImages();
+	Collection<PhotoImage> getImages();
 
 }
