@@ -71,6 +71,7 @@ public class ImageMessageConsumer extends SpyObject
 					msg.getJMSMessageID(), id);
 			PhotoImage pid=
 				PhotoImageFactory.getInstance().getObject(id);
+			assert pid != null : "Object " + id + " doesn't exist yet";
 			cacheVariations(pid);
 			msg.acknowledge();
 		} catch (Exception e) {
@@ -84,7 +85,7 @@ public class ImageMessageConsumer extends SpyObject
 		is.getThumbnail(pid);
 		for(PhotoDimensions dim : sizes) {
 			byte[] img=is.getImage(pid, dim);
-			getLogger().info("Cached %d at %s with %d bytes",
+			getLogger().info("Cached %s at %s with %d bytes",
 					pid, dim, img.length);
 		}
 		Stats.getComputingStat("precache")

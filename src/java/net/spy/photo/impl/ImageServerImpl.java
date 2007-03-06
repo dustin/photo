@@ -88,6 +88,13 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	private byte[] fetchScaledImage(PhotoImage pid, PhotoDimensions dim)
 		throws Exception {
 
+		assert pid != null : "PhotoImage was null";
+
+		// If there aren't dimensions, use the full dimensions.
+		if(dim == null) {
+			dim=pid.getDimensions();
+		}
+
 		byte[] pi=null;
 		String key = "photo_" + pid.getId() + "_"
 			+ dim.getWidth() + "x" + dim.getHeight();

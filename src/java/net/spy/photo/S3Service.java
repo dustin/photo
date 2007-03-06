@@ -10,7 +10,6 @@ import javax.naming.InitialContext;
 
 import net.spy.SpyObject;
 import net.spy.photo.impl.PhotoDimensionsImpl;
-import net.spy.photo.observation.NewImageData;
 import net.spy.photo.observation.Observation;
 import net.spy.photo.observation.Observer;
 import net.spy.s3.AWSAuthConnection;
@@ -24,7 +23,7 @@ import net.spy.s3.S3Object;
 /**
  * Interface to S3.
  */
-public class S3Service extends SpyObject implements Observer<NewImageData> {
+public class S3Service extends SpyObject implements Observer<PhotoImage> {
 
 	private static final String DELIM = "^";
 
@@ -111,7 +110,7 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 		}
 	}
 
-	public void observe(Observation<NewImageData> observation) {
+	public void observe(Observation<PhotoImage> observation) {
 		getLogger().info("Informed of new image: %s", observation.getData());
 	}
 

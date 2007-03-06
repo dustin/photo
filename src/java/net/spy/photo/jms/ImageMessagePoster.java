@@ -14,7 +14,6 @@ import javax.naming.InitialContext;
 import net.spy.SpyObject;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
-import net.spy.photo.observation.NewImageData;
 import net.spy.photo.observation.Observation;
 import net.spy.photo.observation.Observer;
 
@@ -22,7 +21,7 @@ import net.spy.photo.observation.Observer;
  * Post JMS messages when images are added.
  */
 public class ImageMessagePoster extends SpyObject
-	implements Observer<NewImageData> {
+	implements Observer<PhotoImage> {
 
 	private QueueConnection conn=null;
 	private QueueSession session=null;
@@ -53,8 +52,8 @@ public class ImageMessagePoster extends SpyObject
 		conn.close();
 	}
 
-	public void observe(Observation<NewImageData> observation) {
-		PhotoImage pid=observation.getData().getPhotoImage();
+	public void observe(Observation<PhotoImage> observation) {
+		PhotoImage pid=observation.getData();
 
 		try {
 			postMessage(pid);

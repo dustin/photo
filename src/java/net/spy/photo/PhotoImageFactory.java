@@ -2,7 +2,9 @@
 
 package net.spy.photo;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.db.Savable;
@@ -11,6 +13,7 @@ import net.spy.db.savables.CollectionSavable;
 import net.spy.factory.CacheRefresher;
 import net.spy.factory.GenFactory;
 import net.spy.photo.impl.DBImageSource;
+import net.spy.photo.observation.NewImageObservable;
 import net.spy.photo.search.SearchIndex;
 
 /**
@@ -32,6 +35,7 @@ public class PhotoImageFactory extends GenFactory<PhotoImage> {
 		new AtomicReference<PhotoImageFactory>(null);
 
 	private PhotoImageSource source=null;
+	private ConcurrentLinkedQueue<Integer> newImageIds=null;
 
 	/**
 	 * Get an instance of PhotoImageFactory.
@@ -39,6 +43,7 @@ public class PhotoImageFactory extends GenFactory<PhotoImage> {
 	private PhotoImageFactory() {
 		super(CACHE_KEY, CACHE_TIME);
 		source=new DBImageSource();
+		newImageIds=new ConcurrentLinkedQueue<Integer>();
 	}
 
 	/** 
@@ -71,21 +76,31 @@ public class PhotoImageFactory extends GenFactory<PhotoImage> {
 		return(images);
 	}
 
+	/**
+	 * Register a new image ID so we can fire it as a notification.
+	 */
+	public void registerNewImage(int id) {
+		newImageIds.add(id);
+	}
+
 	/** 
 	 * Store a savable and optionally recache the instances.
 	 */
 	public void store(Savable ob, boolean recache, long recacheDelay)
 		throws Exception {
+		Collection<PhotoImage> saved=new ArrayList<PhotoImage>();
 		Saver s=new Saver(PhotoConfig.getInstance());
 		s.save(ob);
 		long start=System.currentTimeMillis();
 		if(ob instanceof PhotoImage) {
 			cacheInstance((PhotoImage)ob);
+			saved.add((PhotoImage)ob);
 		} else if(ob instanceof CollectionSavable) {
 			// XXX: Horrible abstraction leak.
 			CollectionSavable cs=(CollectionSavable)ob;
 			for(Savable pid : cs.getPostSavables(null)) {
 				cacheInstance((PhotoImage)pid);
+				saved.add((PhotoImage)pid);
 			}
 		} else {
 			assert false : "Unexpected savable type: " + ob.getClass();
@@ -96,6 +111,14 @@ public class PhotoImageFactory extends GenFactory<PhotoImage> {
 		if(recache) {
 			CacheRefresher.getInstance().recache(this,
 					System.currentTimeMillis(), recacheDelay);
+		}
+		// Fire notifications for everything we've saved now that the cache
+		// is at least up-to-date enough for notification recipients to pick
+		// stuff up.
+		for(PhotoImage pi : saved) {
+			if(newImageIds.remove(pi.getId())) {
+				NewImageObservable.getInstance().newImage(pi);
+			}
 		}
 	}
 
@@ -110,6 +133,11 @@ public class PhotoImageFactory extends GenFactory<PhotoImage> {
 		getLogger().info(
 				"Recache completed in %dms plus %dms more for indexing",
 				start2-start1, end-start2);
+		Integer i=newImageIds.poll();
+		while(i != null) {
+			NewImageObservable.getInstance().newImage(getObject(i));
+			i=newImageIds.poll();
+		}
 	}
 
 	/** 

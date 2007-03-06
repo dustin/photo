@@ -7,7 +7,7 @@ import net.spy.photo.PhotoImage;
 /**
  * Observation sent when new images are added.
  */
-public class NewImageObservable implements Observable<NewImageData> {
+public class NewImageObservable implements Observable<PhotoImage> {
 
 	private static NewImageObservable instance=null;
 
@@ -25,9 +25,8 @@ public class NewImageObservable implements Observable<NewImageData> {
 	 * Report a new image was added.
 	 * 
 	 * @param pid the image meta data
-	 * @param data the actual image data
 	 */
-	public void newImage(PhotoImage pid, byte[] data) {
-		sendMessage(new ObservationImpl<NewImageData>(new NewImageData(pid)));
+	public void newImage(PhotoImage pid) {
+		sendMessage(new ObservationImpl<PhotoImage>(pid));
 	}
 }

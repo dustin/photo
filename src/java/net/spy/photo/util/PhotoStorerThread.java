@@ -18,7 +18,6 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoImageHelper;
-import net.spy.photo.observation.NewImageData;
 import net.spy.photo.observation.Observation;
 import net.spy.photo.observation.Observer;
 import net.spy.photo.sp.GetImagesToFlush;
@@ -38,7 +37,7 @@ import net.spy.xml.XMLUtils;
  * the database for long-term storage, however.
  */
 public class PhotoStorerThread extends LoopingThread
-	implements SAXAble, Observer<NewImageData> {
+	implements SAXAble, Observer<PhotoImage> {
 
 	// chunks should be divisible by 57
 	public static final int CHUNK_SIZE=2052;
@@ -168,7 +167,7 @@ public class PhotoStorerThread extends LoopingThread
 			PhotoImageFactory.getInstance().getObject(imageId);
 		SpyDB pdb = new SpyDB(PhotoConfig.getInstance());
 		byte[] pi = p.getImage(pid);
-		getLogger().info("Storer: Got image for %d, %d bytes of data", pid,
+		getLogger().info("Storer: Got image for %s, %d bytes of data", pid,
 				pid.getSize());
 
 		Connection db=null;
@@ -352,9 +351,9 @@ public class PhotoStorerThread extends LoopingThread
 	/* (non-Javadoc)
 	 * @see net.spy.photo.observation.Observer#observe(net.spy.photo.observation.Observable, net.spy.photo.observation.Observation)
 	 */
-	public void observe(Observation<NewImageData> observation) {
-		getLogger().info("Got new image observation for ",
-				observation.getData().getPhotoImage());
+	public void observe(Observation<PhotoImage> observation) {
+		getLogger().info("Got new image observation for %s",
+				observation.getData());
 		addedImage();
 	}
 }

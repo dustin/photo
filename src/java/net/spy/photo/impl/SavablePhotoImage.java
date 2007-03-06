@@ -27,6 +27,7 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoParser;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.Place;
@@ -101,6 +102,12 @@ public class SavablePhotoImage extends AbstractSavable implements PhotoImage {
 
 		id=getNewImageId();
 		setNew(true);
+
+		// this is a sort of ugly hack, but tell the image factory there's a
+		// new image.
+		// XXX:  Should probably just get SavablePhotoImage from
+		// PhotoImageFactory.  Then it could all live there.
+		PhotoImageFactory.getInstance().registerNewImage(id);
 	}
 
 	/** 
