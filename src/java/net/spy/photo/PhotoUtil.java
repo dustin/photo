@@ -250,4 +250,30 @@ public class PhotoUtil extends Object {
 		return(rv);
 	}
 
+	/**
+	 * Get the 1-byte integer value from the given position in the given byte
+	 * array.
+	 *
+	 * @param imageData the byte array
+	 * @param which the position
+	 * @return the integer at that position
+	 */
+	public static int getIntValue(byte[] imageData, int which) {
+		int i=(imageData[which]&0xff);
+		return(i);
+	}
+
+	/**
+	 * Get the 2-byte integer value from the given position in the given byte
+	 * array.
+	 *
+	 * @param imageData the byte array
+	 * @param which the position
+	 * @return the integer at that position
+	 */
+	public static int getIntValue2(byte[] imageData, int which) {
+		int i=(getIntValue(imageData, which) << 8)
+			| getIntValue(imageData, which+1);
+		return(i);
+	}
 }

@@ -190,8 +190,9 @@ public class ImageLink extends PhotoTag {
 		if( (width == null) && (height == null) ) {
 			try {
 				if(showThumbnail) {
-					PhotoImageHelper ph=new PhotoImageHelper(id);
-					PhotoDimensions size=ph.getThumbnailSize();
+					PhotoImageHelper ph=PhotoImageHelper.getInstance();
+					PhotoDimensions size=ph.getThumbnailSize(
+							PhotoImageDataFactory.getInstance().getObject(id));
 					width="" + size.getWidth();
 					height="" + size.getHeight();
 				}

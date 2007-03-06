@@ -15,8 +15,8 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoParser;
 import net.spy.photo.PhotoUtil;
 import net.spy.util.Base64;
 
@@ -45,9 +45,9 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public PhotoImage getImage(int imageId, PhotoDimensions dim)
+	public byte[] getImage(PhotoImageData pid, PhotoDimensions dim)
 		throws PhotoException {
-		return(getImage(imageId, dim, true));
+		return(getImage(pid, dim, true));
 	}
 
 	/**
@@ -58,57 +58,57 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	 * @param dim the dimensions at which you want the image
 	 * @param withCache if true, use the cache, otherwise get it directly
 	 */
-	public PhotoImage getImage(int imageId, PhotoDimensions dim, boolean withCache)
+	public byte[] getImage(PhotoImageData pid, PhotoDimensions dim,
+			boolean withCache)
 		throws PhotoException {
-		PhotoImage imageData=null;
+		byte[] imageData=null;
 		try {
 			if(dim==null) {
-				String key = "photo_" + imageId;
+				String key = "photo_" + pid.getId();
 				if(withCache) {
 					imageData = cache.getImage(key);
 				}
 				if(imageData == null) {
-					imageData=fetchImageFromDB(imageId);
+					imageData=fetchImageFromDB(pid);
 					if(withCache) {
 						cache.putImage(key, imageData);
 					}
 				}
 			} else {
-				imageData=fetchScaledImage(imageId, dim);
+				imageData=fetchScaledImage(pid, dim);
 			}
 		} catch(Exception e) {
 			getLogger().warn("Error fetching image in %s",
 					Persistent.getContextPath(), e);
 			throw new PhotoException("Error fetching image", e);
 		}
-		// Calculate the width
-		imageData.getWidth();
 		return(imageData);
 	}
 
-	private PhotoImage fetchScaledImage(int imageId, PhotoDimensions dim)
+	private byte[] fetchScaledImage(PhotoImageData pid, PhotoDimensions dim)
 		throws Exception {
 
-		PhotoImage pi=null;
-		String key = "photo_" + imageId + "_"
+		byte[] pi=null;
+		String key = "photo_" + pid.getId() + "_"
 			+ dim.getWidth() + "x" + dim.getHeight();
 
 		// Try cache first
 		pi=cache.getImage(key);
 		if(pi==null) {
 			// Not in cache, get it
-			pi=getImage(imageId, null);
+			pi=getImage(pid, null);
+			PhotoParser.Result res=PhotoParser.getInstance().parseImage(pi);
 
-			if(pi.equals(dim) || PhotoUtil.smallerThan(pi, dim)) {
-				getLogger().debug("Requested scaled size for " + imageId
+			if(pi.equals(dim) || PhotoUtil.smallerThan(res, dim)) {
+				getLogger().debug("Requested scaled size for " + pid
 					+ "(" + dim + ") is equal to or "
 					+ "greater than its full size, ignoring.");
 			} else {
 				// Scale it
-				pi=scaleImage(pi, dim);
+				pi=scaleImage(pid, pi, dim);
 				// Store it
 				cache.putImage(key, pi);
-				getLogger().info("Stored " + imageId + " with key " + key);
+				getLogger().info("Stored " + pid + " with key " + key);
 			}
 		}
 
@@ -118,19 +118,16 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public PhotoImage getThumbnail(int imageId) throws PhotoException {
+	public byte[] getThumbnail(PhotoImageData pid) throws PhotoException {
 		PhotoDimensions dim=new PhotoDimensionsImpl(conf.get("thumbnail_size"));
-		return(getImage(imageId, dim));
+		return(getImage(pid, dim));
 	}
 
 	/**
 	 * @see ImageServer
 	 */
-	public void storeImage(PhotoImageData pid, PhotoImage image)
+	public void storeImage(PhotoImageData pid, byte[] image)
 		throws PhotoException {
-
-		// Make sure we've calculated the width and height
-		image.getWidth();
 		try {
 			cache.putImage("photo_" + pid.getId(), image);
 		} catch(Exception e) {
@@ -139,13 +136,13 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 		}
 	}
 
-	private PhotoImage scaleImage(
-		PhotoImage in, PhotoDimensions dim) throws Exception {
-		return(scaler.scaleImage(in, dim));
+	private byte[] scaleImage(PhotoImageData pid,
+			byte[] in, PhotoDimensions dim) throws Exception {
+		return(scaler.scaleImage(pid, in, dim));
 	}
 
 	// Fetch an image from the DB
-	private PhotoImage fetchImageFromDB(int imageId) throws Exception {
+	private byte[] fetchImageFromDB(PhotoImageData pid) throws Exception {
 		// Average image is 512k.  Create a buffer of that size to start.
 		StringBuffer sdata=new StringBuffer(512*1024);
 		
@@ -153,7 +150,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 		String query="select data from image_store where id = ?\n"
 			+ " order by line";
 		PreparedStatement st = db.prepareStatement(query);
-		st.setInt(1, imageId);
+		st.setInt(1, pid.getId());
 		ResultSet rs = st.executeQuery();
 		
 		while(rs.next()) {
@@ -164,9 +161,8 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 		
 		Base64 base64 = new Base64();
 		byte data[]=base64.decode(sdata.toString());
-		PhotoImage pi=new PhotoImage(data);
 
-		return(pi);
+		return(data);
 	}
 
 }

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 
 import net.spy.photo.PhotoDimensions;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUtil;
@@ -161,8 +162,9 @@ public class DisplayLink extends PhotoTag {
 
 			if( (width == null) && (height == null) ) {
 				try {
-					PhotoImageHelper ph=new PhotoImageHelper(id);
-					PhotoDimensions size=ph.getThumbnailSize();
+					PhotoImageHelper ph=PhotoImageHelper.getInstance();
+					PhotoDimensions size=ph.getThumbnailSize(
+							PhotoImageDataFactory.getInstance().getObject(id));
 					w="" + size.getWidth();
 					h="" + size.getHeight();
 				} catch(Exception e) {

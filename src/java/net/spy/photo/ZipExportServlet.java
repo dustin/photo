@@ -134,11 +134,11 @@ public class ZipExportServlet extends JWHttpServlet {
 		getLogger().info("Adding " + sr.size() + " images");
 		for(PhotoImageData pid : sr) {
 			getLogger().info("Adding photos for " + pid.getId());
-			PhotoImageHelper p=new PhotoImageHelper(pid.getId());
+			PhotoImageHelper p=PhotoImageHelper.getInstance();
 
 			ZipEntry ne=new ZipEntry("pages/" + sdf.format(pid.getTaken()) + "/"
 					+ pid.getId() + "_normal."+ pid.getFormat().getExtension());
-			byte ndata[]=p.getImage(dims).getData();
+			byte ndata[]=p.getImage(pid, dims);
 			ne.setSize(ndata.length);
 			ne.setTime(pid.getTimestamp().getTime());
 			crc.reset();
@@ -150,7 +150,7 @@ public class ZipExportServlet extends JWHttpServlet {
 
 			ZipEntry te=new ZipEntry("pages/" + sdf.format(pid.getTaken()) + "/"
 					+ pid.getId() + "_tn."+ pid.getFormat().getExtension());
-			byte tdata[]=p.getThumbnail().getData();
+			byte tdata[]=p.getThumbnail(pid);
 			te.setSize(tdata.length);
 			te.setTime(pid.getTimestamp().getTime());
 			crc.reset();

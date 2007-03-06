@@ -11,47 +11,46 @@ import net.spy.photo.impl.PhotoDimensionsImpl;
 /**
  * Get images from the image server.
  */
-public class PhotoImageHelper extends SpyObject { 
+public class PhotoImageHelper extends SpyObject {
 
-	private int imageId=-1;
+	private static PhotoImageHelper instance=null;
 
-	/**
-	 * Get a PhotoHelper for the given image on behalf.
-	 */
-	public PhotoImageHelper(int which) throws Exception {
-		super();
-		this.imageId = which;
+	public static synchronized PhotoImageHelper getInstance() {
+		if(instance == null) {
+			instance=new PhotoImageHelper();
+		}
+		return instance;
 	}
 
 	/**
 	 * Get the full image on behalf of a user.
 	 */
-	public PhotoImage getImage(User user, PhotoDimensions dim)
+	public byte[] getImage(User user, PhotoImageData pid, PhotoDimensions dim)
 		throws Exception {
 
-		Persistent.getSecurity().checkAccess(user, imageId);
-		return(getImage(dim));
+		Persistent.getSecurity().checkAccess(user, pid.getId());
+		return(getImage(pid, dim));
 	}
 
 	/**
 	 * Get a full-size image.
 	 */
-	public PhotoImage getImage() throws Exception {
-		return(getImage(null));
+	public byte[] getImage(PhotoImageData pid) throws Exception {
+		return(getImage(pid, null));
 	}
 
 	/**
 	 * Get the full image.
 	 */
-	public PhotoImage getImage(PhotoDimensions dim)
+	public byte[] getImage(PhotoImageData pid, PhotoDimensions dim)
 		throws Exception {
 
-		PhotoImage rv=null;
+		byte[] rv=null;
 		SimpleCache cache=SimpleCache.getInstance();
 
-		StringBuffer keyb=new StringBuffer(64);
+		StringBuilder keyb=new StringBuilder(64);
 		keyb.append("img_");
-		keyb.append(imageId);
+		keyb.append(pid.getId());
 		if(dim!=null) {
 			keyb.append("_");
 			keyb.append(dim.getWidth());
@@ -61,7 +60,7 @@ public class PhotoImageHelper extends SpyObject {
 		String key=keyb.toString();
 
 		// Always check the cache first
-		rv=(PhotoImage)cache.get(key);
+		rv=(byte[])cache.get(key);
 		if(rv==null) {
 			if(getLogger().isDebugEnabled()) {
 				getLogger().debug("Cache miss on " + key);
@@ -70,11 +69,12 @@ public class PhotoImageHelper extends SpyObject {
 			}
 
 			ImageServer server=Persistent.getImageServer();
-			rv=server.getImage(imageId, dim);
+			rv=server.getImage(pid, dim);
 
 			// If it's small enough, cache it.
-			if(rv.size() < 32768) {
-				cache.store(key, new SoftReference<PhotoImage>(rv), 10*60*1000);
+			if(rv.length < 32768) {
+				cache.store(key,
+						new SoftReference<byte[]>(rv), 10*60*1000);
 			}
 		}
 
@@ -84,31 +84,33 @@ public class PhotoImageHelper extends SpyObject {
 	/**
 	 * Get the thumbnail for an image on behalf of a user.
 	 */
-	public PhotoImage getThumbnail(int uid) throws Exception {
-		Persistent.getSecurity().checkAccess(uid, imageId);
-		return(getThumbnail());
+	public byte[] getThumbnail(PhotoImageData pid, int uid) throws Exception {
+		Persistent.getSecurity().checkAccess(uid, pid.getId());
+		return(getThumbnail(pid));
 	}
 
 	/**
 	 * Get the thumbnail for an image.
 	 */
-	public PhotoImage getThumbnail() throws Exception {
+	public byte[] getThumbnail(PhotoImageData pid) throws Exception {
 		PhotoConfig cf=PhotoConfig.getInstance();
 		PhotoDimensions pdim= new PhotoDimensionsImpl(cf.get("thumbnail_size"));
-		return(getImage(pdim));
+		return(getImage(pid, pdim));
 	}
 
 	/** 
 	 * Get the size of this image as a thumbnail.
 	 */
-	public PhotoDimensions getThumbnailSize() throws Exception {
+	public PhotoDimensions getThumbnailSize(PhotoImageData pid)
+		throws Exception {
 		PhotoDimensions rv=null;
 		SimpleCache cache=SimpleCache.getInstance();
-		String key="ph_thumbnail_size_" + imageId;
+		String key="ph_thumbnail_size_" + pid.getId();
 		rv=(PhotoDimensions)cache.get(key);
 		if(rv == null) {
-			PhotoImage pi=getThumbnail();
-			rv=new PhotoDimensionsImpl(pi.getWidth(), pi.getHeight());
+			byte[] pi=getThumbnail(pid);
+			PhotoParser.Result res=PhotoParser.getInstance().parseImage(pi);
+			rv=new PhotoDimensionsImpl(res.getWidth(), res.getHeight());
 			cache.store(key, new SoftReference<PhotoDimensions>(rv), 1800000);
 		}
 

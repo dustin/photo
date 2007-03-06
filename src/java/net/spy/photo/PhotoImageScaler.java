@@ -15,14 +15,16 @@ import net.spy.SpyObject;
  */
 public class PhotoImageScaler extends SpyObject {
 
-	private PhotoImage pi=null;
+	private PhotoImageData pid=null;
+	private byte[] data=null;
 
 	/**
 	 * Get an instance of PhotoImageScaler.
 	 */
-	public PhotoImageScaler(PhotoImage img) {
+	public PhotoImageScaler(PhotoImageData p, byte[] img) {
 		super();
-		this.pi=img;
+		pid=p;
+		data=img;
 	}
 
 	/**
@@ -31,25 +33,24 @@ public class PhotoImageScaler extends SpyObject {
 	public InputStream getJpegStream(PhotoDimensions dim, int quality)
 		throws Exception {
 
-		PhotoImage tmp=getScaledImage(dim, quality);
-		return(new ByteArrayInputStream(tmp.getData()));
+		return(new ByteArrayInputStream(getScaledImage(dim, quality)));
 	}
 
 	/**
 	 * Get a scaled jpeg as a byte array input stream.
 	 */
-	public PhotoImage getScaledImage(PhotoDimensions dim, int quality)
+	public byte[] getScaledImage(PhotoDimensions dim, int quality)
 		throws Exception {
 
 		if(getLogger().isDebugEnabled()) {
-			getLogger().debug("Scaling " + pi + " to " + dim);
+			getLogger().debug("Scaling some image to " + dim);
 		}
 
 		// Get the original image.
-		Image image=Toolkit.getDefaultToolkit().createImage(pi.getData());
+		Image image=Toolkit.getDefaultToolkit().createImage(data);
 
 		// Make the dimensions have the proper aspect ratio
-		PhotoDimensions sdim=PhotoUtil.scaleTo(pi, dim);
+		PhotoDimensions sdim=PhotoUtil.scaleTo(pid.getDimensions(), dim);
 
 		// Scale it
 		Image img=image.getScaledInstance(sdim.getWidth(), sdim.getHeight(),
@@ -60,12 +61,11 @@ public class PhotoImageScaler extends SpyObject {
 		JpegEncoder jpg=new JpegEncoder(img, quality, os);
 		jpg.compress();
 
-		PhotoImage ri=new PhotoImage(os.toByteArray());
-
-		// flush the image.
+		// flush the images.
 		img.flush();
+		image.flush();
 
-		return(ri);
+		return(os.toByteArray());
 	}
 
 }

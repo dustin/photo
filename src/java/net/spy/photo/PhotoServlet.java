@@ -121,17 +121,17 @@ public class PhotoServlet extends JWHttpServlet {
 
 			int imgId = pid.getId();
 
-			PhotoImageHelper p = new PhotoImageHelper(imgId);
+			PhotoImageHelper p = PhotoImageHelper.getInstance();
 			getLogger().info("Fetching %d scaled to %s for %s", imgId, dims, u);
-			PhotoImage image = p.getImage(u, dims);
+			byte[] image = p.getImage(u, pid, dims);
 
-			res.setContentType(image.getFormat().getMime());
-			res.setContentLength(image.size());
+			res.setContentType(pid.getFormat().getMime());
+			res.setContentLength(pid.getSize());
 			// Setup cache
 			res.addHeader("Cache-Control", "private, max-age=86400");
 			OutputStream os = res.getOutputStream();
 			try {
-				os.write(image.getData());
+				os.write(image);
 			} finally {
 				CloseUtil.close(os);
 			}

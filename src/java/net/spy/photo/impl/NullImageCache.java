@@ -5,7 +5,6 @@ package net.spy.photo.impl;
 import net.spy.SpyObject;
 import net.spy.photo.ImageCache;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImage;
 
 /**
  * ImageCache implementation that doesn't perform any caching.
@@ -19,14 +18,14 @@ public class NullImageCache extends SpyObject implements ImageCache {
 		super();
 	}
 
-	public PhotoImage getImage(String key) throws PhotoException {
+	public byte[] getImage(String key) throws PhotoException {
 		if(getLogger().isDebugEnabled()) {
 			getLogger().debug("Getting image for key:  " + key);
 		}
 		return(null);
 	}
 
-	public void putImage(String key, PhotoImage image) throws PhotoException {
+	public void putImage(String key, byte[] image) throws PhotoException {
 		if(getLogger().isDebugEnabled()) {
 			getLogger().debug("Requested to store image for key:  " + key);
 		}

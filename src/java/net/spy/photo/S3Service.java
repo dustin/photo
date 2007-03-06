@@ -145,17 +145,17 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 	/**
 	 * Store the given image.
 	 */
-	public void storeImage(int id, PhotoImage pi, PhotoDimensions dim)
+	public void storeImage(PhotoImageData pid, byte[] img, PhotoDimensions dim)
 		throws Exception {
 		if(functional) {
-			String key=makeKey(id, dim, pi.getFormat());
-			S3Object obj=new S3Object(pi.getData(), null);
+			String key=makeKey(pid.getId(), dim, pid.getFormat());
+			S3Object obj=new S3Object(img, null);
 			obj.metadata=Collections.emptyMap();
 			Response r=conn.put(bucket, key, obj,
 					Collections.singletonMap("Content-Type",
 							Collections.singletonList(
-									pi.getFormat().getMime())));
-			entries.put(key, pi.getData().length);
+									pid.getFormat().getMime())));
+			entries.put(key, img.length);
 			getLogger().info("Stored %s in bucket %s: %s", key, bucket,
 					r.connection.getResponseCode());
 		} else {
@@ -194,8 +194,8 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 		if(!entries.containsKey(key)) {
 			getLogger().info("%s was missing", key);
 			ImageServer is=Persistent.getImageServer();
-			PhotoImage img=is.getImage(pid.getId(), dim);
-			storeImage(pid.getId(), img, dim);
+			byte[] img=is.getImage(pid, dim);
+			storeImage(pid, img, dim);
 		}
 	}
 

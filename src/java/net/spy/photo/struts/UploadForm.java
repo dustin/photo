@@ -4,13 +4,13 @@ package net.spy.photo.struts;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.spy.photo.PhotoImage;
-import net.spy.photo.PhotoUtil;
-
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
+
+import net.spy.photo.PhotoParser;
+import net.spy.photo.PhotoUtil;
 
 /**
  * Form to receive image uploads.
@@ -23,7 +23,7 @@ public class UploadForm extends PhotoForm {
 	private String taken=null;
 	private String keywords=null;
 	private String info=null;
-	private PhotoImage photoImage=null;
+	private byte[] photoImage=null;
 
 	/**
 	 * Get an instance of UploadForm.
@@ -85,7 +85,7 @@ public class UploadForm extends PhotoForm {
 	/**
 	 * Get the PhotoImage that got uploaded.
 	 */
-	public PhotoImage getPhotoImage() {
+	public byte[] getPhotoImage() {
 		return(photoImage);
 	}
 
@@ -140,19 +140,20 @@ public class UploadForm extends PhotoForm {
 				errors.add("picture", new ActionMessage("error.upload.picture"));
 			} else {
 				// Get the PhotoImage
-				byte data[]=new byte[picture.getFileSize()];
+				photoImage=new byte[picture.getFileSize()];
 				try {
-					int length=picture.getInputStream().read(data);
+					int length=picture.getInputStream().read(photoImage);
 					// verify we read enough data
 					if(length != picture.getFileSize()) {
 						errors.add("picture",
 							new ActionMessage("error.upload.picture.notread"));
 					}
+					PhotoParser.Result res=
+						PhotoParser.getInstance().parseImage(photoImage);
 					// Create a PhotoImage out of it.
-					photoImage=new PhotoImage(data);
 					getLogger().debug("Mime type is "
 						+ picture.getContentType()
-						+ " format is " + photoImage.getFormat().getMime());
+						+ " format is " + res.getFormat().getMime());
 				} catch(Exception e) {
 					getLogger().warn("Problem uploading picture", e);
 					errors.add("picture",

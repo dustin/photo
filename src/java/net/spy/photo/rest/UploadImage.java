@@ -15,7 +15,6 @@ import net.spy.photo.CategoryFactory;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.User;
 import net.spy.photo.impl.SavablePhotoImageData;
@@ -79,7 +78,6 @@ public class UploadImage extends BaseRestServlet {
 			}
 			toRead -= read;
 		}
-		PhotoImage photoImage=new PhotoImage(image);
 
 		// Find the date
 		Date taken=null;
@@ -91,7 +89,7 @@ public class UploadImage extends BaseRestServlet {
 		assert taken != null : "Couldn't find taken date";
 
 		// Get the new image ID
-		SavablePhotoImageData savable=new SavablePhotoImageData(photoImage);
+		SavablePhotoImageData savable=new SavablePhotoImageData(image);
 		// Populate the fields.
 		savable.setKeywords(keywords);
 		savable.setDescr(info);

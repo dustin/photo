@@ -24,7 +24,6 @@ import net.spy.photo.Mailer;
 import net.spy.photo.NoSuchPhotoUserException;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoProperties;
 import net.spy.photo.User;
@@ -120,11 +119,10 @@ public class MailPoller extends SpyObject implements Runnable {
 	private void storeImage(User u, MailImage img) throws Exception {
 		Category cat = img.computeCategory(u);
 		assert cat != null;
-		// Create a PhotoImage from the raw data.
-		PhotoImage photoImage = new PhotoImage(img.getBytes());
 
 		// Get the new image ID
-		SavablePhotoImageData savable = new SavablePhotoImageData(photoImage);
+		SavablePhotoImageData savable =
+			new SavablePhotoImageData(img.getBytes());
 		// Populate the fields.
 		savable.setKeywords(img.getKeywords());
 		savable.setDescr(img.getInfo());

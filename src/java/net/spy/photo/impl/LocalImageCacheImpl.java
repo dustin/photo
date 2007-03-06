@@ -6,7 +6,6 @@ import net.spy.cache.DiskCache;
 import net.spy.photo.ImageCache;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImage;
 
 /**
  * ImageCache that uses local files.
@@ -29,15 +28,15 @@ public class LocalImageCacheImpl extends Object implements ImageCache {
 	/**
 	 * @see ImageCache
 	 */
-	public PhotoImage getImage(String key) throws PhotoException {
-		PhotoImage rv=(PhotoImage)cache.get(key);
+	public byte[] getImage(String key) throws PhotoException {
+		byte[] rv=(byte[])cache.get(key);
 		return(rv);
 	}
 
 	/**
 	 * @see ImageCache
 	 */
-	public void putImage(String key, PhotoImage image) throws PhotoException {
+	public void putImage(String key, byte[] image) throws PhotoException {
 		cache.put(key, image);
 	}
 

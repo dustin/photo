@@ -12,7 +12,6 @@ import net.spy.SpyObject;
 import net.spy.photo.ImageCache;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImage;
 
 /**
  * ImageCache implementation that wraps other ImageCache implementations to
@@ -103,8 +102,8 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 	 * Get a PhotoImage from the first ImageCache implementation that has one
 	 * for the given key.
 	 */
-	public PhotoImage getImage(String key) throws PhotoException {
-		PhotoImage rv=null;
+	public byte[] getImage(String key) throws PhotoException {
+		byte[] rv=null;
 		if(getList != null) {
 			for(ImageCache ic : getList) {
 				rv=ic.getImage(key);
@@ -116,7 +115,7 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 	/** 
 	 * Store a PhotoImage in all chained caches.
 	 */
-	public void putImage(String key, PhotoImage image) throws PhotoException {
+	public void putImage(String key, byte[] image) throws PhotoException {
 		if(putList != null) {
 			for(ImageCache ic : putList) {
 				ic.putImage(key, image);

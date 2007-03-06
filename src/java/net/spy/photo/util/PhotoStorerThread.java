@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.observation.NewImageData;
@@ -163,11 +163,13 @@ public class PhotoStorerThread extends LoopingThread
 	// encoding it to put it into the database in a transaction.  The last
 	// query in the transaction records the image having been stored.
 	private void storeImage(int imageId) throws Exception {
-		PhotoImageHelper p = new PhotoImageHelper(imageId);
+		PhotoImageHelper p = PhotoImageHelper.getInstance();
+		PhotoImageData pid=
+			PhotoImageDataFactory.getInstance().getObject(imageId);
 		SpyDB pdb = new SpyDB(PhotoConfig.getInstance());
-		PhotoImage pi = p.getImage();
-		getLogger().info("Storer: Got image for %d, %d bytes of data", imageId,
-				pi.size());
+		byte[] pi = p.getImage(pid);
+		getLogger().info("Storer: Got image for %d, %d bytes of data", pid,
+				pid.getSize());
 
 		Connection db=null;
 		try {
@@ -182,7 +184,7 @@ public class PhotoStorerThread extends LoopingThread
 			pst.setInt(1, imageId);
 
 			// Get the encoded data
-			for(byte b[] : new ByteChunker(pi.getData(), CHUNK_SIZE)) {
+			for(byte b[] : new ByteChunker(pi, CHUNK_SIZE)) {
 				pst.setInt(2, n++);
 				pst.setString(3, base64.encode(b));
 				int aff=pst.executeUpdate();
@@ -216,7 +218,7 @@ public class PhotoStorerThread extends LoopingThread
 			}
 			db.commit();
 			// Go ahead and generate a thumbnail.
-			p.getThumbnail();
+			p.getThumbnail(pid);
 		} catch(Exception e) {
 			// If anything happens, roll it back.
 			getLogger().warn("Problem saving image", e);

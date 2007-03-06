@@ -13,7 +13,7 @@ import net.spy.SpyObject;
 import net.spy.db.SQLRunner;
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.util.CloseUtil;
 
@@ -157,8 +157,9 @@ public abstract class PhotoMigration extends SpyObject {
 		while(rs.next()) {
 			int id=rs.getInt(1);
 			getLogger().debug("Doing image #" + id);
-			PhotoImageHelper helper=new PhotoImageHelper(id);
-			PhotoImage image=helper.getThumbnail();
+			PhotoImageHelper helper=PhotoImageHelper.getInstance();
+			byte[] image=helper.getThumbnail(
+					PhotoImageDataFactory.getInstance().getObject(id));
 			if(image==null) {
 				throw new Exception("Why did that return null?");
 			}

@@ -26,8 +26,8 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoParser;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.Place;
 import net.spy.photo.User;
@@ -66,7 +66,7 @@ public class SavablePhotoImageData extends AbstractSavable
 	private Date timestamp=null;
 	private int id=-1;
 	private Format format=null;
-	private PhotoImage imageData=null;
+	private byte[] imageData=null;
 	private Place place=null;
 
 	/**
@@ -84,18 +84,15 @@ public class SavablePhotoImageData extends AbstractSavable
 	 * @param data the data for the image
 	 * @throws PhotoException If a new photo id cannot be obtained
 	 */
-	public SavablePhotoImageData(PhotoImage data) throws PhotoException {
+	public SavablePhotoImageData(byte[] data) throws PhotoException {
 		super();
 
 		imageData=data;
-		dimensions=data;
-		size=data.size();
-		format=data.getFormat();
-		try {
-			md5=data.computeMd5();
-		} catch (Exception e) {
-			throw new PhotoException("Problem computing md5", e);
-		}
+		PhotoParser.Result res=PhotoParser.getInstance().parseImage(data);
+		dimensions=new PhotoDimensionsImpl(res.getWidth(), res.getHeight());
+		size=data.length;
+		format=res.getFormat();
+		md5=res.getMd5();
 		timestamp=new Date();
 		votes=new Votes();
 

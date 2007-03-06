@@ -18,7 +18,6 @@ import net.spy.photo.Format;
 import net.spy.photo.Keyword;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.PhotoImageHelper;
@@ -337,10 +336,9 @@ public abstract class PhotoImageDataImpl extends SpyObject
 		if(metaData==null) {
 			metaData=Collections.emptyMap();
 			if(format == Format.JPEG) {
-				PhotoImageHelper p=new PhotoImageHelper(getId());
-				PhotoImage image=p.getImage();
-				metaData=MetaDataExtractor.getInstance().getMetaData(
-						image.getData());
+				PhotoImageHelper p=PhotoImageHelper.getInstance();
+				byte[] image=p.getImage(this);
+				metaData=MetaDataExtractor.getInstance().getMetaData(image);
 			}
 		}
 		return(metaData);

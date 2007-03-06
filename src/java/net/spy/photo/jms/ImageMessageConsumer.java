@@ -21,7 +21,8 @@ import net.spy.photo.ImageServer;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.stat.Stats;
 
@@ -68,21 +69,23 @@ public class ImageMessageConsumer extends SpyObject
 			getLogger().info(
 					"Processing message with id %s for image %s",
 					msg.getJMSMessageID(), id);
-			cacheVariations(id);
+			PhotoImageData pid=
+				PhotoImageDataFactory.getInstance().getObject(id);
+			cacheVariations(pid);
 			msg.acknowledge();
 		} catch (Exception e) {
 			getLogger().warn("Error processing message", e);
 		}
 	}
 
-	private void cacheVariations(int id) throws Exception {
+	private void cacheVariations(PhotoImageData pid) throws Exception {
 		long start=System.currentTimeMillis();
 		ImageServer is=Persistent.getImageServer();
-		is.getThumbnail(id);
+		is.getThumbnail(pid);
 		for(PhotoDimensions dim : sizes) {
-			PhotoImage img=is.getImage(id, dim);
+			byte[] img=is.getImage(pid, dim);
 			getLogger().info("Cached %d at %s with %d bytes",
-					id, dim, img.getData().length);
+					pid, dim, img.length);
 		}
 		Stats.getComputingStat("precache")
 			.add(System.currentTimeMillis() - start);

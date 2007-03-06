@@ -15,7 +15,7 @@ public interface ImageServer {
 	 *            if the dimensions are null, the image is returned at
 	 *            maximum resolution
 	 */
-	PhotoImage getImage(int imageId, PhotoDimensions dim)
+	byte[] getImage(PhotoImageData pid, PhotoDimensions dim)
 		throws PhotoException;
 
 	/**
@@ -23,11 +23,11 @@ public interface ImageServer {
 	 *
 	 * @param imageId the ID of the image you want
 	 */
-	PhotoImage getThumbnail(int imageId) throws PhotoException;
+	byte[] getThumbnail(PhotoImageData pid) throws PhotoException;
 
 	/**
 	 * Store the given image.
 	 */
-	void storeImage(PhotoImageData pid, PhotoImage image) throws PhotoException;
+	void storeImage(PhotoImageData pid, byte[] image) throws PhotoException;
 
 }

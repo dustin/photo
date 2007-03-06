@@ -15,8 +15,8 @@ public abstract class ImageServerScaler extends SpyObject {
 	/**
 	 * Scale the image.
 	 */
-	public abstract PhotoImage scaleImage(PhotoImage in, PhotoDimensions dim)
-		throws Exception;
+	public abstract byte[] scaleImage(PhotoImageData pid, byte[] in,
+			PhotoDimensions dim) throws Exception;
 
 	/**
 	 * Set the configuration for this instance.

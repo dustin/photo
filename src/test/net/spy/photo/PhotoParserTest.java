@@ -7,9 +7,15 @@ import java.io.FileInputStream;
 
 import junit.framework.TestCase;
 
-import net.spy.photo.impl.PhotoDimensionsImpl;
+public class PhotoParserTest extends TestCase {
 
-public class PhotoImageTest extends TestCase {
+	private PhotoParser parser=null;
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		parser=PhotoParser.getInstance();
+	}
 
 	private byte[] getFileData(String filename) throws Exception {
 		File f = new File(System.getProperty("basedir")
@@ -22,6 +28,7 @@ public class PhotoImageTest extends TestCase {
 		return rv;
 	}
 
+	/*
 	private void scaleTest(String n, int w, int h) throws Exception {
 		byte data[] = getFileData(n);
 		PhotoImage pi = new PhotoImage(data);
@@ -37,54 +44,51 @@ public class PhotoImageTest extends TestCase {
 		scaleTest("spyvspy2.png", 45, 50);
 		scaleTest("sflogo.gif", 50, 17);
 	}
+	*/
 
 	public void testJpeg() throws Exception {
 		byte data[] = getFileData("skate.jpg");
-		PhotoImage pi = new PhotoImage(data);
-		assertSame(data, pi.getData());
-		assertEquals(Format.JPEG, pi.getFormat());
-		assertEquals(Format.JPEG.getId(), pi.getFormat().getId());
-		assertEquals("image/jpeg", pi.getFormat().getMime());
-		assertEquals("jpg", pi.getFormat().getExtension());
-		assertEquals(13579, pi.size());
-		assertEquals(166, pi.getWidth());
-		assertEquals(146, pi.getHeight());
-		assertEquals("PhotoImage ({Format image/jpeg}) 166x146",
-			String.valueOf(pi));
+		PhotoParser.Result res=parser.parseImage(data);
+		assertEquals(Format.JPEG, res.getFormat());
+		assertEquals(Format.JPEG.getId(), res.getFormat().getId());
+		assertEquals("image/jpeg", res.getFormat().getMime());
+		assertEquals("jpg", res.getFormat().getExtension());
+		assertEquals(13579, data.length);
+		assertEquals(166, res.getWidth());
+		assertEquals(146, res.getHeight());
+		assertEquals("f57097246c70ee48d1e16f4ae6577b1c", res.getMd5());
 	}
 
 	public void testPNG() throws Exception {
 		byte data[] = getFileData("spyvspy2.png");
-		PhotoImage pi = new PhotoImage(data);
-		assertEquals(Format.PNG, pi.getFormat());
-		assertEquals(Format.PNG.getId(), pi.getFormat().getId());
-		assertEquals("image/png", pi.getFormat().getMime());
-		assertEquals("png", pi.getFormat().getExtension());
-		assertEquals(33441, pi.size());
-		assertEquals(201, pi.getWidth());
-		assertEquals(219, pi.getHeight());
-		assertEquals("PhotoImage ({Format image/png}) 201x219",
-			String.valueOf(pi));
+		PhotoParser.Result res=parser.parseImage(data);
+		assertEquals(Format.PNG, res.getFormat());
+		assertEquals(Format.PNG.getId(), res.getFormat().getId());
+		assertEquals("image/png", res.getFormat().getMime());
+		assertEquals("png", res.getFormat().getExtension());
+		assertEquals(33441, data.length);
+		assertEquals(201, res.getWidth());
+		assertEquals(219, res.getHeight());
+		assertEquals("903a8f0871ef8d75b2127e15b716083b", res.getMd5());
 	}
 
 	public void testGIF() throws Exception {
 		byte data[] = getFileData("sflogo.gif");
-		PhotoImage pi = new PhotoImage(data);
-		assertEquals(Format.GIF, pi.getFormat());
-		assertEquals(Format.GIF.getId(), pi.getFormat().getId());
-		assertEquals("image/gif", pi.getFormat().getMime());
-		assertEquals("gif", pi.getFormat().getExtension());
-		assertEquals(1968, pi.size());
-		assertEquals(88, pi.getWidth());
-		assertEquals(31, pi.getHeight());
-		assertEquals("PhotoImage ({Format image/gif}) 88x31",
-			String.valueOf(pi));
+		PhotoParser.Result res=parser.parseImage(data);
+		assertEquals(Format.GIF, res.getFormat());
+		assertEquals(Format.GIF.getId(), res.getFormat().getId());
+		assertEquals("image/gif", res.getFormat().getMime());
+		assertEquals("gif", res.getFormat().getExtension());
+		assertEquals(1968, data.length);
+		assertEquals(88, res.getWidth());
+		assertEquals(31, res.getHeight());
+		assertEquals("70038412b7daaa63ade5b8e6b7fa5045", res.getMd5());
 	}
 	
 	private void badData(byte data[]) {
 		try {
-			PhotoImage pi=new PhotoImage(data);
-			fail("Made a PhotoImage out of bad data, got " + pi);
+			PhotoParser.Result res=parser.parseImage(data);
+			fail("Made a PhotoImage out of bad data, got " + res);
 		} catch(PhotoException e) {
 			assertNotNull(e.getMessage());
 		} catch(IllegalArgumentException e) {
@@ -100,6 +104,7 @@ public class PhotoImageTest extends TestCase {
 		badData(getFileData("test.random"));
 	}
 
+	/*
 	private void equalityTest(String name) throws Exception {
 		PhotoImage pi1=new PhotoImage(getFileData(name));
 		PhotoImage pi2=new PhotoImage(getFileData(name));
@@ -112,12 +117,13 @@ public class PhotoImageTest extends TestCase {
 		assertEquals(pi1, pd);
 		assertEquals(pi2, pd);
 	}
-	
+
 	public void testEquality() throws Exception {
 		equalityTest("sflogo.gif");
 		equalityTest("skate.jpg");
 		equalityTest("spyvspy2.png");
 	}
+	*/
 	
 	public void testBadFormatRequest() {
 		try {

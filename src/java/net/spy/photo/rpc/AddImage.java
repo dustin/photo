@@ -10,7 +10,6 @@ import net.spy.photo.CategoryFactory;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageDataFactory;
 import net.spy.photo.User;
 import net.spy.photo.impl.SavablePhotoImageData;
@@ -82,11 +81,8 @@ public class AddImage extends RPCMethod {
 				+ category);
 		}
 
-		// Create a PhotoImage from the raw data.
-		PhotoImage photoImage=new PhotoImage(image);
-
 		// Get the new image ID
-		SavablePhotoImageData savable=new SavablePhotoImageData(photoImage);
+		SavablePhotoImageData savable=new SavablePhotoImageData(image);
 		// Populate the fields.
 		savable.setKeywords(keywords);
 		savable.setDescr(info);

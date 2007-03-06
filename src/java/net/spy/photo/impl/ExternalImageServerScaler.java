@@ -10,7 +10,7 @@ import java.util.Random;
 
 import net.spy.photo.ImageServerScaler;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoUtil;
 import net.spy.util.CloseUtil;
 
@@ -47,18 +47,17 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 	 * Scale an image with an external command.
 	 */
 	@Override
-	public PhotoImage scaleImage(PhotoImage in, PhotoDimensions dim)
+	public byte[] scaleImage(PhotoImageData pid, byte[] in, PhotoDimensions dim)
 		throws Exception {
 
 		Random r = new Random();
 		String part = "/tmp/image." + Math.abs(r.nextInt());
-		String thumbfilename = part + ".tn." + in.getFormat().getExtension();
-		String tmpfilename=part + "." + in.getFormat().getExtension();
+		String thumbfilename = part + ".tn." + pid.getFormat().getExtension();
+		String tmpfilename=part + "." + pid.getFormat().getExtension();
 		byte b[]=null;
 
 		// OK, got our filenames, now let's calculate the new size:
-		PhotoDimensions imageSize=new PhotoDimensionsImpl(in.getWidth(),
-			in.getHeight());
+		PhotoDimensions imageSize=pid.getDimensions();
 		PhotoDimensions newSize=PhotoUtil.scaleTo(imageSize, dim);
 
 		FileInputStream fin=null;
@@ -77,7 +76,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 
 			// Write the image data to a temporary file.
 			f = new FileOutputStream(tmpfilename);
-			f.write(in.getData());
+			f.write(in);
 			f.flush();
 			CloseUtil.close(f);
 			f=null;
@@ -125,6 +124,6 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 			theFile = new File(thumbfilename);
 			theFile.delete();
 		}
-		return(new PhotoImage(b));
+		return(b);
 	}
 }

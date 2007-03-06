@@ -10,35 +10,34 @@ import java.util.Map;
 import net.spy.SpyObject;
 import net.spy.photo.ImageCache;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImage;
 
 /**
  * ImageCache implementation that keeps soft references to images in memory.
  */
 public class SoftImageCache extends SpyObject implements ImageCache {
 
-	private Map<String, Reference<PhotoImage>> store=null;
+	private Map<String, Reference<byte[]>> store=null;
 
 	/**
 	 * Get an instance of SoftImageCache.
 	 */
 	public SoftImageCache() {
 		super();
-		store=new HashMap<String, Reference<PhotoImage>>();
+		store=new HashMap<String, Reference<byte[]>>();
 	}
 
-	public PhotoImage getImage(String key) throws PhotoException {
-		PhotoImage rv=null;
-		Reference<PhotoImage> r=store.get(key);
+	public byte[] getImage(String key) throws PhotoException {
+		byte[] rv=null;
+		Reference<byte[]> r=store.get(key);
 		if(r != null) {
 			rv=r.get();
 		}
 		return(rv);
 	}
 
-	public void putImage(String key, PhotoImage image) throws PhotoException {
+	public void putImage(String key, byte[] image) throws PhotoException {
 		getLogger().info("Caching " + key);
-		store.put(key, new SoftReference<PhotoImage>(image));
+		store.put(key, new SoftReference<byte[]>(image));
 	}
 
 }

@@ -5,7 +5,7 @@ package net.spy.photo.impl;
 import net.spy.photo.ImageServerScaler;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageData;
 import net.spy.photo.PhotoImageScaler;
 
 /**
@@ -20,14 +20,10 @@ public class JavaImageServerScaler extends ImageServerScaler {
 		super();
 	}
 
-	/**
-	 * Scale it in 100% Java.
-	 */
 	@Override
-	public PhotoImage scaleImage(PhotoImage in, PhotoDimensions dim)
-		throws Exception {
-
-		PhotoImageScaler pis=new PhotoImageScaler(in);
+	public byte[] scaleImage(PhotoImageData pid, byte[] in,
+			PhotoDimensions dim) throws Exception {
+		PhotoImageScaler pis=new PhotoImageScaler(pid, in);
 		return(pis.getScaledImage(dim,
 				PhotoConfig.getInstance().getInt("jpeg_quality", 70)));
 	}

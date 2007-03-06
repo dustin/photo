@@ -14,7 +14,6 @@ import net.spy.SpyObject;
 import net.spy.SpyThread;
 import net.spy.photo.impl.ImageServerImpl;
 import net.spy.photo.impl.PhotoDimensionsImpl;
-import net.spy.photo.impl.SavablePhotoImageData;
 import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SearchResults;
 import net.spy.photo.struts.SearchForm;
@@ -239,9 +238,9 @@ public class CacheValidator extends SpyObject implements SAXAble {
 			ImageServer is=Persistent.getImageServer();
 			if(is instanceof ImageServerImpl) {
 				ImageServerImpl isi=(ImageServerImpl)is;
-				PhotoImage fromDB=isi.getImage(img.getId(), null, false);
-				PhotoImage fromCache=isi.getImage(img.getId(), null, true);
-				if(!Arrays.equals(fromDB.getData(), fromCache.getData())) {
+				byte[] fromDB=isi.getImage(img, null, false);
+				byte[] fromCache=isi.getImage(img, null, true);
+				if(!Arrays.equals(fromDB, fromCache)) {
 					errs.add("Didn't get the same result from cache and DB for "
 							+ img.getId());
 				}
@@ -256,18 +255,13 @@ public class CacheValidator extends SpyObject implements SAXAble {
 
 		public void process(PhotoImageData img, Collection<String> errs)
 			throws Exception {
-			PhotoImage pi=Persistent.getImageServer().getImage(
-					img.getId(), null);
+			byte[] pi=Persistent.getImageServer().getImage(
+					img, null);
+			PhotoParser.Result res=PhotoParser.getInstance().parseImage(pi);
 			String storedMd5=img.getMd5();
-			if(storedMd5 == null) {
-				SavablePhotoImageData s=new SavablePhotoImageData(img);
-				s.setMd5(pi.computeMd5());
-				getLogger().debug("Set md5 of %d to %s", s.getId(), s.getMd5());
-				PhotoImageDataFactory.getInstance().store(s);
-			} else {
-				if(!storedMd5.equals(img.getMd5())) {
-					errs.add("MD5 is incorrect for img " + img.getId());
-				}
+			assert storedMd5 != null : "No MD5 for image " + img.getId();
+			if(!storedMd5.equals(res.getMd5())) {
+				errs.add("MD5 is incorrect for img " + img.getId());
 			}
 		}
 		
@@ -293,9 +287,9 @@ public class CacheValidator extends SpyObject implements SAXAble {
 		public void process(PhotoImageData img,
 				Collection<String> errs) throws Exception {
 			ImageServer is=Persistent.getImageServer();
-			is.getThumbnail(img.getId());
+			is.getThumbnail(img);
 			for(PhotoDimensions dim : sizes) {
-				is.getImage(img.getId(), dim);
+				is.getImage(img, dim);
 			}
 		}
 		

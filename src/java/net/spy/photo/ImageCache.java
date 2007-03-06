@@ -10,13 +10,11 @@ public interface ImageCache {
 	/**
 	 * Get an image by key.
 	 */
-	PhotoImage getImage(String key) throws PhotoException;
+	byte[] getImage(String key) throws PhotoException;
 
 	/**
 	 * Store an image by key.
 	 */
-	void putImage(String key, PhotoImage image) throws PhotoException;
+	void putImage(String key, byte[] image) throws PhotoException;
 
 }
-
-
