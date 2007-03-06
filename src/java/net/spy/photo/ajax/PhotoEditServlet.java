@@ -17,8 +17,8 @@ import net.spy.photo.Comment;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoRegion;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.Place;
@@ -27,7 +27,7 @@ import net.spy.photo.User;
 import net.spy.photo.Vote;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.impl.PhotoRegionImpl;
-import net.spy.photo.impl.SavablePhotoImageData;
+import net.spy.photo.impl.SavablePhotoImage;
 
 /**
  * Post a comment.
@@ -112,8 +112,8 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 
 			int voteValue=getIntParam(request, "vote");
 
-			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-			PhotoImageData img=pidf.getObject(id);
+			PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+			PhotoImage img=pidf.getObject(id);
 
 			// First, try to find a current vote to update
 			Vote vote=img.getVotes().getVote(user.getId());
@@ -133,7 +133,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 			// Recache to get the votes up-to-date
 			CacheRefresher.getInstance().recache(pidf,
 					System.currentTimeMillis(),
-					PhotoImageDataFactory.RECACHE_DELAY);
+					PhotoImageFactory.RECACHE_DELAY);
 
 			// Get the image again and check out the newly calculated averages
 			img=pidf.getObject(id);
@@ -155,8 +155,8 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 			String title=getStringParam(request, "title", 1);
 			String keywords=getStringParam(request, "keywords", 0);
 
-			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-			SavablePhotoImageData savable=new SavablePhotoImageData(
+			PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+			SavablePhotoImage savable=new SavablePhotoImage(
 				pidf.getObject(id));
 
 			PhotoDimensions displaySize=
@@ -196,8 +196,8 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 				throw new NullPointerException("value");
 			}
 
-			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-			SavablePhotoImageData savable=new SavablePhotoImageData(
+			PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+			SavablePhotoImage savable=new SavablePhotoImage(
 				pidf.getObject(id));
 
 			update(savable, value);
@@ -208,14 +208,14 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 			return(value);
 		}
 
-		protected abstract void update(SavablePhotoImageData savable,
+		protected abstract void update(SavablePhotoImage savable,
 			String value) throws Exception;
 	}
 
 	@AjaxHandler(path="/descr")
 	public static class DescrHandler extends ValueEditor {
 		@Override
-		public void update(SavablePhotoImageData savable, String value)
+		public void update(SavablePhotoImage savable, String value)
 			throws Exception {
 			savable.setDescr(value);
 		}
@@ -224,7 +224,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 	@AjaxHandler(path="/keywords")
 	public static class KeywordsHandler extends ValueEditor {
 		@Override
-		public void update(SavablePhotoImageData savable, String value)
+		public void update(SavablePhotoImage savable, String value)
 			throws Exception {
 			savable.setKeywords(value);
 		}
@@ -233,7 +233,7 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 	@AjaxHandler(path="/taken")
 	public static class TakenHandler extends ValueEditor {
 		@Override
-		public void update(SavablePhotoImageData savable, String value)
+		public void update(SavablePhotoImage savable, String value)
 			throws Exception {
 			savable.setTaken(value);
 		}
@@ -257,8 +257,8 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 			CategoryFactory cf=CategoryFactory.getInstance();
 			Category cat=cf.getObject(catId);
 
-			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-			SavablePhotoImageData savable=new SavablePhotoImageData(
+			PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+			SavablePhotoImage savable=new SavablePhotoImage(
 				pidf.getObject(id));
 			savable.setCatId(catId);
 			pidf.store(savable, true, RECACHE_DELAY);
@@ -287,8 +287,8 @@ public class PhotoEditServlet extends AjaxInPlaceEditServlet {
 				place=cf.getObject(placeId);
 			}
 
-			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-			SavablePhotoImageData savable=new SavablePhotoImageData(
+			PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+			SavablePhotoImage savable=new SavablePhotoImage(
 				pidf.getObject(id));
 			savable.setPlace(place);
 			pidf.store(savable, true, RECACHE_DELAY);

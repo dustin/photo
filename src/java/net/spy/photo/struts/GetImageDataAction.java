@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUtil;
 
@@ -33,12 +33,12 @@ public class GetImageDataAction extends PhotoAction {
 		super();
 	}
 
-	private PhotoImageData getImageById(int id, HttpServletRequest req) {
-		PhotoImageData rv=null;
+	private PhotoImage getImageById(int id, HttpServletRequest req) {
+		PhotoImage rv=null;
 		try {
-			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			PhotoImageFactory pidf=PhotoImageFactory.getInstance();
 			rv=pidf.getObject(id);
-		} catch(PhotoImageDataFactory.NoSuchPhotoException e) {
+		} catch(PhotoImageFactory.NoSuchPhotoException e) {
 			getLogger().info("Requested missing photo", e);
 		}
 		return(rv);
@@ -66,7 +66,7 @@ public class GetImageDataAction extends PhotoAction {
 		}
 
 		// OK, now figure out what kind we want
-		PhotoImageData image=getImageById(imageId.intValue(), request);
+		PhotoImage image=getImageById(imageId.intValue(), request);
 
 		ActionForward rv=mapping.findForward("next");
 

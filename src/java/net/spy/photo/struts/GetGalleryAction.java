@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.spy.photo.Cursor;
 import net.spy.photo.Gallery;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
 
@@ -43,7 +43,7 @@ public class GetGalleryAction extends PhotoAction {
 
 		Gallery g=Gallery.getGallery(user, ggf.getId());
 		sessionData.setCursor("gallery",
-				new Cursor<PhotoImageData>(g.getImages()));
+				new Cursor<PhotoImage>(g.getImages()));
 
 		return(mapping.findForward("next"));
 	}

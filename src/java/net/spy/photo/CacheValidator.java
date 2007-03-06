@@ -172,7 +172,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 		private void runValidation(SearchResults sr) {
 			todo=sr.getSize();
 			done=0;
-			for(PhotoImageData pid : sr.getAllObjects()) {
+			for(PhotoImage pid : sr.getAllObjects()) {
 				for(Operation op : operations) {
 					try {
 						op.process(pid, errs);
@@ -222,7 +222,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 	 * Validate an individual image.
 	 */
 	public static interface Operation {
-		void process(PhotoImageData img, Collection<String> errs)
+		void process(PhotoImage img, Collection<String> errs)
 			throws Exception;
 	}
 
@@ -233,7 +233,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 	public static class ValidateCacheAndDB extends SpyObject
 		implements Operation {
 
-		public void process(PhotoImageData img,
+		public void process(PhotoImage img,
 				Collection<String> errs) throws Exception {
 			ImageServer is=Persistent.getImageServer();
 			if(is instanceof ImageServerImpl) {
@@ -253,7 +253,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 
 	public static class ValidateMD5s extends SpyObject implements Operation {
 
-		public void process(PhotoImageData img, Collection<String> errs)
+		public void process(PhotoImage img, Collection<String> errs)
 			throws Exception {
 			byte[] pi=Persistent.getImageServer().getImage(
 					img, null);
@@ -284,7 +284,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 			sizes.add(new PhotoDimensionsImpl("800x600"));	
 		}
 
-		public void process(PhotoImageData img,
+		public void process(PhotoImage img,
 				Collection<String> errs) throws Exception {
 			ImageServer is=Persistent.getImageServer();
 			is.getThumbnail(img);

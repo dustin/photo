@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 import net.spy.db.Saver;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.impl.SavablePhotoImageData;
+import net.spy.photo.PhotoImageFactory;
+import net.spy.photo.impl.SavablePhotoImage;
 import net.spy.photo.sp.migration.GetAllImgIdsAndKws;
 import net.spy.util.ProgressStats;
 
@@ -40,13 +40,13 @@ public class PhotoMigration11 extends PhotoMigration {
 
 		ProgressStats stat=new ProgressStats(imgs.size());
 
-		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+		PhotoImageFactory pidf=PhotoImageFactory.getInstance();
 
 		// Now, flip through them and set the correct value.
 		for(IdKw idkw : imgs) {
 			stat.start();
 
-			SavablePhotoImageData savable=new SavablePhotoImageData(
+			SavablePhotoImage savable=new SavablePhotoImage(
 				pidf.getObject(idkw.id));
 			savable.setKeywords(idkw.kw);
 

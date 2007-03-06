@@ -3,7 +3,7 @@
 package net.spy.photo.aspects;
 
 import net.spy.photo.ImageServer;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 import net.spy.photo.observation.NewImageObservable;
 
 /**
@@ -11,11 +11,11 @@ import net.spy.photo.observation.NewImageObservable;
  */
 public aspect StorerNotifications {
 
-	pointcut storedImage(PhotoImageData pid, byte[] image):
-		execution(public void ImageServer.storeImage(PhotoImageData, byte[]))
+	pointcut storedImage(PhotoImage pid, byte[] image):
+		execution(public void ImageServer.storeImage(PhotoImage, byte[]))
 		&& args(pid, image);
 
-	after(PhotoImageData pid, byte[] image) returning:
+	after(PhotoImage pid, byte[] image) returning:
 		storedImage(pid, image) {
 
 		// Let everyone know there's a new image.

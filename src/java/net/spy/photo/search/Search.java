@@ -27,7 +27,7 @@ import net.spy.photo.Keyword;
 import net.spy.photo.KeywordFactory;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoUtil;
 import net.spy.photo.User;
 import net.spy.photo.sp.DeleteSearch;
@@ -210,19 +210,19 @@ public class Search extends SpyObject {
 		getLogger().debug("Performing search.");
 
 		// Figure out how the thing should be sorted.
-		Comparator<PhotoImageData> comp = null;
+		Comparator<PhotoImage> comp = null;
 		if("a.ts".equals(form.getOrder())) {
 			comp = new TimestampComparator();
 		} else {
 			comp = new TakenComparator();
 		}
 		if("desc".equals(form.getSdirection())) {
-			comp = new ReverseComparator<PhotoImageData>(comp);
+			comp = new ReverseComparator<PhotoImage>(comp);
 		}
 
 		// This is the result set of images we want to display and maintain
 		// their sort order
-		Set<PhotoImageData> rset = new TreeSet<PhotoImageData>(comp);
+		Set<PhotoImage> rset = new TreeSet<PhotoImage>(comp);
 
 		// Handle any category first
 		String atmp[] = form.getCat();
@@ -262,7 +262,7 @@ public class Search extends SpyObject {
 		// Populate the results
 		SearchResults results = new SearchResults();
 		results.setMaxSize(dims);
-		for(PhotoImageData r : rset) {
+		for(PhotoImage r : rset) {
 			results.add(r);
 		}
 
@@ -293,7 +293,7 @@ public class Search extends SpyObject {
 			SearchForm sf) throws Exception {
 		Map<String, KeywordMatch> rv=new TreeMap<String, KeywordMatch>();
 		ParallelSearch ps=ParallelSearch.getInstance();
-		for(PhotoImageData pid : ps.performSearch(sf, u).getAllObjects()) {
+		for(PhotoImage pid : ps.performSearch(sf, u).getAllObjects()) {
 			for(Keyword kw : pid.getKeywords()) {
 				KeywordMatch km=rv.get(kw.getKeyword());
 				if(km == null) {
@@ -323,16 +323,16 @@ public class Search extends SpyObject {
 	// In the case of dates, we do an explicit OR between the two date range
 	// sets, and then AND the results back to current response set
 	private void processDates(
-		Set<PhotoImageData> rset, String astart, String aend, String tstart,
+		Set<PhotoImage> rset, String astart, String aend, String tstart,
 		String tend) throws Exception {
-		Collection<PhotoImageData> aset = processRange(SortOrder.BY_TS,
+		Collection<PhotoImage> aset = processRange(SortOrder.BY_TS,
 				astart, aend);
-		Collection<PhotoImageData> tset = processRange(SortOrder.BY_TAKEN,
+		Collection<PhotoImage> tset = processRange(SortOrder.BY_TAKEN,
 				tstart, tend);
 
 		// Only process dates if one of them was not null
 		if(aset != null || tset != null) {
-			Set<PhotoImageData> combined = new HashSet<PhotoImageData>();
+			Set<PhotoImage> combined = new HashSet<PhotoImage>();
 			if(aset != null) {
 				getLogger().debug("Got set by added date: %d ", aset.size());
 				combined.addAll(aset);
@@ -348,7 +348,7 @@ public class Search extends SpyObject {
 	}
 
 	private void processKeywords(
-		Set<PhotoImageData> rset, String kw, String keyjoin) throws Exception {
+		Set<PhotoImage> rset, String kw, String keyjoin) throws Exception {
 
 		if(kw == null) {
 			kw = "";
@@ -378,7 +378,7 @@ public class Search extends SpyObject {
 			// Remove everything that doesn't match our keywords (unless we
 			// don't have any)
 			getLogger().debug("Got images with keywords %s", kws.getPositive());
-			Set<PhotoImageData> keyset =
+			Set<PhotoImage> keyset =
 				index.getForKeywords(kws.getPositive(), joinop);
 			rset.retainAll(keyset);
 		}
@@ -388,13 +388,13 @@ public class Search extends SpyObject {
 			// of the images matching the anti-keywords
 			getLogger().debug("Removing images with keywords %s",
 					kws.getNegative());
-			Set<PhotoImageData> keyset =
+			Set<PhotoImage> keyset =
 				index.getForKeywords(kws.getNegative(), SearchIndex.OP.OR);
 			rset.removeAll(keyset);
 		}
 	}
 
-	private void processInfo(Set<PhotoImageData> rset, String kw,
+	private void processInfo(Set<PhotoImage> rset, String kw,
 		String keyjoin) {
 		// Find all of the words
 		ArrayList<String> words = new ArrayList<String>();
@@ -408,8 +408,8 @@ public class Search extends SpyObject {
 			joinop = SearchIndex.OP.OR;
 		}
 
-		for(Iterator<PhotoImageData> ri = rset.iterator(); ri.hasNext();) {
-			PhotoImageData pid = ri.next();
+		for(Iterator<PhotoImage> ri = rset.iterator(); ri.hasNext();) {
+			PhotoImage pid = ri.next();
 			String info = pid.getDescr().toLowerCase();
 			boolean matchedone = false;
 			boolean matchedall = true;
@@ -432,14 +432,14 @@ public class Search extends SpyObject {
 		}
 	}
 
-	private Collection<PhotoImageData> processRange(
+	private Collection<PhotoImage> processRange(
 		SortOrder which, String start, String end) throws Exception {
 
 		SearchIndex index = SearchIndex.getInstance();
 		Date s = PhotoUtil.parseDate(start);
 		Date e = PhotoUtil.parseDate(end);
 
-		Collection<PhotoImageData> matches = null;
+		Collection<PhotoImage> matches = null;
 
 		if(s != null || e != null) {
 			switch(which) {
@@ -469,7 +469,7 @@ public class Search extends SpyObject {
 	}
 
 	static abstract class PIDComparator
-		implements Comparator<PhotoImageData> {
+		implements Comparator<PhotoImage> {
 
 		@Override
 		public boolean equals(Object ob) {
@@ -477,9 +477,9 @@ public class Search extends SpyObject {
 		}
 
 		protected abstract int doCompare(
-			PhotoImageData pid1, PhotoImageData pid2);
+			PhotoImage pid1, PhotoImage pid2);
 
-		public int compare(PhotoImageData pid1, PhotoImageData pid2) {
+		public int compare(PhotoImage pid1, PhotoImage pid2) {
 			int rv = doCompare(pid1, pid2);
 			if(rv == 0) {
 				rv = (pid1.getId() - pid2.getId());
@@ -491,14 +491,14 @@ public class Search extends SpyObject {
 
 	static class TimestampComparator extends PIDComparator {
 		@Override
-		public int doCompare(PhotoImageData pid1, PhotoImageData pid2) {
+		public int doCompare(PhotoImage pid1, PhotoImage pid2) {
 			return (pid1.getTimestamp().compareTo(pid2.getTimestamp()));
 		}
 	}
 
 	static class TakenComparator extends PIDComparator {
 		@Override
-		public int doCompare(PhotoImageData pid1, PhotoImageData pid2) {
+		public int doCompare(PhotoImage pid1, PhotoImage pid2) {
 			return (pid1.getTaken().compareTo(pid2.getTaken()));
 		}
 	}

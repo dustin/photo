@@ -15,7 +15,7 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoParser;
 import net.spy.photo.PhotoUtil;
 import net.spy.util.Base64;
@@ -45,7 +45,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public byte[] getImage(PhotoImageData pid, PhotoDimensions dim)
+	public byte[] getImage(PhotoImage pid, PhotoDimensions dim)
 		throws PhotoException {
 		return(getImage(pid, dim, true));
 	}
@@ -58,7 +58,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	 * @param dim the dimensions at which you want the image
 	 * @param withCache if true, use the cache, otherwise get it directly
 	 */
-	public byte[] getImage(PhotoImageData pid, PhotoDimensions dim,
+	public byte[] getImage(PhotoImage pid, PhotoDimensions dim,
 			boolean withCache)
 		throws PhotoException {
 		byte[] imageData=null;
@@ -85,7 +85,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 		return(imageData);
 	}
 
-	private byte[] fetchScaledImage(PhotoImageData pid, PhotoDimensions dim)
+	private byte[] fetchScaledImage(PhotoImage pid, PhotoDimensions dim)
 		throws Exception {
 
 		byte[] pi=null;
@@ -118,7 +118,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public byte[] getThumbnail(PhotoImageData pid) throws PhotoException {
+	public byte[] getThumbnail(PhotoImage pid) throws PhotoException {
 		PhotoDimensions dim=new PhotoDimensionsImpl(conf.get("thumbnail_size"));
 		return(getImage(pid, dim));
 	}
@@ -126,7 +126,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	/**
 	 * @see ImageServer
 	 */
-	public void storeImage(PhotoImageData pid, byte[] image)
+	public void storeImage(PhotoImage pid, byte[] image)
 		throws PhotoException {
 		try {
 			cache.putImage("photo_" + pid.getId(), image);
@@ -136,13 +136,13 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 		}
 	}
 
-	private byte[] scaleImage(PhotoImageData pid,
+	private byte[] scaleImage(PhotoImage pid,
 			byte[] in, PhotoDimensions dim) throws Exception {
 		return(scaler.scaleImage(pid, in, dim));
 	}
 
 	// Fetch an image from the DB
-	private byte[] fetchImageFromDB(PhotoImageData pid) throws Exception {
+	private byte[] fetchImageFromDB(PhotoImage pid) throws Exception {
 		// Average image is 512k.  Create a buffer of that size to start.
 		StringBuffer sdata=new StringBuffer(512*1024);
 		

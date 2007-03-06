@@ -15,8 +15,8 @@ import org.xml.sax.SAXException;
 
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.observation.NewImageData;
 import net.spy.photo.observation.Observation;
@@ -164,8 +164,8 @@ public class PhotoStorerThread extends LoopingThread
 	// query in the transaction records the image having been stored.
 	private void storeImage(int imageId) throws Exception {
 		PhotoImageHelper p = PhotoImageHelper.getInstance();
-		PhotoImageData pid=
-			PhotoImageDataFactory.getInstance().getObject(imageId);
+		PhotoImage pid=
+			PhotoImageFactory.getInstance().getObject(imageId);
 		SpyDB pdb = new SpyDB(PhotoConfig.getInstance());
 		byte[] pi = p.getImage(pid);
 		getLogger().info("Storer: Got image for %d, %d bytes of data", pid,
@@ -331,7 +331,7 @@ public class PhotoStorerThread extends LoopingThread
 				// recaching done before trying to pull image data in the
 				// normal case.  If we don't make some, there'll be an exception
 				// and we'll keep running until it goes away.
-				Thread.sleep(PhotoImageDataFactory.RECACHE_DELAY + 5000);
+				Thread.sleep(PhotoImageFactory.RECACHE_DELAY + 5000);
 				// Execute a flush.  We expect it to find at least one record
 				// because a flush was pending when we entered here.  However,
 				// there are two circumstances under which there would be
@@ -354,7 +354,7 @@ public class PhotoStorerThread extends LoopingThread
 	 */
 	public void observe(Observation<NewImageData> observation) {
 		getLogger().info("Got new image observation for ",
-				observation.getData().getPhotoImageData());
+				observation.getData().getPhotoImage());
 		addedImage();
 	}
 }

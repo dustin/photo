@@ -1,4 +1,4 @@
-<%@ page import="net.spy.photo.PhotoImageData" %>
+<%@ page import="net.spy.photo.PhotoImage" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ taglib uri='http://jakarta.apache.org/struts/tags-logic' prefix='logic' %>
@@ -8,7 +8,7 @@
 <html:xhtml/>
 
 <%
-	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
+	PhotoImage image=(PhotoImage)request.getAttribute("image");
 %>
 
 <script type="text/javascript">

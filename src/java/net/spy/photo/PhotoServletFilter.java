@@ -19,7 +19,7 @@ public interface PhotoServletFilter {
 	 * @param chain the chain
 	 * @throws Exception if it doesn't like something
 	 */
-	void doFilter(PhotoImageData pid, User u, PhotoDimensions dims,
+	void doFilter(PhotoImage pid, User u, PhotoDimensions dims,
 			HttpServletRequest req, HttpServletResponse res,
 			PhotoServletChain chain)
 		throws Exception;

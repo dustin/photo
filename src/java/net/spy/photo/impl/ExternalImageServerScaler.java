@@ -10,7 +10,7 @@ import java.util.Random;
 
 import net.spy.photo.ImageServerScaler;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoUtil;
 import net.spy.util.CloseUtil;
 
@@ -47,7 +47,7 @@ public class ExternalImageServerScaler extends ImageServerScaler {
 	 * Scale an image with an external command.
 	 */
 	@Override
-	public byte[] scaleImage(PhotoImageData pid, byte[] in, PhotoDimensions dim)
+	public byte[] scaleImage(PhotoImage pid, byte[] in, PhotoDimensions dim)
 		throws Exception {
 
 		Random r = new Random();

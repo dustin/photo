@@ -25,7 +25,7 @@ public class PhotoImageHelper extends SpyObject {
 	/**
 	 * Get the full image on behalf of a user.
 	 */
-	public byte[] getImage(User user, PhotoImageData pid, PhotoDimensions dim)
+	public byte[] getImage(User user, PhotoImage pid, PhotoDimensions dim)
 		throws Exception {
 
 		Persistent.getSecurity().checkAccess(user, pid.getId());
@@ -35,14 +35,14 @@ public class PhotoImageHelper extends SpyObject {
 	/**
 	 * Get a full-size image.
 	 */
-	public byte[] getImage(PhotoImageData pid) throws Exception {
+	public byte[] getImage(PhotoImage pid) throws Exception {
 		return(getImage(pid, null));
 	}
 
 	/**
 	 * Get the full image.
 	 */
-	public byte[] getImage(PhotoImageData pid, PhotoDimensions dim)
+	public byte[] getImage(PhotoImage pid, PhotoDimensions dim)
 		throws Exception {
 
 		byte[] rv=null;
@@ -84,7 +84,7 @@ public class PhotoImageHelper extends SpyObject {
 	/**
 	 * Get the thumbnail for an image on behalf of a user.
 	 */
-	public byte[] getThumbnail(PhotoImageData pid, int uid) throws Exception {
+	public byte[] getThumbnail(PhotoImage pid, int uid) throws Exception {
 		Persistent.getSecurity().checkAccess(uid, pid.getId());
 		return(getThumbnail(pid));
 	}
@@ -92,7 +92,7 @@ public class PhotoImageHelper extends SpyObject {
 	/**
 	 * Get the thumbnail for an image.
 	 */
-	public byte[] getThumbnail(PhotoImageData pid) throws Exception {
+	public byte[] getThumbnail(PhotoImage pid) throws Exception {
 		PhotoConfig cf=PhotoConfig.getInstance();
 		PhotoDimensions pdim= new PhotoDimensionsImpl(cf.get("thumbnail_size"));
 		return(getImage(pid, pdim));
@@ -101,7 +101,7 @@ public class PhotoImageHelper extends SpyObject {
 	/** 
 	 * Get the size of this image as a thumbnail.
 	 */
-	public PhotoDimensions getThumbnailSize(PhotoImageData pid)
+	public PhotoDimensions getThumbnailSize(PhotoImage pid)
 		throws Exception {
 		PhotoDimensions rv=null;
 		SimpleCache cache=SimpleCache.getInstance();

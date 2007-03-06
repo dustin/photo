@@ -9,7 +9,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import net.spy.SpyObject;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoProperties;
 import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.struts.SearchForm;
@@ -37,7 +37,7 @@ public class SlideshowServlet extends PhotoAjaxServlet {
 		sf.setWhat(props.getProperty("idxkeywords", ""));
 
 		ParallelSearch s=ParallelSearch.getInstance();
-		for(PhotoImageData pid :
+		for(PhotoImage pid :
 			s.performSearch(sf, getUser(request), null).getAllObjects()) {
 
 			images.add(new SAXAbleImage(pid));
@@ -56,7 +56,7 @@ public class SlideshowServlet extends PhotoAjaxServlet {
 		private int id=0;
 		private String descr=null;
 
-		public SAXAbleImage(PhotoImageData pid) {
+		public SAXAbleImage(PhotoImage pid) {
 			super();
 			id=pid.getId();
 			descr=pid.getDescr();

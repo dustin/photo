@@ -66,9 +66,9 @@ public class PhotoServlet extends JWHttpServlet {
 		}
 
 		// Figure out if we should display the image or error
-		PhotoImageDataFactory pidf = PhotoImageDataFactory.getInstance();
+		PhotoImageFactory pidf = PhotoImageFactory.getInstance();
 		try {
-			PhotoImageData pid = pidf.getObject(imgId);
+			PhotoImage pid = pidf.getObject(imgId);
 
 			if (!Persistent.getSecurity().testAccess(sessionData.getUser(),
 					imgId)) {
@@ -90,7 +90,7 @@ public class PhotoServlet extends JWHttpServlet {
 						"img.size." + (pdim == null ? "full" : pdim)).add(
 						end - start);
 			}
-		} catch (PhotoImageDataFactory.NoSuchPhotoException e) {
+		} catch (PhotoImageFactory.NoSuchPhotoException e) {
 			getLogger().warn(
 					sessionData.getUser() + " requested missing image", e);
 			res.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -115,7 +115,7 @@ public class PhotoServlet extends JWHttpServlet {
 
 	static class ImgWriter extends BasePhotoServletFilter {
 
-		public void doFilter(PhotoImageData pid, User u, PhotoDimensions dims,
+		public void doFilter(PhotoImage pid, User u, PhotoDimensions dims,
 				HttpServletRequest req, HttpServletResponse res,
 				PhotoServletChain chain) throws Exception {
 

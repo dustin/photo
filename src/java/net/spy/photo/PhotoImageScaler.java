@@ -15,13 +15,13 @@ import net.spy.SpyObject;
  */
 public class PhotoImageScaler extends SpyObject {
 
-	private PhotoImageData pid=null;
+	private PhotoImage pid=null;
 	private byte[] data=null;
 
 	/**
 	 * Get an instance of PhotoImageScaler.
 	 */
-	public PhotoImageScaler(PhotoImageData p, byte[] img) {
+	public PhotoImageScaler(PhotoImage p, byte[] img) {
 		super();
 		pid=p;
 		data=img;

@@ -145,7 +145,7 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 	/**
 	 * Store the given image.
 	 */
-	public void storeImage(PhotoImageData pid, byte[] img, PhotoDimensions dim)
+	public void storeImage(PhotoImage pid, byte[] img, PhotoDimensions dim)
 		throws Exception {
 		if(functional) {
 			String key=makeKey(pid.getId(), dim, pid.getFormat());
@@ -174,8 +174,8 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 		sizes.add(new PhotoDimensionsImpl(conf.get("thumbnail_size")));
 		sizes.add(new PhotoDimensionsImpl("800x600"));
 
-		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-		for(PhotoImageData pid : pidf.getObjects()) {
+		PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+		for(PhotoImage pid : pidf.getObjects()) {
 			for(PhotoDimensions dim : sizes) {
 				send(pid, dim);
 			}
@@ -189,7 +189,7 @@ public class S3Service extends SpyObject implements Observer<NewImageData> {
 	 * @param pid the image metadata
 	 * @param dim the dimensions at which to store the image
 	 */
-	public void send(PhotoImageData pid, PhotoDimensions dim) throws Exception {
+	public void send(PhotoImage pid, PhotoDimensions dim) throws Exception {
 		String key=makeKey(pid.getId(), dim, pid.getFormat());
 		if(!entries.containsKey(key)) {
 			getLogger().info("%s was missing", key);

@@ -1,5 +1,5 @@
 <%@ page import="net.spy.photo.PhotoSessionData" %>
-<%@ page import="net.spy.photo.PhotoImageData" %>
+<%@ page import="net.spy.photo.PhotoImage" %>
 <%@ page import="net.spy.photo.PhotoDimensions" %>
 <%@ page import="net.spy.photo.PhotoRegion" %>
 <%@ page import="net.spy.photo.PhotoUtil" %>
@@ -17,7 +17,7 @@
 <photo:javascript url="/js/extraedit.js"/>
 
 <%
-	PhotoImageData image=(PhotoImageData)request.getAttribute("image");
+	PhotoImage image=(PhotoImage)request.getAttribute("image");
 	PhotoSessionData sessionData=(PhotoSessionData)
 		session.getAttribute(PhotoSessionData.SES_ATTR);
 	int searchPos=sessionData.getResultPos(image.getId());

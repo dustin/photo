@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
-import net.spy.photo.impl.SavablePhotoImageData;
+import net.spy.photo.impl.SavablePhotoImage;
 import net.spy.photo.log.PhotoLogUploadEntry;
 
 import org.apache.struts.action.ActionForm;
@@ -50,8 +50,8 @@ public class UploadAction extends PhotoAction {
 		}
 
 		// Get the Savable
-		SavablePhotoImageData savable=
-			new SavablePhotoImageData(uf.getPhotoImage());
+		SavablePhotoImage savable=
+			new SavablePhotoImage(uf.getPhotoImage());
 
 		savable.setKeywords(uf.getKeywords());
 		savable.setDescr(uf.getInfo());
@@ -59,7 +59,7 @@ public class UploadAction extends PhotoAction {
 		savable.setTaken(uf.getTaken());
 		savable.setAddedBy(user);
 
-		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+		PhotoImageFactory pidf=PhotoImageFactory.getInstance();
 		pidf.store(savable);
 
 		int id=savable.getId();

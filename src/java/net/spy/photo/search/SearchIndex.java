@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.SpyObject;
 import net.spy.photo.Keyword;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 
 /**
  * Search data indexer.
@@ -33,27 +33,27 @@ public class SearchIndex extends SpyObject {
 		new AtomicReference<SearchIndex>(null);
 
 	// Indexes
-	private Map<Keyword, Set<PhotoImageData>> byKeyword = null;
-	private Map<Integer, Set<PhotoImageData>> byCategory = null;
+	private Map<Keyword, Set<PhotoImage>> byKeyword = null;
+	private Map<Integer, Set<PhotoImage>> byCategory = null;
 	// These are actually by date.
-	private SortedMap<Integer, Set<PhotoImageData>> byTaken = null;
-	private SortedMap<Integer, Set<PhotoImageData>> byTs = null;
+	private SortedMap<Integer, Set<PhotoImage>> byTaken = null;
+	private SortedMap<Integer, Set<PhotoImage>> byTs = null;
 
 	// All images that can be classified as a variant of another image.
-	private Set<PhotoImageData> variants=null;
+	private Set<PhotoImage> variants=null;
 
 	/**
 	 * Get an instance of SearchIndex.
 	 */
-	private SearchIndex(Collection<PhotoImageData> vals) {
+	private SearchIndex(Collection<PhotoImage> vals) {
 		super();
-		byKeyword = new HashMap<Keyword, Set<PhotoImageData>>();
-		byCategory = new HashMap<Integer, Set<PhotoImageData>>();
-		byTaken = new TreeMap<Integer, Set<PhotoImageData>>();
-		byTs = new TreeMap<Integer, Set<PhotoImageData>>();	
-		variants = new HashSet<PhotoImageData>();
+		byKeyword = new HashMap<Keyword, Set<PhotoImage>>();
+		byCategory = new HashMap<Integer, Set<PhotoImage>>();
+		byTaken = new TreeMap<Integer, Set<PhotoImage>>();
+		byTs = new TreeMap<Integer, Set<PhotoImage>>();	
+		variants = new HashSet<PhotoImage>();
 		long start=System.currentTimeMillis();
-		for(PhotoImageData pid : vals) {
+		for(PhotoImage pid : vals) {
 			add(byKeyword, pid.getKeywords(), pid);
 			add(byCategory, pid.getCatId(), pid);
 			add(byTaken, pid.getTaken(), pid);
@@ -64,22 +64,22 @@ public class SearchIndex extends SpyObject {
 		immutifyIndex(byCategory);
 		immutifyIndex(byTaken);
 		immutifyIndex(byTs);
-		variants=new ImmutableArraySet<PhotoImageData>(variants);
+		variants=new ImmutableArraySet<PhotoImage>(variants);
 		getLogger().info("Indexed %d images (%d are variants) in %sms",
 				vals.size(), variants.size(),
 				(System.currentTimeMillis() - start));
 	}
 
-	private void immutifyIndex(Map<?, Set<PhotoImageData>> m) {
-		for(Map.Entry<?, Set<PhotoImageData>> me : m.entrySet()) {
-			me.setValue(new ImmutableArraySet<PhotoImageData>(me.getValue()));
+	private void immutifyIndex(Map<?, Set<PhotoImage>> m) {
+		for(Map.Entry<?, Set<PhotoImage>> me : m.entrySet()) {
+			me.setValue(new ImmutableArraySet<PhotoImage>(me.getValue()));
 		}
 	}
 
 	/**
-	 * Update the indexes with a collection of PhotoImageData instances.
+	 * Update the indexes with a collection of PhotoImage instances.
 	 */
-	public static void update(Collection<PhotoImageData> vals) {
+	public static void update(Collection<PhotoImage> vals) {
 		instanceRef.set(new SearchIndex(vals));
 		SearchCache.getInstance().clear();
 	}
@@ -94,22 +94,22 @@ public class SearchIndex extends SpyObject {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void addOne(Map m, Object k, PhotoImageData pid) {
+	private void addOne(Map m, Object k, PhotoImage pid) {
 		Set s = (Set) m.get(k);
 		if(s == null) {
-			s = new HashSet<PhotoImageData>();
+			s = new HashSet<PhotoImage>();
 			m.put(k, s);
 		}
 		s.add(pid);
 	}
 
-	private void add(Map m, Collection c, PhotoImageData pid) {
+	private void add(Map m, Collection c, PhotoImage pid) {
 		for(Iterator i = c.iterator(); i.hasNext();) {
 			addOne(m, i.next(), pid);
 		}
 	}
 
-	private void add(Map m, int i, PhotoImageData pid) {
+	private void add(Map m, int i, PhotoImage pid) {
 		addOne(m, new Integer(i), pid);
 	}
 
@@ -118,14 +118,14 @@ public class SearchIndex extends SpyObject {
 		return d == null ? null : new Integer((int) (d.getTime() / 86400000));
 	}
 
-	private void add(Map m, Date d, PhotoImageData pid) {
+	private void add(Map m, Date d, PhotoImage pid) {
 		addOne(m, dateToInt(d), pid);
 	}
 
 	/**
 	 * Get the set of images for the given category ID.
 	 */
-	public Set<PhotoImageData> getForCat(int i) {
+	public Set<PhotoImage> getForCat(int i) {
 		return (byCategory.get(i));
 	}
 
@@ -136,15 +136,15 @@ public class SearchIndex extends SpyObject {
 	 *            a Collection of Integer objects.
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<PhotoImageData> getForCats(Collection<Integer> cats) {
+	public Set<PhotoImage> getForCats(Collection<Integer> cats) {
 		StringBuilder cacheKey=new StringBuilder();
 		cacheKey.append("orcats ");
 		for(Integer cat : cats) {
 			cacheKey.append(cat).append(",");
 		}
 		SearchCache sc=SearchCache.getInstance();
-		Set<PhotoImageData> cachedStuff=
-			(Set<PhotoImageData>)sc.get(cacheKey.toString());
+		Set<PhotoImage> cachedStuff=
+			(Set<PhotoImage>)sc.get(cacheKey.toString());
 		if(cachedStuff == null) {
 			cachedStuff=getCombined(byCategory, cats, OP.OR);
 			sc.store(cacheKey.toString(), cachedStuff);
@@ -155,25 +155,25 @@ public class SearchIndex extends SpyObject {
 	/**
 	 * Get the set of images for the given keyword.
 	 */
-	public Set<PhotoImageData> getForKeyword(Keyword k) {
+	public Set<PhotoImage> getForKeyword(Keyword k) {
 		return (byKeyword.get(k));
 	}
 
-	private Set<PhotoImageData> getCombined(
-		Map<? extends Object, Set<PhotoImageData>> m,
+	private Set<PhotoImage> getCombined(
+		Map<? extends Object, Set<PhotoImage>> m,
 		Collection<? extends Object> c, OP operator) {
 
-		Set<PhotoImageData> rv = new HashSet<PhotoImageData>();
+		Set<PhotoImage> rv = new HashSet<PhotoImage>();
 		if(c.size() > 0) {
 			// Get and add the first one
 			Iterator i = c.iterator();
-			Set<PhotoImageData> s = m.get(i.next());
+			Set<PhotoImage> s = m.get(i.next());
 			if(s != null) {
 				rv.addAll(s);
 			}
 			// Now, deal with the rest of them
 			for(; i.hasNext();) {
-				Collection<PhotoImageData> stmp = m.get(i.next());
+				Collection<PhotoImage> stmp = m.get(i.next());
 				if(stmp == null) {
 					stmp = Collections.emptyList();
 				}
@@ -197,25 +197,25 @@ public class SearchIndex extends SpyObject {
 	 *            the join operator AND or OR
 	 * @return the set
 	 */
-	public Set<PhotoImageData> getForKeywords(
+	public Set<PhotoImage> getForKeywords(
 		Collection<Keyword> c, OP operator) {
 		return (getCombined(byKeyword, c, operator));
 	}
 
-	private Set<PhotoImageData> getDateRangeSet(
-		SortedMap<Integer, Set<PhotoImageData>> sm, Date fromD, Date toD) {
+	private Set<PhotoImage> getDateRangeSet(
+		SortedMap<Integer, Set<PhotoImage>> sm, Date fromD, Date toD) {
 		Integer from=dateToInt(fromD);
 		Integer to=dateToInt(toD);
-		SortedMap<Integer, Set<PhotoImageData>> tail = sm;
+		SortedMap<Integer, Set<PhotoImage>> tail = sm;
 		if(from != null) {
 			tail = tail.tailMap(from);
 		}
-		SortedMap<Integer, Set<PhotoImageData>> rvm = tail;
+		SortedMap<Integer, Set<PhotoImage>> rvm = tail;
 		if(to != null) {
 			rvm = tail.headMap(to);
 		}
-		HashSet<PhotoImageData> rv = new HashSet<PhotoImageData>();
-		for(Set<PhotoImageData> s : rvm.values()) {
+		HashSet<PhotoImage> rv = new HashSet<PhotoImage>();
+		for(Set<PhotoImage> s : rvm.values()) {
 			rv.addAll(s);
 		}
 		return (rv);
@@ -230,7 +230,7 @@ public class SearchIndex extends SpyObject {
 	 *            ending date (or null if there is no ending date).
 	 * @return the Set of images.
 	 */
-	public Set<PhotoImageData> getForTaken(Date from, Date to) {
+	public Set<PhotoImage> getForTaken(Date from, Date to) {
 		return (getDateRangeSet(byTaken, from, to));
 	}
 
@@ -243,7 +243,7 @@ public class SearchIndex extends SpyObject {
 	 *            ending date (or null if there is no ending date).
 	 * @return the Set of images.
 	 */
-	public Set<PhotoImageData> getForTimestamp(Date from, Date to) {
+	public Set<PhotoImage> getForTimestamp(Date from, Date to) {
 		return (getDateRangeSet(byTs, from, to));
 	}
 

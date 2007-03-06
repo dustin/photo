@@ -18,9 +18,9 @@ import net.spy.db.Savable;
 import net.spy.db.savables.CollectionSavable;
 import net.spy.photo.Keyword;
 import net.spy.photo.KeywordFactory;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.impl.SavablePhotoImageData;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageFactory;
+import net.spy.photo.impl.SavablePhotoImage;
 import net.spy.photo.search.ParallelSearch;
 import net.spy.photo.search.SearchResults;
 
@@ -51,11 +51,11 @@ public class AdminBulkKWUpdate extends PhotoAction {
 			+ " images by adding " + kws.getPositive() + " and removing "
 			+ kws.getNegative());
 
-		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+		PhotoImageFactory pidf=PhotoImageFactory.getInstance();
 
 		ArrayList<Savable> savables=new ArrayList<Savable>(results.getSize());
-		for(PhotoImageData pid : results) {
-			SavablePhotoImageData savable=new SavablePhotoImageData(
+		for(PhotoImage pid : results) {
+			SavablePhotoImage savable=new SavablePhotoImage(
 				pidf.getObject(pid.getId()));
 
 			Collection<Keyword> kw=new HashSet<Keyword>(pid.getKeywords());

@@ -8,14 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 import net.spy.SpyObject;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoServletChain;
 import net.spy.photo.S3Service;
 import net.spy.photo.User;
 
 public class S3PhotoServletFilter extends BasePhotoServletFilter {
 
-	public void doFilter(PhotoImageData pid, User u, PhotoDimensions dims,
+	public void doFilter(PhotoImage pid, User u, PhotoDimensions dims,
 			HttpServletRequest req, HttpServletResponse res,
 			PhotoServletChain chain) throws Exception {
 
@@ -39,10 +39,10 @@ public class S3PhotoServletFilter extends BasePhotoServletFilter {
 	// handling and then having to send some more data in because it's not
 	// a closure like it used to be and stuff like that.
 	private static class Cacher extends SpyObject implements Runnable {
-		private PhotoImageData pid = null;
+		private PhotoImage pid = null;
 		private PhotoDimensions dims = null;
 
-		public Cacher(PhotoImageData p, PhotoDimensions d) {
+		public Cacher(PhotoImage p, PhotoDimensions d) {
 			super();
 			pid = p;
 			dims = d;

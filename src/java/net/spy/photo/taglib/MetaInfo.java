@@ -9,7 +9,7 @@ import javax.servlet.jsp.JspException;
 import net.spy.cache.SimpleCache;
 import net.spy.db.SpyDB;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImageFactory;
 
 /**
  * Meta information about the site.
@@ -52,7 +52,7 @@ public class MetaInfo extends PhotoTag {
 	@Override
 	public int doStartTag() throws JspException {
 		int totalImages=
-			PhotoImageDataFactory.getInstance().getObjects().size();
+			PhotoImageFactory.getInstance().getObjects().size();
 		int totalShown=0;
 
 		try {

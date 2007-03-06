@@ -73,24 +73,24 @@ public class RSSServlet extends PhotoAjaxServlet {
 
 		@Override
 		protected Collection<? extends RSSItem> getItems() {
-			Collection<PhotoImageDataWrapper> c=
-				new ArrayList<PhotoImageDataWrapper>(CHANNEL_SIZE);
-			for(PhotoImageData pid : results) {
+			Collection<PhotoImageWrapper> c=
+				new ArrayList<PhotoImageWrapper>(CHANNEL_SIZE);
+			for(PhotoImage pid : results) {
 				// Just get the first CHANNEL_SIZE
 				if(c.size() >= CHANNEL_SIZE) {
 					break;
 				}
-				c.add(new PhotoImageDataWrapper(pid, base, authenticated));
+				c.add(new PhotoImageWrapper(pid, base, authenticated));
 			}
 			return(c);
 		}
 	}
 
-	private static class PhotoImageDataWrapper implements RSSItem {
-		private PhotoImageData pid=null;
+	private static class PhotoImageWrapper implements RSSItem {
+		private PhotoImage pid=null;
 		private String base=null;
 		private boolean authenticated=false;
-		public PhotoImageDataWrapper(PhotoImageData p, String b, boolean a) {
+		public PhotoImageWrapper(PhotoImage p, String b, boolean a) {
 			super();
 			pid=p;
 			base=b;

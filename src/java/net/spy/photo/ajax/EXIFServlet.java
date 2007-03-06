@@ -4,8 +4,8 @@ package net.spy.photo.ajax;
 import javax.servlet.http.HttpServletRequest;
 
 import net.spy.photo.Persistent;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.User;
 import net.spy.xml.MapElement;
@@ -26,8 +26,8 @@ public class EXIFServlet extends PhotoAjaxServlet {
 		Persistent.getSecurity().checkAccess(user, id);
 
 		// Get the image to get the EXIF data to display
-		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-		PhotoImageData img=pidf.getObject(id);
+		PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+		PhotoImage img=pidf.getObject(id);
 		return new MapElement("exif", "tag", img.getMetaData());
 	}
 }

@@ -87,7 +87,7 @@ public class PhotoSessionData extends Object implements Serializable {
 		setCursor("searchResults", results);
 		searchResults=new HashMap<Integer, Integer>(results.getSize());
 		int pos=0;
-		for(PhotoImageData sr : results.getAllObjects()) {
+		for(PhotoImage sr : results.getAllObjects()) {
 			searchResults.put(sr.getId(), pos++);
 		}
 	}

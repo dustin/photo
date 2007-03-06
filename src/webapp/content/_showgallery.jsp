@@ -18,7 +18,7 @@
 
 <h1><%= g.getName() %></h1>
 
-<logic:iterate id="pid" type="net.spy.photo.PhotoImageData"
+<logic:iterate id="pid" type="net.spy.photo.PhotoImage"
 	collection="<%= g.getImages() %>">
 
 	<%--

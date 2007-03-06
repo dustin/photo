@@ -24,11 +24,11 @@ import net.spy.photo.Mailer;
 import net.spy.photo.NoSuchPhotoUserException;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoProperties;
 import net.spy.photo.User;
 import net.spy.photo.UserFactory;
-import net.spy.photo.impl.SavablePhotoImageData;
+import net.spy.photo.impl.SavablePhotoImage;
 import net.spy.photo.log.PhotoLogUploadEntry;
 import net.spy.photo.util.LCS;
 import net.spy.photo.util.MetaDataExtractor;
@@ -121,8 +121,8 @@ public class MailPoller extends SpyObject implements Runnable {
 		assert cat != null;
 
 		// Get the new image ID
-		SavablePhotoImageData savable =
-			new SavablePhotoImageData(img.getBytes());
+		SavablePhotoImage savable =
+			new SavablePhotoImage(img.getBytes());
 		// Populate the fields.
 		savable.setKeywords(img.getKeywords());
 		savable.setDescr(img.getInfo());
@@ -130,7 +130,7 @@ public class MailPoller extends SpyObject implements Runnable {
 		savable.setTaken(img.getTS());
 		savable.setAddedBy(u);
 
-		PhotoImageDataFactory pidf = PhotoImageDataFactory.getInstance();
+		PhotoImageFactory pidf = PhotoImageFactory.getInstance();
 		pidf.store(savable, true);
 
 		// Log it.
@@ -144,7 +144,7 @@ public class MailPoller extends SpyObject implements Runnable {
 		reportStored(u, savable, img);
 	}
 
-	private void reportStored(User u, SavablePhotoImageData savable,
+	private void reportStored(User u, SavablePhotoImage savable,
 			MailImage img) throws Exception {
 		Mailer m=new Mailer(jndiName);
 		m.setRecipient(u.getEmail());

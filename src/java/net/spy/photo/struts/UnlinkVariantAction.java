@@ -6,8 +6,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.PhotoImageDataFactory;
-import net.spy.photo.impl.SavablePhotoImageData;
+import net.spy.photo.PhotoImageFactory;
+import net.spy.photo.impl.SavablePhotoImage;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -20,8 +20,8 @@ public class UnlinkVariantAction extends PhotoAction {
 	protected ActionForward spyExecute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 		DynaActionForm df=(DynaActionForm)form;
-		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-		SavablePhotoImageData savable=new SavablePhotoImageData(
+		PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+		SavablePhotoImage savable=new SavablePhotoImage(
 				pidf.getObject((Integer)df.get("origId")));
 		savable.removeVariant(
 				pidf.getObject((Integer)df.get("variantId")));

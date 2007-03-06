@@ -21,8 +21,8 @@ import net.spy.photo.ImageServer;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.stat.Stats;
 
@@ -69,8 +69,8 @@ public class ImageMessageConsumer extends SpyObject
 			getLogger().info(
 					"Processing message with id %s for image %s",
 					msg.getJMSMessageID(), id);
-			PhotoImageData pid=
-				PhotoImageDataFactory.getInstance().getObject(id);
+			PhotoImage pid=
+				PhotoImageFactory.getInstance().getObject(id);
 			cacheVariations(pid);
 			msg.acknowledge();
 		} catch (Exception e) {
@@ -78,7 +78,7 @@ public class ImageMessageConsumer extends SpyObject
 		}
 	}
 
-	private void cacheVariations(PhotoImageData pid) throws Exception {
+	private void cacheVariations(PhotoImage pid) throws Exception {
 		long start=System.currentTimeMillis();
 		ImageServer is=Persistent.getImageServer();
 		is.getThumbnail(pid);

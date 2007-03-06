@@ -5,8 +5,8 @@ package net.spy.photo.struts;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.SessionWatcher;
 import net.spy.photo.search.SearchResults;
@@ -51,9 +51,9 @@ public class ViewSessionAction extends PhotoAction {
 
 		// Grab the images from the session
 		SearchResults results=new SearchResults();
-		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+		PhotoImageFactory pidf=PhotoImageFactory.getInstance();
 		for(Integer id : otherData.getImageSeenCollection()) {
-			PhotoImageData pid=pidf.getObject(id);
+			PhotoImage pid=pidf.getObject(id);
 			results.add(pid);
 		}
 

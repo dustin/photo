@@ -88,8 +88,8 @@ public class PhotoSecurity extends SpyObject {
 	public boolean testAccess(User user, int imageId) {
 		boolean ok=false;
 		try {
-			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-			PhotoImageData pid=pidf.getObject(imageId);
+			PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+			PhotoImage pid=pidf.getObject(imageId);
 			ok=user.canView(pid.getCatId());
 
 			if(!ok) {

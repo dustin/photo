@@ -227,7 +227,7 @@ public class Persistent extends JWServletContextListener {
 			getLogger().info("Search cache initialization complete");
 
 			getLogger().info("Initializing image cache");
-			PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
+			PhotoImageFactory pidf=PhotoImageFactory.getInstance();
 			pidf.recache();
 			getLogger().info("Image cache initialization complete");
 

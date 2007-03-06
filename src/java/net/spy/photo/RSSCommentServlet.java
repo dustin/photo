@@ -103,7 +103,7 @@ public class RSSCommentServlet extends PhotoAjaxServlet {
 
 		public String getDescription() {
 			String urlpre=base;
-			PhotoImageData pid=PhotoImageDataFactory.getInstance().getObject(
+			PhotoImage pid=PhotoImageFactory.getInstance().getObject(
 					comment.getPhotoId());
 			if(authenticated) {
 				urlpre = base + "auth/";

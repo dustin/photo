@@ -2,18 +2,18 @@
 
 package net.spy.photo.observation;
 
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 
 public class NewImageData {
 
-	private PhotoImageData photoImageData=null;
+	private PhotoImage photoImageData=null;
 
-	public NewImageData(PhotoImageData pid) {
+	public NewImageData(PhotoImage pid) {
 		super();
 		photoImageData=pid;
 	}
 
-	public PhotoImageData getPhotoImageData() {
+	public PhotoImage getPhotoImage() {
 		return photoImageData;
 	}
 }

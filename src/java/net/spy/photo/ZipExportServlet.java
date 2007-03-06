@@ -84,7 +84,7 @@ public class ZipExportServlet extends JWHttpServlet {
 					+ sessionData.getUser().getRealname() + " on "
 					+ new Date());
 
-			Collection<PhotoImageData> images=new ArrayList<PhotoImageData>(
+			Collection<PhotoImage> images=new ArrayList<PhotoImage>(
 					sr.getAllObjects());
 			addIndexes(images, zos);
 			addStatic(zos);
@@ -125,14 +125,14 @@ public class ZipExportServlet extends JWHttpServlet {
 
 	}
 
-	private void addImages(Collection<PhotoImageData> sr, PhotoDimensions dims,
+	private void addImages(Collection<PhotoImage> sr, PhotoDimensions dims,
 			ZipOutputStream zos) throws Exception {
 
 		SimpleDateFormat sdf=new SimpleDateFormat(PATH_FMT);
 		CRC32 crc=new CRC32();
 
 		getLogger().info("Adding " + sr.size() + " images");
-		for(PhotoImageData pid : sr) {
+		for(PhotoImage pid : sr) {
 			getLogger().info("Adding photos for " + pid.getId());
 			PhotoImageHelper p=PhotoImageHelper.getInstance();
 
@@ -166,7 +166,7 @@ public class ZipExportServlet extends JWHttpServlet {
 		}
 	}
 
-	private void addImageHTML(ZipOutputStream zos, PhotoImageData pid)
+	private void addImageHTML(ZipOutputStream zos, PhotoImage pid)
 		throws Exception {
 		Map<String, String> stuff=new HashMap<String, String>();
 		// XXX:  Fixme
@@ -194,7 +194,7 @@ public class ZipExportServlet extends JWHttpServlet {
 		zos.closeEntry();
 	}
 
-	private void addIndexes(Collection<PhotoImageData> sr, ZipOutputStream zos)
+	private void addIndexes(Collection<PhotoImage> sr, ZipOutputStream zos)
 		throws IOException {
 		SimpleDateFormat sdf=new SimpleDateFormat(DATE_FMT);
 
@@ -210,7 +210,7 @@ public class ZipExportServlet extends JWHttpServlet {
 
 		final Map<String, TreeSet<Integer>> kws=
 			new HashMap<String, TreeSet<Integer>>();
-		for(PhotoImageData pid : sr) {
+		for(PhotoImage pid : sr) {
 			getLogger().info("Processing image " + pid.getId());
 			bw.write("photloc[" + pid.getId() + "]='"
 					+ sdf.format(pid.getTaken()) + "';\n");

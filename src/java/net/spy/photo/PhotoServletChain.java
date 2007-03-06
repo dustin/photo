@@ -20,7 +20,7 @@ public class PhotoServletChain extends SpyObject {
 		fili=c.iterator();
 	}
 
-	public void doChain(PhotoImageData pid, User u, PhotoDimensions dims,
+	public void doChain(PhotoImage pid, User u, PhotoDimensions dims,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 		if(fili.hasNext()) {
 			PhotoServletFilter fil=fili.next();

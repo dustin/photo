@@ -70,7 +70,7 @@ public class KeywordImpl extends AbstractSavable implements Keyword, Comparable<
 	}
 
 	/**
-	 * True if the given object is a PhotoImageData object representing the
+	 * True if the given object is a PhotoImage object representing the
 	 * same image.
 	 */
 	@Override

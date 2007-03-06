@@ -4,12 +4,12 @@ package net.spy.photo.search;
 
 import net.spy.photo.Cursor;
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 
 /**
  * Represents results from a search.
  */
-public class SearchResults extends Cursor<PhotoImageData> {
+public class SearchResults extends Cursor<PhotoImage> {
 
 	private PhotoDimensions maxSize=null;
 

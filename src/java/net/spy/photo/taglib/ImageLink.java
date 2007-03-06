@@ -8,8 +8,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
 import net.spy.photo.PhotoDimensions;
-import net.spy.photo.PhotoImageData;
-import net.spy.photo.PhotoImageDataFactory;
+import net.spy.photo.PhotoImage;
+import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.PhotoSessionData;
 import net.spy.photo.PhotoUtil;
@@ -142,8 +142,8 @@ public class ImageLink extends PhotoTag {
 		if(showOptimal) {
 			scale=true;
 			try {
-				PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-				PhotoImageData pid=pidf.getObject(id);
+				PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+				PhotoImage pid=pidf.getObject(id);
 				PhotoDimensions optdims=sessionData.getOptimalDimensions();
 				PhotoDimensions newDims=PhotoUtil.scaleTo(
 					pid.getDimensions(), optdims);
@@ -192,7 +192,7 @@ public class ImageLink extends PhotoTag {
 				if(showThumbnail) {
 					PhotoImageHelper ph=PhotoImageHelper.getInstance();
 					PhotoDimensions size=ph.getThumbnailSize(
-							PhotoImageDataFactory.getInstance().getObject(id));
+							PhotoImageFactory.getInstance().getObject(id));
 					width="" + size.getWidth();
 					height="" + size.getHeight();
 				}

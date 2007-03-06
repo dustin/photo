@@ -31,7 +31,7 @@ public class Gallery extends AbstractSavable implements Serializable {
 
 	private int id=-1;
 	private String name=null;
-	private ArrayList<PhotoImageData> images=null;
+	private ArrayList<PhotoImage> images=null;
 	private boolean isPublic=false;
 	private User owner=null;
 	private Date timestamp=null;
@@ -43,7 +43,7 @@ public class Gallery extends AbstractSavable implements Serializable {
 		super();
 		this.name=nm;
 		this.owner=o;
-		this.images=new ArrayList<PhotoImageData>();
+		this.images=new ArrayList<PhotoImage>();
 
 		setNew(true);
 		setModified(false);
@@ -111,7 +111,7 @@ public class Gallery extends AbstractSavable implements Serializable {
 
 		ResultSet rs=lg.executeQuery();
 
-		images=new ArrayList<PhotoImageData>();
+		images=new ArrayList<PhotoImage>();
 		while(rs.next()) {
 			addImage(rs.getInt("album_id"));
 		}
@@ -215,7 +215,7 @@ public class Gallery extends AbstractSavable implements Serializable {
 		InsertGalleryMap igm=new InsertGalleryMap(conn);
 		igm.setGalleryId(id);
 
-		for(PhotoImageData pid : images) {
+		for(PhotoImage pid : images) {
 			igm.setAlbumId(pid.getId());
 			affected=igm.executeUpdate();
 			if(affected!=1) {
@@ -228,7 +228,7 @@ public class Gallery extends AbstractSavable implements Serializable {
 	/**
 	 * Add a new image to the gallery.
 	 */
-	public void addImage(PhotoImageData pid) {
+	public void addImage(PhotoImage pid) {
 		removeImage(pid);
 		images.add(pid);
 	}
@@ -237,8 +237,8 @@ public class Gallery extends AbstractSavable implements Serializable {
 	 * Add a new image to the gallery.
 	 */
 	public void addImage(int imageId) throws Exception {
-		PhotoImageDataFactory pidf=PhotoImageDataFactory.getInstance();
-		PhotoImageData pid=pidf.getObject(imageId);
+		PhotoImageFactory pidf=PhotoImageFactory.getInstance();
+		PhotoImage pid=pidf.getObject(imageId);
 		addImage(pid);
 	}
 
@@ -254,7 +254,7 @@ public class Gallery extends AbstractSavable implements Serializable {
 	/**
 	 * Remove an image from the given gallery.
 	 */
-	public void removeImage(PhotoImageData pid) {
+	public void removeImage(PhotoImage pid) {
 		images.remove(pid);
 	}
 
@@ -280,10 +280,10 @@ public class Gallery extends AbstractSavable implements Serializable {
 	}
 
 	/**
-	 * Get a Collection of PhotoImageData objects describing the contents
+	 * Get a Collection of PhotoImage objects describing the contents
 	 * of this gallery.
 	 */
-	public Collection<PhotoImageData> getImages() {
+	public Collection<PhotoImage> getImages() {
 		return(Collections.unmodifiableCollection(images));
 	}
 

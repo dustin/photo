@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.TreeMap;
 
 import net.spy.photo.PhotoException;
-import net.spy.photo.PhotoImageData;
+import net.spy.photo.PhotoImage;
 import net.spy.photo.search.SearchResults;
 
 /**
@@ -64,14 +64,14 @@ public abstract class DateFilter extends SortingFilter {
 		// Do the actual processing
 
 		// This is where the month groups go
-		TreeMap<Date, List<PhotoImageData>> months = null;
+		TreeMap<Date, List<PhotoImage>> months = null;
 		if(direction == SortingFilter.Sort.REVERSE) {
-			months = new TreeMap<Date, List<PhotoImageData>>(
+			months = new TreeMap<Date, List<PhotoImage>>(
 					Collections.reverseOrder());
 		} else {
-			months = new TreeMap<Date, List<PhotoImageData>>();
+			months = new TreeMap<Date, List<PhotoImage>>();
 		}
-		for(PhotoImageData pid : in.getAllObjects()) {
+		for(PhotoImage pid : in.getAllObjects()) {
 			Date dtmp=pid.getTaken();
 
 			// Truncate the date appropriately
@@ -85,9 +85,9 @@ public abstract class DateFilter extends SortingFilter {
 			*/
 
 			// Get a vector from the date
-			List<PhotoImageData> a=months.get(taken);
+			List<PhotoImage> a=months.get(taken);
 			if(a==null) {
-				a=new ArrayList<PhotoImageData>(arrayGuess);
+				a=new ArrayList<PhotoImage>(arrayGuess);
 				months.put(taken, a);
 			}
 
@@ -98,10 +98,10 @@ public abstract class DateFilter extends SortingFilter {
 		Random r=new Random();
 
 		// OK, now we'll flip through the keys to do one per month
-		for(List<PhotoImageData> l : months.values()) {
+		for(List<PhotoImage> l : months.values()) {
 
 			// Get a random object from vector
-			PhotoImageData pid=l.get(r.nextInt(l.size()));
+			PhotoImage pid=l.get(r.nextInt(l.size()));
 
 			// Add it to the results
 			rv.add(pid);
