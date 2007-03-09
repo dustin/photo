@@ -280,7 +280,6 @@ public class CacheValidator extends SpyObject implements SAXAble {
 		public RecacheThumbnailsAndSizes() {
 			super();
 			sizes=new ArrayList<PhotoDimensions>();
-			sizes.add(new PhotoDimensionsImpl("50x50"));
 			sizes.add(new PhotoDimensionsImpl("800x600"));	
 		}
 
