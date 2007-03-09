@@ -18,6 +18,7 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageFactory;
 import net.spy.photo.PhotoImageHelper;
+import net.spy.photo.ShutdownHook;
 import net.spy.photo.observation.Observation;
 import net.spy.photo.observation.Observer;
 import net.spy.photo.sp.GetImagesToFlush;
@@ -37,7 +38,7 @@ import net.spy.xml.XMLUtils;
  * the database for long-term storage, however.
  */
 public class PhotoStorerThread extends LoopingThread
-	implements SAXAble, Observer<PhotoImage> {
+	implements SAXAble, Observer<PhotoImage>, ShutdownHook {
 
 	// chunks should be divisible by 57
 	public static final int CHUNK_SIZE=2052;
@@ -355,5 +356,9 @@ public class PhotoStorerThread extends LoopingThread
 		getLogger().info("Got new image observation for %s",
 				observation.getData());
 		addedImage();
+	}
+
+	public void onShutdown() throws Exception {
+		requestStop();
 	}
 }

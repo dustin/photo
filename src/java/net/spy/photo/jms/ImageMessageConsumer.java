@@ -23,6 +23,7 @@ import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageFactory;
+import net.spy.photo.ShutdownHook;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.stat.Stats;
 
@@ -30,7 +31,7 @@ import net.spy.stat.Stats;
  * Example consumer for JMS messages posted via ImageMessagePoster.
  */
 public class ImageMessageConsumer extends SpyObject
-	implements MessageListener {
+	implements MessageListener, ShutdownHook {
 
 	private QueueConnection conn=null;
 	private QueueSession session=null;
@@ -96,6 +97,10 @@ public class ImageMessageConsumer extends SpyObject
 		conn.stop();
 		session.close();
 		conn.close();
+	}
+
+	public void onShutdown() throws Exception {
+		close();
 	}
 
 }

@@ -9,11 +9,13 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.spy.SpyThread;
+import net.spy.photo.Persistent;
+import net.spy.photo.ShutdownHook;
 
 /**
  * Cache for searches.
  */
-public class SearchCache extends SpyThread {
+public class SearchCache extends SpyThread implements ShutdownHook {
 
 	private static SearchCache instance=null;
 
@@ -39,6 +41,7 @@ public class SearchCache extends SpyThread {
 			new ConcurrentHashMap<Object, SoftReference<SearchResults>>();
 		instance.keyMap=new ConcurrentHashMap<SoftReference<?>, Object>();
 		instance.refQueue=new ReferenceQueue<SearchResults>();
+		Persistent.addShutdownHook(instance);
 		instance.start();
 	}
 
@@ -120,6 +123,10 @@ public class SearchCache extends SpyThread {
 				+ ", misses: " + misses + ", dequeued: " + dequeued
 				+ ", maxsize: " + maxsize
 				+ ", current: " + cache.size() + "/" + keyMap.size());
+	}
+
+	public void onShutdown() throws Exception {
+		shutdown();
 	}
 
 }

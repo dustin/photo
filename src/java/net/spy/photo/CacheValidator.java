@@ -24,7 +24,7 @@ import net.spy.xml.XMLUtils;
 /**
  * Cache validation and build-out utility.
  */
-public class CacheValidator extends SpyObject implements SAXAble {
+public class CacheValidator extends SpyObject implements SAXAble, ShutdownHook {
 
 	private static CacheValidator instance=null;
 
@@ -41,6 +41,7 @@ public class CacheValidator extends SpyObject implements SAXAble {
 	public static synchronized CacheValidator getInstance() {
 		if(instance == null) {
 			instance=new CacheValidator();
+			Persistent.addShutdownHook(instance);
 		}
 		return(instance);
 	}
@@ -119,6 +120,10 @@ public class CacheValidator extends SpyObject implements SAXAble {
 			x.endElement(h, "errors");
 		}
 		x.endElement(h, "cachevalidation");
+	}
+
+	public void onShutdown() throws Exception {
+		cancelProcessing();
 	}
 
 	/**

@@ -14,6 +14,7 @@ import javax.naming.InitialContext;
 import net.spy.SpyObject;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.ShutdownHook;
 import net.spy.photo.observation.Observation;
 import net.spy.photo.observation.Observer;
 
@@ -21,7 +22,7 @@ import net.spy.photo.observation.Observer;
  * Post JMS messages when images are added.
  */
 public class ImageMessagePoster extends SpyObject
-	implements Observer<PhotoImage> {
+	implements Observer<PhotoImage>, ShutdownHook {
 
 	private QueueConnection conn=null;
 	private QueueSession session=null;
@@ -60,5 +61,9 @@ public class ImageMessagePoster extends SpyObject
 		} catch (Exception e) {
 			getLogger().warn("Problem sending JMS message for new image", e);
 		}
+	}
+
+	public void onShutdown() throws Exception {
+		close();
 	}
 }

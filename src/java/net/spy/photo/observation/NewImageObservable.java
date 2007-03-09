@@ -2,12 +2,15 @@
 
 package net.spy.photo.observation;
 
+import net.spy.photo.Persistent;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.ShutdownHook;
 
 /**
  * Observation sent when new images are added.
  */
-public class NewImageObservable implements Observable<PhotoImage> {
+public class NewImageObservable
+	implements Observable<PhotoImage>, ShutdownHook {
 
 	private static NewImageObservable instance=null;
 
@@ -17,6 +20,7 @@ public class NewImageObservable implements Observable<PhotoImage> {
 	public static synchronized NewImageObservable getInstance() {
 		if(instance == null) {
 			instance=new NewImageObservable();
+			Persistent.addShutdownHook(instance);
 		}
 		return instance;
 	}
@@ -28,5 +32,9 @@ public class NewImageObservable implements Observable<PhotoImage> {
 	 */
 	public void newImage(PhotoImage pid) {
 		sendMessage(new ObservationImpl<PhotoImage>(pid));
+	}
+
+	public void onShutdown() throws Exception {
+		removeAllObservers();
 	}
 }

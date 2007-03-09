@@ -10,11 +10,13 @@ import net.spy.photo.ImageCache;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
+import net.spy.photo.ShutdownHook;
 
 /**
  * ImageCache implementation that uses Memcached.
  */
-public class MemcachedImageCache extends SpyObject implements ImageCache {
+public class MemcachedImageCache extends SpyObject
+	implements ImageCache, ShutdownHook {
 
 	private MemcachedClient memcached=null;
 	private int expirationTime=3600;
@@ -44,6 +46,8 @@ public class MemcachedImageCache extends SpyObject implements ImageCache {
 
 			memcached=new MemcachedClient(
 					addrs.toArray(new InetSocketAddress[0]));
+
+			Persistent.addShutdownHook(this);
 		} catch(Exception e) {
 			getLogger().info("Error initializing memcached cache", e);
 		}
@@ -62,6 +66,12 @@ public class MemcachedImageCache extends SpyObject implements ImageCache {
 			String k=prefix + "/" + key;
 			memcached.add(k, expirationTime, image);
 			getLogger().debug("Memcached %s", k);
+		}
+	}
+
+	public void onShutdown() {
+		if(memcached != null) {
+			memcached.shutdown();
 		}
 	}
 

@@ -10,11 +10,13 @@ import java.util.Map;
 import net.spy.SpyObject;
 import net.spy.photo.ImageCache;
 import net.spy.photo.PhotoException;
+import net.spy.photo.ShutdownHook;
 
 /**
  * ImageCache implementation that keeps soft references to images in memory.
  */
-public class SoftImageCache extends SpyObject implements ImageCache {
+public class SoftImageCache extends SpyObject
+	implements ImageCache, ShutdownHook {
 
 	private Map<String, Reference<byte[]>> store=null;
 
@@ -38,6 +40,11 @@ public class SoftImageCache extends SpyObject implements ImageCache {
 	public void putImage(String key, byte[] image) throws PhotoException {
 		getLogger().info("Caching " + key);
 		store.put(key, new SoftReference<byte[]>(image));
+	}
+
+	public void onShutdown() throws Exception {
+		store.clear();
+		store=null;
 	}
 
 }

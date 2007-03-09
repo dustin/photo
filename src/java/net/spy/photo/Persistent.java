@@ -2,6 +2,8 @@
 
 package net.spy.photo;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -34,16 +36,16 @@ public class Persistent extends JWServletContextListener {
 	static PhotoStorerThread storer=null;
 	static ScheduledExecutorService executor=null;
 
+	private static Collection<ShutdownHook> shutdownHooks;
 	private static String contextPath;
-
-	private ImageMessagePoster imp=null;
-	private ImageMessageConsumer imc=null;
 
 	@Override
 	public void ctxInit(ServletContextEvent contextEvent) throws Exception {
 		ServletContext context=contextEvent.getServletContext();
 
 		contextPath=getContextPath(context);
+
+		shutdownHooks=new ArrayList<ShutdownHook>();
 
 		getLogger().info("Initializing photoservlet at " + contextPath);
 
@@ -66,7 +68,7 @@ public class Persistent extends JWServletContextListener {
 			throw new RuntimeException("Couldn't find photo config path");
 		}
 
-		ParallelSearch.getInstance();
+		addShutdownHook(ParallelSearch.getInstance());
 
 		// The initialization occurs in a different thread so all of those
 		// threads can belong to the same thread group.
@@ -85,10 +87,11 @@ public class Persistent extends JWServletContextListener {
 		NewImageObservable.getInstance().addObserver(
 				Persistent.getStorerThread());
 		try {
-			imc=new ImageMessageConsumer();
+			addShutdownHook(new ImageMessageConsumer());
 
-			imp=new ImageMessagePoster();
+			ImageMessagePoster imp = new ImageMessagePoster();
 			NewImageObservable.getInstance().addObserver(imp);
+			addShutdownHook(imp);
 		} catch(Exception e) {
 			getLogger().info("Couldn't initialize JMS queue for new images", e);
 		}
@@ -138,6 +141,13 @@ public class Persistent extends JWServletContextListener {
 		return executor;
 	}
 
+	/**
+	 * Add a shutdown hook.
+	 */
+	public static void addShutdownHook(ShutdownHook sh) {
+		shutdownHooks.add(sh);
+	}
+
 	@Override
 	public void ctxDestroy(ServletContextEvent contextEvent) throws Exception {
 		if(pipeline != null) {
@@ -145,31 +155,7 @@ public class Persistent extends JWServletContextListener {
 			pipeline.shutdown();
 			getLogger().info("pipeline shut down");
 		}
-		if(storer != null) {
-			getLogger().info("Shutting down the storer thread.");
-			storer.requestStop();
-			getLogger().info("Storer thread shutdown complete.");
-		}
-		if(SearchCache.getInstance() != null) {
-			getLogger().info("Shutting down search cache.");
-			SearchCache.getInstance().shutdown();
-			getLogger().info("Search cache shutdown complete");
-		}
-		if(CacheValidator.getInstance() != null
-				&& CacheValidator.getInstance().isRunning()) {
-			getLogger().info("Shutting down outstanding cache validations");
-			CacheValidator.getInstance().cancelProcessing();
-			getLogger().info("Cache validations shut down.");
-		}
-		ParallelSearch.setInstance(null);
-		NewImageObservable.getInstance().removeAllObservers();
 
-		if(imp != null) {
-			imp.close();
-		}
-		if(imc != null) {
-			imc.close();
-		}
 		if(executor != null) {
 			List<Runnable> notrunning=executor.shutdownNow();
 			if(notrunning.size() > 0) {
@@ -177,7 +163,16 @@ public class Persistent extends JWServletContextListener {
 			}
 			executor=null;
 		}
-		S3Service.shutdown();
+
+		for(ShutdownHook sh : shutdownHooks) {
+			getLogger().info("Calling shutdown hook:  %s", sh);
+			try {
+				sh.onShutdown();
+			} catch(Throwable e) {
+				getLogger().error("Error on shutdown hook %s", sh, e);
+			}
+		}
+		shutdownHooks.clear();
 	}
 
 
@@ -247,6 +242,7 @@ public class Persistent extends JWServletContextListener {
 			getLogger().info("Initializing the photo storer thread.");
 			storer=new PhotoStorerThread();
 			storer.start();
+			addShutdownHook(storer);
 			getLogger().info("PhotoStorerThread initialization complete.");
 
 

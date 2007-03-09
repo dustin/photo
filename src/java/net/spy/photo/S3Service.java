@@ -23,7 +23,8 @@ import net.spy.s3.S3Object;
 /**
  * Interface to S3.
  */
-public class S3Service extends SpyObject implements Observer<PhotoImage> {
+public class S3Service extends SpyObject
+	implements Observer<PhotoImage>, ShutdownHook {
 
 	private static final String DELIM = "^";
 
@@ -49,6 +50,7 @@ public class S3Service extends SpyObject implements Observer<PhotoImage> {
 	public static synchronized S3Service getInstance() {
 		if(instance == null) {
 			instance=new S3Service();
+			Persistent.addShutdownHook(instance);
 		}
 		return instance;
 	}
@@ -210,5 +212,9 @@ public class S3Service extends SpyObject implements Observer<PhotoImage> {
 	 */
 	public boolean isFunctional() {
 		return functional;
+	}
+
+	public void onShutdown() throws Exception {
+		shutdown();
 	}
 }

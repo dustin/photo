@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import net.spy.SpyObject;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoDimensions;
+import net.spy.photo.ShutdownHook;
 import net.spy.photo.User;
 import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.struts.SearchForm;
@@ -21,7 +22,7 @@ import net.spy.photo.struts.SearchForm;
 /**
  * Parallel searching interface.
  */
-public class ParallelSearch extends SpyObject {
+public class ParallelSearch extends SpyObject implements ShutdownHook {
 
 	private static AtomicReference<ParallelSearch> instanceRef=
 		new AtomicReference<ParallelSearch>(null);
@@ -123,5 +124,9 @@ public class ParallelSearch extends SpyObject {
 	public SearchResults performSearch(SearchForm form, User user)
 		throws InterruptedException, ExecutionException, TimeoutException {
 		return performSearch(form, user, optimalDims);
+	}
+
+	public void onShutdown() throws Exception {
+		setInstance(null);
 	}
 }
