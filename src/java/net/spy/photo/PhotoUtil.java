@@ -27,26 +27,15 @@ public class PhotoUtil extends Object {
 	private static Collection<SimpleDateFormat> initDateFormats() {
 		ArrayList<SimpleDateFormat> rv=new ArrayList<SimpleDateFormat>();
 
-		SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
-		sdf.setLenient(false);
-		rv.add(sdf);
-
-		sdf=new SimpleDateFormat("MM-dd-yyyy");
-		sdf.setLenient(false);
-		rv.add(sdf);
-
-		sdf=new SimpleDateFormat("yyyy-MM-dd");
-		sdf.setLenient(false);
-		rv.add(sdf);
-
-		sdf=new SimpleDateFormat("yyyy/MM/dd");
-		sdf.setLenient(false);
-		rv.add(sdf);
-
-		// exif format
-		sdf=new SimpleDateFormat("yyyy:MM:dd");
-		sdf.setLenient(false);
-		rv.add(sdf);
+		String[] formats={
+			"MM/dd/yyyy", "MM-dd-yyyy", "yyyy-MM-dd", "yyyy/MM/dd",
+			"yyyy:MM:dd"
+			};
+		for(String fmt : formats) {
+			SimpleDateFormat sdf=new SimpleDateFormat(fmt);
+			sdf.setLenient(false);
+			rv.add(sdf);
+		}
 
 		return(rv);
 	}
