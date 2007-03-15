@@ -43,6 +43,7 @@ import net.spy.photo.sp.InsertImage;
 import net.spy.photo.sp.InsertKeywordMap;
 import net.spy.photo.sp.InsertVariant;
 import net.spy.photo.sp.UpdateImage;
+import net.spy.photo.util.ReferenceTracker;
 import net.spy.util.CloseUtil;
 
 /**
@@ -88,6 +89,7 @@ public class SavablePhotoImage extends AbstractSavable implements PhotoImage {
 		super();
 
 		imageData=data;
+		ReferenceTracker.getInstance().addObject(imageData);
 		PhotoParser.Result res=PhotoParser.getInstance().parseImage(data);
 		dimensions=new PhotoDimensionsImpl(res.getWidth(), res.getHeight());
 		size=data.length;

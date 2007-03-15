@@ -7,6 +7,7 @@ import java.lang.ref.SoftReference;
 import net.spy.SpyObject;
 import net.spy.cache.SimpleCache;
 import net.spy.photo.impl.PhotoDimensionsImpl;
+import net.spy.photo.util.ReferenceTracker;
 
 /**
  * Get images from the image server.
@@ -78,6 +79,7 @@ public class PhotoImageHelper extends SpyObject {
 			}
 		}
 
+		ReferenceTracker.getInstance().addObject(rv);
 		return(rv);
 	}
 

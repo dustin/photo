@@ -78,6 +78,7 @@ public class UploadImage extends BaseRestServlet {
 			}
 			toRead -= read;
 		}
+		is.close();
 
 		// Find the date
 		Date taken=null;
