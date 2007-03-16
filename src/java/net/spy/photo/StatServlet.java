@@ -28,7 +28,7 @@ public class StatServlet extends JWHttpServlet {
 		res.setContentType("text/plain");
 		ServletOutputStream sos=res.getOutputStream();
 		for(Stat s : stuff.values()) {
-			sos.println(String.valueOf(s));
+			sos.println(s.getName() + " = " + s.getStat());
 		}
 		sos.close();
 	}

@@ -3,6 +3,8 @@ package net.spy.photo.util;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import net.spy.SpyObject;
@@ -20,6 +22,9 @@ public class ReferenceTracker extends SpyObject
 	private static ReferenceTracker instance=null;
 
 	private ReferenceQueue<Object> queue=new ReferenceQueue<Object>();
+	private Map<Reference<?>,Object> refs=
+		new ConcurrentHashMap<Reference<?>,Object>();
+
 	private CounterStat loops=Stats.getCounterStat("ref.pollLoops");
 	private CounterStat added=Stats.getCounterStat("ref.add");
 	private CounterStat removed=Stats.getCounterStat("ref.remove");
@@ -36,6 +41,10 @@ public class ReferenceTracker extends SpyObject
 		return instance;
 	}
 
+	private void add(Reference<?> r) {
+		refs.put(r, r);
+	}
+
 	/**
 	 * Mark an object added.
 	 */
@@ -43,10 +52,10 @@ public class ReferenceTracker extends SpyObject
 		if(o.getClass().isArray()
 				&& o.getClass().getComponentType() == Byte.TYPE) {
 			byte[] b=(byte[])o;
-			new ByteArrayReference(o, queue);
+			add(new ByteArrayReference(o, queue));
 			addedbytes.increment(b.length);
 		} else {
-			new WeakReference<Object>(o, queue);
+			add(new WeakReference<Object>(o, queue));
 		}
 		added.increment();
 	}
@@ -65,6 +74,7 @@ public class ReferenceTracker extends SpyObject
 				ByteArrayReference bar=(ByteArrayReference)ref;
 				removedbytes.increment(bar.size);
 			}
+			refs.remove(ref);
 		}
 	}
 
