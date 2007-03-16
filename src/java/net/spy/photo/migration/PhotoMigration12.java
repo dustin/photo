@@ -7,13 +7,6 @@ package net.spy.photo.migration;
  */
 public class PhotoMigration12 extends PhotoMigration {
 
-	/**
-	 * Get an instance of PhotoMigration12.
-	 */
-	public PhotoMigration12() {
-		super();
-	}
-
 	@Override
 	protected boolean checkMigration() throws Exception {
 		return(!hasColumn("album", "keywords"));

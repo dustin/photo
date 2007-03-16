@@ -12,13 +12,6 @@ import net.spy.photo.search.SearchResults;
  */
 public class ReverseFilter extends Filter {
 
-	/**
-	 * Get an instance of ReverseFilter.
-	 */
-	public ReverseFilter() {
-		super();
-	}
-
 	/** 
 	 * Reverse the current order of the given search results.
 	 */

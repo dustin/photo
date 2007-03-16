@@ -23,17 +23,9 @@ public abstract class AnnotatedRegionImpl extends SpyObject
 	private int width=0;
 	private int height=0;
 	private String title=null;
-	private Collection<Keyword> keywords=null;
+	private Collection<Keyword> keywords=new TreeSet<Keyword>();
 	private User user=null;
 	private Date timestamp=null;
-
-	/**
-	 * Get an instance of AnnotatedRegionImpl.
-	 */
-	public AnnotatedRegionImpl() {
-		super();
-		keywords=new TreeSet<Keyword>();
-	}
 
 	/** 
 	 * Get the ID of this annotated region.

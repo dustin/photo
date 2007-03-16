@@ -19,13 +19,6 @@ public class AdminCategoryForm extends PhotoForm {
 	private String catAclAdd[]=null;
 	private String catAclView[]=null;
 
-	/**
-	 * Get an instance of AdminCategoryForm.
-	 */
-	public AdminCategoryForm() {
-		super();
-	}
-
 	public String getCatId() {
 		return(catId);
 	}

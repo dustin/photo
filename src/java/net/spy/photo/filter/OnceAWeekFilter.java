@@ -11,13 +11,6 @@ import java.util.Date;
  */
 public class OnceAWeekFilter extends DateFilter {
 
-	/**
-	 * Get an instance of OnceAWeekFilter.
-	 */
-	public OnceAWeekFilter() {
-		super();
-	}
-
 	/** 
 	 * Truncate the date to the beginning of the month.
 	 */

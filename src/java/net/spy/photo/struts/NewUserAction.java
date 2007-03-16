@@ -27,13 +27,6 @@ import net.spy.photo.UserFactory;
 public class NewUserAction extends PhotoAction {
 
 	/**
-	 * Get an instance of NewUserAction.
-	 */
-	public NewUserAction() {
-		super();
-	}
-
-	/**
 	 * Process the request.
 	 */
 	@Override

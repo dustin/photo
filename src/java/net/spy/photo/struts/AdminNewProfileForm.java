@@ -16,13 +16,6 @@ public class AdminNewProfileForm extends PhotoForm {
 	private String name=null;
 	private String categories[]=null;
 
-	/**
-	 * Get an instance of AdminNewProfileForm.
-	 */
-	public AdminNewProfileForm() {
-		super();
-	}
-
 	public String getName() {
 		return(name);
 	}

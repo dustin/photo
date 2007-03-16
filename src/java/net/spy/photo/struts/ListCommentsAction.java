@@ -21,13 +21,6 @@ import org.apache.struts.action.ActionMapping;
 public class ListCommentsAction extends PhotoAction {
 
 	/**
-	 * Get an instance of ListCommentsAction.
-	 */
-	public ListCommentsAction() {
-		super();
-	}
-
-	/**
 	 * Load the comments cursor.
 	 */
 	@Override

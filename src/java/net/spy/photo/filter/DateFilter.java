@@ -22,13 +22,6 @@ public abstract class DateFilter extends SortingFilter {
 	private static final int DEFAULT_ARRAY_GUESS=16;
 	private int arrayGuess=DEFAULT_ARRAY_GUESS;
 
-	/**
-	 * Get an instance of DateFilter.
-	 */
-	public DateFilter() {
-		super();
-	}
-
 	/** 
 	 * Set the array guess size to optimize the array allocation.  This
 	 * should be set to the approximate number of items you expect there to

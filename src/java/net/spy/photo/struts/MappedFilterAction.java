@@ -19,13 +19,6 @@ import org.apache.struts.action.ActionMapping;
 public class MappedFilterAction extends PhotoAction {
 
 	/**
-	 * Get an instance of MappedFilterAction.
-	 */
-	public MappedFilterAction() {
-		super();
-	}
-
-	/**
 	 * Perform the mapped in filter.
 	 */
 	@SuppressWarnings("unchecked")

@@ -33,15 +33,7 @@ import net.spy.util.CloseUtil;
 /**
  * A PhotoImageSource implementation that gets images from the DB.
  */
-public class DBImageSource extends SpyObject
-	implements PhotoImageSource {
-
-	/**
-	 * Get an instance of DBImageDataSource.
-	 */
-	public DBImageSource() {
-		super();
-	}
+public class DBImageSource extends SpyObject implements PhotoImageSource {
 
 	/**
 	 * Get the images.

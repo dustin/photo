@@ -16,13 +16,6 @@ import net.spy.photo.User;
 public class GetCategories extends RPCMethod {
 
 	/**
-	 * Get an instance of GetCategories.
-	 */
-	public GetCategories() {
-		super();
-	}
-
-	/**
 	 * Get the names of the categories to which the user has add access.
 	 * 
 	 * @param username

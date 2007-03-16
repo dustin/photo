@@ -25,13 +25,6 @@ public class SetDisplayRefresh extends PhotoAction {
 	public static final String SLIDESHOW_MODE="slideshowMode";
 
 	/**
-	 * Get an instance of SetDisplayRefresh.
-	 */
-	public SetDisplayRefresh() {
-		super();
-	}
-
-	/**
 	 * Set the optimal viewing size.
 	 */
 	@Override

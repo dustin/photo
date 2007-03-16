@@ -197,7 +197,6 @@ public class PhotoParser extends SpyObject {
 
 	/**
 	 * True if this is a GIF.
-	 * @param imageData TODO
 	 */
 	private boolean isGif(byte[] imageData) {
 		assert imageData != null : "Image data was null";

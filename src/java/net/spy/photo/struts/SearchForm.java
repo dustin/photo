@@ -34,13 +34,6 @@ public class SearchForm extends PhotoForm {
 
 	private String action=null;
 
-	/**
-	 * Get an instance of SearchForm.
-	 */
-	public SearchForm() {
-		super();
-	}
-
 	private int hc(String s) {
 		return(s == null ? 137 : s.hashCode());
 	}

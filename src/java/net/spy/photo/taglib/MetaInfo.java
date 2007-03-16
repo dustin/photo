@@ -16,13 +16,6 @@ import net.spy.photo.PhotoImageFactory;
  */
 public class MetaInfo extends PhotoTag {
 
-	/**
-	 * Get an instance of MetaInfo.
-	 */
-	public MetaInfo() {
-		super();
-	}
-
 	private int getCount(String query) throws Exception {
 		String key="photo.metainfo." + query;
 

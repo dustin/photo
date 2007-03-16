@@ -17,13 +17,6 @@ import net.spy.log.LoggerFactory;
 public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 
 	/**
-	 * Get an instance of SessionWatcher.
-	 */
-	public SessionWatcher() {
-		super();
-	}
-
-	/**
 	 * Called when a session is created.
 	 */
 	@Override
@@ -73,8 +66,11 @@ public class SessionWatcher extends net.spy.jwebkit.SessionWatcher {
 					PhotoSessionData sessionData=(PhotoSessionData)
 						session.getAttribute(PhotoSessionData.SES_ATTR);
 
-					// XXX:  I guess it's theoretically possible for some of
-					// this stuff to be null.
+					assert username != null;
+					assert sessionData != null;
+					assert sessionData.getUser() != null;
+					assert sessionData.getUser().getName() != null;
+
 					if(sessionData.getUser().getName().equals(username)) {
 						al.add(sessionData);
 					} // Found a match

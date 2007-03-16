@@ -20,13 +20,6 @@ import net.spy.photo.search.SearchResults;
 public class SearchAction extends PhotoAction {
 
 	/**
-	 * Get an instance of SearchAction.
-	 */
-	public SearchAction() {
-		super();
-	}
-
-	/**
 	 * Perform the action.
 	 */
 	@Override

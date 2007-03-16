@@ -19,13 +19,6 @@ import org.apache.struts.action.DynaActionForm;
 public class SetSizeAction extends PhotoAction {
 
 	/**
-	 * Get an instance of SetSizeAction.
-	 */
-	public SetSizeAction() {
-		super();
-	}
-
-	/**
 	 * Set the optimal viewing size.
 	 */
 	@Override

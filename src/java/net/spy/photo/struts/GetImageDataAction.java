@@ -26,13 +26,6 @@ public class GetImageDataAction extends PhotoAction {
 	private static final String DIM_ATTR="displayDims";
 	private static final String MY_RATING="myrating";
 
-	/**
-	 * Get an instance of GetImageDataAction.
-	 */
-	public GetImageDataAction() {
-		super();
-	}
-
 	private PhotoImage getImageById(int id, HttpServletRequest req) {
 		PhotoImage rv=null;
 		try {

@@ -21,13 +21,6 @@ import org.apache.struts.action.ActionMapping;
 public class GetGalleryAction extends PhotoAction {
 
 	/**
-	 * Get an instance of GetGalleryAction.
-	 */
-	public GetGalleryAction() {
-		super();
-	}
-
-	/**
 	 * Perform the action.
 	 */
 	@Override

@@ -18,15 +18,23 @@ import org.w3c.dom.Node;
 public abstract class BackupEntry extends Object implements Serializable {
 
 	// Data stored here.
-	protected Document doc=null;
+	protected Document doc=new DocumentImpl();
 	protected Element myData=null;
 
 	// Node type
 	private String nodeType="unknown_node_type";
 
-	public BackupEntry() throws Exception {
+	protected BackupEntry() {
 		super();
-		doc=new DocumentImpl();
+	}
+
+	/**
+	 * Get an instance of a BackupEntry for a given Node.
+	 */
+	protected BackupEntry(Node n) throws Exception {
+		super();
+		doc=n.getOwnerDocument();
+		myData=(Element)n;
 	}
 
 	/**
@@ -47,15 +55,6 @@ public abstract class BackupEntry extends Object implements Serializable {
 	 * Restore a backup entry to the DB.
 	 */
 	public abstract void restore() throws Exception;
-
-	/**
-	 * Get an instance of a BackupEntry for a given Node.
-	 */
-	public BackupEntry(Node n) throws Exception {
-		super();
-		doc=n.getOwnerDocument();
-		myData=(Element)n;
-	}
 
 	/**
 	 * Write this entry to the given output stream.

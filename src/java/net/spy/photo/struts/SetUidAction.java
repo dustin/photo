@@ -20,13 +20,6 @@ import org.apache.struts.action.DynaActionForm;
  */
 public class SetUidAction extends PhotoAction {
 
-	/**
-	 * Get an instance of SetUidAction.
-	 */
-	public SetUidAction() {
-		super();
-	}
-
 	/** 
 	 * Perform this action.
 	 */

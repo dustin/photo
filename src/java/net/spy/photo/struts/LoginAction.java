@@ -32,13 +32,6 @@ public class LoginAction extends PhotoAction {
 	 */
 	public static final String PERSESS_COOKIE="persess";
 
-	/**
-	 * Get an instance of LoginAction.
-	 */
-	public LoginAction() {
-		super();
-	}
-
 	private void persist(User user,
 		HttpServletRequest request,
 		HttpServletResponse response) throws Exception {

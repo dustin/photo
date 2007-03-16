@@ -23,13 +23,6 @@ import org.apache.struts.action.ActionMapping;
  */
 public class UploadAction extends PhotoAction {
 
-	/**
-	 * Get an instance of UploadAction.
-	 */
-	public UploadAction() {
-		super();
-	}
-
 	@Override
 	public ActionForward spyExecute(ActionMapping mapping,
 		ActionForm form,

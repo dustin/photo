@@ -21,13 +21,6 @@ import net.spy.photo.PhotoACLEntry;
 public class AdminSelectCatAction extends PhotoAction {
 
 	/**
-	 * Get an instance of AdminSelectCatAction.
-	 */
-	public AdminSelectCatAction() {
-		super();
-	}
-
-	/**
 	 * Perform the action.
 	 */
 	@Override

@@ -26,13 +26,6 @@ import net.spy.photo.User;
 public class AdminSelectUserAction extends PhotoAction {
 
 	/**
-	 * Get an instance of AdminSelectUserAction.
-	 */
-	public AdminSelectUserAction() {
-		super();
-	}
-
-	/**
 	 * Perform the action.
 	 */
 	@Override

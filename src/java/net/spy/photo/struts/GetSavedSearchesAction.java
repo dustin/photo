@@ -27,13 +27,6 @@ import org.apache.struts.action.ActionMapping;
 public class GetSavedSearchesAction extends PhotoAction {
 
 	/**
-	 * Get an instance of GetSavedSearchesAction.
-	 */
-	public GetSavedSearchesAction() {
-		super();
-	}
-
-	/**
 	 * Load a saved search from a dynaform that has <q>search_id</q>
 	 * defined.
 	 */

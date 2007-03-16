@@ -14,13 +14,6 @@ import net.spy.photo.SessionWatcher;
 public class SessionInfo extends PhotoTag {
 
 	/**
-	 * Get an instance of SessionInfo.
-	 */
-	public SessionInfo() {
-		super();
-	}
-
-	/**
 	 * Get the meta info and shove it into the webpage.
 	 */
 	@Override

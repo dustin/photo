@@ -18,13 +18,6 @@ public abstract class RPCMethod extends Remote {
 	private User user=null;
 
 	/**
-	 * Get an instance of RPCMethod.
-	 */
-	public RPCMethod() {
-		super();
-	}
-
-	/**
 	 * Get the User associated with this call.
 	 *
 	 * @return the user, or null if a user has not been authenticated

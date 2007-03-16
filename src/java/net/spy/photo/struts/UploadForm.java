@@ -20,19 +20,10 @@ public class UploadForm extends PhotoForm {
 	private FormFile picture=null;
 	private String id=null;
 	private String category=null;
-	private String taken=null;
+	private String taken=PhotoUtil.getToday();
 	private String keywords=null;
 	private String info=null;
 	private byte[] photoImage=null;
-
-	/**
-	 * Get an instance of UploadForm.
-	 */
-	public UploadForm() {
-		super();
-
-		taken=PhotoUtil.getToday();
-	}
 
 	public void setPicture(FormFile to) {
 		this.picture=to;

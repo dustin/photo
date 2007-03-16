@@ -41,9 +41,7 @@ public class GroupedComments extends Cursor<Comment> {
 	 * having more.
 	 */
 	public void addComment(Comment comment) {
-		if(imageId != comment.getPhotoId()) {
-			throw new Error(comment.getPhotoId() + " != " + imageId);
-		}
+		assert imageId == comment.getPhotoId();
 
 		if(getSize() < maxComments) {
 			add(comment);

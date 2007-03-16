@@ -27,13 +27,6 @@ public abstract class PhotoAction extends JWebAction {
 	}
 
 	/**
-	 * Get an instance of PhotoAction.
-	 */
-	public PhotoAction() {
-		super();
-	}
-
-	/**
 	 * Get the sessionData from the session.
 	 */
 	protected PhotoSessionData getSessionData(HttpServletRequest request)

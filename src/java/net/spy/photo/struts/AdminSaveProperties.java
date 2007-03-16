@@ -25,13 +25,6 @@ import net.spy.photo.PhotoProperties;
 public class AdminSaveProperties extends PhotoAction {
 
 	/**
-	 * Get an instance of AdminSaveProperties.
-	 */
-	public AdminSaveProperties() {
-		super();
-	}
-
-	/**
 	 * Perform the action.
 	 */
 	@Override

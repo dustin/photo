@@ -24,19 +24,10 @@ import net.spy.util.Base64;
 public class ParseBackup extends DefaultHandler {
 
 	private String prefix="";
-	private LinkedList<String> nodes=null;
+	private LinkedList<String> nodes=new LinkedList<String>();
 	private int tagnumber=0;
 
 	private Restorable handler=null;
-
-	/**
-	 * Get a restorer.
-	 */
-	public ParseBackup() {
-		super();
-
-		nodes=new LinkedList<String>();
-	}
 
 	/**
 	 * Get the Restorable object.

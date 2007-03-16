@@ -24,13 +24,6 @@ public class AdminUserForm extends PhotoForm {
 	private String adminStatus=null;
 
 	/**
-	 * Get an instance of AdminUserForm.
-	 */
-	public AdminUserForm() {
-		super();
-	}
-
-	/**
 	 * Get the string representation of the user ID.
 	 */
 	public String getUserId() {

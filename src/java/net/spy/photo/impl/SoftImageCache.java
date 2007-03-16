@@ -18,15 +18,8 @@ import net.spy.photo.ShutdownHook;
 public class SoftImageCache extends SpyObject
 	implements ImageCache, ShutdownHook {
 
-	private Map<String, Reference<byte[]>> store=null;
-
-	/**
-	 * Get an instance of SoftImageCache.
-	 */
-	public SoftImageCache() {
-		super();
-		store=new HashMap<String, Reference<byte[]>>();
-	}
+	private Map<String, Reference<byte[]>> store=
+		new HashMap<String, Reference<byte[]>>();
 
 	public byte[] getImage(String key) throws PhotoException {
 		byte[] rv=null;

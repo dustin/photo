@@ -13,13 +13,6 @@ import net.spy.photo.PhotoImageScaler;
  */
 public class JavaImageServerScaler extends ImageServerScaler {
 
-	/**
-	 * Get an instance of JavaImageServerScaler.
-	 */
-	public JavaImageServerScaler() {
-		super();
-	}
-
 	@Override
 	public byte[] scaleImage(PhotoImage pid, byte[] in,
 			PhotoDimensions dim) throws Exception {

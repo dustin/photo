@@ -16,13 +16,6 @@ import org.apache.struts.action.ActionMapping;
 public class LogoutAction extends net.spy.jwebkit.struts.LogoutAction {
 
 	/**
-	 * Get an instance of LogoutAction.
-	 */
-	public LogoutAction() {
-		super();
-	}
-
-	/**
 	 * Call super's spyExecute after clearing out the persess cookie.
 	 */
 	@Override

@@ -23,13 +23,6 @@ import org.apache.struts.action.DynaActionForm;
 public class CommentAction extends PhotoAction {
 
 	/**
-	 * Get an instance of CommentAction.
-	 */
-	public CommentAction() {
-		super();
-	}
-
-	/**
 	 * Process the comment thing.
 	 */
 	@Override

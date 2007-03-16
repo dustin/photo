@@ -21,13 +21,6 @@ import org.apache.struts.action.ActionMapping;
 public class SaveGalleryAction extends PhotoAction {
 
 	/**
-	 * Get an instance of SaveGalleryAction.
-	 */
-	public SaveGalleryAction() {
-		super();
-	}
-
-	/**
 	 * Perform the action.
 	 */
 	@Override

@@ -27,13 +27,6 @@ import net.spy.xml.XMLUtils;
  */
 public class ExportServlet extends XMLOutputServlet {
 
-	/**
-	 * Get an instance of ExportServlet.
-	 */
-	public ExportServlet() {
-		super();
-	}
-
 	/** 
 	 * Process the request.
 	 */

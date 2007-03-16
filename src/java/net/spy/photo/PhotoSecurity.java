@@ -13,15 +13,7 @@ import net.spy.util.Base64;
  */
 public class PhotoSecurity extends SpyObject {
 
-	private UserFactory userFactory=null;
-
-	/**
-	 * Get a PhotoSecurity object.
-	 */
-	public PhotoSecurity() {
-		super();
-		userFactory=UserFactory.getInstance();
-	}
+	private UserFactory userFactory=UserFactory.getInstance();
 
 	/**
 	 * Get a digest for a given string.

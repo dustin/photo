@@ -23,13 +23,6 @@ import org.apache.struts.action.DynaActionForm;
 public class ChangePWAction extends PhotoAction {
 
 	/**
-	 * Get an instance of ChangePWAction.
-	 */
-	public ChangePWAction() {
-		super();
-	}
-
-	/**
 	 * Process the change password request.
 	 */
 	@Override

@@ -12,13 +12,6 @@ import net.spy.photo.search.SearchResults;
 public abstract class Filter extends SpyObject {
 
 	/**
-	 * Get an instance of Filter.
-	 */
-	public Filter() {
-		super();
-	}
-
-	/**
 	 * Filter a result set.
 	 */
 	public abstract SearchResults filter(SearchResults in)

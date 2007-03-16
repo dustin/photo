@@ -13,14 +13,9 @@ import net.spy.SpyObject;
  */
 public class Votes extends SpyObject {
 
-	private Map<Integer, Vote> store=null;
+	private Map<Integer, Vote> store=new HashMap<Integer, Vote>();
 	private double total=0.0d;
 	private double average=0.0d;
-
-	public Votes() {
-		super();
-		store=new HashMap<Integer, Vote>();
-	}
 
 	/**
 	 * Add a vote.

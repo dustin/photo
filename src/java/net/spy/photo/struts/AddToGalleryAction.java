@@ -25,13 +25,6 @@ import org.apache.struts.action.DynaActionForm;
 public class AddToGalleryAction extends PhotoAction {
 
 	/**
-	 * Get an instance of AddToGalleryAction.
-	 */
-	public AddToGalleryAction() {
-		super();
-	}
-
-	/**
 	 * Perform the action.
 	 */
 	@Override

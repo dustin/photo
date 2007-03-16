@@ -15,13 +15,6 @@ public abstract class SortingFilter extends Filter {
 	 */
 	public static enum Sort { FORWARD, REVERSE }
 
-	/**
-	 * Get an instance of SortingFilter.
-	 */
-	public SortingFilter() {
-		super();
-	}
-
 	/** 
 	 * Filter the results and use the FORWARD sort direction.
 	 */

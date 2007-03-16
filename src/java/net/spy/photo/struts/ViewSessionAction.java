@@ -23,13 +23,6 @@ import org.apache.struts.action.DynaActionForm;
 public class ViewSessionAction extends PhotoAction {
 
 	/**
-	 * Get an instance of ViewSessionAction.
-	 */
-	public ViewSessionAction() {
-		super();
-	}
-
-	/**
 	 * Perform the action.
 	 */
 	@Override

@@ -11,13 +11,6 @@ import net.spy.photo.PhotoException;
  */
 public class NullImageCache extends SpyObject implements ImageCache {
 
-	/**
-	 * Get an instance of NullImageCache.
-	 */
-	public NullImageCache() {
-		super();
-	}
-
 	public byte[] getImage(String key) throws PhotoException {
 		if(getLogger().isDebugEnabled()) {
 			getLogger().debug("Getting image for key:  " + key);

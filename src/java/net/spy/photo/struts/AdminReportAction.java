@@ -12,14 +12,6 @@ import org.apache.struts.action.ActionMapping;
  * Report fetch action.
  */
 public class AdminReportAction extends DBSPAction {
-
-	/**
-	 * Get an instance of AdminReportAction.
-	 */
-	public AdminReportAction() {
-		super();
-	}
-
 	/** 
 	 * Get the PhotoConfig.
 	 */

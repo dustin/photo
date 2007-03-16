@@ -11,13 +11,6 @@ public class FilterMapping extends ActionMapping {
 
 	private String filterClass=null;
 
-	/**
-	 * Get an instance of FilterMapping.
-	 */
-	public FilterMapping() {
-		super();
-	}
-
 	/** 
 	 * Set the filter class to use.
 	 */

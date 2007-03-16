@@ -16,13 +16,6 @@ public class GetGalleryForm extends PhotoForm {
 	private int id=-1;
 
 	/**
-	 * Get an instance of GetGalleryForm.
-	 */
-	public GetGalleryForm() {
-		super();
-	}
-
-	/**
 	 * Get the image ID the form is mapping.
 	 */
 	public int getId() {

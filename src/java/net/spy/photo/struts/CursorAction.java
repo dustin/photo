@@ -20,13 +20,6 @@ import org.apache.struts.action.DynaActionForm;
 public class CursorAction extends PhotoAction {
 
 	/**
-	 * Get an instance of CursorAction.
-	 */
-	public CursorAction() {
-		super();
-	}
-
-	/**
 	 * Perform the adjustment (if any).
 	 */
 	@Override

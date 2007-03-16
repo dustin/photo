@@ -19,13 +19,6 @@ import org.apache.struts.action.ActionMapping;
 public class AdminSaveProfile extends PhotoAction {
 
 	/**
-	 * Get an instance of AdminSaveProfile.
-	 */
-	public AdminSaveProfile() {
-		super();
-	}
-
-	/**
 	 * Perform the action.
 	 */
 	@Override

@@ -10,13 +10,6 @@ public class ConditionalTag extends PhotoTag {
 	private boolean negate=false;
 
 	/**
-	 * Get an instance of ConditionalTag.
-	 */
-	public ConditionalTag() {
-		super();
-	}
-
-	/**
 	 * Get the value of the negate field.
 	 */
 	public boolean getNegate() {

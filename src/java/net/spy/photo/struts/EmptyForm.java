@@ -10,12 +10,5 @@ package net.spy.photo.struts;
  * an ActionForm when processing a form that has parameters.
  */
 public class EmptyForm extends PhotoForm {
-
-	/**
-	 * Get an instance of EmptyForm.
-	 */
-	public EmptyForm() {
-		super();
-	}
-
+	// nothing to see here.
 }

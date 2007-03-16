@@ -19,13 +19,6 @@ import org.xml.sax.InputSource;
 public class PhotoRestore extends Object {
 
 	/**
-	 * Get a restorer.
-	 */
-	public PhotoRestore() {
-		super();
-	}
-
-	/**
 	 * Create a BackupEntry from an input stream.
 	 */
 	public BackupEntry restore(InputStream input) throws Exception {

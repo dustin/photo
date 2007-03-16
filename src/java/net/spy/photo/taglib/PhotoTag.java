@@ -19,13 +19,6 @@ public abstract class PhotoTag extends BodyTagSupport {
 	private PhotoSessionData sessionData=null;
 
 	/**
-	 * Get an instance of PhotoTag.
-	 */
-	public PhotoTag() {
-		super();
-	}
-
-	/**
 	 * Get the session data object.
 	 */
 	protected PhotoSessionData getSessionData() throws JspException {

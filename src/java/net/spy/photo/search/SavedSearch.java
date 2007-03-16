@@ -35,13 +35,6 @@ public class SavedSearch extends Object {
 	private String name=null;
 	private String search=null;
 
-	/**
-	 * Get an instance of SavedSearch.
-	 */
-	public SavedSearch() {
-		super();
-	}
-
 	private SavedSearch(ResultSet rs) throws SQLException {
 		Base64 base64=new Base64();
 		id=rs.getInt("searches_id");

@@ -19,13 +19,6 @@ import net.spy.util.CloseUtil;
  */
 public class ExternalImageServerScaler extends ImageServerScaler {
 
-	/**
-	 * Get it.
-	 */
-	public ExternalImageServerScaler() {
-		super();
-	}
-
 	private String dumpIS(InputStream s) {
 		String out="";
 		try {

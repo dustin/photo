@@ -36,9 +36,10 @@ public abstract class PhotoImageImpl extends SpyObject
 	implements Serializable, PhotoImage {
 
 	private int id=-1;
-	private Collection<AnnotatedRegion> annotations=null;
-	private Collection<Keyword> keywords=null;
-	private Votes votes=null;
+	private Collection<AnnotatedRegion> annotations=
+		new HashSet<AnnotatedRegion>();
+	private Collection<Keyword> keywords=new TreeSet<Keyword>();
+	private Votes votes=new Votes();
 	private String descr=null;
 	private String catName=null;
 	private String md5=null;
@@ -59,13 +60,6 @@ public abstract class PhotoImageImpl extends SpyObject
 	private Date taken=null;
 
 	private Format format=null;
-
-	protected PhotoImageImpl() throws Exception {
-		super();
-		keywords=new TreeSet<Keyword>();
-		annotations=new HashSet<AnnotatedRegion>();
-		votes=new Votes();
-	}
 
 	/**
 	 * String me.

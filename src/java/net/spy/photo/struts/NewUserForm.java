@@ -20,13 +20,6 @@ public class NewUserForm extends PhotoForm {
 	private String email=null;
 	private String profile=null;
 
-	/**
-	 * Get an instance of NewUserForm.
-	 */
-	public NewUserForm() {
-		super();
-	}
-
 	public void setUsername(String to) {
 		this.username=to;
 	}

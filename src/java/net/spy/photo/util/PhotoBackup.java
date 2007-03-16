@@ -16,9 +16,6 @@ import net.spy.photo.PhotoConfig;
  * Utility to backup images.
  */
 public class PhotoBackup extends Object {
-	public PhotoBackup() {
-		super();
-	}
 
 	/**
 	 * Perform a backup to a given diretory.

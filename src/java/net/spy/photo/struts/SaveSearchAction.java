@@ -17,14 +17,6 @@ import org.apache.struts.action.DynaActionForm;
  * Save a search.
  */
 public class SaveSearchAction extends PhotoAction {
-
-	/**
-	 * Get an instance of SaveSearchAction.
-	 */
-	public SaveSearchAction() {
-		super();
-	}
-
 	/**
 	 * Process the save search.
 	 */

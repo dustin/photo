@@ -23,13 +23,6 @@ public class AddImage extends RPCMethod {
 	private static final long RECACHE_DELAY=120000;
 
 	/**
-	 * Get an instance of AddImage.
-	 */
-	public AddImage() {
-		super();
-	}
-
-	/**
 	 * Add an image.  The following arguments are required:
 	 *
 	 * <ul>

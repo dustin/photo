@@ -17,13 +17,6 @@ import net.spy.util.ProgressStats;
  */
 public class PhotoMigration11 extends PhotoMigration {
 
-	/**
-	 * Get an instance of PhotoMigration11.
-	 */
-	public PhotoMigration11() {
-		super();
-	}
-
 	private void updateKeywords() throws Exception {
 		// Get the IDs
 		GetAllImgIdsAndKws db=new GetAllImgIdsAndKws(PhotoConfig.getInstance());

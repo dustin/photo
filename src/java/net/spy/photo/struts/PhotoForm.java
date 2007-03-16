@@ -14,13 +14,6 @@ public abstract class PhotoForm extends ActionForm {
 
 	private Logger logger=null;
 
-	/**
-	 * Get an instance of PhotoForm.
-	 */
-	public PhotoForm() {
-		super();
-	}
-
 	/** 
 	 * Get a logger for this form.
 	 */

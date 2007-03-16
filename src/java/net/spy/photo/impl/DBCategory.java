@@ -31,7 +31,7 @@ public class DBCategory extends AbstractSavable implements MutableCategory {
 	private PhotoACL acl=null;
 
 	/**
-	 * Get an instance of Category.
+	 * Get a new empty dbcategory.
 	 */
 	public DBCategory() {
 		super();

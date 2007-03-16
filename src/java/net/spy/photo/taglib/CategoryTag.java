@@ -22,13 +22,6 @@ public class CategoryTag extends PhotoTag {
 	private boolean showViewable=false;
 	private boolean showAddable=false;
 
-	/**
-	 * Get an instance of CategoryTag.
-	 */
-	public CategoryTag() {
-		super();
-	}
-
 	public void setShowViewable(boolean to) {
 		this.showViewable=to;
 	}

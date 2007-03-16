@@ -16,16 +16,9 @@ import net.spy.SpyObject;
 public class PhotoACL extends SpyObject
 	implements Serializable, Iterable<PhotoACLEntry> {
 
-	private Map<Integer, PhotoACLEntry> acl=null;
+	private Map<Integer, PhotoACLEntry> acl=
+		new HashMap<Integer, PhotoACLEntry>();
 	private boolean modified=false;
-
-	/**
-	 * Get an instance of PhotoACL.
-	 */
-	public PhotoACL() {
-		super();
-		acl=new HashMap<Integer, PhotoACLEntry>();
-	}
 
 	/** 
 	 * Get a copy of this PhotoACL.

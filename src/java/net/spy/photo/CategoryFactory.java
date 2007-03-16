@@ -250,11 +250,7 @@ public class CategoryFactory extends GenFactory<Category> {
 
 		@Override
 		public boolean equals(Object o) {
-			boolean rv=false;
-			if(o == this) {
-				rv = true;
-			}
-			return(rv);
+			return(o == this);
 		}
 	}
 

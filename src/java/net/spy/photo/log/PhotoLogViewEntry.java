@@ -18,15 +18,10 @@ import net.spy.photo.sp.GetViewersOfImage;
 public class PhotoLogViewEntry extends Object {
 
 	private int imageId = -1;
-
 	private String username = null;
-
 	private String remoteAddr = null;
-
 	private String userAgent = null;
-
 	private String imageSize = null;
-
 	private Date timeStamp = null;
 
 	/**

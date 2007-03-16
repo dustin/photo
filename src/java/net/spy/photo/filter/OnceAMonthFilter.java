@@ -11,13 +11,6 @@ import java.util.Date;
  */
 public class OnceAMonthFilter extends DateFilter {
 
-	/**
-	 * Get an instance of OnceAMonthFilter.
-	 */
-	public OnceAMonthFilter() {
-		super();
-	}
-
 	/** 
 	 * Truncate the date to the beginning of the month.
 	 */
