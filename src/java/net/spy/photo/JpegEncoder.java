@@ -30,17 +30,11 @@ import net.spy.SpyObject;
  */
 public class JpegEncoder extends SpyObject {
 	private BufferedOutputStream outStream;
-
 	private JpegInfo JpegObj;
-
 	private Huffman Huf;
-
 	private DCT dct;
-
 	private int imageHeight, imageWidth;
-
 	private int quality;
-
 	static final int[] jpegNaturalOrder = {
 		0, 1, 8, 16, 9, 2, 3, 10, 17, 24, 32, 25, 18, 11, 4, 5, 12, 19, 26, 33,
 		40, 48, 41, 34, 27, 20, 13, 6, 7, 14, 21, 28, 35, 42, 49, 56, 57, 50,
@@ -94,7 +88,7 @@ public class JpegEncoder extends SpyObject {
 		try {
 			outStream.flush();
 		} catch(IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Error compressing", e);
 		}
 	}
 
@@ -182,8 +176,7 @@ public class JpegEncoder extends SpyObject {
 	}
 
 	private void writeEOI(BufferedOutputStream out) {
-		byte[] EOI = {
-			(byte) 0xFF, (byte) 0xD9 };
+		byte[] EOI = { (byte) 0xFF, (byte) 0xD9 };
 		WriteMarker(EOI, out);
 	}
 
@@ -192,8 +185,7 @@ public class JpegEncoder extends SpyObject {
 		int tempArray[];
 
 		// the SOI marker
-		byte[] SOI = {
-			(byte) 0xFF, (byte) 0xD8 };
+		byte[] SOI = { (byte) 0xFF, (byte) 0xD8 };
 		WriteMarker(SOI, out);
 
 		// The order of the following headers is quiet inconsequential.
@@ -281,19 +273,16 @@ public class JpegEncoder extends SpyObject {
 		DHT4[1] = (byte) 0xC4;
 		for(i = 0; i < 4; i++) {
 			bytes = 0;
-			DHT1[index++
-				- oldindex] = (byte) Huf.bits.get(i)[0];
+			DHT1[index++ - oldindex] = (byte) Huf.bits.get(i)[0];
 			for(j = 1; j < 17; j++) {
 				temp = Huf.bits.get(i)[j];
-				DHT1[index++
-					- oldindex] = (byte) temp;
+				DHT1[index++ - oldindex] = (byte) temp;
 				bytes += temp;
 			}
 			intermediateindex = index;
 			DHT2 = new byte[bytes];
 			for(j = 0; j < bytes; j++) {
-				DHT2[index++
-					- intermediateindex] = (byte) Huf.val.get(i)[j];
+				DHT2[index++ - intermediateindex] = (byte) Huf.val.get(i)[j];
 			}
 			DHT3 = new byte[index];
 			java.lang.System.arraycopy(DHT4, 0, DHT3, 0, oldindex);
@@ -316,31 +305,30 @@ public class JpegEncoder extends SpyObject {
 		index = 5;
 		for(i = 0; i < SOS[4]; i++) {
 			SOS[index++] = (byte) JpegObj.CompID[i];
-			SOS[index++] = (byte) ((JpegObj.DCtableNumber[i] << 4) + JpegObj.ACtableNumber[i]);
+			SOS[index++] = (byte) ((JpegObj.DCtableNumber[i] << 4)
+					+ JpegObj.ACtableNumber[i]);
 		}
 		SOS[index++] = (byte) JpegObj.Ss;
 		SOS[index++] = (byte) JpegObj.Se;
 		SOS[index++] = (byte) ((JpegObj.Ah << 4) + JpegObj.Al);
 		WriteArray(SOS, out);
-
 	}
 
 	void WriteMarker(byte[] data, BufferedOutputStream out) {
 		try {
 			out.write(data, 0, 2);
 		} catch(IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Error writing marker", e);
 		}
 	}
 
 	void WriteArray(byte[] data, BufferedOutputStream out) {
 		int length;
 		try {
-			length = ((data[2] & 0xFF) << 8)
-				+ (data[3] & 0xFF) + 2;
+			length = ((data[2] & 0xFF) << 8) + (data[3] & 0xFF) + 2;
 			out.write(data, 0, length);
 		} catch(IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException("Error writing array", e);
 		}
 	}
 
@@ -361,28 +349,20 @@ public class JpegEncoder extends SpyObject {
 		 * Image Quality (0-100) - default 80 (good image / good compression)
 		 */
 		public static final int DCT_QUALITY = 80;
-
 		public Object quantum[] = new Object[2];
-
 		public Object Divisors[] = new Object[2];
 
 		/**
 		 * Quantitization Matrix for luminace.
 		 */
-		public int quantum_luminance[] = new int[N
-			* N];
-
-		public double DivisorsLuminance[] = new double[N
-			* N];
+		public int quantum_luminance[] = new int[N * N];
+		public double DivisorsLuminance[] = new double[N * N];
 
 		/**
 		 * Quantitization Matrix for chrominance.
 		 */
-		public int quantum_chrominance[] = new int[N
-			* N];
-
-		public double DivisorsChrominance[] = new double[N
-			* N];
+		public int quantum_chrominance[] = new int[N * N];
+		public double DivisorsChrominance[] = new double[N * N];
 
 		/**
 		 * Constructs a new DCT object. Initializes the cosine transform matrix
@@ -589,8 +569,7 @@ public class JpegEncoder extends SpyObject {
 			quantum_chrominance[63] = 99;
 
 			for(j = 0; j < 64; j++) {
-				temp = (quantum_chrominance[j]
-					* Quality + 50) / 100;
+				temp = (quantum_chrominance[j] * Quality + 50) / 100;
 				if(temp <= 0)
 					temp = 1;
 				if(temp >= 255)
@@ -683,137 +662,83 @@ public class JpegEncoder extends SpyObject {
 			}
 
 			for(i = 0; i < 8; i++) {
-				tmp0 = output[i][0]
-					+ output[i][7];
-				tmp7 = output[i][0]
-					- output[i][7];
-				tmp1 = output[i][1]
-					+ output[i][6];
-				tmp6 = output[i][1]
-					- output[i][6];
-				tmp2 = output[i][2]
-					+ output[i][5];
-				tmp5 = output[i][2]
-					- output[i][5];
-				tmp3 = output[i][3]
-					+ output[i][4];
-				tmp4 = output[i][3]
-					- output[i][4];
+				tmp0 = output[i][0] + output[i][7];
+				tmp7 = output[i][0] - output[i][7];
+				tmp1 = output[i][1] + output[i][6];
+				tmp6 = output[i][1] - output[i][6];
+				tmp2 = output[i][2] + output[i][5];
+				tmp5 = output[i][2] - output[i][5];
+				tmp3 = output[i][3] + output[i][4];
+				tmp4 = output[i][3] - output[i][4];
 
-				tmp10 = tmp0
-					+ tmp3;
-				tmp13 = tmp0
-					- tmp3;
-				tmp11 = tmp1
-					+ tmp2;
-				tmp12 = tmp1
-					- tmp2;
+				tmp10 = tmp0 + tmp3;
+				tmp13 = tmp0 - tmp3;
+				tmp11 = tmp1 + tmp2;
+				tmp12 = tmp1 - tmp2;
 
-				output[i][0] = tmp10
-					+ tmp11;
-				output[i][4] = tmp10
-					- tmp11;
+				output[i][0] = tmp10 + tmp11;
+				output[i][4] = tmp10 - tmp11;
 
 				z1 = (tmp12 + tmp13) * 0.707106781;
-				output[i][2] = tmp13
-					+ z1;
-				output[i][6] = tmp13
-					- z1;
+				output[i][2] = tmp13 + z1;
+				output[i][6] = tmp13 - z1;
 
-				tmp10 = tmp4
-					+ tmp5;
-				tmp11 = tmp5
-					+ tmp6;
-				tmp12 = tmp6
-					+ tmp7;
+				tmp10 = tmp4 + tmp5;
+				tmp11 = tmp5 + tmp6;
+				tmp12 = tmp6 + tmp7;
 
 				z5 = (tmp10 - tmp12) * 0.382683433;
-				z2 = 0.541196100
-					* tmp10 + z5;
-				z4 = 1.306562965
-					* tmp12 + z5;
+				z2 = 0.541196100 * tmp10 + z5;
+				z4 = 1.306562965 * tmp12 + z5;
 				z3 = tmp11 * 0.707106781;
 
-				z11 = tmp7
-					+ z3;
-				z13 = tmp7
-					- z3;
+				z11 = tmp7 + z3;
+				z13 = tmp7 - z3;
 
-				output[i][5] = z13
-					+ z2;
-				output[i][3] = z13
-					- z2;
-				output[i][1] = z11
-					+ z4;
-				output[i][7] = z11
-					- z4;
+				output[i][5] = z13 + z2;
+				output[i][3] = z13 - z2;
+				output[i][1] = z11 + z4;
+				output[i][7] = z11 - z4;
 			}
 
 			for(i = 0; i < 8; i++) {
-				tmp0 = output[0][i]
-					+ output[7][i];
-				tmp7 = output[0][i]
-					- output[7][i];
-				tmp1 = output[1][i]
-					+ output[6][i];
-				tmp6 = output[1][i]
-					- output[6][i];
-				tmp2 = output[2][i]
-					+ output[5][i];
-				tmp5 = output[2][i]
-					- output[5][i];
-				tmp3 = output[3][i]
-					+ output[4][i];
-				tmp4 = output[3][i]
-					- output[4][i];
+				tmp0 = output[0][i] + output[7][i];
+				tmp7 = output[0][i] - output[7][i];
+				tmp1 = output[1][i] + output[6][i];
+				tmp6 = output[1][i] - output[6][i];
+				tmp2 = output[2][i] + output[5][i];
+				tmp5 = output[2][i] - output[5][i];
+				tmp3 = output[3][i] + output[4][i];
+				tmp4 = output[3][i] - output[4][i];
 
-				tmp10 = tmp0
-					+ tmp3;
-				tmp13 = tmp0
-					- tmp3;
-				tmp11 = tmp1
-					+ tmp2;
-				tmp12 = tmp1
-					- tmp2;
+				tmp10 = tmp0 + tmp3;
+				tmp13 = tmp0 - tmp3;
+				tmp11 = tmp1 + tmp2;
+				tmp12 = tmp1 - tmp2;
 
-				output[0][i] = tmp10
-					+ tmp11;
-				output[4][i] = tmp10
-					- tmp11;
+				output[0][i] = tmp10 + tmp11;
+				output[4][i] = tmp10 - tmp11;
 
 				z1 = (tmp12 + tmp13) * 0.707106781;
-				output[2][i] = tmp13
-					+ z1;
-				output[6][i] = tmp13
-					- z1;
+				output[2][i] = tmp13 + z1;
+				output[6][i] = tmp13 - z1;
 
-				tmp10 = tmp4
-					+ tmp5;
-				tmp11 = tmp5
-					+ tmp6;
-				tmp12 = tmp6
-					+ tmp7;
+				tmp10 = tmp4 + tmp5;
+				tmp11 = tmp5 + tmp6;
+				tmp12 = tmp6 + tmp7;
 
 				z5 = (tmp10 - tmp12) * 0.382683433;
-				z2 = 0.541196100
-					* tmp10 + z5;
-				z4 = 1.306562965
-					* tmp12 + z5;
+				z2 = 0.541196100 * tmp10 + z5;
+				z4 = 1.306562965 * tmp12 + z5;
 				z3 = tmp11 * 0.707106781;
 
-				z11 = tmp7
-					+ z3;
-				z13 = tmp7
-					- z3;
+				z11 = tmp7 + z3;
+				z13 = tmp7 - z3;
 
-				output[5][i] = z13
-					+ z2;
-				output[3][i] = z13
-					- z2;
-				output[1][i] = z11
-					+ z4;
-				output[7][i] = z11
-					- z4;
+				output[5][i] = z13 + z2;
+				output[3][i] = z13 - z2;
+				output[1][i] = z11 + z4;
+				output[7][i] = z11 - z4;
 			}
 
 			return output;
@@ -850,8 +775,7 @@ public class JpegEncoder extends SpyObject {
 		 * nearest integer.
 		 */
 		public int[] quantizeBlockExtreme(double inputData[][], int code) {
-			int outputData[] = new int[N
-				* N];
+			int outputData[] = new int[N * N];
 			int i, j;
 			int index;
 			index = 0;
@@ -873,44 +797,27 @@ public class JpegEncoder extends SpyObject {
 
 	private class Huffman {
 		int bufferPutBits, bufferPutBuffer;
-
 		public int ImageHeight;
-
 		public int ImageWidth;
-
 		public int DC_matrix0[][];
-
 		public int AC_matrix0[][];
-
 		public int DC_matrix1[][];
-
 		public int AC_matrix1[][];
-
 		public Object DC_matrix[];
-
 		public Object AC_matrix[];
-
 		public int code;
-
 		public int NumOfDCTables;
-
 		public int NumOfACTables;
-
 		public int[] bitsDCluminance = {
 			0x00, 0, 1, 5, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 };
-
 		public int[] valDCluminance = {
 			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-
 		public int[] bitsDCchrominance = {
 			0x01, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 };
-
 		public int[] valDCchrominance = {
 			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-
 		public int[] bitsACluminance = {
 			0x10, 0, 2, 1, 3, 3, 2, 4, 3, 5, 5, 4, 4, 0, 0, 1, 0x7d };
-
 		public int[] valACluminance = {
 			0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41,
 			0x06, 0x13, 0x51, 0x61, 0x07, 0x22, 0x71, 0x14, 0x32, 0x81, 0x91,
@@ -927,10 +834,8 @@ public class JpegEncoder extends SpyObject {
 			0xca, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xe1,
 			0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xf1, 0xf2,
 			0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa };
-
 		public int[] bitsACchrominance = {
 			0x11, 0, 2, 1, 2, 4, 4, 3, 4, 7, 5, 4, 4, 0, 1, 2, 0x77 };
-
 		public int[] valACchrominance = {
 			0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21, 0x31, 0x06, 0x12,
 			0x41, 0x51, 0x07, 0x61, 0x71, 0x13, 0x22, 0x32, 0x81, 0x08, 0x14,
@@ -947,9 +852,7 @@ public class JpegEncoder extends SpyObject {
 			0xc8, 0xc9, 0xca, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9,
 			0xda, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xf2,
 			0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa };
-
 		public ArrayList<int[]> bits;
-
 		public ArrayList<int[]> val;
 
 		/*
@@ -988,8 +891,7 @@ public class JpegEncoder extends SpyObject {
 
 			// The DC portion
 
-			temp = temp2 = zigzag[0]
-				- prec;
+			temp = temp2 = zigzag[0] - prec;
 			if(temp < 0) {
 				temp = -temp;
 				temp2--;
@@ -1009,7 +911,6 @@ public class JpegEncoder extends SpyObject {
 			}
 
 			// The AC portion
-
 			r = 0;
 
 			for(k = 1; k < 64; k++) {
@@ -1031,8 +932,7 @@ public class JpegEncoder extends SpyObject {
 					while((temp >>= 1) != 0) {
 						nbits++;
 					}
-					i = (r << 4)
-						+ nbits;
+					i = (r << 4) + nbits;
 					bufferIt(
 						os, ((int[][]) AC_matrix[ACcode])[i][0],
 						((int[][]) AC_matrix[ACcode])[i][1]);
@@ -1082,7 +982,6 @@ public class JpegEncoder extends SpyObject {
 			}
 			bufferPutBuffer = PutBuffer;
 			bufferPutBits = PutBits;
-
 		}
 
 		void flushBuffer(BufferedOutputStream os) {
@@ -1269,60 +1168,29 @@ public class JpegEncoder extends SpyObject {
 
 	private class JpegInfo {
 		String Comment;
-
 		public Image imageobj;
-
 		public int jiHeight;
-
 		public int jiWidth;
-
 		public int BlockWidth[];
-
 		public int BlockHeight[];
-
 		// the following are set as the default
 		public int Precision = 8;
-
 		public int NumberOfComponents = 3;
-
 		public Object Components[];
-
-		public int[] CompID = {
-			1, 2, 3 };
-
-		public int[] HsampFactor = {
-			1, 1, 1 };
-
-		public int[] VsampFactor = {
-			1, 1, 1 };
-
-		public int[] QtableNumber = {
-			0, 1, 1 };
-
-		public int[] DCtableNumber = {
-			0, 1, 1 };
-
-		public int[] ACtableNumber = {
-			0, 1, 1 };
-
-		public boolean[] lastColumnIsDummy = {
-			false, false, false };
-
-		public boolean[] lastRowIsDummy = {
-			false, false, false };
-
+		public int[] CompID = { 1, 2, 3 };
+		public int[] HsampFactor = { 1, 1, 1 };
+		public int[] VsampFactor = { 1, 1, 1 };
+		public int[] QtableNumber = { 0, 1, 1 };
+		public int[] DCtableNumber = { 0, 1, 1 };
+		public int[] ACtableNumber = { 0, 1, 1 };
+		public boolean[] lastColumnIsDummy = { false, false, false };
+		public boolean[] lastRowIsDummy = { false, false, false };
 		public int Ss = 0;
-
 		public int Se = 63;
-
 		public int Ah = 0;
-
 		public int Al = 0;
-
 		public int compWidth[], compHeight[];
-
 		public int MaxHsampFactor;
-
 		public int MaxVsampFactor;
 
 		public JpegInfo(Image image) {
@@ -1352,8 +1220,7 @@ public class JpegEncoder extends SpyObject {
 		 */
 
 		private void getYCCArray() {
-			int values[] = new int[jiWidth
-				* jiHeight];
+			int values[] = new int[jiWidth * jiHeight];
 			int r, g, b, y, x;
 			// In order to minimize the chance that grabPixels will throw an
 			// exception
@@ -1418,8 +1285,7 @@ public class JpegEncoder extends SpyObject {
 					// 0.33126 * (float)g + 0.5 * (float)b));
 					// Cr1[y][x] = 128 + (float)(0.8784*(0.5 * (float)r -
 					// 0.41869 * (float)g - 0.08131 * (float)b));
-					Y[y][x] = (float) ((0.299
-						* r + 0.587 * g + 0.114 * b));
+					Y[y][x] = (float) ((0.299 * r + 0.587 * g + 0.114 * b));
 					Cb1[y][x] = 128 + (float) ((-0.16874
 						* r - 0.33126 * g + 0.5 * b));
 					Cr1[y][x] = 128 + (float) ((0.5
