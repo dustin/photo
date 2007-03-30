@@ -87,7 +87,7 @@ public class Comment extends AbstractSavable implements Serializable {
 			CloseUtil.close(db);
 		}
 
-		Stats.getComputingStat("comment.image." + imageId)
+		Stats.getComputingStat("comment.load")
 			.add(System.currentTimeMillis() - start);
 		return(al);
 	}
