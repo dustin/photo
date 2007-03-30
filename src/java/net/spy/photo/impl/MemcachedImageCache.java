@@ -11,6 +11,8 @@ import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
 import net.spy.photo.ShutdownHook;
+import net.spy.stat.ComputingStat;
+import net.spy.stat.Stats;
 
 /**
  * ImageCache implementation that uses Memcached.
@@ -21,6 +23,9 @@ public class MemcachedImageCache extends SpyObject
 	private MemcachedClient memcached=null;
 	private int expirationTime=3600;
 	private String prefix=null;
+
+	private ComputingStat hitStat=null;
+	private ComputingStat missStat=null;
 
 	public MemcachedImageCache() {
 		super();
@@ -49,6 +54,9 @@ public class MemcachedImageCache extends SpyObject
 					addrs.toArray(new InetSocketAddress[0]));
 			memcached.setTranscoder(transcoder);
 
+			hitStat=Stats.getComputingStat("memcached.hit");
+			missStat=Stats.getComputingStat("memcached.miss");
+
 			Persistent.addShutdownHook(this);
 		} catch(Exception e) {
 			getLogger().info("Error initializing memcached cache", e);
@@ -58,9 +66,16 @@ public class MemcachedImageCache extends SpyObject
 	public byte[] getImage(String key) throws PhotoException {
 		byte[] rv=null;
 		if(memcached != null) {
+			long start=System.currentTimeMillis();
 			rv=(byte[])memcached.get(prefix + "/" + key);
-			getLogger().debug("Got %s from memcached (%d bytes)", key,
-					rv == null ? 0 : rv.length);
+			long end=System.currentTimeMillis();
+			// Add our stats.
+			(rv==null?missStat:hitStat).add(end-start);
+			// Log if we got something.
+			if(rv != null) {
+				getLogger().debug("Got %s from memcached (%d bytes)", key,
+						rv.length);
+			}
 		}
 		return rv;
 	}
