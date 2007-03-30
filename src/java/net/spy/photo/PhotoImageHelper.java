@@ -14,6 +14,7 @@ import net.spy.photo.util.ReferenceTracker;
  */
 public class PhotoImageHelper extends SpyObject {
 
+	private static final long CACHE_TIME = 10*60*1000;
 	private static PhotoImageHelper instance=null;
 
 	public static synchronized PhotoImageHelper getInstance() {
@@ -74,8 +75,7 @@ public class PhotoImageHelper extends SpyObject {
 
 			// If it's small enough, cache it.
 			if(rv.length < 32768) {
-				cache.store(key,
-						new SoftReference<byte[]>(rv), 10*60*1000);
+				cache.store(key, new SoftReference<byte[]>(rv), CACHE_TIME);
 			}
 		}
 

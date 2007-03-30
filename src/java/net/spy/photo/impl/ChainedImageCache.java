@@ -3,7 +3,9 @@
 package net.spy.photo.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -105,8 +107,21 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 	public byte[] getImage(String key) throws PhotoException {
 		byte[] rv=null;
 		if(getList != null) {
-			for(ImageCache ic : getList) {
+			Collection<ImageCache> storeMatch=new ArrayList<ImageCache>();
+			for(Iterator<ImageCache> i=getList.iterator();
+					rv==null && i.hasNext();) {
+				ImageCache ic=i.next();
+				getLogger().debug("Looking in cache %s for %s", ic, key);
 				rv=ic.getImage(key);
+				if(rv == null && putList != null && putList.contains(ic)) {
+					storeMatch.add(ic);
+				}
+			}
+			if(rv != null) {
+				for(ImageCache ic : storeMatch) {
+					getLogger().debug("Backcaching %s to %s", key, ic);
+					ic.putImage(key, rv);
+				}
 			}
 		}
 		return(rv);
@@ -118,6 +133,7 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 	public void putImage(String key, byte[] image) throws PhotoException {
 		if(putList != null) {
 			for(ImageCache ic : putList) {
+				getLogger().debug("Storing %s in %s", key, ic);
 				ic.putImage(key, image);
 			}
 		}

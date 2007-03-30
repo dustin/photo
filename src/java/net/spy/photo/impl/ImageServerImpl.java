@@ -150,6 +150,7 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 
 	// Fetch an image from the DB
 	private byte[] fetchImageFromDB(PhotoImage pid) throws Exception {
+		getLogger().debug("Fetching %s from DB", pid);
 		// Average image is 512k.  Create a buffer of that size to start.
 		StringBuffer sdata=new StringBuffer(512*1024);
 		

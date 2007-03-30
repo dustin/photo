@@ -32,6 +32,7 @@ public class MemcachedImageCache extends SpyObject
 			expirationTime=conf.getInt("memcached.cachetime", 3600);
 			SerializingTranscoder transcoder = new SerializingTranscoder();
 			transcoder.setCompressionThreshold(gzipsize);
+			getLogger().info("Compression threshold:  %d", gzipsize);
 
 			ArrayList<InetSocketAddress> addrs=
 				new ArrayList<InetSocketAddress>();
@@ -46,6 +47,7 @@ public class MemcachedImageCache extends SpyObject
 
 			memcached=new MemcachedClient(
 					addrs.toArray(new InetSocketAddress[0]));
+			memcached.setTranscoder(transcoder);
 
 			Persistent.addShutdownHook(this);
 		} catch(Exception e) {
@@ -57,6 +59,8 @@ public class MemcachedImageCache extends SpyObject
 		byte[] rv=null;
 		if(memcached != null) {
 			rv=(byte[])memcached.get(prefix + "/" + key);
+			getLogger().debug("Got %s from memcached (%d bytes)", key,
+					rv == null ? 0 : rv.length);
 		}
 		return rv;
 	}
@@ -65,7 +69,9 @@ public class MemcachedImageCache extends SpyObject
 		if(memcached != null) {
 			String k=prefix + "/" + key;
 			memcached.add(k, expirationTime, image);
-			getLogger().debug("Memcached %s", k);
+			getLogger().debug("Memcached stored %s", k);
+		} else {
+			getLogger().debug("No memcached, can't store %s", key);
 		}
 	}
 
