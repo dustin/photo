@@ -6,6 +6,8 @@ import net.spy.cache.DiskCache;
 import net.spy.photo.ImageCache;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
+import net.spy.stat.ComputingStat;
+import net.spy.stat.Stats;
 
 /**
  * ImageCache that uses local files.
@@ -13,6 +15,9 @@ import net.spy.photo.PhotoException;
 public class LocalImageCacheImpl extends Object implements ImageCache {
 
 	private DiskCache cache=null;
+
+	private ComputingStat hitStat=null;
+	private ComputingStat missStat=null;
 
 	/**
 	 * Get an instance of LocalImageCacheImpl.
@@ -23,13 +28,20 @@ public class LocalImageCacheImpl extends Object implements ImageCache {
 		PhotoConfig conf=PhotoConfig.getInstance();
 		cache=new DiskCache(conf.get("cache.dir", "/var/tmp/photocache"),
 			conf.getInt("cache.dcache.lrusize", 100));
+
+		hitStat=Stats.getComputingStat("localcache.hit");
+		missStat=Stats.getComputingStat("localcache.miss");
 	}
 
 	/**
 	 * @see ImageCache
 	 */
 	public byte[] getImage(String key) throws PhotoException {
+		long start=System.currentTimeMillis();
 		byte[] rv=(byte[])cache.get(key);
+		long end=System.currentTimeMillis();
+		// Add our stats.
+		(rv==null?missStat:hitStat).add(end-start);
 		return(rv);
 	}
 
