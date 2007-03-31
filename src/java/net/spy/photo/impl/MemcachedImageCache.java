@@ -1,9 +1,10 @@
 package net.spy.photo.impl;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
+import java.util.List;
 
 import net.spy.SpyObject;
+import net.spy.memcached.AddrUtil;
 import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.SerializingTranscoder;
 import net.spy.photo.ImageCache;
@@ -34,24 +35,21 @@ public class MemcachedImageCache extends SpyObject
 			PhotoConfig conf=PhotoConfig.getInstance();
 			int gzipsize=conf.getInt("memcached.transcoder.gzipsize",
 					Integer.MAX_VALUE);
-			expirationTime=conf.getInt("memcached.cachetime", 3600);
+			getLogger().info("Compression threshold:  %d", gzipsize);
 			SerializingTranscoder transcoder = new SerializingTranscoder();
 			transcoder.setCompressionThreshold(gzipsize);
-			getLogger().info("Compression threshold:  %d", gzipsize);
 
-			ArrayList<InetSocketAddress> addrs=
-				new ArrayList<InetSocketAddress>();
+			int bufSize=conf.getInt("memcached.bufsize",
+					MemcachedClient.DEFAULT_BUF_SIZE);
+			getLogger().info("Buffer size:  %d", bufSize);
 
-			for(String hoststuff : conf.get("memcached.servers").split(" ")) {
-				String[] parts=hoststuff.split(":");
-				assert parts.length == 2 : "Invalid memcached.servers: "
-					+ conf.get("memcached.servers");
-				addrs.add(new InetSocketAddress(parts[0],
-						Integer.parseInt(parts[1])));
-			}
+			expirationTime=conf.getInt("memcached.cachetime", 3600);
+			getLogger().info("Cache time:  %d", expirationTime);
 
-			memcached=new MemcachedClient(
-					addrs.toArray(new InetSocketAddress[0]));
+			List<InetSocketAddress> addrs=AddrUtil.getAddresses(
+					conf.get("memcached.servers"));
+
+			memcached=new MemcachedClient(bufSize, addrs);
 			memcached.setTranscoder(transcoder);
 
 			hitStat=Stats.getComputingStat("memcached.hit");
