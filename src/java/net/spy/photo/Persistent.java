@@ -258,13 +258,17 @@ public class Persistent extends JWServletContextListener {
 
 			getLogger().info("Initializing mail stuff");
 			PhotoConfig conf=PhotoConfig.getInstance();
-			String mailName=conf.get("mailJNDIName");
 			executor=new ScheduledThreadPoolExecutor(1);
-			if(mailName != null) {
-				executor.scheduleWithFixedDelay(new MailPoller(mailName),
-						5, 30, TimeUnit.SECONDS);
+			try {
+				String mailName=conf.get("mailJNDIName");
+				if(mailName != null) {
+					executor.scheduleWithFixedDelay(new MailPoller(mailName),
+							5, 30, TimeUnit.SECONDS);
+				}
+				getLogger().info("Mail stuff initialization complete");
+			} catch(NamingException e) {
+				getLogger().info("Couldn't initialize mail", e);
 			}
-			getLogger().info("Mail stuff initialization complete");
 
 			getLogger().info("Initialization complete");
 		}
