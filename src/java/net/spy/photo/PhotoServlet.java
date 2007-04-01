@@ -126,7 +126,7 @@ public class PhotoServlet extends JWHttpServlet {
 			byte[] image = p.getImage(u, pid, dims);
 
 			res.setContentType(pid.getFormat().getMime());
-			res.setContentLength(pid.getSize());
+			res.setContentLength(image.length);
 			// Setup cache
 			res.addHeader("Cache-Control", "private, max-age=86400");
 			OutputStream os = res.getOutputStream();
