@@ -21,8 +21,12 @@ import net.spy.stat.Stats;
 public class MemcachedImageCache extends SpyObject
 	implements ImageCache, ShutdownHook {
 
+	private static final int DEFAULT_EXPIRATION_TIME = 3600;
+	private static final int DEFAULT_MAX_CACHE_SIZE = 512*1024;
+
 	private MemcachedClient memcached=null;
-	private int expirationTime=3600;
+	private int expirationTime=DEFAULT_EXPIRATION_TIME;
+	private int maxCacheSize=DEFAULT_MAX_CACHE_SIZE;
 	private String prefix=null;
 
 	private ComputingStat hitStat=null;
@@ -43,8 +47,12 @@ public class MemcachedImageCache extends SpyObject
 					MemcachedClient.DEFAULT_BUF_SIZE);
 			getLogger().info("Buffer size:  %d", bufSize);
 
-			expirationTime=conf.getInt("memcached.cachetime", 3600);
+			expirationTime=conf.getInt("memcached.cachetime",
+					DEFAULT_EXPIRATION_TIME);
 			getLogger().info("Cache time:  %d", expirationTime);
+			maxCacheSize=conf.getInt("memcached.maxCacheSize",
+					DEFAULT_MAX_CACHE_SIZE);
+			getLogger().info("Maximum cache size:  %d", maxCacheSize);
 
 			List<InetSocketAddress> addrs=AddrUtil.getAddresses(
 					conf.get("memcached.servers"));
@@ -80,9 +88,15 @@ public class MemcachedImageCache extends SpyObject
 
 	public void putImage(String key, byte[] image) throws PhotoException {
 		if(memcached != null) {
-			String k=prefix + "/" + key;
-			memcached.add(k, expirationTime, image);
-			getLogger().debug("Memcached stored %s", k);
+			if(image.length < maxCacheSize) {
+				String k=prefix + "/" + key;
+				memcached.add(k, expirationTime, image);
+				getLogger().debug("Memcached stored %d bytes for %s",
+						image.length, k);
+			} else {
+				getLogger().debug("Not caching %s size %d > max (%d)",
+					key, image.length, maxCacheSize);
+			}
 		} else {
 			getLogger().debug("No memcached, can't store %s", key);
 		}
