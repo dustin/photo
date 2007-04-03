@@ -152,7 +152,7 @@
 		<dependency>
 			<groupId>spy</groupId>
 			<artifactId>memcached</artifactId>
-			<version>SNAPSHOT</version>
+			<version>1.0.43</version>
 			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>
