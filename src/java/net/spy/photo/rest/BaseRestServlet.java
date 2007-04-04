@@ -2,12 +2,9 @@
 
 package net.spy.photo.rest;
 
-import java.io.IOException;
 import java.util.Date;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import net.spy.jwebkit.xml.XMLOutputServlet;
 import net.spy.photo.PhotoUtil;
@@ -16,12 +13,6 @@ import net.spy.photo.PhotoUtil;
  * Base class for all REST servlets.
  */
 public abstract class BaseRestServlet extends XMLOutputServlet {
-
-	@Override
-	protected void doGetOrPost(HttpServletRequest req, HttpServletResponse res)
-		throws ServletException, IOException {
-		throw new ServletException("Not implemented");
-	}
 
 	protected int getIntParameter(HttpServletRequest req, String param) {
 		return Integer.parseInt(getStringParameter(req, param));

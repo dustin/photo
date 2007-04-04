@@ -21,7 +21,7 @@ import net.spy.stat.Stats;
 public class StatServlet extends JWHttpServlet {
 
 	@Override
-	protected void doGetOrPost(HttpServletRequest req, HttpServletResponse res)
+	protected void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 		SortedMap<String, Stat> stuff=new TreeMap<String, Stat>(
 				Stats.getInstance().getStats());

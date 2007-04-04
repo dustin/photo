@@ -61,7 +61,7 @@ public class ZipExportServlet extends JWHttpServlet {
 	}
 
 	@Override
-	protected void doGetOrPost(HttpServletRequest req, HttpServletResponse res)
+	protected void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
 
 		HttpSession ses=req.getSession(false);

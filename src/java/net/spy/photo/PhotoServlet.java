@@ -107,12 +107,6 @@ public class PhotoServlet extends JWHttpServlet {
 		return new PhotoServletChain(filters);
 	}
 
-	@Override
-	protected void doGetOrPost(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
-		throw new ServletException("POST not supported.");
-	}
-
 	static class ImgWriter extends BasePhotoServletFilter {
 
 		public void doFilter(PhotoImage pid, User u, PhotoDimensions dims,
