@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.spy.SpyObject;
 import net.spy.memcached.AddrUtil;
+import net.spy.memcached.DefaultConnectionFactory;
 import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.SerializingTranscoder;
 import net.spy.photo.ImageCache;
@@ -44,7 +45,7 @@ public class MemcachedImageCache extends SpyObject
 			transcoder.setCompressionThreshold(gzipsize);
 
 			int bufSize=conf.getInt("memcached.bufsize",
-					MemcachedClient.DEFAULT_BUF_SIZE);
+					DefaultConnectionFactory.DEFAULT_READ_BUFFER_SIZE);
 			getLogger().info("Buffer size:  %d", bufSize);
 
 			expirationTime=conf.getInt("memcached.cachetime",
@@ -57,7 +58,9 @@ public class MemcachedImageCache extends SpyObject
 			List<InetSocketAddress> addrs=AddrUtil.getAddresses(
 					conf.get("memcached.servers"));
 
-			memcached=new MemcachedClient(bufSize, addrs);
+			memcached=new MemcachedClient(new DefaultConnectionFactory(
+					DefaultConnectionFactory.DEFAULT_OP_QUEUE_LEN, bufSize),
+					addrs);
 			memcached.setTranscoder(transcoder);
 
 			hitStat=Stats.getComputingStat("memcached.hit");
