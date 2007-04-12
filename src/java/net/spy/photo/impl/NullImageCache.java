@@ -24,4 +24,8 @@ public class NullImageCache extends SpyObject implements ImageCache {
 		}
 	}
 
+	public boolean willStore(String key, byte[] image) {
+		return false;
+	}
+
 }

@@ -139,4 +139,12 @@ public class ChainedImageCache extends SpyObject implements ImageCache {
 		}
 	}
 
+	public boolean willStore(String key, byte[] image) {
+		boolean rv=false;
+		for(ImageCache ic : putList) {
+			rv |= ic.willStore(key, image);
+		}
+		return rv;
+	}
+
 }

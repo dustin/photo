@@ -40,4 +40,8 @@ public class SoftImageCache extends SpyObject
 		store=null;
 	}
 
+	public boolean willStore(String key, byte[] image) {
+		return true;
+	}
+
 }

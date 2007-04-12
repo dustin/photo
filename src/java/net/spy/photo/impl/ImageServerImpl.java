@@ -136,8 +136,16 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 		throws PhotoException {
 		try {
 			String key="photo_" + pid.getId();
-			getLogger().info("Caching image %s with key %s", pid.getId(), key);
-			cache.putImage(key, image);
+			if(cache.willStore(key, image)) {
+				getLogger().info("Caching image %s with key %s",
+						pid.getId(), key);
+				cache.putImage(key, image);
+			} else {
+				getLogger().warn(
+					"No cache will accept %s, going directly to permanent",
+					key);
+				Persistent.getPermanentStorage().storeImage(pid, image);
+			}
 		} catch(Exception e) {
 			getLogger().warn("Error caching image", e);
 			throw new PhotoException("Error storing image", e);

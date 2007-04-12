@@ -52,5 +52,9 @@ public class LocalImageCacheImpl extends Object implements ImageCache {
 		cache.put(key, image);
 	}
 
+	public boolean willStore(String key, byte[] image) {
+		return true;
+	}
+
 }
 

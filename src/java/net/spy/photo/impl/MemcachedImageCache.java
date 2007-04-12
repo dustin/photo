@@ -115,4 +115,8 @@ public class MemcachedImageCache extends SpyObject
 		}
 	}
 
+	public boolean willStore(String key, byte[] image) {
+		return image.length <= maxCacheSize;
+	}
+
 }
