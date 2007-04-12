@@ -2,11 +2,7 @@
 
 package net.spy.photo.impl;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 import net.spy.SpyObject;
-import net.spy.db.SpyDB;
 import net.spy.photo.ImageCache;
 import net.spy.photo.ImageServer;
 import net.spy.photo.ImageServerScaler;
@@ -18,7 +14,6 @@ import net.spy.photo.PhotoException;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoParser;
 import net.spy.photo.PhotoUtil;
-import net.spy.util.Base64;
 
 /**
  * Base image server implementation.
@@ -69,7 +64,11 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 					imageData = cache.getImage(key);
 				}
 				if(imageData == null) {
-					imageData=fetchImageFromDB(pid);
+					getLogger().info("Couldn't find %s in cache", key);
+					imageData=Persistent.getPermanentStorage().fetchImage(pid);
+					assert imageData != null
+						: "Could not retrieve " + pid
+							+ " from permanent storage";
 					if(withCache) {
 						cache.putImage(key, imageData);
 					}
@@ -136,7 +135,9 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	public void storeImage(PhotoImage pid, byte[] image)
 		throws PhotoException {
 		try {
-			cache.putImage("photo_" + pid.getId(), image);
+			String key="photo_" + pid.getId();
+			getLogger().info("Caching image %s with key %s", pid.getId(), key);
+			cache.putImage(key, image);
 		} catch(Exception e) {
 			getLogger().warn("Error caching image", e);
 			throw new PhotoException("Error storing image", e);
@@ -146,31 +147,6 @@ public class ImageServerImpl extends SpyObject implements ImageServer {
 	private byte[] scaleImage(PhotoImage pid,
 			byte[] in, PhotoDimensions dim) throws Exception {
 		return(scaler.scaleImage(pid, in, dim));
-	}
-
-	// Fetch an image from the DB
-	private byte[] fetchImageFromDB(PhotoImage pid) throws Exception {
-		getLogger().debug("Fetching %s from DB", pid);
-		// Average image is 512k.  Create a buffer of that size to start.
-		StringBuffer sdata=new StringBuffer(512*1024);
-		
-		SpyDB db=new SpyDB(PhotoConfig.getInstance());
-		String query="select data from image_store where id = ?\n"
-			+ " order by line";
-		PreparedStatement st = db.prepareStatement(query);
-		st.setInt(1, pid.getId());
-		ResultSet rs = st.executeQuery();
-		
-		while(rs.next()) {
-			sdata.append(rs.getString("data"));
-		}
-		rs.close();
-		db.close();
-		
-		Base64 base64 = new Base64();
-		byte data[]=base64.decode(sdata.toString());
-
-		return(data);
 	}
 
 }

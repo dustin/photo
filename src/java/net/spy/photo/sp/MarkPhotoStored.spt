@@ -1,0 +1,17 @@
+#
+# Copyright (c) 2007 Dustin Sallings <dustin@spy.net>
+#
+
+@package
+net.spy.photo.sp
+
+@description
+Mark a photo as having been stored.
+
+@sql
+update photo_logs set extra_info=text(now())
+	where photo_id = ?
+	and log_type = get_log_type('Upload')
+
+@params
+photo_id required INTEGER the ID of the image that was updated

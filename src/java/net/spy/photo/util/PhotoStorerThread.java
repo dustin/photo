@@ -2,8 +2,6 @@
 
 package net.spy.photo.util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-import net.spy.db.SpyDB;
+import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
 import net.spy.photo.PhotoImageFactory;
@@ -22,7 +20,7 @@ import net.spy.photo.ShutdownHook;
 import net.spy.photo.observation.Observation;
 import net.spy.photo.observation.Observer;
 import net.spy.photo.sp.GetImagesToFlush;
-import net.spy.util.Base64;
+import net.spy.photo.sp.MarkPhotoStored;
 import net.spy.util.CloseUtil;
 import net.spy.util.LoopingThread;
 import net.spy.util.RingBuffer;
@@ -39,9 +37,6 @@ import net.spy.xml.XMLUtils;
  */
 public class PhotoStorerThread extends LoopingThread
 	implements SAXAble, Observer<PhotoImage>, ShutdownHook {
-
-	// chunks should be divisible by 57
-	public static final int CHUNK_SIZE=2052;
 
 	private int added=0;
 	private int addNotifications=0;
@@ -166,79 +161,37 @@ public class PhotoStorerThread extends LoopingThread
 		PhotoImageHelper p = PhotoImageHelper.getInstance();
 		PhotoImage pid=
 			PhotoImageFactory.getInstance().getObject(imageId);
-		SpyDB pdb = new SpyDB(PhotoConfig.getInstance());
-		byte[] pi = p.getImage(pid);
-		getLogger().info("Storer: Got image for %s, %d bytes of data", pid,
-				pid.getSize());
+		byte[] data = p.getImage(pid);
 
-		Connection db=null;
+		// Attempt to store the image.
+		Persistent.getPermanentStorage().storeImage(pid, data);
+
+		// Clear the record.
+		MarkPhotoStored db=new MarkPhotoStored(PhotoConfig.getInstance());
 		try {
-			int n=0;
-			db = pdb.getConn();
-			db.setAutoCommit(false);
-			PreparedStatement pst=db.prepareStatement(
-				"insert into image_store (id, line, data) values(?,?,?)");
-
-			Base64 base64=new Base64();
-
-			pst.setInt(1, imageId);
-
-			// Get the encoded data
-			for(byte b[] : new ByteChunker(pi, CHUNK_SIZE)) {
-				pst.setInt(2, n++);
-				pst.setString(3, base64.encode(b));
-				int aff=pst.executeUpdate();
-				assert aff == 1 : "Expected to update 1 record, updated " + aff;
-			}
-
-			getLogger().debug("Storer:  Stored %d lines of data for %d.",
-					n, imageId);
-			pst.close();
-			pst=null;
-			PreparedStatement pst2=db.prepareStatement(
-				"update photo_logs set extra_info=text(now())\n"
-					+ "  where photo_id = ?\n"
-					+ "  and log_type = get_log_type('Upload')");
-			pst2.setInt(1, imageId);
-			int rows=pst2.executeUpdate();
+			db.setPhotoId(imageId);
+			int rows=db.executeUpdate();
 			// We should update exactly one row.  We can live with 0, but
 			// more than one could be bad.
 			switch(rows) {
 				case 0:
 					getLogger().warn("WARNING:  No upload log entry was "
-						+ "found for " + imageId);
+							+ "found for " + imageId);
 					break;
 				case 1:
 					// Expected
 					break;
 				default:
 					throw new Exception(
-						"Expected to update 1 upload log entry , updated "
-						+ rows);
-			}
-			db.commit();
-			// Go ahead and generate a thumbnail.
-			p.getThumbnail(pid);
-		} catch(Exception e) {
-			// If anything happens, roll it back.
-			getLogger().warn("Problem saving image", e);
-			try {
-				if(db!=null) {
-					db.rollback();
-				}
-			} catch(Exception e3) {
-				getLogger().warn("Problem rolling back transaction", e3);
+							"Expected to update 1 upload log entry , updated "
+							+ rows);
 			}
 		} finally {
-			if(db!=null) {
-				try {
-					db.setAutoCommit(true);
-				} catch(Exception e) {
-					getLogger().warn("Problem restoring autocommit", e);
-				}
-			}
-			pdb.close();
+			CloseUtil.close(db);
 		}
+
+		// Go ahead and generate a thumbnail.
+		p.getThumbnail(pid);
 	}
 
 	// Get a list of images that have been added, but not yet added into

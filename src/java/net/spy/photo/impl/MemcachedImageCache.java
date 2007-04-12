@@ -12,6 +12,7 @@ import net.spy.photo.ImageCache;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoException;
+import net.spy.photo.PhotoParser;
 import net.spy.photo.ShutdownHook;
 import net.spy.stat.ComputingStat;
 import net.spy.stat.Stats;
@@ -91,13 +92,16 @@ public class MemcachedImageCache extends SpyObject
 
 	public void putImage(String key, byte[] image) throws PhotoException {
 		if(memcached != null) {
+			assert image != null : "Trying to cache null image";
+			assert image.length > PhotoParser.SMALLEST_IMAGE
+				: "Too small to be an image:  " + image.length + " bytes";
 			if(image.length < maxCacheSize) {
 				String k=prefix + "/" + key;
 				memcached.add(k, expirationTime, image);
 				getLogger().debug("Memcached stored %d bytes for %s",
 						image.length, k);
 			} else {
-				getLogger().debug("Not caching %s size %d > max (%d)",
+				getLogger().info("Not caching %s size %d > max (%d)",
 					key, image.length, maxCacheSize);
 			}
 		} else {

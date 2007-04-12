@@ -16,6 +16,7 @@ import javax.servlet.ServletContextEvent;
 import net.spy.SpyThread;
 import net.spy.db.TransactionPipeline;
 import net.spy.jwebkit.JWServletContextListener;
+import net.spy.photo.impl.DBPermanentStorage;
 import net.spy.photo.jms.ImageMessageConsumer;
 import net.spy.photo.jms.ImageMessagePoster;
 import net.spy.photo.mail.MailPoller;
@@ -33,6 +34,7 @@ public class Persistent extends JWServletContextListener {
 	static PhotoSecurity security = null;
 	static TransactionPipeline pipeline = null;
 	static ImageServer imageServer=null;
+	static PermanentStorage permStorage=null;
 	static PhotoStorerThread storer=null;
 	static ScheduledExecutorService executor=null;
 
@@ -116,6 +118,13 @@ public class Persistent extends JWServletContextListener {
 	 */
 	public static ImageServer getImageServer() {
 		return(imageServer);
+	}
+
+	/**
+	 * Get the PermanentStorage instance.
+	 */
+	public static PermanentStorage getPermanentStorage() {
+		return(permStorage);
 	}
 
 	/**
@@ -226,9 +235,14 @@ public class Persistent extends JWServletContextListener {
 			pidf.recache();
 			getLogger().info("Image cache initialization complete");
 
+			getLogger().info("Initializing image permanent storage");
+			permStorage=new Instantiator<PermanentStorage>("permstorageimpl",
+				DBPermanentStorage.class.getName()).getInstance();
+			getLogger().info("Image permanent storage initialization complete");
+
 			getLogger().info("Initializing image server");
 			imageServer=new Instantiator<ImageServer>("imageserverimpl",
-			"net.spy.photo.impl.ImageServerImpl").getInstance();
+				"net.spy.photo.impl.ImageServerImpl").getInstance();
 			getLogger().info("Image server initialization complete");
 
 			getLogger().info("Initializing searches cache");

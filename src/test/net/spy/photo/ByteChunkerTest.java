@@ -7,8 +7,8 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
+import net.spy.photo.impl.DBPermanentStorage;
 import net.spy.photo.util.ByteChunker;
-import net.spy.photo.util.PhotoStorerThread;
 
 public class ByteChunkerTest extends TestCase {
 
@@ -61,7 +61,7 @@ public class ByteChunkerTest extends TestCase {
     public void testBase64EncodedChunks() throws Exception {
         byte data[]=new byte[4096];
         int seen=0;
-        for(byte b[] : new ByteChunker(data, PhotoStorerThread.CHUNK_SIZE)) {
+        for(byte b[] : new ByteChunker(data, DBPermanentStorage.CHUNK_SIZE)) {
             seen+=b.length;
         }
         assertEquals(data.length, seen);

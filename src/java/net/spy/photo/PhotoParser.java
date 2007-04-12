@@ -16,7 +16,7 @@ import net.spy.util.SpyUtil;
 public class PhotoParser extends SpyObject {
 
 	// This is the size of a single-pixel GIF.
-	private static final int SMALLEST_IMAGE=42;
+	public static final int SMALLEST_IMAGE=42;
 
 	private static PhotoParser instance=null;
 
