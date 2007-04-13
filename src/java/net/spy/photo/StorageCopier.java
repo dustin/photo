@@ -111,16 +111,18 @@ public class StorageCopier extends SpyObject
 			Collection<Integer> ids=dest.getMissingIds();
 			todo=ids.size();
 			PhotoImageFactory pif=PhotoImageFactory.getInstance();
+			PhotoImageHelper pih=PhotoImageHelper.getInstance();
 			for(int id : ids) {
 				try {
 					PhotoImage pi=pif.getObject(id);
-					dest.storeImage(pi, src.fetchImage(pi));
+					dest.storeImage(pi, pih.getImage(pi));
 				} catch(Exception e) {
 					getLogger().warn("Error transferring %s", id, e);
 					synchronized(errs) {
 						errs.add("Error on " + id + ": " + e);
 					} // sync
 				} //exception
+				done++;
 			} // every id
 		} // copy
 	} // thread
