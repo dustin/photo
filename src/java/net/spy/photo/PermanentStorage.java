@@ -8,6 +8,11 @@ import java.util.Collection;
 public interface PermanentStorage {
 
 	/**
+	 * Initialize this storage.
+	 */
+	void init() throws Exception;
+
+	/**
 	 * Get a collection of image IDs that are known to exist, but not within
 	 * this permanent storage instance.
 	 *

@@ -31,6 +31,10 @@ public class DBPermanentStorage extends SpyObject implements PermanentStorage {
 	private ComputingStat storeStat=Stats.getComputingStat(
 			"permstorage.db.store");
 
+	public void init() throws Exception {
+		// nothing
+	}
+
 	public byte[] fetchImage(PhotoImage pi) throws Exception {
 		long start=System.currentTimeMillis();
 		getLogger().info("Fetching %s from DB", pi);

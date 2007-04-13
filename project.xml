@@ -168,6 +168,14 @@
 			<type>plugin</type>
 		</dependency>
 
+		<!-- Hadoop interface -->
+		<dependency>
+			<groupId>hadoop</groupId>
+			<artifactId>hadoop</artifactId>
+			<version>0.12.4-dev-core</version>
+			<properties><war.bundle>true</war.bundle></properties>
+		</dependency>
+
 		<!-- Drew Noakes' metadata extractor -->
 		<dependency>
 			<groupId>drewnoakes</groupId>

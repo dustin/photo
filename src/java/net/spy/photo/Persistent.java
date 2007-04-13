@@ -238,6 +238,7 @@ public class Persistent extends JWServletContextListener {
 			getLogger().info("Initializing image permanent storage");
 			permStorage=new Instantiator<PermanentStorage>("permstorageimpl",
 				DBPermanentStorage.class.getName()).getInstance();
+			permStorage.init();
 			getLogger().info("Image permanent storage initialization complete");
 
 			getLogger().info("Initializing image server");
