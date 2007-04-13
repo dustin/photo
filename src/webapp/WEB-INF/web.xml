@@ -162,6 +162,11 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>storageCopy</servlet-name>
+		<servlet-class>net.spy.photo.ajax.StorageCopyControl</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>apiCategory</servlet-name>
 		<servlet-class>net.spy.photo.rest.GetCategories</servlet-class>
 	</servlet>
@@ -274,6 +279,10 @@
 	<servlet-mapping>
 		<servlet-name>storercontrol</servlet-name>
 		<url-pattern>/ajax/storer/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>storageCopy</servlet-name>
+		<url-pattern>/ajax/storageCopy/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Normal mapping -->

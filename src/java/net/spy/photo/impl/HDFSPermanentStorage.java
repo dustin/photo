@@ -82,11 +82,11 @@ public class HDFSPermanentStorage extends SpyObject
 	}
 
 	public Collection<Integer> getMissingIds() throws Exception {
+		getLogger().info("Looking for missing IDs");
 		Collection<Integer> rv=new HashSet<Integer>();
 		for(PhotoImage i : PhotoImageFactory.getInstance().getObjects()) {
 			rv.add(i.getId());
 		}
-		getLogger().warn("getMissingIds is not implemented");
 		FileSystem fs=getFilesystem();
 		try {
 			for(Path p : fs.listPaths(new Path(prefix))) {
@@ -100,6 +100,7 @@ public class HDFSPermanentStorage extends SpyObject
 		} finally {
 			fs.close();
 		}
+		getLogger().info("Found %s missing IDs", rv.size());
 		return rv;
 	}
 

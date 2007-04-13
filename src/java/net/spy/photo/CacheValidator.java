@@ -141,7 +141,7 @@ public class CacheValidator extends SpyObject implements SAXAble, ShutdownHook {
 		int todo=0;
 		int done=0;
 
-		boolean stopRequested=false;
+		volatile boolean stopRequested=false;
 
 		public RunThread(Collection<Operation> ops, User u) {
 			super("CacheValidatorThread");
