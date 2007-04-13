@@ -25,6 +25,8 @@ public class StorageCopyControl extends PhotoAjaxServlet {
 			dest.init();
 			getLogger().info("%s requesting a copy to %s", user, dest);
 			rv.start(dest);
+		} else if(request.getPathInfo().equals("/stop")) {
+			rv.requestStop();
 		}
 		return(rv);
 	}
