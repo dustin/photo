@@ -3,12 +3,15 @@ package net.spy.photo.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import net.spy.SpyObject;
 import net.spy.db.SpyDB;
 import net.spy.photo.PermanentStorage;
 import net.spy.photo.PhotoConfig;
 import net.spy.photo.PhotoImage;
+import net.spy.photo.sp.GetImagesToFlush;
 import net.spy.photo.util.ByteChunker;
 import net.spy.stat.ComputingStat;
 import net.spy.stat.Stats;
@@ -124,6 +127,22 @@ public class DBPermanentStorage extends SpyObject implements PermanentStorage {
 		}
 		long end=System.currentTimeMillis();
 		storeStat.add(end-start);
+	}
+
+	public Collection<Integer> getMissingIds() throws Exception {
+		GetImagesToFlush db = null;
+		Collection<Integer> ids = new ArrayList<Integer>();
+		try {
+			db=new GetImagesToFlush(PhotoConfig.getInstance());
+			ResultSet rs=db.executeQuery();
+			while(rs.next()) {
+				ids.add(rs.getInt("image_id"));
+			}
+			rs.close();
+		} finally {
+			CloseUtil.close(db);
+		}
+		return ids;
 	}
 
 }

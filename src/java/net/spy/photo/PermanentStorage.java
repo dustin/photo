@@ -1,9 +1,20 @@
 package net.spy.photo;
 
+import java.util.Collection;
+
 /**
  * Permanent image storage for photos.
  */
 public interface PermanentStorage {
+
+	/**
+	 * Get a collection of image IDs that are known to exist, but not within
+	 * this permanent storage instance.
+	 *
+	 * @return a collection of image IDs
+	 * @throws Exception if there's a problem getting the collection of IDs
+	 */
+	Collection<Integer> getMissingIds() throws Exception;
 
 	/**
 	 * Permanently store the given image.

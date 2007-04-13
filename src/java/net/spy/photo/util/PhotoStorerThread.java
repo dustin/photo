@@ -2,9 +2,9 @@
 
 package net.spy.photo.util;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -19,7 +19,6 @@ import net.spy.photo.PhotoImageHelper;
 import net.spy.photo.ShutdownHook;
 import net.spy.photo.observation.Observation;
 import net.spy.photo.observation.Observer;
-import net.spy.photo.sp.GetImagesToFlush;
 import net.spy.photo.sp.MarkPhotoStored;
 import net.spy.util.CloseUtil;
 import net.spy.util.LoopingThread;
@@ -208,21 +207,15 @@ public class PhotoStorerThread extends LoopingThread
 		}
 		flushes++;
 		flushing=true;
-		GetImagesToFlush db = null;
-		ArrayList<Integer> ids = new ArrayList<Integer>();
+
+		Collection<Integer> ids=null;
 		try {
-			db=new GetImagesToFlush(PhotoConfig.getInstance());
-			ResultSet rs=db.executeQuery();
-			while(rs.next()) {
-				ids.add(rs.getInt("image_id"));
-			}
-			rs.close();
+			ids=Persistent.getPermanentStorage().getMissingIds();
 		} catch(Exception e) {
 			// Do nothing, we'll try again later.
 			getLogger().warn("Exception while loading images to flush", e);
 			recordException(e);
-		} finally {
-			CloseUtil.close(db);
+			ids=Collections.emptyList();
 		}
 
 		// Got the IDs, now store the actual images.  This is done so
