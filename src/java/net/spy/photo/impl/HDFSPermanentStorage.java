@@ -67,11 +67,13 @@ public class HDFSPermanentStorage extends SpyObject
 	}
 
 	public byte[] fetchImage(PhotoImage pi) throws Exception {
+		Path path=getFile(pi);
+		getLogger().info("Fetching %s from %s", pi.getId(), path);
 		FileSystem fs = getFilesystem();
 		FSDataInputStream is = null;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(pi.getSize());
 		try {
-			is = fs.open(getFile(pi));
+			is = fs.open(path);
 			copyStream(is, bos);
 		} finally {
 			CloseUtil.close(is);
@@ -105,11 +107,13 @@ public class HDFSPermanentStorage extends SpyObject
 	}
 
 	public void storeImage(PhotoImage pi, byte[] data) throws Exception {
+		Path path=getFile(pi);
+		getLogger().info("Storing %s in %s", pi.getId(), path);
         FileSystem fs=getFilesystem();
         FSDataOutputStream out=null;
         InputStream in=new ByteArrayInputStream(data);
         try {
-            out = fs.create(getFile(pi));
+            out = fs.create(path);
             copyStream(in, out);
         } finally {
             CloseUtil.close(in);
