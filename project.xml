@@ -140,7 +140,7 @@
 		<dependency>
 			<groupId>spy</groupId>
 			<artifactId>spyxmlrpc</artifactId>
-			<version>2.1</version>
+			<version>2.2</version>
 			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>
