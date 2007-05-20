@@ -122,7 +122,7 @@
 		<dependency>
 			<groupId>spy</groupId>
 			<artifactId>jwebkit</artifactId>
-			<version>3.0.1</version>
+			<version>3.2.1</version>
 			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>

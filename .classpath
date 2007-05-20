@@ -17,7 +17,7 @@
 	<classpathentry kind="var" path="MAVEN_REPO/oro/jars/oro-2.0.8.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/javamail/jars/mail-1.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/spy-2.3.1.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/jwebkit-3.2.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/jwebkit-3.2.1.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/authkit-2.2.4.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/xmlkit-2.2.3.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/spy/jars/s3lib-1.0.jar"/>
