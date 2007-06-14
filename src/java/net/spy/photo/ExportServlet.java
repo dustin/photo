@@ -39,12 +39,16 @@ public class ExportServlet extends XMLOutputServlet {
 			PhotoSessionData sessionData=(PhotoSessionData)ses.getAttribute(
 				PhotoSessionData.SES_ATTR);
 
-			SearchForm sf=new SearchForm();
-			sf.setSdirection("desc");
-			ParallelSearch ps=ParallelSearch.getInstance();
-			SearchResults psr=ps.performSearch(sf, sessionData.getUser());
+			SearchResults sr=(SearchResults)req.getAttribute("search_results");
+			if(sr == null) {
+				SearchForm sf=new SearchForm();
+				sf.setSdirection("desc");
+				ParallelSearch ps=ParallelSearch.getInstance();
+				sr=ps.performSearch(sf, sessionData.getUser());
+			}
+			assert sr != null : "Didn't get a search result.";
 
-			sendXml(new SearchResultsXML(psr), res);
+			sendXml(new SearchResultsXML(sr), res);
 		} catch(Exception e) {
 			throw new ServletException("Problem exporting data", e);
 		}

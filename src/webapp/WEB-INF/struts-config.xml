@@ -236,6 +236,13 @@
 		<forward name="next" path="/int/search.do" />
 	</action>
 
+	<action path="/x/search"
+		type="net.spy.photo.struts.SearchAction"
+		name="searchForm">
+
+		<forward name="next" path="/export" />
+	</action>
+
 	<action path="/deleteSearch"
 		type="net.spy.photo.struts.DeleteSearchAction"
 		roles="admin" scope="request"
