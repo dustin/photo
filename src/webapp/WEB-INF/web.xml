@@ -110,6 +110,15 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>fzip</servlet-name>
+		<servlet-class>net.spy.photo.ZipExportServlet</servlet-class>
+		<init-param>
+			<param-name>fullExport</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet>
 		<servlet-name>stat</servlet-name>
 		<servlet-class>net.spy.photo.StatServlet</servlet-class>
 	</servlet>
@@ -236,6 +245,10 @@
 	<servlet-mapping>
 		<servlet-name>zip</servlet-name>
 		<url-pattern>/zip</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>fzip</servlet-name>
+		<url-pattern>/fzip</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

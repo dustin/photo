@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.spy.jwebkit.JWHttpServlet;
+import net.spy.photo.impl.PhotoDimensionsImpl;
 import net.spy.photo.search.SearchResults;
 import net.spy.util.CloseUtil;
 import net.spy.util.SpyToker;
@@ -44,6 +45,8 @@ public class ZipExportServlet extends JWHttpServlet {
 
 	private String pageHTML=null;
 
+	private boolean fullExport=false;
+
 	@Override
 	public void init(ServletConfig cf) throws ServletException {
 		super.init(cf);
@@ -57,6 +60,10 @@ public class ZipExportServlet extends JWHttpServlet {
 			}
 		} catch (IOException e) {
 			throw new ServletException("Can't initialize HTML pages", e);
+		}
+		String fullExportString=cf.getInitParameter("fullExport");
+		if(fullExportString != null) {
+			fullExport=Boolean.valueOf(fullExportString);
 		}
 	}
 
@@ -128,42 +135,44 @@ public class ZipExportServlet extends JWHttpServlet {
 	private void addImages(Collection<PhotoImage> sr, PhotoDimensions dims,
 			ZipOutputStream zos) throws Exception {
 
-		SimpleDateFormat sdf=new SimpleDateFormat(PATH_FMT);
-		CRC32 crc=new CRC32();
+		PhotoConfig cf=PhotoConfig.getInstance();
+		PhotoDimensions thumbdim= new PhotoDimensionsImpl(
+				cf.get("thumbnail_size"));
 
 		getLogger().info("Adding " + sr.size() + " images");
 		for(PhotoImage pid : sr) {
 			getLogger().info("Adding photos for " + pid.getId());
-			PhotoImageHelper p=PhotoImageHelper.getInstance();
 
-			ZipEntry ne=new ZipEntry("pages/" + sdf.format(pid.getTaken()) + "/"
-					+ pid.getId() + "_normal."+ pid.getFormat().getExtension());
-			byte ndata[]=p.getImage(pid, dims);
-			ne.setSize(ndata.length);
-			ne.setTime(pid.getTimestamp().getTime());
-			crc.reset();
-			crc.update(ndata);
-			ne.setCrc(crc.getValue());
-			zos.putNextEntry(ne);
-			zos.write(ndata);
-			zos.closeEntry();
+			addImage(dims, zos, pid, "_normal");
 
-			ZipEntry te=new ZipEntry("pages/" + sdf.format(pid.getTaken()) + "/"
-					+ pid.getId() + "_tn."+ pid.getFormat().getExtension());
-			byte tdata[]=p.getThumbnail(pid);
-			te.setSize(tdata.length);
-			te.setTime(pid.getTimestamp().getTime());
-			crc.reset();
-			crc.update(tdata);
-			te.setCrc(crc.getValue());
-			zos.putNextEntry(te);
-			zos.write(tdata);
-			zos.closeEntry();
+			// Add the thumbnail
+			addImage(thumbdim, zos, pid, "_tn");
+
+			if(fullExport) {
+				addImage(null, zos, pid, "_full");
+			}
 
 			addImageHTML(zos, pid);
-
 			zos.flush();
 		}
+	}
+
+	private void addImage(PhotoDimensions dims, ZipOutputStream zos,
+			PhotoImage pid, String suffix) throws Exception, IOException {
+		PhotoImageHelper p=PhotoImageHelper.getInstance();
+		SimpleDateFormat sdf=new SimpleDateFormat(PATH_FMT);
+		CRC32 crc=new CRC32();
+		ZipEntry ne=new ZipEntry("pages/" + sdf.format(pid.getTaken()) + "/"
+				+ pid.getId() + suffix + "." + pid.getFormat().getExtension());
+		byte ndata[]=p.getImage(pid, dims);
+		ne.setSize(ndata.length);
+		ne.setTime(pid.getTimestamp().getTime());
+		crc.reset();
+		crc.update(ndata);
+		ne.setCrc(crc.getValue());
+		zos.putNextEntry(ne);
+		zos.write(ndata);
+		zos.closeEntry();
 	}
 
 	private void addImageHTML(ZipOutputStream zos, PhotoImage pid)
