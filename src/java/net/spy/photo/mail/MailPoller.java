@@ -291,7 +291,10 @@ public class MailPoller extends SpyObject implements Runnable {
 					lines.add(s);
 				}
 			}
-			info = SpyUtil.join(lines, "\n").trim();
+			String tmp = SpyUtil.join(lines, "\n").trim();
+			if(tmp.length() > 0) {
+				info = tmp;
+			}
 		}
 
 		public String getKeywords() {
