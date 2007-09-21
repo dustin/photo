@@ -47,7 +47,7 @@ public class MailPoller extends SpyObject implements Runnable {
 	/**
 	 * Construct a mail poller with the given JNDI name pointing to a mail
 	 * configuration that may be used to receive email.
-	 * 
+	 *
 	 * @param jname
 	 * @throws NamingException
 	 */
@@ -242,7 +242,7 @@ public class MailPoller extends SpyObject implements Runnable {
 		/**
 		 * Find the most appropriate category for this user based on the
 		 * contents of the email.
-		 * 
+		 *
 		 * @param u
 		 *            the user for whom we want the category
 		 * @return the best-fit category
@@ -308,6 +308,11 @@ public class MailPoller extends SpyObject implements Runnable {
 				ts=MetaDataExtractor.getInstance().getDateTaken(to);
 			} catch(Exception e) {
 				getLogger().info("Couldn't get metadata from mailed data", e);
+			}
+			if(ts == null) {
+				getLogger().info("Couldn't get metadata from mailed data,"
+						+ " using current time");
+				ts=new Date();
 			}
 		}
 
