@@ -187,7 +187,7 @@
 		<br />
 		<b>Info</b>:
 		<div id="imgDescr" class="imgDescr"><c:out value="${image.descr}"/></div>
-		<b><a id="metalink" href="#">Toggle Meta Data</a>
+		<b><a id="metalink" style="display: hidden" href="#">Toggle Meta Data</a>
 			<img src="<c:url value='/images/indicator.gif'/>"
 				alt="indicator" id="metaindicator" style="display: none"/>
 			</b>
@@ -422,6 +422,7 @@
 				}
 				return false;
 			};
+			Element.show('metalink');
 			}, false);
 		// ]]>
 	</script>
