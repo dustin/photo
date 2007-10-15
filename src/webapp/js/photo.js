@@ -1,13 +1,13 @@
 function field_blur_behavior(field, def) {
 	var f=$(field);
 	f.onfocus=function() {
-		if(f.value == def) {
+		if(f.value === def) {
 			f.value='';
 			Element.removeClassName(f, 'defaultfield');
 		}
 	};
 	f.onblur=function() {
-		if(f.value == '') {
+		if(f.value === '') {
 			f.value=def;
 			Element.addClassName(f, 'defaultfield');
 		}
