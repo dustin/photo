@@ -483,3 +483,7 @@ a.deletelink:hover {
 .variantlink {
 	display: inline;
 }
+
+.defaultfield {
+	color: #999;
+}
