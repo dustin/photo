@@ -1,5 +1,6 @@
 function field_blur_behavior(field, def) {
 	var f=$(field);
+	var defaultClass='defaultfield';
 	f.onfocus=function() {
 		if(f.value === def) {
 			f.value='';
@@ -12,6 +13,7 @@ function field_blur_behavior(field, def) {
 			Element.addClassName(f, 'defaultfield');
 		}
 	}
+	Event.observe(window, 'unload', f.onfocus);
 	f.onblur();
 }
 
