@@ -184,7 +184,7 @@
 		<div class="footerfineprint">
 			<fmt:message key="page.content.footer"/><br/>
 			Build 
-			<fmt:message key="build.dtstamp"/> (<fmt:message key="hg.long.version"/>)
+			<fmt:message key="build.dtstamp"/> (<fmt:message key="git.long.version"/>)
 		</div> <!-- footerfineprint -->
 	</div> <!-- /Footer -->
 
