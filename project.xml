@@ -157,7 +157,7 @@
 		</dependency>
 		<dependency>
 			<groupId>spy</groupId>
-			<artifactId>maven-hg-plugin</artifactId>
+			<artifactId>maven-git-plugin</artifactId>
 			<version>1.0</version>
 			<type>plugin</type>
 		</dependency>

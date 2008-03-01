@@ -9,7 +9,7 @@
 	xmlns:deploy="deploy">
 
 	<goal name="dist" prereqs="war,javadoc">
-		<zip zipfile="${maven.build.dir}/photoservlet-${hg.short.version}.zip"
+		<zip zipfile="${maven.build.dir}/photoservlet-${git.short.version}.zip"
 			basedir="${maven.build.dir}" excludes="**">
 			<zipfileset dir="${maven.build.dir}/docs" prefix="doc/api"
 				includes="**"/>
@@ -32,7 +32,7 @@
 
 	<!-- Build info -->
 	<preGoal name="war:init">
-		<attainGoal name="hg:versions"/>
+		<attainGoal name="git:versions"/>
 		<attainGoal name="spy:buildprops"/>
 	</preGoal>
 
