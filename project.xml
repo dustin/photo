@@ -164,7 +164,7 @@
 		<dependency>
 			<groupId>spy</groupId>
 			<artifactId>maven-spy-build-plugin</artifactId>
-			<version>1.10</version>
+			<version>1.12</version>
 			<type>plugin</type>
 		</dependency>
 
