@@ -26,6 +26,6 @@ limit 100
 
 @results
 username VARCHAR The user who logged in.
-remote_addr The IP address of the user.
-user_agent The browser the user was using.
-ts When the login occurred.
+remote_addr VARCHAR The IP address of the user.
+user_agent VARCHAR The browser the user was using.
+ts TIMESTAMP When the login occurred.
