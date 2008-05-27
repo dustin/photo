@@ -11,7 +11,7 @@ import net.spy.db.Savable;
 import net.spy.db.Saver;
 import net.spy.db.savables.CollectionSavable;
 import net.spy.factory.CacheRefresher;
-import net.spy.factory.GenFactory;
+import net.spy.factory.GenFactoryImpl;
 import net.spy.photo.impl.DBImageSource;
 import net.spy.photo.observation.NewImageObservable;
 import net.spy.photo.search.SearchIndex;
@@ -19,7 +19,7 @@ import net.spy.photo.search.SearchIndex;
 /**
  * ImageData factory.
  */
-public class PhotoImageFactory extends GenFactory<PhotoImage> {
+public class PhotoImageFactory extends GenFactoryImpl<PhotoImage> {
 
 	private static final String CACHE_KEY="image_data";
 	private static final long CACHE_TIME=86400000;
@@ -46,7 +46,7 @@ public class PhotoImageFactory extends GenFactory<PhotoImage> {
 		newImageIds=new ConcurrentLinkedQueue<Integer>();
 	}
 
-	/** 
+	/**
 	 * Get an instance of the PhotoImageFactory.
 	 */
 	public static PhotoImageFactory getInstance() {
@@ -63,7 +63,7 @@ public class PhotoImageFactory extends GenFactory<PhotoImage> {
 		return rv;
 	}
 
-	/** 
+	/**
 	 * Get the instances of PhotoImage.
 	 */
 	@Override
@@ -83,7 +83,7 @@ public class PhotoImageFactory extends GenFactory<PhotoImage> {
 		newImageIds.add(id);
 	}
 
-	/** 
+	/**
 	 * Store a savable and optionally recache the instances.
 	 */
 	public void store(Savable ob, boolean recache, long recacheDelay)
@@ -140,14 +140,14 @@ public class PhotoImageFactory extends GenFactory<PhotoImage> {
 		}
 	}
 
-	/** 
+	/**
 	 * Store a savable and recache the instances.
 	 */
 	public void store(Savable ob, boolean recache) throws Exception {
 		store(ob, true, RECACHE_DELAY);
 	}
 
-	/** 
+	/**
 	 * Store a savable and recache the instances.
 	 */
 	public void store(Savable ob) throws Exception {

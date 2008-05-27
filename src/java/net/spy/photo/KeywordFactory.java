@@ -11,12 +11,12 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.db.Saver;
-import net.spy.factory.GenFactory;
+import net.spy.factory.GenFactoryImpl;
 import net.spy.photo.impl.KeywordImpl;
 import net.spy.photo.sp.GetKeywords;
 import net.spy.util.CloseUtil;
 
-public class KeywordFactory extends GenFactory<Keyword> {
+public class KeywordFactory extends GenFactoryImpl<Keyword> {
 
 	private static final String CACHE_KEY="keywords";
 	private static final int CACHE_TIME=3600000;
@@ -30,7 +30,7 @@ public class KeywordFactory extends GenFactory<Keyword> {
 		super(CACHE_KEY, CACHE_TIME);
 		ignoredKeywords=new HashSet<String>();
 		ignoredKeywords.addAll(Arrays.asList(new String[]{
-				"of", "the", "a", "for", "to", "in", 
+				"of", "the", "a", "for", "to", "in",
 			}));
 	}
 
@@ -66,7 +66,7 @@ public class KeywordFactory extends GenFactory<Keyword> {
 
 	/**
 	 * Get a keyword by word.
-	 * 
+	 *
 	 * @param word the word
 	 * @return a new Keyword instance, or null if there's no such word
 	 */
@@ -74,7 +74,7 @@ public class KeywordFactory extends GenFactory<Keyword> {
 		return(getKeyword(word, false));
 	}
 
-	/** 
+	/**
 	 * Get a keyword by word.  Optionally, a new keyword instance may be
 	 * created if one does not exist.
 	 */
@@ -103,7 +103,7 @@ public class KeywordFactory extends GenFactory<Keyword> {
 
 	/**
 	 * Parse the keyword string to a set of keywords.
-	 * 
+	 *
 	 * @param s the input string
 	 * @param create true if missing keywords should be created
 	 * @return the Keywords instance

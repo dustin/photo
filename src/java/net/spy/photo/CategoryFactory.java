@@ -14,7 +14,7 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.db.Saver;
-import net.spy.factory.GenFactory;
+import net.spy.factory.GenFactoryImpl;
 import net.spy.photo.impl.DBCategory;
 import net.spy.photo.sp.GetAllACLs;
 import net.spy.photo.sp.GetAllCategories;
@@ -23,7 +23,7 @@ import net.spy.util.CloseUtil;
 /**
  * Category access.
  */
-public class CategoryFactory extends GenFactory<Category> {
+public class CategoryFactory extends GenFactoryImpl<Category> {
 
 	/**
 	 * Flag to list categories that can be read by the user.
@@ -50,7 +50,7 @@ public class CategoryFactory extends GenFactory<Category> {
 		comparator=new CategoryComparator();
 	}
 
-	/** 
+	/**
 	 * Get the singleton instance of CategoryFactory.
 	 */
 	public static CategoryFactory getInstance() {
@@ -91,21 +91,21 @@ public class CategoryFactory extends GenFactory<Category> {
 		return(rv.values());
 	}
 
-	/** 
+	/**
 	 * Create a new mutable category.
 	 */
 	public MutableCategory createNew() {
 		return(new DBCategory());
 	}
 
-	/** 
+	/**
 	 * Get a mutable version of a given category.
 	 */
 	public MutableCategory getMutable(int id) {
 		return(new DBCategory(getObject(id)));
 	}
 
-	/** 
+	/**
 	 * Persist a mutable category.
 	 */
 	public void persist(MutableCategory inst) throws Exception {
@@ -116,7 +116,7 @@ public class CategoryFactory extends GenFactory<Category> {
 		UserFactory.getInstance().recache();
 	}
 
-	/** 
+	/**
 	 * Get a category by name.
 	 */
 	public Category getCategory(String name) {
@@ -129,7 +129,7 @@ public class CategoryFactory extends GenFactory<Category> {
 				rv=cat;
 			}
 		}
-		if(rv == null) { 
+		if(rv == null) {
 			throw new RuntimeException("No such category:  " + name);
 		}
 		return(rv);

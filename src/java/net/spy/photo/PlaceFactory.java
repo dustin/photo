@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.spy.db.Saver;
-import net.spy.factory.GenFactory;
+import net.spy.factory.GenFactoryImpl;
 import net.spy.photo.impl.DBPlace;
 import net.spy.photo.sp.SelectAllPlaces;
 import net.spy.util.CloseUtil;
@@ -16,7 +16,7 @@ import net.spy.util.CloseUtil;
 /**
  * Maker of places.
  */
-public class PlaceFactory extends GenFactory<Place> {
+public class PlaceFactory extends GenFactoryImpl<Place> {
 
 	private static final String CACHE_KEY = "place";
 	private static final long CACHE_TIME = 86400000l;
@@ -58,7 +58,7 @@ public class PlaceFactory extends GenFactory<Place> {
 
 	/**
 	 * Get a mutable place.
-	 * 
+	 *
 	 * @param id the ID of the place
 	 * @return the MutablePlace
 	 */
@@ -69,7 +69,7 @@ public class PlaceFactory extends GenFactory<Place> {
 
 	/**
 	 * Create a new place.
-	 * 
+	 *
 	 * @return the new place
 	 * @throws Exception if a place can't be created
 	 */
@@ -79,7 +79,7 @@ public class PlaceFactory extends GenFactory<Place> {
 
 	/**
 	 * Persist the MutablePlace.
-	 * 
+	 *
 	 * @param mp the mutable place
 	 * @throws Exception if the item can't be persisted
 	 */

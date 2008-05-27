@@ -116,7 +116,7 @@
 		<dependency>
 			<groupId>spy</groupId>
 			<artifactId>spy</artifactId>
-			<version>2.3.1</version>
+			<version>2.4</version>
 			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>
@@ -152,7 +152,7 @@
 		<dependency>
 			<groupId>spy</groupId>
 			<artifactId>memcached</artifactId>
-			<version>2.0-pre9</version>
+			<version>2.1rc3</version>
 			<properties><war.bundle>true</war.bundle></properties>
 		</dependency>
 		<dependency>

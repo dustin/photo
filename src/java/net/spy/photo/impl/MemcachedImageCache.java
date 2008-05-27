@@ -7,7 +7,7 @@ import net.spy.SpyObject;
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.DefaultConnectionFactory;
 import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.SerializingTranscoder;
+import net.spy.memcached.transcoders.SerializingTranscoder;
 import net.spy.photo.ImageCache;
 import net.spy.photo.Persistent;
 import net.spy.photo.PhotoConfig;

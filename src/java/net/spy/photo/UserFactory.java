@@ -14,7 +14,7 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import net.spy.db.Saver;
-import net.spy.factory.GenFactory;
+import net.spy.factory.GenFactoryImpl;
 import net.spy.photo.impl.DBUser;
 import net.spy.photo.sp.GetAllACLs;
 import net.spy.photo.sp.GetAllRoles;
@@ -24,7 +24,7 @@ import net.spy.util.CloseUtil;
 /**
  * Instantiate and lookup Users.
  */
-public class UserFactory extends GenFactory<User> {
+public class UserFactory extends GenFactoryImpl<User> {
 
 	private static final String CACHE_KEY="net.spy.photo.DBUser";
 	private static final int CACHE_TIME=3600000; // one hour
@@ -42,7 +42,7 @@ public class UserFactory extends GenFactory<User> {
 		userComparator=new UserComparator();
 	}
 
-	/** 
+	/**
 	 * Get the singleton instance of UserFactory.
 	 */
 	public static UserFactory getInstance() {
@@ -161,9 +161,9 @@ public class UserFactory extends GenFactory<User> {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Look up a user by name or email address.
-	 * 
+	 *
 	 * @param spec the username or email address
 	 * @return the user
 	 *
@@ -188,7 +188,7 @@ public class UserFactory extends GenFactory<User> {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Get a user by persistent session ID.
 	 */
 	public User getUserByPersess(String persess) throws PhotoUserException {
@@ -202,9 +202,9 @@ public class UserFactory extends GenFactory<User> {
 		return(rv);
 	}
 
-	/** 
+	/**
 	 * Look up a user by user ID.
-	 * 
+	 *
 	 * @param id the user ID
 	 * @return the user
 	 *
@@ -237,10 +237,10 @@ public class UserFactory extends GenFactory<User> {
 		CategoryFactory.getInstance().recache();
 	}
 
-	/** 
+	/**
 	 * Get all known users.
 	 * @return an unmodifiable sorted set of users
-	 * @throws PhotoUserException 
+	 * @throws PhotoUserException
 	 */
 	public SortedSet<User> getAllUsers() throws PhotoUserException {
 		SortedSet<User> rv=new TreeSet<User>(userComparator);
