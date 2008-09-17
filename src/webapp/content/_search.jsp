@@ -13,7 +13,7 @@
 
 <div>
 
-<html:form action="/search.do">
+<html:form method="get" action="/search.do">
 	<p>
 	<html:errors/>
 	<html:hidden property="maxret" value="6"/>
@@ -65,7 +65,7 @@
 
 <fmt:message key="forms.search.adv.pre"/>
 
-<html:form action="/search.do">
+<html:form method="get" action="/search.do">
 
 	<fieldset>
 		<legend><fmt:message key="forms.search.adv.cat"/></legend>

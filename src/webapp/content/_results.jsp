@@ -131,7 +131,7 @@
 
 <c:if test="${photoSession.results.numRemaining > 0}">
 	<div>
-	<html:form action="nextresults.do">
+	<html:form action="nextresults.do" method="get">
 		<div>
 			<input type="hidden" name="startOffset"
 				value="<c:out value='${photoSession.results.pageNumber + 1}'/>"/>

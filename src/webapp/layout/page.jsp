@@ -66,7 +66,7 @@
 		<ul>
 			<li><photo:link url="/index.do" message="page.links.home"/></li>
 			<li>
-				<form method="post" action="<c:url value='/search.do'/>">
+				<form method="get" action="<c:url value='/search.do'/>">
 					<div>
 					<input type="hidden" name="maxret" value="6"/>
 					<input type="hidden" name="fieldjoin" value="and"/>
