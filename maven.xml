@@ -47,7 +47,7 @@
 
 		<mkdir dir="${maven.build.dir}/war"/>
 
-		<j:set var="wars" value="photo,jasonphoto,photodemo,tphoto,trishphoto,ariel" />
+		<j:set var="wars" value="photo,jasonphoto,photodemo,tphoto,trishphoto" />
 		<j:set var="buildwars" value="${wars}"/>
 		<u:tokenize var="buildwars" delim=",">${buildwars}</u:tokenize>
 		<j:forEach items="${buildwars}" var="war">
