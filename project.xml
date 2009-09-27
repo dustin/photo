@@ -24,10 +24,12 @@
 	<shortDescription>PhotoServlet</shortDescription>
 
 	<developers>
-		<name>Dustin Sallings</name>
-		<id>dustin</id>
-		<email>dustin@spy.net</email>
-		<organization>SPY Internetworking</organization>
+    <developer>
+		  <name>Dustin Sallings</name>
+		  <id>dustin</id>
+		  <email>dustin@spy.net</email>
+		  <organization>SPY Internetworking</organization>
+    </developer>
 	</developers>
 
 	<dependencies>
