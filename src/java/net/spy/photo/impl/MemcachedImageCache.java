@@ -5,6 +5,8 @@ import java.util.List;
 
 import net.spy.SpyObject;
 import net.spy.memcached.AddrUtil;
+import net.spy.memcached.ConnectionFactory;
+import net.spy.memcached.ConnectionFactoryBuilder;
 import net.spy.memcached.DefaultConnectionFactory;
 import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.transcoders.SerializingTranscoder;
@@ -59,10 +61,12 @@ public class MemcachedImageCache extends SpyObject
 			List<InetSocketAddress> addrs=AddrUtil.getAddresses(
 					conf.get("memcached.servers"));
 
-			memcached=new MemcachedClient(new DefaultConnectionFactory(
-					DefaultConnectionFactory.DEFAULT_OP_QUEUE_LEN, bufSize),
-					addrs);
-			memcached.setTranscoder(transcoder);
+			ConnectionFactory cf = new ConnectionFactoryBuilder()
+				.setReadBufferSize(bufSize)
+				.setTranscoder(transcoder)
+				.build();
+
+			memcached=new MemcachedClient(cf, addrs);
 
 			hitStat=Stats.getComputingStat("memcached.hit");
 			missStat=Stats.getComputingStat("memcached.miss");
