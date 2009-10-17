@@ -13,6 +13,7 @@ class Parser(libphoto.AlbumParser):
 
     def __init__(self, couch, base):
         self.couch = couch
+        self.databases = {}
         self.base = base
 
     def encode_annotation(self, a):
@@ -41,13 +42,28 @@ class Parser(libphoto.AlbumParser):
         return {'photo.jpg': { 'content_type': t,
                                'data': ''.join(f.bytes)}}
 
+    def getDb(self, db_name):
+        name = 'photo-' + db_name.replace('/', '-').lower()
+        try:
+            if name in self.databases:
+                db = self.databases[name]
+            else:
+                print "Retrieving db", name
+                self.databases[name] = self.couch[name]
+        except couchdb.client.ResourceNotFound:
+            print "Creating db", name
+            self.couch.create(name)
+            self.databases[name] = self.couch[name]
+
+        return self.databases[name]
+
     def gotPhoto(self, p):
         print "Got photo", p
         # if p.md5 in self.couch:
         #     print "Already have", p
         #     return
         try:
-            self.couch[p.md5] = {
+            self.getDb(p.cat)[p.md5] = {
                 'old_id': p.id,
                 'type': 'photo',
                 'size': p.size,
@@ -75,8 +91,8 @@ if __name__ == '__main__':
     if pw is None:
         pw=getpass.getpass()
 
-    c = couchdb.Server('http://localhost:5984')
+    c = couchdb.Server('http://localhost:5984/')
 
     libphoto.authenticate(base, u, pw)
 
-    libphoto.parseIndex(libphoto.fetchIndex(base), Parser(c['photo'], base))
+    libphoto.parseIndex(libphoto.fetchIndex(base), Parser(c, base))
