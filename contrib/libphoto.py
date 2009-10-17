@@ -7,7 +7,6 @@ Copyright (c) 2004  Dustin Sallings <dustin@spy.net>
 """
 
 import os
-import sets
 import urllib
 import urllib2
 import xml.sax
@@ -54,7 +53,7 @@ class Photo(saxkit.ElementHandler):
             else:
                 self.__dict__[name[1]]=val.getValue()
         elif name == (None, 'keywords'):
-            self.keywords=sets.ImmutableSet(val.keywords)
+            self.keywords=set(val.keywords)
         elif name == (None, 'annotations'):
             self.annotations=val.getValues()
         else:
@@ -107,7 +106,7 @@ class Annotation(saxkit.ElementHandler):
             else:
                 self.__dict__[name[1]]=val.getValue()
         elif name == (None, 'keywords'):
-            self.keywords=sets.ImmutableSet(val.keywords)
+            self.keywords=set(val.keywords)
         else:
             self.__dict__[name[1]]=val
 
@@ -211,10 +210,10 @@ class ParseTest(unittest.TestCase):
         self.assertEquals(self.photos[2].cat, "Private")
 
     def testKeywords(self):
-        expected=sets.ImmutableSet(['license', 'mom', 'plate', 'your'])
+        expected=set(['license', 'mom', 'plate', 'your'])
         self.assertEquals(self.photos[1].keywords, expected)
 
-        expected=sets.ImmutableSet(['dustin', 'christmas'])
+        expected=set(['dustin', 'christmas'])
         self.assertEquals(self.photos[2].keywords, expected)
 
     def testMd5s(self):
@@ -233,14 +232,14 @@ class ParseTest(unittest.TestCase):
 
         for a in self.photos[1].annotations:
             if a.x == 762:
-                expected=sets.ImmutableSet(['license', 'mom', 'plate', 'your'])
+                expected=set(['license', 'mom', 'plate', 'your'])
                 self.assertEquals(a.keywords, expected)
                 self.assertEquals(a.y, 462)
                 self.assertEquals(a.addedby, 'demouser')
                 self.assertEquals(a.ts, '2005-05-31T00:47:21')
                 self.assertEquals(a.title, 'We were behind your mom in SF.')
             elif a.x == 90:
-                expected=sets.ImmutableSet(['license', 'plate'])
+                expected=set(['license', 'plate'])
                 self.assertEquals(a.keywords, expected)
                 self.assertEquals(a.y, 478)
                 self.assertEquals(a.addedby, 'demouser')
