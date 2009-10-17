@@ -13,7 +13,7 @@ class Parser(libphoto.AlbumParser):
 
     def __init__(self, couch, base):
         self.couch = couch
-        self.databases = {}
+        self.databases = dict([(n, self.couch[n]) for n in self.couch])
         self.base = base
 
     def encode_annotation(self, a):
@@ -59,11 +59,13 @@ class Parser(libphoto.AlbumParser):
 
     def gotPhoto(self, p):
         print "Got photo", p
-        # if p.md5 in self.couch:
+        db = self.getDb(p.cat)
+        # if p.md5 in db:
         #     print "Already have", p
         #     return
         try:
-            self.getDb(p.cat)[p.md5] = {
+
+            db[p.md5] = {
                 'old_id': p.id,
                 'type': 'photo',
                 'size': p.size,
