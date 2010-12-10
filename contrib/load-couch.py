@@ -50,7 +50,7 @@ class Parser(libphoto.AlbumParser):
             else:
                 print "Retrieving db", name
                 self.databases[name] = self.couch[name]
-        except couchdb.client.ResourceNotFound:
+        except couchdb.ResourceNotFound:
             print "Creating db", name
             self.couch.create(name)
             self.databases[name] = self.couch[name]
@@ -82,7 +82,7 @@ class Parser(libphoto.AlbumParser):
                 'keywords': list(p.keywords),
                 'annotations': [self.encode_annotation(a) for a in p.annotations],
                 '_attachments': self.attachment(p)}
-        except couchdb.client.ResourceConflict:
+        except couchdb.ResourceConflict:
             print "Got a resource conflict on %s" % (p.md5,)
 
 if __name__ == '__main__':
