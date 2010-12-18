@@ -2,12 +2,21 @@
 
 import os
 import sys
+import time
 import base64
 import getpass
+import traceback
+
+import threading
+import Queue
 
 import couchdb
 
 import libphoto
+
+N_THREADS=5
+
+Q=Queue.Queue()
 
 class Parser(libphoto.AlbumParser):
 
@@ -20,30 +29,11 @@ class Parser(libphoto.AlbumParser):
         return {'x': a.x, 'y': a.y, 'width': a.width, 'height': a.height,
                 'title': a.title, 'addedby': a.addedby, 'ts': a.ts}
 
-    def attachment(self, p):
-        img = libphoto.fetchImage(self.base, p.id)
-        t = p.extension
-        if t == 'jpg':
-            t = 'jpeg'
-
-        t = 'image/' + t
-
-        class F(object):
-
-            def __init__(self):
-                self.bytes = []
-
-            def write(self, b):
-                self.bytes.append(b.replace("\n", ""))
-
-        f = F()
-        base64.encode(img, f)
-
-        return {'photo.jpg': { 'content_type': t,
-                               'data': ''.join(f.bytes)}}
+    def getDbName(self, db_name):
+        return 'photo-' + db_name.replace('/', '-').lower()
 
     def getDb(self, db_name):
-        name = 'photo-' + db_name.replace('/', '-').lower()
+        name = self.getDbName(db_name)
         try:
             if name in self.databases:
                 db = self.databases[name]
@@ -60,12 +50,9 @@ class Parser(libphoto.AlbumParser):
     def gotPhoto(self, p):
         print "Got photo", p
         db = self.getDb(p.cat)
-        # if p.md5 in db:
-        #     print "Already have", p
-        #     return
         try:
-
-            db[p.md5] = {
+            doc = {
+                '_id': p.md5,
                 'old_id': p.id,
                 'type': 'photo',
                 'size': p.size,
@@ -81,9 +68,68 @@ class Parser(libphoto.AlbumParser):
                 'extension': p.extension,
                 'keywords': list(p.keywords),
                 'annotations': [self.encode_annotation(a) for a in p.annotations],
-                '_attachments': self.attachment(p)}
+            }
+            docid, rev = db.save(doc)
+            Q.put((p, self.getDbName(p.cat), docid, rev))
+
         except couchdb.ResourceConflict:
             print "Got a resource conflict on %s" % (p.md5,)
+
+class ImageWorker(threading.Thread):
+
+    def __init__(self, url, pbase):
+        threading.Thread.__init__(self)
+        self.c = couchdb.Server(url)
+        self.pbase = pbase
+        self.setDaemon(True)
+        self.start()
+
+    def save_attachment(self, p, dbname, docid, img, t, name, rev=None):
+        retries = 3
+        while True:
+            try:
+                if rev is None:
+                    rev = self.c[dbname][docid]['_rev']
+                self.c[dbname].put_attachment({'_id': docid,
+                                               '_rev': rev}, img,
+                                              filename=name + '.' + p.extension,
+                                              content_type=t)
+                return
+            except:
+                traceback.print_exc()
+                if retries > 0:
+                    retries = retries - 1
+                    if retries:
+                        print "Retrying", p.id, "with", retries, "remaining tries"
+                    time.sleep(1)
+                else:
+                    sys.exit(1)
+
+    def save_attachments(self, p, dbname, docid, rev):
+        print "Processing image for", p.id
+        t = p.extension
+        if t == 'jpg':
+            t = 'jpeg'
+
+        t = 'image/' + t
+
+        self.save_attachment(p, dbname, docid,
+                             libphoto.fetchImage(self.pbase, p.id),
+                             t, 'original', rev)
+        self.save_attachment(p, dbname, docid,
+                             libphoto.fetchImage(self.pbase, p.id,
+                                                 thumbnail=True),
+                             t, 'thumb')
+        self.save_attachment(p, dbname, docid,
+                             libphoto.fetchImage(self.pbase, p.id,
+                                                 size='800x600'),
+                             t, '800x600')
+
+    def run(self):
+        while True:
+            p, dbname, docid, rev = Q.get()
+            self.save_attachments(p, dbname, docid, rev)
+            Q.task_done()
 
 if __name__ == '__main__':
     base, u=sys.argv[1:]
@@ -93,8 +139,18 @@ if __name__ == '__main__':
     if pw is None:
         pw=getpass.getpass()
 
-    c = couchdb.Server('http://localhost:5984/')
+    url = 'http://localhost:5984/'
+    c = couchdb.Server(url, full_commit=False)
 
     libphoto.authenticate(base, u, pw)
 
     libphoto.parseIndex(libphoto.fetchIndex(base), Parser(c, base))
+
+    threads = [ImageWorker(url, base) for w in range(N_THREADS)]
+
+    Q.join()
+
+    for db in c:
+        print "Compacting", db
+        c[db].compact()
+
